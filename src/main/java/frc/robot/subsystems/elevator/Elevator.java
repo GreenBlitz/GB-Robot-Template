@@ -63,11 +63,7 @@ public class Elevator extends GBSubsystem {
 		hasBeenResetBySwitch = false;
 
 		this.commandsBuilder = new ElevatorCommandsBuilder(this);
-		this.sysIdCalibrator = new SysIdCalibrator(
-			rightMotor.getSysidConfigInfo(),
-			this,
-			(voltage) -> setVoltage(voltage + getKg())
-		);
+		this.sysIdCalibrator = new SysIdCalibrator(rightMotor.getSysidConfigInfo(), this, (voltage) -> setVoltage(voltage + getKg()));
 
 		resetMotors(ElevatorConstants.MINIMUM_HEIGHT_METERS);
 		periodic();
@@ -97,7 +93,7 @@ public class Elevator extends GBSubsystem {
 		 */
 	}
 
-	public double getKg(){
+	public double getKg() {
 		return Robot.ROBOT_TYPE.isReal() ? KrakenX60ElevatorBuilder.kG : 0;
 	}
 

@@ -92,8 +92,12 @@ public class KrakenX60ElevatorBuilder {
 		configuration.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 		configuration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 		configuration.Feedback.SensorToMechanismRatio = ElevatorConstants.GEAR_RATIO;
-		configuration.MotionMagic.MotionMagicAcceleration = Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED).getRotations();
-		configuration.MotionMagic.MotionMagicCruiseVelocity = 	Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND).getRotations();
+		configuration.MotionMagic.MotionMagicAcceleration = Elevator
+			.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
+			.getRotations();
+		configuration.MotionMagic.MotionMagicCruiseVelocity = Elevator
+			.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND)
+			.getRotations();
 
 		return configuration;
 	}

@@ -4,7 +4,8 @@
 
 package frc;
 
-import edu.wpi.first.wpilibj.RobotBase;
+import com.ctre.phoenix.ErrorCode;
+
 
 /**
  * Do NOT add any static variables to this class, or any initialization at all. Unless you know what you are doing, do not modify this file
@@ -18,7 +19,8 @@ public final class Main {
 	 * <p>If you change your main robot class, change the parameter type.
 	 */
 	public static void main(String... args) {
-		RobotBase.startRobot(RobotManager::new);
+		System.out.println(ErrorCode.class);
+		// RobotBase.startRobot(RobotManager::new);
 	}
 
 }

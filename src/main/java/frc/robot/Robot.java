@@ -14,6 +14,7 @@ import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.RobotCommander;
+import frc.robot.statemachine.StateMachineConstants;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.factory.ArmFactory;
 import frc.robot.subsystems.elevator.Elevator;
@@ -26,6 +27,7 @@ import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.battery.BatteryUtil;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 
@@ -80,6 +82,7 @@ public class Robot {
 		this.simulationManager = new SimulationManager("SimulationManager", this);
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
 
+		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
 		swerve.getStateHandler().setBranchSupplier(() -> Optional.of(ScoringHelpers.targetBranch));
 	}
 
@@ -89,6 +92,16 @@ public class Robot {
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		simulationManager.logPoses();
+		Logger.recordOutput(
+			"dis",
+			poseEstimator.getEstimatedPose()
+				.getTranslation()
+				.getDistance(
+					ScoringHelpers
+						.getRobotScoringPose(ScoringHelpers.targetBranch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
+						.getTranslation()
+				)
+		);
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 

@@ -29,8 +29,8 @@ Arm Calibrations
 
 ##### Feed Forward 
 
-- [ ] kS
-- [ ] kG
+- [x] kS
+- [x] kG
 
 ##### PID 
 

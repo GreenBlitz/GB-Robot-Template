@@ -2,19 +2,18 @@ package frc.robot.subsystems.arm.factory;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
-import com.ctre.phoenix6.signals.GravityTypeValue;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.ctre.phoenix6.signals.*;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.constants.MathConstants;
 import frc.robot.IDs;
 import frc.robot.Robot;
 import frc.robot.RobotConstants;
@@ -22,6 +21,7 @@ import frc.robot.hardware.empties.EmptyAngleEncoder;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.mechanisms.wpilib.SingleJointedArmSimulation;
+import frc.robot.hardware.phoenix6.Phoenix6Util;
 import frc.robot.hardware.phoenix6.angleencoder.CANCoderEncoder;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.request.Phoenix6FeedForwardRequest;
@@ -33,6 +33,7 @@ import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
+import frc.utils.alerts.Alert;
 import frc.utils.math.AngleUnit;
 
 import static edu.wpi.first.units.Units.Second;
@@ -40,12 +41,14 @@ import static edu.wpi.first.units.Units.Volts;
 
 public class KrakenX60ArmBuilder {
 
+	private static final int APPLY_CONFIG_RETRIES = 5;
+
 	private static final boolean ENABLE_FOC = true;
 	private static final boolean IS_INVERTED = true;
 	private static final Rotation2d STARTING_POSITION = Rotation2d.fromDegrees(17);
 	private static final int NUMBER_OF_MOTORS = 1;
 	private static final double GEAR_RATIO = 450.0 / 7.0;
-	public static final double kG = 0;
+	public static final double kG = 0.3;
 
 	protected static Arm build(String logPath) {
 		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(
@@ -96,7 +99,7 @@ public class KrakenX60ArmBuilder {
 				config.Slot0.kI = 0;
 				config.Slot0.kD = 0;
 				config.Slot0.kS = 0;
-				config.Slot0.kG = 0;
+				config.Slot0.kG = kG;
 			}
 			case SIMULATION -> {
 				config.Slot0.kP = 70;
@@ -122,7 +125,7 @@ public class KrakenX60ArmBuilder {
 		config.Feedback.RotorToSensorRatio = GEAR_RATIO;
 		config.Feedback.SensorToMechanismRatio = 1;
 
-		config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+		config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
 		config.Feedback.FeedbackRemoteSensorID = IDs.CANCodersIDs.ARM.id();
 
 		return config;
@@ -154,14 +157,23 @@ public class KrakenX60ArmBuilder {
 					logPath + "/Encoder",
 					new CANcoder(IDs.CANCodersIDs.ARM.id(), IDs.CANCodersIDs.ARM.busChain().getChainName())
 			);
-			CANcoderConfiguration configuration = new CANcoderConfiguration();
-			configuration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-
-			encoder.getDevice().getConfigurator().apply(configuration);
+			MagnetSensorConfigs magnetSensorConfigs = new MagnetSensorConfigs();
+			encoder.getDevice().getConfigurator().refresh(magnetSensorConfigs);
+			CANcoderConfiguration caNcoderConfiguration = buildEncoderConfig();
+			caNcoderConfiguration.MagnetSensor.MagnetOffset = magnetSensorConfigs.MagnetOffset;
+			if (!Phoenix6Util.checkWithRetry(() -> encoder.getDevice().getConfigurator().apply(caNcoderConfiguration), APPLY_CONFIG_RETRIES).isOK()) {
+				new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
+			}
 
 			return encoder;
 		}
 		return new EmptyAngleEncoder(logPath + "/Encoder");
+	}
+
+	private static CANcoderConfiguration buildEncoderConfig(){
+		CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
+		encoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+		return encoderConfig;
 	}
 
 	private static InputSignal<Rotation2d> generateEncoderPositionSignal(IAngleEncoder encoder) {

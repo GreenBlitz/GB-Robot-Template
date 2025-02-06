@@ -11,6 +11,7 @@ import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.arm.factory.KrakenX60ArmBuilder;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.calibration.sysid.SysIdCalibrator;
+import org.littletonrobotics.junction.Logger;
 
 public class Arm extends GBSubsystem {
 
@@ -48,7 +49,7 @@ public class Arm extends GBSubsystem {
 
 		periodic();
 		resetByEncoderPosition();
-//		setDefaultCommand(getCommandsBuilder().stayInPlace());
+		setDefaultCommand(getCommandsBuilder().stayInPlace());
 	}
 
 	public ArmCommandsBuilder getCommandsBuilder() {
@@ -95,6 +96,7 @@ public class Arm extends GBSubsystem {
 	}
 
 	protected void setTargetPosition(Rotation2d position) {
+		Logger.recordOutput(getLogPath() + "/TargetPose", position);
 		motor.applyRequest(positionRequest.withSetPoint(position));
 	}
 

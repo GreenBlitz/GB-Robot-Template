@@ -47,7 +47,7 @@ public class KrakenX60ArmBuilder {
 	private static final Rotation2d STARTING_POSITION = Rotation2d.fromDegrees(17);
 	private static final int NUMBER_OF_MOTORS = 1;
 	private static final double GEAR_RATIO = 450.0 / 7.0;
-	public static final double kG = 0.255;
+	public static final double kG = 0.31;
 
 	protected static Arm build(String logPath) {
 		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(
@@ -98,13 +98,13 @@ public class KrakenX60ArmBuilder {
 
 		switch (Robot.ROBOT_TYPE) {
 			case REAL -> {
-				config.Slot0.kP = 1;
+				config.Slot0.kP = 0;
 				config.Slot0.kI = 0;
 				config.Slot0.kD = 0;
 				config.Slot0.kS = 0.24;
 				config.Slot0.kG = kG;
-				config.Slot0.kV = 1.3768;
-				config.Slot0.kA = 3.2848;
+				config.Slot0.kV = 0;
+				config.Slot0.kA = 0;
 			}
 			case SIMULATION -> {
 				config.Slot0.kP = 70;

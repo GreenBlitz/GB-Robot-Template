@@ -3,14 +3,13 @@ package frc.robot.hardware.phoenix6.leds;
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.CANdleConfiguration;
-import com.ctre.phoenix.led.ColorFlowAnimation;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.Phoenix6Util;
 
 public class CANdleWrapper extends CANdle {
 
-	private final int DEFAULT_CONFIG_NUMBER_OF_TRIES = 1;
+	private final int DEFAULT_CONFIG_NUMBER_OF_TRIES = 5;
 
 	private final int numberOfLeds;
 

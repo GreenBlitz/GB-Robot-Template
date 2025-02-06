@@ -1,6 +1,7 @@
 package frc.robot.subsystems.arm.factory;
 
 import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -8,6 +9,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -42,7 +44,7 @@ public class KrakenX60ArmBuilder {
 	private static final boolean IS_INVERTED = true;
 	private static final Rotation2d STARTING_POSITION = Rotation2d.fromDegrees(17);
 	private static final int NUMBER_OF_MOTORS = 1;
-	private static final double GEAR_RATIO =  450.0 / 7.0 ;
+	private static final double GEAR_RATIO = 450.0 / 7.0;
 	public static final double kG = 0;
 
 	protected static Arm build(String logPath) {
@@ -117,10 +119,10 @@ public class KrakenX60ArmBuilder {
 		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = ArmConstants.REVERSED_SOFTWARE_LIMIT.getRotations();
 		config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
 
-		config.Feedback.RotorToSensorRatio = GEAR_RATIO * 0;
-		config.Feedback.SensorToMechanismRatio = 1 * GEAR_RATIO;
+		config.Feedback.RotorToSensorRatio = GEAR_RATIO;
+		config.Feedback.SensorToMechanismRatio = 1;
 
-		config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor; //todo fused
+		config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
 		config.Feedback.FeedbackRemoteSensorID = IDs.CANCodersIDs.ARM.id();
 
 		return config;
@@ -147,14 +149,16 @@ public class KrakenX60ArmBuilder {
 	}
 
 	private static IAngleEncoder getEncoder(String logPath) {
-		return switch (Robot.ROBOT_TYPE) {
-			case REAL ->
-				new CANCoderEncoder(
+		if (Robot.ROBOT_TYPE.isReal()) {
+			CANCoderEncoder encoder = new CANCoderEncoder(
 					logPath + "/Encoder",
 					new CANcoder(IDs.CANCodersIDs.ARM.id(), IDs.CANCodersIDs.ARM.busChain().getChainName())
-				);
-			case SIMULATION -> new EmptyAngleEncoder(logPath + "/Encoder");
-		};
+			);
+			CANcoderConfiguration configuration = new CANcoderConfiguration();
+			configuration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+			return encoder;
+		}
+		return new EmptyAngleEncoder(logPath + "/Encoder");
 	}
 
 	private static InputSignal<Rotation2d> generateEncoderPositionSignal(IAngleEncoder encoder) {

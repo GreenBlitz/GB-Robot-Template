@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public class ArmConstants {
 
 	public static final Rotation2d FORWARD_SOFTWARE_LIMIT = Rotation2d.fromDegrees(205);
-	public static final Rotation2d REVERSED_SOFTWARE_LIMIT = Rotation2d.fromDegrees(-2);
+	public static final Rotation2d REVERSED_SOFTWARE_LIMIT = Rotation2d.fromDegrees(-7);
 	public static final double LENGTH_METERS = 0.3;
 	public static final double MASS_KG = 5;
 

@@ -5,11 +5,12 @@ Arm Calibrations
 
 - [x] motor ID 
 - [x] motor Buschain
-- [ ] encoder ID 
-- [ ] encoder Buschain
+- [x] encoder ID 
+- [x] encoder Buschain
 
 ##### Motor config
 
+- [ ] neutral mode
 - [X] is inverted
 - [X] gear ratio (use rotor to sensor and not sensor to mechanism)
 

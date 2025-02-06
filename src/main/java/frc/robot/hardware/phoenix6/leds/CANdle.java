@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.utils.alerts.Alert;
 
-
 public class CANdle {
 
 	private final CANdleWrapper ledStrip;

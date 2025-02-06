@@ -151,8 +151,8 @@ public class KrakenX60ArmBuilder {
 	private static IAngleEncoder getEncoder(String logPath) {
 		if (Robot.ROBOT_TYPE.isReal()) {
 			CANCoderEncoder encoder = new CANCoderEncoder(
-					logPath + "/Encoder",
-					new CANcoder(IDs.CANCodersIDs.ARM.id(), IDs.CANCodersIDs.ARM.busChain().getChainName())
+				logPath + "/Encoder",
+				new CANcoder(IDs.CANCodersIDs.ARM.id(), IDs.CANCodersIDs.ARM.busChain().getChainName())
 			);
 			CANcoderConfiguration configuration = new CANcoderConfiguration();
 			configuration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;

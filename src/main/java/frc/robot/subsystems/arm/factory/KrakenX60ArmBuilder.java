@@ -48,7 +48,7 @@ public class KrakenX60ArmBuilder {
 	private static final Rotation2d STARTING_POSITION = Rotation2d.fromDegrees(17);
 	private static final int NUMBER_OF_MOTORS = 1;
 	private static final double GEAR_RATIO = 450.0 / 7.0;
-	public static final double kG = 0.3;
+	public static final double kG = 0.255;
 
 	protected static Arm build(String logPath) {
 		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(
@@ -70,6 +70,8 @@ public class KrakenX60ArmBuilder {
 			.build(motor.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
 			.build(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+		Phoenix6DoubleSignal closed = Phoenix6SignalBuilder
+				.build(motor.getDevice().getClosedLoopReference(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 
 		IAngleEncoder encoder = getEncoder(logPath);
 
@@ -95,11 +97,13 @@ public class KrakenX60ArmBuilder {
 
 		switch (Robot.ROBOT_TYPE) {
 			case REAL -> {
-				config.Slot0.kP = 0;
+				config.Slot0.kP = 1;
 				config.Slot0.kI = 0;
 				config.Slot0.kD = 0;
-				config.Slot0.kS = 0;
+				config.Slot0.kS = 0.24;
 				config.Slot0.kG = kG;
+				config.Slot0.kV = 1.3768;
+				config.Slot0.kA = 3.2848;
 			}
 			case SIMULATION -> {
 				config.Slot0.kP = 70;

@@ -47,7 +47,7 @@ public class Arm extends GBSubsystem {
 
 		periodic();
 		resetByEncoderPosition();
-		setDefaultCommand(getCommandsBuilder().stayInPlace());
+//		setDefaultCommand(getCommandsBuilder().stayInPlace());
 	}
 
 	public ArmCommandsBuilder getCommandsBuilder() {

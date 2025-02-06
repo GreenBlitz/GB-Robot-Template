@@ -84,8 +84,8 @@ public class KrakenX60ArmBuilder {
 
 	public static SysIdRoutine.Config buildSysidConfig() {
 		return new SysIdRoutine.Config(
-			Volts.of(0.5).per(Second),
-			Volts.of(2),
+			Volts.of(3).per(Second),
+			Volts.of(8),
 			null,
 			state -> SignalLogger.writeString("state", state.toString())
 		);

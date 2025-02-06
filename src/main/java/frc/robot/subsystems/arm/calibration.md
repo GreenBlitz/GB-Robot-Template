@@ -10,7 +10,7 @@ Arm Calibrations
 
 ##### Motor config
 
-- [ ] neutral mode
+- [x] neutral mode
 - [X] is inverted
 - [X] gear ratio (use rotor to sensor and not sensor to mechanism)
 

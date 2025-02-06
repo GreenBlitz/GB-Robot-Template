@@ -4,7 +4,7 @@ Calibrations
 - [x] Motor: Id, Type
 - [x] Buschain
 - [x] Inverted
-- [ ] Neutral Mode
+- [x] Neutral Mode
 - [x] Gear Ratio
 - [x] Drum Diameter
 - [x] Min Position

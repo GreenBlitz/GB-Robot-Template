@@ -48,19 +48,19 @@ public class CANdle {
 		return ledStrip.setLEDs(red, green, blue);
 	}
 
-	public ErrorCode setColor(Color color, int startIndex, int amountOfLedsToAffect ){
+	public ErrorCode setColor(Color color, int startIndex, int amountOfLedsToAffect) {
 		return ledStrip.setColor(color, startIndex, amountOfLedsToAffect);
 	}
 
-	public ErrorCode setColor(Color color, int startIndex){
+	public ErrorCode setColor(Color color, int startIndex) {
 		return ledStrip.setColor(color, startIndex);
 	}
 
-	public ErrorCode setColor(Color color, double amountOfLedsToAffect){
+	public ErrorCode setColor(Color color, double amountOfLedsToAffect) {
 		return ledStrip.setColor(color, amountOfLedsToAffect);
 	}
 
-	public ErrorCode setColor(Color color){
+	public ErrorCode setColor(Color color) {
 		return ledStrip.setColor(color);
 	}
 
@@ -72,19 +72,19 @@ public class CANdle {
 		return ledStrip.animate(animation, animationSlot);
 	}
 
-	public ErrorCode animateColorFlowAnimation(Color color, int speed, int amountOdLedsToAffect, int startIndex){
+	public ErrorCode animateColorFlowAnimation(Color color, int speed, int amountOdLedsToAffect, int startIndex) {
 		return ledStrip.animateColorFlowAnimation(color, speed, amountOdLedsToAffect, startIndex);
 	}
 
-	public ErrorCode animateColorFlowAnimation(Color color, int speed, int amountOfLedsToAffect){
+	public ErrorCode animateColorFlowAnimation(Color color, int speed, int amountOfLedsToAffect) {
 		return ledStrip.animateColorFlowAnimation(color, speed, amountOfLedsToAffect);
 	}
 
-	public ErrorCode animateColorFlowAnimation(Color color, int speed, double startIndex){
+	public ErrorCode animateColorFlowAnimation(Color color, int speed, double startIndex) {
 		return ledStrip.animateColorFlowAnimation(color, speed, startIndex);
 	}
 
-	public ErrorCode animateColorFlowAnimation(Color color, int speed){
+	public ErrorCode animateColorFlowAnimation(Color color, int speed) {
 		return ledStrip.animateColorFlowAnimation(color, speed);
 	}
 

@@ -3,6 +3,7 @@ package frc.robot.hardware.phoenix6.leds;
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.led.Animation;
 import com.ctre.phoenix.led.CANdleConfiguration;
+import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.utils.alerts.Alert;
 
@@ -35,24 +36,56 @@ public class CANdle {
 		return ledStrip.getLastError();
 	}
 
-	public ErrorCode setAnimation(Animation animation) {
+	public ErrorCode setColor(int red, int green, int blue, int white, int startIndex, int amountOfLedsToAffect) {
+		return ledStrip.setLEDs(red, green, blue, white, startIndex, amountOfLedsToAffect);
+	}
+
+	public ErrorCode setColor(int red, int green, int blue, int startIndex, int amountOfLedsToAffect) {
+		return ledStrip.setLEDs(red, green, blue, 0, startIndex, amountOfLedsToAffect);
+	}
+
+	public ErrorCode setColor(int red, int green, int blue) {
+		return ledStrip.setLEDs(red, green, blue);
+	}
+
+	public ErrorCode setColor(Color color, int startIndex, int amountOfLedsToAffect ){
+		return ledStrip.setColor(color, startIndex, amountOfLedsToAffect);
+	}
+
+	public ErrorCode setColor(Color color, int startIndex){
+		return ledStrip.setColor(color, startIndex);
+	}
+
+	public ErrorCode setColor(Color color, double amountOfLedsToAffect){
+		return ledStrip.setColor(color, amountOfLedsToAffect);
+	}
+
+	public ErrorCode setColor(Color color){
+		return ledStrip.setColor(color);
+	}
+
+	public ErrorCode animate(Animation animation) {
 		return ledStrip.animate(animation);
 	}
 
-	public ErrorCode setAnimation(Animation animation, int animationSlot) {
+	public ErrorCode animate(Animation animation, int animationSlot) {
 		return ledStrip.animate(animation, animationSlot);
 	}
 
-	public ErrorCode setLEDs(int red, int green, int blue, int white, int startIndex, int amountOfLEDToApply) {
-		return ledStrip.setLEDs(red, green, blue, white, startIndex, amountOfLEDToApply);
+	public ErrorCode animateColorFlowAnimation(Color color, int speed, int amountOdLedsToAffect, int startIndex){
+		return ledStrip.animateColorFlowAnimation(color, speed, amountOdLedsToAffect, startIndex);
 	}
 
-	public ErrorCode setLEDs(int red, int green, int blue, int startIndex, int amountOfLEDToApply) {
-		return ledStrip.setLEDs(red, green, blue, 0, startIndex, amountOfLEDToApply);
+	public ErrorCode animateColorFlowAnimation(Color color, int speed, int amountOfLedsToAffect){
+		return ledStrip.animateColorFlowAnimation(color, speed, amountOfLedsToAffect);
 	}
 
-	public ErrorCode setLEDs(int red, int green, int blue) {
-		return ledStrip.setLEDs(red, green, blue);
+	public ErrorCode animateColorFlowAnimation(Color color, int speed, double startIndex){
+		return ledStrip.animateColorFlowAnimation(color, speed, startIndex);
+	}
+
+	public ErrorCode animateColorFlowAnimation(Color color, int speed){
+		return ledStrip.animateColorFlowAnimation(color, speed);
 	}
 
 	public ErrorCode clearAnimation(int animationSlot) {

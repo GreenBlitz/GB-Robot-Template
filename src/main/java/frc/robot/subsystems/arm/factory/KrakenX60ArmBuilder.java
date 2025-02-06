@@ -7,7 +7,10 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.signals.*;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.GravityTypeValue;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -65,17 +68,14 @@ public class KrakenX60ArmBuilder {
 		TalonFXMotor motor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ARM, buildSysidConfig(), buildArmSimulation());
 		motor.applyConfiguration(buildTalonFXConfiguration());
 
-		Phoenix6AngleSignal motorPositionSignal = Phoenix6SignalBuilder
-			.build(motor.getDevice().getPosition(), 250, AngleUnit.ROTATIONS);
-		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
-			.build(motor.getDevice().getMotorVoltage(), 250);
-		Phoenix6DoubleSignal closed = Phoenix6SignalBuilder
-			.build(motor.getDevice().getClosedLoopReference(), 250);
-		Phoenix6DoubleSignal velocity = Phoenix6SignalBuilder
-				.build(motor.getDevice().getVelocity(), 250);
+		Phoenix6AngleSignal motorPositionSignal = Phoenix6SignalBuilder.build(motor.getDevice().getPosition(), 250, AngleUnit.ROTATIONS);
+		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder.build(motor.getDevice().getMotorVoltage(), 250);
+
+		// For them to appear need to create
+		Phoenix6DoubleSignal closedReference = Phoenix6SignalBuilder.build(motor.getDevice().getClosedLoopReference(), 250);
+		Phoenix6DoubleSignal velocity = Phoenix6SignalBuilder.build(motor.getDevice().getVelocity(), 250);
 
 		IAngleEncoder encoder = getEncoder(logPath);
-
 		InputSignal<Rotation2d> encoderPositionSignal = generateEncoderPositionSignal(encoder);
 
 		return new Arm(logPath, motor, positionRequest, voltageRequest, motorPositionSignal, voltageSignal, encoder, encoderPositionSignal);
@@ -83,25 +83,18 @@ public class KrakenX60ArmBuilder {
 
 
 	public static SysIdRoutine.Config buildSysidConfig() {
-		return new SysIdRoutine.Config(
-			Volts.of(3).per(Second),
-			Volts.of(8),
-			null,
-			state -> SignalLogger.writeString("state", state.toString())
-		);
+		return new SysIdRoutine.Config(Volts.of(3).per(Second), Volts.of(8), null, state -> SignalLogger.writeString("state", state.toString()));
 	}
 
 	private static TalonFXConfiguration buildTalonFXConfiguration() {
 		TalonFXConfiguration config = new TalonFXConfiguration();
-
-		config.MotorOutput.Inverted = IS_INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 
 		switch (Robot.ROBOT_TYPE) {
 			case REAL -> {
 				config.Slot0.kP = 0;
 				config.Slot0.kI = 0;
 				config.Slot0.kD = 0;
-				config.Slot0.kS = 0.24;
+				config.Slot0.kS = 0;
 				config.Slot0.kG = kG;
 				config.Slot0.kV = 0;
 				config.Slot0.kA = 0;
@@ -114,8 +107,9 @@ public class KrakenX60ArmBuilder {
 				config.Slot0.kG = 0;
 			}
 		}
-
 		config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
+
+		config.MotorOutput.Inverted = IS_INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 
 		config.CurrentLimits.SupplyCurrentLimit = 30;
 		config.CurrentLimits.SupplyCurrentLimitEnable = true;

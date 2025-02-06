@@ -44,8 +44,7 @@ public class Arm extends GBSubsystem {
 		this.encoder = encoder;
 		this.encoderPositionSignal = encoderPositionSignal;
 		this.commandsBuilder = new ArmCommandsBuilder(this);
-		this.sysIdCalibrator = new SysIdCalibrator(motor.getSysidConfigInfo(), this,
-                this::setVoltage);
+		this.sysIdCalibrator = new SysIdCalibrator(motor.getSysidConfigInfo(), this, this::setVoltage);
 
 		periodic();
 		resetByEncoderPosition();
@@ -109,13 +108,9 @@ public class Arm extends GBSubsystem {
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick) {
-		/*
-		 * Calibrate kG using phoenix tuner by setting the voltage
-		 */
+		// Calibrate kG using phoenix tuner by setting the voltage
 
-		/*
-		 * Check limits
-		 */
+		// Check limits
 		joystick.R1.whileTrue(
 			commandsBuilder.setPower(
 				() -> joystick.getAxisValue(Axis.LEFT_Y) * ArmConstants.CALIBRATION_MAX_POWER
@@ -123,22 +118,16 @@ public class Arm extends GBSubsystem {
 			)
 		);
 
-		/*
-		 * Calibrate feed forward using sys id:
-		 */
+		// Calibrate feed forward using sys id:
 		sysIdCalibrator.setAllButtonsForCalibration(joystick);
 
-		/*
-		 * Calibrate PID using phoenix tuner and these bindings:
-		 */
+		// Calibrate PID using phoenix tuner and these bindings:
 		joystick.POV_UP.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(-40)));
 		joystick.POV_DOWN.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(0)));
 		joystick.POV_LEFT.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(90)));
 		joystick.POV_RIGHT.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(200)));
 
-		/*
-		 * Calibrate max acceleration and cruise velocity by the equations: max acceleration = (12 + Ks)/2kA, cruise velocity = (12 + Ks)/kV
-		 */
+		// Calibrate max acceleration and cruise velocity by the equations: max acceleration = (12 + Ks)/2kA, cruise velocity =(12 + Ks)/kV
 	}
 
 }

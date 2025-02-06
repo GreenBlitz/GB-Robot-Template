@@ -49,7 +49,7 @@ public enum Branch {
 			case C -> isLeft ? F : E;
 			case D -> isLeft ? H : G;
 			case E -> isLeft ? J : I;
-			case F -> isLeft ? K: L;
+			case F -> isLeft ? K : L;
 		};
 	}
 

@@ -16,7 +16,6 @@ import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.pose.PoseUtil;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 
@@ -169,8 +168,7 @@ public class RobotCommander extends GBSubsystem {
 					superstructure.idle().until(() -> isReadyToOpenSuperstructure(scoreLevel, ScoringHelpers.getTargetBranch())),
 					superstructure.preScore(scoreLevel)
 				),
-				swerve.getCommandsBuilder().driveByDriversInputs(
-						SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
 			),
 			scoreLevel.getRobotPreScore()
 		);

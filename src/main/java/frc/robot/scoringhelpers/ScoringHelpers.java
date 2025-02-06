@@ -62,10 +62,15 @@ public class ScoringHelpers {
 	public static Command scoreToChosenScoreLevel(Robot robot) {
 		return new SelectCommand<>(
 			Map.of(
-				ScoreLevel.L1, robot.getRobotCommander().setState(RobotState.L1),
-				ScoreLevel.L2, robot.getRobotCommander().setState(RobotState.L2),
-				ScoreLevel.L3, robot.getRobotCommander().setState(RobotState.L3),
-				ScoreLevel.L4, robot.getRobotCommander().setState(RobotState.L4)),
+				ScoreLevel.L1,
+				robot.getRobotCommander().setState(RobotState.L1),
+				ScoreLevel.L2,
+				robot.getRobotCommander().setState(RobotState.L2),
+				ScoreLevel.L3,
+				robot.getRobotCommander().setState(RobotState.L3),
+				ScoreLevel.L4,
+				robot.getRobotCommander().setState(RobotState.L4)
+			),
 			() -> targetScoreLevel
 		);
 	}
@@ -73,10 +78,15 @@ public class ScoringHelpers {
 	public static Command preScoreToChosenScoreLevel(Robot robot) {
 		return new SelectCommand<>(
 			Map.of(
-				ScoreLevel.L1, robot.getRobotCommander().setState(RobotState.PRE_L1),
-				ScoreLevel.L2, robot.getRobotCommander().setState(RobotState.PRE_L2),
-				ScoreLevel.L3, robot.getRobotCommander().setState(RobotState.PRE_L3),
-				ScoreLevel.L4, robot.getRobotCommander().setState(RobotState.PRE_L4)),
+				ScoreLevel.L1,
+				robot.getRobotCommander().setState(RobotState.PRE_L1),
+				ScoreLevel.L2,
+				robot.getRobotCommander().setState(RobotState.PRE_L2),
+				ScoreLevel.L3,
+				robot.getRobotCommander().setState(RobotState.PRE_L3),
+				ScoreLevel.L4,
+				robot.getRobotCommander().setState(RobotState.PRE_L4)
+			),
 			() -> targetScoreLevel
 		);
 	}

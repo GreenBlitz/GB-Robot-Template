@@ -78,7 +78,7 @@ public class Robot {
 
 		this.simulationManager = new SimulationManager("SimulationManager", this);
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
-		this.candle = new CANdle(RobotConstants.DEVICE_ID);
+		this.candle = new CANdle(IDs.CANDle.CANDLE_ID.id(),IDs.CANDle.CANDLE_ID.busChain().getChainName());
 	}
 
 	public void periodic() {

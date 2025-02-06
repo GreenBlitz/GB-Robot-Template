@@ -6,6 +6,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.constants.field.Field;
 import frc.constants.field.enums.Branch;
+import frc.constants.field.enums.ReefSide;
 import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.superstructure.ScoreLevel;
@@ -161,6 +162,14 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
+	public Command getSwerveAimAssistByBranchAndPosition(Branch targetBranch) {
+		Pose2d robotPose = robot.getPoseEstimator().getEstimatedPose();
+		if (robotPose.getTranslation().getDistance(ScoringHelpers.getRobotScoringPose(targetBranch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS).getTranslation()) < 5) {
+			return swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH));
+		}
+		return swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE);
+	}
+
 	private Command genericPreScore(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
@@ -168,7 +177,7 @@ public class RobotCommander extends GBSubsystem {
 					superstructure.idle().until(() -> isReadyToOpenSuperstructure(scoreLevel, ScoringHelpers.targetBranch)),
 					superstructure.preScore(scoreLevel)
 				),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
+				getSwerveAimAssistByBranchAndPosition(ScoringHelpers.targetBranch)
 			),
 			scoreLevel.getRobotPreScore()
 		);
@@ -198,7 +207,7 @@ public class RobotCommander extends GBSubsystem {
 					superstructure.preScore(scoreLevel).until(() -> isPreScoreReady(scoreLevel, ScoringHelpers.targetBranch)),
 					superstructure.score(scoreLevel)
 				),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
+				getSwerveAimAssistByBranchAndPosition(ScoringHelpers.targetBranch)
 			).until(superstructure::isCoralOut),
 			scoreLevel.getRobotScore()
 		);

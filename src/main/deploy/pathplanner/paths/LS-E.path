@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9500000000000002,
-        "y": 1.4607499999999993
+        "x": 2.3985000000000003,
+        "y": 0.9147499999999991
       },
       "isLocked": false,
       "linkedName": "LS"
@@ -21,7 +21,7 @@
       },
       "prevControl": {
         "x": 5.11875,
-        "y": 2.2407499999999994
+        "y": 2.35775
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,20 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "IDLE",
+      "waypointRelativePos": 0.21531728665207533,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "PRE_SCORE",
+      "waypointRelativePos": 0.7702407002188192,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.2,
     "maxAcceleration": 2.0,
@@ -42,7 +55,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 120.0
+    "rotation": 119.99999999999999
   },
   "reversed": false,
   "folder": null,

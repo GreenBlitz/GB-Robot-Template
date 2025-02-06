@@ -20,8 +20,8 @@
         "y": 5.04
       },
       "prevControl": {
-        "x": 5.226,
-        "y": 6.0432500000000005
+        "x": 5.343,
+        "y": 6.2675
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,20 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "IDLE",
+      "waypointRelativePos": 0.22582056892779018,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "PRE_SCORE",
+      "waypointRelativePos": 0.8735229759299782,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.2,
     "maxAcceleration": 2.0,
@@ -42,7 +55,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -120.0
+    "rotation": -119.99999999999999
   },
   "reversed": false,
   "folder": null,

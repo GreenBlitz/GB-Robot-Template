@@ -47,7 +47,20 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "IDLE",
+      "waypointRelativePos": 0.19256017505471157,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "INTAKE",
+      "waypointRelativePos": 1.6770240700218788,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.2,
     "maxAcceleration": 2.0,

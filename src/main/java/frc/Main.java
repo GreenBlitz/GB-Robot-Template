@@ -4,7 +4,7 @@
 
 package frc;
 
-import com.ctre.phoenix.ErrorCode;
+import edu.wpi.first.wpilibj.RobotBase;
 
 
 /**
@@ -19,8 +19,7 @@ public final class Main {
 	 * <p>If you change your main robot class, change the parameter type.
 	 */
 	public static void main(String... args) {
-		System.out.println(ErrorCode.class);
-		// RobotBase.startRobot(RobotManager::new);
+		RobotBase.startRobot(RobotManager::new);
 	}
 
 }

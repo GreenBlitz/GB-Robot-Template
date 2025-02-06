@@ -3,6 +3,7 @@ package frc.robot.subsystems.arm;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
+import frc.robot.Robot;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.interfaces.IRequest;
@@ -60,7 +61,7 @@ public class Arm extends GBSubsystem {
 	}
 
 	private double getKgVoltage() {
-		return KrakenX60ArmBuilder.kG * getPosition().getCos();
+		return Robot.ROBOT_TYPE.isReal() ? KrakenX60ArmBuilder.kG * getPosition().getCos() : 0;
 	}
 
 	@Override

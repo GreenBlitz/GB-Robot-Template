@@ -8,32 +8,28 @@ import java.util.function.Supplier;
 
 public class Phoenix6Util {
 
-	private interface Getter<T> {
-		T get();
-    }
-
 	public static <T> StatusSignal<T> getRefreshedSignal(boolean refresh, StatusSignal<T> signal) {
 		return refresh ? signal.refresh() : signal;
 	}
 
 //	what was before:
-	public static StatusCode checkWithRetry(Getter<StatusCode> statusCodeSupplier, int numberOfTries) {
-		for (int i = 0; i < numberOfTries - 1; i++) {
-			if (statusCodeSupplier.get().isOK()) {
-				return StatusCode.OK;
-			}
-		}
-		return statusCodeSupplier.get();
-	}
-
-	public static ErrorCode checkWithRetry(Getter<ErrorCode> errorCodeSupplier, int numberOfTries) {
-		for (int i = 0; i < numberOfTries - 1; i++) {
-			if (errorCodeSupplier.get() == ErrorCode.OK) {
-				return ErrorCode.OK;
-			}
-		}
-		return errorCodeSupplier.get();
-	}
+//	public static StatusCode checkWithRetry(Getter<StatusCode> statusCodeSupplier, int numberOfTries) {
+//		for (int i = 0; i < numberOfTries - 1; i++) {
+//			if (statusCodeSupplier.get().isOK()) {
+//				return StatusCode.OK;
+//			}
+//		}
+//		return statusCodeSupplier.get();
+//	}
+//
+//	public static ErrorCode checkWithRetry(Getter<ErrorCode> errorCodeSupplier, int numberOfTries) {
+//		for (int i = 0; i < numberOfTries - 1; i++) {
+//			if (errorCodeSupplier.get() == ErrorCode.OK) {
+//				return ErrorCode.OK;
+//			}
+//		}
+//		return errorCodeSupplier.get();
+//	}
 
 // option one:
 //	public static <T> T checkWithRetry(Supplier<T> tCodeSupplier, int numberOfTries) {
@@ -54,14 +50,13 @@ public class Phoenix6Util {
 //		return tCodeSupplier.get();
 //	}
 //	option 2:
-//	public static <T> T checkWithRetry(Supplier<T> tCodeSupplier, int numberOfTries) {
-//		Class<?> aClass = tCodeSupplier.get().getClass();
-//		for (int i = 0; i < numberOfTries - 1; i++) {
-//			if (tCodeSupplier.get() == (aClass == StatusCode.class ? StatusCode.OK : ErrorCode.OK)) {
-//				return (T) (aClass == StatusCode.class ? StatusCode.OK : ErrorCode.OK);
-//			}
-//		}
-//		return tCodeSupplier.get();
-//	}
+	public static <T> T checkWithRetry(Supplier<T> tCodeSupplier, int numberOfTries) {
+		for (int i = 0; i < numberOfTries - 1; i++) {
+			if (tCodeSupplier.get() == (tCodeSupplier.get() instanceof StatusCode ? StatusCode.OK : ErrorCode.OK)) {
+				return (T) (tCodeSupplier.get() instanceof StatusCode ? StatusCode.OK : ErrorCode.OK);
+			}
+		}
+		return tCodeSupplier.get();
+	}
 
 }

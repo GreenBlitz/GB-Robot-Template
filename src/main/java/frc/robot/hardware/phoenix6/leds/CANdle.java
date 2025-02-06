@@ -12,8 +12,8 @@ public class CANdle {
 	private final CANdleWrapper ledStrip;
 	private final String logPath;
 
-	public CANdle(Phoenix6DeviceID deviceID) {
-		ledStrip = new CANdleWrapper(deviceID);
+	public CANdle(Phoenix6DeviceID deviceID, int numberOfLeds) {
+		ledStrip = new CANdleWrapper(deviceID, numberOfLeds);
 		this.logPath = deviceID.busChain().getChainName();
 	}
 

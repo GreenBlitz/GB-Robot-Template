@@ -6,7 +6,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.constants.field.Field;
 import frc.constants.field.enums.Branch;
-import frc.constants.field.enums.ReefSide;
 import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.superstructure.ScoreLevel;
@@ -19,6 +18,7 @@ import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.pose.PoseUtil;
 
 import java.util.Set;
+import java.util.function.Supplier;
 
 public class RobotCommander extends GBSubsystem {
 
@@ -162,12 +162,18 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	public Command getSwerveAimAssistByBranchAndPosition(Branch targetBranch) {
-		Pose2d robotPose = robot.getPoseEstimator().getEstimatedPose();
-		if (robotPose.getTranslation().getDistance(ScoringHelpers.getRobotScoringPose(targetBranch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS).getTranslation()) < 5) {
-			return swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH));
-		}
-		return swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE);
+	public Command getSwerveAimAssistByBranchAndPosition(Branch targetBranch, Supplier<Pose2d> robotPoseSupplier) {
+		return new ConditionalCommand(
+			swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH)),
+			swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE),
+			() -> robotPoseSupplier.get()
+				.getTranslation()
+				.getDistance(
+					ScoringHelpers.getRobotScoringPose(targetBranch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
+						.getTranslation()
+				)
+				< 5
+		);
 	}
 
 	private Command genericPreScore(ScoreLevel scoreLevel) {
@@ -177,7 +183,7 @@ public class RobotCommander extends GBSubsystem {
 					superstructure.idle().until(() -> isReadyToOpenSuperstructure(scoreLevel, ScoringHelpers.targetBranch)),
 					superstructure.preScore(scoreLevel)
 				),
-				getSwerveAimAssistByBranchAndPosition(ScoringHelpers.targetBranch)
+				getSwerveAimAssistByBranchAndPosition(ScoringHelpers.targetBranch, robot.getPoseEstimator()::getEstimatedPose)
 			),
 			scoreLevel.getRobotPreScore()
 		);
@@ -207,7 +213,7 @@ public class RobotCommander extends GBSubsystem {
 					superstructure.preScore(scoreLevel).until(() -> isPreScoreReady(scoreLevel, ScoringHelpers.targetBranch)),
 					superstructure.score(scoreLevel)
 				),
-				getSwerveAimAssistByBranchAndPosition(ScoringHelpers.targetBranch)
+				getSwerveAimAssistByBranchAndPosition(ScoringHelpers.targetBranch, robot.getPoseEstimator()::getEstimatedPose)
 			).until(superstructure::isCoralOut),
 			scoreLevel.getRobotScore()
 		);

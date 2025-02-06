@@ -31,7 +31,7 @@ public class CANdleWrapper extends CANdle {
 	}
 
 	public ErrorCode setColor(Color color, int startIndex, int amountOfLedsToAffect) {
-		return this.setLEDs((int) color.red, (int) color.green, (int) color.green, 0, startIndex, amountOfLedsToAffect);
+		return this.setLEDs((int) color.red, (int) color.green, (int) color.blue, 0, startIndex, amountOfLedsToAffect);
 	}
 
 	public ErrorCode setColor(Color color, int startIndex) {

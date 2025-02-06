@@ -1,6 +1,6 @@
 package frc.constants.field.enums;
 
-import frc.utils.Side;
+import frc.utils.pose.Side;
 
 public enum ReefSide {
 

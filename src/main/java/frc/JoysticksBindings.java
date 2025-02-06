@@ -13,7 +13,7 @@ import frc.robot.statemachine.RobotState;
 import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.utils.Side;
+import frc.utils.pose.Side;
 import frc.utils.utilcommands.ExecuteEndCommand;
 
 public class JoysticksBindings {

@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import frc.constants.field.Field;
 import frc.constants.field.enums.Branch;
@@ -13,11 +12,10 @@ import frc.constants.field.enums.ReefSide;
 import frc.robot.Robot;
 import frc.robot.statemachine.RobotState;
 import frc.robot.statemachine.superstructure.ScoreLevel;
-import frc.utils.Side;
+import frc.utils.pose.Side;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Map;
-import java.util.Set;
 
 public class ScoringHelpers {
 

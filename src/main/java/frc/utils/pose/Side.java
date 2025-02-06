@@ -2,8 +2,8 @@ package frc.utils.pose;
 
 public enum Side {
 
-	LEFT,
-	MIDDLE,
-	RIGHT
+    LEFT,
+    MIDDLE,
+    RIGHT
 
 }

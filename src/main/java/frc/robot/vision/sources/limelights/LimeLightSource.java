@@ -50,6 +50,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	private double captureLatency;
 	private Filter<? super AprilTagVisionData> filter;
 	private RobotAngleValues robotAngleValues;
+	private boolean isSeeingTag;
 
 	protected LimeLightSource(
 		String cameraNetworkTablesName,
@@ -77,6 +78,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		this.captureLatencyEntry = getLimelightNetworkTableEntry("cl");
 
 		this.robotAngleValues = new RobotAngleValues();
+		this.isSeeingTag = false;
 		AlertManager.addAlert(
 			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1)
 		);
@@ -99,7 +101,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		standardDeviationsArray = standardDeviations.getDoubleArray(new double[Pose3dComponentsValue.POSE3D_COMPONENTS_AMOUNT]);
 		computingPipeLineLatency = computingPipelineLatencyEntry.getDouble(0D);
 		captureLatency = captureLatencyEntry.getDouble(0D);
-
+		isSeeingTag = getAprilTagID() != -1;
 		log();
 	}
 
@@ -109,7 +111,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 
 	protected Optional<Pair<Pose3d, Double>> getUpdatedPose3DEstimation() {
 		int id = getAprilTagID();
-		if (id == VisionConstants.NO_APRILTAG_ID) {
+		if (!isSeeingTag || id == -1) {
 			return Optional.empty();
 		}
 

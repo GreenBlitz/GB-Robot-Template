@@ -2,6 +2,7 @@ package frc.robot.subsystems.swerve.factories.modules.steer;
 
 import frc.robot.IDs;
 import frc.robot.hardware.interfaces.ControllableMotor;
+import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.subsystems.swerve.module.ModuleConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
@@ -18,7 +19,7 @@ public class SteerFactory {
 			case FRONT_RIGHT ->
 				Falcon500SteerBuilder.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_FRONT_RIGHT_STEER, IDs.CANCodersIDs.SWERVE_FRONT_RIGHT, true);
 			case BACK_LEFT ->
-				Falcon500SteerBuilder.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_BACK_LEFT_STEER, IDs.CANCodersIDs.SWERVE_BACK_LEFT, false);
+				Falcon500SteerBuilder.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_BACK_LEFT_STEER, new Phoenix6DeviceID(0), false);
 			case BACK_RIGHT ->
 				Falcon500SteerBuilder.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_BACK_RIGHT_STEER, IDs.CANCodersIDs.SWERVE_BACK_RIGHT, true);
 		};

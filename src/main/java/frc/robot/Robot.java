@@ -4,6 +4,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.events.EventTrigger;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -25,14 +26,19 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
+import frc.robot.vision.VisionFilters;
+import frc.robot.vision.data.AprilTagVisionData;
+import frc.robot.vision.data.VisionData;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
 import frc.robot.vision.sources.limelights.DynamicSwitchingLimelight;
 import frc.utils.AngleUnit;
 import frc.utils.DriverStationUtil;
+import frc.utils.Filter;
 import frc.utils.auto.AutonomousChooser;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.battery.BatteryUtil;
+import frc.utils.math.ToleranceMath;
 
 import java.util.function.Supplier;
 
@@ -47,6 +53,7 @@ public class Robot {
 
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
+	private final RobotHeadingEstimator headingEstimator;
 	private final Superstructure superStructure;
 
 	private AutonomousChooser testAutosChooser;
@@ -72,7 +79,7 @@ public class Robot {
 			new Rotation2d()
 		);
 
-		RobotHeadingEstimator headingEstimator = new RobotHeadingEstimator(
+		this.headingEstimator = new RobotHeadingEstimator(
 			RobotHeadingEstimatorConstants.DEFAULT_HEADING_ESTIMATOR_LOGPATH,
 			new Rotation2d(),
 			new Rotation2d(),
@@ -88,12 +95,12 @@ public class Robot {
 				"limelight-back",
 				VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
 				"CameraForPoseEstimating",
-				VisionConstants.DEFAULT_VISION_FILTER,
+				VisionFilters.isYawAtAngle(headingEstimator::getEstimatedHeading, Rotation2d.fromDegrees(5)).and(VisionConstants.DEFAULT_VISION_FILTER),
 				new Pose3d(new Translation3d(0.07, -0.24, 0.54), AngleUnit.DEGREES.toRotation3d(0, -16, 0))
 			)
 		);
 
-		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+		swerve.setHeadingSupplier(headingEstimator::getEstimatedHeading);
 		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
 
 		this.superStructure = new Superstructure(swerve, poseEstimator, headingEstimator, multiAprilTagVisionSources);
@@ -109,8 +116,11 @@ public class Robot {
 		Command preIntakeCommand = superStructure.setState(RobotState.PRE_INTAKE);
 
 		swerve.configPathPlanner(
-			poseEstimator::getEstimatedPose,
-			poseEstimator::resetPose,
+			() -> new Pose2d(poseEstimator.getEstimatedPose().getTranslation(), headingEstimator.getEstimatedHeading()),
+			pose -> {
+				poseEstimator.resetPose(pose);
+				headingEstimator.reset(pose.getRotation());
+			},
 			PathPlannerUtil.getGuiRobotConfig().orElse(AutonomousConstants.SYNCOPA_ROBOT_CONFIG)
 		);
 

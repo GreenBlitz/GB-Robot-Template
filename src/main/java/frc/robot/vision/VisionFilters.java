@@ -8,7 +8,16 @@ import frc.robot.vision.data.VisionData;
 import frc.utils.Filter;
 import frc.utils.math.ToleranceMath;
 
+import java.util.function.Supplier;
+
 public class VisionFilters {
+
+	public static Filter<VisionData> isYawAtAngle(Supplier<Rotation2d> yawSupplier, Rotation2d yawTolerance) {
+		return new Filter<>(
+			visionData -> ToleranceMath
+				.isNearWrapped(yawSupplier.get(), Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getZ()), yawTolerance)
+		);
+	}
 
 	public static Filter<VisionData> isPitchAtAngle(Rotation2d wantedPitch, Rotation2d pitchTolerance) {
 		return new Filter<>(

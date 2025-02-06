@@ -58,8 +58,8 @@ class Falcon500SteerBuilder {
 		steerConfig.CurrentLimits.StatorCurrentLimit = 30;
 		steerConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
-		steerConfig.Feedback.RotorToSensorRatio = GEAR_RATIO;
-		steerConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+		steerConfig.Feedback.SensorToMechanismRatio = GEAR_RATIO;
+		steerConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
 
 		steerConfig.Slot0.kS = 0.19648;
 		steerConfig.Slot0.kV = 2.5763;

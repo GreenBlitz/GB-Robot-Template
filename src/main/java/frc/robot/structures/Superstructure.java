@@ -45,6 +45,7 @@ public class Superstructure {
 		}
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 		poseEstimator.updateVision(multiAprilTagVisionSources.getFilteredVisionData());
+		headingEstimator.log();
 	}
 
 

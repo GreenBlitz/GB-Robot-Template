@@ -1,5 +1,6 @@
 package frc.robot.poseestimator.WPILibPoseEstimator;
 
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -7,6 +8,8 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.Odometry;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.OdometryData;
 import frc.robot.subsystems.GBSubsystem;
@@ -110,10 +113,16 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	}
 
 	private void addVisionMeasurement(AprilTagVisionData visionData) {
+		Matrix<N3, N1> stdDev = WPILibPoseEstimatorConstants.VISION_STANDARD_DEVIATIONS_TRANSFORM.apply(visionData).asColumnVector();
+		Logger.recordOutput(getLogPath() + "visionStdDev", new double[] {
+			stdDev.get(0,0),
+			stdDev.get(1,0),
+			stdDev.get(2,0)
+		});
 		poseEstimator.addVisionMeasurement(
 			visionData.getEstimatedPose().toPose2d(),
 			visionData.getTimestamp(),
-			WPILibPoseEstimatorConstants.VISION_STANDARD_DEVIATIONS_TRANSFORM.apply(visionData).asColumnVector()
+			stdDev
 		);
 		this.lastVisionData = visionData;
 	}

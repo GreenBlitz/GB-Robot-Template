@@ -16,7 +16,7 @@ Arm Calibrations
 
 ##### Encoder config
 
-- [ ] is inverted
+- [x] is inverted
 
 ##### Limits 
 
@@ -29,7 +29,7 @@ Arm Calibrations
 
 ##### Feed Forward 
 
-- [x] kS
+- [ ] kS
 - [ ] kG
 
 ##### PID 

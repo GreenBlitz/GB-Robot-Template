@@ -156,6 +156,9 @@ public class KrakenX60ArmBuilder {
 			);
 			CANcoderConfiguration configuration = new CANcoderConfiguration();
 			configuration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+
+			encoder.getDevice().getConfigurator().apply(configuration);
+
 			return encoder;
 		}
 		return new EmptyAngleEncoder(logPath + "/Encoder");

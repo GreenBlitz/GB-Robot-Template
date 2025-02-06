@@ -1,5 +1,7 @@
 package frc.robot.subsystems.endeffector;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.joysticks.SmartJoystick;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.ControllableMotor;
@@ -17,6 +19,7 @@ public class EndEffector extends GBSubsystem {
 	private final IDigitalInput backBeamBreaker;
 	private final DigitalInputInputsAutoLogged backBeamBreakerInputs;
 	private final EndEffectorCommandsBuilder commandsBuilder;
+	private double calibrationPower = 0;
 
 	public EndEffector(
 		String logPath,
@@ -92,6 +95,15 @@ public class EndEffector extends GBSubsystem {
 
 	protected void setPower(double power) {
 		roller.setPower(power);
+	}
+
+	public void applyCalibrationsBindings(SmartJoystick joystick) {
+		joystick.R1.whileTrue(commandsBuilder.setPower(() -> calibrationPower));
+
+		joystick.B.onTrue(new InstantCommand(() -> calibrationPower = Math.max(calibrationPower - 0.01, -1)));
+		joystick.X.onTrue(new InstantCommand(() -> calibrationPower = Math.min(calibrationPower + 0.01, 1)));
+		joystick.A.onTrue(new InstantCommand(() -> calibrationPower = Math.max(calibrationPower - 0.1, -1)));
+		joystick.Y.onTrue(new InstantCommand(() -> calibrationPower = Math.min(calibrationPower + 0.1, 1)));
 	}
 
 }

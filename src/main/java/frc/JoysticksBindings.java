@@ -111,6 +111,7 @@ public class JoysticksBindings {
 	private static void fourthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = FOURTH_JOYSTICK;
 		// bindings...
+		robot.getElevator().applyCalibrationBindings(usedJoystick);
 	}
 
 	private static void fifthJoystickButtons(Robot robot) {
@@ -121,7 +122,8 @@ public class JoysticksBindings {
 
 	private static void sixthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SIXTH_JOYSTICK;
-		// bindings...
+
+		robot.getEndEffector().applyCalibrationsBindings(usedJoystick);
 	}
 
 }

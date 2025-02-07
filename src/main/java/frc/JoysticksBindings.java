@@ -93,13 +93,12 @@ public class JoysticksBindings {
 		usedJoystick.X.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L3));
 		usedJoystick.Y.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4));
 
-		usedJoystick.R1.onTrue(new InstantCommand(ScoringHelpers::toggleLeftBranch));
-		usedJoystick.POV_DOWN.onTrue(new InstantCommand(ScoringHelpers::toggleTargetCoralStation));
-		usedJoystick.L1.onTrue(new InstantCommand(ScoringHelpers::toggleFarReefSide));
+		usedJoystick.R1.onTrue(new InstantCommand(ScoringHelpers::toggleIsLeftBranch));
+		usedJoystick.L1.onTrue(new InstantCommand(ScoringHelpers::toggleIsFarReefHalf));
 
-		usedJoystick.POV_UP.onTrue(new InstantCommand(() -> ScoringHelpers.setTargetReefSide(Side.MIDDLE)));
-		usedJoystick.POV_LEFT.onTrue(new InstantCommand(() -> ScoringHelpers.setTargetReefSide(Side.LEFT)));
-		usedJoystick.POV_RIGHT.onTrue(new InstantCommand(() -> ScoringHelpers.setTargetReefSide(Side.RIGHT)));
+		usedJoystick.POV_UP.onTrue(new InstantCommand(() -> ScoringHelpers.setTargetSideForReef(Side.MIDDLE)));
+		usedJoystick.POV_LEFT.onTrue(new InstantCommand(() -> ScoringHelpers.setTargetSideForReef(Side.LEFT)));
+		usedJoystick.POV_RIGHT.onTrue(new InstantCommand(() -> ScoringHelpers.setTargetSideForReef(Side.RIGHT)));
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {

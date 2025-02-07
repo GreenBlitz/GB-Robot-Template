@@ -38,7 +38,6 @@ import frc.robot.subsystems.arm.ArmConstants;
 import frc.utils.alerts.Alert;
 import frc.utils.math.AngleUnit;
 
-import java.util.function.Supplier;
 
 import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Volts;
@@ -58,12 +57,7 @@ public class KrakenX60ArmBuilder {
 		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(new MotionMagicVoltage(0), 0, ENABLE_FOC);
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), ENABLE_FOC);
 
-		TalonFXMotor motor = new TalonFXMotor(
-			logPath,
-			IDs.TalonFXIDs.ARM,
-			buildSysidConfig(),
-			buildArmSimulation()
-		);
+		TalonFXMotor motor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ARM, buildSysidConfig(), buildArmSimulation());
 		motor.applyConfiguration(buildTalonFXConfiguration());
 
 		Phoenix6AngleSignal motorPositionSignal = Phoenix6SignalBuilder
@@ -82,16 +76,7 @@ public class KrakenX60ArmBuilder {
 		IAngleEncoder encoder = getEncoder(logPath);
 		InputSignal<Rotation2d> encoderPositionSignal = generateEncoderPositionSignal(encoder);
 
-		return new Arm(
-			logPath,
-			motor,
-			positionRequest,
-			voltageRequest,
-			motorPositionSignal,
-			voltageSignal,
-			encoder,
-			encoderPositionSignal
-		);
+		return new Arm(logPath, motor, positionRequest, voltageRequest, motorPositionSignal, voltageSignal, encoder, encoderPositionSignal);
 	}
 
 

@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
+import frc.robot.Robot;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.ControllableMotor;
@@ -62,11 +63,7 @@ public class Elevator extends GBSubsystem {
 		hasBeenResetBySwitch = false;
 
 		this.commandsBuilder = new ElevatorCommandsBuilder(this);
-		this.sysIdCalibrator = new SysIdCalibrator(
-			rightMotor.getSysidConfigInfo(),
-			this,
-			(voltage) -> setVoltage(voltage + KrakenX60ElevatorBuilder.kG)
-		);
+		this.sysIdCalibrator = new SysIdCalibrator(rightMotor.getSysidConfigInfo(), this, (voltage) -> setVoltage(voltage + getKgVoltage()));
 
 		resetMotors(ElevatorConstants.MINIMUM_HEIGHT_METERS);
 		periodic();
@@ -83,17 +80,18 @@ public class Elevator extends GBSubsystem {
 		 */
 		sysIdCalibrator.setAllButtonsForCalibration(joystick);
 
-		/*
-		 * PID Testing
-		 */
-		joystick.POV_DOWN.onTrue(commandsBuilder.setTargetPositionMeters(0.1));
-		joystick.POV_LEFT.onTrue(commandsBuilder.setTargetPositionMeters(0.36));
-		joystick.POV_RIGHT.onTrue(commandsBuilder.setTargetPositionMeters(0.5));
-		joystick.POV_UP.onTrue(commandsBuilder.setTargetPositionMeters(0.8));
+		// PID Testing
+		joystick.POV_DOWN.onTrue(commandsBuilder.setTargetPositionMeters(ElevatorState.L1.getHeightMeters()));
+		joystick.POV_LEFT.onTrue(commandsBuilder.setTargetPositionMeters(ElevatorState.L2.getHeightMeters()));
+		joystick.POV_RIGHT.onTrue(commandsBuilder.setTargetPositionMeters(ElevatorState.L3.getHeightMeters()));
+		joystick.POV_UP.onTrue(commandsBuilder.setTargetPositionMeters(ElevatorState.L4.getHeightMeters()));
 
-		/*
-		 * Calibrate max acceleration and cruse velocity by the equations: max acceleration = (12 + Ks)/2kA cruise velocity = (12 + Ks)/kV
-		 */
+
+		// Calibrate max acceleration and cruse velocity by the equations: max acceleration = (12 + Ks)/2kA cruise velocity = (12 + Ks)/kV
+	}
+
+	public double getKgVoltage() {
+		return Robot.ROBOT_TYPE.isReal() ? KrakenX60ElevatorBuilder.kG : 0;
 	}
 
 	public ElevatorCommandsBuilder getCommandsBuilder() {
@@ -172,6 +170,7 @@ public class Elevator extends GBSubsystem {
 	}
 
 	protected void setTargetPositionMeters(double targetPositionMeters) {
+		Logger.recordOutput("TargetPositionMeters", targetPositionMeters);
 		Rotation2d targetPosition = convertMetersToRotations(targetPositionMeters);
 		rightMotor.applyRequest(positionRequest.withSetPoint(targetPosition));
 		leftMotor.applyRequest(positionRequest.withSetPoint(targetPosition));

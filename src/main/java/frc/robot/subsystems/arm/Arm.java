@@ -14,7 +14,6 @@ import frc.utils.battery.BatteryUtil;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
 
-import java.util.function.Supplier;
 
 public class Arm extends GBSubsystem {
 
@@ -108,7 +107,7 @@ public class Arm extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/TargetPose", position);
 		if (minSoftLimit.getDegrees() > position.getDegrees()) {
 			Logger.recordOutput(getLogPath() + "/TargetPoseUnderLimit", true);
-			stayInPlace(); //todo fix
+			stayInPlace(); // todo fix
 		} else {
 			Logger.recordOutput(getLogPath() + "/TargetPoseUnderLimit", false);
 			motor.applyRequest(positionRequest.withSetPoint(position));
@@ -117,7 +116,7 @@ public class Arm extends GBSubsystem {
 
 	protected void stayInPlace() {
 		Rotation2d target = motorPositionSignal.getLatestValue();
-		if (target.getDegrees() < minSoftLimit.getDegrees()){
+		if (target.getDegrees() < minSoftLimit.getDegrees()) {
 			target = minSoftLimit;
 		} else if (target.getDegrees() > ArmConstants.FORWARD_SOFTWARE_LIMIT.getDegrees()) {
 			target = ArmConstants.FORWARD_SOFTWARE_LIMIT;

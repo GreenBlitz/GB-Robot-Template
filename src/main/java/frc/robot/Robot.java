@@ -27,7 +27,6 @@ import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.battery.BatteryUtil;
 
-import java.util.function.Supplier;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -119,10 +118,10 @@ public class Robot {
 //		return robotCommander;
 //	}
 
-	private Rotation2d getArmReverseSoftLimit(){
+	private Rotation2d getArmReverseSoftLimit() {
 		return elevator.getElevatorPositionMeters() >= ArmConstants.ELEVATOR_HEIGHT_METERS_TO_CHANGE_SOFT_LIMIT
-				? ArmConstants.ELEVATOR_OPEN_REVERSED_SOFTWARE_LIMIT
-				: ArmConstants.ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT;
+			? ArmConstants.ELEVATOR_OPEN_REVERSED_SOFTWARE_LIMIT
+			: ArmConstants.ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT;
 	}
 
 }

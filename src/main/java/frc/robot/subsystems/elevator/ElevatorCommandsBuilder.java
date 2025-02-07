@@ -2,9 +2,7 @@ package frc.robot.subsystems.elevator;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.function.DoubleSupplier;
 
@@ -34,24 +32,21 @@ public class ElevatorCommandsBuilder {
 
 	public Command setTargetPositionMeters(double targetPositionMeters) {
 		return elevator.asSubsystemCommand(
-				new FunctionalCommand(
-						() -> elevator.setTargetPositionMeters(targetPositionMeters),
-						() -> {},
-						interrupted -> elevator.stop(),
-						() -> false
-				),
-				"Set Target Position To " + targetPositionMeters + " Meters"
+			new FunctionalCommand(
+				() -> elevator.setTargetPositionMeters(targetPositionMeters),
+				() -> {},
+				interrupted -> elevator.stop(),
+				() -> false
+			),
+			"Set Target Position To " + targetPositionMeters + " Meters"
 		);
 	}
 
 	public Command stayInPlace() {
 		return elevator.asSubsystemCommand(
-				new FunctionalCommand(
-				elevator::stayInPlace,
-				() -> {},
-				interrupted -> elevator.stop(),
-				() -> false
-		), "Stay in place");
+			new FunctionalCommand(elevator::stayInPlace, () -> {}, interrupted -> elevator.stop(), () -> false),
+			"Stay in place"
+		);
 	}
 
 	public Command stop() {

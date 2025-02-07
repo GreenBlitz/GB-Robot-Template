@@ -72,7 +72,7 @@ public class Robot {
 		this.elevator = ElevatorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Elevator");
 		BrakeStateManager.add(() -> elevator.setBrake(true), () -> elevator.setBrake(false));
 
-		this.arm = ArmFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Arm", generateArmReverseSoftLimitSupplier());
+		this.arm = ArmFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Arm");
 		BrakeStateManager.add(() -> arm.setBrake(true), () -> arm.setBrake(false));
 
 		this.endEffector = EndEffectorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/EndEffector");
@@ -84,6 +84,7 @@ public class Robot {
 	public void periodic() {
 		swerve.update();
 		poseEstimator.updateOdometry(swerve.getAllOdometryObservations());
+		arm.setMinSoftLimit(getArmReverseSoftLimit());
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		simulationManager.logPoses();
@@ -122,10 +123,6 @@ public class Robot {
 		return elevator.getElevatorPositionMeters() >= ArmConstants.ELEVATOR_HEIGHT_METERS_TO_CHANGE_SOFT_LIMIT
 				? ArmConstants.ELEVATOR_OPEN_REVERSED_SOFTWARE_LIMIT
 				: ArmConstants.ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT;
-	}
-
-	private Supplier<Rotation2d> generateArmReverseSoftLimitSupplier() {
-		return this::getArmReverseSoftLimit;
 	}
 
 }

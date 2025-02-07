@@ -54,7 +54,7 @@ public class KrakenX60ArmBuilder {
 	private static final double GEAR_RATIO = 450.0 / 7.0;
 	public static final double kG = 0.3165;
 
-	protected static Arm build(String logPath, Supplier<Rotation2d> currentReverseSoftLimitSupplier) {
+	protected static Arm build(String logPath) {
 		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(new MotionMagicVoltage(0), 0, ENABLE_FOC);
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), ENABLE_FOC);
 
@@ -62,9 +62,9 @@ public class KrakenX60ArmBuilder {
 			logPath,
 			IDs.TalonFXIDs.ARM,
 			buildSysidConfig(),
-			buildArmSimulation(currentReverseSoftLimitSupplier)
+			buildArmSimulation()
 		);
-		motor.applyConfiguration(buildTalonFXConfiguration(currentReverseSoftLimitSupplier));
+		motor.applyConfiguration(buildTalonFXConfiguration());
 
 		Phoenix6AngleSignal motorPositionSignal = Phoenix6SignalBuilder
 			.build(motor.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
@@ -90,8 +90,7 @@ public class KrakenX60ArmBuilder {
 			motorPositionSignal,
 			voltageSignal,
 			encoder,
-			encoderPositionSignal,
-			currentReverseSoftLimitSupplier
+			encoderPositionSignal
 		);
 	}
 
@@ -100,7 +99,7 @@ public class KrakenX60ArmBuilder {
 		return new SysIdRoutine.Config(Volts.of(1).per(Second), Volts.of(7), null, state -> SignalLogger.writeString("state", state.toString()));
 	}
 
-	private static TalonFXConfiguration buildTalonFXConfiguration(Supplier<Rotation2d> currentReverseSoftLimitSupplier) {
+	private static TalonFXConfiguration buildTalonFXConfiguration() {
 		TalonFXConfiguration config = new TalonFXConfiguration();
 
 		switch (Robot.ROBOT_TYPE) {
@@ -135,7 +134,7 @@ public class KrakenX60ArmBuilder {
 
 		config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = ArmConstants.FORWARD_SOFTWARE_LIMIT.getRotations();
 		config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = currentReverseSoftLimitSupplier.get().getRotations();
+		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = ArmConstants.ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT.getRotations();
 		config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
 
 		config.Feedback.RotorToSensorRatio = GEAR_RATIO;
@@ -147,7 +146,7 @@ public class KrakenX60ArmBuilder {
 		return config;
 	}
 
-	private static SingleJointedArmSimulation buildArmSimulation(Supplier<Rotation2d> currentReverseSoftLimitSupplier) {
+	private static SingleJointedArmSimulation buildArmSimulation() {
 		return new SingleJointedArmSimulation(
 			new SingleJointedArmSim(
 				LinearSystemId.createDCMotorSystem(
@@ -158,7 +157,7 @@ public class KrakenX60ArmBuilder {
 				DCMotor.getKrakenX60(NUMBER_OF_MOTORS),
 				GEAR_RATIO,
 				ArmConstants.LENGTH_METERS,
-				currentReverseSoftLimitSupplier.get().getRadians(),
+				ArmConstants.ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT.getRadians(),
 				ArmConstants.FORWARD_SOFTWARE_LIMIT.getRadians(),
 				false,
 				STARTING_POSITION.getRadians()

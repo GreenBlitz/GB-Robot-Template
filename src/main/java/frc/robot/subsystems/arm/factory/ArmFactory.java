@@ -7,8 +7,8 @@ import java.util.function.Supplier;
 
 public class ArmFactory {
 
-	public static Arm create(String logPath, Supplier<Rotation2d> currentReverseSoftLimitSupplier) {
-		return KrakenX60ArmBuilder.build(logPath, currentReverseSoftLimitSupplier);
+	public static Arm create(String logPath) {
+		return KrakenX60ArmBuilder.build(logPath);
 	}
 
 }

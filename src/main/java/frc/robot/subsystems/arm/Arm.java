@@ -27,7 +27,7 @@ public class Arm extends GBSubsystem {
 	private final InputSignal<Rotation2d> encoderPositionSignal;
 	private final ArmCommandsBuilder commandsBuilder;
 	private final SysIdCalibrator sysIdCalibrator;
-	private Supplier<Rotation2d> currentSoftLimitSupplier;
+	private Rotation2d minSoftLimit;
 
 	public Arm(
 		String logPath,
@@ -37,8 +37,7 @@ public class Arm extends GBSubsystem {
 		InputSignal<Rotation2d> motorPositionSignal,
 		InputSignal<Double> motorVoltageSignal,
 		IAngleEncoder encoder,
-		InputSignal<Rotation2d> encoderPositionSignal,
-		Supplier<Rotation2d> currentSoftLimitSupplier
+		InputSignal<Rotation2d> encoderPositionSignal
 	) {
 		super(logPath);
 		this.motor = motor;
@@ -50,7 +49,7 @@ public class Arm extends GBSubsystem {
 		this.encoderPositionSignal = encoderPositionSignal;
 		this.commandsBuilder = new ArmCommandsBuilder(this);
 		this.sysIdCalibrator = new SysIdCalibrator(motor.getSysidConfigInfo(), this, (voltage) -> setVoltage(voltage + getKgVoltage()));
-		this.currentSoftLimitSupplier = currentSoftLimitSupplier;
+		this.minSoftLimit = ArmConstants.ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT;
 
 		periodic();
 		resetByEncoderPosition();
@@ -80,6 +79,10 @@ public class Arm extends GBSubsystem {
 		encoder.updateInputs(encoderPositionSignal);
 	}
 
+	public void setMinSoftLimit(Rotation2d minSoftLimit) {
+		this.minSoftLimit = minSoftLimit;
+	}
+
 	protected void resetByEncoderPosition() {
 		motor.resetPosition(encoderPositionSignal.getLatestValue());
 	}
@@ -102,9 +105,11 @@ public class Arm extends GBSubsystem {
 
 	protected void setTargetPosition(Rotation2d position) {
 		Logger.recordOutput(getLogPath() + "/TargetPose", position);
-		if (currentSoftLimitSupplier.get().getDegrees() < position.getDegrees()) {
+		if (minSoftLimit.getDegrees() < position.getDegrees()) {
+			Logger.recordOutput(getLogPath() + "/TargetPoseUnderLimit", true);
 			stayInPlace();
 		} else {
+			Logger.recordOutput(getLogPath() + "/TargetPoseUnderLimit", false);
 			motor.applyRequest(positionRequest.withSetPoint(position));
 		}
 	}

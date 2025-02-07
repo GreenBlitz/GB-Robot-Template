@@ -34,14 +34,14 @@
 
 ##### PID 
 
-- [ ] kP  
-- [ ] kI   
-- [ ] kD
+- [x] kP  
+- [x] kI   
+- [x] kD
 
 #### Motion Magic
 
-- [ ] Cruise velocity
-- [ ] Max acceleration
+- [x] Cruise velocity
+- [x] Max acceleration
 
 ##### Simulation
 

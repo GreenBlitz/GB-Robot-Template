@@ -3,7 +3,6 @@ package frc.robot.subsystems.elevator;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
@@ -74,7 +73,10 @@ public class Elevator extends GBSubsystem {
 	double voltage = 0;
 
 	public void applyCalibrationBindings(SmartJoystick joystick) {
-		joystick.R1.whileTrue(commandsBuilder.setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * MAX_CALIBRATION_POWER));
+		joystick.R1.whileTrue(
+				commandsBuilder.setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * MAX_CALIBRATION_POWER +
+
+						(getKgVoltage() / 12)));
 //		joystick.POV_RIGHT.onTrue(new InstantCommand(() -> voltage = voltage + 0.01));
 //		joystick.POV_LEFT.onTrue(new InstantCommand(() -> voltage = voltage - 0.01));
 
@@ -86,10 +88,10 @@ public class Elevator extends GBSubsystem {
 		sysIdCalibrator.setAllButtonsForCalibration(joystick);
 
 		// PID Testing
-//		joystick.POV_DOWN.onTrue(commandsBuilder.setTargetPositionMeters(ElevatorState.L1.getHeightMeters()));
-//		joystick.POV_LEFT.onTrue(commandsBuilder.setTargetPositionMeters(ElevatorState.L2.getHeightMeters()));
-//		joystick.POV_RIGHT.onTrue(commandsBuilder.setTargetPositionMeters(ElevatorState.L3.getHeightMeters()));
-//		joystick.POV_UP.onTrue(commandsBuilder.setTargetPositionMeters(ElevatorState.L4.getHeightMeters()));
+		joystick.POV_DOWN.onTrue(commandsBuilder.setTargetPositionMeters(ElevatorState.L1.getHeightMeters()));
+		joystick.POV_LEFT.onTrue(commandsBuilder.setTargetPositionMeters(ElevatorState.L2.getHeightMeters()));
+		joystick.POV_RIGHT.onTrue(commandsBuilder.setTargetPositionMeters(ElevatorState.L3.getHeightMeters()));
+		joystick.POV_UP.onTrue(commandsBuilder.setTargetPositionMeters(ElevatorState.L4.getHeightMeters()));
 
 
 		// Calibrate max acceleration and cruse velocity by the equations: max acceleration = (12 + Ks)/2kA cruise velocity = (12 + Ks)/kV

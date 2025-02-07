@@ -1,5 +1,6 @@
 package frc.robot.subsystems.elevator.factory;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -32,7 +33,6 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.records.ElevatorMotorSignals;
 import frc.utils.math.AngleUnit;
-import org.littletonrobotics.junction.Logger;
 
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
@@ -47,7 +47,7 @@ public class KrakenX60ElevatorBuilder {
 	private static final boolean SOFT_LIMIT_ENABLE = true;
 	private static final boolean IS_FIRST_MOTOR_INVERTED = true;
 	private static final boolean IS_SECOND_MOTOR_INVERTED = true;
-	public static final double kG = 0.35;
+	public static final double kG = 0.2599;
 
 	private static final int NUMBER_OF_MOTORS = 2;
 	private static final double STARTING_HEIGHT_METERS = 0;
@@ -61,7 +61,7 @@ public class KrakenX60ElevatorBuilder {
 			CONFIG_RAMP_RATE,
 			CONFIG_STEP_VOLTAGE,
 			CONFIG_TIMEOUT,
-			(state) -> Logger.recordOutput("state", state.toString())
+			state -> SignalLogger.writeString("state", state.toString())
 		);
 	}
 
@@ -72,9 +72,9 @@ public class KrakenX60ElevatorBuilder {
 			configuration.Slot0.kI = 0;
 			configuration.Slot0.kD = 0;
 			configuration.Slot0.kG = kG;
-			configuration.Slot0.kS = 0.12;
-			configuration.Slot0.kV = 0;
-			configuration.Slot0.kA = 0;
+			configuration.Slot0.kS = 0.086119;
+			configuration.Slot0.kV = 0.45503;
+			configuration.Slot0.kA = 0.10795;
 		} else {
 			configuration.Slot0.kP = 1;
 			configuration.Slot0.kI = 0;

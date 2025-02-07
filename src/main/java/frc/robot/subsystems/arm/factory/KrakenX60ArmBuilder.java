@@ -65,14 +65,6 @@ public class KrakenX60ArmBuilder {
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
 			.build(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 
-		// For them to appear need to create
-		Phoenix6DoubleSignal closedReference = Phoenix6SignalBuilder
-			.build(motor.getDevice().getClosedLoopReference(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
-		Phoenix6DoubleSignal velocity = Phoenix6SignalBuilder
-			.build(motor.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
-		Phoenix6DoubleSignal velocitSlope = Phoenix6SignalBuilder
-			.build(motor.getDevice().getClosedLoopReferenceSlope(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
-
 		IAngleEncoder encoder = getEncoder(logPath);
 		InputSignal<Rotation2d> encoderPositionSignal = generateEncoderPositionSignal(encoder);
 
@@ -89,13 +81,13 @@ public class KrakenX60ArmBuilder {
 
 		switch (Robot.ROBOT_TYPE) {
 			case REAL -> {
-				config.Slot0.kP = 5;
+				config.Slot0.kP = 30;
 				config.Slot0.kI = 0;
 				config.Slot0.kD = 0;
 				config.Slot0.kS = 0.0715;
 				config.Slot0.kG = kG;
 				config.Slot0.kV = 7.9;
-				config.Slot0.kA = 0.49877;
+				config.Slot0.kA = 0.5209;
 			}
 			case SIMULATION -> {
 				config.Slot0.kP = 70;
@@ -112,9 +104,9 @@ public class KrakenX60ArmBuilder {
 
 		config.MotorOutput.Inverted = IS_INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 
-		config.CurrentLimits.SupplyCurrentLimit = 16;
+		config.CurrentLimits.SupplyCurrentLimit = 40;
 		config.CurrentLimits.SupplyCurrentLimitEnable = true;
-		config.CurrentLimits.StatorCurrentLimit = 20;
+		config.CurrentLimits.StatorCurrentLimit = 40;
 		config.CurrentLimits.StatorCurrentLimitEnable = true;
 
 		config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = ArmConstants.FORWARD_SOFTWARE_LIMIT.getRotations();

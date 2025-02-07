@@ -72,6 +72,7 @@ public class Arm extends GBSubsystem {
 	protected void subsystemPeriodic() {
 		motor.updateSimulation();
 		updateInputs();
+		Logger.recordOutput(getLogPath() + "/MinLimit", minSoftLimit);
 	}
 
 	private void updateInputs() {

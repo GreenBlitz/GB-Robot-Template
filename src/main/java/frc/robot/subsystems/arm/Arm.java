@@ -14,7 +14,6 @@ import frc.utils.battery.BatteryUtil;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
 
-
 public class Arm extends GBSubsystem {
 
 	private final ControllableMotor motor;

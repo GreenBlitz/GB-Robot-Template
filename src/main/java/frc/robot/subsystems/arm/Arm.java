@@ -108,7 +108,7 @@ public class Arm extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/TargetPose", position);
 		if (minSoftLimit.getDegrees() > position.getDegrees()) {
 			Logger.recordOutput(getLogPath() + "/TargetPoseUnderLimit", true);
-			stayInPlace();
+			stayInPlace(); //todo fix
 		} else {
 			Logger.recordOutput(getLogPath() + "/TargetPoseUnderLimit", false);
 			motor.applyRequest(positionRequest.withSetPoint(position));

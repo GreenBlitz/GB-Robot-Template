@@ -27,7 +27,7 @@ public class Arm extends GBSubsystem {
 	private final InputSignal<Rotation2d> encoderPositionSignal;
 	private final ArmCommandsBuilder commandsBuilder;
 	private final SysIdCalibrator sysIdCalibrator;
-	private Rotation2d minSoftLimit;
+	private Rotation2d reversedSoftLimit;
 
 	public Arm(
 		String logPath,
@@ -49,7 +49,7 @@ public class Arm extends GBSubsystem {
 		this.encoderPositionSignal = encoderPositionSignal;
 		this.commandsBuilder = new ArmCommandsBuilder(this);
 		this.sysIdCalibrator = new SysIdCalibrator(motor.getSysidConfigInfo(), this, (voltage) -> setVoltage(voltage + getKgVoltage()));
-		this.minSoftLimit = ArmConstants.ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT;
+		this.reversedSoftLimit = ArmConstants.ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT;
 
 		periodic();
 		resetByEncoderPosition();
@@ -72,7 +72,7 @@ public class Arm extends GBSubsystem {
 	protected void subsystemPeriodic() {
 		motor.updateSimulation();
 		updateInputs();
-		Logger.recordOutput(getLogPath() + "/MinLimit", minSoftLimit);
+		Logger.recordOutput(getLogPath() + "/ReversedSoftLimit", reversedSoftLimit);
 	}
 
 	private void updateInputs() {
@@ -80,8 +80,8 @@ public class Arm extends GBSubsystem {
 		encoder.updateInputs(encoderPositionSignal);
 	}
 
-	public void setMinSoftLimit(Rotation2d minSoftLimit) {
-		this.minSoftLimit = minSoftLimit;
+	public void setReversedSoftLimit(Rotation2d reversedSoftLimit) {
+		this.reversedSoftLimit = reversedSoftLimit;
 	}
 
 	protected void resetByEncoderPosition() {
@@ -106,7 +106,7 @@ public class Arm extends GBSubsystem {
 
 	protected void setTargetPosition(Rotation2d targetPosition) {
 		Logger.recordOutput(getLogPath() + "/TargetPose", targetPosition);
-		if (minSoftLimit.getDegrees() <= targetPosition.getDegrees()) {
+		if (reversedSoftLimit.getDegrees() <= targetPosition.getDegrees()) {
 			motor.applyRequest(positionRequest.withSetPoint(targetPosition));
 		} else {
 			new Alert(Alert.AlertType.WARNING, getLogPath() + "/TargetPoseUnderLimit").report();
@@ -118,7 +118,7 @@ public class Arm extends GBSubsystem {
 		Rotation2d limitedPosition = Rotation2d.fromDegrees(
 			MathUtil.clamp(
 				motorPositionSignal.getLatestValue().getDegrees(),
-				minSoftLimit.getDegrees(),
+				reversedSoftLimit.getDegrees(),
 				ArmConstants.FORWARD_SOFTWARE_LIMIT.getDegrees()
 			)
 		);

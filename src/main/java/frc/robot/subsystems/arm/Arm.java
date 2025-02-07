@@ -14,6 +14,8 @@ import frc.utils.battery.BatteryUtil;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.function.Supplier;
+
 public class Arm extends GBSubsystem {
 
 	private final ControllableMotor motor;
@@ -25,6 +27,7 @@ public class Arm extends GBSubsystem {
 	private final InputSignal<Rotation2d> encoderPositionSignal;
 	private final ArmCommandsBuilder commandsBuilder;
 	private final SysIdCalibrator sysIdCalibrator;
+	private Supplier<Rotation2d> currentSoftLimitSupplier;
 
 	public Arm(
 		String logPath,
@@ -34,7 +37,8 @@ public class Arm extends GBSubsystem {
 		InputSignal<Rotation2d> motorPositionSignal,
 		InputSignal<Double> motorVoltageSignal,
 		IAngleEncoder encoder,
-		InputSignal<Rotation2d> encoderPositionSignal
+		InputSignal<Rotation2d> encoderPositionSignal,
+		Supplier<Rotation2d> currentSoftLimitSupplier
 	) {
 		super(logPath);
 		this.motor = motor;
@@ -45,7 +49,8 @@ public class Arm extends GBSubsystem {
 		this.encoder = encoder;
 		this.encoderPositionSignal = encoderPositionSignal;
 		this.commandsBuilder = new ArmCommandsBuilder(this);
-		this.sysIdCalibrator = new SysIdCalibrator(motor.getSysidConfigInfo(), this, this::setVoltage);
+		this.sysIdCalibrator = new SysIdCalibrator(motor.getSysidConfigInfo(), this, (voltage) -> setVoltage(voltage + getKgVoltage()));
+		this.currentSoftLimitSupplier = currentSoftLimitSupplier;
 
 		periodic();
 		resetByEncoderPosition();
@@ -97,7 +102,11 @@ public class Arm extends GBSubsystem {
 
 	protected void setTargetPosition(Rotation2d position) {
 		Logger.recordOutput(getLogPath() + "/TargetPose", position);
-		motor.applyRequest(positionRequest.withSetPoint(position));
+		if (currentSoftLimitSupplier.get().getDegrees() < position.getDegrees()) {
+			stayInPlace();
+		} else {
+			motor.applyRequest(positionRequest.withSetPoint(position));
+		}
 	}
 
 	protected void stayInPlace() {
@@ -123,10 +132,10 @@ public class Arm extends GBSubsystem {
 		sysIdCalibrator.setAllButtonsForCalibration(joystick);
 
 		// Calibrate PID using phoenix tuner and these bindings:
-		joystick.POV_UP.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(90)));
-		joystick.POV_DOWN.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(210)));
-		joystick.POV_LEFT.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(0)));
-		joystick.POV_RIGHT.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(180)));
+		joystick.POV_UP.onTrue(commandsBuilder.moveToPosition(ArmState.L4.getPosition()));
+		joystick.POV_DOWN.onTrue(commandsBuilder.moveToPosition(ArmState.INTAKE.getPosition()));
+		joystick.POV_LEFT.onTrue(commandsBuilder.moveToPosition(ArmState.L1.getPosition()));
+		joystick.POV_RIGHT.onTrue(commandsBuilder.moveToPosition(ArmState.L2.getPosition()));
 
 		// Calibrate max acceleration and cruise velocity by the equations: max acceleration = (12 + Ks)/2kA, cruise velocity =(12 + Ks)/kV
 	}

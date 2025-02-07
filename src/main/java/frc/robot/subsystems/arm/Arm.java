@@ -1,5 +1,6 @@
 package frc.robot.subsystems.arm;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
@@ -10,6 +11,7 @@ import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.arm.factory.KrakenX60ArmBuilder;
+import frc.utils.alerts.Alert;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
@@ -25,7 +27,7 @@ public class Arm extends GBSubsystem {
 	private final InputSignal<Rotation2d> encoderPositionSignal;
 	private final ArmCommandsBuilder commandsBuilder;
 	private final SysIdCalibrator sysIdCalibrator;
-	private Rotation2d minSoftLimit;
+	private Rotation2d reversedSoftLimit;
 
 	public Arm(
 		String logPath,
@@ -47,7 +49,7 @@ public class Arm extends GBSubsystem {
 		this.encoderPositionSignal = encoderPositionSignal;
 		this.commandsBuilder = new ArmCommandsBuilder(this);
 		this.sysIdCalibrator = new SysIdCalibrator(motor.getSysidConfigInfo(), this, (voltage) -> setVoltage(voltage + getKgVoltage()));
-		this.minSoftLimit = ArmConstants.ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT;
+		this.reversedSoftLimit = ArmConstants.ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT;
 
 		periodic();
 		resetByEncoderPosition();
@@ -70,7 +72,7 @@ public class Arm extends GBSubsystem {
 	protected void subsystemPeriodic() {
 		motor.updateSimulation();
 		updateInputs();
-		Logger.recordOutput(getLogPath() + "/MinLimit", minSoftLimit);
+		Logger.recordOutput(getLogPath() + "/ReversedSoftLimit", reversedSoftLimit);
 	}
 
 	private void updateInputs() {
@@ -78,8 +80,8 @@ public class Arm extends GBSubsystem {
 		encoder.updateInputs(encoderPositionSignal);
 	}
 
-	public void setMinSoftLimit(Rotation2d minSoftLimit) {
-		this.minSoftLimit = minSoftLimit;
+	public void setReversedSoftLimit(Rotation2d reversedSoftLimit) {
+		this.reversedSoftLimit = reversedSoftLimit;
 	}
 
 	protected void resetByEncoderPosition() {
@@ -102,25 +104,25 @@ public class Arm extends GBSubsystem {
 		motor.applyRequest(voltageRequest.withSetPoint(voltage));
 	}
 
-	protected void setTargetPosition(Rotation2d position) {
-		Logger.recordOutput(getLogPath() + "/TargetPose", position);
-		if (minSoftLimit.getDegrees() > position.getDegrees()) {
-			Logger.recordOutput(getLogPath() + "/TargetPoseUnderLimit", true);
-			stayInPlace(); // todo fix
+	protected void setTargetPosition(Rotation2d targetPosition) {
+		Logger.recordOutput(getLogPath() + "/TargetPose", targetPosition);
+		if (reversedSoftLimit.getDegrees() <= targetPosition.getDegrees()) {
+			motor.applyRequest(positionRequest.withSetPoint(targetPosition));
 		} else {
-			Logger.recordOutput(getLogPath() + "/TargetPoseUnderLimit", false);
-			motor.applyRequest(positionRequest.withSetPoint(position));
+			new Alert(Alert.AlertType.WARNING, getLogPath() + "/TargetPoseUnderLimit").report();
+			stayInPlace();
 		}
 	}
 
 	protected void stayInPlace() {
-		Rotation2d target = motorPositionSignal.getLatestValue();
-		if (target.getDegrees() < minSoftLimit.getDegrees()) {
-			target = minSoftLimit;
-		} else if (target.getDegrees() > ArmConstants.FORWARD_SOFTWARE_LIMIT.getDegrees()) {
-			target = ArmConstants.FORWARD_SOFTWARE_LIMIT;
-		}
-		setTargetPosition(target);
+		Rotation2d limitedPosition = Rotation2d.fromDegrees(
+			MathUtil.clamp(
+				motorPositionSignal.getLatestValue().getDegrees(),
+				reversedSoftLimit.getDegrees(),
+				ArmConstants.FORWARD_SOFTWARE_LIMIT.getDegrees()
+			)
+		);
+		setTargetPosition(limitedPosition);
 	}
 
 	public boolean isAtPosition(Rotation2d position, Rotation2d tolerance) {

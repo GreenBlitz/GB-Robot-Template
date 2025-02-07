@@ -38,7 +38,6 @@ import frc.robot.subsystems.arm.ArmConstants;
 import frc.utils.alerts.Alert;
 import frc.utils.math.AngleUnit;
 
-
 import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Volts;
 

@@ -30,7 +30,7 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		this.motor = new TalonFXWrapper(deviceID);
 		this.talonFXSimulationOptional = createSimulation(simulation);
 		this.sysidConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysidConfig, true);
-//		motor.optimizeBusUtilization();
+		motor.optimizeBusUtilization();
 	}
 
 	public TalonFXMotor(String logPath, Phoenix6DeviceID deviceID, SysIdRoutine.Config sysidConfig) {

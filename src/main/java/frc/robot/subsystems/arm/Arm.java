@@ -106,7 +106,7 @@ public class Arm extends GBSubsystem {
 
 	protected void setTargetPosition(Rotation2d position) {
 		Logger.recordOutput(getLogPath() + "/TargetPose", position);
-		if (minSoftLimit.getDegrees() < position.getDegrees()) {
+		if (minSoftLimit.getDegrees() > position.getDegrees()) {
 			Logger.recordOutput(getLogPath() + "/TargetPoseUnderLimit", true);
 			stayInPlace();
 		} else {
@@ -116,7 +116,13 @@ public class Arm extends GBSubsystem {
 	}
 
 	protected void stayInPlace() {
-		setTargetPosition(motorPositionSignal.getLatestValue());
+		Rotation2d target = motorPositionSignal.getLatestValue();
+		if (target.getDegrees() < minSoftLimit.getDegrees()){
+			target = minSoftLimit;
+		} else if (target.getDegrees() > ArmConstants.FORWARD_SOFTWARE_LIMIT.getDegrees()) {
+			target = ArmConstants.FORWARD_SOFTWARE_LIMIT;
+		}
+		setTargetPosition(target);
 	}
 
 	public boolean isAtPosition(Rotation2d position, Rotation2d tolerance) {

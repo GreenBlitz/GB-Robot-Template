@@ -1,6 +1,8 @@
 package frc.robot.subsystems.arm.factory;
 
 import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -8,6 +10,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -20,6 +23,7 @@ import frc.robot.hardware.empties.EmptyAngleEncoder;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.mechanisms.wpilib.SingleJointedArmSimulation;
+import frc.robot.hardware.phoenix6.Phoenix6Util;
 import frc.robot.hardware.phoenix6.angleencoder.CANCoderEncoder;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.request.Phoenix6FeedForwardRequest;
@@ -31,6 +35,7 @@ import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
+import frc.utils.alerts.Alert;
 import frc.utils.math.AngleUnit;
 
 import static edu.wpi.first.units.Units.Second;
@@ -38,11 +43,13 @@ import static edu.wpi.first.units.Units.Volts;
 
 public class KrakenX60ArmBuilder {
 
+	private static final int APPLY_CONFIG_RETRIES = 5;
+
 	private static final boolean ENABLE_FOC = true;
-	private static final boolean IS_INVERTED = false;
+	private static final boolean IS_INVERTED = true;
 	private static final Rotation2d STARTING_POSITION = Rotation2d.fromDegrees(17);
 	private static final int NUMBER_OF_MOTORS = 1;
-	private static final double GEAR_RATIO = 7.0 / 450.0;
+	private static final double GEAR_RATIO = 450.0 / 7.0;
 	public static final double kG = 0;
 
 	protected static Arm build(String logPath) {
@@ -148,13 +155,31 @@ public class KrakenX60ArmBuilder {
 
 	private static IAngleEncoder getEncoder(String logPath) {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL ->
-				new CANCoderEncoder(
-					logPath + "/Encoder",
-					new CANcoder(IDs.CANCodersIDs.ARM.id(), IDs.CANCodersIDs.ARM.busChain().getChainName())
-				);
+			case REAL -> buildRealEncoder(logPath);
 			case SIMULATION -> new EmptyAngleEncoder(logPath + "/Encoder");
 		};
+	}
+
+	private static IAngleEncoder buildRealEncoder(String logPath) {
+		CANcoder canCoder = new CANcoder(IDs.CANCodersIDs.ARM.id(), IDs.CANCodersIDs.ARM.busChain().getChainName());
+		CANCoderEncoder encoder = new CANCoderEncoder(logPath + "/Encoder", canCoder);
+		CANcoderConfiguration configuration = buildEncoderConfig(encoder);
+		if (!Phoenix6Util.checkWithRetry(() -> encoder.getDevice().getConfigurator().apply(configuration), APPLY_CONFIG_RETRIES).isOK()) {
+			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
+		}
+
+		return encoder;
+	}
+
+	private static CANcoderConfiguration buildEncoderConfig(CANCoderEncoder canCoderEncoder) {
+		MagnetSensorConfigs magnetSensorConfigs = new MagnetSensorConfigs();
+		canCoderEncoder.getDevice().getConfigurator().refresh(magnetSensorConfigs);
+
+		CANcoderConfiguration configuration = new CANcoderConfiguration();
+		configuration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+		configuration.MagnetSensor.MagnetOffset = magnetSensorConfigs.MagnetOffset;
+
+		return configuration;
 	}
 
 	private static InputSignal<Rotation2d> generateEncoderPositionSignal(IAngleEncoder encoder) {

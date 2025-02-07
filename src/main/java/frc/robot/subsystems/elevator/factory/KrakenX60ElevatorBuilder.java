@@ -2,6 +2,7 @@ package frc.robot.subsystems.elevator.factory;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -156,12 +157,7 @@ public class KrakenX60ElevatorBuilder {
 		IDigitalInput digitalInput = generateDigitalInput();
 
 		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(
-			new DynamicMotionMagicVoltage(
-				0,
-				Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND).getRotations(),
-				Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED).getRotations(),
-				0
-			),
+			new MotionMagicVoltage(0),
 			0,
 			true
 		);

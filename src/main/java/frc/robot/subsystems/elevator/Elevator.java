@@ -92,6 +92,7 @@ public class Elevator extends GBSubsystem {
 		joystick.POV_UP.onTrue(commandsBuilder.setTargetPositionMeters(ElevatorState.L4.getHeightMeters()));
 
 
+
 		// Calibrate max acceleration and cruse velocity by the equations: max acceleration = (12 + Ks)/2kA cruise velocity = (12 + Ks)/kV
 	}
 
@@ -146,7 +147,6 @@ public class Elevator extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/PositionMeters", getElevatorPositionMeters());
 		Logger.recordOutput(getLogPath() + "/IsAtBackwardsLimit", isAtBackwardsLimit());
 		Logger.recordOutput(getLogPath() + "/HasBeenResetBySwitch", hasBeenResetBySwitch);
-		Logger.recordOutput(getLogPath() + "voltage", voltage);
 	}
 
 	public void resetMotors(double positionMeters) {

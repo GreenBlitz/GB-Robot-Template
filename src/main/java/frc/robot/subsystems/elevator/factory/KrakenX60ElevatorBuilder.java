@@ -3,6 +3,7 @@ package frc.robot.subsystems.elevator.factory;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.filter.Debouncer;
@@ -46,13 +47,13 @@ public class KrakenX60ElevatorBuilder {
 	private static final boolean SOFT_LIMIT_ENABLE = true;
 	private static final boolean IS_FIRST_MOTOR_INVERTED = true;
 	private static final boolean IS_SECOND_MOTOR_INVERTED = true;
-	public static final double kG = 0;
+	public static final double kG = 0.35;
 
 	private static final int NUMBER_OF_MOTORS = 2;
 	private static final double STARTING_HEIGHT_METERS = 0;
 
-	private static final Velocity<VoltageUnit> CONFIG_RAMP_RATE = Volts.of(1).per(Second);
-	private static final Voltage CONFIG_STEP_VOLTAGE = Volts.of(7);
+	private static final Velocity<VoltageUnit> CONFIG_RAMP_RATE = Volts.of(0.5).per(Second);
+	private static final Voltage CONFIG_STEP_VOLTAGE = Volts.of(3);
 	private static final Time CONFIG_TIMEOUT = Seconds.of(10);
 
 	private static SysIdRoutine.Config generateSysidConfig() {
@@ -67,11 +68,11 @@ public class KrakenX60ElevatorBuilder {
 	private static TalonFXConfiguration generateConfiguration(boolean inverted) {
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
 		if (Robot.ROBOT_TYPE.isReal()) {
-			configuration.Slot0.kP = 0.01;
+			configuration.Slot0.kP = 0;
 			configuration.Slot0.kI = 0;
 			configuration.Slot0.kD = 0;
 			configuration.Slot0.kG = kG;
-			configuration.Slot0.kS = 0;
+			configuration.Slot0.kS = 0.12;
 			configuration.Slot0.kV = 0;
 			configuration.Slot0.kA = 0;
 		} else {
@@ -79,6 +80,8 @@ public class KrakenX60ElevatorBuilder {
 			configuration.Slot0.kI = 0;
 			configuration.Slot0.kD = 0.05;
 		}
+		configuration.Slot0.GravityType = GravityTypeValue.Elevator_Static;
+
 		configuration.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT;
 		configuration.CurrentLimits.StatorCurrentLimitEnable = CURRENT_LIMIT_ENABLE;
 		configuration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Elevator

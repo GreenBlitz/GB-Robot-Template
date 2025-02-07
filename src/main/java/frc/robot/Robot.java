@@ -118,10 +118,14 @@ public class Robot {
 //		return robotCommander;
 //	}
 
+	private Rotation2d getArmReverseSoftLimit(){
+		return elevator.getElevatorPositionMeters() >= ArmConstants.ELEVATOR_HEIGHT_METERS_TO_CHANGE_SOFT_LIMIT
+				? ArmConstants.ELEVATOR_OPEN_REVERSED_SOFTWARE_LIMIT
+				: ArmConstants.ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT;
+	}
+
 	private Supplier<Rotation2d> generateArmReverseSoftLimitSupplier() {
-		return () -> elevator.getElevatorPositionMeters() >= ArmConstants.ELEVATOR_HEIGHT_METERS_TO_CHANGE_SOFT_LIMIT
-			? ArmConstants.ELEVATOR_OPEN_REVERSED_SOFTWARE_LIMIT
-			: ArmConstants.ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT;
+		return this::getArmReverseSoftLimit;
 	}
 
 }

@@ -27,7 +27,7 @@ public class ElevatorCommandsBuilder {
 	}
 
 	public Command setVoltage(DoubleSupplier voltageSupplier) {
-		return elevator.asSubsystemCommand(new RunCommand(() -> elevator.setVoltage(voltageSupplier.getAsDouble())), "Set power by Supplier");
+		return elevator.asSubsystemCommand(new RunCommand(() -> elevator.setVoltage(voltageSupplier.getAsDouble())), "Set voltage by Supplier");
 	}
 
 	public Command setTargetPositionMeters(double targetPositionMeters) {

@@ -48,6 +48,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	private double[] standardDeviationsArray;
 	private double computingPipeLineLatency;
 	private double captureLatency;
+	private int lastSeenAprilTagId;
 	private Filter<? super AprilTagVisionData> filter;
 	private RobotAngleValues robotAngleValues;
 
@@ -88,6 +89,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 
 	@Override
 	public void update() {
+		lastSeenAprilTagId = getAprilTagID();
 		robotOrientationEntry.setDoubleArray(robotAngleValues.asArray());
 		Logger.recordOutput(logPath + "gyroAngleValues", robotAngleValues.asArray());
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
@@ -108,8 +110,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	}
 
 	protected Optional<Pair<Pose3d, Double>> getUpdatedPose3DEstimation() {
-		int id = getAprilTagID();
-		if (id == VisionConstants.NO_APRILTAG_ID) {
+		if (lastSeenAprilTagId == VisionConstants.NO_APRILTAG_ID) {
 			return Optional.empty();
 		}
 
@@ -156,7 +157,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 				new StandardDeviations3D(standardDeviationsArray),
 				getAprilTagValueInRobotSpace(Pose3dComponentsValue.Z_VALUE),
 				getDistanceFromTag(),
-				getAprilTagID()
+				lastSeenAprilTagId
 			)
 		);
 	}

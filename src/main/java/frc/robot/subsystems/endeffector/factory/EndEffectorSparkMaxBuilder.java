@@ -20,9 +20,9 @@ import frc.robot.subsystems.endeffector.EndEffector;
 public class EndEffectorSparkMaxBuilder {
 
 	private static final int NUMBER_OF_MOTORS = 1;
-	private static final boolean IS_INVERTED = false;
+	private static final boolean IS_INVERTED = true;
 	private static final boolean SET_BRAKE = false;
-	private static final int CURRENT_LIMIT = 30;
+	private static final int CURRENT_LIMIT = 20;
 
 	// Gear ratio in SparkMAX is output / input (as opposed to input / output in CTRE)
 	private static final double GEAR_RATIO = 25.0 / 6.0;

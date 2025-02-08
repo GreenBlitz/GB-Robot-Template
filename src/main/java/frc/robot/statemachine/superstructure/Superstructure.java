@@ -1,5 +1,6 @@
 package frc.robot.statemachine.superstructure;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -8,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
 import frc.robot.statemachine.Tolerances;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmState;
 import frc.robot.subsystems.arm.ArmStateHandler;
 import frc.robot.subsystems.elevator.ElevatorState;
@@ -36,6 +38,13 @@ public class Superstructure extends GBSubsystem {
 
 		this.currentState = SuperstructureState.IDLE;
 		setDefaultCommand(new DeferredCommand(() -> endState(currentState), Set.of(this)));
+	}
+
+
+	public Rotation2d getArmReversedSoftLimitByElevator() {
+		return robot.getElevator().getElevatorPositionMeters() >= ArmConstants.ELEVATOR_HEIGHT_METERS_TO_CHANGE_SOFT_LIMIT
+			? ArmConstants.ELEVATOR_OPEN_REVERSED_SOFTWARE_LIMIT
+			: ArmConstants.ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT;
 	}
 
 	public boolean isCoralIn() {

@@ -16,7 +16,7 @@ public class ElevatorConstants {
 
 	public static final double FORWARD_SOFT_LIMIT_VALUE_METERS = 1.13;
 
-	public static final double CRUISE_VELOCITY_METERS_PER_SECOND = 10;
-	public static final double ACCELERATION_METERS_PER_SECOND_SQUARED = 512;
+	public static final double CRUISE_VELOCITY_METERS_PER_SECOND = 1;
+	public static final double ACCELERATION_METERS_PER_SECOND_SQUARED = 2;
 
 }

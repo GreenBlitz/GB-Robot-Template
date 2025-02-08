@@ -12,7 +12,7 @@ Calibrations
 - [x] Current Limit
 - [ ] Limit Switch Channel
 - [x] Enable FOC
-- [ ] Control: kS, kG, PID
+- [x] Control: kS, kG, PID
 - [ ] Max acceleration, Cruise velocity
 - [ ] Elevator Mass
 - [ ] States heights

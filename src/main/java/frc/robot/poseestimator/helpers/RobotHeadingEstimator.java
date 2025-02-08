@@ -4,6 +4,7 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import frc.constants.RobotHeadingEstimatorConstants;
+import frc.utils.math.DataMath;
 import frc.utils.math.PoseEstimationMath;
 import frc.utils.buffers.RingBuffer.RingBuffer;
 import frc.utils.TimedValue;
@@ -47,7 +48,7 @@ public class RobotHeadingEstimator {
 		double visionStandardDeviation,
 		double maximumStandardDeviationTolerance
 	) {
-		double visionNoiseStandardDeviation = PoseMath.calculateStandardDeviations(
+		double visionNoiseStandardDeviation = DataMath.calculateStandardDeviations(
 			estimationAndGyroBuffer,
 			estimationVisionPair -> Math
 				.abs(AngleMath.getAngleDifference(estimationVisionPair.getFirst(), estimationVisionPair.getSecond()).getRadians())

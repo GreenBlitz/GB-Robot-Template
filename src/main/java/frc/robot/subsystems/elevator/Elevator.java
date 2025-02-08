@@ -40,6 +40,7 @@ public class Elevator extends GBSubsystem {
 
 	private boolean hasBeenResetBySwitch;
 	private double ffCalibrationVoltage;
+	private double currentTargetPositionMeters;
 
 	public Elevator(
 		String logPath,
@@ -126,6 +127,7 @@ public class Elevator extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/IsAtBackwardsLimit", isAtBackwardsLimit());
 		Logger.recordOutput(getLogPath() + "/HasBeenResetBySwitch", hasBeenResetBySwitch);
 		Logger.recordOutput(getLogPath() + "/FFCalibrationVoltage", ffCalibrationVoltage);
+		Logger.recordOutput(getLogPath() + "/TargetPositionMeters", currentTargetPositionMeters);
 	}
 
 	public void resetMotors(double positionMeters) {
@@ -155,7 +157,7 @@ public class Elevator extends GBSubsystem {
 	}
 
 	protected void setTargetPositionMeters(double targetPositionMeters) {
-		Logger.recordOutput(getLogPath() + "/TargetPositionMeters", targetPositionMeters);
+		currentTargetPositionMeters = targetPositionMeters;
 		Rotation2d targetPosition = convertMetersToRotations(targetPositionMeters);
 		rightMotor.applyRequest(positionRequest.withSetPoint(targetPosition));
 		leftMotor.applyRequest(positionRequest.withSetPoint(targetPosition));

@@ -83,7 +83,7 @@ public class Robot {
 	public void periodic() {
 		swerve.update();
 		poseEstimator.updateOdometry(swerve.getAllOdometryObservations());
-		arm.setReversedSoftLimit(getArmReverseSoftLimit());
+		arm.setReversedSoftLimit(arm.getReverseSoftLimit(elevator));
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		simulationManager.logPoses();
@@ -116,12 +116,6 @@ public class Robot {
 
 	public RobotCommander getRobotCommander() {
 		return robotCommander;
-	}
-
-	private Rotation2d getArmReverseSoftLimit() {
-		return elevator.getElevatorPositionMeters() >= ArmConstants.ELEVATOR_HEIGHT_METERS_TO_CHANGE_SOFT_LIMIT
-			? ArmConstants.ELEVATOR_OPEN_REVERSED_SOFTWARE_LIMIT
-			: ArmConstants.ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT;
 	}
 
 }

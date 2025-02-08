@@ -11,6 +11,7 @@ import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.arm.factory.KrakenX60ArmBuilder;
+import frc.robot.subsystems.elevator.Elevator;
 import frc.utils.alerts.Alert;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.calibration.sysid.SysIdCalibrator;
@@ -68,16 +69,28 @@ public class Arm extends GBSubsystem {
 		return Robot.ROBOT_TYPE.isReal() ? KrakenX60ArmBuilder.kG * getPosition().getCos() : 0;
 	}
 
+
+	public Rotation2d getReverseSoftLimit(Elevator elevator) {
+		return elevator.getElevatorPositionMeters() >= ArmConstants.ELEVATOR_HEIGHT_METERS_TO_CHANGE_SOFT_LIMIT
+				? ArmConstants.ELEVATOR_OPEN_REVERSED_SOFTWARE_LIMIT
+				: ArmConstants.ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT;
+	}
+
 	@Override
 	protected void subsystemPeriodic() {
 		motor.updateSimulation();
 		updateInputs();
-		Logger.recordOutput(getLogPath() + "/ReversedSoftLimit", reversedSoftLimit);
+		log();
 	}
 
 	private void updateInputs() {
 		motor.updateInputs(motorPositionSignal, motorVoltageSignal);
 		encoder.updateInputs(encoderPositionSignal);
+	}
+
+	private void log(){
+		Logger.recordOutput(getLogPath() + "/ReversedSoftLimit", reversedSoftLimit);
+		Logger.recordOutput(getLogPath() + "/TargetPose", positionRequest.getSetPoint());
 	}
 
 	public void setReversedSoftLimit(Rotation2d reversedSoftLimit) {
@@ -105,7 +118,6 @@ public class Arm extends GBSubsystem {
 	}
 
 	protected void setTargetPosition(Rotation2d targetPosition) {
-		Logger.recordOutput(getLogPath() + "/TargetPose", targetPosition);
 		if (reversedSoftLimit.getDegrees() <= targetPosition.getDegrees()) {
 			motor.applyRequest(positionRequest.withSetPoint(targetPosition));
 		} else {

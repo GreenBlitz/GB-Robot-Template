@@ -14,8 +14,9 @@ public class EndEffector extends GBSubsystem {
 	private final ControllableMotor roller;
 	private final InputSignal<Double> powerSignal;
 	private final InputSignal<Double> currentSignal;
-	private final IDigitalInput frontBeamBreaker;
-	private final DigitalInputInputsAutoLogged frontBeamBreakerInputs;
+	// Todo: now there is only one bb connected. We need to add one in the future.
+//	private final IDigitalInput beamBreakerNotWorking;
+//	private final DigitalInputInputsAutoLogged beamBreakerNotWorkingInputs;
 	private final IDigitalInput backBeamBreaker;
 	private final DigitalInputInputsAutoLogged backBeamBreakerInputs;
 	private final EndEffectorCommandsBuilder commandsBuilder;
@@ -26,7 +27,7 @@ public class EndEffector extends GBSubsystem {
 		ControllableMotor roller,
 		InputSignal<Double> powerSignal,
 		InputSignal<Double> currentSignal,
-		IDigitalInput frontBeamBreaker,
+		IDigitalInput beamBreakerNotWorking,
 		IDigitalInput backBeamBreaker
 	) {
 		super(logPath);
@@ -34,8 +35,8 @@ public class EndEffector extends GBSubsystem {
 		this.powerSignal = powerSignal;
 		this.currentSignal = currentSignal;
 
-		this.frontBeamBreaker = frontBeamBreaker;
-		this.frontBeamBreakerInputs = new DigitalInputInputsAutoLogged();
+//		this.beamBreakerNotWorking = beamBreakerNotWorking;
+//		this.beamBreakerNotWorkingInputs = new DigitalInputInputsAutoLogged();
 
 		this.backBeamBreaker = backBeamBreaker;
 		this.backBeamBreakerInputs = new DigitalInputInputsAutoLogged();
@@ -52,7 +53,7 @@ public class EndEffector extends GBSubsystem {
 	}
 
 	public boolean isCoralInFront() {
-		return frontBeamBreakerInputs.debouncedValue;
+		return backBeamBreakerInputs.debouncedValue; // beamBreakerNotWorkingInputs.debouncedValue;
 	}
 
 	public boolean isCoralInBack() {
@@ -77,8 +78,8 @@ public class EndEffector extends GBSubsystem {
 		roller.updateSimulation();
 		roller.updateInputs(powerSignal, currentSignal);
 
-		frontBeamBreaker.updateInputs(frontBeamBreakerInputs);
-		Logger.processInputs(getLogPath() + "/FrontBeamBreaker", frontBeamBreakerInputs);
+//		beamBreakerNotWorking.updateInputs(beamBreakerNotWorkingInputs);
+//		Logger.processInputs(getLogPath() + "/BeamBreakerNotWorking", beamBreakerNotWorkingInputs);
 
 		backBeamBreaker.updateInputs(backBeamBreakerInputs);
 		Logger.processInputs(getLogPath() + "/BackBeamBreaker", backBeamBreakerInputs);
@@ -93,6 +94,10 @@ public class EndEffector extends GBSubsystem {
 		roller.setBrake(brake);
 	}
 
+	protected void stop() {
+		roller.stop();
+	}
+
 	protected void setPower(double power) {
 		roller.setPower(power);
 	}
@@ -104,6 +109,11 @@ public class EndEffector extends GBSubsystem {
 		joystick.X.onTrue(new InstantCommand(() -> calibrationPower = Math.min(calibrationPower + 0.01, 1)));
 		joystick.A.onTrue(new InstantCommand(() -> calibrationPower = Math.max(calibrationPower - 0.1, -1)));
 		joystick.Y.onTrue(new InstantCommand(() -> calibrationPower = Math.min(calibrationPower + 0.1, 1)));
+
+		joystick.POV_LEFT.onTrue(commandsBuilder.setPower(EndEffectorState.KEEP.getPower()));
+		joystick.POV_DOWN.onTrue(commandsBuilder.setPower(EndEffectorState.INTAKE.getPower()).until(this::isCoralInBack));
+		joystick.POV_UP.onTrue(commandsBuilder.setPower(EndEffectorState.OUTTAKE.getPower()).until(() -> !isCoralInFront()));
+		joystick.POV_RIGHT.onTrue(commandsBuilder.stop());
 	}
 
 }

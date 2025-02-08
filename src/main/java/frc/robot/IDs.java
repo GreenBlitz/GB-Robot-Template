@@ -40,7 +40,7 @@ public class IDs {
 
 	public static class SparkMAXIDs {
 
-		public static final SparkMaxDeviceID END_EFFECTOR = new SparkMaxDeviceID(30);
+		public static final SparkMaxDeviceID END_EFFECTOR = new SparkMaxDeviceID(5);
 
 	}
 

@@ -24,7 +24,7 @@ public class Phoenix6Util {
 
 	public static StatusCode checkWithRetry(StatusCodeSupplier statusCodeSupplier, int numberOfTries) {
 		for (int i = 0; i < numberOfTries - 1; i++) {
-			if (statusCodeSupplier.get() == StatusCode.OK) {
+			if (statusCodeSupplier.get().isOK()) {
 				return StatusCode.OK;
 			}
 		}

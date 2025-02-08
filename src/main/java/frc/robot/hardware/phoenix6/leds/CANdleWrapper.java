@@ -6,11 +6,13 @@ import com.ctre.phoenix.led.CANdleConfiguration;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.Phoenix6Util;
+import org.littletonrobotics.junction.Logger;
 
 public class CANdleWrapper extends CANdle {
 
 	private final int DEFAULT_CONFIG_NUMBER_OF_TRIES = 5;
 
+	private final String logPath;
 	private final int numberOfLeds;
 
 	public CANdleWrapper(int deviceId, int numberOfLeds) {
@@ -19,6 +21,7 @@ public class CANdleWrapper extends CANdle {
 
 	public CANdleWrapper(Phoenix6DeviceID ctreDeviceID, int numberOfLeds) {
 		super(ctreDeviceID.id(), ctreDeviceID.busChain().getChainName());
+		this.logPath = ctreDeviceID.busChain().getChainName();
 		this.numberOfLeds = numberOfLeds;
 	}
 
@@ -28,6 +31,14 @@ public class CANdleWrapper extends CANdle {
 
 	public ErrorCode applyConfiguration(CANdleConfiguration configuration) {
 		return applyConfiguration(configuration, DEFAULT_CONFIG_NUMBER_OF_TRIES);
+	}
+
+	public boolean isConnected() {
+		return this.getTemperature() != 0; // we will see if it's not connected and this is the cleanest solution we found
+	}
+
+	public void log(){
+		Logger.recordOutput(logPath + "/isConnected", isConnected());
 	}
 
 	public ErrorCode setColor(Color color, int startIndex, int amountOfLedsToAffect) {
@@ -44,10 +55,6 @@ public class CANdleWrapper extends CANdle {
 
 	public ErrorCode setColor(Color color) {
 		return this.setColor(color, 0);
-	}
-
-	public boolean isConnected() {
-		return this.getTemperature() != 0; // we will see if it's not connected and this is the cleanest solution we found
 	}
 
 }

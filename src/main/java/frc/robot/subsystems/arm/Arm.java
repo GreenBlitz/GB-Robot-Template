@@ -69,13 +69,6 @@ public class Arm extends GBSubsystem {
 		return Robot.ROBOT_TYPE.isReal() ? KrakenX60ArmBuilder.kG * getPosition().getCos() : 0;
 	}
 
-
-	public Rotation2d getReverseSoftLimit(Elevator elevator) {
-		return elevator.getElevatorPositionMeters() >= ArmConstants.ELEVATOR_HEIGHT_METERS_TO_CHANGE_SOFT_LIMIT
-				? ArmConstants.ELEVATOR_OPEN_REVERSED_SOFTWARE_LIMIT
-				: ArmConstants.ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT;
-	}
-
 	@Override
 	protected void subsystemPeriodic() {
 		motor.updateSimulation();

@@ -12,7 +12,6 @@ import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmState;
 import frc.robot.subsystems.arm.ArmStateHandler;
-import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorState;
 import frc.robot.subsystems.elevator.ElevatorStateHandler;
 import frc.robot.subsystems.endeffector.EndEffectorState;
@@ -42,7 +41,7 @@ public class Superstructure extends GBSubsystem {
 	}
 
 
-	public Rotation2d getArmReverseSoftLimit() {
+	public Rotation2d getArmReversedSoftLimitByElevator() {
 		return robot.getElevator().getElevatorPositionMeters() >= ArmConstants.ELEVATOR_HEIGHT_METERS_TO_CHANGE_SOFT_LIMIT
 				? ArmConstants.ELEVATOR_OPEN_REVERSED_SOFTWARE_LIMIT
 				: ArmConstants.ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT;

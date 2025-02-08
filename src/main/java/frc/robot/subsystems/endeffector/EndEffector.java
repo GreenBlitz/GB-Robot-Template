@@ -14,7 +14,7 @@ public class EndEffector extends GBSubsystem {
 	private final ControllableMotor roller;
 	private final InputSignal<Double> powerSignal;
 	private final InputSignal<Double> currentSignal;
-	private final IDigitalInput beamBreakerNotWorking/*❗❗❗❗❗❗❗❗❗❗*/;
+	private final IDigitalInput beamBreakerNotWorking;
 	private final DigitalInputInputsAutoLogged beamBreakerNotWorkingInputs;
 	private final IDigitalInput backBeamBreaker;
 	private final DigitalInputInputsAutoLogged backBeamBreakerInputs;
@@ -110,9 +110,9 @@ public class EndEffector extends GBSubsystem {
 		joystick.Y.onTrue(new InstantCommand(() -> calibrationPower = Math.min(calibrationPower + 0.1, 1)));
 
 		joystick.POV_LEFT.onTrue(commandsBuilder.setPower(EndEffectorState.KEEP.getPower()));
-		joystick.POV_RIGHT.onTrue(commandsBuilder.setPower(EndEffectorState.INTAKE.getPower()).until(this::isCoralInBack));
+		joystick.POV_DOWN.onTrue(commandsBuilder.setPower(EndEffectorState.INTAKE.getPower()).until(this::isCoralInBack));
 		joystick.POV_UP.onTrue(commandsBuilder.setPower(EndEffectorState.OUTTAKE.getPower()).until(() -> !isCoralInBack()));
-		joystick.START.onTrue(commandsBuilder.stop());
+		joystick.POV_RIGHT.onTrue(commandsBuilder.stop());
 	}
 
 }

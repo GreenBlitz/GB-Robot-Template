@@ -4,6 +4,6 @@ Calibrations:
 - [x] Natural mode
 - [x] Motor inverted
 - [x] Current limit
-- [ ] Beam breaker ports
-- [ ] Beam breakers inverted
+- [x] Beam breaker ports
+- [x] Beam breakers inverted
 - [ ] Motor states powers

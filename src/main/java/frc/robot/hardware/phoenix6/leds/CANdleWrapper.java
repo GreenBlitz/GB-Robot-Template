@@ -37,7 +37,7 @@ public class CANdleWrapper extends CANdle {
 		return this.getTemperature() != 0; // we will see if it's not connected and this is the cleanest solution we found
 	}
 
-	public void log(){
+	public void log() {
 		Logger.recordOutput(logPath + "/isConnected", isConnected());
 	}
 

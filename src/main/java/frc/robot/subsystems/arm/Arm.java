@@ -11,7 +11,6 @@ import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.arm.factory.KrakenX60ArmBuilder;
-import frc.robot.subsystems.elevator.Elevator;
 import frc.utils.alerts.Alert;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.calibration.sysid.SysIdCalibrator;
@@ -81,7 +80,7 @@ public class Arm extends GBSubsystem {
 		encoder.updateInputs(encoderPositionSignal);
 	}
 
-	private void log(){
+	private void log() {
 		Logger.recordOutput(getLogPath() + "/ReversedSoftLimit", reversedSoftLimit);
 		Logger.recordOutput(getLogPath() + "/TargetPose", positionRequest.getSetPoint());
 	}

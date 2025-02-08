@@ -194,6 +194,10 @@ public class Elevator extends GBSubsystem {
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick) {
+		joystick.getAxisAsButton(Axis.LEFT_TRIGGER).whileTrue(commandsBuilder.setVoltage(() -> ffCalibrationVoltage));
+		joystick.R1.onTrue(new InstantCommand(() -> ffCalibrationVoltage = ffCalibrationVoltage + 0.01));
+		joystick.L1.onTrue(new InstantCommand(() -> ffCalibrationVoltage = ffCalibrationVoltage - 0.01));
+
 		joystick.getAxisAsButton(Axis.RIGHT_TRIGGER)
 			.whileTrue(
 				commandsBuilder.setPower(
@@ -201,14 +205,9 @@ public class Elevator extends GBSubsystem {
 				)
 			);
 
-		joystick.getAxisAsButton(Axis.LEFT_TRIGGER).whileTrue(commandsBuilder.setVoltage(() -> ffCalibrationVoltage));
-		joystick.R1.onTrue(new InstantCommand(() -> ffCalibrationVoltage = ffCalibrationVoltage + 0.01));
-		joystick.L1.onTrue(new InstantCommand(() -> ffCalibrationVoltage = ffCalibrationVoltage - 0.01));
-
-
-//		The sysid outputs will be logged to the "CTRE Signal Logger". Use phoenix tuner x to extract the position, velocity, motorVoltage,
-//		state signals into wpilog. Then enter the wpilog into wpilib sysid app and make sure you enter all info in the correct places. (see
-//		wpilib sysid in google)
+		// The sysid outputs will be logged to the "CTRE Signal Logger". Use phoenix tuner x to extract the position, velocity, motorVoltage,
+		// state signals into wpilog. Then enter the wpilog into wpilib sysid app and make sure you enter all info in the correct places. (see
+		// wpilib sysid in google)
 		sysIdCalibrator.setAllButtonsForCalibration(joystick);
 
 		// PID Testing

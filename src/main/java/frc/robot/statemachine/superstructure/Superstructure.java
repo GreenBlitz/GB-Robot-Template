@@ -43,8 +43,8 @@ public class Superstructure extends GBSubsystem {
 
 	public Rotation2d getArmReversedSoftLimitByElevator() {
 		return robot.getElevator().getElevatorPositionMeters() >= ArmConstants.ELEVATOR_HEIGHT_METERS_TO_CHANGE_SOFT_LIMIT
-				? ArmConstants.ELEVATOR_OPEN_REVERSED_SOFTWARE_LIMIT
-				: ArmConstants.ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT;
+			? ArmConstants.ELEVATOR_OPEN_REVERSED_SOFTWARE_LIMIT
+			: ArmConstants.ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT;
 	}
 
 	public boolean isCoralIn() {

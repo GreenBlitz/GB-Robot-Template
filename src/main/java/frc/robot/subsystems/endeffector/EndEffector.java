@@ -14,6 +14,7 @@ public class EndEffector extends GBSubsystem {
 	private final ControllableMotor roller;
 	private final InputSignal<Double> powerSignal;
 	private final InputSignal<Double> currentSignal;
+	// Todo: now there is only one bb connected. We need to add one in the future.
 //	private final IDigitalInput beamBreakerNotWorking;
 //	private final DigitalInputInputsAutoLogged beamBreakerNotWorkingInputs;
 	private final IDigitalInput backBeamBreaker;

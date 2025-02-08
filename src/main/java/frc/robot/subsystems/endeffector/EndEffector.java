@@ -105,10 +105,9 @@ public class EndEffector extends GBSubsystem {
 		joystick.A.onTrue(new InstantCommand(() -> calibrationPower = Math.max(calibrationPower - 0.1, -1)));
 		joystick.Y.onTrue(new InstantCommand(() -> calibrationPower = Math.min(calibrationPower + 0.1, 1)));
 
-		joystick.POV_LEFT.onTrue(commandsBuilder.setPower(0.5));
-		joystick.POV_RIGHT.onTrue(commandsBuilder.setPower(-0.5));
-		joystick.POV_UP.onTrue(commandsBuilder.setPower(0.8));
-		joystick.POV_DOWN.onTrue(commandsBuilder.setPower(-0.8));
+		joystick.POV_LEFT.onTrue(commandsBuilder.setPower(EndEffectorState.KEEP.getPower()));
+		joystick.POV_RIGHT.onTrue(commandsBuilder.setPower(EndEffectorState.INTAKE.getPower()));
+		joystick.POV_UP.onTrue(commandsBuilder.setPower(EndEffectorState.OUTTAKE.getPower()));
 		joystick.START.onTrue(commandsBuilder.stop());
 	}
 

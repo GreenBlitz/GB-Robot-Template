@@ -21,7 +21,7 @@ public enum ScoreLevel {
 		RobotState.PRE_L1
 	),
 	L2(
-		EndEffectorState.OUTTAKE,
+		EndEffectorState.BRANCH_OUTTAKE,
 		ElevatorState.L2,
 		ElevatorState.PRE_L2,
 		ArmState.L2,
@@ -34,7 +34,7 @@ public enum ScoreLevel {
 		RobotState.PRE_L2
 	),
 	L3(
-		EndEffectorState.OUTTAKE,
+		EndEffectorState.BRANCH_OUTTAKE,
 		ElevatorState.L3,
 		ElevatorState.PRE_L3,
 		ArmState.L3,
@@ -47,7 +47,7 @@ public enum ScoreLevel {
 		RobotState.PRE_L3
 	),
 	L4(
-		EndEffectorState.OUTTAKE,
+		EndEffectorState.BRANCH_OUTTAKE,
 		ElevatorState.L4,
 		ElevatorState.PRE_L4,
 		ArmState.L4,

@@ -10,8 +10,8 @@ public class Solenoid extends GBSubsystem {
 	private final InputSignal<Double> voltageSignal;
 	private final SolenoidCommandBuilder commandsBuilder;
 	
-	public Solenoid(SolenoidComponents solenoidComponents) {
-		super(solenoidComponents.logPath());
+	public Solenoid(SolenoidComponents solenoidComponents, String logPath) {
+		super(logPath);
 		this.motor = solenoidComponents.solenoid();
 		this.voltageSignal = solenoidComponents.voltageSignal();
 		this.commandsBuilder = new SolenoidCommandBuilder(this);

@@ -77,6 +77,8 @@ public class Swerve extends GBSubsystem {
 		// Calibrate steer ks with phoenix tuner x
 		// Calibrate steer pid with phoenix tuner x
 
+		joystick.BACK.onTrue(new InstantCommand(() -> setHeading(new Rotation2d())));
+
 		// Let it rotate some rotations then output will be in log under Calibrations/.
 		joystick.POV_RIGHT.whileTrue(getCommandsBuilder().wheelRadiusCalibration());
 
@@ -99,9 +101,9 @@ public class Swerve extends GBSubsystem {
 		);
 		// Apply 12 volts on rotation-axis.
 		// Use it for max velocity calibrations. See what velocity the swerve log after it stops accelerating and use it as max.
-		joystick.BACK.whileTrue(
-			getCommandsBuilder().driveByState(() -> new ChassisPowers(0, 0, 1), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
-		);
+//		joystick.BACK.whileTrue(
+//			getCommandsBuilder().driveByState(() -> new ChassisPowers(0, 0, 1), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
+//		);
 
 		// The sysid outputs will be logged to the "CTRE Signal Logger".
 		// Use phoenix tuner x to extract the position, velocity, motorVoltage, state signals into wpilog.

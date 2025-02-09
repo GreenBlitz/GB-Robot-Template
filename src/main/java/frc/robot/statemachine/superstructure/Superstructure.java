@@ -110,39 +110,39 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	private Command genericPreArm(ScoreLevel scoreLevel) {
+	private Command genericArmPreScore(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.CLOSED),
 				armStateHandler.setState(scoreLevel.getArmPreScore()),
 				endEffectorStateHandler.setState(EndEffectorState.KEEP)
 			),
-			scoreLevel.getSuperstructurePreArm()
+			scoreLevel.getSuperstructureArmPreScore()
 		);
 	}
 
-	private Command preArmL1() {
-		return genericPreArm(ScoreLevel.L1);
+	private Command armPreL1() {
+		return genericArmPreScore(ScoreLevel.L1);
 	}
 
-	private Command preArmL2() {
-		return genericPreArm(ScoreLevel.L2);
+	private Command armPreL2() {
+		return genericArmPreScore(ScoreLevel.L2);
 	}
 
-	private Command preArmL3() {
-		return genericPreArm(ScoreLevel.L3);
+	private Command armPreL3() {
+		return genericArmPreScore(ScoreLevel.L3);
 	}
 
-	private Command preArmL4() {
-		return genericPreArm(ScoreLevel.L4);
+	private Command armPreL4() {
+		return genericArmPreScore(ScoreLevel.L4);
 	}
 
-	public Command preArm(ScoreLevel scoreLevel) {
+	public Command armPreScore(ScoreLevel scoreLevel) {
 		return switch (scoreLevel) {
-			case L1 -> preArmL1();
-			case L2 -> preArmL2();
-			case L3 -> preArmL3();
-			case L4 -> preArmL4();
+			case L1 -> armPreL1();
+			case L2 -> armPreL2();
+			case L3 -> armPreL3();
+			case L4 -> armPreL4();
 		};
 	}
 
@@ -197,11 +197,21 @@ public class Superstructure extends GBSubsystem {
 
 	private Command genericScoreWithRelease(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(scoreLevel.getElevatorScore()),
-				armStateHandler.setState(scoreLevel.getArmScore()),
-				endEffectorStateHandler.setState(scoreLevel.getEndEffectorState())
-			).until(this::isCoralOut).withTimeout(StateMachineConstants.SCORE_TIME_OUT_SECONDS),
+			new SequentialCommandGroup(
+
+
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(scoreLevel.getElevatorScore()),
+					armStateHandler.setState(scoreLevel.getArmScore()),
+					endEffectorStateHandler.setState(scoreLevel.getEndEffectorState())
+				).until(this::isCoralOut),
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(scoreLevel.getElevatorScore()),
+					armStateHandler.setState(scoreLevel.getArmScore()),
+					endEffectorStateHandler.setState(scoreLevel.getEndEffectorState())
+				).withTimeout(StateMachineConstants.SCORE_TIME_OUT_SECONDS)
+			),
+
 			scoreLevel.getSuperstructureScore()
 		);
 	}
@@ -263,10 +273,10 @@ public class Superstructure extends GBSubsystem {
 	private Command endState(SuperstructureState state) {
 		return switch (state) {
 			case INTAKE, OUTTAKE, IDLE -> idle();
-			case PRE_ARM_L1 -> preArmL1();
-			case PRE_ARM_L2 -> preArmL2();
-			case PRE_ARM_L3 -> preArmL3();
-			case PRE_ARM_L4 -> preArmL4();
+			case ARM_PRE_L1 -> armPreL1();
+			case ARM_PRE_L2 -> armPreL2();
+			case ARM_PRE_L3 -> armPreL3();
+			case ARM_PRE_L4 -> armPreL4();
 			case PRE_L1 -> preL1();
 			case PRE_L2 -> preL2();
 			case PRE_L3 -> preL3();

@@ -116,10 +116,10 @@ public class RobotCommander extends GBSubsystem {
 			case INTAKE -> intake();
 			case OUTTAKE -> outtake();
 			case ALIGN_REEF -> alignReef();
-			case PRE_ARM_L1 -> preArmL1();
-			case PRE_ARM_L2 -> preArmL2();
-			case PRE_ARM_L3 -> preArmL3();
-			case PRE_ARM_L4 -> preArmL4();
+			case ARM_PRE_L1 -> armPreL1();
+			case ARM_PRE_L2 -> armPreL2();
+			case ARM_PRE_L3 -> armPreL3();
+			case ARM_PRE_L4 -> armPreL4();
 			case PRE_L1 -> preL1();
 			case PRE_L2 -> preL2();
 			case PRE_L3 -> preL3();
@@ -172,10 +172,8 @@ public class RobotCommander extends GBSubsystem {
 	private Command genericPreScore(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
-				new SequentialCommandGroup(
-					superstructure.idle().until(() -> isReadyToOpenSuperstructure(scoreLevel, ScoringHelpers.targetBranch)),
-					superstructure.preScore(scoreLevel)
-				),
+				superstructure.idle().until(() -> isReadyToOpenSuperstructure(scoreLevel, ScoringHelpers.targetBranch)),
+				superstructure.preScore(scoreLevel),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
 			),
 			scoreLevel.getRobotPreScore()
@@ -198,38 +196,38 @@ public class RobotCommander extends GBSubsystem {
 		return genericPreScore(ScoreLevel.L4);
 	}
 
-	private Command genericPreArm(ScoreLevel scoreLevel) {
+	private Command genericArmPreScore(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
-				superstructure.preArm(scoreLevel),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.REEF))
+				superstructure.armPreScore(scoreLevel),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
 			),
-			scoreLevel.getRobotPreArm()
+			scoreLevel.getRobotArmPreScore()
 		);
 	}
 
-	private Command preArmL1() {
-		return genericPreArm(ScoreLevel.L1);
+	private Command armPreL1() {
+		return genericArmPreScore(ScoreLevel.L1);
 	}
 
-	private Command preArmL2() {
-		return genericPreArm(ScoreLevel.L2);
+	private Command armPreL2() {
+		return genericArmPreScore(ScoreLevel.L2);
 	}
 
-	private Command preArmL3() {
-		return genericPreArm(ScoreLevel.L3);
+	private Command armPreL3() {
+		return genericArmPreScore(ScoreLevel.L3);
 	}
 
-	private Command preArmL4() {
-		return genericPreArm(ScoreLevel.L4);
+	private Command armPreL4() {
+		return genericArmPreScore(ScoreLevel.L4);
 	}
 
-	public Command preArm(ScoreLevel scoreLevel) {
+	public Command armPreScore(ScoreLevel scoreLevel) {
 		return switch (scoreLevel) {
-			case L1 -> preArmL1();
-			case L2 -> preArmL2();
-			case L3 -> preArmL3();
-			case L4 -> preArmL4();
+			case L1 -> armPreL1();
+			case L2 -> armPreL2();
+			case L3 -> armPreL3();
+			case L4 -> armPreL4();
 		};
 	}
 
@@ -296,14 +294,10 @@ public class RobotCommander extends GBSubsystem {
 	private Command endState(RobotState state) {
 		return switch (state) {
 			case INTAKE, OUTTAKE, DRIVE, ALIGN_REEF -> drive();
-			case PRE_ARM_L1 -> preArmL1();
-			case PRE_ARM_L2 -> preArmL2();
-			case PRE_ARM_L3 -> preArmL3();
-			case PRE_ARM_L4 -> preArmL4();
-			case PRE_L1 -> preL1();
-			case PRE_L2 -> preL2();
-			case PRE_L3 -> preL3();
-			case PRE_L4 -> preL4();
+			case PRE_L1, ARM_PRE_L1 -> preL1();
+			case PRE_L2, ARM_PRE_L2 -> preL2();
+			case PRE_L3, ARM_PRE_L3 -> preL3();
+			case PRE_L4, ARM_PRE_L4 -> preL4();
 			case L1, L1_WITHOUT_RELEASE -> scoreL1WithoutRelease();
 			case L2, L2_WITHOUT_RELEASE -> scoreL2WithoutRelease();
 			case L3, L3_WITHOUT_RELEASE -> scoreL3WithoutRelease();

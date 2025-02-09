@@ -16,11 +16,11 @@ public enum ScoreLevel {
 		SuperstructureState.SCORE_L1,
 		SuperstructureState.SCORE_L1_WITHOUT_RELEASE,
 		SuperstructureState.PRE_L1,
-		SuperstructureState.PRE_ARM_L1,
+		SuperstructureState.ARM_PRE_L1,
 		RobotState.L1,
 		RobotState.L1_WITHOUT_RELEASE,
 		RobotState.PRE_L1,
-		RobotState.PRE_ARM_L1
+		RobotState.ARM_PRE_L1
 	),
 	L2(
 		EndEffectorState.BRANCH_OUTTAKE,
@@ -31,11 +31,11 @@ public enum ScoreLevel {
 		SuperstructureState.SCORE_L2,
 		SuperstructureState.SCORE_L2_WITHOUT_RELEASE,
 		SuperstructureState.PRE_L2,
-		SuperstructureState.PRE_ARM_L2,
+		SuperstructureState.ARM_PRE_L2,
 		RobotState.L2,
 		RobotState.L2_WITHOUT_RELEASE,
 		RobotState.PRE_L2,
-		RobotState.PRE_ARM_L2
+		RobotState.ARM_PRE_L2
 	),
 	L3(
 		EndEffectorState.BRANCH_OUTTAKE,
@@ -46,11 +46,11 @@ public enum ScoreLevel {
 		SuperstructureState.SCORE_L3,
 		SuperstructureState.SCORE_L3_WITHOUT_RELEASE,
 		SuperstructureState.PRE_L3,
-		SuperstructureState.PRE_ARM_L3,
+		SuperstructureState.ARM_PRE_L3,
 		RobotState.L3,
 		RobotState.L3_WITHOUT_RELEASE,
 		RobotState.PRE_L3,
-		RobotState.PRE_ARM_L3
+		RobotState.ARM_PRE_L3
 	),
 	L4(
 		EndEffectorState.BRANCH_OUTTAKE,
@@ -61,11 +61,11 @@ public enum ScoreLevel {
 		SuperstructureState.SCORE_L4,
 		SuperstructureState.SCORE_L4_WITHOUT_RELEASE,
 		SuperstructureState.PRE_L4,
-		SuperstructureState.PRE_ARM_L4,
+		SuperstructureState.ARM_PRE_L4,
 		RobotState.L4,
 		RobotState.L4_WITHOUT_RELEASE,
 		RobotState.PRE_L4,
-		RobotState.PRE_ARM_L4
+		RobotState.ARM_PRE_L3
 	);
 
 	private final EndEffectorState endEffectorState;
@@ -76,11 +76,11 @@ public enum ScoreLevel {
 	private final SuperstructureState superstructureScore;
 	private final SuperstructureState superstructureScoreWithoutRelease;
 	private final SuperstructureState superstructurePreScore;
-	private final SuperstructureState superstructurePreArm;
+	private final SuperstructureState superstructureArmPreScore;
 	private final RobotState robotScore;
 	private final RobotState robotScoreWithoutRelease;
 	private final RobotState robotPreScore;
-	private final RobotState robotPreArm;
+	private final RobotState robotArmPreScore;
 
 	ScoreLevel(
 		EndEffectorState endEffectorState,
@@ -91,11 +91,11 @@ public enum ScoreLevel {
 		SuperstructureState superstructureScore,
 		SuperstructureState superstructureScoreWithoutRelease,
 		SuperstructureState superstructurePreScore,
-		SuperstructureState superstructurePreArm,
+		SuperstructureState superstructureArmPreScore,
 		RobotState robotScore,
 		RobotState robotScoreWithoutRelease,
 		RobotState robotPreScore,
-		RobotState robotPreArm
+		RobotState robotArmPreScore
 	) {
 		this.endEffectorState = endEffectorState;
 		this.elevatorScore = elevatorScore;
@@ -105,11 +105,11 @@ public enum ScoreLevel {
 		this.superstructureScore = superstructureScore;
 		this.superstructureScoreWithoutRelease = superstructureScoreWithoutRelease;
 		this.superstructurePreScore = superstructurePreScore;
-		this.superstructurePreArm = superstructurePreArm;
+		this.superstructureArmPreScore = superstructureArmPreScore;
 		this.robotScore = robotScore;
 		this.robotScoreWithoutRelease = robotScoreWithoutRelease;
 		this.robotPreScore = robotPreScore;
-		this.robotPreArm = robotPreArm;
+		this.robotArmPreScore = robotArmPreScore;
 	}
 
 	public EndEffectorState getEndEffectorState() {
@@ -144,8 +144,8 @@ public enum ScoreLevel {
 		return superstructurePreScore;
 	}
 
-	public SuperstructureState getSuperstructurePreArm() {
-		return superstructurePreArm;
+	public SuperstructureState getSuperstructureArmPreScore() {
+		return superstructureArmPreScore;
 	}
 
 	public RobotState getRobotScore() {
@@ -160,8 +160,8 @@ public enum ScoreLevel {
 		return robotPreScore;
 	}
 
-	public RobotState getRobotPreArm() {
-		return robotPreArm;
+	public RobotState getRobotArmPreScore() {
+		return robotArmPreScore;
 	}
 
 }

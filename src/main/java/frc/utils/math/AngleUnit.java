@@ -2,6 +2,8 @@ package frc.utils.math;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import frc.utils.TriFunction;
+
 import java.util.function.DoubleFunction;
 
 public enum AngleUnit {

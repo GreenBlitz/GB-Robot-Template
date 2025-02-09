@@ -110,6 +110,8 @@ public class KrakenX60ArmBuilder {
 			}
 		}
 		config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
+		config.Slot1.GravityType = GravityTypeValue.Arm_Cosine;
+		config.Slot2.GravityType = GravityTypeValue.Arm_Cosine;
 
 		config.MotionMagic.MotionMagicAcceleration = ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED.getRotations();
 		config.MotionMagic.MotionMagicCruiseVelocity = ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND.getRotations();

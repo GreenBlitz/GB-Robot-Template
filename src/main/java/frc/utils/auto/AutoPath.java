@@ -9,6 +9,9 @@ import java.util.Optional;
 
 public enum AutoPath {
 
+	AUTO_LINE_1_TO_I(AutonomousConstants.LinkedWaypoints.AUTO_LINE1, AutonomousConstants.LinkedWaypoints.I),
+	AUTO_LINE_1_TO_J(AutonomousConstants.LinkedWaypoints.AUTO_LINE1, AutonomousConstants.LinkedWaypoints.J),
+	AUTO_LINE_1_TO_K(AutonomousConstants.LinkedWaypoints.AUTO_LINE1, AutonomousConstants.LinkedWaypoints.K),
 	A_TO_UPPER_CORAL_STATION(AutonomousConstants.LinkedWaypoints.A, AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION),
 	B_TO_LOWER_CORAL_STATION(AutonomousConstants.LinkedWaypoints.B, AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION),
 	C_TO_LOWER_CORAL_STATION(AutonomousConstants.LinkedWaypoints.C, AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION),

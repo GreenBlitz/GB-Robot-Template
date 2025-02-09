@@ -70,7 +70,6 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-		usedJoystick.A.onTrue(robot.getArm().getCommandsBuilder().loggedDashboardSetVoltage());
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

@@ -180,6 +180,7 @@ public class KrakenX60ArmBuilder {
 		CANcoderConfiguration configuration = new CANcoderConfiguration();
 		configuration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
 		configuration.MagnetSensor.MagnetOffset = magnetSensorConfigs.MagnetOffset;
+		configuration.MagnetSensor.AbsoluteSensorDiscontinuityPoint = ArmConstants.MAXIMUM_POSITION.getRotations();
 
 		return configuration;
 	}

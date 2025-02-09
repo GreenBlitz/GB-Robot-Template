@@ -10,10 +10,10 @@ public class SolenoidCommandBuilder {
 	
 	private final Solenoid solenoid;
 	
-	public SolenoidCommandsBuilder(Solenoid solenoid) {
+	public SolenoidCommandBuilder(Solenoid solenoid) {
 		this.solenoid = solenoid;
 	}
-	
+
 	//@formatter:off
 	public Command setPower(double power) {
 		return new FunctionalCommand(

@@ -26,14 +26,18 @@ public class LEDManager {
     }
 
     public void periodic(){
-        setStateByBooleanSupplier();
+        setAllStateByBooleanSupplier();
     }
 
-    public void setStateByBooleanSupplier(){
-        for (Pair<BooleanSupplier, LEDState> p : suppliersList){
-            if (p.getFirst().getAsBoolean()){
-                ledStateHandler.setState(p.getSecond());
-            }
+    public void setAllStateByBooleanSupplier(){
+        for (Pair<BooleanSupplier, LEDState> ledStatePair : suppliersList){
+            setStateByBooleanSupplier(ledStatePair);
+        }
+    }
+
+    public void setStateByBooleanSupplier(Pair<BooleanSupplier, LEDState> ledStatePair){
+        if (ledStatePair.getFirst().getAsBoolean()){
+            ledStateHandler.setState(ledStatePair.getSecond());
         }
     }
 }

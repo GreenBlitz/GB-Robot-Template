@@ -43,7 +43,7 @@ public class Robot {
 	private final EndEffector endEffector;
 
 	private final SimulationManager simulationManager;
-	private final RobotCommander robotCommander;
+//	private final RobotCommander robotCommander;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -75,13 +75,13 @@ public class Robot {
 		this.endEffector = EndEffectorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/EndEffector");
 
 		this.simulationManager = new SimulationManager("SimulationManager", this);
-		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
+//		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
 	}
 
 	public void periodic() {
 		swerve.update();
 		poseEstimator.updateOdometry(swerve.getAllOdometryObservations());
-		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());
+//		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		simulationManager.logPoses();
@@ -112,8 +112,8 @@ public class Robot {
 		return endEffector;
 	}
 
-	public RobotCommander getRobotCommander() {
-		return robotCommander;
-	}
+//	public RobotCommander getRobotCommander() {
+//		return robotCommander;
+//	}
 
 }

@@ -31,11 +31,11 @@ public class JoysticksBindings {
 		fifthJoystickButtons(robot);
 		sixthJoystickButtons(robot);
 
-		Trigger noteIn = new Trigger(robot.getRobotCommander().getSuperstructure()::isCoralIn);
-		noteIn.onTrue(noteInRumble(MAIN_JOYSTICK).alongWith(noteInRumble(SECOND_JOYSTICK)));
-
-		Trigger noteOut = new Trigger(robot.getRobotCommander().getSuperstructure()::isCoralOut);
-		noteOut.onTrue(noteInRumble(MAIN_JOYSTICK).alongWith(noteInRumble(SECOND_JOYSTICK)));
+//		Trigger noteIn = new Trigger(robot.getRobotCommander().getSuperstructure()::isCoralIn);
+//		noteIn.onTrue(noteInRumble(MAIN_JOYSTICK).alongWith(noteInRumble(SECOND_JOYSTICK)));
+//
+//		Trigger noteOut = new Trigger(robot.getRobotCommander().getSuperstructure()::isCoralOut);
+//		noteOut.onTrue(noteInRumble(MAIN_JOYSTICK).alongWith(noteInRumble(SECOND_JOYSTICK)));
 	}
 
 	public static void setDriversInputsToSwerve(Swerve swerve) {

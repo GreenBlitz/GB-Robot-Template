@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.15,
-        "y": 0.97
+        "x": 1.13,
+        "y": 1.06
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.07675,
-        "y": 1.2169999999999994
+        "x": 2.05675,
+        "y": 1.3069999999999995
       },
       "isLocked": false,
       "linkedName": "LS"
     },
     {
       "anchor": {
-        "x": 5.26,
-        "y": 3.02
+        "x": 5.3,
+        "y": 2.9400000000000004
       },
       "prevControl": {
-        "x": 5.0115,
-        "y": 2.1529999999999996
+        "x": 5.2065,
+        "y": 2.0554999999999994
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,13 +34,13 @@
   "eventMarkers": [
     {
       "name": "IDLE",
-      "waypointRelativePos": 0.23982494529540788,
+      "waypointRelativePos": 0.18380743982494505,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
       "name": "PRE_SCORE",
-      "waypointRelativePos": 0.7544857768052513,
+      "waypointRelativePos": 0.8175054704595166,
       "endWaypointRelativePos": null,
       "command": null
     }

@@ -9,7 +9,7 @@ import com.ctre.phoenix6.CANBus.CANBusStatus;
 
 public enum BusChain {
 
-	ROBORIO(""),
+	ROBORIO("rio"),
 	CANIVORE("*");
 
 	private static final double PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE = 0.6;

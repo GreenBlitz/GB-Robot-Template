@@ -80,7 +80,7 @@ public class Robot {
 
 	public void periodic() {
 		swerve.update();
-		poseEstimator.updateOdometry(swerve.getAllOdometryObservations());
+		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();

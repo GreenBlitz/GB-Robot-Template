@@ -89,7 +89,7 @@ public class WheelRadiusCharacterization extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		onEnd.run();
-		String output = accumulateGyroYawRadians <= MathConstants.FULL_CIRCLE.getRadians()
+		String output = Math.abs(accumulateGyroYawRadians) <= MathConstants.FULL_CIRCLE.getRadians()
 			? "Not enough data for characterization"
 			: wheelRadiusMeters + " meters";
 		Logger.recordOutput(WheelRadiusConstants.LOG_PATH, output);

@@ -216,6 +216,9 @@ public class Swerve extends GBSubsystem {
 		Logger.recordOutput(constants.velocityLogPath() + "/Magnitude", SwerveMath.getDriveMagnitude(allianceRelativeSpeeds));
 
 		Logger.recordOutput(getLogPath() + "/OdometrySamples", getNumberOfOdometrySamples());
+
+		Logger.recordOutput(getLogPath() + "/headSAupp", headingSupplier.get());
+		Logger.recordOutput(getLogPath() + "/getAbs", getAbsoluteHeading());
 	}
 
 

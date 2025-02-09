@@ -58,7 +58,9 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void teleopInit() {
-		auto.cancel();
+		if (auto != null) {
+			auto.cancel();
+		}
 	}
 
 	@Override

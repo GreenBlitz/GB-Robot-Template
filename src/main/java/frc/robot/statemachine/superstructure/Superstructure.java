@@ -115,7 +115,7 @@ public class Superstructure extends GBSubsystem {
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.CLOSED),
 				armStateHandler.setState(scoreLevel.getArmPreScore()),
-				endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
+				endEffectorStateHandler.setState(EndEffectorState.KEEP)
 			),
 			scoreLevel.getSuperstructurePreArm()
 		);

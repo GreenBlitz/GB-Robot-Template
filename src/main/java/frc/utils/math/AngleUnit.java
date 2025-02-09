@@ -1,6 +1,5 @@
 package frc.utils.math;
 
-import com.pathplanner.lib.auto.AutoBuilder.TriFunction;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import java.util.function.DoubleFunction;

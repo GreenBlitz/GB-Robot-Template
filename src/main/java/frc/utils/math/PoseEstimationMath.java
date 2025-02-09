@@ -1,10 +1,9 @@
-package frc.robot.poseestimator;
+package frc.utils.math;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.constants.RobotHeadingEstimatorConstants;
-import frc.utils.math.AngleMath;
 
-public class PoseEstimatorMath {
+public class PoseEstimationMath {
 
 	public static double getKalmanRatio(double odometryStandardDeviation, double visionStandardDeviation) {
 		double ratio = odometryStandardDeviation / (odometryStandardDeviation + visionStandardDeviation);

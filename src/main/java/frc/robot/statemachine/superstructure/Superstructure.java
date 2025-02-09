@@ -149,8 +149,10 @@ public class Superstructure extends GBSubsystem {
 	private Command genericPreScore(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
-				elevatorStateHandler.setState(scoreLevel.getElevatorPreScore()),
-				preArm(scoreLevel),
+				new SequentialCommandGroup(
+					armStateHandler.setState(scoreLevel.getArmScore()),
+					elevatorStateHandler.setState(scoreLevel.getElevatorScore())
+				),
 				endEffectorStateHandler.setState(EndEffectorState.KEEP)
 			),
 			scoreLevel.getSuperstructurePreScore()

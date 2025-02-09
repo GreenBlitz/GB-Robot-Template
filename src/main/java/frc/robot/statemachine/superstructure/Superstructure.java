@@ -113,11 +113,15 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
+	private Command preArmLevel(ScoreLevel scoreLevel) {
+		return armStateHandler.setState(scoreLevel.getArmPreScore());
+	}
+
 	private Command genericPreScore(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(scoreLevel.getElevatorPreScore()),
-				armStateHandler.setState(scoreLevel.getArmPreScore()),
+				preArmLevel(scoreLevel),
 				endEffectorStateHandler.setState(EndEffectorState.KEEP)
 			),
 			scoreLevel.getSuperstructurePreScore()
@@ -149,7 +153,18 @@ public class Superstructure extends GBSubsystem {
 		};
 	}
 
-	private Command genericScore(ScoreLevel scoreLevel) {
+	private Command genericScoreWithoutRelease(ScoreLevel scoreLevel) {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(scoreLevel.getElevatorScore()),
+				armStateHandler.setState(scoreLevel.getArmScore()),
+				endEffectorStateHandler.setState(EndEffectorState.KEEP)
+			),
+			scoreLevel.getSuperstructureScoreWithoutRelease()
+		);
+	}
+
+	private Command genericScoreWithRelease(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
@@ -173,19 +188,35 @@ public class Superstructure extends GBSubsystem {
 	}
 
 	public Command scoreL1() {
-		return genericScore(ScoreLevel.L1);
+		return genericScoreWithRelease(ScoreLevel.L1);
 	}
 
 	public Command scoreL2() {
-		return genericScore(ScoreLevel.L2);
+		return genericScoreWithRelease(ScoreLevel.L2);
 	}
 
 	public Command scoreL3() {
-		return genericScore(ScoreLevel.L3);
+		return genericScoreWithRelease(ScoreLevel.L3);
 	}
 
 	public Command scoreL4() {
-		return genericScore(ScoreLevel.L4);
+		return genericScoreWithRelease(ScoreLevel.L4);
+	}
+
+	public Command scoreL1WithoutRelease() {
+		return genericScoreWithoutRelease(ScoreLevel.L1);
+	}
+
+	public Command scoreL2WithoutRelease() {
+		return genericScoreWithoutRelease(ScoreLevel.L2);
+	}
+
+	public Command scoreL3WithoutRelease() {
+		return genericScoreWithoutRelease(ScoreLevel.L3);
+	}
+
+	public Command scoreL4WithoutRelease() {
+		return genericScoreWithoutRelease(ScoreLevel.L4);
 	}
 
 	public Command score(ScoreLevel scoreLevel) {
@@ -197,6 +228,15 @@ public class Superstructure extends GBSubsystem {
 		};
 	}
 
+	public Command scoreWithoutRelease(ScoreLevel scoreLevel) {
+		return switch (scoreLevel) {
+			case L1 -> scoreL1WithoutRelease();
+			case L2 -> scoreL2WithoutRelease();
+			case L3 -> scoreL3WithoutRelease();
+			case L4 -> scoreL4WithoutRelease();
+		};
+	}
+
 	private Command asSubsystemCommand(Command command, SuperstructureState state) {
 		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
 	}
@@ -204,10 +244,14 @@ public class Superstructure extends GBSubsystem {
 	private Command endState(SuperstructureState state) {
 		return switch (state) {
 			case INTAKE, OUTTAKE, IDLE -> idle();
-			case PRE_L1, SCORE_L1 -> preL1();
-			case PRE_L2, SCORE_L2 -> preL2();
-			case PRE_L3, SCORE_L3 -> preL3();
-			case PRE_L4, SCORE_L4 -> preL4();
+			case PRE_L1 -> preL1();
+			case PRE_L2 -> preL2();
+			case PRE_L3 -> preL3();
+			case PRE_L4 -> preL4();
+			case SCORE_L1, SCORE_L1_WITHOUT_RELEASE -> scoreL1WithoutRelease();
+			case SCORE_L2, SCORE_L2_WITHOUT_RELEASE -> scoreL2WithoutRelease();
+			case SCORE_L3, SCORE_L3_WITHOUT_RELEASE -> scoreL3WithoutRelease();
+			case SCORE_L4, SCORE_L4_WITHOUT_RELEASE -> scoreL4WithoutRelease();
 		};
 	}
 

@@ -120,6 +120,10 @@ public class RobotCommander extends GBSubsystem {
 			case PRE_L2 -> preL2();
 			case PRE_L3 -> preL3();
 			case PRE_L4 -> preL4();
+			case L1_WITHOUT_RELEASE -> scoreL1WithoutRelease();
+			case L2_WITHOUT_RELEASE -> scoreL2WithoutRelease();
+			case L3_WITHOUT_RELEASE -> scoreL3WithoutRelease();
+			case L4_WITHOUT_RELEASE -> scoreL4WithoutRelease();
 			case L1 -> scoreL1();
 			case L2 -> scoreL2();
 			case L3 -> scoreL3();
@@ -190,6 +194,16 @@ public class RobotCommander extends GBSubsystem {
 		return genericPreScore(ScoreLevel.L4);
 	}
 
+	private Command genericScoreWithoutRelease(ScoreLevel scoreLevel) {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				superstructure.scoreWithoutRelease(scoreLevel),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
+			),
+			scoreLevel.getRobotScoreWithoutRelease()
+		);
+	}
+
 	private Command genericScore(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
@@ -220,6 +234,22 @@ public class RobotCommander extends GBSubsystem {
 		return genericScore(ScoreLevel.L4);
 	}
 
+	private Command scoreL1WithoutRelease() {
+		return genericScoreWithoutRelease(ScoreLevel.L1);
+	}
+
+	private Command scoreL2WithoutRelease() {
+		return genericScoreWithoutRelease(ScoreLevel.L2);
+	}
+
+	private Command scoreL3WithoutRelease() {
+		return genericScoreWithoutRelease(ScoreLevel.L3);
+	}
+
+	private Command scoreL4WithoutRelease() {
+		return genericScoreWithoutRelease(ScoreLevel.L4);
+	}
+
 	private Command asSubsystemCommand(Command command, RobotState state) {
 		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
 	}
@@ -227,10 +257,14 @@ public class RobotCommander extends GBSubsystem {
 	private Command endState(RobotState state) {
 		return switch (state) {
 			case INTAKE, OUTTAKE, DRIVE, ALIGN_REEF -> drive();
-			case PRE_L1, L1 -> preL1();
-			case PRE_L2, L2 -> preL2();
-			case PRE_L3, L3 -> preL3();
-			case PRE_L4, L4 -> preL4();
+			case PRE_L1 -> preL1();
+			case PRE_L2 -> preL2();
+			case PRE_L3 -> preL3();
+			case PRE_L4 -> preL4();
+			case L1, L1_WITHOUT_RELEASE -> scoreL1WithoutRelease();
+			case L2, L2_WITHOUT_RELEASE -> scoreL2WithoutRelease();
+			case L3, L3_WITHOUT_RELEASE -> scoreL3WithoutRelease();
+			case L4, L4_WITHOUT_RELEASE -> scoreL4WithoutRelease();
 		};
 	}
 

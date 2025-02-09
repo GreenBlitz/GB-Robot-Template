@@ -1,0 +1,68 @@
+package frc.robot.subsystems.solenoid.factory;
+
+import com.revrobotics.spark.config.LimitSwitchConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.IDs;
+import frc.robot.Robot;
+import frc.robot.hardware.digitalinput.IDigitalInput;
+import frc.robot.hardware.digitalinput.chooser.ChooserDigitalInput;
+import frc.robot.hardware.digitalinput.supplied.SuppliedDigitalInput;
+import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
+import frc.robot.hardware.rev.motors.*;
+import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
+import frc.robot.subsystems.endeffector.EndEffector;
+import frc.robot.subsystems.solenoid.Solenoid;
+
+public class SolenoidSparkMaxBuilder {
+
+	private static final int NUMBER_OF_MOTORS = 1;
+	private static final boolean IS_INVERTED = true;
+	private static final boolean SET_BRAKE = false;
+	private static final int CURRENT_LIMIT = 20;
+
+	// Gear ratio in SparkMAX is output / input (as opposed to input / output in CTRE)
+	private static final double GEAR_RATIO = 25.0 / 6.0;
+	private static final double MOMENT_OF_INERTIA = 0.001;
+
+	private static void configMotor(SparkMaxMotor sparkMaxMotor) {
+		SparkMaxConfig config = new SparkMaxConfig();
+		config.inverted(IS_INVERTED);
+		config.smartCurrentLimit(CURRENT_LIMIT);
+
+		config.encoder.positionConversionFactor(GEAR_RATIO);
+		config.encoder.velocityConversionFactor(GEAR_RATIO);
+
+		sparkMaxMotor.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig(config));
+		sparkMaxMotor.setBrake(SET_BRAKE);
+	}
+
+	private static BrushedSparkMAXMotor generateMotor(String logPath, SparkMaxWrapper sparkMaxWrapper) {
+		SimpleMotorSimulation simulation = new SimpleMotorSimulation(
+			new DCMotorSim(
+				LinearSystemId.createDCMotorSystem(DCMotor.getNEO(NUMBER_OF_MOTORS), MOMENT_OF_INERTIA, 1 / GEAR_RATIO),
+				DCMotor.getNEO(NUMBER_OF_MOTORS)
+			)
+		);
+
+		BrushedSparkMAXMotor motor = new BrushedSparkMAXMotor(logPath, sparkMaxWrapper, simulation);
+		configMotor(motor);
+		return motor;
+	}
+
+	public static Solenoid generate(String logPath) {
+		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.SparkMAXIDs.END_EFFECTOR);
+
+		SuppliedDoubleSignal powerSignal = new SuppliedDoubleSignal("power", sparkMaxWrapper::get);
+		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("current", sparkMaxWrapper::getOutputCurrent);
+
+		BrushedSparkMAXMotor motor = generateMotor(logPath + "/Roller", sparkMaxWrapper);
+
+		return new Solenoid(logPath, motor, powerSignal, currentSignal, frontDigitalInput, backDigitalInput);
+	}
+
+}

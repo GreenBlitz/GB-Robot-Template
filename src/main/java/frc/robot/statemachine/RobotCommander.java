@@ -116,6 +116,10 @@ public class RobotCommander extends GBSubsystem {
 			case INTAKE -> intake();
 			case OUTTAKE -> outtake();
 			case ALIGN_REEF -> alignReef();
+			case PRE_ARM_L1 -> preArmL1();
+			case PRE_ARM_L2 -> preArmL2();
+			case PRE_ARM_L3 -> preArmL3();
+			case PRE_ARM_L4 -> preArmL4();
 			case PRE_L1 -> preL1();
 			case PRE_L2 -> preL2();
 			case PRE_L3 -> preL3();
@@ -194,6 +198,41 @@ public class RobotCommander extends GBSubsystem {
 		return genericPreScore(ScoreLevel.L4);
 	}
 
+	private Command genericPreArm(ScoreLevel scoreLevel) {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				superstructure.preArm(scoreLevel),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.REEF))
+			),
+			scoreLevel.getRobotPreArm()
+		);
+	}
+
+	private Command preArmL1() {
+		return genericPreArm(ScoreLevel.L1);
+	}
+
+	private Command preArmL2() {
+		return genericPreArm(ScoreLevel.L2);
+	}
+
+	private Command preArmL3() {
+		return genericPreArm(ScoreLevel.L3);
+	}
+
+	private Command preArmL4() {
+		return genericPreArm(ScoreLevel.L4);
+	}
+
+	public Command preArm(ScoreLevel scoreLevel) {
+		return switch (scoreLevel) {
+			case L1 -> preArmL1();
+			case L2 -> preArmL2();
+			case L3 -> preArmL3();
+			case L4 -> preArmL4();
+		};
+	}
+
 	private Command genericScoreWithoutRelease(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
@@ -257,7 +296,10 @@ public class RobotCommander extends GBSubsystem {
 	private Command endState(RobotState state) {
 		return switch (state) {
 			case INTAKE, OUTTAKE, DRIVE, ALIGN_REEF -> drive();
-			case PRE_ARM ->
+			case PRE_ARM_L1 -> preArmL1();
+			case PRE_ARM_L2 -> preArmL2();
+			case PRE_ARM_L3 -> preArmL3();
+			case PRE_ARM_L4 -> preArmL4();
 			case PRE_L1 -> preL1();
 			case PRE_L2 -> preL2();
 			case PRE_L3 -> preL3();

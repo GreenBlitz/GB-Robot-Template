@@ -111,7 +111,14 @@ public class Superstructure extends GBSubsystem {
 	}
 
 	private Command genericPreArm(ScoreLevel scoreLevel) {
-		return armStateHandler.setState(scoreLevel.getArmPreScore());
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.CLOSED),
+				armStateHandler.setState(scoreLevel.getArmPreScore()),
+				endEffectorStateHandler.setState(EndEffectorState.OUTTAKE)
+			),
+			scoreLevel.getSuperstructurePreArm()
+		);
 	}
 
 	private Command preArmL1() {
@@ -254,6 +261,10 @@ public class Superstructure extends GBSubsystem {
 	private Command endState(SuperstructureState state) {
 		return switch (state) {
 			case INTAKE, OUTTAKE, IDLE -> idle();
+			case PRE_ARM_L1 -> preArmL1();
+			case PRE_ARM_L2 -> preArmL2();
+			case PRE_ARM_L3 -> preArmL3();
+			case PRE_ARM_L4 -> preArmL4();
 			case PRE_L1 -> preL1();
 			case PRE_L2 -> preL2();
 			case PRE_L3 -> preL3();

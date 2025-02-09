@@ -107,6 +107,12 @@ public class KrakenX60ArmBuilder {
 				config.Slot0.kD = 0;
 				config.Slot0.kS = 0;
 				config.Slot0.kG = 0;
+
+				config.Slot1.kP = 70;
+				config.Slot1.kI = 0;
+				config.Slot1.kD = 0;
+				config.Slot1.kS = 0;
+				config.Slot1.kG = 0;
 			}
 		}
 		config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;

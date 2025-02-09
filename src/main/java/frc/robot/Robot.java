@@ -4,10 +4,7 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -32,19 +29,14 @@ import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.vision.VisionFilters;
-import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.data.VisionData;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
-import frc.robot.vision.sources.VisionSource;
-import frc.robot.vision.sources.limelights.DynamicSwitchingLimelight;
 import frc.utils.Filter;
 import frc.utils.TimedValue;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.battery.BatteryUtil;
-import frc.utils.math.AngleUnit;
 import frc.utils.time.TimeUtil;
 
-import java.util.List;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -99,11 +91,14 @@ public class Robot {
 			VisionConstants.VISION_SOURCES
 		);
 
-		multiAprilTagVisionSources.applyFunctionOnAllFilters(filters -> filters.and(
-			new Filter<>(data ->
-				VisionFilters.isYawAtAngle(headingEstimator::getEstimatedHeading, VisionConstants.ANGLE_FILTERS_TOLERANCES).apply((VisionData) data)
+		multiAprilTagVisionSources.applyFunctionOnAllFilters(
+			filters -> filters.and(
+				new Filter<>(
+					data -> VisionFilters.isYawAtAngle(headingEstimator::getEstimatedHeading, VisionConstants.ANGLE_FILTERS_TOLERANCES)
+						.apply((VisionData) data)
+				)
 			)
-		));
+		);
 
 		swerve.setHeadingSupplier(headingEstimator::getEstimatedHeading);
 		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
@@ -123,7 +118,7 @@ public class Robot {
 	public void periodic() {
 		swerve.update();
 		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
-		for(TimedValue<Rotation2d> headingData : multiAprilTagVisionSources.getRawRobotHeadings()) {
+		for (TimedValue<Rotation2d> headingData : multiAprilTagVisionSources.getRawRobotHeadings()) {
 			headingEstimator.updateVisionHeading(headingData, RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION);
 		}
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());

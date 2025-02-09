@@ -257,6 +257,7 @@ public class RobotCommander extends GBSubsystem {
 	private Command endState(RobotState state) {
 		return switch (state) {
 			case INTAKE, OUTTAKE, DRIVE, ALIGN_REEF -> drive();
+			case PRE_ARM ->
 			case PRE_L1 -> preL1();
 			case PRE_L2 -> preL2();
 			case PRE_L3 -> preL3();

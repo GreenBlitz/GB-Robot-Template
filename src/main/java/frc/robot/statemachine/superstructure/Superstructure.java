@@ -110,15 +110,40 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	private Command preArmLevel(ScoreLevel scoreLevel) {
+	private Command genericPreArm(ScoreLevel scoreLevel) {
 		return armStateHandler.setState(scoreLevel.getArmPreScore());
+	}
+
+	private Command preArmL1() {
+		return genericPreArm(ScoreLevel.L1);
+	}
+
+	private Command preArmL2() {
+		return genericPreArm(ScoreLevel.L2);
+	}
+
+	private Command preArmL3() {
+		return genericPreArm(ScoreLevel.L3);
+	}
+
+	private Command preArmL4() {
+		return genericPreArm(ScoreLevel.L4);
+	}
+
+	public Command preArm(ScoreLevel scoreLevel) {
+		return switch (scoreLevel) {
+			case L1 -> preArmL1();
+			case L2 -> preArmL2();
+			case L3 -> preArmL3();
+			case L4 -> preArmL4();
+		};
 	}
 
 	private Command genericPreScore(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(scoreLevel.getElevatorPreScore()),
-				preArmLevel(scoreLevel),
+				preArm(scoreLevel),
 				endEffectorStateHandler.setState(EndEffectorState.KEEP)
 			),
 			scoreLevel.getSuperstructurePreScore()

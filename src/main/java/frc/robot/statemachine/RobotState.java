@@ -6,6 +6,7 @@ public enum RobotState {
 	INTAKE,
 	OUTTAKE,
 	ALIGN_REEF,
+	PRE_ARM,
 	PRE_L1,
 	PRE_L2,
 	PRE_L3,

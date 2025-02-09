@@ -43,13 +43,13 @@ public class AutosBuilder {
 		return autos;
 	}
 
-	public static List<Supplier<PathPlannerAutoWrapper>> getAllIntakingAutos(Robot robot, Supplier<Command> intakeCommand, Pose2d tolerance) {
+	public static List<Supplier<PathPlannerAutoWrapper>> getAllIntakingAutos(Robot robot, Pose2d tolerance) {
 		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
 		for (AutoPath autoPath : PathHelper.getAllIntakingPaths()) {
 			autos.add(
 					() -> createAutoFromAutoPath(
 							autoPath,
-							pathPlannerPath -> PathFollowingCommandsBuilder.commandAfterPath(robot, pathPlannerPath, intakeCommand, tolerance)
+							pathPlannerPath -> PathFollowingCommandsBuilder.followAdjustedPath(robot, pathPlannerPath, tolerance)
 					)
 			);
 		}

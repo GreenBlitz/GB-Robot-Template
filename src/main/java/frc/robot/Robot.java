@@ -4,9 +4,12 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.events.EventTrigger;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.autonomous.AutonomousConstants;
+import frc.robot.autonomous.AutosBuilder;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
@@ -22,10 +25,13 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
+import frc.utils.auto.AutonomousChooser;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
+
+import java.util.function.Supplier;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -45,6 +51,14 @@ public class Robot {
 
 	private final SimulationManager simulationManager;
 	private final RobotCommander robotCommander;
+
+	private AutonomousChooser startingPointAndWhereToScoreFirstObjectChooser;
+	private AutonomousChooser whereToIntakeSecondObjectChooser;
+	private AutonomousChooser whereToScoreSecondObjectChooser;
+	private AutonomousChooser whereToIntakeThirdObjectChooser;
+	private AutonomousChooser whereToScoreThirdObjectChooser;
+	private AutonomousChooser whereToIntakeFourthObjectChooser;
+	private AutonomousChooser whereToScoreFourthObjectChooser;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -82,11 +96,46 @@ public class Robot {
 	}
 
 	private void configureAuto() {
+		Supplier<Command> scoringCommand = () -> robotCommander.getSuperstructure().scoreL4();
+
 		swerve.configPathPlanner(
 				poseEstimator::getEstimatedPose,
 				poseEstimator::resetPose,
 				PathPlannerUtil.getGuiRobotConfig().orElse(AutonomousConstants.ROBOT_CONFIG)
 		);
+
+		this.startingPointAndWhereToScoreFirstObjectChooser = new AutonomousChooser(
+				"StartingPointAndScoreFirst",
+				AutosBuilder.getAllStartingAndScoringFirstObjectAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+		);
+		this.whereToIntakeSecondObjectChooser = new AutonomousChooser(
+				"IntakeSecond",
+				AutosBuilder.getAllIntakingAutos(this, AutonomousConstants.TARGET_POSE_TOLERANCES)
+		);
+		this.whereToScoreSecondObjectChooser = new AutonomousChooser(
+				"ScoreSecond",
+				AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+		);
+		this.whereToIntakeThirdObjectChooser = new AutonomousChooser(
+				"IntakeThird",
+				AutosBuilder.getAllIntakingAutos(this, AutonomousConstants.TARGET_POSE_TOLERANCES)
+		);
+		this.whereToScoreThirdObjectChooser = new AutonomousChooser(
+				"ScoreThird",
+				AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+		);
+		this.whereToIntakeFourthObjectChooser = new AutonomousChooser(
+				"IntakeFourth",
+				AutosBuilder.getAllIntakingAutos(this, AutonomousConstants.TARGET_POSE_TOLERANCES)
+		);
+		this.whereToScoreFourthObjectChooser = new AutonomousChooser(
+				"ScoreFourth",
+				AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+		);
+
+		new EventTrigger("PRE_SCORE").onTrue(robotCommander.getSuperstructure().preL4());
+		new EventTrigger("INTAKE").onTrue(robotCommander.getSuperstructure().intake());
+		new EventTrigger("IDLE").onTrue(robotCommander.getSuperstructure().idle());
 	}
 
 	public void periodic() {
@@ -100,7 +149,15 @@ public class Robot {
 	}
 
 	public PathPlannerAutoWrapper getAuto() {
-		return new PathPlannerAutoWrapper();
+		return PathPlannerAutoWrapper.chainAutos(
+				startingPointAndWhereToScoreFirstObjectChooser.getChosenValue(),
+				whereToIntakeSecondObjectChooser.getChosenValue(),
+				whereToScoreSecondObjectChooser.getChosenValue(),
+				whereToIntakeThirdObjectChooser.getChosenValue(),
+				whereToScoreThirdObjectChooser.getChosenValue(),
+				whereToIntakeFourthObjectChooser.getChosenValue(),
+				whereToScoreFourthObjectChooser.getChosenValue()
+		);
 	}
 
 	public WPILibPoseEstimatorWrapper getPoseEstimator() {

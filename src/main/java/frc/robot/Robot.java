@@ -12,6 +12,7 @@ import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
+import frc.robot.statemachine.RobotCommander;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.factory.ArmFactory;
 import frc.robot.subsystems.elevator.Elevator;
@@ -22,8 +23,8 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
-import frc.utils.battery.BatteryUtils;
 import frc.utils.brakestate.BrakeStateManager;
+import frc.utils.battery.BatteryUtil;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -42,9 +43,10 @@ public class Robot {
 	private final EndEffector endEffector;
 
 	private final SimulationManager simulationManager;
+	private final RobotCommander robotCommander;
 
 	public Robot() {
-		BatteryUtils.scheduleLimiter();
+		BatteryUtil.scheduleLimiter();
 
 		IGyro gyro = GyroFactory.createGyro(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(
@@ -73,12 +75,14 @@ public class Robot {
 		this.endEffector = EndEffectorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/EndEffector");
 
 		this.simulationManager = new SimulationManager("SimulationManager", this);
+		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
 	}
 
 	public void periodic() {
 		swerve.update();
 		poseEstimator.updateOdometry(swerve.getAllOdometryObservations());
-		BatteryUtils.logStatus();
+		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());
+		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		simulationManager.logPoses();
 		CommandScheduler.getInstance().run(); // Should be last
@@ -106,6 +110,10 @@ public class Robot {
 
 	public EndEffector getEndEffector() {
 		return endEffector;
+	}
+
+	public RobotCommander getRobotCommander() {
+		return robotCommander;
 	}
 
 }

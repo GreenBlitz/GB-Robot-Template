@@ -3,10 +3,10 @@ package frc.robot.subsystems.swerve.factories.modules.encoder;
 import frc.robot.hardware.empties.EmptyAngleEncoder;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.signal.AngleSignal;
-import frc.robot.hardware.signal.TimedValue;
 import frc.robot.subsystems.swerve.module.records.EncoderSignals;
+import frc.utils.TimedValue;
 import frc.utils.math.AngleUnit;
-import frc.utils.time.TimeUtils;
+import frc.utils.time.TimeUtil;
 
 class SimulationEncoderBuilder {
 
@@ -19,7 +19,7 @@ class SimulationEncoderBuilder {
 
 			@Override
 			protected TimedValue<Double> getNewValue() {
-				return new TimedValue<>(0.0, TimeUtils.getCurrentTimeSeconds());
+				return new TimedValue<>(0.0, TimeUtil.getCurrentTimeSeconds());
 			}
 
 		});

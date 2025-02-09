@@ -18,7 +18,7 @@ public class Modules {
 		this.modules = modules;
 	}
 
-	public Module getModule(ModuleUtils.ModulePosition modulePosition) {
+	public Module getModule(ModuleUtil.ModulePosition modulePosition) {
 		return modules[modulePosition.getIndex()];
 	}
 
@@ -27,8 +27,8 @@ public class Modules {
 		for (Module currentModule : modules) {
 			currentModule.updateInputs();
 		}
-		Logger.recordOutput(logPath + "CurrentStates", getCurrentStates());
-		Logger.recordOutput(logPath + "TargetStates", getTargetStates());
+		Logger.recordOutput(logPath + "/CurrentStates", getCurrentStates());
+		Logger.recordOutput(logPath + "/TargetStates", getTargetStates());
 	}
 
 

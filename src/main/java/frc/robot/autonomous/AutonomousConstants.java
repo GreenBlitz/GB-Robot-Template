@@ -23,11 +23,11 @@ public class AutonomousConstants {
 	public static final RobotConfig ROBOT_CONFIG = new RobotConfig(
 			60,
 			8.6,
-			new ModuleConfig(0.04, 5.24, 0.96, DCMotor.getKrakenX60Foc(1), 6.12, 60),
-			new Translation2d(),
-			new Translation2d(),
-			new Translation2d(),
-			new Translation2d()
+			new ModuleConfig(0.0508, 4.477, 0.96, DCMotor.getKrakenX60Foc(1), 7.13, 60, 1),
+			new Translation2d(0.3, 0.3),
+			new Translation2d(0.3, -0.3),
+			new Translation2d(-0.3, 0.3),
+			new Translation2d(-0.3, -0.3)
 	);
 
 	public static class LinkedWaypoints {

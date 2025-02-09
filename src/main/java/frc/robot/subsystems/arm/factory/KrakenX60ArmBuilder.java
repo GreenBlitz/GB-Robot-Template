@@ -4,7 +4,6 @@ import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -54,11 +53,7 @@ public class KrakenX60ArmBuilder {
 	public static final double kG = 0.3165;
 
 	protected static Arm build(String logPath) {
-		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(
-			new PositionVoltage(0).withSlot(1),
-			0,
-			ENABLE_FOC
-		);
+		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0).withSlot(1), 0, ENABLE_FOC);
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), ENABLE_FOC);
 
 		TalonFXMotor motor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ARM, buildSysidConfig(), buildArmSimulation());

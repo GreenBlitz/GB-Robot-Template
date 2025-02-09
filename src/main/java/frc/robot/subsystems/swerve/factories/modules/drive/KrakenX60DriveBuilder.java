@@ -45,7 +45,7 @@ class KrakenX60DriveBuilder {
 		return new SimpleMotorSimulation(
 			new DCMotorSim(
 				LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), MOMENT_OF_INERTIA_METERS_SQUARED, GEAR_RATIO),
-				DCMotor.getKrakenX60Foc(1)
+				DCMotor.getKrakenX60(1)
 			)
 		);
 	}
@@ -64,9 +64,9 @@ class KrakenX60DriveBuilder {
 		driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
 		if (Robot.ROBOT_TYPE.isReal()) {
-			driveConfig.Slot0.kS = 0;
-			driveConfig.Slot0.kV = 0;
-			driveConfig.Slot0.kA = 0;
+			driveConfig.Slot0.kS = 0.28607;
+			driveConfig.Slot0.kV = 0.86406;
+			driveConfig.Slot0.kA = 0.80992;
 			driveConfig.Slot0.kP = 0;
 			driveConfig.Slot0.kI = 0;
 			driveConfig.Slot0.kD = 0;

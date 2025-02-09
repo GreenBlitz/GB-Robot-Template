@@ -80,7 +80,8 @@ public class Swerve extends GBSubsystem {
 		joystick.BACK.onTrue(new InstantCommand(() -> setHeading(new Rotation2d())));
 
 		// Let it rotate some rotations then output will be in log under Calibrations/.
-		joystick.POV_RIGHT.whileTrue(getCommandsBuilder().wheelRadiusCalibration());
+//		joystick.POV_RIGHT.whileTrue(getCommandsBuilder().wheelRadiusCalibration());
+		joystick.POV_RIGHT.whileTrue(getCommandsBuilder().pointWheels(Rotation2d.fromDegrees(0),false));
 
 		// Test the swerve returns real velocities (measure distance and time in real life and compare to swerve velocity logs).
 		// REMEMBER after drive calibrations use these for pid testing

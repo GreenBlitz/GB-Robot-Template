@@ -46,9 +46,9 @@ public class AutonomousConstants {
 
 		public static final Pair<String, Pose2d> AUTO_LINE7 = Pair.of("AL7", new Pose2d(7.58, 0.81, Rotation2d.fromDegrees(180)));
 
-		public static final Pair<String, Pose2d> UPPER_CORAL_STATION = Pair.of("US", new Pose2d(1.18, 7.1, Rotation2d.fromDegrees(-54)));
+		public static final Pair<String, Pose2d> UPPER_CORAL_STATION = Pair.of("US", new Pose2d(1.63, 7.34, Rotation2d.fromDegrees(-54)));
 
-		public static final Pair<String, Pose2d> LOWER_CORAL_STATION = Pair.of("LS", new Pose2d(1.13, 1.06, Rotation2d.fromDegrees(54)));
+		public static final Pair<String, Pose2d> LOWER_CORAL_STATION = Pair.of("LS", new Pose2d(1.61, 0.7, Rotation2d.fromDegrees(54)));
 
 		public static final Pair<String, Pose2d> A = Pair.of("A", new Pose2d(3.16, 4.19, Rotation2d.fromDegrees(0)));
 

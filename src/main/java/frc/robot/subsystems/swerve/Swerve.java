@@ -75,10 +75,6 @@ public class Swerve extends GBSubsystem {
 		setDefaultCommand(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
 	}
 
-	double peakVelocity = 0;
-	double startVelocityTestTime = 0;
-	double peakVelocityTimeDiff = 0;
-
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {
 		// Calibrate steer ks with phoenix tuner x
 		// Calibrate steer pid with phoenix tuner x
@@ -101,11 +97,7 @@ public class Swerve extends GBSubsystem {
 
 		// Apply 12 volts on x-axis. Use it for max velocity calibrations.
 		// See what velocity the swerve log after it stops accelerating and use it as max.
-		joystick.START.whileTrue(new SequentialCommandGroup(new InstantCommand(() -> {
-			startVelocityTestTime = TimeUtil.getCurrentTimeSeconds();
-			peakVelocity = 0;
-			peakVelocityTimeDiff = 0;
-		}), getCommandsBuilder().driveByState(() -> new ChassisPowers(1, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))));
+		joystick.START.whileTrue(commandsBuilder.maxVelocityAccelerationCalibration());
 
 		// Apply 12 volts on rotation-axis.
 		// Use it for max velocity calibrations. See what velocity the swerve log after it stops accelerating and use it as max.
@@ -222,16 +214,6 @@ public class Swerve extends GBSubsystem {
 		Logger.recordOutput(constants.velocityLogPath() + "/Magnitude", SwerveMath.getDriveMagnitude(allianceRelativeSpeeds));
 
 		Logger.recordOutput(getLogPath() + "/OdometrySamples", getNumberOfOdometrySamples());
-
-		double curVel = SwerveMath.getDriveMagnitude(allianceRelativeSpeeds);
-		if (Math.abs(curVel) > Math.abs(peakVelocity)) {
-			peakVelocity = curVel;
-			peakVelocityTimeDiff = TimeUtil.getCurrentTimeSeconds() - startVelocityTestTime;
-		}
-		Logger.recordOutput(getLogPath() + "/Calibrations/PeakVelocity", peakVelocity);
-		Logger.recordOutput(getLogPath() + "/Calibrations/TimeToReachPickVelocity", peakVelocityTimeDiff);
-		Logger.recordOutput(getLogPath() + "/Calibrations/StartTime", startVelocityTestTime);
-		Logger.recordOutput(getLogPath() + "/Calibrations/MaxACC", peakVelocity / peakVelocityTimeDiff);
 	}
 
 

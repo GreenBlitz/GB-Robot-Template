@@ -15,9 +15,11 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.Modules;
+import frc.robot.subsystems.swerve.states.LoopMode;
 import frc.robot.subsystems.swerve.states.RotateAxis;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.auto.PathPlannerUtil;
+import frc.utils.calibration.swervecalibration.MaxVelocityAccelerationCharacterization;
 import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.utilcommands.InitExecuteCommand;
@@ -116,6 +118,16 @@ public class SwerveCommandsBuilder {
 				)
 			),
 			"Wheel radius calibration"
+		);
+	}
+
+	public Command maxVelocityAccelerationCalibration() {
+		return swerve.asSubsystemCommand(
+			new MaxVelocityAccelerationCharacterization(
+				swerve,
+				power -> swerve.driveByState(new ChassisPowers(power, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
+			),
+			"Max Velocity Acceleration Calibration"
 		);
 	}
 

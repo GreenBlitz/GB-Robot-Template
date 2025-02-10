@@ -6,7 +6,6 @@ import com.ctre.phoenix.led.CANdleConfiguration;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.Phoenix6Util;
-import org.littletonrobotics.junction.Logger;
 
 public class CANdleWrapper extends CANdle {
 

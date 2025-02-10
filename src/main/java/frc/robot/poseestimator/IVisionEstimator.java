@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface IVisionEstimator {
 
-	void updateVision(List<AprilTagVisionData> robotPoseVisionObservation);
+	void updateVision(List<AprilTagVisionData> robotPoseVisionData);
 
 	Pose2d getEstimatedPose();
 

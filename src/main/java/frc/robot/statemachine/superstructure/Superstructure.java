@@ -188,17 +188,6 @@ public class Superstructure extends GBSubsystem {
 		};
 	}
 
-	private Command genericScoreWithoutRelease(ScoreLevel scoreLevel) {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(scoreLevel.getElevatorScore()),
-				armStateHandler.setState(scoreLevel.getArmScore()),
-				endEffectorStateHandler.setState(EndEffectorState.KEEP)
-			),
-			scoreLevel.getSuperstructureScoreWithoutRelease()
-		);
-	}
-
 	private Command genericScoreWithRelease(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
@@ -236,6 +225,17 @@ public class Superstructure extends GBSubsystem {
 
 	public Command scoreL4() {
 		return genericScoreWithRelease(ScoreLevel.L4);
+	}
+
+	private Command genericScoreWithoutRelease(ScoreLevel scoreLevel) {
+		return asSubsystemCommand(
+				new ParallelCommandGroup(
+						elevatorStateHandler.setState(scoreLevel.getElevatorScore()),
+						armStateHandler.setState(scoreLevel.getArmScore()),
+						endEffectorStateHandler.setState(EndEffectorState.KEEP)
+				),
+				scoreLevel.getSuperstructureScoreWithoutRelease()
+		);
 	}
 
 	public Command scoreL1WithoutRelease() {
@@ -283,14 +283,10 @@ public class Superstructure extends GBSubsystem {
 			case ARM_PRE_L2 -> armPreL2();
 			case ARM_PRE_L3 -> armPreL3();
 			case ARM_PRE_L4 -> armPreL4();
-			case PRE_L1 -> preL1();
-			case PRE_L2 -> preL2();
-			case PRE_L3 -> preL3();
-			case PRE_L4 -> preL4();
-			case SCORE_L1, SCORE_L1_WITHOUT_RELEASE -> scoreL1WithoutRelease();
-			case SCORE_L2, SCORE_L2_WITHOUT_RELEASE -> scoreL2WithoutRelease();
-			case SCORE_L3, SCORE_L3_WITHOUT_RELEASE -> scoreL3WithoutRelease();
-			case SCORE_L4, SCORE_L4_WITHOUT_RELEASE -> scoreL4WithoutRelease();
+			case PRE_L1, SCORE_L1, SCORE_L1_WITHOUT_RELEASE -> preL1();
+			case PRE_L2, SCORE_L2, SCORE_L2_WITHOUT_RELEASE -> preL2();
+			case PRE_L3, SCORE_L3, SCORE_L3_WITHOUT_RELEASE -> preL3();
+			case PRE_L4, SCORE_L4, SCORE_L4_WITHOUT_RELEASE -> preL4();
 		};
 	}
 

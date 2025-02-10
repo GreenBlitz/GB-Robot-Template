@@ -48,7 +48,7 @@ public class PathPlannerAutoWrapper extends PathPlannerAuto {
 		return new PathPlannerAutoWrapper(Commands.none().andThen(autos), autos[0].getStartingPose(), chainAutoNames(autos), true);
 	}
 
-	private static String chainAutoNames(PathPlannerAutoWrapper... autos) {
+	public static String chainAutoNames(PathPlannerAutoWrapper... autos) {
 		StringBuilder autoName = new StringBuilder();
 		for (PathPlannerAutoWrapper auto : autos) {
 			autoName.append(auto.getName()).append("-");

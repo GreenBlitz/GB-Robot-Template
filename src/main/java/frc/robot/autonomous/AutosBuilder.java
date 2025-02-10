@@ -26,44 +26,26 @@ public class AutosBuilder {
 		);
 	}
 
-	public static List<Supplier<PathPlannerAutoWrapper>> getAllStartingAndScoringFirstObjectAutos(
-		Robot robot,
-		Supplier<Command> scoringCommand,
-		Pose2d tolerance
-	) {
-		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
-		for (AutoPath autoPath : PathHelper.getAllStartingAndScoringFirstObjectPaths()) {
-			autos.add(
-				() -> createAutoFromAutoPath(
-					autoPath,
-					pathPlannerPath -> PathFollowingCommandsBuilder.commandAfterPath(robot, pathPlannerPath, scoringCommand, tolerance)
-				)
-			);
-		}
-		return autos;
+	public static List<Supplier<PathPlannerAutoWrapper>> getAllStartingAndScoringFirstObjectAutos(Robot robot, Pose2d tolerance) {
+		return createAutoListFromAutoPathList(robot, PathHelper.getAllStartingAndScoringFirstObjectPaths(), tolerance);
 	}
 
 	public static List<Supplier<PathPlannerAutoWrapper>> getAllIntakingAutos(Robot robot, Pose2d tolerance) {
-		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
-		for (AutoPath autoPath : PathHelper.getAllIntakingPaths()) {
-			autos.add(
-				() -> createAutoFromAutoPath(
-					autoPath,
-					pathPlannerPath -> PathFollowingCommandsBuilder.followAdjustedPath(robot, pathPlannerPath, tolerance)
-				)
-			);
-		}
-		return autos;
+		return createAutoListFromAutoPathList(robot, PathHelper.getAllIntakingPaths(), tolerance);
 	}
 
 	public static List<Supplier<PathPlannerAutoWrapper>> getAllScoringAutos(Robot robot, Supplier<Command> scoringCommand, Pose2d tolerance) {
+		return createAutoListFromAutoPathList(robot, PathHelper.getAllScoringPathsFromCoralStations(), tolerance);
+	}
+
+	public static List<Supplier<PathPlannerAutoWrapper>> createAutoListFromAutoPathList(Robot robot, List<AutoPath> paths, Pose2d tolerance) {
 		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
-		for (AutoPath autoPath : PathHelper.getAllScoringPathsFromCoralStations()) {
+		for (AutoPath autoPath : paths) {
 			autos.add(
-				() -> createAutoFromAutoPath(
-					autoPath,
-					pathPlannerPath -> PathFollowingCommandsBuilder.commandAfterPath(robot, pathPlannerPath, scoringCommand, tolerance)
-				)
+					() -> createAutoFromAutoPath(
+							autoPath,
+							pathPlannerPath -> PathFollowingCommandsBuilder.followAdjustedPath(robot, pathPlannerPath, tolerance)
+					)
 			);
 		}
 		return autos;

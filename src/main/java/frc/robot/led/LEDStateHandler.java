@@ -4,16 +4,18 @@ import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.LarsonAnimation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.GBSubsystem;
 
-public class LEDStateHandler {
+public class LEDStateHandler extends GBSubsystem {
     public CANdle candle;
 
-    public LEDStateHandler(CANdle candle) {
-        this.candle = candle;
+    public LEDStateHandler(String logPath,CANdle candle) {
+		super(logPath);
+		this.candle = candle;
     }
 
     public Command setState(LEDState state){
-        return new InstantCommand(() -> candle.animate(state.animation));
+        return new InstantCommand(() -> candle.animate(state.animation),this);
     }
 
 

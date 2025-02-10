@@ -15,13 +15,14 @@ public class CANdleWrapper extends CANdle {
 	private final String logPath;
 	private final int numberOfLeds;
 
-	public CANdleWrapper(int deviceId, int numberOfLeds) {
-		this(new Phoenix6DeviceID(deviceId), numberOfLeds);
+	public CANdleWrapper(int deviceId, int numberOfLeds, String logPath) {
+		this(new Phoenix6DeviceID(deviceId), numberOfLeds, logPath);
 	}
 
-	public CANdleWrapper(Phoenix6DeviceID ctreDeviceID, int numberOfLeds) {
+	public CANdleWrapper(Phoenix6DeviceID ctreDeviceID, int numberOfLeds, String logPath) {
 		super(ctreDeviceID.id(), ctreDeviceID.busChain().getChainName());
-		this.logPath = ctreDeviceID.busChain().getChainName();
+		super.clearAnimation(0);
+		this.logPath = logPath;
 		this.numberOfLeds = numberOfLeds;
 	}
 
@@ -33,16 +34,8 @@ public class CANdleWrapper extends CANdle {
 		return applyConfiguration(configuration, DEFAULT_CONFIG_NUMBER_OF_TRIES);
 	}
 
-	public boolean isConnected() {
-		return this.getTemperature() != 0; // we will see if it's not connected and this is the cleanest solution we found
-	}
-
-	public void log() {
-		Logger.recordOutput(logPath + "/isConnected", isConnected());
-	}
-
 	public ErrorCode setColor(Color color, int startIndex, int amountOfLedsToAffect) {
-		return this.setLEDs((int) color.red, (int) color.green, (int) color.blue, 0, startIndex, amountOfLedsToAffect);
+		return super.setLEDs((int) color.red, (int) color.green, (int) color.blue, 0, startIndex, amountOfLedsToAffect);
 	}
 
 	public ErrorCode setColor(Color color, int startIndex) {

@@ -165,7 +165,7 @@ public class Superstructure extends GBSubsystem {
 				new ParallelCommandGroup(
 					elevatorStateHandler.setState(scoreLevel.getElevatorScore()),
 					armStateHandler.setState(scoreLevel.getArmScore()),
-					endEffectorStateHandler.setState(scoreLevel.getEndEffectorState())
+					endEffectorStateHandler.setState(scoreLevel.getEndEffectorScore())
 				)
 			).until(this::isCoralOut),
 			scoreLevel.getSuperstructureScore()

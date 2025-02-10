@@ -19,7 +19,7 @@ public enum ScoreLevel {
 		RobotState.PRE_L1
 	),
 	L2(
-		EndEffectorState.OUTTAKE,
+		EndEffectorState.BRANCH_OUTTAKE,
 		ElevatorState.L2,
 		ElevatorState.PRE_L2,
 		ArmState.L2,
@@ -30,7 +30,7 @@ public enum ScoreLevel {
 		RobotState.PRE_L2
 	),
 	L3(
-		EndEffectorState.OUTTAKE,
+		EndEffectorState.BRANCH_OUTTAKE,
 		ElevatorState.L3,
 		ElevatorState.PRE_L3,
 		ArmState.L3,
@@ -41,7 +41,7 @@ public enum ScoreLevel {
 		RobotState.PRE_L3
 	),
 	L4(
-		EndEffectorState.OUTTAKE,
+		EndEffectorState.BRANCH_OUTTAKE,
 		ElevatorState.L4,
 		ElevatorState.PRE_L4,
 		ArmState.L4,
@@ -52,7 +52,7 @@ public enum ScoreLevel {
 		RobotState.PRE_L4
 	);
 
-	private final EndEffectorState endEffectorState;
+	private final EndEffectorState endEffectorScore;
 	private final ElevatorState elevatorScore;
 	private final ElevatorState elevatorPreScore;
 	private final ArmState armScore;
@@ -63,7 +63,7 @@ public enum ScoreLevel {
 	private final RobotState robotPreScore;
 
 	ScoreLevel(
-		EndEffectorState endEffectorState,
+		EndEffectorState endEffectorScore,
 		ElevatorState elevatorScore,
 		ElevatorState elevatorPreScore,
 		ArmState armScore,
@@ -73,7 +73,7 @@ public enum ScoreLevel {
 		RobotState robotScore,
 		RobotState robotPreScore
 	) {
-		this.endEffectorState = endEffectorState;
+		this.endEffectorScore = endEffectorScore;
 		this.elevatorScore = elevatorScore;
 		this.elevatorPreScore = elevatorPreScore;
 		this.armScore = armScore;
@@ -84,8 +84,8 @@ public enum ScoreLevel {
 		this.robotPreScore = robotPreScore;
 	}
 
-	public EndEffectorState getEndEffectorState() {
-		return endEffectorState;
+	public EndEffectorState getEndEffectorScore() {
+		return endEffectorScore;
 	}
 
 	public ElevatorState getElevatorScore() {

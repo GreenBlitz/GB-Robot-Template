@@ -16,6 +16,7 @@ import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
 import frc.robot.statemachine.RobotCommander;
+import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.factory.ArmFactory;
 import frc.robot.subsystems.elevator.Elevator;
@@ -97,7 +98,7 @@ public class Robot {
 	}
 
 	private void configureAuto() {
-		Supplier<Command> scoringCommand = InstantCommand::new;
+		Supplier<Command> scoringCommand = () -> robotCommander.getSuperstructure().scoreL4().andThen(robotCommander.getSuperstructure().preL4().until(() -> robotCommander.getSuperstructure().isPreScoreReady(ScoreLevel.L4)));
 
 		swerve.configPathPlanner(
 			poseEstimator::getEstimatedPose,
@@ -105,9 +106,9 @@ public class Robot {
 			PathPlannerUtil.getGuiRobotConfig().orElse(AutonomousConstants.ROBOT_CONFIG)
 		);
 
-		new EventTrigger("PRE_SCORE").onTrue(new InstantCommand());
-		new EventTrigger("INTAKE").onTrue(new InstantCommand());
-		new EventTrigger("IDLE").onTrue(new InstantCommand());
+		new EventTrigger("PRE_SCORE").onTrue(robotCommander.getSuperstructure().preL4());
+		new EventTrigger("INTAKE").onTrue(robotCommander.getSuperstructure().intake());
+		new EventTrigger("IDLE").onTrue(robotCommander.getSuperstructure().idle());
 
 		this.startingPointAndWhereToScoreFirstObjectChooser = new AutonomousChooser(
 			"StartingPointAndScoreFirst",

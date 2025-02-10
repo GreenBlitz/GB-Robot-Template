@@ -129,7 +129,7 @@ public class SwerveCommandsBuilder {
 				powers -> swerve.driveByState(powers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)),
 				velocityType
 			),
-			"Max Velocity Acceleration Calibration"
+			"Max " + velocityType + " Velocity Acceleration Calibration"
 		);
 	}
 

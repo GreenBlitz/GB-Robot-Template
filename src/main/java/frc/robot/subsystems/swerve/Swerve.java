@@ -91,12 +91,12 @@ public class Swerve extends GBSubsystem {
 			.whileTrue(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE)));
 
 		// Test the swerve returns real velocities (measure distance and time in real life and compare to swerve velocity logs).
-		// REMEMBER after drive calibrations use these for pid testing
+		// REMEMBER after drive calibrations use these for pid testing - Remove OPEN LOOP for that
 		joystick.POV_LEFT.whileTrue(
 			getCommandsBuilder().driveByState(() -> new ChassisPowers(0.2, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
 		);
 		joystick.POV_RIGHT.whileTrue(
-			getCommandsBuilder().driveByState(() -> new ChassisPowers(-0.5, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
+			getCommandsBuilder().driveByState(() -> new ChassisPowers(0.5, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
 		);
 
 		// Apply 12 volts on x-axis. Use it for max velocity calibrations.

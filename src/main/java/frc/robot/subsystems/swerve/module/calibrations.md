@@ -1,6 +1,6 @@
 Modules:
 -----------------------
-- [s] Enter modules in the order specified in ModuleUtils.ModulePosition
+- [x] Enter modules in the order specified in ModuleUtils.ModulePosition
 
 ModuleConstants: (real and simulation)
 -----------------------
@@ -40,8 +40,8 @@ Drive:
 - [x] Neutral Mode
 - [x] Current Limit
 - [x] Gear Ratio (should use RotorToSensorRatio)
-- [ ] FF (ks, kv, ka)
-- [ ] PID
+- [x] FF (ks, kv, ka)
+- [x] PID
 - [x] Control mode (motion magic, voltage, torque)
 - [x] Enable/Disable FOC (only talonfx)
 

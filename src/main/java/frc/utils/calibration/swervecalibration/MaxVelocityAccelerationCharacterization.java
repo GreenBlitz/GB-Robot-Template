@@ -16,9 +16,9 @@ public class MaxVelocityAccelerationCharacterization extends Command {
 	private final Swerve swerve;
 	private final Consumer<Double> openLoopDriveByPower;
 
-	private double peakVelocityMetersPerSecond;
+	private double maxVelocityMetersPerSecond;
 	private double characterizationStartingTimeSeconds;
-	private double peakVelocityTimeSeconds;
+	private double maxVelocityTimeSeconds;
 
 	public MaxVelocityAccelerationCharacterization(Swerve swerve, Consumer<Double> openLoopDriveByPower) {
 		this.swerve = swerve;
@@ -29,8 +29,8 @@ public class MaxVelocityAccelerationCharacterization extends Command {
 
 	@Override
 	public void initialize() {
-		peakVelocityMetersPerSecond = 0;
-		peakVelocityTimeSeconds = 0;
+		maxVelocityMetersPerSecond = 0;
+		maxVelocityTimeSeconds = 0;
 		characterizationStartingTimeSeconds = TimeUtil.getCurrentTimeSeconds();
 	}
 
@@ -39,19 +39,19 @@ public class MaxVelocityAccelerationCharacterization extends Command {
 		openLoopDriveByPower.accept(MAX_POWER);
 
 		double currentVelocityMagnitudeMetersPerSecond = SwerveMath.getDriveMagnitude(swerve.getRobotRelativeVelocity());
-		if (Math.abs(currentVelocityMagnitudeMetersPerSecond) > Math.abs(peakVelocityMetersPerSecond)) {
-			peakVelocityMetersPerSecond = currentVelocityMagnitudeMetersPerSecond;
-			peakVelocityTimeSeconds = TimeUtil.getCurrentTimeSeconds();
+		if (Math.abs(currentVelocityMagnitudeMetersPerSecond) > Math.abs(maxVelocityMetersPerSecond)) {
+			maxVelocityMetersPerSecond = currentVelocityMagnitudeMetersPerSecond;
+			maxVelocityTimeSeconds = TimeUtil.getCurrentTimeSeconds();
 		}
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		double timeToReachPeakVelocitySeconds = peakVelocityTimeSeconds - characterizationStartingTimeSeconds;
+		double timeToReachMaxVelocitySeconds = maxVelocityTimeSeconds - characterizationStartingTimeSeconds;
 
-		Logger.recordOutput(LOG_PATH + "/PeakVelocityMetersPerSecond", peakVelocityMetersPerSecond);
-		Logger.recordOutput(LOG_PATH + "/TimeToReachPeakVelocitySeconds", timeToReachPeakVelocitySeconds);
-		Logger.recordOutput(LOG_PATH + "/PeakAccelerationMetersPerSecondSquared", peakVelocityTimeSeconds / timeToReachPeakVelocitySeconds);
+		Logger.recordOutput(LOG_PATH + "/MaxVelocityMetersPerSecond", maxVelocityMetersPerSecond);
+		Logger.recordOutput(LOG_PATH + "/TimeToReachMaxVelocitySeconds", timeToReachMaxVelocitySeconds);
+		Logger.recordOutput(LOG_PATH + "/MaxAccelerationMetersPerSecondSquared", maxVelocityTimeSeconds / timeToReachMaxVelocitySeconds);
 	}
 
 }

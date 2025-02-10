@@ -1,6 +1,7 @@
 package frc.robot.subsystems.elevator;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 
 import java.util.function.DoubleSupplier;
@@ -25,15 +26,27 @@ public class ElevatorCommandsBuilder {
 		return elevator.asSubsystemCommand(new RunCommand(() -> elevator.setVoltage(voltage)), "Set voltage to " + voltage);
 	}
 
+	public Command setVoltage(DoubleSupplier voltageSupplier) {
+		return elevator.asSubsystemCommand(new RunCommand(() -> elevator.setVoltage(voltageSupplier.getAsDouble())), "Set voltage by Supplier");
+	}
+
 	public Command setTargetPositionMeters(double targetPositionMeters) {
 		return elevator.asSubsystemCommand(
-			new RunCommand(() -> elevator.setTargetPositionMeters(targetPositionMeters)),
+			new FunctionalCommand(
+				() -> elevator.setTargetPositionMeters(targetPositionMeters),
+				() -> {},
+				interrupted -> elevator.stop(),
+				() -> false
+			),
 			"Set Target Position To " + targetPositionMeters + " Meters"
 		);
 	}
 
 	public Command stayInPlace() {
-		return elevator.asSubsystemCommand(new RunCommand(elevator::stayInPlace), "Stay in place");
+		return elevator.asSubsystemCommand(
+			new FunctionalCommand(elevator::stayInPlace, () -> {}, interrupted -> elevator.stop(), () -> false),
+			"Stay in place"
+		);
 	}
 
 	public Command stop() {

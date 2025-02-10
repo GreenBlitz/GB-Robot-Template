@@ -8,12 +8,12 @@ import frc.robot.subsystems.solenoid.SolenoidStateHandler;
 
 public class ClimbStateHandler {
 
-	private final LifterStateHandler lifterStateHandler;
 	private final SolenoidStateHandler solenoidStateHandler;
+	private final LifterStateHandler lifterStateHandler;
 
-	public ClimbStateHandler(LifterStateHandler lifterStateHandler, SolenoidStateHandler solenoidStateHandler) {
-		this.lifterStateHandler = lifterStateHandler;
+	public ClimbStateHandler(SolenoidStateHandler solenoidStateHandler, LifterStateHandler lifterStateHandler) {
 		this.solenoidStateHandler = solenoidStateHandler;
+		this.lifterStateHandler = lifterStateHandler;
 	}
 
 	public Command setState(ClimbState state) {

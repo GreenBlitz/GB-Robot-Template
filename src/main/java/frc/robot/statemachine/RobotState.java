@@ -14,5 +14,7 @@ public enum RobotState {
 	L2,
 	L3,
 	L4,
+	PRE_CLIMB,
+	CLIMB
 
 }

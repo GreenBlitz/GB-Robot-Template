@@ -19,6 +19,10 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.factory.ElevatorFactory;
 import frc.robot.subsystems.endeffector.EndEffector;
 import frc.robot.subsystems.endeffector.factory.EndEffectorFactory;
+import frc.robot.subsystems.lifter.Lifter;
+import frc.robot.subsystems.lifter.factory.LifterFactory;
+import frc.robot.subsystems.solenoid.Solenoid;
+import frc.robot.subsystems.solenoid.factory.SolenoidFactory;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
@@ -41,6 +45,8 @@ public class Robot {
 	private final Elevator elevator;
 	private final Arm arm;
 	private final EndEffector endEffector;
+	private final Solenoid solenoid;
+	private final Lifter lifter;
 
 	private final SimulationManager simulationManager;
 	private final RobotCommander robotCommander;
@@ -73,6 +79,10 @@ public class Robot {
 		BrakeStateManager.add(() -> arm.setBrake(true), () -> arm.setBrake(false));
 
 		this.endEffector = EndEffectorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/EndEffector");
+
+		this.solenoid = SolenoidFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Solenoid");
+
+		this.lifter = LifterFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Lifter");
 
 		this.simulationManager = new SimulationManager("SimulationManager", this);
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
@@ -110,6 +120,14 @@ public class Robot {
 
 	public EndEffector getEndEffector() {
 		return endEffector;
+	}
+
+	public Solenoid getSolenoid() {
+		return solenoid;
+	}
+
+	public Lifter getLifter() {
+		return lifter;
 	}
 
 	public RobotCommander getRobotCommander() {

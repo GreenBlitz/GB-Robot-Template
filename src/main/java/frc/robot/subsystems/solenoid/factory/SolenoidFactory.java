@@ -1,12 +1,11 @@
 package frc.robot.subsystems.solenoid.factory;
 
-import frc.robot.subsystems.endeffector.EndEffector;
-import frc.robot.subsystems.endeffector.factory.EndEffectorSparkMaxBuilder;
+import frc.robot.subsystems.solenoid.Solenoid;
 
 public class SolenoidFactory {
 
-	public static EndEffector create(String logPath) {
-		return EndEffectorSparkMaxBuilder.generate(logPath);
+	public static Solenoid create(String logPath) {
+		return SolenoidSparkMaxBuilder.generate(logPath);
 	}
 
 }

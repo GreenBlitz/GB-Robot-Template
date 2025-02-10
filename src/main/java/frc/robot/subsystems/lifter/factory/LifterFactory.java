@@ -1,13 +1,13 @@
 package frc.robot.subsystems.lifter.factory;
 
 import frc.robot.Robot;
-import frc.robot.subsystems.lifter.LifterStuff;
+import frc.robot.subsystems.lifter.Lifter;
 
 public class LifterFactory {
 
-	public static LifterStuff create(String logPath) {
+	public static Lifter create(String logPath) {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> LifterRealConstants.generateLifterStuff(logPath);
+			case REAL -> new Lifter(LifterRealConstants.generateLifterStuff(logPath));
 			case SIMULATION -> null;
 		};
 	}

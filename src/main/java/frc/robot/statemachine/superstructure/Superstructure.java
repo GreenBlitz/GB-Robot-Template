@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
 import frc.robot.statemachine.Tolerances;
+import frc.robot.statemachine.superstructure.climb.ClimbState;
+import frc.robot.statemachine.superstructure.climb.ClimbStateHandler;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmState;
@@ -16,6 +18,8 @@ import frc.robot.subsystems.elevator.ElevatorState;
 import frc.robot.subsystems.elevator.ElevatorStateHandler;
 import frc.robot.subsystems.endeffector.EndEffectorState;
 import frc.robot.subsystems.endeffector.EndEffectorStateHandler;
+import frc.robot.subsystems.lifter.LifterStateHandler;
+import frc.robot.subsystems.solenoid.SolenoidStateHandler;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
@@ -26,6 +30,7 @@ public class Superstructure extends GBSubsystem {
 	private final ElevatorStateHandler elevatorStateHandler;
 	private final ArmStateHandler armStateHandler;
 	private final EndEffectorStateHandler endEffectorStateHandler;
+	private final ClimbStateHandler climbStateHandler;
 
 	private SuperstructureState currentState;
 
@@ -35,6 +40,9 @@ public class Superstructure extends GBSubsystem {
 		this.elevatorStateHandler = new ElevatorStateHandler(robot.getElevator());
 		this.armStateHandler = new ArmStateHandler(robot.getArm());
 		this.endEffectorStateHandler = new EndEffectorStateHandler(robot.getEndEffector());
+		SolenoidStateHandler solenoidStateHandler = new SolenoidStateHandler(robot.getSolenoid());
+		LifterStateHandler lifterStateHandler = new LifterStateHandler(robot.getLifter());
+		this.climbStateHandler = new ClimbStateHandler(solenoidStateHandler, lifterStateHandler);
 
 		this.currentState = SuperstructureState.IDLE;
 		setDefaultCommand(new DeferredCommand(() -> endState(currentState), Set.of(this)));
@@ -85,7 +93,8 @@ public class Superstructure extends GBSubsystem {
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.CLOSED),
 				armStateHandler.setState(ArmState.CLOSED),
-				endEffectorStateHandler.setState(EndEffectorState.KEEP)
+				endEffectorStateHandler.setState(EndEffectorState.KEEP),
+				climbStateHandler.setState(ClimbState.RETRACT)
 			),
 			SuperstructureState.IDLE
 		);
@@ -197,6 +206,30 @@ public class Superstructure extends GBSubsystem {
 		};
 	}
 
+	public Command preClimb() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.CLOSED),
+				armStateHandler.setState(ArmState.CLOSED),
+				endEffectorStateHandler.setState(EndEffectorState.KEEP),
+				climbStateHandler.setState(ClimbState.EXTEND)
+			),
+			SuperstructureState.PRE_CLIMB
+		);
+	}
+
+	public Command climb() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.CLOSED),
+				armStateHandler.setState(ArmState.CLOSED),
+				endEffectorStateHandler.setState(EndEffectorState.KEEP),
+				climbStateHandler.setState(ClimbState.RETRACT)
+			),
+			SuperstructureState.PRE_CLIMB
+		);
+	}
+
 	private Command asSubsystemCommand(Command command, SuperstructureState state) {
 		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
 	}
@@ -208,6 +241,8 @@ public class Superstructure extends GBSubsystem {
 			case PRE_L2, SCORE_L2 -> preL2();
 			case PRE_L3, SCORE_L3 -> preL3();
 			case PRE_L4, SCORE_L4 -> preL4();
+			case PRE_CLIMB -> preClimb();
+			case CLIMB -> climb();
 		};
 	}
 

@@ -231,12 +231,12 @@ public class Superstructure extends GBSubsystem {
 
 	private Command genericScoreWithoutRelease(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
-				new ParallelCommandGroup(
-						elevatorStateHandler.setState(scoreLevel.getElevatorScore()),
-						armStateHandler.setState(scoreLevel.getArmScore()),
-						endEffectorStateHandler.setState(EndEffectorState.KEEP)
-				),
-				scoreLevel.getSuperstructureScoreWithoutRelease()
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(scoreLevel.getElevatorScore()),
+				armStateHandler.setState(scoreLevel.getArmScore()),
+				endEffectorStateHandler.setState(EndEffectorState.KEEP)
+			),
+			scoreLevel.getSuperstructureScoreWithoutRelease()
 		);
 	}
 

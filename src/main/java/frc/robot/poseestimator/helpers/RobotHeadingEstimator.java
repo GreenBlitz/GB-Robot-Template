@@ -4,11 +4,11 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import frc.constants.RobotHeadingEstimatorConstants;
-import frc.robot.poseestimator.PoseEstimatorMath;
+import frc.utils.math.StatisticsMath;
+import frc.utils.math.PoseEstimationMath;
 import frc.utils.buffers.RingBuffer.RingBuffer;
 import frc.utils.TimedValue;
 import frc.utils.math.AngleMath;
-import frc.utils.math.PoseMath;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
@@ -47,7 +47,7 @@ public class RobotHeadingEstimator {
 		double visionStandardDeviation,
 		double maximumStandardDeviationTolerance
 	) {
-		double visionNoiseStandardDeviation = PoseMath.calculateStandardDeviations(
+		double visionNoiseStandardDeviation = StatisticsMath.calculateStandardDeviations(
 			estimationAndGyroBuffer,
 			estimationVisionPair -> Math
 				.abs(AngleMath.getAngleDifference(estimationVisionPair.getFirst(), estimationVisionPair.getSecond()).getRadians())
@@ -73,7 +73,7 @@ public class RobotHeadingEstimator {
 		Logger.recordOutput(logPath + RobotHeadingEstimatorConstants.VISION_HEADING_INPUT_LOGPATH_ADDITION, visionHeadingData.value());
 		Optional<Rotation2d> gyroAtTimestamp = unOffsetedGyroAngleInterpolator.getSample(visionHeadingData.timestamp());
 		gyroAtTimestamp.ifPresent(
-			gyroSampleAtTimestamp -> estimatedHeading = PoseEstimatorMath.combineVisionHeadingAndGyro(
+			gyroSampleAtTimestamp -> estimatedHeading = PoseEstimationMath.combineVisionHeadingAndGyro(
 				visionHeadingData.value(),
 				gyroSampleAtTimestamp,
 				lastGyroAngle,

@@ -34,4 +34,7 @@ public class Tolerances {
 	);
 	public static final Pose2d REEF_RELATIVE_SUPERSTRUCTURE_L1_OPEN_DEADBANDS = new Pose2d(4, 1, Rotation2d.fromRadians(0.1));
 
+	public static double ACTIVATE_AIM_ASSIST_X_AXIS_DISTANCE = 2.5;
+	public static double ACTIVATE_AIM_ASSIST_Y_AXIS_DISTANCE = 2;
+
 }

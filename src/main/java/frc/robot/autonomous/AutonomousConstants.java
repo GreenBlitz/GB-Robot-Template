@@ -21,13 +21,13 @@ public class AutonomousConstants {
 	public static final Pose2d TARGET_POSE_TOLERANCES = new Pose2d(0.02, 0.02, Rotation2d.fromDegrees(2));
 
 	public static final RobotConfig ROBOT_CONFIG = new RobotConfig(
-			60,
-			8.6,
-			new ModuleConfig(0.0508, 4.477, 0.96, DCMotor.getKrakenX60Foc(1), 7.13, 60, 1),
-			new Translation2d(0.3, 0.3),
-			new Translation2d(0.3, -0.3),
-			new Translation2d(-0.3, 0.3),
-			new Translation2d(-0.3, -0.3)
+		50,
+		4.6875,
+		new ModuleConfig(0.0508, 4.477, 0.96, DCMotor.getKrakenX60Foc(1), 7.13, 60, 1),
+		new Translation2d(0.3, 0.3),
+		new Translation2d(0.3, -0.3),
+		new Translation2d(-0.3, 0.3),
+		new Translation2d(-0.3, -0.3)
 	);
 
 	public static class LinkedWaypoints {

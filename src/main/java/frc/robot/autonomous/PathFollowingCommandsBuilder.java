@@ -27,7 +27,6 @@ public class PathFollowingCommandsBuilder {
 	}
 
 
-
 	public static Command followPath(PathPlannerPath path) {
 		return AutoBuilder.followPath(path);
 	}
@@ -56,12 +55,12 @@ public class PathFollowingCommandsBuilder {
 
 	public static Command followPathOrPathfindAndFollowPath(Robot robot, PathPlannerPath path) {
 		return new ConditionalCommand(
-				followPath(path),
-				pathfindThenFollowPath(path, AutonomousConstants.REAL_TIME_CONSTRAINTS),
-				() -> PathPlannerUtil.isRobotInPathfindingDeadband(
-						robot.getPoseEstimator().getEstimatedPose(),
-						Field.getAllianceRelative(PathPlannerUtil.getPathStartingPose(path), true, true, AngleTransform.INVERT)
-				)
+			followPath(path),
+			pathfindThenFollowPath(path, AutonomousConstants.REAL_TIME_CONSTRAINTS),
+			() -> PathPlannerUtil.isRobotInPathfindingDeadband(
+				robot.getPoseEstimator().getEstimatedPose(),
+				Field.getAllianceRelative(PathPlannerUtil.getPathStartingPose(path), true, true, AngleTransform.INVERT)
+			)
 		);
 	}
 
@@ -71,15 +70,15 @@ public class PathFollowingCommandsBuilder {
 
 	public static Command followAdjustedPath(Robot robot, PathPlannerPath path, Pose2d tolerance) {
 		return followPathOrPathfindAndFollowPath(robot, path)
-				.andThen(moveToPoseByPID(robot, Field.getAllianceRelative(PathPlannerUtil.getLastPathPose(path), true, true, AngleTransform.INVERT)))
-				.until(
-						() -> ToleranceMath.isNear(
-								Field.getAllianceRelative(PathPlannerUtil.getLastPathPose(path), true, true, AngleTransform.INVERT),
-								robot.getPoseEstimator().getEstimatedPose(),
-								tolerance
-						)
+			.andThen(moveToPoseByPID(robot, Field.getAllianceRelative(PathPlannerUtil.getLastPathPose(path), true, true, AngleTransform.INVERT)))
+			.until(
+				() -> ToleranceMath.isNear(
+					Field.getAllianceRelative(PathPlannerUtil.getLastPathPose(path), true, true, AngleTransform.INVERT),
+					robot.getPoseEstimator().getEstimatedPose(),
+					tolerance
 				)
-				.andThen(robot.getSwerve().getCommandsBuilder().resetTargetSpeeds());
+			)
+			.andThen(robot.getSwerve().getCommandsBuilder().resetTargetSpeeds());
 	}
 
 }

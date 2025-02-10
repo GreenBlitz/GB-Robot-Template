@@ -27,17 +27,17 @@ public class AutosBuilder {
 	}
 
 	public static List<Supplier<PathPlannerAutoWrapper>> getAllStartingAndScoringFirstObjectAutos(
-			Robot robot,
-			Supplier<Command> scoringCommand,
-			Pose2d tolerance
+		Robot robot,
+		Supplier<Command> scoringCommand,
+		Pose2d tolerance
 	) {
 		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
 		for (AutoPath autoPath : PathHelper.getAllStartingAndScoringFirstObjectPaths()) {
 			autos.add(
-					() -> createAutoFromAutoPath(
-							autoPath,
-							pathPlannerPath -> PathFollowingCommandsBuilder.commandAfterPath(robot, pathPlannerPath, scoringCommand, tolerance)
-					)
+				() -> createAutoFromAutoPath(
+					autoPath,
+					pathPlannerPath -> PathFollowingCommandsBuilder.commandAfterPath(robot, pathPlannerPath, scoringCommand, tolerance)
+				)
 			);
 		}
 		return autos;
@@ -47,10 +47,10 @@ public class AutosBuilder {
 		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
 		for (AutoPath autoPath : PathHelper.getAllIntakingPaths()) {
 			autos.add(
-					() -> createAutoFromAutoPath(
-							autoPath,
-							pathPlannerPath -> PathFollowingCommandsBuilder.followAdjustedPath(robot, pathPlannerPath, tolerance)
-					)
+				() -> createAutoFromAutoPath(
+					autoPath,
+					pathPlannerPath -> PathFollowingCommandsBuilder.followAdjustedPath(robot, pathPlannerPath, tolerance)
+				)
 			);
 		}
 		return autos;
@@ -60,10 +60,10 @@ public class AutosBuilder {
 		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
 		for (AutoPath autoPath : PathHelper.getAllScoringPathsFromCoralStations()) {
 			autos.add(
-					() -> createAutoFromAutoPath(
-							autoPath,
-							pathPlannerPath -> PathFollowingCommandsBuilder.commandAfterPath(robot, pathPlannerPath, scoringCommand, tolerance)
-					)
+				() -> createAutoFromAutoPath(
+					autoPath,
+					pathPlannerPath -> PathFollowingCommandsBuilder.commandAfterPath(robot, pathPlannerPath, scoringCommand, tolerance)
+				)
 			);
 		}
 		return autos;

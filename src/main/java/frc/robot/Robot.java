@@ -99,38 +99,38 @@ public class Robot {
 		Supplier<Command> scoringCommand = () -> robotCommander.getSuperstructure().scoreL4();
 
 		swerve.configPathPlanner(
-				poseEstimator::getEstimatedPose,
-				poseEstimator::resetPose,
-				PathPlannerUtil.getGuiRobotConfig().orElse(AutonomousConstants.ROBOT_CONFIG)
+			poseEstimator::getEstimatedPose,
+			poseEstimator::resetPose,
+			PathPlannerUtil.getGuiRobotConfig().orElse(AutonomousConstants.ROBOT_CONFIG)
 		);
 
 		this.startingPointAndWhereToScoreFirstObjectChooser = new AutonomousChooser(
-				"StartingPointAndScoreFirst",
-				AutosBuilder.getAllStartingAndScoringFirstObjectAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+			"StartingPointAndScoreFirst",
+			AutosBuilder.getAllStartingAndScoringFirstObjectAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
 		);
 		this.whereToIntakeSecondObjectChooser = new AutonomousChooser(
-				"IntakeSecond",
-				AutosBuilder.getAllIntakingAutos(this, AutonomousConstants.TARGET_POSE_TOLERANCES)
+			"IntakeSecond",
+			AutosBuilder.getAllIntakingAutos(this, AutonomousConstants.TARGET_POSE_TOLERANCES)
 		);
 		this.whereToScoreSecondObjectChooser = new AutonomousChooser(
-				"ScoreSecond",
-				AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+			"ScoreSecond",
+			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
 		);
 		this.whereToIntakeThirdObjectChooser = new AutonomousChooser(
-				"IntakeThird",
-				AutosBuilder.getAllIntakingAutos(this, AutonomousConstants.TARGET_POSE_TOLERANCES)
+			"IntakeThird",
+			AutosBuilder.getAllIntakingAutos(this, AutonomousConstants.TARGET_POSE_TOLERANCES)
 		);
 		this.whereToScoreThirdObjectChooser = new AutonomousChooser(
-				"ScoreThird",
-				AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+			"ScoreThird",
+			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
 		);
 		this.whereToIntakeFourthObjectChooser = new AutonomousChooser(
-				"IntakeFourth",
-				AutosBuilder.getAllIntakingAutos(this, AutonomousConstants.TARGET_POSE_TOLERANCES)
+			"IntakeFourth",
+			AutosBuilder.getAllIntakingAutos(this, AutonomousConstants.TARGET_POSE_TOLERANCES)
 		);
 		this.whereToScoreFourthObjectChooser = new AutonomousChooser(
-				"ScoreFourth",
-				AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+			"ScoreFourth",
+			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
 		);
 
 		new EventTrigger("PRE_SCORE").onTrue(robotCommander.getSuperstructure().preL4());
@@ -150,13 +150,13 @@ public class Robot {
 
 	public PathPlannerAutoWrapper getAuto() {
 		return PathPlannerAutoWrapper.chainAutos(
-				startingPointAndWhereToScoreFirstObjectChooser.getChosenValue(),
-				whereToIntakeSecondObjectChooser.getChosenValue(),
-				whereToScoreSecondObjectChooser.getChosenValue(),
-				whereToIntakeThirdObjectChooser.getChosenValue(),
-				whereToScoreThirdObjectChooser.getChosenValue(),
-				whereToIntakeFourthObjectChooser.getChosenValue(),
-				whereToScoreFourthObjectChooser.getChosenValue()
+			startingPointAndWhereToScoreFirstObjectChooser.getChosenValue(),
+			whereToIntakeSecondObjectChooser.getChosenValue(),
+			whereToScoreSecondObjectChooser.getChosenValue(),
+			whereToIntakeThirdObjectChooser.getChosenValue(),
+			whereToScoreThirdObjectChooser.getChosenValue(),
+			whereToIntakeFourthObjectChooser.getChosenValue(),
+			whereToScoreFourthObjectChooser.getChosenValue()
 		);
 	}
 

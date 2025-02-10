@@ -46,7 +46,7 @@ public class SolenoidSparkMaxBuilder {
 		return motor;
 	}
 
-	public static Solenoid generate(String logPath) {
+	public static Solenoid createSolenoid(String logPath) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.SparkMAXIDs.SOLENOID);
 
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);

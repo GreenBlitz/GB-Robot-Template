@@ -255,6 +255,8 @@ public class RobotCommander extends GBSubsystem {
 			case PRE_L2, L2 -> preL2();
 			case PRE_L3, L3 -> preL3();
 			case PRE_L4, L4 -> preL4();
+			case PRE_CLIMB -> preClimb();
+			case CLIMB -> climb();
 		};
 	}
 

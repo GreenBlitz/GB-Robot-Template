@@ -5,7 +5,7 @@ import frc.robot.subsystems.solenoid.Solenoid;
 public class SolenoidFactory {
 
 	public static Solenoid create(String logPath) {
-		return SolenoidSparkMaxBuilder.generate(logPath);
+		return SolenoidSparkMaxBuilder.createSolenoid(logPath);
 	}
 
 }

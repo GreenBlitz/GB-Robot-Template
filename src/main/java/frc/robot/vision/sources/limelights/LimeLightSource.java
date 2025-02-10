@@ -30,7 +30,6 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	private final String logPath;
 	private final String cameraNetworkTablesName;
 	private final String sourceName;
-	private final BooleanSupplier shouldDataBeFiltered;
 	private final LimelightPoseEstimationMethod poseEstimationMethod;
 
 	private final NetworkTableEntry cameraPoseOffsetEntry;
@@ -49,6 +48,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	private double computingPipeLineLatency;
 	private double captureLatency;
 	private int lastSeenAprilTagId;
+	private BooleanSupplier shouldDataBeFiltered;
 	private Filter<? super AprilTagVisionData> filter;
 	private RobotAngleValues robotAngleValues;
 
@@ -63,8 +63,8 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		this.logPath = parentLogPath + cameraNetworkTablesName + "/" + sourceName + "/";
 		this.cameraNetworkTablesName = cameraNetworkTablesName;
 		this.sourceName = sourceName;
-		this.filter = filter;
 		this.shouldDataBeFiltered = () -> getVisionData().map(filter::apply).orElse(true);
+		this.filter = filter;
 		this.poseEstimationMethod = poseEstimationMethod;
 
 		this.cameraPoseOffsetEntry = getLimelightNetworkTableEntry("camerapose_robotspace_set");
@@ -174,6 +174,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	@Override
 	public void setFilter(Filter<? super AprilTagVisionData> newFilter) {
 		this.filter = newFilter;
+		this.shouldDataBeFiltered = () -> getVisionData().map(filter::apply).orElse(true);
 	}
 
 	@Override

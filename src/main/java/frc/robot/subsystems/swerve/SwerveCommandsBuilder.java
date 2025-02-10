@@ -166,7 +166,10 @@ public class SwerveCommandsBuilder {
 	}
 
 	public Command resetTargetSpeeds() {
-		return swerve.asSubsystemCommand(new InstantCommand(() -> swerve.driveByState(0, 0, 0, SwerveState.DEFAULT_DRIVE)), "ResetTargetSpeeds");
+		return swerve.asSubsystemCommand(
+			new InstantCommand(() -> swerve.driveByState(new ChassisSpeeds(), SwerveState.DEFAULT_DRIVE)),
+			"ResetTargetSpeeds"
+		);
 	}
 
 	public Command driveToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose) {

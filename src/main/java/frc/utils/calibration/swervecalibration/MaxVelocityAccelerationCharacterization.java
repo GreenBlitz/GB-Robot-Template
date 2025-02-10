@@ -29,9 +29,9 @@ public class MaxVelocityAccelerationCharacterization extends Command {
 
 	@Override
 	public void initialize() {
-		maxVelocityMetersPerSecond = TimeUtil.getCurrentTimeSeconds();
-		maxVelocityTimeSeconds = maxVelocityMetersPerSecond;
+		maxVelocityMetersPerSecond = 0;
 		characterizationStartingTimeSeconds = TimeUtil.getCurrentTimeSeconds();
+		maxVelocityTimeSeconds = characterizationStartingTimeSeconds;
 	}
 
 	@Override

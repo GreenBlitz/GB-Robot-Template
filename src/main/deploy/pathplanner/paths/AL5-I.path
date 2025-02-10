@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.942,
-        "y": 3.8592499999999994
+        "x": 7.0005,
+        "y": 2.679499999999999
       },
       "isLocked": false,
       "linkedName": "AL4"
@@ -20,8 +20,8 @@
         "y": 5.08
       },
       "prevControl": {
-        "x": 5.655,
-        "y": 5.204749999999999
+        "x": 6.698250000000001,
+        "y": 7.38875
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "PRE_SCORE",
-      "waypointRelativePos": 0.7474835886214454,
+      "waypointRelativePos": 0.8175054704595192,
       "endWaypointRelativePos": null,
       "command": null
     }

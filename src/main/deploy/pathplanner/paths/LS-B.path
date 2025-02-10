@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6478655296410998,
-        "y": 1.8545872585442682
+        "x": 1.6672500000000001,
+        "y": 1.2559999999999991
       },
       "isLocked": false,
       "linkedName": "LS"
@@ -20,8 +20,8 @@
         "y": 3.86
       },
       "prevControl": {
-        "x": 2.6910000000000003,
-        "y": 3.6154999999999995
+        "x": 0.3217500000000002,
+        "y": 4.015249999999999
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,13 +34,13 @@
   "eventMarkers": [
     {
       "name": "IDLE",
-      "waypointRelativePos": 0.22056892778993573,
+      "waypointRelativePos": 0.2730853391684867,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
       "name": "PRE_SCORE",
-      "waypointRelativePos": 0.8227571115973792,
+      "waypointRelativePos": 0.7597374179431063,
       "endWaypointRelativePos": null,
       "command": null
     }

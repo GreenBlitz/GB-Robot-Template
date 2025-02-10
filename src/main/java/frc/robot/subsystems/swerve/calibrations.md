@@ -6,7 +6,7 @@ SwerveConstants:
 -----------------------
 - [x] Velocity at 12 volts (meters per second)
 - [x] Max rotational velocity (angle per second)
-- [ ] Translation PID (for x,y PID controllers)
+- [x] Translation PID (for x,y PID controllers)
 - [x] Rotational degrees PID 
 - [ ] PathPlanner RealTimeConstraints (in AutonomousConstants)
 

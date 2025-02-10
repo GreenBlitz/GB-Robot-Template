@@ -45,7 +45,7 @@ class KrakenX60DriveBuilder {
 		return new SimpleMotorSimulation(
 			new DCMotorSim(
 				LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), MOMENT_OF_INERTIA_METERS_SQUARED, GEAR_RATIO),
-				DCMotor.getKrakenX60(1)
+				DCMotor.getKrakenX60Foc(1)
 			)
 		);
 	}

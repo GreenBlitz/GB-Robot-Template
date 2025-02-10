@@ -85,8 +85,8 @@ public class Swerve extends GBSubsystem {
 //		joystick.POV_RIGHT.whileTrue(getCommandsBuilder().wheelRadiusCalibration());
 
 		// TEST STEER PID
-		joystick.POV_RIGHT.onTrue(commandsBuilder.pointWheels(new Rotation2d(), false));
-		joystick.POV_LEFT.onTrue(commandsBuilder.pointWheels(Rotation2d.fromDegrees(90), false));
+//		joystick.POV_RIGHT.onTrue(commandsBuilder.pointWheels(new Rotation2d(), false));
+//		joystick.POV_LEFT.onTrue(commandsBuilder.pointWheels(Rotation2d.fromDegrees(90), false));
 
 		// ROBOT RELATIVE DRIVE - FOR GYRO TEST
 		joystick.POV_UP
@@ -97,17 +97,17 @@ public class Swerve extends GBSubsystem {
 //		joystick.POV_UP.whileTrue(
 //			getCommandsBuilder().driveByState(() -> new ChassisPowers(0.5, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
 //		);
-//		joystick.POV_LEFT.whileTrue(
-//			getCommandsBuilder().driveByState(() -> new ChassisPowers(0.2, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
-//		);
-//		joystick.POV_DOWN.whileTrue(
-//			getCommandsBuilder().driveByState(() -> new ChassisPowers(-0.5, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
-//		);
+		joystick.POV_LEFT.whileTrue(
+			getCommandsBuilder().driveByState(() -> new ChassisPowers(0.2, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
+		);
+		joystick.POV_RIGHT.whileTrue(
+			getCommandsBuilder().driveByState(() -> new ChassisPowers(-0.5, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
+		);
 
 		// Apply 12 volts on x-axis. Use it for max velocity calibrations.
 		// See what velocity the swerve log after it stops accelerating and use it as max.
 		joystick.START.whileTrue(new SequentialCommandGroup(new InstantCommand(() -> {
-			startVelocityTestTime = 0;
+			startVelocityTestTime = TimeUtil.getCurrentTimeSeconds();
 			peakVelocity = 0;
 			peakVelocityTimeDiff = 0;
 		}), getCommandsBuilder().driveByState(() -> new ChassisPowers(1, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))));
@@ -235,6 +235,8 @@ public class Swerve extends GBSubsystem {
 		}
 		Logger.recordOutput(getLogPath() + "/Calibrations/PeakVelocity", peakVelocity);
 		Logger.recordOutput(getLogPath() + "/Calibrations/TimeToReachPickVelocity", peakVelocityTimeDiff);
+		Logger.recordOutput(getLogPath() + "/Calibrations/StartTime", startVelocityTestTime);
+		Logger.recordOutput(getLogPath() + "/Calibrations/MaxACC", peakVelocity / peakVelocityTimeDiff);
 	}
 
 

@@ -28,6 +28,7 @@ import frc.robot.subsystems.swerve.states.heading.HeadingControl;
 import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.auto.PathPlannerUtil;
+import frc.utils.calibration.swervecalibration.maxvelocityacceleration.VelocityType;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
@@ -319,13 +320,12 @@ public class Swerve extends GBSubsystem {
 
 		// Apply 12 volts on x-axis. Use it for max velocity calibrations.
 		// See what velocity the swerve log after it stops accelerating and use it as max.
-		joystick.START.whileTrue(commandsBuilder.maxVelocityAccelerationCalibration());
+		joystick.START.whileTrue(commandsBuilder.maxVelocityAccelerationCalibration(VelocityType.TRANSLATIONAL));
 
 		// Apply 12 volts on rotation-axis.
 		// Use it for max velocity calibrations. See what velocity the swerve log after it stops accelerating and use it as max.
-		joystick.BACK.whileTrue(
-			getCommandsBuilder().driveByState(() -> new ChassisPowers(0, 0, 1), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
-		);
+		joystick.BACK.whileTrue(commandsBuilder.maxVelocityAccelerationCalibration(VelocityType.ROTATIONAL));
+
 
 		// The sysid outputs will be logged to the "CTRE Signal Logger".
 		// Use phoenix tuner x to extract the position, velocity, motorVoltage, state signals into wpilog.

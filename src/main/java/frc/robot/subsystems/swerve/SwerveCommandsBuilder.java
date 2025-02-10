@@ -19,8 +19,9 @@ import frc.robot.subsystems.swerve.states.LoopMode;
 import frc.robot.subsystems.swerve.states.RotateAxis;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.auto.PathPlannerUtil;
-import frc.utils.calibration.swervecalibration.MaxVelocityAccelerationCharacterization;
-import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
+import frc.utils.calibration.swervecalibration.maxvelocityacceleration.MaxVelocityAccelerationCharacterization;
+import frc.utils.calibration.swervecalibration.maxvelocityacceleration.VelocityType;
+import frc.utils.calibration.swervecalibration.wheelradius.WheelRadiusCharacterization;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.utilcommands.InitExecuteCommand;
 
@@ -121,11 +122,12 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-	public Command maxVelocityAccelerationCalibration() {
+	public Command maxVelocityAccelerationCalibration(VelocityType velocityType) {
 		return swerve.asSubsystemCommand(
 			new MaxVelocityAccelerationCharacterization(
 				swerve,
-				power -> swerve.driveByState(new ChassisPowers(power, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
+				powers -> swerve.driveByState(powers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)),
+				velocityType
 			),
 			"Max Velocity Acceleration Calibration"
 		);

@@ -2,7 +2,7 @@ package frc.utils.math;
 
 import java.util.function.Function;
 
-public class DataMath {
+public class StatisticsMath {
 
 	public static <T extends Iterable<E>, E> double calculateStandardDeviations(T iterable, Function<E, Double> getValue) {
 		int length = 0;

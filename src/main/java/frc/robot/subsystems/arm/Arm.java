@@ -1,16 +1,20 @@
 package frc.robot.subsystems.arm;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
+import frc.robot.Robot;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.arm.factory.KrakenX60ArmBuilder;
+import frc.utils.alerts.Alert;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.calibration.sysid.SysIdCalibrator;
+import org.littletonrobotics.junction.Logger;
 
 public class Arm extends GBSubsystem {
 
@@ -23,6 +27,7 @@ public class Arm extends GBSubsystem {
 	private final InputSignal<Rotation2d> encoderPositionSignal;
 	private final ArmCommandsBuilder commandsBuilder;
 	private final SysIdCalibrator sysIdCalibrator;
+	private Rotation2d reversedSoftLimit;
 
 	public Arm(
 		String logPath,
@@ -43,7 +48,8 @@ public class Arm extends GBSubsystem {
 		this.encoder = encoder;
 		this.encoderPositionSignal = encoderPositionSignal;
 		this.commandsBuilder = new ArmCommandsBuilder(this);
-		this.sysIdCalibrator = new SysIdCalibrator(motor.getSysidConfigInfo(), this, voltage -> setVoltage(voltage + getKgVoltage()));
+		this.sysIdCalibrator = new SysIdCalibrator(motor.getSysidConfigInfo(), this, (voltage) -> setVoltage(voltage + getKgVoltage()));
+		this.reversedSoftLimit = ArmConstants.ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT;
 
 		periodic();
 		resetByEncoderPosition();
@@ -59,18 +65,28 @@ public class Arm extends GBSubsystem {
 	}
 
 	private double getKgVoltage() {
-		return KrakenX60ArmBuilder.kG * getPosition().getCos();
+		return Robot.ROBOT_TYPE.isReal() ? KrakenX60ArmBuilder.kG * getPosition().getCos() : 0;
 	}
 
 	@Override
 	protected void subsystemPeriodic() {
 		motor.updateSimulation();
 		updateInputs();
+		log();
 	}
 
 	private void updateInputs() {
 		motor.updateInputs(motorPositionSignal, motorVoltageSignal);
 		encoder.updateInputs(encoderPositionSignal);
+	}
+
+	private void log() {
+		Logger.recordOutput(getLogPath() + "/ReversedSoftLimit", reversedSoftLimit);
+		Logger.recordOutput(getLogPath() + "/TargetPose", positionRequest.getSetPoint());
+	}
+
+	public void setReversedSoftLimit(Rotation2d reversedSoftLimit) {
+		this.reversedSoftLimit = reversedSoftLimit;
 	}
 
 	protected void resetByEncoderPosition() {
@@ -93,12 +109,24 @@ public class Arm extends GBSubsystem {
 		motor.applyRequest(voltageRequest.withSetPoint(voltage));
 	}
 
-	protected void setTargetPosition(Rotation2d position) {
-		motor.applyRequest(positionRequest.withSetPoint(position));
+	protected void setTargetPosition(Rotation2d targetPosition) {
+		if (reversedSoftLimit.getDegrees() <= targetPosition.getDegrees()) {
+			motor.applyRequest(positionRequest.withSetPoint(targetPosition));
+		} else {
+			new Alert(Alert.AlertType.WARNING, getLogPath() + "/TargetPoseUnderLimit").report();
+			stayInPlace();
+		}
 	}
 
 	protected void stayInPlace() {
-		setTargetPosition(motorPositionSignal.getLatestValue());
+		Rotation2d limitedPosition = Rotation2d.fromDegrees(
+			MathUtil.clamp(
+				motorPositionSignal.getLatestValue().getDegrees(),
+				reversedSoftLimit.getDegrees(),
+				ArmConstants.FORWARD_SOFTWARE_LIMIT.getDegrees()
+			)
+		);
+		setTargetPosition(limitedPosition);
 	}
 
 	public boolean isAtPosition(Rotation2d position, Rotation2d tolerance) {
@@ -106,13 +134,9 @@ public class Arm extends GBSubsystem {
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick) {
-		/*
-		 * Calibrate kG using phoenix tuner by setting the voltage
-		 */
+		// Calibrate kG using phoenix tuner by setting the voltage
 
-		/*
-		 * Check limits
-		 */
+		// Check limits
 		joystick.R1.whileTrue(
 			commandsBuilder.setPower(
 				() -> joystick.getAxisValue(Axis.LEFT_Y) * ArmConstants.CALIBRATION_MAX_POWER
@@ -120,22 +144,16 @@ public class Arm extends GBSubsystem {
 			)
 		);
 
-		/*
-		 * Calibrate feed forward using sys id:
-		 */
+		// Calibrate feed forward using sys id:
 		sysIdCalibrator.setAllButtonsForCalibration(joystick);
 
-		/*
-		 * Calibrate PID using phoenix tuner and these bindings:
-		 */
-		joystick.POV_UP.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(-40)));
-		joystick.POV_DOWN.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(0)));
-		joystick.POV_LEFT.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(90)));
-		joystick.POV_RIGHT.onTrue(commandsBuilder.moveToPosition(Rotation2d.fromDegrees(200)));
+		// Calibrate PID using phoenix tuner and these bindings:
+		joystick.POV_UP.onTrue(commandsBuilder.moveToPosition(ArmState.L4.getPosition()));
+		joystick.POV_DOWN.onTrue(commandsBuilder.moveToPosition(ArmState.INTAKE.getPosition()));
+		joystick.POV_LEFT.onTrue(commandsBuilder.moveToPosition(ArmState.L1.getPosition()));
+		joystick.POV_RIGHT.onTrue(commandsBuilder.moveToPosition(ArmState.L2.getPosition()));
 
-		/*
-		 * Calibrate max acceleration and cruise velocity by the equations: max acceleration = (12 + Ks)/2kA, cruise velocity = (12 + Ks)/kV
-		 */
+		// Calibrate max acceleration and cruise velocity by the equations: max acceleration = (12 + Ks)/2kA, cruise velocity =(12 + Ks)/kV
 	}
 
 }

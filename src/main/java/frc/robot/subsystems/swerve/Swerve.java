@@ -89,14 +89,14 @@ public class Swerve extends GBSubsystem {
 //		joystick.POV_LEFT.onTrue(commandsBuilder.pointWheels(Rotation2d.fromDegrees(90), false));
 
 		// ROBOT RELATIVE DRIVE - FOR GYRO TEST
-		joystick.POV_UP
-			.whileTrue(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE)));
+//		joystick.POV_UP
+//			.whileTrue(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE)));
 
 		// Test the swerve returns real velocities (measure distance and time in real life and compare to swerve velocity logs).
 		// REMEMBER after drive calibrations use these for pid testing
-//		joystick.POV_UP.whileTrue(
-//			getCommandsBuilder().driveByState(() -> new ChassisPowers(0.5, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
-//		);
+		joystick.POV_UP.whileTrue(
+			getCommandsBuilder().driveByState(() -> new ChassisPowers(0.5, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
+		);
 		joystick.POV_LEFT.whileTrue(
 			getCommandsBuilder().driveByState(() -> new ChassisPowers(0.2, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
 		);

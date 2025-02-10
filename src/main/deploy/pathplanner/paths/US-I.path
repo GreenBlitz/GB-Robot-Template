@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.023912226916682,
-        "y": 6.523985672635499
+        "x": 1.0822500000000002,
+        "y": 6.443
       },
       "isLocked": false,
       "linkedName": "US"
@@ -20,8 +20,8 @@
         "y": 5.09
       },
       "prevControl": {
-        "x": 5.393,
-        "y": 6.3175
+        "x": 6.67875,
+        "y": 6.76475
       },
       "nextControl": null,
       "isLocked": false,
@@ -40,7 +40,7 @@
     },
     {
       "name": "PRE_SCORE",
-      "waypointRelativePos": 0.8735229759299782,
+      "waypointRelativePos": 0.7702407002188184,
       "endWaypointRelativePos": null,
       "command": null
     }

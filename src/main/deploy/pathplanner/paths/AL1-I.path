@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "PRE_SCORE",
-      "waypointRelativePos": 0.9100529100528922,
+      "waypointRelativePos": 0.800000000000003,
       "endWaypointRelativePos": null,
       "command": null
     }

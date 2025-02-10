@@ -18,7 +18,7 @@ public class MaxVelocityAccelerationCharacterization extends Command {
 
 	private double maxVelocityMetersPerSecond;
 	private double characterizationStartingTimeSeconds;
-	private double maxVelocityTimeSeconds;
+	private double timeReachedMaxVelocitySeconds;
 
 	public MaxVelocityAccelerationCharacterization(Swerve swerve, Consumer<Double> openLoopDriveByPower) {
 		this.swerve = swerve;
@@ -31,7 +31,7 @@ public class MaxVelocityAccelerationCharacterization extends Command {
 	public void initialize() {
 		maxVelocityMetersPerSecond = 0;
 		characterizationStartingTimeSeconds = TimeUtil.getCurrentTimeSeconds();
-		maxVelocityTimeSeconds = characterizationStartingTimeSeconds;
+		timeReachedMaxVelocitySeconds = characterizationStartingTimeSeconds;
 	}
 
 	@Override
@@ -41,17 +41,17 @@ public class MaxVelocityAccelerationCharacterization extends Command {
 		double currentVelocityMagnitudeMetersPerSecond = SwerveMath.getDriveMagnitude(swerve.getRobotRelativeVelocity());
 		if (Math.abs(currentVelocityMagnitudeMetersPerSecond) > Math.abs(maxVelocityMetersPerSecond)) {
 			maxVelocityMetersPerSecond = currentVelocityMagnitudeMetersPerSecond;
-			maxVelocityTimeSeconds = TimeUtil.getCurrentTimeSeconds();
+			timeReachedMaxVelocitySeconds = TimeUtil.getCurrentTimeSeconds();
 		}
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		double timeToReachMaxVelocitySeconds = maxVelocityTimeSeconds - characterizationStartingTimeSeconds;
+		double timeToReachMaxVelocitySeconds = timeReachedMaxVelocitySeconds - characterizationStartingTimeSeconds;
 
 		Logger.recordOutput(LOG_PATH + "/MaxVelocityMetersPerSecond", maxVelocityMetersPerSecond);
 		Logger.recordOutput(LOG_PATH + "/TimeToReachMaxVelocitySeconds", timeToReachMaxVelocitySeconds);
-		Logger.recordOutput(LOG_PATH + "/MaxAccelerationMetersPerSecondSquared", maxVelocityTimeSeconds / timeToReachMaxVelocitySeconds);
+		Logger.recordOutput(LOG_PATH + "/MaxAccelerationMetersPerSecondSquared", maxVelocityMetersPerSecond / timeToReachMaxVelocitySeconds);
 	}
 
 }

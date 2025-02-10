@@ -12,6 +12,7 @@ public class MaxVelocityAccelerationCharacterization extends Command {
 
 	private static final String LOG_PATH = "Calibration/MaxVelocityAcceleration";
 	private static final double MAX_POWER = 1.0;
+	private static final double MAX_VELOCITY_TOLERANCE_METERS_PER_SECOND = 0.02;
 
 	private final Swerve swerve;
 	private final Consumer<Double> openLoopDriveByPower;
@@ -39,7 +40,9 @@ public class MaxVelocityAccelerationCharacterization extends Command {
 		openLoopDriveByPower.accept(MAX_POWER);
 
 		double currentVelocityMagnitudeMetersPerSecond = SwerveMath.getDriveMagnitude(swerve.getRobotRelativeVelocity());
-		if (Math.abs(currentVelocityMagnitudeMetersPerSecond) > Math.abs(maxVelocityMetersPerSecond)) {
+		if (
+			Math.abs(currentVelocityMagnitudeMetersPerSecond) - Math.abs(maxVelocityMetersPerSecond) > MAX_VELOCITY_TOLERANCE_METERS_PER_SECOND
+		) {
 			maxVelocityMetersPerSecond = currentVelocityMagnitudeMetersPerSecond;
 			timeReachedMaxVelocitySeconds = TimeUtil.getCurrentTimeSeconds();
 		}

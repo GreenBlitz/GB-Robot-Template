@@ -346,21 +346,21 @@ public class Swerve extends GBSubsystem {
 
 		// Translation pid tests
 		joystick.getAxisAsButton(Axis.LEFT_TRIGGER)
-				.onTrue(
-					new DeferredCommand(
-						() -> getCommandsBuilder()
-							.pidToPose(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(2, 0, new Rotation2d()))),
-						Set.of(this)
-					)
-				);
+			.onTrue(
+				new DeferredCommand(
+					() -> getCommandsBuilder()
+						.pidToPose(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(2, 0, new Rotation2d()))),
+					Set.of(this)
+				)
+			);
 		joystick.getAxisAsButton(Axis.RIGHT_TRIGGER)
-				.onTrue(
-					new DeferredCommand(
-						() -> getCommandsBuilder()
-							.pidToPose(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(-2, 0, new Rotation2d()))),
-						Set.of(this)
-					)
-				);
+			.onTrue(
+				new DeferredCommand(
+					() -> getCommandsBuilder()
+						.pidToPose(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(-2, 0, new Rotation2d()))),
+					Set.of(this)
+				)
+			);
 	}
 
 }

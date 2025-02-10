@@ -1,15 +1,12 @@
 package frc.robot.subsystems.solenoid.factory;
 
-import frc.robot.Robot;
-import frc.robot.subsystems.solenoid.SolenoidComponents;
+import frc.robot.subsystems.endeffector.EndEffector;
+import frc.robot.subsystems.endeffector.factory.EndEffectorSparkMaxBuilder;
 
 public class SolenoidFactory {
 
-	public static SolenoidComponents create(String logPath) {
-		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> SolenoidRealConstants.generateSolenoidComponents(logPath);
-			case SIMULATION -> null;
-		};
+	public static EndEffector create(String logPath) {
+		return EndEffectorSparkMaxBuilder.generate(logPath);
 	}
 
 }

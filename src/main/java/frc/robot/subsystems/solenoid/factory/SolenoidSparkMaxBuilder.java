@@ -1,21 +1,13 @@
 package frc.robot.subsystems.solenoid.factory;
 
-import com.revrobotics.spark.config.LimitSwitchConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.IDs;
-import frc.robot.Robot;
-import frc.robot.hardware.digitalinput.IDigitalInput;
-import frc.robot.hardware.digitalinput.chooser.ChooserDigitalInput;
-import frc.robot.hardware.digitalinput.supplied.SuppliedDigitalInput;
 import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
 import frc.robot.hardware.rev.motors.*;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
-import frc.robot.subsystems.endeffector.EndEffector;
 import frc.robot.subsystems.solenoid.Solenoid;
 
 public class SolenoidSparkMaxBuilder {
@@ -55,14 +47,13 @@ public class SolenoidSparkMaxBuilder {
 	}
 
 	public static Solenoid generate(String logPath) {
-		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.SparkMAXIDs.END_EFFECTOR);
+		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.SparkMAXIDs.SOLENOID);
 
-		SuppliedDoubleSignal powerSignal = new SuppliedDoubleSignal("power", sparkMaxWrapper::get);
-		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("current", sparkMaxWrapper::getOutputCurrent);
+		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
 
-		BrushedSparkMAXMotor motor = generateMotor(logPath + "/Roller", sparkMaxWrapper);
+		BrushedSparkMAXMotor motor = generateMotor(logPath + "/Solenoid", sparkMaxWrapper);
 
-		return new Solenoid(logPath, motor, powerSignal, currentSignal, frontDigitalInput, backDigitalInput);
+		return new Solenoid(logPath, motor, voltageSignal);
 	}
 
 }

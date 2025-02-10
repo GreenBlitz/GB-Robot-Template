@@ -7,9 +7,9 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import java.util.function.DoubleSupplier;
 
 public class SolenoidCommandBuilder {
-	
+
 	private final Solenoid solenoid;
-	
+
 	public SolenoidCommandBuilder(Solenoid solenoid) {
 		this.solenoid = solenoid;
 	}
@@ -24,7 +24,7 @@ public class SolenoidCommandBuilder {
 				solenoid
 		);
 	}
-	
+
 	public Command setPower(DoubleSupplier powerSupplier) {
 		return new FunctionalCommand(
 				() -> {},
@@ -34,10 +34,10 @@ public class SolenoidCommandBuilder {
 				solenoid
 		);
 	}
-	
+
 	public Command stop() {
 		return new RunCommand(solenoid::stop, solenoid);
 	}
 	//@formatter:on
-	
+
 }

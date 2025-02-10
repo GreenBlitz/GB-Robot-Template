@@ -21,7 +21,7 @@ public class LoggedDashboardCommand extends InitExecuteCommand {
 	}
 
 	public LoggedDashboardCommand(LoggedDashboardNumber logDashboardNumber, Consumer<Double> methodToRun, GBSubsystem... subsystems) {
-		super(() -> methodToRun.accept(logDashboardNumber.get()), ()->{}, subsystems);
+		super(() -> methodToRun.accept(logDashboardNumber.get()), () -> {}, subsystems);
 	}
 
 }

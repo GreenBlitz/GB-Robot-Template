@@ -7,7 +7,7 @@ package frc.robot;
 import com.pathplanner.lib.events.EventTrigger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.AutosBuilder;
@@ -17,7 +17,6 @@ import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
 import frc.robot.statemachine.RobotCommander;
 import frc.robot.statemachine.superstructure.ScoreLevel;
-import frc.robot.statemachine.superstructure.Superstructure;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.factory.ArmFactory;
 import frc.robot.subsystems.elevator.Elevator;
@@ -99,10 +98,7 @@ public class Robot {
 	}
 
 	private void configureAuto() {
-		robotCommander.getSuperstructure()
-			.scoreL4()
-			.andThen(robotCommander.getSuperstructure().preL4().until(() -> robotCommander.getSuperstructure().isPreScoreReady(ScoreLevel.L4)))
-			.withTimeout(5);
+		Supplier<Command> scoringCommand = () -> robotCommander.getSuperstructure().scoreL4().andThen(robotCommander.getSuperstructure().preL4().until(() -> robotCommander.getSuperstructure().isPreScoreReady(ScoreLevel.L4)));
 
 		swerve.configPathPlanner(
 			poseEstimator::getEstimatedPose,
@@ -110,11 +106,9 @@ public class Robot {
 			PathPlannerUtil.getGuiRobotConfig().orElse(AutonomousConstants.ROBOT_CONFIG)
 		);
 
-		Superstructure superstructure = robotCommander.getSuperstructure();
-
-		new EventTrigger("PRE_SCORE").onTrue(superstructure.preL4());
-		new EventTrigger("INTAKE").onTrue(superstructure.intake());
-		new EventTrigger("IDLE").onTrue(superstructure.idle());
+		new EventTrigger("PRE_SCORE").onTrue(robotCommander.getSuperstructure().preL4());
+		new EventTrigger("INTAKE").onTrue(robotCommander.getSuperstructure().intake());
+		new EventTrigger("IDLE").onTrue(robotCommander.getSuperstructure().idle());
 
 		this.startingPointAndWhereToScoreFirstObjectChooser = new AutonomousChooser(
 			"StartingPointAndScoreFirst",
@@ -157,36 +151,14 @@ public class Robot {
 	}
 
 	public PathPlannerAutoWrapper getAuto() {
-//		return PathPlannerAutoWrapper.chainAutos(
-//			startingPointAndWhereToScoreFirstObjectChooser.getChosenValue(),
-//			whereToIntakeSecondObjectChooser.getChosenValue(),
-//			whereToScoreSecondObjectChooser.getChosenValue(),
-//			whereToIntakeThirdObjectChooser.getChosenValue(),
-//			whereToScoreThirdObjectChooser.getChosenValue(),
-//			whereToIntakeFourthObjectChooser.getChosenValue(),
-//			whereToScoreFourthObjectChooser.getChosenValue()
-//		).withResetPose(poseEstimator::resetPose);
-		return new PathPlannerAutoWrapper(
-			new SequentialCommandGroup(
-				startingPointAndWhereToScoreFirstObjectChooser.getChosenValue(),
-				whereToIntakeSecondObjectChooser.getChosenValue(),
-				whereToScoreSecondObjectChooser.getChosenValue(),
-				whereToIntakeThirdObjectChooser.getChosenValue(),
-				whereToScoreThirdObjectChooser.getChosenValue(),
-				whereToIntakeFourthObjectChooser.getChosenValue(),
-				whereToScoreFourthObjectChooser.getChosenValue()
-			),
-			startingPointAndWhereToScoreFirstObjectChooser.getChosenValue().getStartingPose(),
-			PathPlannerAutoWrapper.chainAutoNames(
-				startingPointAndWhereToScoreFirstObjectChooser.getChosenValue(),
-				whereToIntakeSecondObjectChooser.getChosenValue(),
-				whereToScoreSecondObjectChooser.getChosenValue(),
-				whereToIntakeThirdObjectChooser.getChosenValue(),
-				whereToScoreThirdObjectChooser.getChosenValue(),
-				whereToIntakeFourthObjectChooser.getChosenValue(),
-				whereToScoreFourthObjectChooser.getChosenValue()
-			),
-			true
+		return PathPlannerAutoWrapper.chainAutos(
+			startingPointAndWhereToScoreFirstObjectChooser.getChosenValue(),
+			whereToIntakeSecondObjectChooser.getChosenValue(),
+			whereToScoreSecondObjectChooser.getChosenValue(),
+			whereToIntakeThirdObjectChooser.getChosenValue(),
+			whereToScoreThirdObjectChooser.getChosenValue(),
+			whereToIntakeFourthObjectChooser.getChosenValue(),
+			whereToScoreFourthObjectChooser.getChosenValue()
 		).withResetPose(poseEstimator::resetPose);
 	}
 

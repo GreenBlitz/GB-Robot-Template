@@ -13,6 +13,7 @@ import frc.RobotManager;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.led.LEDState;
+import frc.robot.led.LEDStateHandler;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
 import frc.robot.statemachine.RobotCommander;
@@ -50,7 +51,8 @@ public class Robot {
 	private final SimulationManager simulationManager;
 	private final RobotCommander robotCommander;
 	private final CANdle candle;
-
+	private final LEDStateHandler ledStateHandler;
+	private final String logPath;
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 
@@ -83,6 +85,10 @@ public class Robot {
 		this.simulationManager = new SimulationManager("SimulationManager", this);
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
 		this.candle = new CANdle(IDs.CANDle.CANDLE_ID.id(),IDs.CANDle.CANDLE_ID.busChain().getChainName());
+		logPath = new String("logpath");
+		candle.configLEDType(CANdle.LEDStripType.GRB);
+		candle.clearAnimation(0);
+		ledStateHandler = new LEDStateHandler(logPath, candle);
 	}
 
 	public void periodic() {

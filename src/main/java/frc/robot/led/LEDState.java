@@ -5,7 +5,7 @@ import com.ctre.phoenix.led.*;
 public enum LEDState {
     IDLE(new FireAnimation()),
     DISABLE(new RainbowAnimation()),
-    READY_TO_ISOF(new StrobeAnimation(0, 200, 200)),
+    READY_TO_COLLECT(new StrobeAnimation(0, 200, 200)),
     HAS_CORAL(new StrobeAnimation(200, 0, 200)),
     START_AIM_ASSIST(new SingleFadeAnimation(200, 0, 0)),
     IS_IN_POSITION_TO_OPEN_ELEVATOR(new StrobeAnimation(255, 0, 0)),

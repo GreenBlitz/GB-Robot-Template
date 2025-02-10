@@ -7,8 +7,10 @@ import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
+import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.utilcommands.ExecuteEndCommand;
 
 public class JoysticksBindings {
@@ -70,6 +72,11 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+		usedJoystick.A.onTrue(
+			robot.getRobotCommander()
+				.getSwerveAimAssistByBranchAndPosition(ScoringHelpers.targetBranch, robot.getPoseEstimator()::getEstimatedPose)
+		);
+		usedJoystick.B.onTrue(robot.getSwerve().getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

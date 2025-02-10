@@ -68,7 +68,7 @@ public enum ScoreLevel {
 		RobotState.ARM_PRE_L3
 	);
 
-	private final EndEffectorState endEffectorState;
+	private final EndEffectorState endEffectorScore;
 	private final ElevatorState elevatorScore;
 	private final ElevatorState elevatorPreScore;
 	private final ArmState armScore;
@@ -83,7 +83,7 @@ public enum ScoreLevel {
 	private final RobotState robotArmPreScore;
 
 	ScoreLevel(
-		EndEffectorState endEffectorState,
+		EndEffectorState endEffectorScore,
 		ElevatorState elevatorScore,
 		ElevatorState elevatorPreScore,
 		ArmState armScore,
@@ -97,7 +97,7 @@ public enum ScoreLevel {
 		RobotState robotPreScore,
 		RobotState robotArmPreScore
 	) {
-		this.endEffectorState = endEffectorState;
+		this.endEffectorScore = endEffectorScore;
 		this.elevatorScore = elevatorScore;
 		this.elevatorPreScore = elevatorPreScore;
 		this.armScore = armScore;
@@ -112,8 +112,8 @@ public enum ScoreLevel {
 		this.robotArmPreScore = robotArmPreScore;
 	}
 
-	public EndEffectorState getEndEffectorState() {
-		return endEffectorState;
+	public EndEffectorState getEndEffectorScore() {
+		return endEffectorScore;
 	}
 
 	public ElevatorState getElevatorScore() {

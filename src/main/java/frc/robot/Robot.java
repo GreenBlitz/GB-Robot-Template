@@ -7,6 +7,7 @@ package frc.robot;
 import com.pathplanner.lib.events.EventTrigger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.AutosBuilder;
@@ -96,13 +97,17 @@ public class Robot {
 	}
 
 	private void configureAuto() {
-		Supplier<Command> scoringCommand = () -> robotCommander.getSuperstructure().scoreL4();
+		Supplier<Command> scoringCommand = InstantCommand::new;
 
 		swerve.configPathPlanner(
 			poseEstimator::getEstimatedPose,
 			poseEstimator::resetPose,
 			PathPlannerUtil.getGuiRobotConfig().orElse(AutonomousConstants.ROBOT_CONFIG)
 		);
+
+		new EventTrigger("PRE_SCORE").onTrue(new InstantCommand());
+		new EventTrigger("INTAKE").onTrue(new InstantCommand());
+		new EventTrigger("IDLE").onTrue(new InstantCommand());
 
 		this.startingPointAndWhereToScoreFirstObjectChooser = new AutonomousChooser(
 			"StartingPointAndScoreFirst",
@@ -132,10 +137,6 @@ public class Robot {
 			"ScoreFourth",
 			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
 		);
-
-		new EventTrigger("PRE_SCORE").onTrue(robotCommander.getSuperstructure().preL4());
-		new EventTrigger("INTAKE").onTrue(robotCommander.getSuperstructure().intake());
-		new EventTrigger("IDLE").onTrue(robotCommander.getSuperstructure().idle());
 	}
 
 	public void periodic() {
@@ -157,7 +158,7 @@ public class Robot {
 			whereToScoreThirdObjectChooser.getChosenValue(),
 			whereToIntakeFourthObjectChooser.getChosenValue(),
 			whereToScoreFourthObjectChooser.getChosenValue()
-		);
+		).withResetPose(poseEstimator::resetPose);
 	}
 
 	public WPILibPoseEstimatorWrapper getPoseEstimator() {

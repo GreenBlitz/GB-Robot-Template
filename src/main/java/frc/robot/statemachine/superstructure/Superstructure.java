@@ -37,7 +37,7 @@ public class Superstructure extends GBSubsystem {
 		this.endEffectorStateHandler = new EndEffectorStateHandler(robot.getEndEffector());
 
 		this.currentState = SuperstructureState.IDLE;
-		setDefaultCommand(new DeferredCommand(() -> endState(currentState), Set.of(this)));
+//		setDefaultCommand(new DeferredCommand(() -> endState(currentState), Set.of(this)));
 	}
 
 

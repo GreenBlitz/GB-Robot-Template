@@ -20,7 +20,7 @@ class Pigeon2GyroBuilder {
 
 		gyroConfig.MountPose.MountPoseRoll = 0;
 		gyroConfig.MountPose.MountPosePitch = 0;
-		gyroConfig.MountPose.MountPoseYaw = 0;
+		gyroConfig.MountPose.MountPoseYaw = 90;
 
 		return gyroConfig;
 	}

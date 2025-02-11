@@ -1,9 +1,9 @@
 Calibrations:
 ----------------
-- [ ] Motor id
-- [ ] Natural mode
-- [ ] Motor inverted
-- [ ] Current limit
-- [ ] Beam breaker ports
-- [ ] Beam breakers inverted
+- [x] Motor id
+- [x] Natural mode
+- [x] Motor inverted
+- [x] Current limit
+- [x] Beam breaker ports
+- [x] Beam breakers inverted
 - [ ] Motor states powers

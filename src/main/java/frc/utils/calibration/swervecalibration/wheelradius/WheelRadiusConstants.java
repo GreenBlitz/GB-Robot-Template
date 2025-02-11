@@ -1,4 +1,4 @@
-package frc.utils.calibration.swervecalibration;
+package frc.utils.calibration.swervecalibration.wheelradius;
 
 class WheelRadiusConstants {
 

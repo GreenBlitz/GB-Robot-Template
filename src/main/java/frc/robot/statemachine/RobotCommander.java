@@ -6,7 +6,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.constants.field.Field;
 import frc.constants.field.enums.Branch;
-import frc.constants.field.enums.ReefSide;
 import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.superstructure.ScoreLevel;
@@ -17,7 +16,6 @@ import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.pose.PoseUtil;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -165,11 +163,17 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public Command getSwerveAimAssistByBranchAndPosition(Branch targetBranch, Supplier<Pose2d> robotPoseSupplier) {
-		Pose2d robotPose = robotPoseSupplier.get().rotateBy(Field.getReefSideMiddle(targetBranch.getReefSide()).getRotation().unaryMinus());
-		Pose2d scoringPose = ScoringHelpers.getRobotScoringPose(targetBranch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS).rotateBy(Field.getReefSideMiddle(targetBranch.getReefSide()).getRotation().unaryMinus());
-		Logger.recordOutput("robot", robotPose);
-		Logger.recordOutput("scoring", scoringPose);
-		return swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE);
+		return swerve.getCommandsBuilder()
+			.driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
+			.onlyWhile(
+				() -> robotPoseSupplier.get()
+					.getTranslation()
+					.getDistance(
+						ScoringHelpers.getRobotScoringPose(targetBranch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
+							.getTranslation()
+					)
+					< 1.1
+			).repeatedly();
 	}
 
 	private Command genericPreScore(ScoreLevel scoreLevel) {

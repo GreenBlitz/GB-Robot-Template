@@ -174,6 +174,16 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
+	private Command genericArmPreScore(ScoreLevel scoreLevel) {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				superstructure.genericArmPreScore(scoreLevel),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
+			),
+			scoreLevel.getRobotArmPreScore()
+		);
+	}
+
 	private Command genericPreScore(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
@@ -184,16 +194,6 @@ public class RobotCommander extends GBSubsystem {
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
 			),
 			scoreLevel.getRobotPreScore()
-		);
-	}
-
-	private Command genericArmPreScore(ScoreLevel scoreLevel) {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				superstructure.genericArmPreScore(scoreLevel),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
-			),
-			scoreLevel.getRobotArmPreScore()
 		);
 	}
 
@@ -209,10 +209,10 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command genericScore(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
-			new ParallelCommandGroup(
+			new ParallelDeadlineGroup(
 				superstructure.genericScoreWithRelease(scoreLevel),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
-			).until(superstructure::isCoralOut),
+			),
 			scoreLevel.getRobotScore()
 		);
 	}

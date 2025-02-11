@@ -130,36 +130,11 @@ public class Superstructure extends GBSubsystem {
 	public Command genericPreScore(ScoreLevel scoreLevel) {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
-				new SequentialCommandGroup(
-					armStateHandler.setState(scoreLevel.getArmScore()),
-					elevatorStateHandler.setState(scoreLevel.getElevatorScore())
-				),
+				elevatorStateHandler.setState(scoreLevel.getElevatorPreScore()),
+				armStateHandler.setState(scoreLevel.getArmPreScore()),
 				endEffectorStateHandler.setState(EndEffectorState.KEEP)
 			),
 			scoreLevel.getSuperstructurePreScore()
-		);
-	}
-
-	public Command genericScoreWithRelease(ScoreLevel scoreLevel) {
-		return asSubsystemCommand(
-			new SequentialCommandGroup(
-				new ParallelCommandGroup(
-					elevatorStateHandler.setState(scoreLevel.getElevatorPreScore()),
-					armStateHandler.setState(scoreLevel.getArmPreScore()),
-					endEffectorStateHandler.setState(EndEffectorState.KEEP)
-				).until(() -> isPreScoreReady(scoreLevel)),
-				new ParallelCommandGroup(
-					elevatorStateHandler.setState(scoreLevel.getElevatorScore()),
-					armStateHandler.setState(scoreLevel.getArmScore()),
-					endEffectorStateHandler.setState(EndEffectorState.KEEP)
-				).until(() -> isReadyToScore(scoreLevel)),
-				new ParallelCommandGroup(
-					elevatorStateHandler.setState(scoreLevel.getElevatorScore()),
-					armStateHandler.setState(scoreLevel.getArmScore()),
-					endEffectorStateHandler.setState(scoreLevel.getEndEffectorScore())
-				).withTimeout(StateMachineConstants.SCORE_OUTTAKE_TIME_AFTER_BEAM_BREAK_SECONDS)
-			),
-			scoreLevel.getSuperstructureScore()
 		);
 	}
 
@@ -171,6 +146,24 @@ public class Superstructure extends GBSubsystem {
 				endEffectorStateHandler.setState(EndEffectorState.KEEP)
 			),
 			scoreLevel.getSuperstructureScoreWithoutRelease()
+		);
+	}
+
+	public Command genericScoreWithRelease(ScoreLevel scoreLevel) {
+		return asSubsystemCommand(
+			new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(scoreLevel.getElevatorScore()),
+					armStateHandler.setState(scoreLevel.getArmScore()),
+					endEffectorStateHandler.setState(scoreLevel.getEndEffectorScore())
+				).until(this::isCoralOut),
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(scoreLevel.getElevatorScore()),
+					armStateHandler.setState(scoreLevel.getArmScore()),
+					endEffectorStateHandler.setState(scoreLevel.getEndEffectorScore())
+				).withTimeout(StateMachineConstants.SCORE_OUTTAKE_TIME_AFTER_BEAM_BREAK_SECONDS)
+			),
+			scoreLevel.getSuperstructureScore()
 		);
 	}
 

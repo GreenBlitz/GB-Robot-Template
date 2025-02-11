@@ -34,8 +34,8 @@ class KrakenX60DriveBuilder {
 
 	private static SysIdRoutine.Config buildSysidConfig() {
 		return new SysIdRoutine.Config(
-			Units.Volts.of(0.5).per(Units.Second),
-			Units.Volts.of(2),
+			Units.Volts.of(1).per(Units.Second),
+			Units.Volts.of(7),
 			null,
 			state -> SignalLogger.writeString("state", state.toString())
 		);
@@ -64,10 +64,10 @@ class KrakenX60DriveBuilder {
 		driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
 		if (Robot.ROBOT_TYPE.isReal()) {
-			driveConfig.Slot0.kS = 0;
-			driveConfig.Slot0.kV = 0;
-			driveConfig.Slot0.kA = 0;
-			driveConfig.Slot0.kP = 0;
+			driveConfig.Slot0.kS = 0.1629;
+			driveConfig.Slot0.kV = 0.87762;
+			driveConfig.Slot0.kA = 0.085594;
+			driveConfig.Slot0.kP = 3;
 			driveConfig.Slot0.kI = 0;
 			driveConfig.Slot0.kD = 0;
 		} else {

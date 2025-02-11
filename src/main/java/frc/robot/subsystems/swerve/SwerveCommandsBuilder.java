@@ -168,8 +168,7 @@ public class SwerveCommandsBuilder {
 	}
 
 	public Command driveByDriversInputs(Supplier<SwerveState> state) {
-		return swerve
-			.asSubsystemCommand(new DeferredCommand(() -> driveByDriversInputs(state.get()), Set.of(swerve)), "Drive with supplier state");
+		return new DeferredCommand(() -> driveByDriversInputs(state.get()), Set.of(swerve));
 	}
 
 	public Command driveByDriversInputs(SwerveState state) {
@@ -181,12 +180,9 @@ public class SwerveCommandsBuilder {
 
 
 	public Command driveToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose) {
-		return swerve.asSubsystemCommand(
-			new DeferredCommand(
-				() -> new SequentialCommandGroup(pathToPose(currentPose.get(), targetPose.get()), pidToPose(currentPose, targetPose.get())),
-				Set.of(swerve)
-			),
-			"Drive to pose"
+		return new DeferredCommand(
+			() -> new SequentialCommandGroup(pathToPose(currentPose.get(), targetPose.get()), pidToPose(currentPose, targetPose.get())),
+			Set.of(swerve)
 		);
 	}
 

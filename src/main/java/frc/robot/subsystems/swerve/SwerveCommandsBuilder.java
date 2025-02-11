@@ -168,8 +168,7 @@ public class SwerveCommandsBuilder {
 	}
 
 	public Command driveByDriversInputs(Supplier<SwerveState> state) {
-		return swerve
-			.asSubsystemCommand(new DeferredCommand(() -> driveByDriversInputs(state.get()), Set.of(swerve)), "Drive with supplier state");
+		return new DeferredCommand(() -> driveByDriversInputs(state.get()), Set.of(swerve));
 	}
 
 	public Command driveByDriversInputs(SwerveState state) {

@@ -178,7 +178,8 @@ public class RobotCommander extends GBSubsystem {
 							.getTranslation()
 					)
 					< 1.1
-			).repeatedly();
+			)
+			.repeatedly();
 	}
 
 	private Command genericPreScore(ScoreLevel scoreLevel) {

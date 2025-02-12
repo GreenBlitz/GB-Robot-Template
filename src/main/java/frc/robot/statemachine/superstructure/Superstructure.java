@@ -88,7 +88,7 @@ public class Superstructure extends GBSubsystem {
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.CLOSED),
 				armStateHandler.setState(ArmState.CLOSED),
-				endEffectorStateHandler.setState(EndEffectorState.KEEP)
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
 			),
 			SuperstructureState.IDLE
 		);
@@ -128,7 +128,7 @@ public class Superstructure extends GBSubsystem {
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.CLOSED),
 				armStateHandler.setState(scoreLevel.getArmPreScore()),
-				endEffectorStateHandler.setState(EndEffectorState.KEEP)
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
 			),
 			scoreLevel.getSuperstructureArmPreScore()
 		);
@@ -139,7 +139,7 @@ public class Superstructure extends GBSubsystem {
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(scoreLevel.getElevatorPreScore()),
 				armStateHandler.setState(scoreLevel.getArmPreScore()),
-				endEffectorStateHandler.setState(EndEffectorState.KEEP)
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
 			),
 			scoreLevel.getSuperstructurePreScore()
 		);
@@ -150,7 +150,7 @@ public class Superstructure extends GBSubsystem {
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(scoreLevel.getElevatorScore()),
 				armStateHandler.setState(scoreLevel.getArmScore()),
-				endEffectorStateHandler.setState(EndEffectorState.KEEP)
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
 			),
 			scoreLevel.getSuperstructureScoreWithoutRelease()
 		);

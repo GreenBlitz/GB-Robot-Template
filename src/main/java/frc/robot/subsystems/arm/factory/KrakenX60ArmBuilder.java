@@ -90,7 +90,7 @@ public class KrakenX60ArmBuilder {
 				config.Slot0.kA = 0.5209;
 
 				// PID
-				config.Slot1.kP = 15;
+				config.Slot1.kP = 60;
 				config.Slot1.kI = 0;
 				config.Slot1.kD = 0;
 				config.Slot1.kS = 0.0715;

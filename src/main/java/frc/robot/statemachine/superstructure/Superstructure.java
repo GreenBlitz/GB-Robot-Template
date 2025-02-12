@@ -96,11 +96,18 @@ public class Superstructure extends GBSubsystem {
 
 	public Command intake() {
 		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.INTAKE),
-				armStateHandler.setState(ArmState.INTAKE),
-				endEffectorStateHandler.setState(EndEffectorState.INTAKE)
-			).until(this::isCoralIn),
+			new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.INTAKE),
+					armStateHandler.setState(ArmState.INTAKE),
+					endEffectorStateHandler.setState(EndEffectorState.INTAKE)
+				).until(this::isCoralIn),
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.INTAKE),
+					armStateHandler.setState(ArmState.INTAKE),
+					endEffectorStateHandler.setState(EndEffectorState.INTAKE)
+				).withTimeout(StateMachineConstants.SCORE_OUTTAKE_TIME_AFTER_BEAM_BREAK_SECONDS)
+			),
 			SuperstructureState.INTAKE
 		);
 	}

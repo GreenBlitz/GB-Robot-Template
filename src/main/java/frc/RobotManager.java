@@ -5,10 +5,7 @@
 package frc;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.constants.field.enums.Branch;
 import frc.robot.Robot;
-import frc.robot.scoringhelpers.ScoringHelpers;
-import frc.robot.statemachine.StateMachineConstants;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtil;

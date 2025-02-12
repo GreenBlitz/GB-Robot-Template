@@ -5,9 +5,9 @@ import frc.robot.subsystems.swerve.factories.constants.SimulationSwerveConstants
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.records.ModuleSpecificConstants;
 
-class RealModuleConstants {
+public class RealModuleConstants {
 
-	private static final double WHEEL_DIAMETER_METERS = 0.0479588 * 2;
+	public static final double WHEEL_DIAMETER_METERS = 0.0479588 * 2;
 	private static final double COUPLING_RATIO = 0.4296;
 
 	private static final double MODULE_X_DISTANCE_FROM_CENTER = 0.30833;
@@ -28,7 +28,7 @@ class RealModuleConstants {
 		-MODULE_X_DISTANCE_FROM_CENTER,
 		-MODULE_Y_DISTANCE_FROM_CENTER
 	);
-	private static final Translation2d[] LOCATIONS = {
+	public static final Translation2d[] LOCATIONS = {
 		FRONT_LEFT_TRANSLATION2D,
 		FRONT_RIGHT_TRANSLATION2D,
 		BACK_LEFT_TRANSLATION2D,

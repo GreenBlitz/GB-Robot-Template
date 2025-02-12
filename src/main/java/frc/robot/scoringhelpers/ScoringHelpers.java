@@ -74,13 +74,13 @@ public class ScoringHelpers {
 		return new SelectCommand<>(
 			Map.of(
 				ScoreLevel.L1,
-				robot.getRobotCommander().setState(RobotState.L1),
+				robot.getRobotCommander().score(ScoreLevel.L1),
 				ScoreLevel.L2,
-				robot.getRobotCommander().setState(RobotState.L2),
+				robot.getRobotCommander().score(ScoreLevel.L2),
 				ScoreLevel.L3,
-				robot.getRobotCommander().setState(RobotState.L3),
+				robot.getRobotCommander().score(ScoreLevel.L3),
 				ScoreLevel.L4,
-				robot.getRobotCommander().setState(RobotState.L4)
+				robot.getRobotCommander().score(ScoreLevel.L4)
 			),
 			() -> targetScoreLevel
 		);

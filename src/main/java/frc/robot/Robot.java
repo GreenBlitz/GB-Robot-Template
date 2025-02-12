@@ -38,7 +38,6 @@ import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.time.TimeUtil;
 
-
 import java.util.Optional;
 
 /**
@@ -123,6 +122,8 @@ public class Robot {
 
 	public void periodic() {
 		swerve.update();
+		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());
+
 		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
 		for (TimedValue<Rotation2d> headingData : multiAprilTagVisionSources.getRawRobotHeadings()) {
 			headingEstimator.updateVisionHeading(headingData, RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION);
@@ -131,11 +132,12 @@ public class Robot {
 		poseEstimator.updateVision(multiAprilTagVisionSources.getFilteredVisionData());
 		multiAprilTagVisionSources.log();
 		headingEstimator.log();
-		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());
+
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		simulationManager.logPoses();
 		ScoringHelpers.log("Scoring");
+
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 

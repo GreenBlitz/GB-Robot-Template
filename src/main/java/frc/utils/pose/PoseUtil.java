@@ -26,6 +26,12 @@ public class PoseUtil {
 		return isAtX && isAtY && isAtHeading && isStill;
 	}
 
+	public static boolean isAtPoseWithoutSpeedsAndHeadingCheck(Pose2d currentPose, Pose2d targetPose, Pose2d tolerances) {
+		boolean isAtX = MathUtil.isNear(targetPose.getX(), currentPose.getX(), tolerances.getX());
+		boolean isAtY = MathUtil.isNear(targetPose.getY(), currentPose.getY(), tolerances.getY());
+		return isAtX && isAtY;
+	}
+
 	public static Pose3d poseArrayToPose3D(double[] poseArray, AngleUnit angleUnit) {
 		int requiredAmount = Pose3dComponentsValue.POSE3D_COMPONENTS_AMOUNT;
 		if (poseArray.length != requiredAmount) {

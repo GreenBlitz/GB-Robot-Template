@@ -16,6 +16,7 @@ import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.pose.PoseUtil;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -167,19 +168,28 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	public Command getSwerveAimAssistByBranchAndPosition(Branch targetBranch, Supplier<Pose2d> robotPoseSupplier) {
-		return swerve.getCommandsBuilder()
-			.driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
-			.onlyWhile(
-				() -> robotPoseSupplier.get()
-					.getTranslation()
-					.getDistance(
-						ScoringHelpers.getRobotScoringPose(targetBranch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
-							.getTranslation()
-					)
-					< 1.1
-			)
-			.repeatedly();
+	public boolean isReadyToStartBranchAimAssist(Branch targetBranch) {
+		Rotation2d reefAngle = Field.getReefSideMiddle(targetBranch.getReefSide()).getRotation();
+
+		Pose2d reefRelativeTargetPose = ScoringHelpers
+			.getRobotScoringPose(targetBranch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
+			.rotateBy(reefAngle.unaryMinus());
+		Pose2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus());
+
+		Pose2d middleOfAimAssistActivatingMalben = new Pose2d(
+			reefRelativeTargetPose.getX() - 1,
+			reefRelativeTargetPose.getY(),
+			new Rotation2d()
+		);
+
+		Logger.recordOutput("robot", reefRelativeRobotPose);
+		Logger.recordOutput("malben", middleOfAimAssistActivatingMalben);
+		return PoseUtil
+			.isAtPoseWithoutSpeedsAndHeadingCheck(reefRelativeRobotPose, middleOfAimAssistActivatingMalben, Tolerances.REEF_AIM_ASSIST);
+	}
+
+	public Supplier<SwerveState> getSwerveStateSupplier(Supplier<Boolean> isReady) {
+		return () -> (isReady.get() ? SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH) : SwerveState.DEFAULT_DRIVE);
 	}
 
 	private Command genericPreScore(ScoreLevel scoreLevel) {
@@ -189,7 +199,8 @@ public class RobotCommander extends GBSubsystem {
 					superstructure.idle().until(() -> isReadyToOpenSuperstructure(scoreLevel, ScoringHelpers.targetBranch)),
 					superstructure.preScore(scoreLevel)
 				),
-				getSwerveAimAssistByBranchAndPosition(ScoringHelpers.targetBranch, robot.getPoseEstimator()::getEstimatedPose)
+				swerve.getCommandsBuilder()
+					.driveByDriversInputs(getSwerveStateSupplier(() -> isReadyToStartBranchAimAssist(ScoringHelpers.targetBranch)))
 			),
 			scoreLevel.getRobotPreScore()
 		);
@@ -219,7 +230,12 @@ public class RobotCommander extends GBSubsystem {
 					superstructure.preScore(scoreLevel).until(() -> isPreScoreReady(scoreLevel, ScoringHelpers.targetBranch)),
 					superstructure.score(scoreLevel)
 				),
-				getSwerveAimAssistByBranchAndPosition(ScoringHelpers.targetBranch, robot.getPoseEstimator()::getEstimatedPose)
+				swerve.getCommandsBuilder()
+					.driveByDriversInputs(
+						() -> isReadyToStartBranchAimAssist(ScoringHelpers.targetBranch)
+							? SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH)
+							: SwerveState.DEFAULT_DRIVE
+					)
 			).until(superstructure::isCoralOut),
 			scoreLevel.getRobotScore()
 		);

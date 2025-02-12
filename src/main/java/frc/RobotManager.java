@@ -6,6 +6,7 @@ package frc;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtil;
@@ -72,6 +73,7 @@ public class RobotManager extends LoggedRobot {
 		JoysticksBindings.setDriversInputsToSwerve(robot.getSwerve());
 		robot.periodic();
 		AlertManager.reportAlerts();
+		Logger.recordOutput("isReady", robot.getRobotCommander().isReadyToStartBranchAimAssist(ScoringHelpers.targetBranch));
 	}
 
 	private void updateTimeRelatedData() {

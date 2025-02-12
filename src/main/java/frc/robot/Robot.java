@@ -123,12 +123,12 @@ public class Robot {
 		}
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 		poseEstimator.updateVision(multiAprilTagVisionSources.getFilteredVisionData());
+		multiAprilTagVisionSources.log();
+		headingEstimator.log();
 		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		simulationManager.logPoses();
-		multiAprilTagVisionSources.log();
-		headingEstimator.log();
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 

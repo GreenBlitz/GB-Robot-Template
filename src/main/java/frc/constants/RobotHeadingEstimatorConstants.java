@@ -1,6 +1,5 @@
 package frc.constants;
 
-
 public class RobotHeadingEstimatorConstants {
 
 	public static final String DEFAULT_HEADING_ESTIMATOR_LOGPATH = "HeadingEstimator/";

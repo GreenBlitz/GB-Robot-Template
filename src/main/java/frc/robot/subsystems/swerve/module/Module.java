@@ -94,6 +94,10 @@ public class Module {
 		return constants.positionFromCenterMeters();
 	}
 
+	public ModuleSpecificConstants getModuleConstants() {
+		return constants;
+	}
+
 	public double toDriveMeters(Rotation2d angle) {
 		return Conversions.angleToDistance(angle, constants.wheelDiameterMeters());
 	}

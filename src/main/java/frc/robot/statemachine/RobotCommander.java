@@ -185,6 +185,14 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
+	public Command fullyPreScore(ScoreLevel scoreLevel) {
+		return new SequentialCommandGroup(
+			genericArmPreScore(scoreLevel).until(() -> isReadyToOpenSuperstructure(scoreLevel, ScoringHelpers.getTargetBranch())),
+			genericPreScore(scoreLevel).until(() -> isPreScoreReady(scoreLevel, ScoringHelpers.getTargetBranch())),
+			genericScoreWithoutRelease(scoreLevel)
+		);
+	}
+
 	private Command drive() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(superstructure.idle(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),

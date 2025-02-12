@@ -90,13 +90,13 @@ public class ScoringHelpers {
 		return new SelectCommand<>(
 			Map.of(
 				ScoreLevel.L1,
-				robot.getRobotCommander().setState(RobotState.PRE_L1),
+				robot.getRobotCommander().fullyPreScore(ScoreLevel.L1),
 				ScoreLevel.L2,
-				robot.getRobotCommander().setState(RobotState.PRE_L2),
+				robot.getRobotCommander().fullyPreScore(ScoreLevel.L2),
 				ScoreLevel.L3,
-				robot.getRobotCommander().setState(RobotState.PRE_L3),
+				robot.getRobotCommander().fullyPreScore(ScoreLevel.L3),
 				ScoreLevel.L4,
-				robot.getRobotCommander().setState(RobotState.PRE_L4)
+				robot.getRobotCommander().fullyPreScore(ScoreLevel.L4)
 			),
 			() -> targetScoreLevel
 		);

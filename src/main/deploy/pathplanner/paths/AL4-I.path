@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 7.58,
-        "y": 3.0
+        "y": 4.02
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.22475,
-        "y": 2.699
+        "x": 7.244249999999999,
+        "y": 3.722749999999999
       },
       "isLocked": false,
       "linkedName": "AL4"
@@ -20,8 +20,8 @@
         "y": 5.08
       },
       "prevControl": {
-        "x": 6.513,
-        "y": 7.34
+        "x": 6.15225,
+        "y": 6.4625
       },
       "nextControl": null,
       "isLocked": false,

@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.292999999999999,
-        "y": 5.662999999999999
+        "x": 7.2735,
+        "y": 5.63375
       },
       "isLocked": false,
       "linkedName": "AL2"
@@ -20,8 +20,8 @@
         "y": 5.08
       },
       "prevControl": {
-        "x": 6.249750000000001,
-        "y": 6.794
+        "x": 5.87925,
+        "y": 6.247999999999999
       },
       "nextControl": null,
       "isLocked": false,

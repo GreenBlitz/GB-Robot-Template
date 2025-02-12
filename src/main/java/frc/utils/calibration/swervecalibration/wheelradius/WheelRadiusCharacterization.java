@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.utils.calibration.swervecalibration;
+package frc.utils.calibration.swervecalibration.wheelradius;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -89,7 +89,7 @@ public class WheelRadiusCharacterization extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		onEnd.run();
-		String output = accumulateGyroYawRadians <= MathConstants.FULL_CIRCLE.getRadians()
+		String output = Math.abs(accumulateGyroYawRadians) <= MathConstants.FULL_CIRCLE.getRadians()
 			? "Not enough data for characterization"
 			: wheelRadiusMeters + " meters";
 		Logger.recordOutput(WheelRadiusConstants.LOG_PATH, output);

@@ -8,13 +8,19 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
+import frc.robot.subsystems.swerve.factories.constants.RealSwerveConstants;
 
 
 public class AutonomousConstants {
 
 	public static final String LOG_PATH_PREFIX = "Autonomous";
 
-	public static final PathConstraints REAL_TIME_CONSTRAINTS = new PathConstraints(2.5, 2.5, 4, 4);
+	public static final PathConstraints REAL_TIME_CONSTRAINTS = new PathConstraints(
+		RealSwerveConstants.VELOCITY_AT_12_VOLTS_METERS_PER_SECOND,
+		RealSwerveConstants.ACCELERATION_AT_12_VOLTS_METERS_PER_SECOND_SQUARED,
+		RealSwerveConstants.MAX_ROTATIONAL_VELOCITY_PER_SECOND.getRadians(),
+		4
+	);
 
 	public static final double PATHFINDING_DEADBAND_METERS = 0.5;
 

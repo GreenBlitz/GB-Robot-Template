@@ -2,7 +2,7 @@ package frc.robot.vision.sources.limelights;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.constants.VisionConstants;
+import frc.robot.vision.VisionConstants;
 import frc.utils.TimedValue;
 import frc.robot.vision.RobotAngleValues;
 import frc.robot.vision.data.AprilTagVisionData;

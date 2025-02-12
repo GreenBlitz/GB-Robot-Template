@@ -1,4 +1,4 @@
-package frc.constants;
+package frc.robot.poseestimator.helpers.RobotHeadingEstimator;
 
 public class RobotHeadingEstimatorConstants {
 

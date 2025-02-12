@@ -1,11 +1,11 @@
-package frc.constants;
+package frc.robot.vision;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import frc.robot.vision.VisionFilters;
+import frc.constants.DirectoryPaths;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.data.VisionData;
 import frc.robot.vision.sources.VisionSource;

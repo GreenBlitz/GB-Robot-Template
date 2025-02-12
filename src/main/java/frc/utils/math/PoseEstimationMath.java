@@ -1,7 +1,7 @@
 package frc.utils.math;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.constants.RobotHeadingEstimatorConstants;
+import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
 
 public class PoseEstimationMath {
 

@@ -19,7 +19,6 @@ import frc.utils.pose.PoseUtil;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
-import java.util.function.Supplier;
 
 public class RobotCommander extends GBSubsystem {
 
@@ -181,15 +180,14 @@ public class RobotCommander extends GBSubsystem {
 			reefRelativeTargetPose.getY(),
 			new Rotation2d()
 		);
-
-		Logger.recordOutput("robot", reefRelativeRobotPose);
-		Logger.recordOutput("malben", middleOfAimAssistActivatingMalben);
 		return PoseUtil
 			.isAtPoseWithoutSpeedsAndHeadingCheck(reefRelativeRobotPose, middleOfAimAssistActivatingMalben, Tolerances.REEF_AIM_ASSIST);
 	}
 
-	public Supplier<SwerveState> getSwerveStateSupplier(Supplier<Boolean> isReady) {
-		return () -> (isReady.get() ? SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH) : SwerveState.DEFAULT_DRIVE);
+	public SwerveState getSwerveStateSupplier() {
+		return (isReadyToStartBranchAimAssist(ScoringHelpers.targetBranch)
+			? SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH)
+			: SwerveState.DEFAULT_DRIVE);
 	}
 
 	private Command genericPreScore(ScoreLevel scoreLevel) {
@@ -199,8 +197,7 @@ public class RobotCommander extends GBSubsystem {
 					superstructure.idle().until(() -> isReadyToOpenSuperstructure(scoreLevel, ScoringHelpers.targetBranch)),
 					superstructure.preScore(scoreLevel)
 				),
-				swerve.getCommandsBuilder()
-					.driveByDriversInputs(getSwerveStateSupplier(() -> isReadyToStartBranchAimAssist(ScoringHelpers.targetBranch)))
+				swerve.getCommandsBuilder().driveByDriversInputs(this::getSwerveStateSupplier, false)
 			),
 			scoreLevel.getRobotPreScore()
 		);
@@ -230,12 +227,7 @@ public class RobotCommander extends GBSubsystem {
 					superstructure.preScore(scoreLevel).until(() -> isPreScoreReady(scoreLevel, ScoringHelpers.targetBranch)),
 					superstructure.score(scoreLevel)
 				),
-				swerve.getCommandsBuilder()
-					.driveByDriversInputs(
-						() -> isReadyToStartBranchAimAssist(ScoringHelpers.targetBranch)
-							? SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH)
-							: SwerveState.DEFAULT_DRIVE
-					)
+				swerve.getCommandsBuilder().driveByDriversInputs(this::getSwerveStateSupplier, false)
 			).until(superstructure::isCoralOut),
 			scoreLevel.getRobotScore()
 		);

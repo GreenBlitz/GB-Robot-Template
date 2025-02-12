@@ -5,12 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.DeferredCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
@@ -167,8 +162,15 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-	public Command driveByDriversInputs(Supplier<SwerveState> state) {
-		return new DeferredCommand(() -> driveByDriversInputs(state.get()), Set.of(swerve));
+	public Command driveByDriversInputs(Supplier<SwerveState> state, boolean isOnce) {
+		if (isOnce) {
+			return new DeferredCommand(() -> driveByDriversInputs(state.get()), Set.of(swerve));
+		} else {
+			return swerve.asSubsystemCommand(
+				new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.driveByDriversTargetsPowers(state.get())),
+				"Drive by drivers inputs with state"
+			);
+		}
 	}
 
 	public Command driveByDriversInputs(SwerveState state) {

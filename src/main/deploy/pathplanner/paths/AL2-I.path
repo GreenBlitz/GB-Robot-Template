@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.2735,
-        "y": 5.63375
+        "x": 7.468500000000001,
+        "y": 5.67275
       },
       "isLocked": false,
       "linkedName": "AL2"
@@ -20,8 +20,8 @@
         "y": 5.08
       },
       "prevControl": {
-        "x": 5.87925,
-        "y": 6.247999999999999
+        "x": 5.82075,
+        "y": 6.062749999999999
       },
       "nextControl": null,
       "isLocked": false,
@@ -55,7 +55,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -145.0
   },
   "useDefaultConstraints": true
 }

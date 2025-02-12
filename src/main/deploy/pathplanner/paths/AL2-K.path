@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.63975,
-        "y": 6.443
+        "x": 7.176,
+        "y": 5.4582500000000005
       },
       "isLocked": false,
       "linkedName": "AL2"
@@ -20,8 +20,8 @@
         "y": 5.26
       },
       "prevControl": {
-        "x": 2.73975,
-        "y": 7.19375
+        "x": 3.1492500000000003,
+        "y": 6.86225
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "PRE_SCORE",
-      "waypointRelativePos": 0.8560175054704596,
+      "waypointRelativePos": 0.8840262582056908,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -55,7 +55,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -145.0
   },
   "useDefaultConstraints": true
 }

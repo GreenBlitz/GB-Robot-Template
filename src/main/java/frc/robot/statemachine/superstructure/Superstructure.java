@@ -106,7 +106,7 @@ public class Superstructure extends GBSubsystem {
 					elevatorStateHandler.setState(ElevatorState.INTAKE),
 					armStateHandler.setState(ArmState.INTAKE),
 					endEffectorStateHandler.setState(EndEffectorState.INTAKE)
-				).withTimeout(StateMachineConstants.SCORE_OUTTAKE_TIME_AFTER_BEAM_BREAK_SECONDS)
+				).withTimeout(StateMachineConstants.INTAKE_TIME_AFTER_BEAM_BREAK_SECONDS)
 			),
 			SuperstructureState.INTAKE
 		);

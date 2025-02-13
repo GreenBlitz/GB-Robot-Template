@@ -49,22 +49,25 @@ public class LEDManager {
     
     public void initializeLEDManager(){
         addCondition(
-                () -> robot.getRobotCommander().getSuperstructure().getCurrentState() == SuperstructureState.IDLE,
+//                () -> robot.getRobotCommander().getSuperstructure().getCurrentState() == SuperstructureState.IDLE,
+                DriverStationUtil::isTeleop,
                 LEDState.IDLE
         );
         
         addCondition(
-                () -> DriverStationUtil.isDisabled(),
+				DriverStationUtil::isDisabled,
                 LEDState.DISABLE
         );
         
         addCondition(
-                () -> robot.getRobotCommander().getSuperstructure().isCoralIn(),
+//                () -> robot.getRobotCommander().getSuperstructure().isCoralIn(),
+                DriverStationUtil::isAutonomous,
                 LEDState.HAS_CORAL
         );
         
         addCondition(
-                () -> robot.getRobotCommander().getSuperstructure().isReadyToScore(),
+//                () -> robot.getRobotCommander().getSuperstructure().isReadyToScore(),
+                DriverStationUtil::isTest,
                 LEDState.IN_POSITION_TO_SCORE
         );
         

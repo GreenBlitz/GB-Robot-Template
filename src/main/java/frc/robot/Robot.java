@@ -133,6 +133,7 @@ public class Robot {
 		candle.clearAnimation(0);
 		ledStateHandler = new LEDStateHandler("CANDle", candle);
 		this.ledManager = new LEDManager(this ,ledStateHandler);
+		ledManager.initializeLEDManager();
 	}
 
 	public void periodic() {
@@ -153,6 +154,7 @@ public class Robot {
 		simulationManager.logPoses();
 
 		CommandScheduler.getInstance().run(); // Should be last
+		
 	}
 
 	public Command getAutonomousCommand() {
@@ -186,5 +188,8 @@ public class Robot {
 	public CANdle getCandle(){
 		return candle;
 	}
-
+	
+	public LEDManager getLedManager() {
+		return ledManager;
+	}
 }

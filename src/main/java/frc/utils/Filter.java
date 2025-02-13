@@ -26,8 +26,4 @@ public class Filter<T> {
 		return new Filter<>(data -> apply(data) || otherFilter.apply(data));
 	}
 
-	public <E extends T> Filter<E> polymorphAs() {
-		return new Filter<>(this::apply);
-	}
-
 }

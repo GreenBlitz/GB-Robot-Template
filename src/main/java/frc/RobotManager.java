@@ -74,7 +74,7 @@ public class RobotManager extends LoggedRobot {
 		JoysticksBindings.setDriversInputsToSwerve(robot.getSwerve());
 		robot.periodic();
 		AlertManager.reportAlerts();
-		Logger.recordOutput("Slots", Field.getCoralStationSlots(CoralStationSlot.R9));
+		Logger.recordOutput("Slots", Field.CORAL_STATION_SLOTS_MIDDLES);
 	}
 
 	private void updateTimeRelatedData() {

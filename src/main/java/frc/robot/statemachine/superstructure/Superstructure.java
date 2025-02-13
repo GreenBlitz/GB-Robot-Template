@@ -30,6 +30,7 @@ public class Superstructure extends GBSubsystem {
 	private final EndEffectorStateHandler endEffectorStateHandler;
 
 	private SuperstructureState currentState;
+	public boolean driverIsObjectInOverride;
 
 	public Superstructure(String logPath, Robot robot) {
 		super(logPath);
@@ -39,6 +40,7 @@ public class Superstructure extends GBSubsystem {
 		this.endEffectorStateHandler = new EndEffectorStateHandler(robot.getEndEffector());
 
 		this.currentState = SuperstructureState.IDLE;
+		this.driverIsObjectInOverride = false;
 		setDefaultCommand(
 			new DeferredCommand(() -> endState(currentState), Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector()))
 		);
@@ -52,11 +54,11 @@ public class Superstructure extends GBSubsystem {
 	}
 
 	public boolean isCoralIn() {
-		return robot.getEndEffector().isCoralInBack();
+		return robot.getEndEffector().isCoralInBack() || driverIsObjectInOverride;
 	}
 
 	public boolean isCoralOut() {
-		return !robot.getEndEffector().isCoralInFront();
+		return !robot.getEndEffector().isCoralInFront() || !driverIsObjectInOverride;
 	}
 
 	public boolean isPreScoreReady(ScoreLevel scoreLevel) {

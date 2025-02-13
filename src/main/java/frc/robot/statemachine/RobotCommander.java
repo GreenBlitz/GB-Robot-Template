@@ -174,13 +174,13 @@ public class RobotCommander extends GBSubsystem {
 			.rotateBy(reefAngle.unaryMinus());
 		Pose2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus());
 
-		Pose2d middleOfAimAssistActivatingMalben = new Pose2d(
-			reefRelativeTargetPose.getX() - 1,
+		Pose2d middleOfAimAssistActivatingRectangle = new Pose2d(
+			reefRelativeTargetPose.getX() - StateMachineConstants.MIDDLE_OF_AIM_ASSIST_ACTIVATING_RECTANGLE_DISTANCE_FROM_SCORING_POSITION,
 			reefRelativeTargetPose.getY(),
 			new Rotation2d()
 		);
 		return PoseUtil
-			.isAtPoseWithoutSpeedsAndHeadingCheck(reefRelativeRobotPose, middleOfAimAssistActivatingMalben, Tolerances.REEF_AIM_ASSIST);
+			.isAtPoseWithoutSpeedsAndHeadingCheck(reefRelativeRobotPose, middleOfAimAssistActivatingRectangle, Tolerances.REEF_AIM_ASSIST);
 	}
 
 	public SwerveState getSwerveStateSupplier() {

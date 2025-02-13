@@ -38,23 +38,23 @@ public class AutonomousConstants {
 
 	public static class LinkedWaypoints {
 
-		public static final Pair<String, Pose2d> AUTO_LINE1 = Pair.of("AL1", new Pose2d(7.58, 7.26, Rotation2d.fromDegrees(-137)));
+		public static final Pair<String, Pose2d> AUTO_LINE_1 = Pair.of("AL1", new Pose2d(7.58, 7.26, Rotation2d.fromDegrees(-137)));
 
-		public static final Pair<String, Pose2d> AUTO_LINE2 = Pair.of("AL2", new Pose2d(7.58, 6.17, Rotation2d.fromDegrees(-145)));
+		public static final Pair<String, Pose2d> AUTO_LINE_2 = Pair.of("AL2", new Pose2d(7.58, 6.17, Rotation2d.fromDegrees(-145)));
 
-		public static final Pair<String, Pose2d> AUTO_LINE3 = Pair.of("AL3", new Pose2d(7.58, 5.07, Rotation2d.fromDegrees(-157)));
+		public static final Pair<String, Pose2d> AUTO_LINE_3 = Pair.of("AL3", new Pose2d(7.58, 5.07, Rotation2d.fromDegrees(-157)));
 
-		public static final Pair<String, Pose2d> AUTO_LINE4 = Pair.of("AL4", new Pose2d(7.58, 4.02, Rotation2d.fromDegrees(180)));
+		public static final Pair<String, Pose2d> AUTO_LINE_4 = Pair.of("AL4", new Pose2d(7.58, 4.02, Rotation2d.fromDegrees(180)));
 
-		public static final Pair<String, Pose2d> AUTO_LINE5 = Pair.of("AL5", new Pose2d(7.58, 3, Rotation2d.fromDegrees(157)));
+		public static final Pair<String, Pose2d> AUTO_LINE_5 = Pair.of("AL5", new Pose2d(7.58, 3, Rotation2d.fromDegrees(157)));
 
-		public static final Pair<String, Pose2d> AUTO_LINE6 = Pair.of("AL6", new Pose2d(7.58, 1.9, Rotation2d.fromDegrees(152)));
+		public static final Pair<String, Pose2d> AUTO_LINE_6 = Pair.of("AL6", new Pose2d(7.58, 1.9, Rotation2d.fromDegrees(152)));
 
-		public static final Pair<String, Pose2d> AUTO_LINE7 = Pair.of("AL7", new Pose2d(7.58, 0.81, Rotation2d.fromDegrees(137)));
+		public static final Pair<String, Pose2d> AUTO_LINE_7 = Pair.of("AL7", new Pose2d(7.58, 0.81, Rotation2d.fromDegrees(137)));
 
-		public static final Pair<String, Pose2d> UPPER_CORAL_STATION2 = Pair.of("US2", new Pose2d(1.63, 7.34, Rotation2d.fromDegrees(-54)));
+		public static final Pair<String, Pose2d> UPPER_CORAL_STATION_2 = Pair.of("US2", new Pose2d(1.63, 7.34, Rotation2d.fromDegrees(-54)));
 
-		public static final Pair<String, Pose2d> LOWER_CORAL_STATION2 = Pair.of("LS2", new Pose2d(1.61, 0.7, Rotation2d.fromDegrees(54)));
+		public static final Pair<String, Pose2d> LOWER_CORAL_STATION_2 = Pair.of("LS2", new Pose2d(1.61, 0.7, Rotation2d.fromDegrees(54)));
 
 		public static final Pair<String, Pose2d> A = Pair.of("A", new Pose2d(3.16, 4.19, Rotation2d.fromDegrees(0)));
 

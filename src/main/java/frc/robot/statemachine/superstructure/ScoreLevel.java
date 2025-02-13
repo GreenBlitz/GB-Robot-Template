@@ -65,7 +65,7 @@ public enum ScoreLevel {
 		RobotState.L4,
 		RobotState.L4_WITHOUT_RELEASE,
 		RobotState.PRE_L4,
-		RobotState.ARM_PRE_L3
+		RobotState.ARM_PRE_L4
 	);
 
 	private final EndEffectorState endEffectorScore;

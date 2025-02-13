@@ -18,7 +18,7 @@ import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
 import frc.robot.hardware.empties.EmptyGyro;
 import frc.robot.hardware.interfaces.IGyro;
-import frc.robot.poseestimator.observations.OdometryObservation;
+import frc.robot.poseestimator.OdometryData;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.states.DriveRelative;
@@ -154,18 +154,18 @@ public class Swerve extends GBSubsystem {
 		return Math.min(gyroSignals.yawSignal().asArray().length, modules.getNumberOfOdometrySamples());
 	}
 
-	public OdometryObservation[] getAllOdometryObservations() {
-		OdometryObservation[] odometryObservations = new OdometryObservation[getNumberOfOdometrySamples()];
+	public OdometryData[] getAllOdometryData() {
+		OdometryData[] odometryData = new OdometryData[getNumberOfOdometrySamples()];
 
-		for (int i = 0; i < odometryObservations.length; i++) {
-			odometryObservations[i] = new OdometryObservation(
+		for (int i = 0; i < odometryData.length; i++) {
+			odometryData[i] = new OdometryData(
 				modules.getWheelPositions(i),
 				gyro instanceof EmptyGyro ? Optional.empty() : Optional.of(gyroSignals.yawSignal().asArray()[i]),
 				gyroSignals.yawSignal().getTimestamps()[i]
 			);
 		}
 
-		return odometryObservations;
+		return odometryData;
 	}
 
 	public double getDriveRadiusMeters() {

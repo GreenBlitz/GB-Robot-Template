@@ -3,11 +3,11 @@ package frc.robot.vision.multivisionsources;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import frc.constants.VisionConstants;
+import frc.robot.vision.VisionConstants;
 import frc.utils.TimedValue;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.IndpendentHeadingVisionSource;
-import frc.robot.vision.GyroAngleValues;
+import frc.robot.vision.RobotAngleValues;
 import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
 import frc.robot.vision.sources.VisionSource;
 import frc.robot.vision.sources.limelights.DynamicSwitchingLimelight;
@@ -53,24 +53,24 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		this(logPath, robotHeadingSupplier, useRobotHeadingForPoseEstimating, List.of(visionSources));
 	}
 
-	private void updateAngleInHeadingRequiringSources(GyroAngleValues gyroAngleValues) {
+	private void updateAngleInHeadingRequiringSources(RobotAngleValues robotAngleValues) {
 		for (VisionSource<AprilTagVisionData> visionSource : visionSources) {
 			if (visionSource instanceof RobotHeadingRequiringVisionSource robotHeadingRequiringVisionSource) {
-				robotHeadingRequiringVisionSource.updateGyroAngleValues(gyroAngleValues);
+				robotHeadingRequiringVisionSource.updateRobotAngleValues(robotAngleValues);
 			}
 		}
 	}
 
 	private void updateAngleInHeadingRequiringSources(Rotation3d angle, double yawRate, double pitchRate, double rollRate) {
-		updateAngleInHeadingRequiringSources(new GyroAngleValues(angle, yawRate, pitchRate, rollRate));
+		updateAngleInHeadingRequiringSources(new RobotAngleValues(angle, yawRate, pitchRate, rollRate));
 	}
 
 	private void updateAngleInHeadingRequiringSources(Rotation3d angle) {
-		updateAngleInHeadingRequiringSources(new GyroAngleValues(angle));
+		updateAngleInHeadingRequiringSources(new RobotAngleValues(angle));
 	}
 
 	private void updateAngleInHeadingRequiringSources(Rotation2d yaw) {
-		updateAngleInHeadingRequiringSources(new Rotation3d(yaw.getRadians(), 0, 0));
+		updateAngleInHeadingRequiringSources(new Rotation3d(0, 0, yaw.getRadians()));
 	}
 
 	protected ArrayList<TimedValue<Rotation2d>> extractHeadingDataFromMappedSources(

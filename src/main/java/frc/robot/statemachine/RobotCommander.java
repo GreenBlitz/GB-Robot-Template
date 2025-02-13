@@ -179,8 +179,11 @@ public class RobotCommander extends GBSubsystem {
 			reefRelativeTargetPose.getY(),
 			new Rotation2d()
 		);
-		return PoseUtil
-			.isAtPoseWithoutSpeedsAndHeadingCheck(reefRelativeRobotPose, middleOfAimAssistActivatingRectangle, Tolerances.REEF_AIM_ASSIST);
+		return PoseUtil.isAtPoseWithoutSpeedsAndHeadingCheck(
+			reefRelativeRobotPose,
+			middleOfAimAssistActivatingRectangle,
+			StateMachineConstants.REEF_AIM_ASSIST_ACTIVATING_DISTANCES_FROM_CENTER_OF_AIM_ASSIST_RECTANGLE
+		);
 	}
 
 	public SwerveState getSwerveStateSupplier() {

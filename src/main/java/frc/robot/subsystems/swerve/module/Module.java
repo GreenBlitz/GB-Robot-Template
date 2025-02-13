@@ -82,6 +82,10 @@ public class Module {
 		resetSteerByEncoder();
 	}
 
+	public ModuleSpecificConstants getModuleConstants() {
+		return constants;
+	}
+
 	public SysIdCalibrator.SysIdConfigInfo getSteerSysIdConfigInfo() {
 		return steer.getSysidConfigInfo();
 	}
@@ -92,10 +96,6 @@ public class Module {
 
 	public Translation2d getPositionFromCenterMeters() {
 		return constants.positionFromCenterMeters();
-	}
-
-	public ModuleSpecificConstants getModuleConstants() {
-		return constants;
 	}
 
 	public double toDriveMeters(Rotation2d angle) {

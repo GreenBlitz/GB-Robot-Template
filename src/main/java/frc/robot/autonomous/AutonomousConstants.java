@@ -5,7 +5,11 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.Robot;
+import frc.robot.RobotConstants;
+import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.RealSwerveConstants;
+import frc.robot.subsystems.swerve.factories.modules.drive.KrakenX60DriveBuilder;
+import frc.robot.subsystems.swerve.module.ModuleConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 
 
@@ -13,26 +17,28 @@ public class AutonomousConstants {
 
 	public static final String LOG_PATH_PREFIX = "Autonomous";
 
-	public static final PathConstraints REAL_TIME_CONSTRAINTS = new PathConstraints(
-		RealSwerveConstants.VELOCITY_AT_12_VOLTS_METERS_PER_SECOND,
-		RealSwerveConstants.ACCELERATION_AT_12_VOLTS_METERS_PER_SECOND_SQUARED,
-		RealSwerveConstants.MAX_ROTATIONAL_VELOCITY_PER_SECOND.getRadians(),
-		4
-	);
+	public static final double PATHFINDING_DEADBAND_METERS = 0.5;
 
-	public static final double CLOSE_TO_TARGET_POSITION_DEADBAND_METERS = 0.5;
+	public static PathConstraints getRealTimeConstraints(Swerve swerve) {
+		return new PathConstraints(
+			swerve.getConstants().velocityAt12VoltsMetersPerSecond(),
+			RealSwerveConstants.ACCELERATION_AT_12_VOLTS_METERS_PER_SECOND_SQUARED,
+			swerve.getConstants().maxRotationalVelocityPerSecond().getRadians(),
+			4
+		);
+	}
 
 	public static RobotConfig getRobotConfig(Robot robot) {
 		return new RobotConfig(
-			52,
-			4.6875,
+			RobotConstants.MASS_KILOGRAM,
+			RobotConstants.MOMENT_OF_INERTIA_KILOGRAM_METERS_SQUARED,
 			new ModuleConfig(
 				robot.getSwerve().getModules().getModule(ModuleUtil.ModulePosition.FRONT_LEFT).getModuleConstants().wheelDiameterMeters() / 2,
-				RealSwerveConstants.VELOCITY_AT_12_VOLTS_METERS_PER_SECOND,
-				0.96,
+				robot.getSwerve().getConstants().velocityAt12VoltsMetersPerSecond(),
+				ModuleConstants.COEFFICIENT_OF_FRICTION,
 				DCMotor.getKrakenX60Foc(1),
-				7.13,
-				60,
+				KrakenX60DriveBuilder.GEAR_RATIO,
+				KrakenX60DriveBuilder.SLIP_CURRENT,
 				1
 			),
 			robot.getSwerve().getModules().getModulePositionsFromCenterMeters()

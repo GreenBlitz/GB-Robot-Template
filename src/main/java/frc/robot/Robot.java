@@ -11,7 +11,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
+import frc.robot.led.LEDManager;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
+import frc.robot.statemachine.superstructure.SuperstructureState;
 import frc.robot.vision.VisionConstants;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -35,6 +37,7 @@ import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.vision.VisionFilters;
 import frc.robot.vision.data.VisionData;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
+import frc.utils.DriverStationUtil;
 import frc.utils.Filter;
 import frc.utils.TimedValue;
 import frc.utils.brakestate.BrakeStateManager;
@@ -63,8 +66,10 @@ public class Robot {
 
 	private final SimulationManager simulationManager;
 	private final RobotCommander robotCommander;
+	
 	private final CANdle candle;
 	private final LEDStateHandler ledStateHandler;
+	private final LEDManager ledManager;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -122,10 +127,12 @@ public class Robot {
 
 		this.simulationManager = new SimulationManager("SimulationManager", this);
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
+		
 		this.candle = new CANdle(IDs.CANDle.CANDLE_ID.id(),IDs.CANDle.CANDLE_ID.busChain().getChainName());
 		candle.configLEDType(CANdle.LEDStripType.GRB);
 		candle.clearAnimation(0);
 		ledStateHandler = new LEDStateHandler("CANDle", candle);
+		this.ledManager = new LEDManager(this ,ledStateHandler);
 	}
 
 	public void periodic() {

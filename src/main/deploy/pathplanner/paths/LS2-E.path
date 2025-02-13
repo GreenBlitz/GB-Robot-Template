@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.63,
-        "y": 7.34
+        "x": 1.61,
+        "y": 0.7
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6785,
-        "y": 6.88025
+        "x": 1.7647500000000003,
+        "y": 1.4217499999999998
       },
       "isLocked": false,
-      "linkedName": "US"
+      "linkedName": "LS2"
     },
     {
       "anchor": {
-        "x": 3.68,
-        "y": 5.1
+        "x": 5.01,
+        "y": 2.79
       },
       "prevControl": {
-        "x": 2.925,
-        "y": 6.618500000000001
+        "x": 6.610499999999999,
+        "y": 0.7002499999999996
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "L"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -34,13 +34,13 @@
   "eventMarkers": [
     {
       "name": "IDLE",
-      "waypointRelativePos": 0.26958424507659,
+      "waypointRelativePos": 0.21531728665207533,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
       "name": "PRE_SCORE",
-      "waypointRelativePos": 0.7929978118161903,
+      "waypointRelativePos": 0.7544857768052495,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -55,13 +55,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -59.99999999999999
+    "rotation": 119.99999999999999
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -54.0
+    "rotation": 54.0
   },
   "useDefaultConstraints": true
 }

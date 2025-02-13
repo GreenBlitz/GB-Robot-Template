@@ -3,16 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.16,
-        "y": 4.19
+        "x": 5.83,
+        "y": 3.86
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3136270491803277,
-        "y": 3.7552766393442623
+        "x": 7.107750000000001,
+        "y": 3.9274999999999993
       },
       "isLocked": false,
-      "linkedName": "A"
+      "linkedName": "G"
+    },
+    {
+      "anchor": {
+        "x": 5.29425,
+        "y": 2.435749999999999
+      },
+      "prevControl": {
+        "x": 5.6518535695004495,
+        "y": 2.59259367083353
+      },
+      "nextControl": {
+        "x": 4.7385,
+        "y": 2.1919999999999993
+      },
+      "isLocked": false,
+      "linkedName": null
     },
     {
       "anchor": {
@@ -20,12 +36,12 @@
         "y": 0.7
       },
       "prevControl": {
-        "x": 1.8746523223744171,
-        "y": 0.844362983594293
+        "x": 1.8135000000000003,
+        "y": 0.8854999999999995
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "LS"
+      "linkedName": "LS2"
     }
   ],
   "rotationTargets": [],
@@ -34,13 +50,13 @@
   "eventMarkers": [
     {
       "name": "IDLE",
-      "waypointRelativePos": 0.11553610503282408,
+      "waypointRelativePos": 0.19256017505471157,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
       "name": "INTAKE",
-      "waypointRelativePos": 0.6,
+      "waypointRelativePos": 1.6770240700218788,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -61,7 +77,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

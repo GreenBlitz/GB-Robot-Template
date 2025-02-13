@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3975409836065573,
-        "y": 6.908043032786885
+        "x": 2.4960000000000004,
+        "y": 7.106
       },
       "isLocked": false,
-      "linkedName": "US"
+      "linkedName": "US2"
     },
     {
       "anchor": {
         "x": 3.16,
-        "y": 3.86
+        "y": 4.19
       },
       "prevControl": {
-        "x": 0.3217500000000002,
-        "y": 4.015249999999999
+        "x": 0.4485000000000001,
+        "y": 3.966499999999999
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "B"
+      "linkedName": "A"
     }
   ],
   "rotationTargets": [],
@@ -34,13 +34,13 @@
   "eventMarkers": [
     {
       "name": "IDLE",
-      "waypointRelativePos": 0.2730853391684867,
+      "waypointRelativePos": 0.26433260393872615,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
       "name": "PRE_SCORE",
-      "waypointRelativePos": 0.7597374179431063,
+      "waypointRelativePos": 0.8245076586433232,
       "endWaypointRelativePos": null,
       "command": null
     }

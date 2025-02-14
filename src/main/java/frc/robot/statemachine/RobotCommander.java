@@ -166,6 +166,17 @@ public class RobotCommander extends GBSubsystem {
 		};
 	}
 
+	public Command fullyScore() {
+		return new ParallelCommandGroup(
+			new SequentialCommandGroup(
+				armPreScore().until(() -> isReadyToOpenSuperstructure(ScoringHelpers.targetScoreLevel, ScoringHelpers.getTargetBranch())),
+				preScore().until(() -> isPreScoreReady(ScoringHelpers.targetScoreLevel, ScoringHelpers.getTargetBranch())),
+				scoreWithoutRelease().until(() -> isReadyToScore(ScoringHelpers.targetScoreLevel, ScoringHelpers.getTargetBranch())),
+				score()
+			)
+		);
+	}
+
 	public Command scoreForButton() {
 		return new SequentialCommandGroup(
 			scoreWithoutRelease().until(() -> isReadyToScore(ScoringHelpers.targetScoreLevel, ScoringHelpers.getTargetBranch())),
@@ -180,6 +191,7 @@ public class RobotCommander extends GBSubsystem {
 			scoreWithoutRelease()
 		);
 	}
+
 
 	private Command drive() {
 		return asSubsystemCommand(

@@ -37,7 +37,6 @@ import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.time.TimeUtil;
 
-
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
  * actually be handled in the {@link RobotManager} periodic methods (other than the scheduler calls). Instead, the structure of the robot
@@ -100,7 +99,9 @@ public class Robot {
 			)
 		);
 
-		swerve.setHeadingSupplier(headingEstimator::getEstimatedHeading);
+		swerve.setHeadingSupplier(
+			() -> ROBOT_TYPE.isSimulation() ? poseEstimator.getEstimatedPose().getRotation() : headingEstimator.getEstimatedHeading()
+		);
 		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
 
 		this.elevator = ElevatorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Elevator");
@@ -117,6 +118,8 @@ public class Robot {
 
 	public void periodic() {
 		swerve.update();
+		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());
+
 		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
 		for (TimedValue<Rotation2d> headingData : multiAprilTagVisionSources.getRawRobotHeadings()) {
 			headingEstimator.updateVisionIfNotCalibrated(
@@ -129,10 +132,11 @@ public class Robot {
 		poseEstimator.updateVision(multiAprilTagVisionSources.getFilteredVisionData());
 		multiAprilTagVisionSources.log();
 		headingEstimator.log();
-		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());
+
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		simulationManager.logPoses();
+
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 

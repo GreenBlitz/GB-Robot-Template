@@ -18,10 +18,18 @@ public class EndEffectorStateHandler {
 	}
 
 	public Command setState(EndEffectorState state) {
-		return new ParallelCommandGroup(
-			new InstantCommand(() -> currentState = state),
-			endEffector.getCommandsBuilder().setPower(state.getPower())
-		);
+		Command stateCommand;
+		if (state == EndEffectorState.DEFAULT) {
+			stateCommand = endEffector.getCommandsBuilder().setPower(this::defaultStatePower);
+		} else {
+			stateCommand = endEffector.getCommandsBuilder().setPower(state.getPower());
+		}
+		return new ParallelCommandGroup(new InstantCommand(() -> currentState = state), stateCommand);
 	}
+
+	private double defaultStatePower() {
+		return endEffector.isCoralInBack() ? EndEffectorState.DEFAULT.getPower() : -EndEffectorState.DEFAULT.getPower();
+	}
+
 
 }

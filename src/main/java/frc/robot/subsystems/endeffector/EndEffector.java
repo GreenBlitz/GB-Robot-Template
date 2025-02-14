@@ -110,7 +110,7 @@ public class EndEffector extends GBSubsystem {
 		joystick.A.onTrue(new InstantCommand(() -> calibrationPower = Math.max(calibrationPower - 0.1, -1)));
 		joystick.Y.onTrue(new InstantCommand(() -> calibrationPower = Math.min(calibrationPower + 0.1, 1)));
 
-		joystick.POV_LEFT.onTrue(commandsBuilder.setPower(EndEffectorState.KEEP.getPower()));
+		joystick.POV_LEFT.onTrue(commandsBuilder.setPower(EndEffectorState.DEFAULT.getPower()));
 		joystick.POV_DOWN.onTrue(commandsBuilder.setPower(EndEffectorState.INTAKE.getPower()).until(this::isCoralInBack));
 		joystick.POV_UP.onTrue(commandsBuilder.setPower(EndEffectorState.BRANCH_OUTTAKE.getPower()).until(() -> !isCoralInFront()));
 		joystick.POV_RIGHT.onTrue(commandsBuilder.stop());

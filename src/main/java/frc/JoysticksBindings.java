@@ -76,7 +76,7 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 
-		usedJoystick.R1.onTrue(ScoringHelpers.scoreToChosenScoreLevel(robot));
+		usedJoystick.R1.onTrue(robot.getRobotCommander().scoreForButton());
 		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
 		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
 	}
@@ -86,7 +86,7 @@ public class JoysticksBindings {
 		// bindings...
 
 		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getRobotCommander().setState(RobotState.ALIGN_REEF));
-		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(ScoringHelpers.preScoreToChosenScoreLevel(robot));
+		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getRobotCommander().fullyPreScore());
 
 		usedJoystick.A.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L1));
 		usedJoystick.B.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L2));

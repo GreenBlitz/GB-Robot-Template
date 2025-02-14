@@ -146,11 +146,11 @@ public class Robot {
 		ScoringHelpers.log("Scoring");
 
 		Logger.recordOutput(
-			"isReadyToScore",
+			"ScoringChecks/isReadyToScore",
 			robotCommander.isReadyToScore(ScoringHelpers.targetScoreLevel, ScoringHelpers.getTargetBranch())
 		);
 		Logger.recordOutput(
-			"isSuperStructureReadyToScore",
+			"ScoringChecks/isSuperStructureReadyToScore",
 			robotCommander.getSuperstructure().isReadyToScore(ScoringHelpers.targetScoreLevel)
 		);
 

@@ -26,7 +26,6 @@ public class ScoringHelpers {
 	private static boolean isLeftBranch = false;
 	private static CoralStation latestWantedCoralStation = CoralStation.LEFT;
 
-
 	public static ReefSide getTargetReefSide() {
 		return ReefSide.getReefSideBySideAndFar(targetSideForReef, isFarReefHalf);
 	}

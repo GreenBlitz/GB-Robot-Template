@@ -18,7 +18,7 @@ public class Tolerances {
 		0.1,
 		Rotation2d.fromDegrees(3)
 	);
-	public static final Pose2d REEF_RELATIVE_OPEN_SUPERSTRUCTURE_DEADBANDS = new Pose2d(0.5, 0.5, Rotation2d.fromRadians(2));
+	public static final Pose2d REEF_RELATIVE_OPEN_SUPERSTRUCTURE_DEADBANDS = new Pose2d(0.5, 0.1, Rotation2d.fromDegrees(10));
 
 	public static final Pose2d REEF_RELATIVE_L1_SCORING_POSITION = new Pose2d(
 		0.2,

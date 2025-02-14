@@ -37,6 +37,7 @@ import frc.utils.TimedValue;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 
@@ -143,6 +144,15 @@ public class Robot {
 		BusChain.logChainsStatuses();
 		simulationManager.logPoses();
 		ScoringHelpers.log("Scoring");
+
+		Logger.recordOutput(
+			"isReadyToScore",
+			robotCommander.isReadyToScore(ScoringHelpers.targetScoreLevel, ScoringHelpers.getTargetBranch())
+		);
+		Logger.recordOutput(
+			"isSuperStructureReadyToScore",
+			robotCommander.getSuperstructure().isReadyToScore(ScoringHelpers.targetScoreLevel)
+		);
 
 		CommandScheduler.getInstance().run(); // Should be last
 	}

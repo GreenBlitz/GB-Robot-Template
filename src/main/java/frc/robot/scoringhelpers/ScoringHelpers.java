@@ -14,6 +14,8 @@ import org.littletonrobotics.junction.Logger;
 
 public class ScoringHelpers {
 
+	public static final Translation2d END_EFFECTOR_OFFSET_FROM_MID_ROBOT = new Translation2d(0, 0.014);
+
 	private static final Translation2d LEFT_CORAL_STATION_TRANSLATION = Field.getCoralStationMiddle(CoralStation.LEFT).getTranslation();
 	private static final Translation2d RIGHT_CORAL_STATION_TRANSLATION = Field.getCoralStationMiddle(CoralStation.RIGHT).getTranslation();
 
@@ -61,7 +63,8 @@ public class ScoringHelpers {
 		Translation2d branchTranslation = Field.getCoralPlacement(branch);
 		Rotation2d targetRobotAngle = Field.getReefSideMiddle(branch.getReefSide()).getRotation();
 		Translation2d differenceTranslation = new Translation2d(distanceFromBranchMeters, targetRobotAngle);
-		return new Pose2d(branchTranslation.minus(differenceTranslation), targetRobotAngle);
+		Translation2d endeffectorOffsetDifference = END_EFFECTOR_OFFSET_FROM_MID_ROBOT.rotateBy(targetRobotAngle);
+		return new Pose2d(branchTranslation.minus(differenceTranslation).minus(endeffectorOffsetDifference), targetRobotAngle);
 	}
 
 	public static void log(String logPath) {

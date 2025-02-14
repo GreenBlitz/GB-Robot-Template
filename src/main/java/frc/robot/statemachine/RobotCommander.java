@@ -215,7 +215,6 @@ public class RobotCommander extends GBSubsystem {
 				swerve.getCommandsBuilder().driveByDriversInputs(this::getSwerveStateSupplier, false)
 			),
 			RobotState.SCORE_WITHOUT_RELEASE
-
 		);
 	}
 

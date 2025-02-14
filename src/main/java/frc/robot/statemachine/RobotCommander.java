@@ -121,14 +121,10 @@ public class RobotCommander extends GBSubsystem {
 			case INTAKE -> intake();
 			case OUTTAKE -> outtake();
 			case ALIGN_REEF -> alignReef();
-			case PRE_L1 -> preL1();
-			case PRE_L2 -> preL2();
-			case PRE_L3 -> preL3();
-			case PRE_L4 -> preL4();
-			case L1 -> scoreL1();
-			case L2 -> scoreL2();
-			case L3 -> scoreL3();
-			case L4 -> scoreL4();
+			case ARM_PRE_SCORE -> armPreScore();
+			case PRE_SCORE -> preScore();
+			case SCORE_WITHOUT_RELEASE -> scoreWithoutRelease();
+			case SCORE -> score();
 		};
 	}
 
@@ -141,10 +137,10 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command intake() {
 		return asSubsystemCommand(
-			new ParallelCommandGroup(
+			new ParallelDeadlineGroup(
 				superstructure.intake(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CORAL_STATION))
-			).until(superstructure::isCoralIn),
+			),
 			RobotState.INTAKE
 		);
 	}
@@ -192,63 +188,48 @@ public class RobotCommander extends GBSubsystem {
 			: SwerveState.DEFAULT_DRIVE);
 	}
 
-	private Command genericPreScore(ScoreLevel scoreLevel) {
+	private Command armPreScore() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				superstructure.armPreScore(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
+			),
+			RobotState.ARM_PRE_SCORE
+		);
+	}
+
+	private Command preScore() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				new SequentialCommandGroup(
-					superstructure.idle().until(() -> isReadyToOpenSuperstructure(scoreLevel, ScoringHelpers.targetBranch)),
-					superstructure.preScore(scoreLevel)
+					superstructure.idle().until(() -> isReadyToOpenSuperstructure(ScoringHelpers.targetLevel, ScoringHelpers.targetBranch)),
+					superstructure.preScore()
 				),
 				swerve.getCommandsBuilder().driveByDriversInputs(this::getSwerveStateSupplier, false)
 			),
-			scoreLevel.getRobotPreScore()
+			RobotState.PRE_SCORE
 		);
 	}
 
-	private Command preL1() {
-		return genericPreScore(ScoreLevel.L1);
-	}
-
-	private Command preL2() {
-		return genericPreScore(ScoreLevel.L2);
-	}
-
-	private Command preL3() {
-		return genericPreScore(ScoreLevel.L3);
-	}
-
-	private Command preL4() {
-		return genericPreScore(ScoreLevel.L4);
-	}
-
-	private Command genericScore(ScoreLevel scoreLevel) {
+	private Command scoreWithoutRelease() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
-				new SequentialCommandGroup(
-					superstructure.idle().until(() -> isReadyToOpenSuperstructure(scoreLevel, ScoringHelpers.targetBranch)),
-					superstructure.preScore(scoreLevel).until(() -> isPreScoreReady(scoreLevel, ScoringHelpers.targetBranch)),
-					superstructure.score(scoreLevel)
-				),
-				swerve.getCommandsBuilder().driveByDriversInputs(this::getSwerveStateSupplier, false)
-			).until(superstructure::isCoralOut),
-			scoreLevel.getRobotScore()
+				superstructure.scoreWithoutRelease(),
+					swerve.getCommandsBuilder().driveByDriversInputs(this::getSwerveStateSupplier, false)
+			),
+			RobotState.SCORE_WITHOUT_RELEASE
+
 		);
 	}
 
-	private Command scoreL1() {
-		return genericScore(ScoreLevel.L1);
-	}
-
-	private Command scoreL2() {
-		return genericScore(ScoreLevel.L2);
-	}
-
-	private Command scoreL3() {
-		return genericScore(ScoreLevel.L3);
-	}
-
-	private Command scoreL4() {
-		return genericScore(ScoreLevel.L4);
+	private Command score() {
+		return asSubsystemCommand(
+			new ParallelDeadlineGroup(
+				superstructure.scoreWithRelease(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
+			),
+			RobotState.SCORE
+		);
 	}
 
 	private Command asSubsystemCommand(Command command, RobotState state) {
@@ -258,10 +239,8 @@ public class RobotCommander extends GBSubsystem {
 	private Command endState(RobotState state) {
 		return switch (state) {
 			case INTAKE, OUTTAKE, DRIVE, ALIGN_REEF -> drive();
-			case PRE_L1, L1 -> preL1();
-			case PRE_L2, L2 -> preL2();
-			case PRE_L3, L3 -> preL3();
-			case PRE_L4, L4 -> preL4();
+			case ARM_PRE_SCORE -> armPreScore();
+			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> preScore();
 		};
 	}
 

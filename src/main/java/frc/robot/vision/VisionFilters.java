@@ -8,14 +8,9 @@ import frc.robot.vision.data.VisionData;
 import frc.utils.Filter;
 import frc.utils.math.ToleranceMath;
 
-public class VisionFilters {
+import java.util.function.Supplier;
 
-	public static Filter<VisionData> isPitchAtAngle(Rotation2d wantedPitch, Rotation2d pitchTolerance) {
-		return new Filter<>(
-			visionData -> ToleranceMath
-				.isNearWrapped(wantedPitch, Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getY()), pitchTolerance)
-		);
-	}
+public class VisionFilters {
 
 	public static Filter<VisionData> isRollAtAngle(Rotation2d wantedRoll, Rotation2d rollTolerance) {
 		return new Filter<>(
@@ -24,14 +19,31 @@ public class VisionFilters {
 		);
 	}
 
+	public static Filter<VisionData> isPitchAtAngle(Rotation2d wantedPitch, Rotation2d pitchTolerance) {
+		return new Filter<>(
+			visionData -> ToleranceMath
+				.isNearWrapped(wantedPitch, Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getY()), pitchTolerance)
+		);
+	}
+
+	public static Filter<VisionData> isYawAtAngle(Supplier<Rotation2d> wantedYawSupplier, Rotation2d yawTolerance) {
+		return new Filter<>(
+			visionData -> ToleranceMath
+				.isNearWrapped(wantedYawSupplier.get(), Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getZ()), yawTolerance)
+		);
+	}
+
 	public static Filter<VisionData> isOnGround(double distanceFromGroundToleranceMeters) {
 		return new Filter<>(visionData -> MathUtil.isNear(0, visionData.getEstimatedPose().getZ(), distanceFromGroundToleranceMeters));
 	}
 
-	public static Filter<AprilTagVisionData> isAprilTagHeightValid(double aprilTagRealHeightMeters, double aprilTagHeightToleranceMeters) {
+	public static Filter<AprilTagVisionData> isAprilTagHeightValid(double aprilTagHeightToleranceMeters) {
 		return new Filter<>(
-			aprilTagVisionData -> MathUtil
-				.isNear(aprilTagRealHeightMeters, aprilTagVisionData.getAprilTagHeightMeters(), aprilTagHeightToleranceMeters)
+			aprilTagVisionData -> MathUtil.isNear(
+				VisionUtils.getAprilTagHeightByID(aprilTagVisionData.getTrackedAprilTagId()),
+				aprilTagVisionData.getAprilTagHeightMeters(),
+				aprilTagHeightToleranceMeters
+			)
 		);
 	}
 

@@ -46,13 +46,23 @@ public class RobotCommander extends GBSubsystem {
 		return superstructure;
 	}
 
+
 	/**
-	 * Checks if robot close enough in y and x-axis so we can open superstructure.
+	 * Check if robot at pose but relative to target branch. Y-axis is vertical to the branch. X-axis is horizontal to the branch So when you
+	 * check if robot in place in y-axis its in parallel to the reef side.
 	 */
-	private boolean isReadyToOpenSuperstructure(ScoreLevel level, Branch branch) {
+	private boolean isAtScoringPose(
+		ScoreLevel scoreLevel,
+		Branch branch,
+		double scoringPoseDistanceFromReefMeters,
+		Pose2d l1Tolerances,
+		Pose2d l1Deadbands,
+		Pose2d tolerances,
+		Pose2d deadbands
+	) {
 		Rotation2d reefAngle = Field.getReefSideMiddle(branch.getReefSide()).getRotation();
 
-		Pose2d reefRelativeTargetPose = ScoringHelpers.getRobotScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
+		Pose2d reefRelativeTargetPose = ScoringHelpers.getRobotScoringPose(branch, scoringPoseDistanceFromReefMeters)
 			.rotateBy(reefAngle.unaryMinus());
 		Pose2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus());
 
@@ -60,59 +70,42 @@ public class RobotCommander extends GBSubsystem {
 		ChassisSpeeds reefRelativeSpeeds = SwerveMath
 			.robotToAllianceRelativeSpeeds(allianceRelativeSpeeds, Field.getAllianceRelative(reefAngle.unaryMinus()));
 
-		return switch (level) {
-			case L1 ->
-				PoseUtil.isAtPose(
-					reefRelativeRobotPose,
-					reefRelativeTargetPose,
-					reefRelativeSpeeds,
-					Tolerances.REEF_RELATIVE_L1_OPEN_SUPERSTRUCTURE_POSITION,
-					Tolerances.REEF_RELATIVE_SUPERSTRUCTURE_L1_OPEN_DEADBANDS
-				);
-			case L2, L3, L4 ->
-				PoseUtil.isAtPose(
-					reefRelativeRobotPose,
-					reefRelativeTargetPose,
-					reefRelativeSpeeds,
-					Tolerances.REEF_RELATIVE_OPEN_SUPERSTRUCTURE_POSITION,
-					Tolerances.REEF_RELATIVE_OPEN_SUPERSTRUCTURE_DEADBANDS
-				);
+		return switch (scoreLevel) {
+			case L1 -> PoseUtil.isAtPose(reefRelativeRobotPose, reefRelativeTargetPose, reefRelativeSpeeds, l1Tolerances, l1Deadbands);
+			case L2, L3, L4 -> PoseUtil.isAtPose(reefRelativeRobotPose, reefRelativeTargetPose, reefRelativeSpeeds, tolerances, deadbands);
 		};
+	}
+
+	/**
+	 * Checks if robot close enough in y and x-axis so we can open superstructure.
+	 */
+	private boolean isReadyToOpenSuperstructure(ScoreLevel scoreLevel, Branch branch) {
+		return isAtScoringPose(
+			scoreLevel,
+			branch,
+			StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS,
+			Tolerances.REEF_RELATIVE_L1_OPEN_SUPERSTRUCTURE_POSITION,
+			Tolerances.REEF_RELATIVE_L1_OPEN_SUPERSTRUCTURE_DEADBANDS,
+			Tolerances.REEF_RELATIVE_OPEN_SUPERSTRUCTURE_POSITION,
+			Tolerances.REEF_RELATIVE_OPEN_SUPERSTRUCTURE_DEADBANDS
+		);
 	}
 
 	/**
 	 * Checks if elevator and arm in place and is robot at pose but relative to target branch. Y-axis is vertical to the branch. X-axis is
 	 * horizontal to the branch So when you check if robot in place in y-axis its in parallel to the reef side.
 	 */
-	private boolean isPreScoreReady(ScoreLevel level, Branch branch) {
-		Rotation2d reefAngle = Field.getReefSideMiddle(branch.getReefSide()).getRotation();
-
-		Pose2d reefRelativeTargetPose = ScoringHelpers.getRobotScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
-			.rotateBy(reefAngle.unaryMinus());
-		Pose2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus());
-
-		ChassisSpeeds allianceRelativeSpeeds = swerve.getAllianceRelativeVelocity();
-		ChassisSpeeds reefRelativeSpeeds = SwerveMath
-			.robotToAllianceRelativeSpeeds(allianceRelativeSpeeds, Field.getAllianceRelative(reefAngle.unaryMinus()));
-
-		return superstructure.isPreScoreReady(level) && switch (level) {
-			case L1 ->
-				PoseUtil.isAtPose(
-					reefRelativeRobotPose,
-					reefRelativeTargetPose,
-					reefRelativeSpeeds,
-					Tolerances.REEF_RELATIVE_L1_SCORING_POSITION,
-					Tolerances.REEF_RELATIVE_L1_SCORING_DEADBANDS
-				);
-			case L2, L3, L4 ->
-				PoseUtil.isAtPose(
-					reefRelativeRobotPose,
-					reefRelativeTargetPose,
-					reefRelativeSpeeds,
-					Tolerances.REEF_RELATIVE_SCORING_POSITION,
-					Tolerances.REEF_RELATIVE_SCORING_DEADBANDS
-				);
-		};
+	private boolean isPreScoreReady(ScoreLevel scoreLevel, Branch branch) {
+		return superstructure.isPreScoreReady(scoreLevel)
+			&& isAtScoringPose(
+				scoreLevel,
+				branch,
+				StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS,
+				Tolerances.REEF_RELATIVE_L1_SCORING_POSITION,
+				Tolerances.REEF_RELATIVE_L1_SCORING_DEADBANDS,
+				Tolerances.REEF_RELATIVE_SCORING_POSITION,
+				Tolerances.REEF_RELATIVE_SCORING_DEADBANDS
+			);
 	}
 
 	public Command setState(RobotState state) {

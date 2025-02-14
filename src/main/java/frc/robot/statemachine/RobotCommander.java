@@ -115,6 +115,36 @@ public class RobotCommander extends GBSubsystem {
 		};
 	}
 
+	/**
+	 * Checks if the robot is at a "rectangle", this rectangle is the safe zone to activate aim assist, because otherwise the robot will try to
+	 * drive through the reef
+	 */
+	public boolean isReadyToStartBranchAimAssist(Branch targetBranch) {
+		Rotation2d reefAngle = Field.getReefSideMiddle(targetBranch.getReefSide()).getRotation();
+
+		Pose2d reefRelativeTargetPose = ScoringHelpers
+			.getRobotScoringPose(targetBranch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
+			.rotateBy(reefAngle.unaryMinus());
+		Pose2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus());
+
+		Pose2d middleOfAimAssistActivatingRectangle = new Pose2d(
+			reefRelativeTargetPose.getX() - StateMachineConstants.MIDDLE_OF_AIM_ASSIST_ACTIVATING_RECTANGLE_DISTANCE_FROM_SCORING_POSITION,
+			reefRelativeTargetPose.getY(),
+			new Rotation2d()
+		);
+		return PoseUtil.isAtPoseWithoutSpeedsAndHeadingCheck(
+			reefRelativeRobotPose,
+			middleOfAimAssistActivatingRectangle,
+			StateMachineConstants.REEF_AIM_ASSIST_ACTIVATING_DISTANCES_FROM_CENTER_OF_AIM_ASSIST_RECTANGLE
+		);
+	}
+
+	public SwerveState getSwerveStateSupplier() {
+		return (isReadyToStartBranchAimAssist(ScoringHelpers.targetBranch)
+			? SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH)
+			: SwerveState.DEFAULT_DRIVE);
+	}
+
 	public Command setState(RobotState state) {
 		return switch (state) {
 			case DRIVE -> drive();
@@ -162,37 +192,11 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	public boolean isReadyToStartBranchAimAssist(Branch targetBranch) {
-		Rotation2d reefAngle = Field.getReefSideMiddle(targetBranch.getReefSide()).getRotation();
-
-		Pose2d reefRelativeTargetPose = ScoringHelpers
-			.getRobotScoringPose(targetBranch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
-			.rotateBy(reefAngle.unaryMinus());
-		Pose2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus());
-
-		Pose2d middleOfAimAssistActivatingRectangle = new Pose2d(
-			reefRelativeTargetPose.getX() - StateMachineConstants.MIDDLE_OF_AIM_ASSIST_ACTIVATING_RECTANGLE_DISTANCE_FROM_SCORING_POSITION,
-			reefRelativeTargetPose.getY(),
-			new Rotation2d()
-		);
-		return PoseUtil.isAtPoseWithoutSpeedsAndHeadingCheck(
-			reefRelativeRobotPose,
-			middleOfAimAssistActivatingRectangle,
-			StateMachineConstants.REEF_AIM_ASSIST_ACTIVATING_DISTANCES_FROM_CENTER_OF_AIM_ASSIST_RECTANGLE
-		);
-	}
-
-	public SwerveState getSwerveStateSupplier() {
-		return (isReadyToStartBranchAimAssist(ScoringHelpers.targetBranch)
-			? SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH)
-			: SwerveState.DEFAULT_DRIVE);
-	}
-
 	private Command armPreScore() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				superstructure.armPreScore(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
+				swerve.getCommandsBuilder().driveByDriversInputs(this::getSwerveStateSupplier, false)
 			),
 			RobotState.ARM_PRE_SCORE
 		);
@@ -222,7 +226,7 @@ public class RobotCommander extends GBSubsystem {
 		return asSubsystemCommand(
 			new ParallelDeadlineGroup(
 				superstructure.scoreWithRelease(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
+				swerve.getCommandsBuilder().driveByDriversInputs(this::getSwerveStateSupplier, false)
 			),
 			RobotState.SCORE
 		);

@@ -4,12 +4,15 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
+import frc.constants.field.enums.Branch;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
+import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.vision.VisionConstants;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -36,6 +39,7 @@ import frc.utils.TimedValue;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -132,6 +136,16 @@ public class Robot {
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		simulationManager.logPoses();
+
+		Logger.recordOutput("isReady", robotCommander.isAtScoringPose(
+				ScoreLevel.L4,
+				Branch.A,
+				1,
+				new Pose2d(1,1,new Rotation2d()),
+				new Pose2d(1,1,new Rotation2d()),
+				new Pose2d(2,2,new Rotation2d()),
+				new Pose2d(1,1,new Rotation2d())
+		));
 
 		CommandScheduler.getInstance().run(); // Should be last
 	}

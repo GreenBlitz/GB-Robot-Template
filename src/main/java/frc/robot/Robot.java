@@ -100,7 +100,7 @@ public class Robot {
 		);
 
 		swerve.setHeadingSupplier(
-			ROBOT_TYPE.isSimulation() ? poseEstimator.getEstimatedPose()::getRotation : headingEstimator::getEstimatedHeading
+			() -> ROBOT_TYPE.isSimulation() ? poseEstimator.getEstimatedPose().getRotation() : headingEstimator.getEstimatedHeading()
 		);
 		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
 

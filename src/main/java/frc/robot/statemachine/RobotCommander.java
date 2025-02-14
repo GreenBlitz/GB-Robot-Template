@@ -202,7 +202,6 @@ public class RobotCommander extends GBSubsystem {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				superstructure.preScore(),
-
 				swerve.getCommandsBuilder().driveByDriversInputs(this::getSwerveStateSupplier, false)
 			),
 			RobotState.PRE_SCORE

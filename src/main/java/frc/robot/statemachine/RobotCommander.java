@@ -169,7 +169,7 @@ public class RobotCommander extends GBSubsystem {
 	public Command scoreForButton() {
 		return new SequentialCommandGroup(
 			scoreWithoutRelease().until(() -> isReadyToScore(ScoringHelpers.targetScoreLevel, ScoringHelpers.getTargetBranch())),
-			scoreForButton()
+			score()
 		);
 	}
 

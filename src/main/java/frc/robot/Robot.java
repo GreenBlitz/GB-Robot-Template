@@ -104,7 +104,7 @@ public class Robot {
 		);
 
 		swerve.setHeadingSupplier(
-			ROBOT_TYPE.isSimulation() ? poseEstimator.getEstimatedPose()::getRotation : headingEstimator::getEstimatedHeading
+			() -> ROBOT_TYPE.isSimulation() ? poseEstimator.getEstimatedPose().getRotation() : headingEstimator.getEstimatedHeading()
 		);
 		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
 		swerve.getStateHandler().setBranchSupplier(() -> Optional.of(ScoringHelpers.getTargetBranch()));
@@ -129,7 +129,11 @@ public class Robot {
 
 		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
 		for (TimedValue<Rotation2d> headingData : multiAprilTagVisionSources.getRawRobotHeadings()) {
-			headingEstimator.updateVisionHeading(headingData, RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION);
+			headingEstimator.updateVisionIfNotCalibrated(
+				headingData,
+				RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION,
+				RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE
+			);
 		}
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 		poseEstimator.updateVision(multiAprilTagVisionSources.getFilteredVisionData());

@@ -130,8 +130,8 @@ public class Superstructure extends GBSubsystem {
 		return asSubsystemCommand(
 			new DeferredCommand(
 				() -> new ParallelCommandGroup(
-					elevatorStateHandler.setState(ElevatorState.CLOSED),
-					armStateHandler.setState(ScoringHelpers.targetLevel.getArmPreScore()),
+					elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorWhileDrive()),
+					armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmPreScore()),
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
 				),
 				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector())
@@ -144,8 +144,8 @@ public class Superstructure extends GBSubsystem {
 		return asSubsystemCommand(
 			new DeferredCommand(
 				() -> new ParallelCommandGroup(
-					elevatorStateHandler.setState(ScoringHelpers.targetLevel.getElevatorPreScore()),
-					armStateHandler.setState(ScoringHelpers.targetLevel.getArmPreScore()),
+					elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorPreScore()),
+					armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmPreScore()),
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
 				),
 				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector())
@@ -158,8 +158,8 @@ public class Superstructure extends GBSubsystem {
 		return asSubsystemCommand(
 			new DeferredCommand(
 				() -> new ParallelCommandGroup(
-					elevatorStateHandler.setState(ScoringHelpers.targetLevel.getElevatorScore()),
-					armStateHandler.setState(ScoringHelpers.targetLevel.getArmScore()),
+					elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorScore()),
+					armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmScore()),
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
 				),
 				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector())
@@ -173,14 +173,14 @@ public class Superstructure extends GBSubsystem {
 			new DeferredCommand(
 				() -> new SequentialCommandGroup(
 					new ParallelCommandGroup(
-						elevatorStateHandler.setState(ScoringHelpers.targetLevel.getElevatorScore()),
-						armStateHandler.setState(ScoringHelpers.targetLevel.getArmScore()),
-						endEffectorStateHandler.setState(ScoringHelpers.targetLevel.getEndEffectorScore())
+						elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorScore()),
+						armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmScore()),
+						endEffectorStateHandler.setState(ScoringHelpers.targetScoreLevel.getEndEffectorScore())
 					).until(this::isCoralOut),
 					new ParallelCommandGroup(
-						elevatorStateHandler.setState(ScoringHelpers.targetLevel.getElevatorScore()),
-						armStateHandler.setState(ScoringHelpers.targetLevel.getArmScore()),
-						endEffectorStateHandler.setState(ScoringHelpers.targetLevel.getEndEffectorScore())
+						elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorScore()),
+						armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmScore()),
+						endEffectorStateHandler.setState(ScoringHelpers.targetScoreLevel.getEndEffectorScore())
 					).withTimeout(StateMachineConstants.SCORE_OUTTAKE_TIME_AFTER_BEAM_BREAK_SECONDS)
 				),
 				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector())

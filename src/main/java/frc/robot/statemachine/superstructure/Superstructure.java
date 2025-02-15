@@ -130,7 +130,7 @@ public class Superstructure extends GBSubsystem {
 		return asSubsystemCommand(
 			new DeferredCommand(
 				() -> new ParallelCommandGroup(
-					elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorPreArm()),
+					elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorWhileDrive()),
 					armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmPreScore()),
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
 				),

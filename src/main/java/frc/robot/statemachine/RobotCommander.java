@@ -47,18 +47,6 @@ public class RobotCommander extends GBSubsystem {
 		return superstructure;
 	}
 
-	@Override
-	protected void subsystemPeriodic() {
-		Logger.recordOutput(
-			getLogPath() + "ScoringChecks/isReadyToScore",
-			isReadyToScore(ScoringHelpers.targetScoreLevel, ScoringHelpers.getTargetBranch())
-		);
-		Logger.recordOutput(
-			getLogPath() + "ScoringChecks/isSuperStructureReadyToScore",
-			getSuperstructure().isReadyToScore(ScoringHelpers.targetScoreLevel)
-		);
-	}
-
 	/**
 	 * Checks if robot close enough in y and x-axis so we can open superstructure.
 	 */

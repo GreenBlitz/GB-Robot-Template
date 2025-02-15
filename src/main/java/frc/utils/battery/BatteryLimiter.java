@@ -64,7 +64,7 @@ class BatteryLimiter extends Command {
 	public void execute() {
 		averageVoltage = voltageFilter.calculate(BatteryUtil.getCurrentVoltage());
 		if (averageVoltage <= BatteryUtil.MIN_VOLTAGE && !DriverStationUtil.isMatch()) {
-			showBatteryMessage();
+//			showBatteryMessage();
 		} else if (lowBatteryEntry.get()) {
 			lowBatteryEntry.set(false);
 		}

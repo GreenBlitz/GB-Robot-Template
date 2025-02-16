@@ -13,11 +13,11 @@ public class ButtonDriverHelper {
 
 	private enum LeftRightTogglePlacements {
 
-		LEFT_TOGGLE_PLACEMENT(
-			Field.getAllianceRelative(new Pose2d(LEFT_RIGHT_TOGGLE_X_AXIS, 4.55, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT)
+		LEFT_TOGGLE_BRANCH_PLACEMENT(
+			Field.getAllianceRelative(new Pose2d(LEFT_RIGHT_BRANCH_TOGGLE_X_AXIS, 4.55, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT)
 		),
-		RIGHT_TOGGLE_PLACEMENT(
-			Field.getAllianceRelative(new Pose2d(LEFT_RIGHT_TOGGLE_X_AXIS, 3.55, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT)
+		RIGHT_TOGGLE_BRANCH_PLACEMENT(
+			Field.getAllianceRelative(new Pose2d(LEFT_RIGHT_BRANCH_TOGGLE_X_AXIS, 3.55, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT)
 		),
 		HIDDEN_PLACEMENT(new Pose2d(-10, -10, Rotation2d.fromDegrees(90)));
 
@@ -31,7 +31,7 @@ public class ButtonDriverHelper {
 
 	private static final double DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS = 0.45;
 	private static final double SCORE_LEVEL_Y_AXIS = 6.85;
-	private static final double LEFT_RIGHT_TOGGLE_X_AXIS = 7.22;
+	private static final double LEFT_RIGHT_BRANCH_TOGGLE_X_AXIS = 7.22;
 
 	private static final Pose2d L1_DISPLAY_PLACEMENT = Field
 		.getAllianceRelative(new Pose2d(3.22, SCORE_LEVEL_Y_AXIS, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
@@ -72,13 +72,13 @@ public class ButtonDriverHelper {
 
 	public static void updateLeftRightToggleIndexes(Branch branch) {
 		if (branch.isLeft()) {
-			leftIndex = LeftRightTogglePlacements.LEFT_TOGGLE_PLACEMENT.ordinal();
+			leftIndex = LeftRightTogglePlacements.LEFT_TOGGLE_BRANCH_PLACEMENT.ordinal();
 			rightIndex = LeftRightTogglePlacements.HIDDEN_PLACEMENT.ordinal();
-			darkToggleIndex = LeftRightTogglePlacements.RIGHT_TOGGLE_PLACEMENT.ordinal();
+			darkToggleIndex = LeftRightTogglePlacements.RIGHT_TOGGLE_BRANCH_PLACEMENT.ordinal();
 		} else {
 			leftIndex = LeftRightTogglePlacements.HIDDEN_PLACEMENT.ordinal();
-			rightIndex = LeftRightTogglePlacements.RIGHT_TOGGLE_PLACEMENT.ordinal();
-			darkToggleIndex = LeftRightTogglePlacements.LEFT_TOGGLE_PLACEMENT.ordinal();
+			rightIndex = LeftRightTogglePlacements.RIGHT_TOGGLE_BRANCH_PLACEMENT.ordinal();
+			darkToggleIndex = LeftRightTogglePlacements.LEFT_TOGGLE_BRANCH_PLACEMENT.ordinal();
 		}
 	}
 

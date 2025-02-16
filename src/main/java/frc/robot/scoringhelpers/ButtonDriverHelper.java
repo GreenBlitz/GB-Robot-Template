@@ -14,10 +14,20 @@ public class ButtonDriverHelper {
 	private enum LeftRightTogglePlacements {
 
 		LEFT_TOGGLE_BRANCH_PLACEMENT(
-			Field.getAllianceRelative(new Pose2d(LEFT_RIGHT_BRANCH_TOGGLE_X_AXIS, 4.55, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT)
+			Field.getAllianceRelative(
+				new Pose2d(LEFT_RIGHT_BRANCH_TOGGLE_X_AXIS, 4.55, Rotation2d.fromDegrees(0)),
+				true,
+				true,
+				AngleTransform.INVERT
+			)
 		),
 		RIGHT_TOGGLE_BRANCH_PLACEMENT(
-			Field.getAllianceRelative(new Pose2d(LEFT_RIGHT_BRANCH_TOGGLE_X_AXIS, 3.55, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT)
+			Field.getAllianceRelative(
+				new Pose2d(LEFT_RIGHT_BRANCH_TOGGLE_X_AXIS, 3.55, Rotation2d.fromDegrees(0)),
+				true,
+				true,
+				AngleTransform.INVERT
+			)
 		),
 		HIDDEN_PLACEMENT(new Pose2d(-10, -10, Rotation2d.fromDegrees(90)));
 

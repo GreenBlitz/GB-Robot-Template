@@ -2,6 +2,7 @@ package frc.robot.statemachine;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.constants.field.Field;
@@ -44,12 +45,11 @@ public class RobotCommander extends GBSubsystem {
 		return superstructure;
 	}
 
-
 	/**
 	 * Check if robot at pose but relative to target branch. Y-axis is vertical to the branch. X-axis is horizontal to the branch So when you
 	 * check if robot in place in y-axis its in parallel to the reef side.
 	 */
-	public boolean isAtReefScoringPose(
+	private boolean isAtReefScoringPose(
 		double scoringPoseDistanceFromReefMeters,
 		Pose2d l1Tolerances,
 		Pose2d l1Deadbands,
@@ -73,6 +73,18 @@ public class RobotCommander extends GBSubsystem {
 		};
 	}
 
+	private boolean isAtReefScoringPose(double scoringPoseDistanceFromReefMeters, Translation2d tolerances) {
+		Rotation2d reefAngle = Field.getReefSideMiddle(ScoringHelpers.getTargetBranch().getReefSide()).getRotation();
+
+		Translation2d reefRelativeTargetPose = ScoringHelpers
+			.getRobotBranchScoringPose(ScoringHelpers.getTargetBranch(), scoringPoseDistanceFromReefMeters)
+			.rotateBy(reefAngle.unaryMinus())
+			.getTranslation();
+		Translation2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus()).getTranslation();
+
+		return PoseUtil.isAtTranslation(reefRelativeRobotPose, reefRelativeTargetPose, tolerances);
+	}
+
 	private boolean isReadyToOpenSuperstructure() {
 		return isAtReefScoringPose(
 			StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS,
@@ -92,6 +104,16 @@ public class RobotCommander extends GBSubsystem {
 				Tolerances.REEF_RELATIVE_SCORING_POSITION,
 				Tolerances.REEF_RELATIVE_SCORING_DEADBANDS
 			);
+	}
+
+	/**
+	 * Checks if the robot is out of the safe zone to close the superstructure
+	 */
+	public boolean isReadyToCloseSuperstructure() {
+		return !isAtReefScoringPose(
+			StateMachineConstants.CLOSE_SUPERSTRUCTURE_DISTANCE_FROM_BRANCH_METERS,
+			StateMachineConstants.CLOSE_SUPERSTRUCTURE_LENGTH_AND_WIDTH
+		);
 	}
 
 	public boolean isReadyToScore() {
@@ -213,6 +235,14 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
+	private Command closeAfterScore() {
+		return new SequentialCommandGroup(
+			new ParallelCommandGroup(superstructure.preScore(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE))
+				.until(this::isReadyToCloseSuperstructure),
+			drive()
+		);
+	}
+
 	private Command asSubsystemCommand(Command command, RobotState state) {
 		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
 	}
@@ -221,7 +251,8 @@ public class RobotCommander extends GBSubsystem {
 		return switch (state) {
 			case INTAKE, OUTTAKE, DRIVE, ALIGN_REEF -> drive();
 			case ARM_PRE_SCORE -> armPreScore();
-			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> preScore();
+			case PRE_SCORE -> preScore();
+			case SCORE, SCORE_WITHOUT_RELEASE -> closeAfterScore();
 		};
 	}
 

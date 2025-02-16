@@ -73,6 +73,18 @@ public class RobotCommander extends GBSubsystem {
 		};
 	}
 
+	public boolean isAtReefScoringPose(double scoringPoseDistanceFromReefMeters, Translation2d tolerances) {
+		Rotation2d reefAngle = Field.getReefSideMiddle(ScoringHelpers.getTargetBranch().getReefSide()).getRotation();
+
+		Translation2d reefRelativeTargetPose = ScoringHelpers
+			.getRobotBranchScoringPose(ScoringHelpers.getTargetBranch(), scoringPoseDistanceFromReefMeters)
+			.rotateBy(reefAngle.unaryMinus())
+			.getTranslation();
+		Translation2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus()).getTranslation();
+
+		return PoseUtil.isAtTranslation(reefRelativeRobotPose, reefRelativeTargetPose, tolerances);
+	}
+
 	private boolean isReadyToOpenSuperstructure() {
 		return isAtReefScoringPose(
 			StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS,
@@ -98,21 +110,8 @@ public class RobotCommander extends GBSubsystem {
 	 * Checks if the robot is out of the safe zone to close the superstructure
 	 */
 	public boolean isReadyToCloseSuperstructure() {
-		Rotation2d reefAngle = Field.getReefSideMiddle(ScoringHelpers.getTargetBranch().getReefSide()).getRotation();
-
-		Translation2d reefRelativeTargetPose = ScoringHelpers
-			.getRobotBranchScoringPose(ScoringHelpers.getTargetBranch(), StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
-			.rotateBy(reefAngle.unaryMinus())
-			.getTranslation();
-		Translation2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus()).getTranslation();
-
-		Translation2d middleOfAimAssistActivatingRectangle = new Translation2d(
-			reefRelativeTargetPose.getX() - StateMachineConstants.CLOSE_SUPERSTRUCTURE_DISTANCE_FROM_BRANCH_METERS,
-			reefRelativeTargetPose.getY()
-		);
-		return !PoseUtil.isAtTranslation(
-			reefRelativeRobotPose,
-			middleOfAimAssistActivatingRectangle,
+		return !isAtReefScoringPose(
+			StateMachineConstants.CLOSE_SUPERSTRUCTURE_DISTANCE_FROM_BRANCH_METERS,
 			StateMachineConstants.CLOSE_SUPERSTRUCTURE_LENGTH_AND_WIDTH
 		);
 	}

@@ -141,13 +141,16 @@ public class Robot {
 	}
 
 	private void configureAuto() {
-		Supplier<Command> scoringCommand = () -> new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4).andThen(robotCommander.getSuperstructure()
-			.scoreWithRelease()
+		Supplier<Command> scoringCommand = () -> new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4)
 			.andThen(
 				robotCommander.getSuperstructure()
-					.preScore()
-					.until(() -> robotCommander.getSuperstructure().isPreScoreReady(ScoreLevel.L4))
-			))
+					.scoreWithRelease()
+					.andThen(
+						robotCommander.getSuperstructure()
+							.preScore()
+							.until(() -> robotCommander.getSuperstructure().isPreScoreReady(ScoreLevel.L4))
+					)
+			)
 			.asProxy();
 		Supplier<Command> intakingCommand = () -> robotCommander.getSuperstructure().intake().asProxy();
 
@@ -157,7 +160,9 @@ public class Robot {
 			PathPlannerUtil.getGuiRobotConfig().orElse(AutonomousConstants.ROBOT_CONFIG)
 		);
 
-		new EventTrigger("PRE_SCORE").onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4).andThen(robotCommander.getSuperstructure().preScore()));
+		new EventTrigger("PRE_SCORE").onTrue(
+			new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4).andThen(robotCommander.getSuperstructure().preScore())
+		);
 		new EventTrigger("INTAKE").onTrue(robotCommander.getSuperstructure().intake());
 		new EventTrigger("IDLE").onTrue(robotCommander.getSuperstructure().idle());
 

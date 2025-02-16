@@ -51,7 +51,7 @@ public class RobotCommander extends GBSubsystem {
 	 * Check if robot at pose but relative to target branch. Y-axis is vertical to the branch. X-axis is horizontal to the branch So when you
 	 * check if robot in place in y-axis its in parallel to the reef side.
 	 */
-	public boolean isAtScoringPose(
+	public boolean isAtReefScoringPose(
 		ScoreLevel scoreLevel,
 		Branch branch,
 		double scoringPoseDistanceFromReefMeters,
@@ -80,7 +80,7 @@ public class RobotCommander extends GBSubsystem {
 	 * Checks if robot close enough in y and x-axis so we can open superstructure.
 	 */
 	private boolean isReadyToOpenSuperstructure(ScoreLevel scoreLevel, Branch branch) {
-		return isAtScoringPose(
+		return isAtReefScoringPose(
 			scoreLevel,
 			branch,
 			StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS,
@@ -97,7 +97,7 @@ public class RobotCommander extends GBSubsystem {
 	 */
 	private boolean isPreScoreReady(ScoreLevel scoreLevel, Branch branch) {
 		return superstructure.isPreScoreReady(scoreLevel)
-			&& isAtScoringPose(
+			&& isAtReefScoringPose(
 				scoreLevel,
 				branch,
 				StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS,

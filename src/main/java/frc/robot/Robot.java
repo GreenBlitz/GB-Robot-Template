@@ -137,16 +137,6 @@ public class Robot {
 		BusChain.logChainsStatuses();
 		simulationManager.logPoses();
 
-		Logger.recordOutput("isReady", robotCommander.isAtScoringPose(
-				ScoreLevel.L4,
-				Branch.A,
-				1,
-				new Pose2d(1,1,new Rotation2d()),
-				new Pose2d(1,1,new Rotation2d()),
-				new Pose2d(2,2,new Rotation2d()),
-				new Pose2d(1,1,new Rotation2d())
-		));
-
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 

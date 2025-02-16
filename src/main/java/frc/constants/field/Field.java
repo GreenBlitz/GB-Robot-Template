@@ -94,19 +94,19 @@ public class Field {
 	}
 
 
-	private static Pose2d getAllianceRelative(Pose2d pose, boolean mirrorX, boolean mirrorY, AngleTransform angleTransform) {
+	public static Pose2d getAllianceRelative(Pose2d pose, boolean mirrorX, boolean mirrorY, AngleTransform angleTransform) {
 		return isFieldConventionAlliance() ? pose : FieldMath.mirror(pose, mirrorX, mirrorY, angleTransform);
 	}
 
-	private static Translation2d getAllianceRelative(Translation2d translation, boolean mirrorX, boolean mirrorY) {
+	public static Translation2d getAllianceRelative(Translation2d translation, boolean mirrorX, boolean mirrorY) {
 		return isFieldConventionAlliance() ? translation : FieldMath.mirror(translation, mirrorX, mirrorY);
 	}
 
-	private static Translation3d getAllianceRelative(Translation3d translation, boolean mirrorX, boolean mirrorY) {
+	public static Translation3d getAllianceRelative(Translation3d translation, boolean mirrorX, boolean mirrorY) {
 		return isFieldConventionAlliance() ? translation : FieldMath.mirror(translation, mirrorX, mirrorY);
 	}
 
-	private static Rotation3d getAllianceRelative(Rotation3d rotation) {
+	public static Rotation3d getAllianceRelative(Rotation3d rotation) {
 		return isFieldConventionAlliance() ? rotation : FieldMath.mirrorAngle(rotation);
 	}
 
@@ -114,7 +114,7 @@ public class Field {
 		return isFieldConventionAlliance() ? rotation : FieldMath.mirrorAngle(rotation, AngleTransform.INVERT);
 	}
 
-	private static Pose3d getAllianceRelative(Pose3d pose, boolean mirrorX, boolean mirrorY, boolean mirrorAngle) {
+	public static Pose3d getAllianceRelative(Pose3d pose, boolean mirrorX, boolean mirrorY, boolean mirrorAngle) {
 		Translation3d translation3d = getAllianceRelative(pose.getTranslation(), mirrorX, mirrorY);
 		return mirrorAngle ? new Pose3d(translation3d, getAllianceRelative(pose.getRotation())) : new Pose3d(translation3d, pose.getRotation());
 	}

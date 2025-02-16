@@ -6,17 +6,18 @@ import frc.constants.field.Field;
 import frc.constants.field.enums.Branch;
 import frc.constants.field.enums.ReefSide;
 import frc.robot.statemachine.superstructure.ScoreLevel;
+import frc.utils.math.AngleTransform;
 import org.littletonrobotics.junction.Logger;
 
 public class ButtonDriverHelper {
 
 	private static final double METERS_FROM_REEF_FOR_SIDE_HIGHLIGHTING = 0.45;
-	private static final Pose2d L1_DISPLAY_PLACEMENT = new Pose2d(1.22, 1.4, Rotation2d.fromDegrees(90));
-	private static final Pose2d L2_DISPLAY_PLACEMENT = new Pose2d(1.22, 3.2, Rotation2d.fromDegrees(90));
-	private static final Pose2d L3_DISPLAY_PLACEMENT = new Pose2d(1.22, 5.02, Rotation2d.fromDegrees(90));
-	private static final Pose2d L4_DISPLAY_PLACEMENT = new Pose2d(1.22, 6.85, Rotation2d.fromDegrees(90));
-	private static final Pose2d LEFT_TOGGLE_PLACEMENT = new Pose2d(4, 6.85, Rotation2d.fromDegrees(90));
-	private static final Pose2d RIGHT_TOGGLE_PLACEMENT = new Pose2d(5, 6.85, Rotation2d.fromDegrees(90));
+	private static final Pose2d L1_DISPLAY_PLACEMENT = Field.getAllianceRelative(new Pose2d(3.22, 6.85, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
+	private static final Pose2d L2_DISPLAY_PLACEMENT = Field.getAllianceRelative(new Pose2d(4.55, 6.85, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
+	private static final Pose2d L3_DISPLAY_PLACEMENT = Field.getAllianceRelative(new Pose2d(5.88, 6.85, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
+	private static final Pose2d L4_DISPLAY_PLACEMENT = Field.getAllianceRelative(new Pose2d(7.22, 6.85, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
+	private static final Pose2d LEFT_TOGGLE_PLACEMENT = Field.getAllianceRelative(new Pose2d(7.22, 4.55, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
+	private static final Pose2d RIGHT_TOGGLE_PLACEMENT = Field.getAllianceRelative(new Pose2d(7.22, 3.55, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
 	private static final Pose2d HIDDEN_PLACEMENT = new Pose2d(-10, -10, Rotation2d.fromDegrees(90));
 	private static final int CHOSEN_SIDE = 0;
 	private static final int CHOSEN_SCORE_LEVEL = 0;

@@ -78,8 +78,19 @@ public class RobotManager extends LoggedRobot {
 //		Logger.recordOutput("Slots", Field.CORAL_STATION_SLOTS_MIDDLES);
 //		Logger.recordOutput("Slots2",Field.CORAL_STATION_SLOTS_MIDDLES[CoralStationSlot.R2.getIndex()]);
 //		Logger.recordOutput("Slots3",Field.CORAL_STATION_SLOTS_MIDDLES[CoralStationSlot.R3.getIndex()]);
-		Logger.recordOutput("Slotsssssss", new Pose2d[]{Field.getCoralStationSlots(CoralStationSlot.R4), Field.getCoralStationSlots(CoralStationSlot.R5),
-				Field.getCoralStationSlots(CoralStationSlot.L4), Field.getCoralStationSlots(CoralStationSlot.L5)});
+		Logger.recordOutput("Slotsssssss", new Pose2d[]{
+				Field.getCoralStationSlots(CoralStationSlot.R1), Field.getCoralStationSlots(CoralStationSlot.R2),
+				Field.getCoralStationSlots(CoralStationSlot.R3), Field.getCoralStationSlots(CoralStationSlot.R4),
+				Field.getCoralStationSlots(CoralStationSlot.R5), Field.getCoralStationSlots(CoralStationSlot.R6),
+				Field.getCoralStationSlots(CoralStationSlot.R7), Field.getCoralStationSlots(CoralStationSlot.R8),
+				Field.getCoralStationSlots(CoralStationSlot.R9),
+
+				Field.getCoralStationSlots(CoralStationSlot.L1), Field.getCoralStationSlots(CoralStationSlot.L2),
+				Field.getCoralStationSlots(CoralStationSlot.L3), Field.getCoralStationSlots(CoralStationSlot.L4),
+				Field.getCoralStationSlots(CoralStationSlot.L5), Field.getCoralStationSlots(CoralStationSlot.L6),
+				Field.getCoralStationSlots(CoralStationSlot.L7), Field.getCoralStationSlots(CoralStationSlot.L8),
+				Field.getCoralStationSlots(CoralStationSlot.L9)
+		});
 
 	}
 

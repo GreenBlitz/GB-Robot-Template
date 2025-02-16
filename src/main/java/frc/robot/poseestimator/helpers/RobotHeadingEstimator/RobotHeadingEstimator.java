@@ -35,6 +35,13 @@ public class RobotHeadingEstimator {
 	public void reset(Rotation2d newHeading) {
 		estimatedHeading = newHeading;
 		unOffsetedGyroAngleInterpolator.clear();
+		estimationAndGyroBuffer.clear();
+	}
+
+	public void updateByGyroReset(Rotation2d newGyroHeading) {
+		Rotation2d differenceInGyroAngle = newGyroHeading.minus(lastGyroAngle);
+		lastGyroAngle = newGyroHeading;
+		reset(estimatedHeading.plus(differenceInGyroAngle));
 	}
 
 	public Rotation2d getEstimatedHeading() {

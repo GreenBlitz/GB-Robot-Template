@@ -28,8 +28,8 @@ public class CANdleWrapper extends CANdle {
 	}
 
 	public void applyConfiguration(CANdleConfiguration configuration, int numberOfTries) {
-		if (this.isConnected() && (Phoenix6Util.checkWithRetry(() -> this.configAllSettings(configuration), numberOfTries)) == ErrorCode.OK) {
-			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailed").report();
+		if (isConnected() && (Phoenix6Util.checkWithRetry(() -> configAllSettings(configuration), numberOfTries)) != ErrorCode.OK) {
+			new Alert(Alert.AlertType.ERROR, logPath + "/ConfigurationFailed").report();
 		}
 	}
 
@@ -42,35 +42,35 @@ public class CANdleWrapper extends CANdle {
 	}
 
 	public ErrorCode setColor(Color color, int startIndex) {
-		return this.setColor(color, startIndex, numberOfLeds - startIndex);
+		return setColor(color, startIndex, numberOfLeds - startIndex);
 	}
 
 	public ErrorCode setColor(Color color, double amountOfLedsToAffect) {
-		return this.setColor(color, 0, (int) amountOfLedsToAffect);
+		return setColor(color, 0, (int) amountOfLedsToAffect);
 	}
 
 	public ErrorCode setColor(Color color) {
-		return this.setColor(color, 0);
+		return setColor(color, 0);
 	}
 
-	public ErrorCode setColor(java.awt.Color color, int startIndex, int amountOfLedsToAffect){
+	public ErrorCode setColor(java.awt.Color color, int startIndex, int amountOfLedsToAffect) {
 		return super.setLEDs(color.getRed(), color.getGreen(), color.getBlue(), 0, startIndex, amountOfLedsToAffect);
 	}
 
-	public ErrorCode setColor(java.awt.Color color, int startIndex){
-		return this.setColor(color, startIndex, numberOfLeds - startIndex);
+	public ErrorCode setColor(java.awt.Color color, int startIndex) {
+		return setColor(color, startIndex, numberOfLeds - startIndex);
 	}
 
-	public ErrorCode setColor(java.awt.Color color, double amountOfLedsToAffect){
-		return this.setColor(color, 0, (int) amountOfLedsToAffect);
+	public ErrorCode setColor(java.awt.Color color, double amountOfLedsToAffect) {
+		return setColor(color, 0, (int) amountOfLedsToAffect);
 	}
 
-	public ErrorCode setColor(java.awt.Color color){
-		return this.setColor(color, 0);
+	public ErrorCode setColor(java.awt.Color color) {
+		return setColor(color, 0);
 	}
 
 	public boolean isConnected() {
-		return this.getTemperature() == 0;
+		return getTemperature() != 0;
 	}
 
 	public void log() {

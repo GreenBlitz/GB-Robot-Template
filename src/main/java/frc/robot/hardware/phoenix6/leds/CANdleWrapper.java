@@ -53,6 +53,22 @@ public class CANdleWrapper extends CANdle {
 		return this.setColor(color, 0);
 	}
 
+	public ErrorCode setColor(java.awt.Color color, int startIndex, int amountOfLedsToAffect){
+		return super.setLEDs(color.getRed(), color.getGreen(), color.getBlue(), 0, startIndex, amountOfLedsToAffect);
+	}
+
+	public ErrorCode setColor(java.awt.Color color, int startIndex){
+		return this.setColor(color, startIndex, numberOfLeds - startIndex);
+	}
+
+	public ErrorCode setColor(java.awt.Color color, double amountOfLedsToAffect){
+		return this.setColor(color, 0, (int) amountOfLedsToAffect);
+	}
+
+	public ErrorCode setColor(java.awt.Color color){
+		return this.setColor(color, 0);
+	}
+
 	public boolean isConnected() {
 		return this.getTemperature() == 0;
 	}

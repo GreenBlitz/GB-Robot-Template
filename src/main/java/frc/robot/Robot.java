@@ -18,7 +18,7 @@ import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimator;
-import frc.robot.statemachine.רםנםואלֹםצצשמגקר;
+import frc.robot.statemachine.robotCommnader;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.factory.ArmFactory;
 import frc.robot.subsystems.elevator.Elevator;
@@ -59,7 +59,7 @@ public class Robot {
 	private final EndEffector endEffector;
 
 	private final SimulationManager simulationManager;
-	private final רםנםואלֹםצצשמגקר robotCommander;
+	private final robotCommnader robotCommander;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -119,7 +119,7 @@ public class Robot {
 		this.endEffector = EndEffectorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/EndEffector");
 
 		this.simulationManager = new SimulationManager("SimulationManager", this);
-		this.robotCommander = new רםנםואלֹםצצשמגקר("StateMachine/RobotCommander", this);
+		this.robotCommander = new robotCommnader("StateMachine/RobotCommander", this);
 	}
 
 	public void periodic() {
@@ -171,7 +171,7 @@ public class Robot {
 		return endEffector;
 	}
 
-	public רםנםואלֹםצצשמגקר getRobotCommander() {
+	public robotCommnader getRobotCommander() {
 		return robotCommander;
 	}
 

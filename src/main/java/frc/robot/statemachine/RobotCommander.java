@@ -19,7 +19,7 @@ import frc.utils.pose.PoseUtil;
 
 import java.util.Set;
 
-public class רםנםואלֹםצצשמגקר extends GBSubsystem {
+public class RobotCommander extends GBSubsystem {
 
 
         private final Robot robot;
@@ -28,7 +28,7 @@ public class רםנםואלֹםצצשמגקר extends GBSubsystem {
 
         private RobotState currentState;
 
-        public רםנםואלֹםצצשמגקר(String logPath, Robot robot) {
+        public RobotCommander(String logPath, Robot robot) {
             super(logPath);
             this.robot = robot;
             this.swerve = robot.getSwerve();

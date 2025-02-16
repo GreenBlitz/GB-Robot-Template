@@ -9,6 +9,7 @@ import frc.constants.field.Field;
 import frc.constants.field.enums.Branch;
 import frc.constants.field.enums.CoralStation;
 import frc.constants.field.enums.ReefSide;
+import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
@@ -116,7 +117,7 @@ public class SwerveStateHandler {
 	}
 
 	private ChassisSpeeds handleBranchAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, Branch reefBranch, SwerveState swerveState) {
-		Translation2d branch = Field.getCoralPlacement(reefBranch);
+		Translation2d branch = ScoringHelpers.getRobotBranchScoringPose(reefBranch, 0).getTranslation();
 		Rotation2d headingToReefSide = Field.getReefSideMiddle(reefBranch.getReefSide()).getRotation();
 
 		chassisSpeeds = AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotPose.getRotation(), headingToReefSide, swerveConstants);

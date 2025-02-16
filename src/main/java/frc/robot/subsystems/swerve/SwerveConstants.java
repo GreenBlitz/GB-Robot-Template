@@ -46,7 +46,7 @@ public record SwerveConstants(
 
 	public static final double AIM_ASSIST_MAGNITUDE_FACTOR = 4;
 
-	static final Pose2d DEADBANDS = new Pose2d(0.05, 0.05, Rotation2d.fromRadians(0.05));
+	static final Pose2d DEADBANDS = new Pose2d(0.08, 0.08, Rotation2d.fromRadians(0.15));
 	static final Rotation2d CALIBRATION_MODULE_ANGLE_TOLERANCE = Rotation2d.fromDegrees(3);
 	static final Rotation2d CALIBRATION_MODULE_ANGULAR_VELOCITY_PER_SECOND_DEADBAND = Rotation2d.fromDegrees(3);
 

@@ -126,7 +126,7 @@ public class KrakenX60ArmBuilder {
 
 		config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = ArmConstants.FORWARD_SOFTWARE_LIMIT.getRotations();
 		config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = ArmConstants.ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT.getRotations();
+		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = ArmConstants.ELEVATOR_OPEN_REVERSED_SOFTWARE_LIMIT.getRotations();
 		config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
 
 		config.Feedback.RotorToSensorRatio = GEAR_RATIO;
@@ -149,8 +149,8 @@ public class KrakenX60ArmBuilder {
 				DCMotor.getKrakenX60(NUMBER_OF_MOTORS),
 				GEAR_RATIO,
 				ArmConstants.LENGTH_METERS,
-				ArmConstants.ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT.getRadians(),
-				ArmConstants.FORWARD_SOFTWARE_LIMIT.getRadians(),
+				ArmConstants.ELEVATOR_OPEN_REVERSED_SOFTWARE_LIMIT.getRadians(),
+				ArmConstants.MAXIMUM_POSITION.getRadians(),
 				false,
 				STARTING_POSITION.getRadians()
 			),

@@ -10,6 +10,5 @@ public enum RobotState {
 	PRE_SCORE,
 	SCORE_WITHOUT_RELEASE,
 	SCORE,
-	CLOSE_AFTER_SCORE;
 
 }

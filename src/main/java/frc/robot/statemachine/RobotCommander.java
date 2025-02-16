@@ -188,7 +188,6 @@ public class RobotCommander extends GBSubsystem {
 			case PRE_SCORE -> preScore();
 			case SCORE_WITHOUT_RELEASE -> scoreWithoutRelease();
 			case SCORE -> score();
-			case CLOSE_AFTER_SCORE -> closeAfterScore();
 		};
 	}
 
@@ -294,13 +293,7 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	private Command closeAfterScore() {
-		return asSubsystemCommand(
-			new SequentialCommandGroup(
-				preScore().until(() -> isReadyToCloseSuperstructure(ScoringHelpers.getTargetBranch())),
-				new ParallelCommandGroup(superstructure.idle(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE))
-			),
-			RobotState.CLOSE_AFTER_SCORE
-		);
+		return new SequentialCommandGroup(preScore().until(() -> isReadyToCloseSuperstructure(ScoringHelpers.getTargetBranch())), drive());
 	}
 
 	private Command asSubsystemCommand(Command command, RobotState state) {
@@ -312,7 +305,7 @@ public class RobotCommander extends GBSubsystem {
 			case INTAKE, OUTTAKE, DRIVE, ALIGN_REEF -> drive();
 			case ARM_PRE_SCORE -> armPreScore();
 			case PRE_SCORE -> preScore();
-			case SCORE, SCORE_WITHOUT_RELEASE, CLOSE_AFTER_SCORE -> closeAfterScore();
+			case SCORE, SCORE_WITHOUT_RELEASE -> closeAfterScore();
 		};
 	}
 

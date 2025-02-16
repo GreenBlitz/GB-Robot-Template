@@ -75,6 +75,9 @@ public class RobotManager extends LoggedRobot {
 		robot.periodic();
 		AlertManager.reportAlerts();
 		Logger.recordOutput("Slots", Field.CORAL_STATION_SLOTS_MIDDLES);
+		Logger.recordOutput("Slots2",Field.CORAL_STATION_SLOTS_MIDDLES[CoralStationSlot.R2.getIndex()]);
+		Logger.recordOutput("Slots3",Field.CORAL_STATION_SLOTS_MIDDLES[CoralStationSlot.R3.getIndex()]);
+
 	}
 
 	private void updateTimeRelatedData() {

@@ -21,7 +21,6 @@ import java.util.Set;
 
 public class RobotCommander extends GBSubsystem {
 
-
 	private final Robot robot;
 	private final Swerve swerve;
 	private final Superstructure superstructure;
@@ -80,6 +79,29 @@ public class RobotCommander extends GBSubsystem {
 					Tolerances.REEF_RELATIVE_OPEN_SUPERSTRUCTURE_DEADBANDS
 				);
 		};
+	}
+
+	/**
+	 * Checks if the
+	 */
+	public boolean isReadyToCloseSuperstructure(Branch targetBranch) {
+		Rotation2d reefAngle = Field.getReefSideMiddle(targetBranch.getReefSide()).getRotation();
+
+		Pose2d reefRelativeTargetPose = ScoringHelpers
+			.getRobotBranchScoringPose(targetBranch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
+			.rotateBy(reefAngle.unaryMinus());
+		Pose2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus());
+
+		Pose2d middleOfAimAssistActivatingRectangle = new Pose2d(
+			reefRelativeTargetPose.getX() - StateMachineConstants.SAFE_ZONE_DISTANCE_FROM_SCORING_POSITION,
+			reefRelativeTargetPose.getY(),
+			new Rotation2d()
+		);
+		return !PoseUtil.isAtPoseWithoutSpeedsAndHeadingCheck(
+			reefRelativeRobotPose,
+			middleOfAimAssistActivatingRectangle,
+			StateMachineConstants.SAFE_ZONE_DISTANCES_FROM_CENTER_OF_SAFE_ZONE
+		);
 	}
 
 	/**
@@ -152,30 +174,6 @@ public class RobotCommander extends GBSubsystem {
 					Tolerances.REEF_RELATIVE_SCORING_DEADBANDS
 				);
 		};
-	}
-
-	/**
-	 * Checks if the robot is out of a "rectangle", this rectangle is the safe zone to activate aim assist, because otherwise the robot will try
-	 * to drive through the reef
-	 */
-	public boolean isReadyToCloseSuperstructure(Branch targetBranch) {
-		Rotation2d reefAngle = Field.getReefSideMiddle(targetBranch.getReefSide()).getRotation();
-
-		Pose2d reefRelativeTargetPose = ScoringHelpers
-			.getRobotBranchScoringPose(targetBranch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
-			.rotateBy(reefAngle.unaryMinus());
-		Pose2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus());
-
-		Pose2d middleOfAimAssistActivatingRectangle = new Pose2d(
-			reefRelativeTargetPose.getX() - StateMachineConstants.MIDDLE_OF_AIM_ASSIST_ACTIVATING_RECTANGLE_DISTANCE_FROM_SCORING_POSITION,
-			reefRelativeTargetPose.getY(),
-			new Rotation2d()
-		);
-		return !PoseUtil.isAtPoseWithoutSpeedsAndHeadingCheck(
-			reefRelativeRobotPose,
-			middleOfAimAssistActivatingRectangle,
-			StateMachineConstants.REEF_AIM_ASSIST_ACTIVATING_DISTANCES_FROM_CENTER_OF_AIM_ASSIST_RECTANGLE
-		);
 	}
 
 	public Command setState(RobotState state) {

@@ -52,12 +52,12 @@ public class JoysticksBindings {
 					MAIN_JOYSTICK.getAxisValue(Axis.RIGHT_X)
 				)
 			);
-		} else if (SECOND_JOYSTICK.isConnected()) {
+		} else if (THIRD_JOYSTICK.isConnected()) {
 			swerve.setDriversPowerInputs(
 				new ChassisPowers(
-					SECOND_JOYSTICK.getAxisValue(Axis.LEFT_Y),
-					SECOND_JOYSTICK.getAxisValue(Axis.LEFT_X),
-					SECOND_JOYSTICK.getAxisValue(Axis.RIGHT_X)
+					THIRD_JOYSTICK.getAxisValue(Axis.LEFT_Y),
+					THIRD_JOYSTICK.getAxisValue(Axis.LEFT_X),
+					THIRD_JOYSTICK.getAxisValue(Axis.RIGHT_X)
 				)
 			);
 		} else {

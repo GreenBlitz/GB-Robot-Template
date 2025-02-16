@@ -16,7 +16,6 @@ import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.pose.PoseUtil;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 
@@ -45,18 +44,6 @@ public class RobotCommander extends GBSubsystem {
 
 	public Superstructure getSuperstructure() {
 		return superstructure;
-	}
-
-	@Override
-	protected void subsystemPeriodic() {
-		Logger.recordOutput(
-			getLogPath() + "ScoringChecks/isReadyToScore",
-			isReadyToScore(ScoringHelpers.targetScoreLevel, ScoringHelpers.getTargetBranch())
-		);
-		Logger.recordOutput(
-			getLogPath() + "ScoringChecks/isSuperStructureReadyToScore",
-			getSuperstructure().isReadyToScore(ScoringHelpers.targetScoreLevel)
-		);
 	}
 
 	/**

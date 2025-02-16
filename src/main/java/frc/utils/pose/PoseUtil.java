@@ -1,15 +1,11 @@
 package frc.utils.pose;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.utils.TimedValue;
 import frc.robot.poseestimator.Pose2dComponentsValue;
 import frc.robot.poseestimator.Pose3dComponentsValue;
-import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.vision.data.VisionData;
 import frc.utils.alerts.Alert;
@@ -26,7 +22,7 @@ public class PoseUtil {
 		return isAtX && isAtY && isAtHeading && isStill;
 	}
 
-	public static boolean isAtPoseWithoutSpeedsAndHeadingCheck(Pose2d currentPose, Pose2d targetPose, Pose2d tolerances) {
+	public static boolean isAtTranslation(Translation2d currentPose, Translation2d targetPose, Translation2d tolerances) {
 		boolean isAtX = MathUtil.isNear(targetPose.getX(), currentPose.getX(), tolerances.getX());
 		boolean isAtY = MathUtil.isNear(targetPose.getY(), currentPose.getY(), tolerances.getY());
 		return isAtX && isAtY;

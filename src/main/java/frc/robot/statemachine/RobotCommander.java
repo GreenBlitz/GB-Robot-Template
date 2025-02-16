@@ -2,6 +2,7 @@ package frc.robot.statemachine;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.constants.field.Field;
@@ -82,22 +83,21 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	/**
-	 * Checks if the
+	 * Checks if the robot is out of the safe zone to close the superstructure
 	 */
 	public boolean isReadyToCloseSuperstructure(Branch targetBranch) {
 		Rotation2d reefAngle = Field.getReefSideMiddle(targetBranch.getReefSide()).getRotation();
 
-		Pose2d reefRelativeTargetPose = ScoringHelpers
+		Translation2d reefRelativeTargetPose = ScoringHelpers
 			.getRobotBranchScoringPose(targetBranch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
-			.rotateBy(reefAngle.unaryMinus());
-		Pose2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus());
+			.rotateBy(reefAngle.unaryMinus()).getTranslation();
+		Translation2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus()).getTranslation();
 
-		Pose2d middleOfAimAssistActivatingRectangle = new Pose2d(
+		Translation2d middleOfAimAssistActivatingRectangle = new Translation2d(
 			reefRelativeTargetPose.getX() - StateMachineConstants.SAFE_ZONE_DISTANCE_FROM_SCORING_POSITION,
-			reefRelativeTargetPose.getY(),
-			new Rotation2d()
+			reefRelativeTargetPose.getY()
 		);
-		return !PoseUtil.isAtPoseWithoutSpeedsAndHeadingCheck(
+		return !PoseUtil.isAtTranslation(
 			reefRelativeRobotPose,
 			middleOfAimAssistActivatingRectangle,
 			StateMachineConstants.SAFE_ZONE_DISTANCES_FROM_CENTER_OF_SAFE_ZONE
@@ -291,7 +291,13 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	private Command closeAfterScore() {
-		return new SequentialCommandGroup(preScore().until(() -> isReadyToCloseSuperstructure(ScoringHelpers.getTargetBranch())), drive());
+		return new SequentialCommandGroup(
+				new ParallelCommandGroup(
+						superstructure.preScore(),
+						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+				).until(() -> isReadyToCloseSuperstructure(ScoringHelpers.getTargetBranch())),
+				drive()
+		);
 	}
 
 	private Command asSubsystemCommand(Command command, RobotState state) {
@@ -306,6 +312,5 @@ public class RobotCommander extends GBSubsystem {
 			case SCORE, SCORE_WITHOUT_RELEASE -> closeAfterScore();
 		};
 	}
-
 
 }

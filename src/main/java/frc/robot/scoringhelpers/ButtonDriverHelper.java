@@ -42,19 +42,19 @@ public class ButtonDriverHelper {
 	private static final Pose2d L4_DISPLAY_PLACEMENT = Field
 		.getAllianceRelative(new Pose2d(7.22, SCORE_LEVEL_Y_AXIS, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
 
-	private static int chosenSideIndex = 0;
-	private static int chosenScoreLevelIndex = 0;
-	private static int leftIndex = 0;
-	private static int rightIndex = 1;
-	private static int darkToggleIndex = 2;
+	private static int chosenSideIndex;
+	private static int chosenScoreLevelIndex;
+	private static int leftIndex;
+	private static int rightIndex;
+	private static int darkToggleIndex;
 
 	private static final Pose2d[] REEF_SIDES = {
-		getPointFromCertainDistance(Field.getReefSideMiddle(ReefSide.A), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS),
-		getPointFromCertainDistance(Field.getReefSideMiddle(ReefSide.B), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS),
-		getPointFromCertainDistance(Field.getReefSideMiddle(ReefSide.C), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS),
-		getPointFromCertainDistance(Field.getReefSideMiddle(ReefSide.D), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS),
-		getPointFromCertainDistance(Field.getReefSideMiddle(ReefSide.E), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS),
-		getPointFromCertainDistance(Field.getReefSideMiddle(ReefSide.F), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS)};
+		Field.getPointFromCertainDistance(Field.getReefSideMiddle(ReefSide.A), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS),
+		Field.getPointFromCertainDistance(Field.getReefSideMiddle(ReefSide.B), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS),
+		Field.getPointFromCertainDistance(Field.getReefSideMiddle(ReefSide.C), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS),
+		Field.getPointFromCertainDistance(Field.getReefSideMiddle(ReefSide.D), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS),
+		Field.getPointFromCertainDistance(Field.getReefSideMiddle(ReefSide.E), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS),
+		Field.getPointFromCertainDistance(Field.getReefSideMiddle(ReefSide.F), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS)};
 
 	private static final Pose2d[] SCORE_LEVEL_PLACEMENTS = {
 		L1_DISPLAY_PLACEMENT,
@@ -82,7 +82,7 @@ public class ButtonDriverHelper {
 		}
 	}
 
-	public static Pose2d[] getDarkPlacementsDisplay() {
+	public static Pose2d[] setUpDisplay() {
 		updateChosenReefSideIndex(ScoringHelpers.getTargetReefSide());
 		updateScoreLevelIndex(ScoringHelpers.targetScoreLevel);
 		updateLeftRightToggleIndexes(ScoringHelpers.getTargetBranch());
@@ -90,37 +90,29 @@ public class ButtonDriverHelper {
 		Pose2d[] darkDisplay = new Pose2d[REEF_SIDES.length + SCORE_LEVEL_PLACEMENTS.length - 1];
 		int darkDisplayIndex = 0;
 
-		for (int index = 0; index < REEF_SIDES.length; index++) {
-			if (index != chosenSideIndex) {
-				darkDisplay[darkDisplayIndex] = REEF_SIDES[index];
-				darkDisplayIndex++;
-			}
-		}
-		for (int index = 0; index < SCORE_LEVEL_PLACEMENTS.length; index++) {
-			if (index != chosenScoreLevelIndex) {
-				darkDisplay[darkDisplayIndex] = SCORE_LEVEL_PLACEMENTS[index];
-				darkDisplayIndex++;
-			}
-		}
+		darkDisplayIndex = addArrayToArrayWithoutSpecificIndex(darkDisplay, darkDisplayIndex, REEF_SIDES, chosenSideIndex);
+		darkDisplayIndex = addArrayToArrayWithoutSpecificIndex(darkDisplay, darkDisplayIndex, SCORE_LEVEL_PLACEMENTS, chosenScoreLevelIndex);
 		darkDisplay[darkDisplayIndex] = LeftRightTogglePlacements.values()[darkToggleIndex].placement;
 
 		return darkDisplay;
 	}
 
-	public static Pose2d getPointFromCertainDistance(Pose2d point, double distantInMeters) {
-		return new Pose2d(
-			point.getX() - point.getRotation().getCos() * distantInMeters,
-			point.getY() - point.getRotation().getSin() * distantInMeters,
-			point.getRotation()
-		);
-	}
-
 	public static void log(String logPath) {
-		Logger.recordOutput(logPath + "/DarkDisplay", getDarkPlacementsDisplay());
+		Logger.recordOutput(logPath + "/DarkDisplay", setUpDisplay());
 		Logger.recordOutput(logPath + "/ChosenReefSide", REEF_SIDES[chosenSideIndex]);
 		Logger.recordOutput(logPath + "/ChosenScoreLevel", SCORE_LEVEL_PLACEMENTS[chosenScoreLevelIndex]);
 		Logger.recordOutput(logPath + "/LeftToggle", LeftRightTogglePlacements.values()[leftIndex].placement);
 		Logger.recordOutput(logPath + "/RightToggle", LeftRightTogglePlacements.values()[rightIndex].placement);
+	}
+
+	public static <T> int addArrayToArrayWithoutSpecificIndex(T[] receiver, int startIndex, T[] giver, int indexToExclude) {
+		for (int index = 0; index < giver.length; index++) {
+			if (index != indexToExclude) {
+				receiver[startIndex] = giver[index];
+				startIndex++;
+			}
+		}
+		return startIndex;
 	}
 
 }

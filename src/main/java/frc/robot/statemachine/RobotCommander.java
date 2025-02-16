@@ -49,7 +49,7 @@ public class RobotCommander extends GBSubsystem {
 	 * Check if robot at pose but relative to target branch. Y-axis is vertical to the branch. X-axis is horizontal to the branch So when you
 	 * check if robot in place in y-axis its in parallel to the reef side.
 	 */
-	public boolean isAtReefScoringPose(
+	private boolean isAtReefScoringPose(
 		double scoringPoseDistanceFromReefMeters,
 		Pose2d l1Tolerances,
 		Pose2d l1Deadbands,
@@ -73,7 +73,7 @@ public class RobotCommander extends GBSubsystem {
 		};
 	}
 
-	public boolean isAtReefScoringPose(double scoringPoseDistanceFromReefMeters, Translation2d tolerances) {
+	private boolean isAtReefScoringPose(double scoringPoseDistanceFromReefMeters, Translation2d tolerances) {
 		Rotation2d reefAngle = Field.getReefSideMiddle(ScoringHelpers.getTargetBranch().getReefSide()).getRotation();
 
 		Translation2d reefRelativeTargetPose = ScoringHelpers

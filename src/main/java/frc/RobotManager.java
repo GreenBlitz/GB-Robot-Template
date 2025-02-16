@@ -4,6 +4,7 @@
 
 package frc;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.constants.field.Field;
 import frc.constants.field.enums.CoralStationSlot;
@@ -77,6 +78,8 @@ public class RobotManager extends LoggedRobot {
 		Logger.recordOutput("Slots", Field.CORAL_STATION_SLOTS_MIDDLES);
 		Logger.recordOutput("Slots2",Field.CORAL_STATION_SLOTS_MIDDLES[CoralStationSlot.R2.getIndex()]);
 		Logger.recordOutput("Slots3",Field.CORAL_STATION_SLOTS_MIDDLES[CoralStationSlot.R3.getIndex()]);
+		Logger.recordOutput("Slotsssssss", new Pose2d[]{Field.getCoralStationSlots(CoralStationSlot.L2), Field.getCoralStationSlots(CoralStationSlot.L3),
+				Field.getCoralStationSlots(CoralStationSlot.L4), Field.getCoralStationSlots(CoralStationSlot.L5)});
 
 	}
 

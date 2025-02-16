@@ -1,5 +1,6 @@
 package frc.robot.vision.multivisionsources;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -31,6 +32,7 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 
 	private final Supplier<Rotation2d> robotHeadingSupplier;
 	private boolean useRobotHeadingForPoseEstimating;
+	private final List<Integer> lastSeenApriltags;
 
 	public MultiAprilTagVisionSources(
 		String logPath,
@@ -40,6 +42,7 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	) {
 		super(logPath, visionSources);
 		this.robotHeadingSupplier = robotHeadingSupplier;
+		this.lastSeenApriltags = new ArrayList<>();
 		setUseRobotHeadingForPoseEstimating(useRobotHeadingForPoseEstimating);
 	}
 
@@ -132,11 +135,22 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	}
 
 	private void logAprilTagPoseData() {
+		List<Integer> seenApriltags = new ArrayList<>();
 		for (AprilTagVisionData visionData : getUnfilteredVisionData()) {
 			int aprilTagID = visionData.getTrackedAprilTagId();
 			Optional<Pose3d> aprilTag = VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(aprilTagID);
-			aprilTag.ifPresent((pose) -> Logger.recordOutput(logPath + "targets/" + aprilTagID, pose));
+			aprilTag.ifPresent((pose) -> {
+				Logger.recordOutput(logPath + "targets/" + aprilTagID, pose);
+				seenApriltags.add(aprilTagID);
+			});
 		}
+		for(Integer aprilTagID : lastSeenApriltags) {
+			if (!seenApriltags.contains(aprilTagID)) {
+				Logger.recordOutput(logPath + "targets/" + aprilTagID, (Pose2d) null);
+			}
+		}
+		lastSeenApriltags.clear();
+		lastSeenApriltags.addAll(seenApriltags);
 	}
 
 	@Override

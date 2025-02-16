@@ -75,10 +75,10 @@ public class RobotManager extends LoggedRobot {
 		JoysticksBindings.setDriversInputsToSwerve(robot.getSwerve());
 		robot.periodic();
 		AlertManager.reportAlerts();
-		Logger.recordOutput("Slots", Field.CORAL_STATION_SLOTS_MIDDLES);
-		Logger.recordOutput("Slots2",Field.CORAL_STATION_SLOTS_MIDDLES[CoralStationSlot.R2.getIndex()]);
-		Logger.recordOutput("Slots3",Field.CORAL_STATION_SLOTS_MIDDLES[CoralStationSlot.R3.getIndex()]);
-		Logger.recordOutput("Slotsssssss", new Pose2d[]{Field.getCoralStationSlots(CoralStationSlot.L2), Field.getCoralStationSlots(CoralStationSlot.L3),
+//		Logger.recordOutput("Slots", Field.CORAL_STATION_SLOTS_MIDDLES);
+//		Logger.recordOutput("Slots2",Field.CORAL_STATION_SLOTS_MIDDLES[CoralStationSlot.R2.getIndex()]);
+//		Logger.recordOutput("Slots3",Field.CORAL_STATION_SLOTS_MIDDLES[CoralStationSlot.R3.getIndex()]);
+		Logger.recordOutput("Slotsssssss", new Pose2d[]{Field.getCoralStationSlots(CoralStationSlot.R4), Field.getCoralStationSlots(CoralStationSlot.R5),
 				Field.getCoralStationSlots(CoralStationSlot.L4), Field.getCoralStationSlots(CoralStationSlot.L5)});
 
 	}

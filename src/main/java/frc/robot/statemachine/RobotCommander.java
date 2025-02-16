@@ -117,7 +117,6 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-
 	public boolean isReadyToScore() {
 		return superstructure.isReadyToScore()
 			&& isAtReefScoringPose(

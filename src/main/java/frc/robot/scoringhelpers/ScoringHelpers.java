@@ -10,6 +10,7 @@ import frc.constants.field.enums.CoralStationSlot;
 public class ScoringHelpers {
 
 	public static Branch targetBranch = Branch.C;
+	public static CoralStationSlot targetcoralStationSlot = CoralStationSlot.L1;
 
 	public static Pose2d getRobotScoringPose(Branch branch, double distanceFromBranchMeters) {
 		Translation2d branchTranslation = Field.getCoralPlacement(branch);

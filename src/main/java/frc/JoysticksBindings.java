@@ -12,6 +12,8 @@ import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.states.SwerveState;
+import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.utilcommands.ExecuteEndCommand;
 
 public class JoysticksBindings {
@@ -74,8 +76,8 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 //		usedJoystick.A.onTrue(robot.getSwerve().getCommandsBuilder().driveToPose(()->robot.getPoseEstimator().getEstimatedPose(),()-> ScoringHelpers.getRobotFeederPose(CoralStationSlot.R5,5)));
-		usedJoystick.A.onTrue(robot.getSwerve().getCommandsBuilder().driveToPose(()->robot.getPoseEstimator().getEstimatedPose(), ()-> Field.getCoralStationSlotsPose2d(CoralStationSlot.L5)));
-
+//		usedJoystick.A.onTrue(robot.getSwerve().getCommandsBuilder().driveToPose(()->robot.getPoseEstimator().getEstimatedPose(), ()-> Field.getCoralStationSlotsPose2d(CoralStationSlot.L5)));
+		usedJoystick.A.onTrue(robot.getSwerve().getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CORAL_STATION_SLOTS)));
 
 	}
 

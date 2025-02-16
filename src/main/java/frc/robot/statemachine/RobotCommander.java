@@ -5,10 +5,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.constants.field.Field;
-import frc.constants.field.enums.Branch;
 import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
-import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.statemachine.superstructure.Superstructure;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.Swerve;
@@ -97,13 +95,14 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public boolean isReadyToScore() {
-		return superstructure.isReadyToScore() && isAtReefScoringPose(
+		return superstructure.isReadyToScore()
+			&& isAtReefScoringPose(
 				StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS,
 				Tolerances.REEF_RELATIVE_L1_SCORING_POSITION,
 				Tolerances.REEF_RELATIVE_L1_SCORING_DEADBANDS,
 				Tolerances.REEF_RELATIVE_SCORING_POSITION,
 				Tolerances.REEF_RELATIVE_SCORING_DEADBANDS
-		);
+			);
 	}
 
 	public Command setState(RobotState state) {
@@ -120,19 +119,16 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public Command fullyScore() {
-			return new SequentialCommandGroup(
-				armPreScore().until(this::isReadyToOpenSuperstructure),
-				preScore().until(this::isPreScoreReady),
-				scoreWithoutRelease().until(this::isReadyToScore),
-				score()
-			);
-	}
-
-	public Command scoreForButton() {
 		return new SequentialCommandGroup(
+			armPreScore().until(this::isReadyToOpenSuperstructure),
+			preScore().until(this::isPreScoreReady),
 			scoreWithoutRelease().until(this::isReadyToScore),
 			score()
 		);
+	}
+
+	public Command scoreForButton() {
+		return new SequentialCommandGroup(scoreWithoutRelease().until(this::isReadyToScore), score());
 	}
 
 	public Command fullyPreScore() {

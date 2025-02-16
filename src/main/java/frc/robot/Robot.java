@@ -4,15 +4,12 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
-import frc.constants.field.enums.Branch;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
-import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.vision.VisionConstants;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -40,7 +37,6 @@ import frc.utils.TimedValue;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.time.TimeUtil;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 

@@ -90,11 +90,12 @@ public class RobotCommander extends GBSubsystem {
 
 		Translation2d reefRelativeTargetPose = ScoringHelpers
 			.getRobotBranchScoringPose(targetBranch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
-			.rotateBy(reefAngle.unaryMinus()).getTranslation();
+			.rotateBy(reefAngle.unaryMinus())
+			.getTranslation();
 		Translation2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus()).getTranslation();
 
 		Translation2d middleOfAimAssistActivatingRectangle = new Translation2d(
-			reefRelativeTargetPose.getX() - StateMachineConstants.SAFE_ZONE_DISTANCE_FROM_SCORING_POSITION,
+			reefRelativeTargetPose.getX() - StateMachineConstants.SAFE_ZONE_DISTANCE_FROM_SCORING_POSITION_METERS,
 			reefRelativeTargetPose.getY()
 		);
 		return !PoseUtil.isAtTranslation(
@@ -292,11 +293,9 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command closeAfterScore() {
 		return new SequentialCommandGroup(
-				new ParallelCommandGroup(
-						superstructure.preScore(),
-						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
-				).until(() -> isReadyToCloseSuperstructure(ScoringHelpers.getTargetBranch())),
-				drive()
+			new ParallelCommandGroup(superstructure.preScore(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE))
+				.until(() -> isReadyToCloseSuperstructure(ScoringHelpers.getTargetBranch())),
+			drive()
 		);
 	}
 

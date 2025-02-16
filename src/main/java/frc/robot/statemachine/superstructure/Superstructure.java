@@ -2,10 +2,12 @@ package frc.robot.statemachine.superstructure;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
+import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.StateMachineConstants;
 import frc.robot.statemachine.Tolerances;
 import frc.robot.subsystems.GBSubsystem;
@@ -18,6 +20,7 @@ import frc.robot.subsystems.endeffector.EndEffectorState;
 import frc.robot.subsystems.endeffector.EndEffectorStateHandler;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.Set;
 
 public class Superstructure extends GBSubsystem {
 
@@ -27,6 +30,7 @@ public class Superstructure extends GBSubsystem {
 	private final EndEffectorStateHandler endEffectorStateHandler;
 
 	private SuperstructureState currentState;
+	public boolean driverIsObjectInOverride;
 
 	public Superstructure(String logPath, Robot robot) {
 		super(logPath);
@@ -36,9 +40,10 @@ public class Superstructure extends GBSubsystem {
 		this.endEffectorStateHandler = new EndEffectorStateHandler(robot.getEndEffector());
 
 		this.currentState = SuperstructureState.IDLE;
-//		setDefaultCommand(
-//			new DeferredCommand(() -> endState(currentState), Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector()))
-//		);
+		this.driverIsObjectInOverride = false;
+		setDefaultCommand(
+			new DeferredCommand(() -> endState(currentState), Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector()))
+		);
 	}
 
 
@@ -49,11 +54,11 @@ public class Superstructure extends GBSubsystem {
 	}
 
 	public boolean isCoralIn() {
-		return robot.getEndEffector().isCoralInBack();
+		return robot.getEndEffector().isCoralInBack() || driverIsObjectInOverride;
 	}
 
 	public boolean isCoralOut() {
-		return !robot.getEndEffector().isCoralInFront();
+		return !robot.getEndEffector().isCoralInFront() && !driverIsObjectInOverride;
 	}
 
 	public boolean isPreScoreReady(ScoreLevel scoreLevel) {
@@ -86,7 +91,7 @@ public class Superstructure extends GBSubsystem {
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.CLOSED),
 				armStateHandler.setState(ArmState.CLOSED),
-				endEffectorStateHandler.setState(EndEffectorState.KEEP)
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
 			),
 			SuperstructureState.IDLE
 		);
@@ -121,54 +126,66 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command genericArmPreScore(ScoreLevel scoreLevel) {
+	public Command armPreScore() {
 		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.CLOSED),
-				armStateHandler.setState(scoreLevel.getArmPreScore()),
-				endEffectorStateHandler.setState(EndEffectorState.KEEP)
+			new DeferredCommand(
+				() -> new ParallelCommandGroup(
+					elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorWhileDrive()),
+					armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmPreScore()),
+					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+				),
+				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector())
 			),
-			scoreLevel.getSuperstructureArmPreScore()
+			SuperstructureState.ARM_PRE_SCORE
 		);
 	}
 
-	public Command genericPreScore(ScoreLevel scoreLevel) {
+	public Command preScore() {
 		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(scoreLevel.getElevatorPreScore()),
-				armStateHandler.setState(scoreLevel.getArmPreScore()),
-				endEffectorStateHandler.setState(EndEffectorState.KEEP)
+			new DeferredCommand(
+				() -> new ParallelCommandGroup(
+					elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorPreScore()),
+					armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmPreScore()),
+					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+				),
+				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector())
 			),
-			scoreLevel.getSuperstructurePreScore()
+			SuperstructureState.PRE_SCORE
 		);
 	}
 
-	public Command genericScoreWithoutRelease(ScoreLevel scoreLevel) {
+	public Command scoreWithoutRelease() {
 		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(scoreLevel.getElevatorScore()),
-				armStateHandler.setState(scoreLevel.getArmScore()),
-				endEffectorStateHandler.setState(EndEffectorState.KEEP)
+			new DeferredCommand(
+				() -> new ParallelCommandGroup(
+					elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorScore()),
+					armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmScore()),
+					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+				),
+				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector())
 			),
-			scoreLevel.getSuperstructureScoreWithoutRelease()
+			SuperstructureState.SCORE_WITHOUT_RELEASE
 		);
 	}
 
-	public Command genericScoreWithRelease(ScoreLevel scoreLevel) {
+	public Command scoreWithRelease() {
 		return asSubsystemCommand(
-			new SequentialCommandGroup(
-				new ParallelCommandGroup(
-					elevatorStateHandler.setState(scoreLevel.getElevatorScore()),
-					armStateHandler.setState(scoreLevel.getArmScore()),
-					endEffectorStateHandler.setState(scoreLevel.getEndEffectorScore())
-				).until(this::isCoralOut),
-				new ParallelCommandGroup(
-					elevatorStateHandler.setState(scoreLevel.getElevatorScore()),
-					armStateHandler.setState(scoreLevel.getArmScore()),
-					endEffectorStateHandler.setState(scoreLevel.getEndEffectorScore())
-				).withTimeout(StateMachineConstants.SCORE_OUTTAKE_TIME_AFTER_BEAM_BREAK_SECONDS)
+			new DeferredCommand(
+				() -> new SequentialCommandGroup(
+					new ParallelCommandGroup(
+						elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorScore()),
+						armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmScore()),
+						endEffectorStateHandler.setState(ScoringHelpers.targetScoreLevel.getEndEffectorScore())
+					).until(this::isCoralOut),
+					new ParallelCommandGroup(
+						elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorScore()),
+						armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmScore()),
+						endEffectorStateHandler.setState(ScoringHelpers.targetScoreLevel.getEndEffectorScore())
+					).withTimeout(StateMachineConstants.SCORE_OUTTAKE_TIME_AFTER_BEAM_BREAK_SECONDS)
+				),
+				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector())
 			),
-			scoreLevel.getSuperstructureScore()
+			SuperstructureState.SCORE
 		);
 	}
 
@@ -179,14 +196,8 @@ public class Superstructure extends GBSubsystem {
 	private Command endState(SuperstructureState state) {
 		return switch (state) {
 			case INTAKE, OUTTAKE, IDLE -> idle();
-			case ARM_PRE_L1 -> genericArmPreScore(ScoreLevel.L1);
-			case ARM_PRE_L2 -> genericArmPreScore(ScoreLevel.L2);
-			case ARM_PRE_L3 -> genericArmPreScore(ScoreLevel.L3);
-			case ARM_PRE_L4 -> genericArmPreScore(ScoreLevel.L4);
-			case PRE_L1, SCORE_L1, SCORE_L1_WITHOUT_RELEASE -> genericPreScore(ScoreLevel.L1);
-			case PRE_L2, SCORE_L2, SCORE_L2_WITHOUT_RELEASE -> genericPreScore(ScoreLevel.L2);
-			case PRE_L3, SCORE_L3, SCORE_L3_WITHOUT_RELEASE -> genericPreScore(ScoreLevel.L3);
-			case PRE_L4, SCORE_L4, SCORE_L4_WITHOUT_RELEASE -> genericPreScore(ScoreLevel.L4);
+			case ARM_PRE_SCORE -> armPreScore();
+			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> preScore();
 		};
 	}
 

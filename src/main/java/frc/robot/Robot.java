@@ -8,6 +8,7 @@ import com.pathplanner.lib.events.EventTrigger;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.AutosBuilder;
@@ -18,6 +19,7 @@ import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
+import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimator;
 import frc.robot.statemachine.RobotCommander;
 import frc.robot.statemachine.superstructure.ScoreLevel;
@@ -43,6 +45,7 @@ import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.time.TimeUtil;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -116,9 +119,12 @@ public class Robot {
 		);
 
 		swerve.setHeadingSupplier(
-			ROBOT_TYPE.isSimulation() ? poseEstimator.getEstimatedPose()::getRotation : headingEstimator::getEstimatedHeading
+			() -> ROBOT_TYPE.isSimulation() ? poseEstimator.getEstimatedPose().getRotation() : headingEstimator.getEstimatedHeading()
 		);
 		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
+		swerve.getStateHandler().setBranchSupplier(() -> Optional.of(ScoringHelpers.getTargetBranch()));
+		swerve.getStateHandler().setReefSideSupplier(() -> Optional.of(ScoringHelpers.getTargetReefSide()));
+		swerve.getStateHandler().setCoralStationSupplier(() -> Optional.of(ScoringHelpers.getTargetCoralStation(this)));
 
 		this.elevator = ElevatorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Elevator");
 		BrakeStateManager.add(() -> elevator.setBrake(true), () -> elevator.setBrake(false));
@@ -135,13 +141,13 @@ public class Robot {
 	}
 
 	private void configureAuto() {
-		Supplier<Command> scoringCommand = () -> robotCommander.getSuperstructure()
-			.genericScoreWithRelease(ScoreLevel.L4)
+		Supplier<Command> scoringCommand = () -> new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4).andThen(robotCommander.getSuperstructure()
+			.scoreWithRelease()
 			.andThen(
 				robotCommander.getSuperstructure()
-					.genericPreScore(ScoreLevel.L4)
+					.preScore()
 					.until(() -> robotCommander.getSuperstructure().isPreScoreReady(ScoreLevel.L4))
-			)
+			))
 			.asProxy();
 		Supplier<Command> intakingCommand = () -> robotCommander.getSuperstructure().intake().asProxy();
 
@@ -151,7 +157,7 @@ public class Robot {
 			PathPlannerUtil.getGuiRobotConfig().orElse(AutonomousConstants.ROBOT_CONFIG)
 		);
 
-		new EventTrigger("PRE_SCORE").onTrue(robotCommander.getSuperstructure().genericPreScore(ScoreLevel.L4));
+		new EventTrigger("PRE_SCORE").onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4).andThen(robotCommander.getSuperstructure().preScore()));
 		new EventTrigger("INTAKE").onTrue(robotCommander.getSuperstructure().intake());
 		new EventTrigger("IDLE").onTrue(robotCommander.getSuperstructure().idle());
 
@@ -191,7 +197,11 @@ public class Robot {
 
 		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
 		for (TimedValue<Rotation2d> headingData : multiAprilTagVisionSources.getRawRobotHeadings()) {
-			headingEstimator.updateVisionHeading(headingData, RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION);
+			headingEstimator.updateVisionIfNotCalibrated(
+				headingData,
+				RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION,
+				RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE
+			);
 		}
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 		poseEstimator.updateVision(multiAprilTagVisionSources.getFilteredVisionData());
@@ -201,6 +211,7 @@ public class Robot {
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		simulationManager.logPoses();
+		ScoringHelpers.log("Scoring");
 
 		CommandScheduler.getInstance().run(); // Should be last
 	}

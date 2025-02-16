@@ -154,33 +154,27 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	/**
-	 * Checks if the robot is at a "rectangle", this rectangle is the safe zone to activate aim assist, because otherwise the robot will try to
+	 * Checks if the robot is out of a "rectangle", this rectangle is the safe zone to activate aim assist, because otherwise the robot will try to
 	 * drive through the reef
 	 */
-	public boolean isReadyToStartBranchAimAssist(Branch targetBranch) {
+	public boolean isReadyToCloseSuperstructure(Branch targetBranch) {
 		Rotation2d reefAngle = Field.getReefSideMiddle(targetBranch.getReefSide()).getRotation();
 
 		Pose2d reefRelativeTargetPose = ScoringHelpers
-			.getRobotBranchScoringPose(targetBranch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
-			.rotateBy(reefAngle.unaryMinus());
+				.getRobotBranchScoringPose(targetBranch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
+				.rotateBy(reefAngle.unaryMinus());
 		Pose2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus());
 
 		Pose2d middleOfAimAssistActivatingRectangle = new Pose2d(
-			reefRelativeTargetPose.getX() - StateMachineConstants.MIDDLE_OF_AIM_ASSIST_ACTIVATING_RECTANGLE_DISTANCE_FROM_SCORING_POSITION,
-			reefRelativeTargetPose.getY(),
-			new Rotation2d()
+				reefRelativeTargetPose.getX() - StateMachineConstants.MIDDLE_OF_AIM_ASSIST_ACTIVATING_RECTANGLE_DISTANCE_FROM_SCORING_POSITION,
+				reefRelativeTargetPose.getY(),
+				new Rotation2d()
 		);
-		return PoseUtil.isAtPoseWithoutSpeedsAndHeadingCheck(
-			reefRelativeRobotPose,
-			middleOfAimAssistActivatingRectangle,
-			StateMachineConstants.REEF_AIM_ASSIST_ACTIVATING_DISTANCES_FROM_CENTER_OF_AIM_ASSIST_RECTANGLE
+		return !PoseUtil.isAtPoseWithoutSpeedsAndHeadingCheck(
+				reefRelativeRobotPose,
+				middleOfAimAssistActivatingRectangle,
+				StateMachineConstants.REEF_AIM_ASSIST_ACTIVATING_DISTANCES_FROM_CENTER_OF_AIM_ASSIST_RECTANGLE
 		);
-	}
-
-	public SwerveState getSwerveStateSupplier() {
-		return (isReadyToStartBranchAimAssist(ScoringHelpers.getTargetBranch())
-			? SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH)
-			: SwerveState.DEFAULT_DRIVE);
 	}
 
 	public Command setState(RobotState state) {
@@ -262,7 +256,7 @@ public class RobotCommander extends GBSubsystem {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				superstructure.armPreScore(),
-				swerve.getCommandsBuilder().driveByDriversInputs(this::getSwerveStateSupplier, false)
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
 			),
 			RobotState.ARM_PRE_SCORE
 		);
@@ -272,7 +266,7 @@ public class RobotCommander extends GBSubsystem {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				superstructure.preScore(),
-				swerve.getCommandsBuilder().driveByDriversInputs(this::getSwerveStateSupplier, false)
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
 			),
 			RobotState.PRE_SCORE
 		);
@@ -282,7 +276,7 @@ public class RobotCommander extends GBSubsystem {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				superstructure.scoreWithoutRelease(),
-				swerve.getCommandsBuilder().driveByDriversInputs(this::getSwerveStateSupplier, false)
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
 			),
 			RobotState.SCORE_WITHOUT_RELEASE
 		);
@@ -292,7 +286,7 @@ public class RobotCommander extends GBSubsystem {
 		return asSubsystemCommand(
 			new ParallelDeadlineGroup(
 				superstructure.scoreWithRelease(),
-				swerve.getCommandsBuilder().driveByDriversInputs(this::getSwerveStateSupplier, false)
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
 			),
 			RobotState.SCORE
 		);
@@ -301,7 +295,7 @@ public class RobotCommander extends GBSubsystem {
 	private Command closeAfterScore(){
 		return asSubsystemCommand(
 				new SequentialCommandGroup(
-						preScore().until(() -> !isReadyToStartBranchAimAssist(ScoringHelpers.getTargetBranch())),
+						preScore().until(() -> isReadyToCloseSuperstructure(ScoringHelpers.getTargetBranch())),
 						new ParallelCommandGroup(
 								superstructure.idle(),
 								swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)

@@ -93,7 +93,6 @@ public class Field {
 		return getAllianceRelative(CORAL_STATION_MIDDLES[coralStation.getIndex()], true, true, AngleTransform.INVERT);
 	}
 
-
 	public static Pose2d getAllianceRelative(Pose2d pose, boolean mirrorX, boolean mirrorY, AngleTransform angleTransform) {
 		return isFieldConventionAlliance() ? pose : FieldMath.mirror(pose, mirrorX, mirrorY, angleTransform);
 	}

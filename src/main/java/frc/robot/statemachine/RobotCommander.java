@@ -95,13 +95,13 @@ public class RobotCommander extends GBSubsystem {
 		Translation2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus()).getTranslation();
 
 		Translation2d middleOfAimAssistActivatingRectangle = new Translation2d(
-			reefRelativeTargetPose.getX() - StateMachineConstants.SAFE_ZONE_DISTANCE_FROM_SCORING_POSITION_METERS,
+			reefRelativeTargetPose.getX() - StateMachineConstants.CLOSE_SUPERSTRUCTURE_DISTANCE_FROM_BRANCH_METERS,
 			reefRelativeTargetPose.getY()
 		);
 		return !PoseUtil.isAtTranslation(
 			reefRelativeRobotPose,
 			middleOfAimAssistActivatingRectangle,
-			StateMachineConstants.SAFE_ZONE_DISTANCES_FROM_CENTER_OF_SAFE_ZONE
+			StateMachineConstants.CLOSE_SUPERSTRUCTURE_LENGTH_AND_WIDTH
 		);
 	}
 

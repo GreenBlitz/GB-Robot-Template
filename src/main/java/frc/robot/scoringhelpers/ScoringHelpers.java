@@ -19,7 +19,7 @@ public class ScoringHelpers {
 	private static final Translation2d LEFT_CORAL_STATION_TRANSLATION = Field.getCoralStationMiddle(CoralStation.LEFT).getTranslation();
 	private static final Translation2d RIGHT_CORAL_STATION_TRANSLATION = Field.getCoralStationMiddle(CoralStation.RIGHT).getTranslation();
 
-	public static ScoreLevel targetScoreLevel = ScoreLevel.L2;
+	public static ScoreLevel targetScoreLevel = ScoreLevel.L4;
 
 	private static boolean isFarReefHalf = false;
 	private static Side targetSideForReef = Side.MIDDLE;

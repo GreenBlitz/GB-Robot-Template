@@ -58,6 +58,7 @@ public class Superstructure extends GBSubsystem {
 	}
 
 	public boolean isCoralOut() {
+		Logger.recordOutput("isCoralOut", !robot.getEndEffector().isCoralInFront() && !driverIsObjectInOverride);
 		return !robot.getEndEffector().isCoralInFront() && !driverIsObjectInOverride;
 	}
 

@@ -2,9 +2,6 @@ package frc.robot.scoringhelpers;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.numbers.N0;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N2;
 import frc.constants.field.Field;
 import frc.constants.field.enums.Branch;
 import frc.constants.field.enums.ReefSide;
@@ -15,12 +12,18 @@ import org.littletonrobotics.junction.Logger;
 public class ButtonDriverHelper {
 
 	private enum LeftRightTogglePlacements {
-		LEFT_TOGGLE_PLACEMENT(Field.getAllianceRelative(new Pose2d(LEFT_RIGHT_TOGGLE_X_AXIS, 4.55, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT)),
-		RIGHT_TOGGLE_PLACEMENT(Field.getAllianceRelative(new Pose2d(LEFT_RIGHT_TOGGLE_X_AXIS, 3.55, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT)),
+
+		LEFT_TOGGLE_PLACEMENT(
+			Field.getAllianceRelative(new Pose2d(LEFT_RIGHT_TOGGLE_X_AXIS, 4.55, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT)
+		),
+		RIGHT_TOGGLE_PLACEMENT(
+			Field.getAllianceRelative(new Pose2d(LEFT_RIGHT_TOGGLE_X_AXIS, 3.55, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT)
+		),
 		HIDDEN_PLACEMENT(new Pose2d(-10, -10, Rotation2d.fromDegrees(90)));
 
 		private final Pose2d placement;
-		LeftRightTogglePlacements(Pose2d placement){
+
+		LeftRightTogglePlacements(Pose2d placement) {
 			this.placement = placement;
 		}
 

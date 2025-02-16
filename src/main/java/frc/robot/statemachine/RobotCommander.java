@@ -238,8 +238,10 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command closeAfterScore() {
 		return new SequentialCommandGroup(
-			new ParallelCommandGroup(superstructure.preScore(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE))
-				.until(this::isReadyToCloseSuperstructure),
+			new ParallelCommandGroup(
+				superstructure.closeAfterScore(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+			).until(this::isReadyToCloseSuperstructure),
 			drive()
 		);
 	}

@@ -36,10 +36,10 @@ public class AutonomousConstants {
 				robot.getSwerve().getModules().getModule(ModuleUtil.ModulePosition.FRONT_LEFT).getModuleConstants().wheelDiameterMeters() / 2,
 				robot.getSwerve().getConstants().velocityAt12VoltsMetersPerSecond(),
 				ModuleConstants.COEFFICIENT_OF_FRICTION,
-				DCMotor.getKrakenX60Foc(1),
+				DCMotor.getKrakenX60Foc(ModuleConstants.NUMBER_OF_DRIVE_MOTORS),
 				KrakenX60DriveBuilder.GEAR_RATIO,
 				KrakenX60DriveBuilder.SLIP_CURRENT,
-				1
+				ModuleConstants.NUMBER_OF_DRIVE_MOTORS
 			),
 			robot.getSwerve().getModules().getModulePositionsFromCenterMeters()
 		);

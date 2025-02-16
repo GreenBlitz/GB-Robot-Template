@@ -62,19 +62,33 @@ public class VisionConstants {
 		.and(VisionFilters.isOnGround(ROBOT_DISTANCE_TO_GROUND_TOLERANCE_METERS));
 
 	public static final Pose3d LIMELIGHT_LEFT_CAMERA_ROBOT_POSE = new Pose3d(
-		new Translation3d(0.20989, -0.13998, 0.46927),
-		AngleUnit.DEGREES.toRotation3d(-9.5, -25.17, -24.82)
+		new Translation3d(0.22989, -0.11998, 0.48927),
+		AngleUnit.DEGREES.toRotation3d(-8.6, -27.07, -21.72)
+	);
+
+	public static final Pose3d LIMELIGHT_RIGHT_CAMERA_ROBOT_POSE = new Pose3d(
+		new Translation3d(0.215, 0.11, 0.495),
+		AngleUnit.DEGREES.toRotation3d(11.21, -24.65, 23.76)
 	);
 
 	public static final VisionSource<AprilTagVisionData> LIMELIGHT_LEFT = new DynamicSwitchingLimelight(
 		true,
 		"limelight-left",
 		VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
-		"limelight4",
+		"limelight4-front",
 		VisionConstants.DEFAULT_VISION_FILTER,
 		LIMELIGHT_LEFT_CAMERA_ROBOT_POSE
 	);
 
-	public static final List<VisionSource<AprilTagVisionData>> VISION_SOURCES = List.of(LIMELIGHT_LEFT);
+	public static final VisionSource<AprilTagVisionData> LIMELIGHT_RIGHT = new DynamicSwitchingLimelight(
+		true,
+		"limelight-right",
+		VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
+		"limelight3gb-front",
+		VisionConstants.DEFAULT_VISION_FILTER,
+		LIMELIGHT_RIGHT_CAMERA_ROBOT_POSE
+	);
+
+	public static final List<VisionSource<AprilTagVisionData>> VISION_SOURCES = List.of(LIMELIGHT_LEFT, LIMELIGHT_RIGHT);
 
 }

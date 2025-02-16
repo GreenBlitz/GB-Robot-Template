@@ -53,34 +53,29 @@ public class ButtonDriverHelper {
 		L3_DISPLAY_PLACEMENT,
 		L4_DISPLAY_PLACEMENT};
 
-	private static final Pose2d[] LEFT_RIGHT_TOGGLE_PLACEMENTS = {
-			LEFT_TOGGLE_PLACEMENT,
-			RIGHT_TOGGLE_PLACEMENT,
-			HIDDEN_PLACEMENT
-	};
+	private static final Pose2d[] LEFT_RIGHT_TOGGLE_PLACEMENTS = {LEFT_TOGGLE_PLACEMENT, RIGHT_TOGGLE_PLACEMENT, HIDDEN_PLACEMENT};
 
 	public static void updateChosenReefSideIndex(ReefSide reefSide) {
 		chosenSideIndex = reefSide.getIndex();
 	}
 
-	public static void updateScoreLevelIndex(ScoreLevel scoreLevel){
+	public static void updateScoreLevelIndex(ScoreLevel scoreLevel) {
 		chosenScoreLevelIndex = scoreLevel.ordinal();
 	}
 
-	public static void updateLeftRightToggleIndexes(Branch branch){
-		if (branch.isLeft()){
+	public static void updateLeftRightToggleIndexes(Branch branch) {
+		if (branch.isLeft()) {
 			leftIndex = N0.instance.getNum();
 			rightIndex = N2.instance.getNum();
 			darkToggleIndex = N1.instance.getNum();
-		}
-		else{
+		} else {
 			leftIndex = N2.instance.getNum();
 			rightIndex = N1.instance.getNum();
 			darkToggleIndex = N0.instance.getNum();
 		}
 	}
 
-	public static Pose2d[] getDarkPlacementsDisplay(){
+	public static Pose2d[] getDarkPlacementsDisplay() {
 		updateChosenReefSideIndex(ScoringHelpers.getTargetReefSide());
 		updateScoreLevelIndex(ScoringHelpers.targetScoreLevel);
 		updateLeftRightToggleIndexes(ScoringHelpers.getTargetBranch());
@@ -88,14 +83,14 @@ public class ButtonDriverHelper {
 		Pose2d[] darkDisplay = new Pose2d[REEF_SIDES.length + SCORE_LEVEL_PLACEMENTS.length - N1.instance.getNum()];
 		int darkDisplayIndex = 0;
 
-		for (int index = 0; index < REEF_SIDES.length; index++){
-			if (index != chosenSideIndex){
+		for (int index = 0; index < REEF_SIDES.length; index++) {
+			if (index != chosenSideIndex) {
 				darkDisplay[darkDisplayIndex] = REEF_SIDES[index];
 				darkDisplayIndex++;
 			}
 		}
-		for (int index = 0; index < SCORE_LEVEL_PLACEMENTS.length; index++){
-			if (index != chosenScoreLevelIndex){
+		for (int index = 0; index < SCORE_LEVEL_PLACEMENTS.length; index++) {
+			if (index != chosenScoreLevelIndex) {
 				darkDisplay[darkDisplayIndex] = SCORE_LEVEL_PLACEMENTS[index];
 				darkDisplayIndex++;
 			}

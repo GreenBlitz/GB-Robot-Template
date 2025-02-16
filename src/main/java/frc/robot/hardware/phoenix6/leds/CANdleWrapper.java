@@ -38,7 +38,7 @@ public class CANdleWrapper extends CANdle {
 	}
 
 	public ErrorCode setColor(Color color, int startIndex, int amountOfLedsToAffect) {
-		return super.setLEDs((int) color.red, (int) color.green, (int) color.blue, 0, startIndex, amountOfLedsToAffect);
+		return super.setLEDs((int) (color.red * 255), (int) (color.green * 255), (int) (color.blue * 255), 100, startIndex, amountOfLedsToAffect);
 	}
 
 	public ErrorCode setColor(Color color, int startIndex) {
@@ -54,7 +54,7 @@ public class CANdleWrapper extends CANdle {
 	}
 
 	public ErrorCode setColor(java.awt.Color color, int startIndex, int amountOfLedsToAffect) {
-		return super.setLEDs(color.getRed(), color.getGreen(), color.getBlue(), 0, startIndex, amountOfLedsToAffect);
+		return super.setLEDs(color.getRed(), color.getGreen(), color.getBlue(), 100, startIndex, amountOfLedsToAffect);
 	}
 
 	public ErrorCode setColor(java.awt.Color color, int startIndex) {
@@ -75,6 +75,7 @@ public class CANdleWrapper extends CANdle {
 
 	public void log() {
 		Logger.recordOutput(logPath + "/isConnected", isConnected());
+		Logger.recordOutput(logPath + "/Temperature", getTemperature());
 	}
 
 }

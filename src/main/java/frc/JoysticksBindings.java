@@ -78,7 +78,7 @@ public class JoysticksBindings {
 //		usedJoystick.A.onTrue(robot.getSwerve().getCommandsBuilder().driveToPose(()->robot.getPoseEstimator().getEstimatedPose(),()-> ScoringHelpers.getRobotFeederPose(CoralStationSlot.R5,5)));
 //		usedJoystick.A.onTrue(robot.getSwerve().getCommandsBuilder().driveToPose(()->robot.getPoseEstimator().getEstimatedPose(), ()-> Field.getCoralStationSlotsPose2d(CoralStationSlot.L5)));
 		usedJoystick.A.onTrue(robot.getSwerve().getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CORAL_STATION_SLOTS)));
-
+		usedJoystick.B.onTrue(robot.getSwerve().getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

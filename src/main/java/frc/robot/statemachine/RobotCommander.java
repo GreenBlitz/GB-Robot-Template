@@ -52,17 +52,16 @@ public class RobotCommander extends GBSubsystem {
 	 * check if robot in place in y-axis its in parallel to the reef side.
 	 */
 	public boolean isAtReefScoringPose(
-		ScoreLevel scoreLevel,
-		Branch branch,
 		double scoringPoseDistanceFromReefMeters,
 		Pose2d l1Tolerances,
 		Pose2d l1Deadbands,
 		Pose2d tolerances,
 		Pose2d deadbands
 	) {
-		Rotation2d reefAngle = Field.getReefSideMiddle(branch.getReefSide()).getRotation();
+		Rotation2d reefAngle = Field.getReefSideMiddle(ScoringHelpers.getTargetBranch().getReefSide()).getRotation();
 
-		Pose2d reefRelativeTargetPose = ScoringHelpers.getRobotScoringPose(branch, scoringPoseDistanceFromReefMeters)
+		Pose2d reefRelativeTargetPose = ScoringHelpers
+			.getRobotBranchScoringPose(ScoringHelpers.getTargetBranch(), scoringPoseDistanceFromReefMeters)
 			.rotateBy(reefAngle.unaryMinus());
 		Pose2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus());
 
@@ -70,19 +69,14 @@ public class RobotCommander extends GBSubsystem {
 		ChassisSpeeds reefRelativeSpeeds = SwerveMath
 			.robotToAllianceRelativeSpeeds(allianceRelativeSpeeds, Field.getAllianceRelative(reefAngle.unaryMinus()));
 
-		return switch (scoreLevel) {
+		return switch (ScoringHelpers.targetScoreLevel) {
 			case L1 -> PoseUtil.isAtPose(reefRelativeRobotPose, reefRelativeTargetPose, reefRelativeSpeeds, l1Tolerances, l1Deadbands);
 			case L2, L3, L4 -> PoseUtil.isAtPose(reefRelativeRobotPose, reefRelativeTargetPose, reefRelativeSpeeds, tolerances, deadbands);
 		};
 	}
 
-	/**
-	 * Checks if robot close enough in y and x-axis so we can open superstructure.
-	 */
-	private boolean isReadyToOpenSuperstructure(ScoreLevel scoreLevel, Branch branch) {
+	private boolean isReadyToOpenSuperstructure() {
 		return isAtReefScoringPose(
-			scoreLevel,
-			branch,
 			StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS,
 			Tolerances.REEF_RELATIVE_L1_OPEN_SUPERSTRUCTURE_POSITION,
 			Tolerances.REEF_RELATIVE_L1_OPEN_SUPERSTRUCTURE_DEADBANDS,
@@ -91,21 +85,25 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	/**
-	 * Checks if elevator and arm in place and is robot at pose but relative to target branch. Y-axis is vertical to the branch. X-axis is
-	 * horizontal to the branch So when you check if robot in place in y-axis its in parallel to the reef side.
-	 */
-	private boolean isPreScoreReady(ScoreLevel scoreLevel, Branch branch) {
-		return superstructure.isPreScoreReady(scoreLevel)
+	private boolean isPreScoreReady() {
+		return superstructure.isPreScoreReady()
 			&& isAtReefScoringPose(
-				scoreLevel,
-				branch,
 				StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS,
 				Tolerances.REEF_RELATIVE_L1_SCORING_POSITION,
 				Tolerances.REEF_RELATIVE_L1_SCORING_DEADBANDS,
 				Tolerances.REEF_RELATIVE_SCORING_POSITION,
 				Tolerances.REEF_RELATIVE_SCORING_DEADBANDS
 			);
+	}
+
+	public boolean isReadyToScore() {
+		return superstructure.isReadyToScore() && isAtReefScoringPose(
+				StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS,
+				Tolerances.REEF_RELATIVE_L1_SCORING_POSITION,
+				Tolerances.REEF_RELATIVE_L1_SCORING_DEADBANDS,
+				Tolerances.REEF_RELATIVE_SCORING_POSITION,
+				Tolerances.REEF_RELATIVE_SCORING_DEADBANDS
+		);
 	}
 
 	public Command setState(RobotState state) {
@@ -119,6 +117,30 @@ public class RobotCommander extends GBSubsystem {
 			case SCORE_WITHOUT_RELEASE -> scoreWithoutRelease();
 			case SCORE -> score();
 		};
+	}
+
+	public Command fullyScore() {
+			return new SequentialCommandGroup(
+				armPreScore().until(this::isReadyToOpenSuperstructure),
+				preScore().until(this::isPreScoreReady),
+				scoreWithoutRelease().until(this::isReadyToScore),
+				score()
+			);
+	}
+
+	public Command scoreForButton() {
+		return new SequentialCommandGroup(
+			scoreWithoutRelease().until(this::isReadyToScore),
+			score()
+		);
+	}
+
+	public Command fullyPreScore() {
+		return new SequentialCommandGroup(
+			armPreScore().until(this::isReadyToOpenSuperstructure),
+			preScore().until(this::isPreScoreReady),
+			scoreWithoutRelease()
+		);
 	}
 
 	private Command drive() {

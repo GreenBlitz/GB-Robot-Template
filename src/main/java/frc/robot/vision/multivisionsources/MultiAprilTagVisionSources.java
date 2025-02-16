@@ -144,7 +144,7 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 				seenApriltags.add(aprilTagID);
 			});
 		}
-		for(Integer aprilTagID : lastSeenApriltags) {
+		for (Integer aprilTagID : lastSeenApriltags) {
 			if (!seenApriltags.contains(aprilTagID)) {
 				Logger.recordOutput(logPath + "targets/" + aprilTagID, (Pose2d) null);
 			}

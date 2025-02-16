@@ -14,6 +14,18 @@ import org.littletonrobotics.junction.Logger;
 
 public class ButtonDriverHelper {
 
+	private enum LeftRightTogglePlacements {
+		LEFT_TOGGLE_PLACEMENT(Field.getAllianceRelative(new Pose2d(LEFT_RIGHT_TOGGLE_X_AXIS, 4.55, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT)),
+		RIGHT_TOGGLE_PLACEMENT(Field.getAllianceRelative(new Pose2d(LEFT_RIGHT_TOGGLE_X_AXIS, 3.55, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT)),
+		HIDDEN_PLACEMENT(new Pose2d(-10, -10, Rotation2d.fromDegrees(90)));
+
+		private final Pose2d placement;
+		LeftRightTogglePlacements(Pose2d placement){
+			this.placement = placement;
+		}
+
+	}
+
 	private static final double DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS = 0.45;
 	private static final double SCORE_LEVEL_Y_AXIS = 6.85;
 	private static final double LEFT_RIGHT_TOGGLE_X_AXIS = 7.22;
@@ -26,12 +38,6 @@ public class ButtonDriverHelper {
 		.getAllianceRelative(new Pose2d(5.88, SCORE_LEVEL_Y_AXIS, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
 	private static final Pose2d L4_DISPLAY_PLACEMENT = Field
 		.getAllianceRelative(new Pose2d(7.22, SCORE_LEVEL_Y_AXIS, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
-
-	private static final Pose2d LEFT_TOGGLE_PLACEMENT = Field
-		.getAllianceRelative(new Pose2d(LEFT_RIGHT_TOGGLE_X_AXIS, 4.55, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
-	private static final Pose2d RIGHT_TOGGLE_PLACEMENT = Field
-		.getAllianceRelative(new Pose2d(LEFT_RIGHT_TOGGLE_X_AXIS, 3.55, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
-	private static final Pose2d HIDDEN_PLACEMENT = new Pose2d(-10, -10, Rotation2d.fromDegrees(90));
 
 	private static int chosenSideIndex = 0;
 	private static int chosenScoreLevelIndex = 0;
@@ -53,8 +59,6 @@ public class ButtonDriverHelper {
 		L3_DISPLAY_PLACEMENT,
 		L4_DISPLAY_PLACEMENT};
 
-	private static final Pose2d[] LEFT_RIGHT_TOGGLE_PLACEMENTS = {LEFT_TOGGLE_PLACEMENT, RIGHT_TOGGLE_PLACEMENT, HIDDEN_PLACEMENT};
-
 	public static void updateChosenReefSideIndex(ReefSide reefSide) {
 		chosenSideIndex = reefSide.getIndex();
 	}
@@ -65,13 +69,13 @@ public class ButtonDriverHelper {
 
 	public static void updateLeftRightToggleIndexes(Branch branch) {
 		if (branch.isLeft()) {
-			leftIndex = N0.instance.getNum();
-			rightIndex = N2.instance.getNum();
-			darkToggleIndex = N1.instance.getNum();
+			leftIndex = LeftRightTogglePlacements.LEFT_TOGGLE_PLACEMENT.ordinal();
+			rightIndex = LeftRightTogglePlacements.HIDDEN_PLACEMENT.ordinal();
+			darkToggleIndex = LeftRightTogglePlacements.RIGHT_TOGGLE_PLACEMENT.ordinal();
 		} else {
-			leftIndex = N2.instance.getNum();
-			rightIndex = N1.instance.getNum();
-			darkToggleIndex = N0.instance.getNum();
+			leftIndex = LeftRightTogglePlacements.HIDDEN_PLACEMENT.ordinal();
+			rightIndex = LeftRightTogglePlacements.RIGHT_TOGGLE_PLACEMENT.ordinal();
+			darkToggleIndex = LeftRightTogglePlacements.LEFT_TOGGLE_PLACEMENT.ordinal();
 		}
 	}
 
@@ -80,7 +84,7 @@ public class ButtonDriverHelper {
 		updateScoreLevelIndex(ScoringHelpers.targetScoreLevel);
 		updateLeftRightToggleIndexes(ScoringHelpers.getTargetBranch());
 
-		Pose2d[] darkDisplay = new Pose2d[REEF_SIDES.length + SCORE_LEVEL_PLACEMENTS.length - N1.instance.getNum()];
+		Pose2d[] darkDisplay = new Pose2d[REEF_SIDES.length + SCORE_LEVEL_PLACEMENTS.length - 1];
 		int darkDisplayIndex = 0;
 
 		for (int index = 0; index < REEF_SIDES.length; index++) {
@@ -95,7 +99,7 @@ public class ButtonDriverHelper {
 				darkDisplayIndex++;
 			}
 		}
-		darkDisplay[darkDisplayIndex] = LEFT_RIGHT_TOGGLE_PLACEMENTS[darkToggleIndex];
+		darkDisplay[darkDisplayIndex] = LeftRightTogglePlacements.values()[darkToggleIndex].placement;
 
 		return darkDisplay;
 	}
@@ -112,8 +116,8 @@ public class ButtonDriverHelper {
 		Logger.recordOutput(logPath + "/DarkDisplay", getDarkPlacementsDisplay());
 		Logger.recordOutput(logPath + "/ChosenReefSide", REEF_SIDES[chosenSideIndex]);
 		Logger.recordOutput(logPath + "/ChosenScoreLevel", SCORE_LEVEL_PLACEMENTS[chosenScoreLevelIndex]);
-		Logger.recordOutput(logPath + "/LeftToggle", LEFT_RIGHT_TOGGLE_PLACEMENTS[leftIndex]);
-		Logger.recordOutput(logPath + "/RightToggle", LEFT_RIGHT_TOGGLE_PLACEMENTS[rightIndex]);
+		Logger.recordOutput(logPath + "/LeftToggle", LeftRightTogglePlacements.values()[leftIndex].placement);
+		Logger.recordOutput(logPath + "/RightToggle", LeftRightTogglePlacements.values()[rightIndex].placement);
 	}
 
 }

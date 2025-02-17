@@ -1,11 +1,7 @@
 package frc.robot.statemachine.superstructure;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.DeferredCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.StateMachineConstants;
@@ -80,7 +76,7 @@ public class Superstructure extends GBSubsystem {
 	@Override
 	protected void subsystemPeriodic() {
 		log();
-		Logger.recordOutput("isPastPosition",  robot.getArm().isPastPosition(ArmState.CLOSED.getPosition()));
+		Logger.recordOutput("isAtPosition",  robot.getArm().isAtPosition(ArmState.CLOSED.getPosition(), Tolerances.ARM_POSITION));
 	}
 
 	private void log() {
@@ -195,14 +191,19 @@ public class Superstructure extends GBSubsystem {
 	public Command closeAfterScore() {
 		return new DeferredCommand(() -> switch (ScoringHelpers.targetScoreLevel) {
 			case L4 ->
-				new ParallelCommandGroup(
-					armStateHandler.setState(ArmState.CLOSED),
-					new SequentialCommandGroup(
-						elevatorStateHandler.setState(ElevatorState.PRE_L4)
-							.until(() -> robot.getArm().isPastPosition(ArmState.CLOSED.getPosition())),
+//				new ParallelCommandGroup(
+//					new InstantCommand(() -> Logger.recordOutput("Close After Score", true)),
+//					armStateHandler.setState(ArmState.CLOSED),
+//					new SequentialCommandGroup(
+//						elevatorStateHandler.setState(ElevatorState.PRE_L4)
+//							.until(() -> robot.getArm().isAtPosition(ArmState.CLOSED.getPosition(), Tolerances.ARM_POSITION)),
+//						elevatorStateHandler.setState(ElevatorState.CLOSED)
+//					),
+//					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+//				);
+				new SequentialCommandGroup(
+						armStateHandler.setState(ArmState.CLOSED).until(() -> robot.getArm().isAtPosition(ArmState.CLOSED.getPosition(), Tolerances.ARM_POSITION)),
 						elevatorStateHandler.setState(ElevatorState.CLOSED)
-					),
-					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
 				);
 			case L1, L2, L3 -> preScore();
 		}, Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector()));

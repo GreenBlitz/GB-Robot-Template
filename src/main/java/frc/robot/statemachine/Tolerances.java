@@ -32,6 +32,6 @@ public class Tolerances {
 		Field.REEF_SIDE_LENGTH_METERS / 2.0,
 		Rotation2d.fromDegrees(3)
 	);
-	public static final Pose2d REEF_RELATIVE_SUPERSTRUCTURE_L1_OPEN_DEADBANDS = new Pose2d(4, 1, Rotation2d.fromRadians(0.1));
+	public static final Pose2d REEF_RELATIVE_L1_OPEN_SUPERSTRUCTURE_DEADBANDS = new Pose2d(4, 1, Rotation2d.fromRadians(0.1));
 
 }

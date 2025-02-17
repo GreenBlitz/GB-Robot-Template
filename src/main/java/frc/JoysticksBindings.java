@@ -83,7 +83,7 @@ public class JoysticksBindings {
 		usedJoystick.POV_UP.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4));
 		usedJoystick.POV_LEFT.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L3));
 		usedJoystick.POV_RIGHT.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L2));
-		usedJoystick.POV_DOWN.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L1));\][]
+		usedJoystick.POV_DOWN.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L1));
 	}
 
 

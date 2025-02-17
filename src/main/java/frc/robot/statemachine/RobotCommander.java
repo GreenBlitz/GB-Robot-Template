@@ -10,6 +10,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.constants.field.Field;
+import frc.constants.field.enums.Branch;
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.scoringhelpers.ScoringHelpers;
@@ -24,6 +25,7 @@ import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public class RobotCommander extends GBSubsystem {
 	
@@ -320,7 +322,7 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 	
-	private PathPlannerPath getPathByTargetBranch() {
+	private PathPlannerPath getPathByTargetBranch(Branch branch) {
 		try {
 			return PathPlannerPath.fromPathFile("a");
 		} catch (IOException e) {
@@ -330,13 +332,32 @@ public class RobotCommander extends GBSubsystem {
 		}
 	}
 	
-	public Command driveToReef() {
+	public Command scoreSequence() {
 		
-		return asSubsystemCommand(AutoBuilder.pathfindThenFollowPath(
-						getPathByTargetBranch(),
-						AutonomousConstants.REAL_TIME_CONSTRAINTS
+		Supplier<Branch> targetBranchSupplier = ScoringHelpers::getTargetBranch;
+		
+		return asSubsystemCommand(
+				new DeferredCommand(
+						() -> Commands.parallel(
+								AutoBuilder.pathfindThenFollowPath(
+										getPathByTargetBranch(targetBranchSupplier.get()),
+										AutonomousConstants.REAL_TIME_CONSTRAINTS
+								),
+								Commands.sequence(
+										superstructure.armPreScore()
+												.until(() ->
+														isAtReefScoringPose(
+																StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS,
+																Tolerances.REEF_RELATIVE_OPEN_SUPERSTRUCTURE_POSITION.getTranslation()
+														)
+												),
+										superstructure.preScore().until(this::isPreScoreReady),
+										superstructure.scoreWithRelease()
+								)
+						).until(superstructure::isCoralOut),
+						Set.of(superstructure, this, swerve)
 				),
-				"pathfindThenFollowPath"
+				"score seq"
 		);
 	}
 	

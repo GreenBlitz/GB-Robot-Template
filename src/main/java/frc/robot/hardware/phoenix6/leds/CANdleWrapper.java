@@ -27,7 +27,7 @@ public class CANdleWrapper extends CANdle {
 	}
 
 	public void applyConfiguration(CANdleConfiguration configuration, int numberOfTries) {
-		if (Phoenix6Util.checkWithRetry(() -> configAllSettings(configuration), numberOfTries) != ErrorCode.OK) {
+		if (Phoenix6Util.checkErrorCodeWithRetry(() -> configAllSettings(configuration), numberOfTries) != ErrorCode.OK) {
 			new Alert(Alert.AlertType.ERROR, logPath + "/ConfigurationFailed").report();
 		}
 	}

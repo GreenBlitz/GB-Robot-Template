@@ -169,7 +169,9 @@ public class KrakenX60ArmBuilder {
 		CANcoder canCoder = new CANcoder(IDs.CANCodersIDs.ARM.id(), IDs.CANCodersIDs.ARM.busChain().getChainName());
 		CANCoderEncoder encoder = new CANCoderEncoder(logPath + "/Encoder", canCoder);
 		CANcoderConfiguration configuration = buildEncoderConfig(encoder);
-		if (!Phoenix6Util.checkWithRetry(() -> encoder.getDevice().getConfigurator().apply(configuration), APPLY_CONFIG_RETRIES).isOK()) {
+		if (
+			!Phoenix6Util.checkStatusCodeWithRetry(() -> encoder.getDevice().getConfigurator().apply(configuration), APPLY_CONFIG_RETRIES).isOK()
+		) {
 			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
 		}
 

@@ -4,25 +4,15 @@ import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 
+import java.util.function.Supplier;
+
 public class Phoenix6Util {
-
-	public interface StatusCodeSupplier {
-
-		StatusCode get();
-
-	}
-
-	public interface ErrorCodeSupplier {
-
-		ErrorCode get();
-
-	}
 
 	public static <T> StatusSignal<T> getRefreshedSignal(boolean refresh, StatusSignal<T> signal) {
 		return refresh ? signal.refresh() : signal;
 	}
 
-	public static StatusCode checkWithRetry(StatusCodeSupplier statusCodeSupplier, int numberOfTries) {
+	public static StatusCode checkStatusCodeWithRetry(Supplier<StatusCode> statusCodeSupplier, int numberOfTries) {
 		for (int i = 0; i < numberOfTries - 1; i++) {
 			if (statusCodeSupplier.get().isOK()) {
 				return StatusCode.OK;
@@ -31,7 +21,7 @@ public class Phoenix6Util {
 		return statusCodeSupplier.get();
 	}
 
-	public static ErrorCode checkWithRetry(ErrorCodeSupplier errorCodeSupplier, int numberOfTries) {
+	public static ErrorCode checkErrorCodeWithRetry(Supplier<ErrorCode> errorCodeSupplier, int numberOfTries) {
 		for (int i = 0; i < numberOfTries - 1; i++) {
 			if (errorCodeSupplier.get() == ErrorCode.OK) {
 				return ErrorCode.OK;

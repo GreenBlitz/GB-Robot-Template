@@ -1,12 +1,15 @@
 package frc;
 
 import com.ctre.phoenix.led.RgbFadeAnimation;
+import com.ctre.phoenix.led.SingleFadeAnimation;
 import com.ctre.phoenix.led.StrobeAnimation;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
@@ -121,10 +124,18 @@ public class JoysticksBindings {
 		// bindings...
 //robot.getElevator().applyCalibrationBindings(usedJoystick);
 		
-		Trigger t = new Trigger(DriverStation::isDisabled);
+		Trigger t = new Trigger(DriverStation::isAutonomous);
 		t.onTrue(new InstantCommand(() -> robot.caNdleWrapper.animate(new StrobeAnimation(255,0,0)),robot.ledStateHandler));
 		usedJoystick.POV_LEFT.onTrue(new InstantCommand(() -> robot.caNdleWrapper.animate(new RgbFadeAnimation(100,0.1,10)), robot.ledStateHandler));
 		usedJoystick.POV_RIGHT.onTrue(new InstantCommand(() -> robot.caNdleWrapper.animate(new StrobeAnimation(0, 200, 0)), robot.ledStateHandler));
+		usedJoystick.POV_UP.onTrue(
+				Commands.parallel(
+						new InstantCommand(() -> robot.caNdleWrapper.animate(new SingleFadeAnimation(0, 0, 200)), robot.ledStateHandler),
+						new WaitCommand(1)
+				).andThen(
+						robot.ledStateHandler.setState(LEDState.IDLE)
+				)
+		);
 		
 		usedJoystick.B.onTrue(robot.ledStateHandler.setState(LEDState.HAS_CORAL));
 			}

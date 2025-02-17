@@ -15,7 +15,8 @@ public class LEDStateHandler extends GBSubsystem {
     }
 
     public Command setState(LEDState state){
-        return new InstantCommand(() -> candle.animate(state.animation),this);
+        Command command = new InstantCommand(() -> candle.animate(state.animation),this).ignoringDisable(true);
+		return command;
     }
 
 

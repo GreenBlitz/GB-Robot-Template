@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
+import frc.robot.hardware.phoenix6.leds.CANdleWrapper;
+import frc.robot.led.LEDStateHandler;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
 import frc.robot.scoringhelpers.ButtonDriverHelper;
 import frc.robot.vision.VisionConstants;
@@ -61,6 +63,9 @@ public class Robot {
 
 	private final SimulationManager simulationManager;
 	private final RobotCommander robotCommander;
+	
+	public final CANdleWrapper caNdleWrapper;
+	public final LEDStateHandler ledStateHandler;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -121,6 +126,9 @@ public class Robot {
 
 		this.simulationManager = new SimulationManager("SimulationManager", this);
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
+		
+		this.caNdleWrapper = new CANdleWrapper(0,10,"candle");
+		this.ledStateHandler = new LEDStateHandler("aaaa", caNdleWrapper);
 	}
 
 	public void periodic() {

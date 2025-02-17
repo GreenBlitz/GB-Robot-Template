@@ -1,6 +1,10 @@
 package frc;
 
+import com.ctre.phoenix.led.RgbFadeAnimation;
+import com.ctre.phoenix.led.StrobeAnimation;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -8,6 +12,9 @@ import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
+import frc.robot.hardware.digitalinput.IDigitalInput;
+import frc.robot.hardware.digitalinput.chooser.ChooserDigitalInput;
+import frc.robot.led.LEDState;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.RobotState;
 import frc.robot.statemachine.superstructure.ScoreLevel;
@@ -112,10 +119,16 @@ public class JoysticksBindings {
 	private static void fourthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = FOURTH_JOYSTICK;
 		// bindings...
-		robot.getElevator().applyCalibrationBindings(usedJoystick);
-	}
-
-	private static void fifthJoystickButtons(Robot robot) {
+//robot.getElevator().applyCalibrationBindings(usedJoystick);
+		
+		Trigger t = new Trigger(DriverStation::isDisabled);
+		t.onTrue(new InstantCommand(() -> robot.caNdleWrapper.animate(new StrobeAnimation(255,0,0)),robot.ledStateHandler));
+		usedJoystick.POV_LEFT.onTrue(new InstantCommand(() -> robot.caNdleWrapper.animate(new RgbFadeAnimation(100,0.1,10)), robot.ledStateHandler));
+		usedJoystick.POV_RIGHT.onTrue(new InstantCommand(() -> robot.caNdleWrapper.animate(new StrobeAnimation(0, 200, 0)), robot.ledStateHandler));
+		
+		usedJoystick.B.onTrue(robot.ledStateHandler.setState(LEDState.HAS_CORAL));
+			}
+private static void fifthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = FIFTH_JOYSTICK;
 		// bindings...
 		robot.getArm().applyCalibrationBindings(usedJoystick);

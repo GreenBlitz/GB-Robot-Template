@@ -125,19 +125,19 @@ public class Robot {
 
 		this.simulationManager = new SimulationManager("SimulationManager", this);
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
-		
+
 		configPathPlanner();
 	}
-	
+
 	public void configPathPlanner() {
 		swerve.configPathPlanner(
-				poseEstimator::getEstimatedPose,
-				poseEstimator::resetPose,
-				PathPlannerUtil.getGuiRobotConfig()
-						.orElse(new RobotConfig(70, 0.0001, new ModuleConfig(0.048, 5.24, 0.96, DCMotor.getKrakenX60Foc(1), 60, 1), 0.577))
+			poseEstimator::getEstimatedPose,
+			poseEstimator::resetPose,
+			PathPlannerUtil.getGuiRobotConfig()
+				.orElse(new RobotConfig(70, 0.0001, new ModuleConfig(0.048, 5.24, 0.96, DCMotor.getKrakenX60Foc(1), 60, 1), 0.577))
 		);
 	}
-	
+
 	public void periodic() {
 		swerve.update();
 		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());

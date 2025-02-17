@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 public class StateMachineConstants {
 
-	public static final double ROBOT_SCORING_DISTANCE_FROM_REEF_METERS = 0.5;
+	public static final double ROBOT_SCORING_DISTANCE_FROM_REEF_METERS = 0.55;
 	public static final double OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS = 1.3;
 	public static final double CLOSE_SUPERSTRUCTURE_DISTANCE_FROM_BRANCH_METERS = ROBOT_SCORING_DISTANCE_FROM_REEF_METERS + 0.3;
 

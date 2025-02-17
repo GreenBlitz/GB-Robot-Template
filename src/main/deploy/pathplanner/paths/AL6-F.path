@@ -33,8 +33,14 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
+      "name": "ARM_PRE_SCORE",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
       "name": "PRE_SCORE",
-      "waypointRelativePos": 0.8962800875273519,
+      "waypointRelativePos": 0.9,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -52,7 +58,7 @@
     "rotation": 119.99999999999999
   },
   "reversed": false,
-  "folder": null,
+  "folder": "from auto line",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 152.0

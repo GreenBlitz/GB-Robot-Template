@@ -34,13 +34,13 @@
   "eventMarkers": [
     {
       "name": "ARM_PRE_SCORE",
-      "waypointRelativePos": 0.21531728665207533,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
       "name": "PRE_SCORE",
-      "waypointRelativePos": 0.7544857768052495,
+      "waypointRelativePos": 0.85,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -58,7 +58,7 @@
     "rotation": 119.99999999999999
   },
   "reversed": false,
-  "folder": null,
+  "folder": "from coral station",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 54.0

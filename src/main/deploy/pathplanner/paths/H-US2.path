@@ -49,14 +49,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "ARM_PRE_SCORE",
-      "waypointRelativePos": 0.20656455142232066,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
       "name": "INTAKE",
-      "waypointRelativePos": 1.6945295404814018,
+      "waypointRelativePos": 0.15,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -74,7 +68,7 @@
     "rotation": -54.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "to coral station",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0

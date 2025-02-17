@@ -15,7 +15,6 @@ import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.pose.PoseUtil;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 
@@ -102,11 +101,12 @@ public class RobotCommander extends GBSubsystem {
 		Rotation2d reefAngle = Field.getReefSideMiddle(ScoringHelpers.getTargetBranch().getReefSide()).getRotation();
 
 		Translation2d reefRelativeReefSideMiddle = Field.getReefSideMiddle(ScoringHelpers.getTargetBranch().getReefSide())
-				.rotateBy(reefAngle.unaryMinus())
-				.getTranslation();
+			.rotateBy(reefAngle.unaryMinus())
+			.getTranslation();
 		Translation2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus()).getTranslation();
 
-		return !PoseUtil.isAtTranslation(reefRelativeRobotPose, reefRelativeReefSideMiddle, StateMachineConstants.CLOSE_SUPERSTRUCTURE_LENGTH_AND_WIDTH);
+		return !PoseUtil
+			.isAtTranslation(reefRelativeRobotPose, reefRelativeReefSideMiddle, StateMachineConstants.CLOSE_SUPERSTRUCTURE_LENGTH_AND_WIDTH);
 	}
 
 	public boolean isReadyToScore() {
@@ -229,30 +229,24 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	private Command closeAfterScore() {
-		return new DeferredCommand(
-				() -> switch (ScoringHelpers.targetScoreLevel){
-					case L4 -> new SequentialCommandGroup(
-							new ParallelDeadlineGroup(
-									superstructure.closeL4AfterScore(),
-									swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
-							),
-							drive()
-					);
-					case L1, L2, L3 -> new SequentialCommandGroup(
-							new ParallelCommandGroup(
-									superstructure.preScore(),
-									swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
-							).until(this::isReadyToCloseSuperstructure),
-							drive()
-					);
-				},
-				Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
-		);
-	}
-
-	@Override
-	protected void subsystemPeriodic() {
-		Logger.recordOutput("isReadyToCloseSupersturcture", isReadyToCloseSuperstructure());
+		return new DeferredCommand(() -> switch (ScoringHelpers.targetScoreLevel) {
+			case L4 ->
+				new SequentialCommandGroup(
+					new ParallelDeadlineGroup(
+						superstructure.closeL4AfterScore(),
+						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+					),
+					drive()
+				);
+			case L1, L2, L3 ->
+				new SequentialCommandGroup(
+					new ParallelCommandGroup(
+						superstructure.preScore(),
+						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+					).until(this::isReadyToCloseSuperstructure),
+					drive()
+				);
+		}, Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector()));
 	}
 
 	private Command asSubsystemCommand(Command command, RobotState state) {

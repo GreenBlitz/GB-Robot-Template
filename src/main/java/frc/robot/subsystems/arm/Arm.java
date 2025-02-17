@@ -29,8 +29,6 @@ public class Arm extends GBSubsystem {
 	private final SysIdCalibrator sysIdCalibrator;
 	private Rotation2d reversedSoftLimit;
 
-	public int counter = 0;
-
 	public Arm(
 		String logPath,
 		ControllableMotor motor,
@@ -85,8 +83,6 @@ public class Arm extends GBSubsystem {
 	private void log() {
 		Logger.recordOutput(getLogPath() + "/ReversedSoftLimit", reversedSoftLimit);
 		Logger.recordOutput(getLogPath() + "/TargetPose", positionRequest.getSetPoint());
-
-		Logger.recordOutput(getLogPath() + "/timesIsPastWasTrue", counter);
 	}
 
 	public void setReversedSoftLimit(Rotation2d reversedSoftLimit) {
@@ -138,12 +134,7 @@ public class Arm extends GBSubsystem {
 	}
 
 	public boolean isPastPosition(Rotation2d position) {
-		Logger.recordOutput("isPast", motorPositionSignal.isGreater(position));
-		if (motorPositionSignal.isGreater(position)) {
-			counter++;
-			return true;
-		}
-		return false;
+		return motorPositionSignal.isGreater(position);
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick) {

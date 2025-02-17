@@ -13,6 +13,7 @@ import frc.RobotManager;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.AutosBuilder;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
+import frc.robot.scoringhelpers.ButtonDriverHelper;
 import frc.robot.vision.VisionConstants;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -217,6 +218,7 @@ public class Robot {
 		BusChain.logChainsStatuses();
 		simulationManager.logPoses();
 		ScoringHelpers.log("Scoring");
+		ButtonDriverHelper.log("Scoring/ButtonDriverDisplay");
 
 		CommandScheduler.getInstance().run(); // Should be last
 	}

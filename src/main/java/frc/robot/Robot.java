@@ -149,7 +149,7 @@ public class Robot {
 					.andThen(
 						robotCommander.getSuperstructure()
 							.preScore()
-							.until(() -> robotCommander.getSuperstructure().isPreScoreReady(ScoreLevel.L4))
+							.until(() -> robotCommander.getSuperstructure().isPreScoreReady())
 					)
 			)
 			.asProxy();

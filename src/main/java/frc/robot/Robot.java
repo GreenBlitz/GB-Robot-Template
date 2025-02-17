@@ -62,13 +62,8 @@ public class Robot {
 	private final SimulationManager simulationManager;
 	private final RobotCommander robotCommander;
 
-	private final CANdleWrapper ledStrip;
-
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
-
-		ledStrip = new CANdleWrapper(IDs.CANDLE, 23, "LEDs");
-		ledStrip.configLOSBehavior(true);
 
 		IGyro gyro = GyroFactory.createGyro(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(
@@ -150,8 +145,6 @@ public class Robot {
 		simulationManager.logPoses();
 		ScoringHelpers.log("Scoring");
 
-		ledStrip.log();
-
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 
@@ -181,10 +174,6 @@ public class Robot {
 
 	public RobotCommander getRobotCommander() {
 		return robotCommander;
-	}
-
-	public CANdleWrapper getLedStrip() {
-		return ledStrip;
 	}
 
 }

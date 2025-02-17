@@ -191,20 +191,16 @@ public class Superstructure extends GBSubsystem {
 	public Command closeAfterScore() {
 		return new DeferredCommand(() -> switch (ScoringHelpers.targetScoreLevel) {
 			case L4 ->
-//				new ParallelCommandGroup(
-//					new InstantCommand(() -> Logger.recordOutput("Close After Score", true)),
-//					armStateHandler.setState(ArmState.CLOSED),
-//					new SequentialCommandGroup(
-//						elevatorStateHandler.setState(ElevatorState.PRE_L4)
-//							.until(() -> robot.getArm().isAtPosition(ArmState.CLOSED.getPosition(), Tolerances.ARM_POSITION)),
-//						elevatorStateHandler.setState(ElevatorState.CLOSED)
-//					),
-//					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
-//				);
-				new SequentialCommandGroup(
-						armStateHandler.setState(ArmState.CLOSED).until(() -> robot.getArm().isAtPosition(ArmState.CLOSED.getPosition(), Tolerances.ARM_POSITION)),
+				new ParallelCommandGroup(
+					new InstantCommand(() -> Logger.recordOutput("Close After Score", true)),
+					armStateHandler.setState(ArmState.CLOSED),
+					new SequentialCommandGroup(
+						elevatorStateHandler.setState(ElevatorState.PRE_L4)
+							.until(() -> robot.getArm().isAtPosition(ArmState.CLOSED.getPosition(), Tolerances.ARM_POSITION)),
 						elevatorStateHandler.setState(ElevatorState.CLOSED)
-				);
+					),
+					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+				).until(() -> elevatorStateHandler.getCurrentState() == ElevatorState.CLOSED);
 			case L1, L2, L3 -> preScore();
 		}, Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector()));
 	}

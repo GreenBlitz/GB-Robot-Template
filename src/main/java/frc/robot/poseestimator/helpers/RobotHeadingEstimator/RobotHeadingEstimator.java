@@ -43,7 +43,7 @@ public class RobotHeadingEstimator {
 	}
 
 	public void updateByGyroReset(Rotation2d newGyroHeading) {
-		Rotation2d differenceInGyroAngle = newGyroHeading.minus(lastGyroAngle);
+		Rotation2d differenceInGyroAngle = AngleMath.getAngleDifference(newGyroHeading, lastGyroAngle);
 		lastGyroAngle = newGyroHeading;
 		reset(estimatedHeading.plus(differenceInGyroAngle));
 	}

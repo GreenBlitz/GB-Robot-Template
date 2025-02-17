@@ -146,11 +146,7 @@ public class Robot {
 			.andThen(
 				robotCommander.getSuperstructure()
 					.scoreWithRelease()
-					.andThen(
-						robotCommander.getSuperstructure()
-							.preScore()
-							.until(() -> robotCommander.getSuperstructure().isPreScoreReady())
-					)
+					.andThen(robotCommander.getSuperstructure().preScore().until(() -> robotCommander.getSuperstructure().isPreScoreReady()))
 			)
 			.asProxy();
 		Supplier<Command> intakingCommand = () -> robotCommander.getSuperstructure().intake().asProxy();

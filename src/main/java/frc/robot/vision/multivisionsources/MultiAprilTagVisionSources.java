@@ -32,7 +32,6 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 
 	private final Supplier<Rotation2d> robotHeadingSupplier;
 	private boolean useRobotHeadingForPoseEstimating;
-	private final List<Integer> lastSeenApriltags;
 
 	public MultiAprilTagVisionSources(
 		String logPath,
@@ -42,7 +41,6 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	) {
 		super(logPath, visionSources);
 		this.robotHeadingSupplier = robotHeadingSupplier;
-		this.lastSeenApriltags = new ArrayList<>();
 		setUseRobotHeadingForPoseEstimating(useRobotHeadingForPoseEstimating);
 	}
 

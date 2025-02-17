@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.Phoenix6Util;
 import frc.utils.alerts.Alert;
-import org.littletonrobotics.junction.Logger;
 
 public class CANdleWrapper extends CANdle {
 
@@ -38,7 +37,14 @@ public class CANdleWrapper extends CANdle {
 	}
 
 	public ErrorCode setColor(Color color, int startIndex, int amountOfLedsToAffect) {
-		return super.setLEDs((int) (color.red * 255), (int) (color.green * 255), (int) (color.blue * 255), 100, startIndex, amountOfLedsToAffect);
+		return super.setLEDs(
+			(int) (color.red * 255),
+			(int) (color.green * 255),
+			(int) (color.blue * 255),
+			100,
+			startIndex,
+			amountOfLedsToAffect
+		);
 	}
 
 	public ErrorCode setColor(Color color, int startIndex) {
@@ -69,19 +75,19 @@ public class CANdleWrapper extends CANdle {
 		return setColor(color, 0);
 	}
 
-	public ErrorCode clear(int startIndex, int amountOfLedsToAffect){
+	public ErrorCode clear(int startIndex, int amountOfLedsToAffect) {
 		return setColor(java.awt.Color.BLACK);
 	}
 
-	public ErrorCode clear(int startIndex){
+	public ErrorCode clear(int startIndex) {
 		return clear(startIndex, numberOfLeds - startIndex);
 	}
 
-	public ErrorCode clear(double amountOfLedsToAffect){
+	public ErrorCode clear(double amountOfLedsToAffect) {
 		return clear(0, (int) amountOfLedsToAffect);
 	}
 
-	public ErrorCode clear(){
+	public ErrorCode clear() {
 		return clear(0);
 	}
 

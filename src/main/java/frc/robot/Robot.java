@@ -67,7 +67,7 @@ public class Robot {
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 
-		ledStrip = new CANdleWrapper(IDs.CANDLE, 23,  "LEDs");
+		ledStrip = new CANdleWrapper(IDs.CANDLE, 23, "LEDs");
 		ledStrip.configLOSBehavior(true);
 
 		IGyro gyro = GyroFactory.createGyro(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
@@ -126,7 +126,6 @@ public class Robot {
 
 		this.simulationManager = new SimulationManager("SimulationManager", this);
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
-
 	}
 
 	public void periodic() {
@@ -184,7 +183,7 @@ public class Robot {
 		return robotCommander;
 	}
 
-	public CANdleWrapper getLedStrip(){
+	public CANdleWrapper getLedStrip() {
 		return ledStrip;
 	}
 

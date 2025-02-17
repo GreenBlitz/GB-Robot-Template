@@ -185,6 +185,16 @@ public class SwerveCommandsBuilder {
 			Set.of(swerve)
 		);
 	}
+	
+	public Command pathToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose){
+		return swerve.asSubsystemCommand(
+				new DeferredCommand(
+						() -> pathToPose(currentPose.get(), targetPose.get()),
+						Set.of(swerve)
+				),
+				"path to pose: " + targetPose.get().toString()
+		);
+	}
 
 	private Command pathToPose(Pose2d currentPose, Pose2d targetPose) {
 		Command pathFollowingCommand;

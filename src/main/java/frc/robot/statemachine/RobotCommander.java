@@ -253,7 +253,7 @@ public class RobotCommander extends GBSubsystem {
 		return asSubsystemCommand(
 			new DeferredCommand(
 				() -> swerve.getCommandsBuilder()
-					.driveToPose(
+					.pathToPose(
 						() -> robot.getPoseEstimator().getEstimatedPose(),
 						() -> ScoringHelpers.getRobotBranchScoringPose(
 							ScoringHelpers.getTargetBranch(),
@@ -281,10 +281,6 @@ public class RobotCommander extends GBSubsystem {
 			),
 			"driving to waiting pose of: " + ScoringHelpers.getTargetBranch().name() + " " + ScoringHelpers.targetScoreLevel.name()
 		);
-	}
-
-	public Command exitReef() {
-		return driveToReefWaitPose();
 	}
 
 	public Command autoScore() {

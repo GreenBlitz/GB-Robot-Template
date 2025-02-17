@@ -4,7 +4,10 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -35,6 +38,7 @@ import frc.robot.vision.data.VisionData;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
 import frc.utils.Filter;
 import frc.utils.TimedValue;
+import frc.utils.auto.PathPlannerUtil;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.time.TimeUtil;
@@ -121,8 +125,19 @@ public class Robot {
 
 		this.simulationManager = new SimulationManager("SimulationManager", this);
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
+		
+		configPathPlanner();
 	}
-
+	
+	public void configPathPlanner() {
+		swerve.configPathPlanner(
+				poseEstimator::getEstimatedPose,
+				poseEstimator::resetPose,
+				PathPlannerUtil.getGuiRobotConfig()
+						.orElse(new RobotConfig(70, 0.0001, new ModuleConfig(0.048, 5.24, 0.96, DCMotor.getKrakenX60Foc(1), 60, 1), 0.577))
+		);
+	}
+	
 	public void periodic() {
 		swerve.update();
 		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());

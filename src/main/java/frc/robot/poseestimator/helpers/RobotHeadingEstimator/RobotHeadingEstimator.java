@@ -58,14 +58,13 @@ public class RobotHeadingEstimator {
 			estimationVisionPair -> Math
 				.abs(AngleMath.getAngleDifference(estimationVisionPair.getFirst(), estimationVisionPair.getSecond()).getRadians())
 		);
-		boolean isGyroOffsetCalibrated = calculatedVisionNoiseStandardDeviation < maximumStandardDeviationTolerance && estimationAndGyroBuffer.isFull();
+		boolean isGyroOffsetCalibrated = calculatedVisionNoiseStandardDeviation < maximumStandardDeviationTolerance
+			&& estimationAndGyroBuffer.isFull();
 		Logger.recordOutput(
 			logPath + RobotHeadingEstimatorConstants.VISION_NOISE_STANDARD_DEVIATION_LOGPATH_ADDITION,
 			calculatedVisionNoiseStandardDeviation
 		);
-		Logger.recordOutput(
-			logPath + "isGyroOffsetCalibrated/", isGyroOffsetCalibrated
-		);
+		Logger.recordOutput(logPath + "isGyroOffsetCalibrated/", isGyroOffsetCalibrated);
 		return isGyroOffsetCalibrated;
 	}
 

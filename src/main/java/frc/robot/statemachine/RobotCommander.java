@@ -74,17 +74,6 @@ public class RobotCommander extends GBSubsystem {
 		};
 	}
 
-	private boolean isAtReefScoringPose(Translation2d tolerances) {
-		Rotation2d reefAngle = Field.getReefSideMiddle(ScoringHelpers.getTargetBranch().getReefSide()).getRotation();
-
-		Translation2d reefRelativeTargetPose = Field.getReefSideMiddle(ScoringHelpers.getTargetBranch().getReefSide())
-			.rotateBy(reefAngle.unaryMinus())
-			.getTranslation();
-		Translation2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus()).getTranslation();
-
-		return PoseUtil.isAtTranslation(reefRelativeRobotPose, reefRelativeTargetPose, tolerances);
-	}
-
 	private boolean isReadyToOpenSuperstructure() {
 		return isAtReefScoringPose(
 			StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS,
@@ -110,7 +99,14 @@ public class RobotCommander extends GBSubsystem {
 	 * Checks if the robot is out of the safe zone to close the superstructure
 	 */
 	public boolean isReadyToCloseSuperstructure() {
-		return !isAtReefScoringPose(StateMachineConstants.CLOSE_SUPERSTRUCTURE_LENGTH_AND_WIDTH);
+		Rotation2d reefAngle = Field.getReefSideMiddle(ScoringHelpers.getTargetBranch().getReefSide()).getRotation();
+
+		Translation2d reefRelativeReefSideMiddle = Field.getReefSideMiddle(ScoringHelpers.getTargetBranch().getReefSide())
+				.rotateBy(reefAngle.unaryMinus())
+				.getTranslation();
+		Translation2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus()).getTranslation();
+
+		return !PoseUtil.isAtTranslation(reefRelativeRobotPose, reefRelativeReefSideMiddle, StateMachineConstants.CLOSE_SUPERSTRUCTURE_LENGTH_AND_WIDTH);
 	}
 
 	public boolean isReadyToScore() {

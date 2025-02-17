@@ -194,10 +194,14 @@ public class Superstructure extends GBSubsystem {
 	public Command closeAfterScore() {
 		return new DeferredCommand(() -> switch (ScoringHelpers.targetScoreLevel) {
 			case L4 ->
-				new SequentialCommandGroup(
-					armStateHandler.setState(ArmState.MIDDLE_WAY)
-						.until(() -> robot.getArm().isAtPosition(ArmState.MIDDLE_WAY.getPosition(), Tolerances.ARM_POSITION)),
-					idle()
+				new ParallelCommandGroup(
+					armStateHandler.setState(ArmState.CLOSED),
+					new SequentialCommandGroup(
+						elevatorStateHandler.setState(ElevatorState.PRE_L4)
+							.until(() -> robot.getArm().isPastPosition(StateMachineConstants.ARM_POSITION_TO_CLOSE_ELEVATOR_L4)),
+						elevatorStateHandler.setState(ElevatorState.CLOSED)
+					),
+					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
 				);
 			case L1, L2, L3 -> preScore();
 		}, Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector()));

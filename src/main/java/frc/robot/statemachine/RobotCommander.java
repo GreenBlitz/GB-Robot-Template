@@ -351,7 +351,7 @@ public class RobotCommander extends GBSubsystem {
 																Tolerances.REEF_RELATIVE_OPEN_SUPERSTRUCTURE_POSITION.getTranslation()
 														)
 												),
-										superstructure.preScore().until(this::isPreScoreReady),
+										superstructure.preScore().until(() -> isPreScoreReady() && isReadyToScore()),
 										superstructure.scoreWithRelease()
 								)
 						).until(superstructure::isCoralOut),

@@ -129,7 +129,7 @@ public class Robot {
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 		headingEstimator.updateGyroAngle(new TimedValue<>(poseEstimator.getEstimatedPose().getRotation(), TimeUtil.getCurrentTimeSeconds()));
 		for (TimedValue<Rotation2d> headingData : multiAprilTagVisionSources.getRawRobotHeadings()) {
-			headingEstimator.updateVisionIfNotCalibrated(
+			headingEstimator.updateVisionIfGyroOffsetIsNotCalibrated(
 				headingData,
 				RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION,
 				RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE

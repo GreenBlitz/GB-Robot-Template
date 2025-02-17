@@ -285,5 +285,18 @@ public class RobotCommander extends GBSubsystem {
 	public Command exitReef(){
 		return driveToReefWaitPose();
 	}
+	
+	public Command autoScore(){
+		return asSubsystemCommand(
+				Commands.sequence(
+						Commands.parallel(
+								superstructure.armPreScore(),
+								driveToReefWaitPose()
+						).until(() -> isAtReefScoringPose(StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS, Tolerances.REEF_RELATIVE_OPEN_SUPERSTRUCTURE_POSITION.getTranslation()))
+				),
+				
+				"auto score"
+		);
+	}
 
 }

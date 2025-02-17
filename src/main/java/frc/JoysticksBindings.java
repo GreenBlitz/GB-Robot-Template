@@ -85,7 +85,7 @@ public class JoysticksBindings {
 		));
 		usedJoystick.B.onTrue(robot.getRobotCommander().driveToReefWaitPose());
 		usedJoystick.Y.onTrue(robot.getRobotCommander().driveToReefTargetPose());
-		usedJoystick.START.onTrue(robot.getRobotCommander().exitReef());
+		usedJoystick.START.onTrue(robot.getRobotCommander().autoScore());
 		
 		usedJoystick.POV_DOWN.onTrue(new InstantCommand(() -> ScoringHelpers.toggleIsLeftBranch()));
 		usedJoystick.POV_UP.onTrue(new InstantCommand(() -> ScoringHelpers.toggleIsFarReefHalf()));

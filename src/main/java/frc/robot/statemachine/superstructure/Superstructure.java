@@ -196,7 +196,7 @@ public class Superstructure extends GBSubsystem {
 					armStateHandler.setState(ArmState.CLOSED),
 					new SequentialCommandGroup(
 						elevatorStateHandler.setState(ElevatorState.PRE_L4)
-							.until(() -> robot.getArm().isAtPosition(ArmState.CLOSED.getPosition(), Tolerances.ARM_POSITION)),
+							.until(() -> robot.getArm().isPastPosition(StateMachineConstants.ARM_POSITION_TO_CLOSE_ELEVATOR_L4)),
 						elevatorStateHandler.setState(ElevatorState.CLOSED)
 					),
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)

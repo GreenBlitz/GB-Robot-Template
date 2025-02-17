@@ -134,6 +134,7 @@ public class Arm extends GBSubsystem {
 	}
 
 	public boolean isPastPosition(Rotation2d position) {
+		Logger.recordOutput("isPast", motorPositionSignal.isGreater(position));
 		return motorPositionSignal.isGreater(position);
 	}
 

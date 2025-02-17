@@ -80,6 +80,7 @@ public class Superstructure extends GBSubsystem {
 	@Override
 	protected void subsystemPeriodic() {
 		log();
+		Logger.recordOutput("isPastPosition",  robot.getArm().isPastPosition(ArmState.CLOSED.getPosition()));
 	}
 
 	private void log() {
@@ -198,7 +199,7 @@ public class Superstructure extends GBSubsystem {
 					armStateHandler.setState(ArmState.CLOSED),
 					new SequentialCommandGroup(
 						elevatorStateHandler.setState(ElevatorState.PRE_L4)
-							.until(() -> robot.getArm().isPastPosition(StateMachineConstants.ARM_POSITION_TO_CLOSE_ELEVATOR_L4)),
+							.until(() -> robot.getArm().isPastPosition(ArmState.CLOSED.getPosition())),
 						elevatorStateHandler.setState(ElevatorState.CLOSED)
 					),
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)

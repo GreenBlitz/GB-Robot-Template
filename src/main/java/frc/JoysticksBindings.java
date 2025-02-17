@@ -16,8 +16,6 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.utils.pose.Side;
 import frc.utils.utilcommands.ExecuteEndCommand;
 
-import java.awt.*;
-
 public class JoysticksBindings {
 
 	private static final double NOTE_IN_RUMBLE_TIME_SECONDS = 0.5;

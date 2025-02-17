@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "IDLE",
+      "name": "ARM_PRE_SCORE",
       "waypointRelativePos": 0.26433260393872615,
       "endWaypointRelativePos": null,
       "command": null

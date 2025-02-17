@@ -161,7 +161,7 @@ public class Robot {
 			new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4).andThen(robotCommander.getSuperstructure().preScore())
 		);
 		new EventTrigger("INTAKE").onTrue(robotCommander.getSuperstructure().intake());
-		new EventTrigger("IDLE").onTrue(robotCommander.getSuperstructure().idle());
+		new EventTrigger("ARM_PRE_SCORE").onTrue(robotCommander.getSuperstructure().armPreScore());
 
 		this.startingPointAndWhereToScoreFirstObjectChooser = new AutonomousChooser(
 			"StartingPointAndScoreFirst",

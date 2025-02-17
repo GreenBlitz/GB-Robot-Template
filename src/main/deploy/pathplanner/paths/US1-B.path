@@ -40,7 +40,7 @@
     },
     {
       "name": "PRE_SCORE",
-      "waypointRelativePos": 0.8489124044679605,
+      "waypointRelativePos": 0.85,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -58,7 +58,7 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "from coral station",
   "idealStartingState": {
     "velocity": 0.0,
     "rotation": -54.0

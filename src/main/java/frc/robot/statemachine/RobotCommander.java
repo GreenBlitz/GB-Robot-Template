@@ -338,24 +338,24 @@ public class RobotCommander extends GBSubsystem {
 		
 		return asSubsystemCommand(
 				new DeferredCommand(
-						() -> Commands.parallel(
+						() -> new ParallelCommandGroup(
 								AutoBuilder.pathfindThenFollowPath(
 										getPathByTargetBranch(targetBranchSupplier.get()),
 										AutonomousConstants.REAL_TIME_CONSTRAINTS
 								),
-								Commands.sequence(
+								new SequentialCommandGroup(
 										superstructure.armPreScore()
-												.until(() ->
-														isAtReefScoringPose(
+												.until(
+														() -> isAtReefScoringPose(
 																StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS,
 																Tolerances.REEF_RELATIVE_OPEN_SUPERSTRUCTURE_POSITION.getTranslation()
 														)
 												),
-										superstructure.preScore().until(() -> isPreScoreReady() && isReadyToScore()),
+										superstructure.preScore().until(() -> false),
 										superstructure.scoreWithRelease()
 								)
 						).until(superstructure::isCoralOut),
-						Set.of(superstructure, this, swerve)
+						Set.of(superstructure, this, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
 				),
 				"score seq"
 		);

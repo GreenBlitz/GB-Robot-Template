@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.utils.TimedValue;
 import frc.robot.poseestimator.Pose2dComponentsValue;
@@ -24,6 +25,12 @@ public class PoseUtil {
 		boolean isAtHeading = ToleranceMath.isNearWrapped(targetPose.getRotation(), currentPose.getRotation(), tolerances.getRotation());
 		boolean isStill = SwerveMath.isStill(currentSpeeds, deadbands);
 		return isAtX && isAtY && isAtHeading && isStill;
+	}
+
+	public static boolean isAtTranslation(Translation2d currentPose, Translation2d targetPose, Translation2d tolerances) {
+		boolean isAtX = MathUtil.isNear(targetPose.getX(), currentPose.getX(), tolerances.getX());
+		boolean isAtY = MathUtil.isNear(targetPose.getY(), currentPose.getY(), tolerances.getY());
+		return isAtX && isAtY;
 	}
 
 	public static Pose3d toPose3D(double[] poseArray, AngleUnit angleUnit) {

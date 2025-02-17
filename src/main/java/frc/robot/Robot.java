@@ -4,24 +4,20 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.led.CANdle;
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
-import frc.robot.led.LEDManager;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
-import frc.robot.statemachine.superstructure.SuperstructureState;
+import frc.robot.scoringhelpers.ButtonDriverHelper;
 import frc.robot.vision.VisionConstants;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
-import frc.robot.led.LEDState;
-import frc.robot.led.LEDStateHandler;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
+import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimator;
 import frc.robot.statemachine.RobotCommander;
 import frc.robot.subsystems.arm.Arm;
@@ -37,14 +33,13 @@ import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.vision.VisionFilters;
 import frc.robot.vision.data.VisionData;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
-import frc.utils.DriverStationUtil;
 import frc.utils.Filter;
 import frc.utils.TimedValue;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.time.TimeUtil;
 
-import java.util.function.BooleanSupplier;
+import java.util.Optional;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -66,10 +61,6 @@ public class Robot {
 
 	private final SimulationManager simulationManager;
 	private final RobotCommander robotCommander;
-	
-	private final CANdle candle;
-	private final LEDStateHandler ledStateHandler;
-	private final LEDManager ledManager;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -113,9 +104,12 @@ public class Robot {
 		);
 
 		swerve.setHeadingSupplier(
-			ROBOT_TYPE.isSimulation() ? poseEstimator.getEstimatedPose()::getRotation : headingEstimator::getEstimatedHeading
+			() -> ROBOT_TYPE.isSimulation() ? poseEstimator.getEstimatedPose().getRotation() : headingEstimator.getEstimatedHeading()
 		);
 		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
+		swerve.getStateHandler().setBranchSupplier(() -> Optional.of(ScoringHelpers.getTargetBranch()));
+		swerve.getStateHandler().setReefSideSupplier(() -> Optional.of(ScoringHelpers.getTargetReefSide()));
+		swerve.getStateHandler().setCoralStationSupplier(() -> Optional.of(ScoringHelpers.getTargetCoralStation(this)));
 
 		this.elevator = ElevatorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Elevator");
 		BrakeStateManager.add(() -> elevator.setBrake(true), () -> elevator.setBrake(false));
@@ -127,13 +121,6 @@ public class Robot {
 
 		this.simulationManager = new SimulationManager("SimulationManager", this);
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
-		
-		this.candle = new CANdle(IDs.CANDle.CANDLE_ID.id(),IDs.CANDle.CANDLE_ID.busChain().getChainName());
-		candle.configLEDType(CANdle.LEDStripType.GRB);
-		candle.clearAnimation(0);
-		ledStateHandler = new LEDStateHandler("CANDle", candle);
-		this.ledManager = new LEDManager(this ,ledStateHandler);
-		ledManager.initializeLEDManager();
 	}
 
 	public void periodic() {
@@ -142,7 +129,11 @@ public class Robot {
 
 		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
 		for (TimedValue<Rotation2d> headingData : multiAprilTagVisionSources.getRawRobotHeadings()) {
-			headingEstimator.updateVisionHeading(headingData, RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION);
+			headingEstimator.updateVisionIfNotCalibrated(
+				headingData,
+				RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION,
+				RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE
+			);
 		}
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 		poseEstimator.updateVision(multiAprilTagVisionSources.getFilteredVisionData());
@@ -152,9 +143,10 @@ public class Robot {
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		simulationManager.logPoses();
+		ScoringHelpers.log("Scoring");
+		ButtonDriverHelper.log("Scoring/ButtonDriverDisplay");
 
 		CommandScheduler.getInstance().run(); // Should be last
-		
 	}
 
 	public Command getAutonomousCommand() {
@@ -185,11 +177,4 @@ public class Robot {
 		return robotCommander;
 	}
 
-	public CANdle getCandle(){
-		return candle;
-	}
-	
-	public LEDManager getLedManager() {
-		return ledManager;
-	}
 }

@@ -28,7 +28,7 @@ public class CANdleWrapper extends CANdle {
 	}
 
 	public void applyConfiguration(CANdleConfiguration configuration, int numberOfTries) {
-		if (isConnected() && (Phoenix6Util.checkWithRetry(() -> configAllSettings(configuration), numberOfTries)) != ErrorCode.OK) {
+		if (Phoenix6Util.checkWithRetry(() -> configAllSettings(configuration), numberOfTries) != ErrorCode.OK) {
 			new Alert(Alert.AlertType.ERROR, logPath + "/ConfigurationFailed").report();
 		}
 	}
@@ -69,13 +69,20 @@ public class CANdleWrapper extends CANdle {
 		return setColor(color, 0);
 	}
 
-	public boolean isConnected() {
-		return getTemperature() != 0;
+	public ErrorCode clear(int startIndex, int amountOfLedsToAffect){
+		return setColor(java.awt.Color.BLACK);
 	}
 
-	public void log() {
-		Logger.recordOutput(logPath + "/isConnected", isConnected());
-		Logger.recordOutput(logPath + "/Temperature", getTemperature());
+	public ErrorCode clear(int startIndex){
+		return clear(startIndex, numberOfLeds - startIndex);
+	}
+
+	public ErrorCode clear(double amountOfLedsToAffect){
+		return clear(0, (int) amountOfLedsToAffect);
+	}
+
+	public ErrorCode clear(){
+		return clear(0);
 	}
 
 }

@@ -76,7 +76,7 @@ public class CANdleWrapper extends CANdle {
 	}
 
 	public ErrorCode clear(int startIndex, int amountOfLedsToAffect) {
-		return setColor(java.awt.Color.BLACK);
+		return setColor(Color.kBlack);
 	}
 
 	public ErrorCode clear(int startIndex) {

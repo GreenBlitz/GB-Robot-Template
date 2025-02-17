@@ -292,7 +292,11 @@ public class RobotCommander extends GBSubsystem {
 						Commands.parallel(
 								superstructure.armPreScore(),
 								driveToReefWaitPose()
-						).until(() -> isAtReefScoringPose(StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS, Tolerances.REEF_RELATIVE_OPEN_SUPERSTRUCTURE_POSITION.getTranslation()))
+						).until(() -> isAtReefScoringPose(StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS, Tolerances.REEF_RELATIVE_OPEN_SUPERSTRUCTURE_POSITION.getTranslation())),
+						Commands.parallel(
+								superstructure.preScore(),
+								driveToReefTargetPose()
+						).until(() -> isAtReefScoringPose(StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS, Tolerances.REEF_RELATIVE_SCORING_POSITION.getTranslation()))
 				),
 				
 				"auto score"

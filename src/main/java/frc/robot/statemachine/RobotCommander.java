@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.constants.field.Field;
 import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
+import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.statemachine.superstructure.Superstructure;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.Swerve;
@@ -247,6 +248,22 @@ public class RobotCommander extends GBSubsystem {
 			case PRE_SCORE -> preScore();
 			case SCORE, SCORE_WITHOUT_RELEASE -> closeAfterScore();
 		};
+	}
+	
+	public Command driveToReefWaitPose(){
+		return asSubsystemCommand(
+				new DeferredCommand(
+						() -> swerve.getCommandsBuilder().driveToPose(
+								() -> robot.getPoseEstimator().getEstimatedPose(),
+								() -> ScoringHelpers.getRobotBranchScoringPose(
+										ScoringHelpers.getTargetBranch(),
+										StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS
+								)
+						),
+						Set.of(this,swerve)
+				),
+				"driving to waiting pose of: " + ScoringHelpers.getTargetBranch().name() + " " + ScoringHelpers.targetScoreLevel.name()
+		);
 	}
 
 }

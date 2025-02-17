@@ -79,14 +79,15 @@ public class JoysticksBindings {
 		// bindings...
 
 		usedJoystick.R1.onTrue(robot.getRobotCommander().scoreForButton());
-		usedJoystick.B.onTrue(robot.getSwerve().getCommandsBuilder().driveToPose(
+		usedJoystick.X.onTrue(robot.getSwerve().getCommandsBuilder().driveToPose(
 				() -> robot.getPoseEstimator().getEstimatedPose(),
 				() -> new Pose2d(5,5, new Rotation2d())
 		));
-		usedJoystick.X.onTrue(robot.getSwerve().getCommandsBuilder().driveToPose(
-				() -> robot.getPoseEstimator().getEstimatedPose(),
-				() -> new Pose2d(3,3, new Rotation2d())
-		));
+		usedJoystick.B.onTrue(robot.getRobotCommander().driveToReefWaitPose());
+		
+		usedJoystick.POV_DOWN.onTrue(new InstantCommand(() -> ScoringHelpers.toggleIsLeftBranch()));
+		usedJoystick.POV_UP.onTrue(new InstantCommand(() -> ScoringHelpers.toggleIsFarReefHalf()));
+		
 		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
 	}
 

@@ -10,10 +10,8 @@ import java.nio.file.Path;
 
 /*
  * Inspired from Trigon code.
-YoniKiriaty marked this conversation as resolved.
  *
  * @author Yoni Kiriaty
-YoniKiriaty marked this conversation as resolved.
  */
 public class KeyboardController {
 

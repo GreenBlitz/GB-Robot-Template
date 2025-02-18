@@ -11,6 +11,9 @@ public class RealSwerveConstants {
 	public static final double MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND = 4;
 	public static final Rotation2d MAX_ROTATIONAL_VELOCITY_PER_SECOND = Rotation2d.fromRadians(7.9);
 
+	public static final int DRIVE_CURRENT_LIMIT = 60;
+	public static final double ROBOT_TRACK_WIDTH_METERS = 0.577;
+
 	private static final PIDConstants TRANSLATION_METERS_PID_CONSTANTS = new PIDConstants(3.6, 0, 0);
 	private static final PIDConstants ROTATION_DEGREES_PID_CONSTANTS = new PIDConstants(4.3, 0, 0);
 

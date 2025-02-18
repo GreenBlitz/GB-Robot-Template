@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
 import frc.robot.scoringhelpers.ButtonDriverHelper;
+import frc.robot.subsystems.swerve.factories.constants.RealSwerveConstants;
+import frc.robot.subsystems.swerve.factories.modules.constants.RealModuleConstants;
 import frc.robot.subsystems.swerve.factories.modules.drive.KrakenX60DriveBuilder;
 import frc.robot.subsystems.swerve.module.ModuleConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
@@ -128,8 +130,6 @@ public class Robot {
 		this.simulationManager = new SimulationManager("SimulationManager", this);
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
 
-		swerve.getStateHandler().setCoralStationSlotSupplier(() -> Optional.of(ScoringHelpers.targetcoralStationSlot));
-
 		configPathPlanner();
 	}
 
@@ -138,7 +138,21 @@ public class Robot {
 			poseEstimator::getEstimatedPose,
 			poseEstimator::resetPose,
 			PathPlannerUtil.getGuiRobotConfig()
-				.orElse(new RobotConfig(70, 0.0001, new ModuleConfig(0.048, 5.24, 0.96, DCMotor.getFalcon500Foc(1), 60, 1), 0.577))
+				.orElse(
+					new RobotConfig(
+						RobotConstants.MASS_KILOGRAM,
+						RobotConstants.MOMENT_OF_INERTIA_KILOGRAM_METERS_SQUARED,
+						new ModuleConfig(
+							RealModuleConstants.WHEEL_DIAMETER_METERS / 2,
+							RealSwerveConstants.VELOCITY_AT_12_VOLTS_METERS_PER_SECOND,
+							RealModuleConstants.WHEEL_COF,
+							DCMotor.getFalcon500Foc(1),
+							RealSwerveConstants.DRIVE_CURRENT_LIMIT,
+							1
+						),
+						RealSwerveConstants.ROBOT_TRACK_WIDTH_METERS
+					)
+				)
 		);
 	}
 

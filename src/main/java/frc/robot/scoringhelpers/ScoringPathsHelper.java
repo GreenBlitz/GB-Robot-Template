@@ -16,7 +16,7 @@ public class ScoringPathsHelper {
 
     private static final HashMap<Branch, PathPlannerPath> BRANCH_PATH_PLANNER_PATH_HASH_MAP = generateAllPaths();
 
-    public static HashMap<Branch, PathPlannerPath> generateAllPaths(){
+    private static HashMap<Branch, PathPlannerPath> generateAllPaths(){
         HashMap<Branch, PathPlannerPath> branchToPathMap = new HashMap<>();
 
         Branch[] branches = Branch.values();
@@ -30,7 +30,7 @@ public class ScoringPathsHelper {
         return BRANCH_PATH_PLANNER_PATH_HASH_MAP.get(branch);
     }
 
-    public static PathPlannerPath generatePathToTargetBranch(Branch branch){
+    private static PathPlannerPath generatePathToTargetBranch(Branch branch){
 
         return new PathPlannerPath(
                 PathPlannerPath.waypointsFromPoses(

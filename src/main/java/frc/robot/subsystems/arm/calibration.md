@@ -3,49 +3,50 @@ Arm Calibrations
 
 ##### IDs
 
-- [ ] motor ID 
-- [ ] motor Buschain
-- [ ] encoder ID 
-- [ ] encoder Buschain
+- [x] motor ID 
+- [x] motor Buschain
+- [x] encoder ID 
+- [x] encoder Buschain
 
 ##### Motor config
 
-- [ ] is inverted
-- [ ] gear ratio (use rotor to sensor and not sensor to mechanism)
+- [x] neutral mode
+- [x] is inverted
+- [x] gear ratio (use rotor to sensor and not sensor to mechanism)
 
 ##### Encoder config
 
-- [ ] is inverted
+- [x] is inverted
 
 ##### Limits 
 
-- [ ] current limit
-- [ ] software forward limit
-- [ ] software reverse limit
+- [x] current limit
+- [x] software forward limit
+- [x] software reverse limit
 
 ##### FOC
-- [ ] enable FOC
+- [x] enable FOC
 
 ##### Feed Forward 
 
-- [ ] kS
-- [ ] kG
+- [x] kS
+- [x] kG
 
 ##### PID 
 
-- [ ] kP  
-- [ ] kI   
-- [ ] kD
+- [x] kP  
+- [x] kI   
+- [x] kD
 
 #### Motion Magic
 
-- [ ] Cruise velocity
-- [ ] Max acceleration
+- [x] Cruise velocity
+- [x] Max acceleration
 
 ##### Simulation
 
-- [ ] starting position
-- [ ] number of motors
+- [x] starting position
+- [x] number of motors
 - [ ] length
 - [ ] mass
 

@@ -1,8 +1,10 @@
 package frc.robot.subsystems.elevator.factory;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.filter.Debouncer;
@@ -31,7 +33,6 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.records.ElevatorMotorSignals;
 import frc.utils.math.AngleUnit;
-import org.littletonrobotics.junction.Logger;
 
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
@@ -46,19 +47,13 @@ public class KrakenX60ElevatorBuilder {
 	private static final boolean SOFT_LIMIT_ENABLE = true;
 	private static final boolean IS_FIRST_MOTOR_INVERTED = true;
 	private static final boolean IS_SECOND_MOTOR_INVERTED = true;
+	public static final double kG = 0.26146;
 
-	private static final double REAL_KP = 1;
-	private static final double REAL_KI = 0;
-	private static final double REAL_KD = 0;
-
-	private static final double SIMULATION_KP = 1;
-	private static final double SIMULATION_KI = 0;
-	private static final double SIMULATION_KD = 0.05;
 	private static final int NUMBER_OF_MOTORS = 2;
 	private static final double STARTING_HEIGHT_METERS = 0;
 
-	private static final Velocity<VoltageUnit> CONFIG_RAMP_RATE = Volts.of(1).per(Second);
-	private static final Voltage CONFIG_STEP_VOLTAGE = Volts.of(7);
+	private static final Velocity<VoltageUnit> CONFIG_RAMP_RATE = Volts.of(0.5).per(Second);
+	private static final Voltage CONFIG_STEP_VOLTAGE = Volts.of(3);
 	private static final Time CONFIG_TIMEOUT = Seconds.of(10);
 
 	private static SysIdRoutine.Config generateSysidConfig() {
@@ -66,21 +61,41 @@ public class KrakenX60ElevatorBuilder {
 			CONFIG_RAMP_RATE,
 			CONFIG_STEP_VOLTAGE,
 			CONFIG_TIMEOUT,
-			(state) -> Logger.recordOutput("state", state.toString())
+			state -> SignalLogger.writeString("state", state.toString())
 		);
 	}
 
 	private static TalonFXConfiguration generateConfiguration(boolean inverted) {
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
 		if (Robot.ROBOT_TYPE.isReal()) {
-			configuration.Slot0.kP = REAL_KP;
-			configuration.Slot0.kI = REAL_KI;
-			configuration.Slot0.kD = REAL_KD;
+			// Motion Magic
+			configuration.Slot0.kP = 3.5;
+			configuration.Slot0.kI = 0;
+			configuration.Slot0.kD = 0;
+			configuration.Slot0.kG = kG;
+			configuration.Slot0.kS = 0.050413;
+			configuration.Slot0.kV = 0.5684;
+			configuration.Slot0.kA = 0.071671;
+
+			// PID
+			configuration.Slot1.kP = 8;
+			configuration.Slot1.kI = 0;
+			configuration.Slot1.kD = 0.5;
+			configuration.Slot1.kG = kG;
+			configuration.Slot1.kS = 0.050413;
 		} else {
-			configuration.Slot0.kP = SIMULATION_KP;
-			configuration.Slot0.kI = SIMULATION_KI;
-			configuration.Slot0.kD = SIMULATION_KD;
+			configuration.Slot0.kP = 1;
+			configuration.Slot0.kI = 0;
+			configuration.Slot0.kD = 0.05;
+
+			configuration.Slot1.kP = 1;
+			configuration.Slot1.kI = 0;
+			configuration.Slot1.kD = 0.05;
 		}
+		configuration.Slot0.GravityType = GravityTypeValue.Elevator_Static;
+		configuration.Slot1.GravityType = GravityTypeValue.Elevator_Static;
+		configuration.Slot2.GravityType = GravityTypeValue.Elevator_Static;
+
 		configuration.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT;
 		configuration.CurrentLimits.StatorCurrentLimitEnable = CURRENT_LIMIT_ENABLE;
 		configuration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Elevator
@@ -93,13 +108,21 @@ public class KrakenX60ElevatorBuilder {
 		configuration.SoftwareLimitSwitch.ForwardSoftLimitEnable = SOFT_LIMIT_ENABLE;
 		configuration.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 		configuration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+		configuration.Feedback.SensorToMechanismRatio = ElevatorConstants.GEAR_RATIO;
+		configuration.MotionMagic.MotionMagicAcceleration = Elevator
+			.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
+			.getRotations();
+		configuration.MotionMagic.MotionMagicCruiseVelocity = Elevator
+			.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND)
+			.getRotations();
+
 		return configuration;
 	}
 
 	private static IDigitalInput generateDigitalInput() {
 		return Robot.ROBOT_TYPE.isSimulation()
 			? new ChooserDigitalInput("ElevatorLimitSwitch")
-			: new ChanneledDigitalInput(new DigitalInput(LIMIT_SWITCH_CHANNEL), new Debouncer(LIMIT_SWITCH_DEBOUNCE_TIME));
+			: new ChanneledDigitalInput(new DigitalInput(LIMIT_SWITCH_CHANNEL), new Debouncer(LIMIT_SWITCH_DEBOUNCE_TIME), true);
 	}
 
 	private static ElevatorMotorSignals createSignals(TalonFXMotor motor) {
@@ -130,10 +153,10 @@ public class KrakenX60ElevatorBuilder {
 	}
 
 	public static Elevator createRealElevator(String logPath) {
-		TalonFXMotor rightMotor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_RIGHT, generateSysidConfig());
+		TalonFXMotor rightMotor = new TalonFXMotor(logPath + "/right", IDs.TalonFXIDs.ELEVATOR_RIGHT, generateSysidConfig());
 		rightMotor.applyConfiguration(generateConfiguration(IS_FIRST_MOTOR_INVERTED));
 
-		TalonFXMotor leftMotor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_LEFT, generateSysidConfig());
+		TalonFXMotor leftMotor = new TalonFXMotor(logPath + "/left", IDs.TalonFXIDs.ELEVATOR_LEFT, generateSysidConfig());
 		leftMotor.applyConfiguration(generateConfiguration(IS_SECOND_MOTOR_INVERTED));
 
 		return create(logPath, rightMotor, leftMotor);
@@ -149,16 +172,7 @@ public class KrakenX60ElevatorBuilder {
 	private static Elevator create(String logPath, TalonFXMotor rightMotor, TalonFXMotor leftMotor) {
 		IDigitalInput digitalInput = generateDigitalInput();
 
-		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(
-			new DynamicMotionMagicVoltage(
-				0,
-				Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND).getRotations(),
-				Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED).getRotations(),
-				0
-			),
-			0,
-			true
-		);
+		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0).withSlot(1), 0, true);
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), true);
 
 		return new Elevator(

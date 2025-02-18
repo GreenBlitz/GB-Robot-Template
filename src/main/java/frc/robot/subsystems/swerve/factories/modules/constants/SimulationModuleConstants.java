@@ -10,8 +10,8 @@ class SimulationModuleConstants {
 	private static final double WHEEL_DIAMETER_METERS = 0.048359 * 2;
 	private static final double COUPLING_RATIO = 0;
 
-	private static final double MODULE_X_DISTANCE_FROM_CENTER = 0.27833;
-	private static final double MODULE_Y_DISTANCE_FROM_CENTER = 0.34733;
+	private static final double MODULE_X_DISTANCE_FROM_CENTER = 0.30833;
+	private static final double MODULE_Y_DISTANCE_FROM_CENTER = 0.30833;
 	private static final Translation2d FRONT_LEFT_TRANSLATION2D = new Translation2d(
 		MODULE_X_DISTANCE_FROM_CENTER,
 		MODULE_Y_DISTANCE_FROM_CENTER

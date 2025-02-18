@@ -25,15 +25,19 @@ public class ElevatorCommandsBuilder {
 		return elevator.asSubsystemCommand(new RunCommand(() -> elevator.setVoltage(voltage)), "Set voltage to " + voltage);
 	}
 
+	public Command setVoltage(DoubleSupplier voltageSupplier) {
+		return elevator.asSubsystemCommand(new RunCommand(() -> elevator.setVoltage(voltageSupplier.getAsDouble())), "Set voltage by Supplier");
+	}
+
 	public Command setTargetPositionMeters(double targetPositionMeters) {
 		return elevator.asSubsystemCommand(
-			new RunCommand(() -> elevator.setTargetPositionMeters(targetPositionMeters)),
+			new RunCommand(() -> elevator.setTargetPositionMeters(targetPositionMeters), elevator),
 			"Set Target Position To " + targetPositionMeters + " Meters"
 		);
 	}
 
 	public Command stayInPlace() {
-		return elevator.asSubsystemCommand(new RunCommand(elevator::stayInPlace), "Stay in place");
+		return elevator.asSubsystemCommand(new RunCommand(elevator::stayInPlace, elevator), "Stay in place");
 	}
 
 	public Command stop() {

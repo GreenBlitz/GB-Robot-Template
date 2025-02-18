@@ -115,9 +115,8 @@ public class Robot {
 			)
 		);
 
-		swerve.setHeadingSupplier(
-			() -> ROBOT_TYPE.isSimulation() ? poseEstimator.getEstimatedPose().getRotation() : headingEstimator.getEstimatedHeading()
-		);
+		swerve.setHeadingSupplier(headingEstimator::getEstimatedHeading);
+
 		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
 		swerve.getStateHandler().setBranchSupplier(() -> Optional.of(ScoringHelpers.getTargetBranch()));
 		swerve.getStateHandler().setReefSideSupplier(() -> Optional.of(ScoringHelpers.getTargetReefSide()));
@@ -143,15 +142,15 @@ public class Robot {
 		swerve.update();
 		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());
 
-		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
+		poseEstimator.updateOdometry(swerve.getAllOdometryData());
+		headingEstimator.updateGyroAngle(new TimedValue<>(poseEstimator.getEstimatedPose().getRotation(), TimeUtil.getCurrentTimeSeconds()));
 		for (TimedValue<Rotation2d> headingData : multiAprilTagVisionSources.getRawRobotHeadings()) {
-			headingEstimator.updateVisionIfNotCalibrated(
+			headingEstimator.updateVisionIfGyroOffsetIsNotCalibrated(
 				headingData,
 				RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION,
 				RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE
 			);
 		}
-		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 		poseEstimator.updateVision(multiAprilTagVisionSources.getFilteredVisionData());
 		multiAprilTagVisionSources.log();
 		headingEstimator.log();

@@ -4,8 +4,11 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.events.EventTrigger;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -14,6 +17,9 @@ import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.AutosBuilder;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
 import frc.robot.scoringhelpers.ButtonDriverHelper;
+import frc.robot.subsystems.swerve.factories.modules.drive.KrakenX60DriveBuilder;
+import frc.robot.subsystems.swerve.module.ModuleConstants;
+import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.vision.VisionConstants;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -113,15 +119,14 @@ public class Robot {
 		multiAprilTagVisionSources.applyFunctionOnAllFilters(
 			filters -> filters.and(
 				new Filter<>(
-					data -> VisionFilters.isYawAtAngle(headingEstimator::getEstimatedHeading, VisionConstants.ANGLE_FILTERS_TOLERANCES)
+					data -> VisionFilters.isYawAtAngle(headingEstimator::getEstimatedHeading, VisionConstants.YAW_FILTER_TOLERANCE)
 						.apply((VisionData) data)
 				)
 			)
 		);
 
-		swerve.setHeadingSupplier(
-			() -> ROBOT_TYPE.isSimulation() ? poseEstimator.getEstimatedPose().getRotation() : headingEstimator.getEstimatedHeading()
-		);
+		swerve.setHeadingSupplier(headingEstimator::getEstimatedHeading);
+
 		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
 		swerve.getStateHandler().setBranchSupplier(() -> Optional.of(ScoringHelpers.getTargetBranch()));
 		swerve.getStateHandler().setReefSideSupplier(() -> Optional.of(ScoringHelpers.getTargetReefSide()));
@@ -197,15 +202,15 @@ public class Robot {
 		swerve.update();
 		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());
 
-		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
+		poseEstimator.updateOdometry(swerve.getAllOdometryData());
+		headingEstimator.updateGyroAngle(new TimedValue<>(poseEstimator.getEstimatedPose().getRotation(), TimeUtil.getCurrentTimeSeconds()));
 		for (TimedValue<Rotation2d> headingData : multiAprilTagVisionSources.getRawRobotHeadings()) {
-			headingEstimator.updateVisionIfNotCalibrated(
+			headingEstimator.updateVisionIfGyroOffsetIsNotCalibrated(
 				headingData,
 				RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION,
 				RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE
 			);
 		}
-		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 		poseEstimator.updateVision(multiAprilTagVisionSources.getFilteredVisionData());
 		multiAprilTagVisionSources.log();
 		headingEstimator.log();
@@ -256,5 +261,23 @@ public class Robot {
 	public RobotCommander getRobotCommander() {
 		return robotCommander;
 	}
+
+	public RobotConfig getRobotConfig() {
+		return new RobotConfig(
+			RobotConstants.MASS_KILOGRAM,
+			RobotConstants.MOMENT_OF_INERTIA_KILOGRAM_METERS_SQUARED,
+			new ModuleConfig(
+				swerve.getModules().getModule(ModuleUtil.ModulePosition.FRONT_LEFT).getModuleConstants().wheelDiameterMeters() / 2,
+				swerve.getConstants().velocityAt12VoltsMetersPerSecond(),
+				ModuleConstants.COEFFICIENT_OF_FRICTION,
+				DCMotor.getKrakenX60Foc(ModuleConstants.NUMBER_OF_DRIVE_MOTORS),
+				KrakenX60DriveBuilder.GEAR_RATIO,
+				KrakenX60DriveBuilder.SLIP_CURRENT,
+				ModuleConstants.NUMBER_OF_DRIVE_MOTORS
+			),
+			swerve.getModules().getModulePositionsFromCenterMeters()
+		);
+	}
+
 
 }

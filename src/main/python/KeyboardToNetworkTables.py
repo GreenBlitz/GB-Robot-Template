@@ -54,7 +54,7 @@ def create_keyboard_listener(keys_table: NetworkTable) -> keyboard.Listener:
 
 
 def track_keyboard_until_client_disconnect(keys_table: NetworkTable, keyboard_client: NetworkTableClient) -> None:
-    keyboard_listener = create__keyboard_listener(keys_table)
+    keyboard_listener = create_keyboard_listener(keys_table)
     keyboard_listener.start()
     wait_until_client_disconnect(keyboard_client)
     keyboard_listener.stop()

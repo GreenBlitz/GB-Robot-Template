@@ -251,23 +251,17 @@ public class RobotCommander extends GBSubsystem {
 		}, Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector()));
 	}
 
-	private Command preClimb(){
+	private Command preClimb() {
 		return asSubsystemCommand(
-				new ParallelCommandGroup(
-						superstructure.preClimb(),
-						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
-				),
-				RobotState.PRE_CLIMB
+			new ParallelCommandGroup(superstructure.preClimb(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			RobotState.PRE_CLIMB
 		);
 	}
 
-	private Command climb(){
+	private Command climb() {
 		return asSubsystemCommand(
-				new ParallelCommandGroup(
-						superstructure.climb(),
-						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
-				),
-				RobotState.CLIMB
+			new ParallelCommandGroup(superstructure.climb(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			RobotState.CLIMB
 		);
 	}
 

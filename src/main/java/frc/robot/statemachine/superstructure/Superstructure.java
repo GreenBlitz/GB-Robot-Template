@@ -211,25 +211,25 @@ public class Superstructure extends GBSubsystem {
 
 	public Command preClimb() {
 		return asSubsystemCommand(
-				new ParallelCommandGroup(
-						elevatorStateHandler.setState(ElevatorState.CLOSED),
-						armStateHandler.setState(ArmState.CLOSED),
-						endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
-						climbStateHandler.setState(ClimbState.EXTEND)
-				),
-				SuperstructureState.PRE_CLIMB
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.CLOSED),
+				armStateHandler.setState(ArmState.CLOSED),
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
+				climbStateHandler.setState(ClimbState.EXTEND)
+			),
+			SuperstructureState.PRE_CLIMB
 		);
 	}
 
 	public Command climb() {
 		return asSubsystemCommand(
-				new ParallelCommandGroup(
-						elevatorStateHandler.setState(ElevatorState.CLOSED),
-						armStateHandler.setState(ArmState.CLOSED),
-						endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
-						climbStateHandler.setState(ClimbState.RETRACT)
-				),
-				SuperstructureState.CLIMB
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.CLOSED),
+				armStateHandler.setState(ArmState.CLOSED),
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
+				climbStateHandler.setState(ClimbState.RETRACT)
+			),
+			SuperstructureState.CLIMB
 		);
 	}
 

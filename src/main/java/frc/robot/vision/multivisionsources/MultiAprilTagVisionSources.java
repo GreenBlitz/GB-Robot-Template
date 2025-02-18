@@ -133,17 +133,17 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	}
 
 	private void logAprilTagPoseData() {
-		List<Integer> seenApriltags = new ArrayList<>();
+		List<Integer> seenApriltagIDs = new ArrayList<>();
 		for (AprilTagVisionData visionData : getUnfilteredVisionData()) {
 			int aprilTagID = visionData.getTrackedAprilTagId();
 			Optional<Pose3d> aprilTag = VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(aprilTagID);
 			aprilTag.ifPresent((pose) -> {
 				Logger.recordOutput(logPath + "targets/" + aprilTagID, pose);
-				seenApriltags.add(aprilTagID);
+				seenApriltagIDs.add(aprilTagID);
 			});
 		}
 		for (int aprilTagID = 1; aprilTagID <= VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTags().size(); aprilTagID++) {
-			if (!seenApriltags.contains(aprilTagID)) {
+			if (!seenApriltagIDs.contains(aprilTagID)) {
 				Logger.recordOutput(logPath + "targets/" + aprilTagID, PoseUtil.EMPTY_POSE2D);
 			}
 		}

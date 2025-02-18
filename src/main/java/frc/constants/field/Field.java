@@ -7,8 +7,12 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.constants.field.enums.*;
+import frc.constants.field.enums.Branch;
+import frc.constants.field.enums.Cage;
+import frc.constants.field.enums.CoralStation;
+import frc.constants.field.enums.ReefSide;
 import frc.utils.DriverStationUtil;
+import frc.constants.field.enums.CoralStationSlot;
 import frc.utils.math.AngleTransform;
 import frc.utils.math.FieldMath;
 

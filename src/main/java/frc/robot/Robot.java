@@ -14,6 +14,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
 import frc.robot.scoringhelpers.ButtonDriverHelper;
+import frc.robot.subsystems.swerve.factories.modules.drive.KrakenX60DriveBuilder;
+import frc.robot.subsystems.swerve.module.ModuleConstants;
+import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.vision.VisionConstants;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -191,5 +194,23 @@ public class Robot {
 	public RobotCommander getRobotCommander() {
 		return robotCommander;
 	}
+
+	public RobotConfig getRobotConfig() {
+		return new RobotConfig(
+			RobotConstants.MASS_KILOGRAM,
+			RobotConstants.MOMENT_OF_INERTIA_KILOGRAM_METERS_SQUARED,
+			new ModuleConfig(
+				swerve.getModules().getModule(ModuleUtil.ModulePosition.FRONT_LEFT).getModuleConstants().wheelDiameterMeters() / 2,
+				swerve.getConstants().velocityAt12VoltsMetersPerSecond(),
+				ModuleConstants.COEFFICIENT_OF_FRICTION,
+				DCMotor.getKrakenX60Foc(ModuleConstants.NUMBER_OF_DRIVE_MOTORS),
+				KrakenX60DriveBuilder.GEAR_RATIO,
+				KrakenX60DriveBuilder.SLIP_CURRENT,
+				ModuleConstants.NUMBER_OF_DRIVE_MOTORS
+			),
+			swerve.getModules().getModulePositionsFromCenterMeters()
+		);
+	}
+
 
 }

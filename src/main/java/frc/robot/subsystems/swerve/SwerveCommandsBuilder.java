@@ -236,10 +236,11 @@ public class SwerveCommandsBuilder {
 	private Command pathToPose(Pose2d currentPose, Pose2d targetPose) {
 		Command pathFollowingCommand;
 		double distanceFromTarget = currentPose.getTranslation().getDistance(targetPose.getTranslation());
-		if (distanceFromTarget < AutonomousConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
-			pathFollowingCommand = PathPlannerUtil.createPathOnTheFly(currentPose, targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
+		if (distanceFromTarget < AutonomousConstants.PATHFINDING_DEADBAND_METERS) {
+			pathFollowingCommand = PathPlannerUtil
+				.createPathOnTheFly(currentPose, targetPose, AutonomousConstants.getRealTimeConstraints(swerve));
 		} else {
-			pathFollowingCommand = AutoBuilder.pathfindToPose(targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
+			pathFollowingCommand = AutoBuilder.pathfindToPose(targetPose, AutonomousConstants.getRealTimeConstraints(swerve));
 		}
 
 		return swerve.asSubsystemCommand(

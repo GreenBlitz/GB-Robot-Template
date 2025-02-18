@@ -50,8 +50,7 @@ public class VisionConstants {
 
 	public static final int NO_APRILTAG_ID = -1;
 
-	public static Rotation2d ANGLE_FILTERS_TOLERANCES = Rotation2d.fromDegrees(1
-	);
+	public static Rotation2d ANGLE_FILTERS_TOLERANCES = Rotation2d.fromDegrees(1);
 
 	public static double ROBOT_POSITION_IN_FIELD_TOLERANCE_METERS = 0.1;
 

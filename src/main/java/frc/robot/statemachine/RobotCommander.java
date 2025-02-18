@@ -21,6 +21,7 @@ import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.pose.PoseUtil;
 import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
 
 import java.io.IOException;
 import java.util.Set;
@@ -74,6 +75,9 @@ public class RobotCommander extends GBSubsystem {
 		ChassisSpeeds allianceRelativeSpeeds = swerve.getAllianceRelativeVelocity();
 		ChassisSpeeds reefRelativeSpeeds = SwerveMath
 			.robotToAllianceRelativeSpeeds(allianceRelativeSpeeds, Field.getAllianceRelative(reefAngle.unaryMinus()));
+
+		Logger.recordOutput("checkin/ a", ScoringHelpers
+				.getRobotBranchScoringPose(ScoringHelpers.getTargetBranch(), scoringPoseDistanceFromReefMeters));
 
 		return switch (ScoringHelpers.targetScoreLevel) {
 			case L1 -> PoseUtil.isAtPose(reefRelativeRobotPose, reefRelativeTargetPose, reefRelativeSpeeds, l1Tolerances, l1Deadbands);
@@ -276,38 +280,34 @@ public class RobotCommander extends GBSubsystem {
 
 
 	public Command scoreSequence() {
-
 		Supplier<Branch> targetBranchSupplier = ScoringHelpers::getTargetBranch;
 
 		return asSubsystemCommand(
-				new DeferredCommand(
-						() -> new ParallelCommandGroup(
-								AutoBuilder.pathfindThenFollowPath(
-										getPathByBranch(targetBranchSupplier.get()),
-										AutonomousConstants.getRealTimeConstraints(swerve)
-								),
-								new SequentialCommandGroup(
-										superstructure.armPreScore()
-												.until(
-														() -> PoseUtil.isAtPose(
-																robot.getPoseEstimator().getEstimatedPose(),
-																ScoringHelpers.getRobotBranchScoringPose(
-																		targetBranchSupplier.get(),
-																		StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS
-																),
-																swerve.getChassisSpeeds(),
-																Tolerances.REEF_RELATIVE_OPEN_SUPERSTRUCTURE_POSITION,
-																Tolerances.REEF_RELATIVE_OPEN_SUPERSTRUCTURE_DEADBANDS
+			new DeferredCommand(
+				() -> Commands.parallel(
+					AutoBuilder.pathfindThenFollowPath(
+						getPathByBranch(targetBranchSupplier.get()),
+						AutonomousConstants.getRealTimeConstraints(swerve)
+					),
+					Commands.sequence(
+						superstructure.armPreScore()
+							.until(() ->
+								ScoringHelpers.isAfterOpeningDistance(
+										robot.getPoseEstimator().getEstimatedPose(),
+										ScoringHelpers.getTargetBranch(),
+										StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS,
+										StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS
 
-														)
-												),
-										superstructure.preScore().until(() -> false),
-										superstructure.scoreWithRelease()
 								)
-						).until(superstructure::isCoralOut),
-						Set.of(superstructure, this, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
-				),
-				"score seq"
+							),
+						superstructure.preScore().until(superstructure::isPreScoreReady),
+						superstructure.scoreWithoutRelease().until(this::isReadyToScore),
+						superstructure.scoreWithRelease()
+					)
+				).until(superstructure::isCoralOut),
+				Set.of(superstructure, this, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
+			),
+			RobotState.SCORE
 		);
 	}
 

@@ -16,11 +16,11 @@ public class ComputerMain {
 	}
 
 	private static void startComputerPrograms(String connectedIP) {
+		CMDHandler.runPythonClass(Path.of("BatteryMessage"), connectedIP);
 
 		if (KeyboardController.ENABLE_KEYBOARD) {
 			CMDHandler.runPythonClass(Path.of("KeyboardToNetworkTables"), connectedIP);
 		}
-//		CMDHandler.runPythonClass(Path.of("BatteryMessage"), connectedIP);
 
 	}
 

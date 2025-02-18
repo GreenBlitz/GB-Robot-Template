@@ -50,15 +50,19 @@ public class VisionConstants {
 
 	public static final int NO_APRILTAG_ID = -1;
 
-	public static Rotation2d ANGLE_FILTERS_TOLERANCES = Rotation2d.fromDegrees(1);
+	public static Rotation2d ROLL_FILTER_TOLERANCE = Rotation2d.fromDegrees(3);
+
+	public static Rotation2d PITCH_FILTER_TOLERANCE = Rotation2d.fromDegrees(3);
+
+	public static Rotation2d YAW_FILTER_TOLERANCE = Rotation2d.fromDegrees(1);
 
 	public static double ROBOT_POSITION_IN_FIELD_TOLERANCE_METERS = 0.1;
 
 	public static double ROBOT_DISTANCE_TO_GROUND_TOLERANCE_METERS = 0.3;
 
 	public static final Filter<VisionData> DEFAULT_VISION_FILTER = VisionFilters.isInField(ROBOT_POSITION_IN_FIELD_TOLERANCE_METERS)
-		.and(VisionFilters.isRollAtAngle(Rotation2d.fromDegrees(0), ANGLE_FILTERS_TOLERANCES))
-		.and(VisionFilters.isPitchAtAngle(Rotation2d.fromDegrees(0), ANGLE_FILTERS_TOLERANCES))
+		.and(VisionFilters.isRollAtAngle(Rotation2d.fromDegrees(0), ROLL_FILTER_TOLERANCE))
+		.and(VisionFilters.isPitchAtAngle(Rotation2d.fromDegrees(0), PITCH_FILTER_TOLERANCE))
 		.and(VisionFilters.isOnGround(ROBOT_DISTANCE_TO_GROUND_TOLERANCE_METERS));
 
 	public static final Pose3d LIMELIGHT_LEFT_CAMERA_ROBOT_POSE = new Pose3d(

@@ -109,7 +109,7 @@ public class Robot {
 		multiAprilTagVisionSources.applyFunctionOnAllFilters(
 			filters -> filters.and(
 				new Filter<>(
-					data -> VisionFilters.isYawAtAngle(headingEstimator::getEstimatedHeading, VisionConstants.ANGLE_FILTERS_TOLERANCES)
+					data -> VisionFilters.isYawAtAngle(headingEstimator::getEstimatedHeading, VisionConstants.YAW_FILTER_TOLERANCE)
 						.apply((VisionData) data)
 				)
 			)

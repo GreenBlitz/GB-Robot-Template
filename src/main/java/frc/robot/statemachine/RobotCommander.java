@@ -280,15 +280,13 @@ public class RobotCommander extends GBSubsystem {
 
 
 	public Command scoreSequence() {
-		Supplier<Branch> targetBranchSupplier = ScoringHelpers::getTargetBranch;
-
 		return asSubsystemCommand(
 			new DeferredCommand(
 				() -> Commands
 					.parallel(
 						swerve.getCommandsBuilder().driveToPath(
 							() -> robot.getPoseEstimator().getEstimatedPose(),
-							getPathByBranch(targetBranchSupplier.get())
+							getPathByBranch(ScoringHelpers.getTargetBranch())
 						),
 						Commands.sequence(
 							superstructure.armPreScore()
@@ -297,7 +295,7 @@ public class RobotCommander extends GBSubsystem {
 										robot.getPoseEstimator().getEstimatedPose(),
 										ScoringHelpers.getTargetBranch(),
 										StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS,
-										StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS
+										StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS_NOT_ATUO
 
 									)
 								),

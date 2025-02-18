@@ -135,7 +135,7 @@ public class Robot {
 	public void configPathPlanner() {
 		swerve.configPathPlanner(
 			poseEstimator::getEstimatedPose,
-			poseEstimator::resetPose,
+			(pose2d) -> {},
 			PathPlannerUtil.getGuiRobotConfig().orElse(getRobotConfig())
 		);
 	}

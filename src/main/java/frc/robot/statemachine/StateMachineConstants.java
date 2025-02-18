@@ -7,6 +7,7 @@ public class StateMachineConstants {
 
 	public static final double ROBOT_SCORING_DISTANCE_FROM_REEF_METERS = 0.56;
 	public static final double OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS = 0.7;
+	public static final double OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS_NOT_ATUO = 0.8;
 
 	public static final Translation2d CLOSE_SUPERSTRUCTURE_LENGTH_AND_WIDTH = new Translation2d(0.79, 1.03);
 

@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3950896846119463,
-        "y": 1.7842153358984192
+        "x": 1.9300204918032788,
+        "y": 2.2568135245901635
       },
       "isLocked": false,
       "linkedName": "LS1"
@@ -20,8 +20,8 @@
         "y": 2.96
       },
       "prevControl": {
-        "x": 3.4417500000000003,
-        "y": 2.6404999999999994
+        "x": 2.9609631147540982,
+        "y": 2.02904713114754
       },
       "nextControl": null,
       "isLocked": false,
@@ -40,7 +40,7 @@
     },
     {
       "name": "PRE_SCORE",
-      "waypointRelativePos": 0.7824945295404772,
+      "waypointRelativePos": 0.7995296884185734,
       "endWaypointRelativePos": null,
       "command": null
     }

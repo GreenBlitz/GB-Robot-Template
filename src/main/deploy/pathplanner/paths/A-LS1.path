@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.58,
-        "y": 5.07
+        "x": 3.16,
+        "y": 4.19
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.283250000000001,
-        "y": 5.204749999999999
+        "x": 2.6612704918032786,
+        "y": 3.8511782786885242
       },
       "isLocked": false,
-      "linkedName": "AL3"
+      "linkedName": "A"
     },
     {
       "anchor": {
-        "x": 5.83,
-        "y": 4.19
+        "x": 0.67,
+        "y": 1.39
       },
       "prevControl": {
-        "x": 6.990749999999999,
-        "y": 4.1225
+        "x": 0.9085040769030139,
+        "y": 1.7759028463167505
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "H"
+      "linkedName": "LS1"
     }
   ],
   "rotationTargets": [],
@@ -33,14 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "ARM_PRE_SCORE",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "PRE_SCORE",
-      "waypointRelativePos": 0.85,
+      "name": "INTAKE",
+      "waypointRelativePos": 0.13874191651969375,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -55,13 +49,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 54.0
   },
   "reversed": false,
-  "folder": "from auto line",
+  "folder": "to coral station",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -157.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

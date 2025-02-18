@@ -1,4 +1,4 @@
-package frc.robot.subsystems.solenoid.factory;
+package frc.robot.subsystems.climb.solenoid.factory;
 
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -8,9 +8,9 @@ import frc.robot.IDs;
 import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
 import frc.robot.hardware.rev.motors.*;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
-import frc.robot.subsystems.solenoid.Solenoid;
+import frc.robot.subsystems.climb.solenoid.Solenoid;
 
-public class SolenoidSparkMaxBuilder {
+public class SparkMaxSolenoidBuilder {
 
 	private static final int NUMBER_OF_MOTORS = 1;
 	private static final boolean IS_INVERTED = true;

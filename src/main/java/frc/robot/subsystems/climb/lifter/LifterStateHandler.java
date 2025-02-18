@@ -1,4 +1,4 @@
-package frc.robot.subsystems.lifter;
+package frc.robot.subsystems.climb.lifter;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -15,7 +15,7 @@ public class LifterStateHandler {
 			case HOLD -> lifter.getCommandsBuilder().stop();
 			case FORWARD, BACKWARD -> lifter.getCommandsBuilder().setPower(state.getPower());
 			case EXTENDED -> lifter.getCommandsBuilder().setPower(state.getPower()).until(() -> lifter.isHigher(state.getTargetPosition()));
-			case RETRACTED -> lifter.getCommandsBuilder().setPower(state.getPower()).until(lifter::isLimitSwitchPressed);
+			case RETRACTED -> lifter.getCommandsBuilder().setPower(state.getPower()).until(lifter::isAtLimitSwitch);
 		};
 	}
 

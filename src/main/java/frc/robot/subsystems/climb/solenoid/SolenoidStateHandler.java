@@ -1,4 +1,4 @@
-package frc.robot.subsystems.solenoid;
+package frc.robot.subsystems.climb.solenoid;
 
 import edu.wpi.first.wpilibj2.command.Command;
 

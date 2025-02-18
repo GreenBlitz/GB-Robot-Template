@@ -1,4 +1,4 @@
-package frc.robot.statemachine.superstructure.climb;
+package frc.robot.subsystems.climb;
 
 public class ClimbConstants {
 

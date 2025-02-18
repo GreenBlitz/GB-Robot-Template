@@ -1,4 +1,4 @@
-package frc.robot.subsystems.solenoid;
+package frc.robot.subsystems.climb.solenoid;
 
 import frc.robot.hardware.interfaces.IMotor;
 import frc.robot.hardware.interfaces.InputSignal;
@@ -8,18 +8,18 @@ public class Solenoid extends GBSubsystem {
 
 	private final IMotor motor;
 	private final InputSignal<Double> voltageSignal;
-	private final SolenoidCommandBuilder commandsBuilder;
+	private final SolenoidCommandsBuilder commandsBuilder;
 
 	public Solenoid(String logPath, IMotor motor, InputSignal<Double> voltageSignal) {
 		super(logPath);
 		this.motor = motor;
 		this.voltageSignal = voltageSignal;
-		this.commandsBuilder = new SolenoidCommandBuilder(this);
+		this.commandsBuilder = new SolenoidCommandsBuilder(this);
 
 		updateInputs();
 	}
 
-	public SolenoidCommandBuilder getCommandsBuilder() {
+	public SolenoidCommandsBuilder getCommandsBuilder() {
 		return commandsBuilder;
 	}
 

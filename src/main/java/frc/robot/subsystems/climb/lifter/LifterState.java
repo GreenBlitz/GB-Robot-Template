@@ -1,4 +1,4 @@
-package frc.robot.subsystems.lifter;
+package frc.robot.subsystems.climb.lifter;
 
 public enum LifterState {
 

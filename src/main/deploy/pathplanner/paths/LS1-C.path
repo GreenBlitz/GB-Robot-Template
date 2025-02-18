@@ -1,0 +1,67 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.67,
+        "y": 1.39
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.3950896846119463,
+        "y": 1.7842153358984192
+      },
+      "isLocked": false,
+      "linkedName": "LS1"
+    },
+    {
+      "anchor": {
+        "x": 3.65,
+        "y": 2.96
+      },
+      "prevControl": {
+        "x": 3.4417500000000003,
+        "y": 2.6404999999999994
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "C"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "ARM_PRE_SCORE",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "PRE_SCORE",
+      "waypointRelativePos": 0.7824945295404772,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 59.99999999999999
+  },
+  "reversed": false,
+  "folder": "from coral station",
+  "idealStartingState": {
+    "velocity": 0.0,
+    "rotation": 54.0
+  },
+  "useDefaultConstraints": true
+}

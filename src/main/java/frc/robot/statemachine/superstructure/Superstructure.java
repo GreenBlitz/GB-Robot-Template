@@ -191,6 +191,18 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
+	public Command closeL4AfterScore() {
+		return new ParallelCommandGroup(
+			armStateHandler.setState(ArmState.CLOSED),
+			new SequentialCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.PRE_L4)
+					.until(() -> robot.getArm().isPastPosition(StateMachineConstants.ARM_POSITION_TO_CLOSE_ELEVATOR_L4)),
+				elevatorStateHandler.setState(ElevatorState.CLOSED)
+			),
+			endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+		).until(() -> robot.getElevator().isAtPosition(ElevatorState.CLOSED.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS));
+	}
+
 	private Command asSubsystemCommand(Command command, SuperstructureState state) {
 		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
 	}

@@ -73,18 +73,6 @@ public class RobotCommander extends GBSubsystem {
 		};
 	}
 
-	private boolean isAtReefScoringPose(double scoringPoseDistanceFromReefMeters, Translation2d tolerances) {
-		Rotation2d reefAngle = Field.getReefSideMiddle(ScoringHelpers.getTargetBranch().getReefSide()).getRotation();
-
-		Translation2d reefRelativeTargetPose = ScoringHelpers
-			.getRobotBranchScoringPose(ScoringHelpers.getTargetBranch(), scoringPoseDistanceFromReefMeters)
-			.rotateBy(reefAngle.unaryMinus())
-			.getTranslation();
-		Translation2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus()).getTranslation();
-
-		return PoseUtil.isAtTranslation(reefRelativeRobotPose, reefRelativeTargetPose, tolerances);
-	}
-
 	private boolean isReadyToOpenSuperstructure() {
 		return isAtReefScoringPose(
 			StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS,
@@ -110,10 +98,15 @@ public class RobotCommander extends GBSubsystem {
 	 * Checks if the robot is out of the safe zone to close the superstructure
 	 */
 	public boolean isReadyToCloseSuperstructure() {
-		return !isAtReefScoringPose(
-			StateMachineConstants.CLOSE_SUPERSTRUCTURE_DISTANCE_FROM_BRANCH_METERS,
-			StateMachineConstants.CLOSE_SUPERSTRUCTURE_LENGTH_AND_WIDTH
-		);
+		Rotation2d reefAngle = Field.getReefSideMiddle(ScoringHelpers.getTargetBranch().getReefSide()).getRotation();
+
+		Translation2d reefRelativeReefSideMiddle = Field.getReefSideMiddle(ScoringHelpers.getTargetBranch().getReefSide())
+			.rotateBy(reefAngle.unaryMinus())
+			.getTranslation();
+		Translation2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus()).getTranslation();
+
+		return !PoseUtil
+			.isAtTranslation(reefRelativeRobotPose, reefRelativeReefSideMiddle, StateMachineConstants.CLOSE_SUPERSTRUCTURE_LENGTH_AND_WIDTH);
 	}
 
 	public boolean isReadyToScore() {
@@ -236,11 +229,24 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	private Command closeAfterScore() {
-		return new SequentialCommandGroup(
-			new ParallelCommandGroup(superstructure.preScore(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE))
-				.until(this::isReadyToCloseSuperstructure),
-			drive()
-		);
+		return new DeferredCommand(() -> switch (ScoringHelpers.targetScoreLevel) {
+			case L4 ->
+				new SequentialCommandGroup(
+					new ParallelDeadlineGroup(
+						superstructure.closeL4AfterScore(),
+						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+					),
+					drive()
+				);
+			case L1, L2, L3 ->
+				new SequentialCommandGroup(
+					new ParallelCommandGroup(
+						superstructure.preScore(),
+						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+					).until(this::isReadyToCloseSuperstructure),
+					drive()
+				);
+		}, Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector()));
 	}
 
 	private Command asSubsystemCommand(Command command, RobotState state) {

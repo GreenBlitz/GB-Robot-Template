@@ -12,6 +12,7 @@ import frc.constants.field.enums.Branch;
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.scoringhelpers.ScoringHelpers;
+import frc.robot.scoringhelpers.ScoringPathsHelper;
 import frc.robot.statemachine.superstructure.Superstructure;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.Swerve;
@@ -270,11 +271,7 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	private PathPlannerPath getPathByBranch(Branch branch){
-        try {
-            return PathPlannerPath.fromPathFile("a");
-        } catch (IOException | ParseException e) {
-            throw new RuntimeException(e);
-        }
+        return ScoringPathsHelper.generatePathToTargetBranch(branch);
     }
 
 

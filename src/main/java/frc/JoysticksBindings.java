@@ -86,7 +86,7 @@ public class JoysticksBindings {
 		);
 //		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
 		usedJoystick.B.onTrue(robot.getRobotCommander().scoreSequence());
-		usedJoystick.START.onTrue(robot.getRobotCommander().autoScore());
+		usedJoystick.START.onTrue(robot.getRobotCommander().scoreSequence());
 
 		usedJoystick.POV_DOWN.onTrue(new InstantCommand(() -> ScoringHelpers.toggleIsLeftBranch()));
 		usedJoystick.POV_UP.onTrue(new InstantCommand(() -> ScoringHelpers.toggleIsFarReefHalf()));

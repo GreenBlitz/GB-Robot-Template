@@ -19,7 +19,7 @@ public class TalonFXWrapper extends TalonFX {
 	}
 
 	public StatusCode applyConfiguration(TalonFXConfiguration configuration, int numberOfTries) {
-		return Phoenix6Util.checkWithRetry(() -> getConfigurator().apply(configuration), numberOfTries);
+		return Phoenix6Util.checkStatusCodeWithRetry(() -> getConfigurator().apply(configuration), numberOfTries);
 	}
 
 	public StatusCode applyConfiguration(TalonFXConfiguration configuration) {

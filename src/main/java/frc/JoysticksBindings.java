@@ -75,10 +75,7 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-//		usedJoystick.A.onTrue(robot.getSwerve().getCommandsBuilder().driveToPose(()->robot.getPoseEstimator().getEstimatedPose(),()-> ScoringHelpers.getRobotFeederPose(CoralStationSlot.R5,5)));
-//		usedJoystick.A.onTrue(robot.getSwerve().getCommandsBuilder().driveToPose(()->robot.getPoseEstimator().getEstimatedPose(), ()-> Field.getCoralStationSlotsPose2d(CoralStationSlot.L5)));
-		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
-		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
+
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

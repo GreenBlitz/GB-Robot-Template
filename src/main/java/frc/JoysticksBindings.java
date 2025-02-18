@@ -1,6 +1,7 @@
 package frc;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -82,19 +83,7 @@ public class JoysticksBindings {
 		// bindings...
 
 		usedJoystick.R1.onTrue(robot.getRobotCommander().scoreForButton());
-		usedJoystick.X.onTrue(
-			robot.getSwerve()
-				.getCommandsBuilder()
-				.driveToPose(() -> robot.getPoseEstimator().getEstimatedPose(), () -> new Pose2d(5, 5, new Rotation2d()))
-		);
-//		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
-		usedJoystick.START.onTrue(robot.getRobotCommander().scoreSequence());
-
-//		usedJoystick.POV_DOWN.onTrue(new InstantCommand(() -> ScoringHelpers.toggleIsLeftBranch()));
-//		usedJoystick.POV_UP.onTrue(new InstantCommand(() -> ScoringHelpers.toggleIsFarReefHalf()));
-//		usedJoystick.POV_RIGHT.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4));
-//		usedJoystick.POV_LEFT.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L3));
-//
+		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
 
 		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
 	}
@@ -105,7 +94,9 @@ public class JoysticksBindings {
 
 		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getRobotCommander().setState(RobotState.ALIGN_REEF));
 //		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getRobotCommander().fullyPreScore());
-		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getRobotCommander().fullyScore());
+//		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getRobotCommander().fullyScore());
+		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getRobotCommander().scoreSequence());
+
 
 		usedJoystick.A.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L1));
 		usedJoystick.B.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L2));

@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -135,8 +136,7 @@ public class Robot {
 		swerve.configPathPlanner(
 			poseEstimator::getEstimatedPose,
 			poseEstimator::resetPose,
-			PathPlannerUtil.getGuiRobotConfig()
-				.orElse(new RobotConfig(70, 0.0001, new ModuleConfig(0.048, 5.24, 0.96, DCMotor.getKrakenX60Foc(1), 60, 1), 0.577))
+			PathPlannerUtil.getGuiRobotConfig().orElse(getRobotConfig())
 		);
 	}
 
@@ -167,7 +167,7 @@ public class Robot {
 	}
 
 	public Command getAutonomousCommand() {
-		return new InstantCommand();
+		return new PathPlannerAuto("Straight 2m");
 	}
 
 	public IPoseEstimator getPoseEstimator() {

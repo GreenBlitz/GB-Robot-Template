@@ -6,6 +6,7 @@ package frc;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtil;
@@ -41,6 +42,7 @@ public class RobotManager extends LoggedRobot {
 		if (!DriverStationUtil.isMatch()) {
 			BrakeStateManager.coast();
 		}
+		robot.getSwerve().setDriversPowerInputs(new ChassisPowers(0,0,0));
 	}
 
 	@Override

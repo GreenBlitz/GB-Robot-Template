@@ -44,8 +44,14 @@ public class ScoringHelpers {
 		return latestWantedCoralStation;
 	}
 
-	public static boolean isAfterOpeningDistance(Pose2d robotPose,Branch targetBranch,double scoreDistanceFromBranch, double openDistanceFromBranch){
-		return getRobotBranchScoringPose(targetBranch, scoreDistanceFromBranch).getTranslation().getDistance(robotPose.getTranslation()) < openDistanceFromBranch;
+	public static boolean isAfterOpeningDistance(
+		Pose2d robotPose,
+		Branch targetBranch,
+		double scoreDistanceFromBranch,
+		double openDistanceFromBranch
+	) {
+		return getRobotBranchScoringPose(targetBranch, scoreDistanceFromBranch).getTranslation().getDistance(robotPose.getTranslation())
+			< openDistanceFromBranch;
 	}
 
 

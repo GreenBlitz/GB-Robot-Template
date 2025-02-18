@@ -142,7 +142,7 @@ public class Swerve extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/OdometrySamples", getNumberOfOdometrySamples());
 	}
 
-	public ChassisSpeeds getChassisSpeeds(){
+	public ChassisSpeeds getChassisSpeeds() {
 		return kinematics.toChassisSpeeds(getModules().getCurrentStates());
 	}
 

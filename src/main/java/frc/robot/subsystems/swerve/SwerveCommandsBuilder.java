@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -182,54 +183,49 @@ public class SwerveCommandsBuilder {
 			Set.of(swerve)
 		);
 	}
-	
-	public Command driveToPose(
-			Supplier<Pose2d> currentPose,
-			Supplier<Pose2d> targetPose,
-			Supplier<ChassisSpeeds> chassisSpeedsSupplier,
-			ProfiledPIDController xMetersProfiledPIDController,
-			ProfiledPIDController yMetersProfiledPIDController,
-			ProfiledPIDController thetaDegreesProfiledPIDController
-	){
-		return swerve.asSubsystemCommand(
-				new DeferredCommand(
-						() -> new FunctionalCommand(
-								() -> {
-									xMetersProfiledPIDController.reset(currentPose.get().getX(),chassisSpeedsSupplier.get().vxMetersPerSecond);
-									yMetersProfiledPIDController.reset(currentPose.get().getY(),chassisSpeedsSupplier.get().vyMetersPerSecond);
-									thetaDegreesProfiledPIDController.reset(currentPose.get().getRotation().getDegrees(), chassisSpeedsSupplier.get().omegaRadiansPerSecond);
-									
-									xMetersProfiledPIDController.setGoal(targetPose.get().getX());
-									yMetersProfiledPIDController.setGoal(targetPose.get().getY());
-									thetaDegreesProfiledPIDController.setGoal(targetPose.get().getRotation().getDegrees());
-								},
-								() -> {
-									swerve.driveByState(
-											new ChassisSpeeds(
-													xMetersProfiledPIDController.calculate(currentPose.get().getX()),
-													yMetersProfiledPIDController.calculate(currentPose.get().getY()),
-													Units.degreesToRadians(thetaDegreesProfiledPIDController.calculate(currentPose.get().getRotation().getDegrees()))
-											),
-											SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.CLOSED)
-									);
-								},
-								(interrupted) -> {},
-								() -> false,
-								swerve
-						),
-						Set.of(swerve)
-				),
-				"drive to pose by profiled pid: " + targetPose.get().toString()
+	public Command driveToPath(Supplier<Pose2d> currentPose, PathPlannerPath path) {
+		return new DeferredCommand(
+				() -> new SequentialCommandGroup(
+						AutoBuilder.pathfindThenFollowPath(path, AutonomousConstants.getRealTimeConstraints(swerve)),
+						pidToPose(currentPose, path.getPathPoses().get(path.getPathPoses().size() - 1))),
+				Set.of(swerve)
 		);
 	}
-	
-	public Command pathToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose){
-		return swerve.asSubsystemCommand(
-				new DeferredCommand(
-						() -> pathToPose(currentPose.get(), targetPose.get()),
-						Set.of(swerve)
+
+
+	public Command driveToPose(
+		Supplier<Pose2d> currentPose,
+		Supplier<Pose2d> targetPose,
+		Supplier<ChassisSpeeds> chassisSpeedsSupplier,
+		ProfiledPIDController xMetersProfiledPIDController,
+		ProfiledPIDController yMetersProfiledPIDController,
+		ProfiledPIDController thetaDegreesProfiledPIDController
+	) {
+		return swerve.asSubsystemCommand(new DeferredCommand(() -> new FunctionalCommand(() -> {
+			xMetersProfiledPIDController.reset(currentPose.get().getX(), chassisSpeedsSupplier.get().vxMetersPerSecond);
+			yMetersProfiledPIDController.reset(currentPose.get().getY(), chassisSpeedsSupplier.get().vyMetersPerSecond);
+			thetaDegreesProfiledPIDController
+				.reset(currentPose.get().getRotation().getDegrees(), chassisSpeedsSupplier.get().omegaRadiansPerSecond);
+
+			xMetersProfiledPIDController.setGoal(targetPose.get().getX());
+			yMetersProfiledPIDController.setGoal(targetPose.get().getY());
+			thetaDegreesProfiledPIDController.setGoal(targetPose.get().getRotation().getDegrees());
+		}, () -> {
+			swerve.driveByState(
+				new ChassisSpeeds(
+					xMetersProfiledPIDController.calculate(currentPose.get().getX()),
+					yMetersProfiledPIDController.calculate(currentPose.get().getY()),
+					Units.degreesToRadians(thetaDegreesProfiledPIDController.calculate(currentPose.get().getRotation().getDegrees()))
 				),
-				"path to pose: " + targetPose.get().toString()
+				SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.CLOSED)
+			);
+		}, (interrupted) -> {}, () -> false, swerve), Set.of(swerve)), "drive to pose by profiled pid: " + targetPose.get().toString());
+	}
+
+	public Command pathToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose) {
+		return swerve.asSubsystemCommand(
+			new DeferredCommand(() -> pathToPose(currentPose.get(), targetPose.get()), Set.of(swerve)),
+			"path to pose: " + targetPose.get().toString()
 		);
 	}
 

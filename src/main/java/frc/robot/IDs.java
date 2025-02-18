@@ -8,7 +8,11 @@ import frc.utils.battery.PowerDistributionDeviceID;
 
 public class IDs {
 
-	public static final PowerDistributionDeviceID POWER_DISTRIBUTION = new PowerDistributionDeviceID(1, PowerDistribution.ModuleType.kRev);
+	public static final PowerDistributionDeviceID POWER_DISTRIBUTION = new PowerDistributionDeviceID(20, PowerDistribution.ModuleType.kRev);
+
+	public static final Phoenix6DeviceID SWERVE_PIGEON_2 = new Phoenix6DeviceID(0, BusChain.CANIVORE);
+
+	public static final Phoenix6DeviceID CANDLE = new Phoenix6DeviceID(0, BusChain.ROBORIO);
 
 	public static class TalonFXIDs {
 
@@ -32,13 +36,13 @@ public class IDs {
 
 		public static final Phoenix6DeviceID ELEVATOR_LEFT = new Phoenix6DeviceID(11, BusChain.ROBORIO);
 
-		public static final Phoenix6DeviceID ARM = new Phoenix6DeviceID(20, BusChain.CANIVORE);
+		public static final Phoenix6DeviceID ARM = new Phoenix6DeviceID(20, BusChain.ROBORIO);
 
 	}
 
 	public static class SparkMAXIDs {
 
-		public static final SparkMaxDeviceID END_EFFECTOR = new SparkMaxDeviceID(30);
+		public static final SparkMaxDeviceID END_EFFECTOR = new SparkMaxDeviceID(5);
 
 	}
 
@@ -52,7 +56,7 @@ public class IDs {
 
 		public static final Phoenix6DeviceID SWERVE_BACK_RIGHT = new Phoenix6DeviceID(3, BusChain.CANIVORE);
 
-		public static final Phoenix6DeviceID ARM = new Phoenix6DeviceID(20, BusChain.CANIVORE);
+		public static final Phoenix6DeviceID ARM = new Phoenix6DeviceID(20, BusChain.ROBORIO);
 
 	}
 

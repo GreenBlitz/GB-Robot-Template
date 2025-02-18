@@ -10,6 +10,7 @@ import frc.constants.field.enums.Branch;
 import frc.constants.field.enums.CoralStation;
 import frc.constants.field.enums.CoralStationSlot;
 import frc.constants.field.enums.ReefSide;
+import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
@@ -61,6 +62,7 @@ public class SwerveStateHandler {
 	public void setCoralStationSlotSupplier(Supplier<Optional<CoralStationSlot>> coralStationSlotSupplier) {
 		this.coralStationSlotSupplier = coralStationSlotSupplier;
 	}
+
 	private void reportMissingSupplier(String supplierName) {
 		new Alert(Alert.AlertType.WARNING, swerve.getLogPath() + "/AimAssist/missing " + supplierName + " supplier").report();
 	}
@@ -130,14 +132,19 @@ public class SwerveStateHandler {
 	}
 
 	private ChassisSpeeds handleBranchAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, Branch reefBranch, SwerveState swerveState) {
-		Translation2d branch = Field.getCoralPlacement(reefBranch);
+		Translation2d branch = ScoringHelpers.getRobotBranchScoringPose(reefBranch, 0).getTranslation();
 		Rotation2d headingToReefSide = Field.getReefSideMiddle(reefBranch.getReefSide()).getRotation();
 
 		chassisSpeeds = AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotPose.getRotation(), headingToReefSide, swerveConstants);
 		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, headingToReefSide, branch, swerveConstants, swerveState);
 	}
 
-	private ChassisSpeeds handleCoralStationSlotAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, CoralStationSlot coralStationSlot, SwerveState swerveState) {
+	private ChassisSpeeds handleCoralStationSlotAimAssist(
+		ChassisSpeeds chassisSpeeds,
+		Pose2d robotPose,
+		CoralStationSlot coralStationSlot,
+		SwerveState swerveState
+	) {
 		Translation2d branch = Field.getCoralStationTranslation2d(coralStationSlot);
 		Rotation2d headingToReefSide = Field.getCoralStationSlotsPose2d(coralStationSlot).getRotation();
 

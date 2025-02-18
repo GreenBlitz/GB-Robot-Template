@@ -1,5 +1,6 @@
 package frc.robot.vision.sources.limelights;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.IndpendentHeadingVisionSource;
 import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
@@ -11,18 +12,34 @@ public class LimelightFactory {
 		String cameraNetworkTablesName,
 		String parentLogPath,
 		String sourceName,
-		Filter<AprilTagVisionData> filter
+		Filter<? super AprilTagVisionData> filter,
+		Pose3d cameraPoseOffset
 	) {
-		return new LimeLightSource(cameraNetworkTablesName, parentLogPath, sourceName, filter, LimelightPoseEstimationMethod.MEGATAG_2);
+		return new LimeLightSource(
+			cameraNetworkTablesName,
+			parentLogPath,
+			sourceName,
+			filter,
+			cameraPoseOffset,
+			LimelightPoseEstimationMethod.MEGATAG_2
+		);
 	}
 
 	public static IndpendentHeadingVisionSource createRobotHeadingEstimatingLimelight(
 		String cameraNetworkTablesName,
 		String parentLogPath,
 		String sourceName,
-		Filter<AprilTagVisionData> filter
+		Filter<? super AprilTagVisionData> filter,
+		Pose3d cameraPoseOffset
 	) {
-		return new LimeLightSource(cameraNetworkTablesName, parentLogPath, sourceName, filter, LimelightPoseEstimationMethod.MEGATAG_1);
+		return new LimeLightSource(
+			cameraNetworkTablesName,
+			parentLogPath,
+			sourceName,
+			filter,
+			cameraPoseOffset,
+			LimelightPoseEstimationMethod.MEGATAG_1
+		);
 	}
 
 }

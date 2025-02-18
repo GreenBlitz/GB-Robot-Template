@@ -38,9 +38,14 @@ public class LogCommand extends InstantCommand {
 		super(() -> Logger.recordOutput(key, value));
 	}
 
-	interface IntegerSupplier extends Supplier<Integer>{}
-	interface StringSupplier extends Supplier<String>{}
-	interface TSupplier<T> extends Supplier<T> {}
+	interface IntegerSupplier extends Supplier<Integer> {
+	}
+
+	interface StringSupplier extends Supplier<String> {
+	}
+
+	interface TSupplier<T> extends Supplier<T> {
+	}
 
 	public LogCommand(String key, StringSupplier value) {
 		super(() -> Logger.recordOutput(key, value.get()));
@@ -65,4 +70,5 @@ public class LogCommand extends InstantCommand {
 	public <T extends WPISerializable> LogCommand(String key, Supplier<T> value) {
 		super(() -> Logger.recordOutput(key, value.get()));
 	}
+
 }

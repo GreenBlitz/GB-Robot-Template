@@ -9,6 +9,8 @@ public enum RobotState {
 	ARM_PRE_SCORE,
 	PRE_SCORE,
 	SCORE_WITHOUT_RELEASE,
-	SCORE;
+	SCORE,
+	PRE_CLIMB,
+	CLIMB;
 
 }

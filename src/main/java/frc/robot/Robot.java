@@ -159,7 +159,7 @@ public class Robot {
 		swerve.configPathPlanner(
 			poseEstimator::getEstimatedPose,
 			poseEstimator::resetPose,
-			PathPlannerUtil.getGuiRobotConfig().orElse(AutonomousConstants.ROBOT_CONFIG)
+			PathPlannerUtil.getGuiRobotConfig().orElse(getRobotConfig())
 		);
 
 		new EventTrigger("PRE_SCORE").onTrue(

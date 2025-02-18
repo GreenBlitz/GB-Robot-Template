@@ -40,13 +40,13 @@
     },
     {
       "name": "PRE_SCORE",
-      "waypointRelativePos": 0.90,
+      "waypointRelativePos": 0.9,
       "endWaypointRelativePos": null,
       "command": null
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.2,
+    "maxVelocity": 4.0,
     "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,

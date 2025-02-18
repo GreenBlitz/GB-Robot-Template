@@ -9,9 +9,26 @@ import edu.wpi.first.math.util.Units;
 import frc.constants.field.Field;
 import frc.constants.field.enums.Branch;
 import frc.robot.statemachine.StateMachineConstants;
-import frc.utils.Conversions;
+
+import java.util.HashMap;
 
 public class ScoringPathsHelper {
+
+    private static final HashMap<Branch, PathPlannerPath> BRANCH_PATH_PLANNER_PATH_HASH_MAP = generateAllPaths();
+
+    public static HashMap<Branch, PathPlannerPath> generateAllPaths(){
+        HashMap<Branch, PathPlannerPath> branchToPathMap = new HashMap<>();
+
+        Branch[] branches = Branch.values();
+        for (Branch branch : branches){
+            branchToPathMap.put(branch, generatePathToTargetBranch(branch));
+        }
+        return branchToPathMap;
+    }
+
+    public static PathPlannerPath getPathByTargetBranch(Branch branch){
+        return BRANCH_PATH_PLANNER_PATH_HASH_MAP.get(branch);
+    }
 
     public static PathPlannerPath generatePathToTargetBranch(Branch branch){
 

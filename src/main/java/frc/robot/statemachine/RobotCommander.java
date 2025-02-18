@@ -271,7 +271,7 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	private PathPlannerPath getPathByBranch(Branch branch){
-        return ScoringPathsHelper.generatePathToTargetBranch(branch);
+        return ScoringPathsHelper.getPathByTargetBranch(branch);
     }
 
 

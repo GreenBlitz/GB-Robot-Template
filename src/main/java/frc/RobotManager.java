@@ -4,12 +4,8 @@
 
 package frc;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.constants.field.Field;
-import frc.constants.field.enums.CoralStationSlot;
 import frc.robot.Robot;
-import frc.robot.subsystems.swerve.SwerveCommandsBuilder;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtil;
@@ -92,7 +88,6 @@ public class RobotManager extends LoggedRobot {
 //				Field.getCoralStationSlotsPose2d(CoralStationSlot.L7), Field.getCoralStationSlotsPose2d(CoralStationSlot.L8),
 //				Field.getCoralStationSlotsPose2d(CoralStationSlot.L9)
 //		});
-
 	}
 
 	private void updateTimeRelatedData() {

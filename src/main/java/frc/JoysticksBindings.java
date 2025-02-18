@@ -3,13 +3,10 @@ package frc;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.constants.field.Field;
-import frc.constants.field.enums.CoralStationSlot;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
-import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.states.SwerveState;
@@ -77,7 +74,9 @@ public class JoysticksBindings {
 		// bindings...
 //		usedJoystick.A.onTrue(robot.getSwerve().getCommandsBuilder().driveToPose(()->robot.getPoseEstimator().getEstimatedPose(),()-> ScoringHelpers.getRobotFeederPose(CoralStationSlot.R5,5)));
 //		usedJoystick.A.onTrue(robot.getSwerve().getCommandsBuilder().driveToPose(()->robot.getPoseEstimator().getEstimatedPose(), ()-> Field.getCoralStationSlotsPose2d(CoralStationSlot.L5)));
-		usedJoystick.A.onTrue(robot.getSwerve().getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CORAL_STATION_SLOTS)));
+		usedJoystick.A.onTrue(
+			robot.getSwerve().getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CORAL_STATION_SLOTS))
+		);
 		usedJoystick.B.onTrue(robot.getSwerve().getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
 	}
 

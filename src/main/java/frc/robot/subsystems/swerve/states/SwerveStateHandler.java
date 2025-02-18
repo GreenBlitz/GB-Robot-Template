@@ -61,6 +61,7 @@ public class SwerveStateHandler {
 	public void setCoralStationSlotSupplier(Supplier<Optional<CoralStationSlot>> coralStationSlotSupplier) {
 		this.coralStationSlotSupplier = coralStationSlotSupplier;
 	}
+
 	private void reportMissingSupplier(String supplierName) {
 		new Alert(Alert.AlertType.WARNING, swerve.getLogPath() + "/AimAssist/missing " + supplierName + " supplier").report();
 	}
@@ -137,7 +138,12 @@ public class SwerveStateHandler {
 		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, headingToReefSide, branch, swerveConstants, swerveState);
 	}
 
-	private ChassisSpeeds handleCoralStationSlotAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, CoralStationSlot coralStationSlot, SwerveState swerveState) {
+	private ChassisSpeeds handleCoralStationSlotAimAssist(
+		ChassisSpeeds chassisSpeeds,
+		Pose2d robotPose,
+		CoralStationSlot coralStationSlot,
+		SwerveState swerveState
+	) {
 		Translation2d branch = Field.getCoralStationTranslation2d(coralStationSlot);
 		Rotation2d headingToReefSide = Field.getCoralStationSlotsPose2d(coralStationSlot).getRotation();
 

@@ -32,13 +32,13 @@ public class ElevatorCommandsBuilder {
 
 	public Command setTargetPositionMeters(double targetPositionMeters) {
 		return elevator.asSubsystemCommand(
-			new InstantCommand(() -> elevator.setTargetPositionMeters(targetPositionMeters), elevator),
+			new RunCommand(() -> elevator.setTargetPositionMeters(targetPositionMeters), elevator),
 			"Set Target Position To " + targetPositionMeters + " Meters"
 		);
 	}
 
 	public Command stayInPlace() {
-		return elevator.asSubsystemCommand(new InstantCommand(elevator::stayInPlace, elevator), "Stay in place");
+		return elevator.asSubsystemCommand(new RunCommand(elevator::stayInPlace, elevator), "Stay in place");
 	}
 
 	public Command stop() {

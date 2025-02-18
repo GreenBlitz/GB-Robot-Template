@@ -37,7 +37,7 @@ public class ArmCommandsBuilder {
 	}
 
 	public Command stayInPlace() {
-		return arm.asSubsystemCommand(new InstantCommand(arm::stayInPlace), "Stay in place");
+		return arm.asSubsystemCommand(new RunCommand(arm::stayInPlace), "Stay in place");
 	}
 
 	public Command loggedDashboardSetVoltage() {

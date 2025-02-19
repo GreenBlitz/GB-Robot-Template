@@ -312,7 +312,6 @@ public class Swerve extends GBSubsystem {
 		);
 
 		// Apply 12 volts on x-axis. Use it for max velocity calibrations.
-
 		// See what velocity the swerve log after it stops accelerating and use it as max.
 //		joystick.START.whileTrue(commandsBuilder.maxVelocityAccelerationCalibration(VelocityType.TRANSLATIONAL));
 

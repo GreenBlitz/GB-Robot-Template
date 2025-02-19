@@ -132,10 +132,11 @@ public class Robot {
 	}
 
 	public void configPathPlanner() {
-		swerve.configPathPlanner(poseEstimator::getEstimatedPose, pose2d -> {
-			poseEstimator.resetPose(pose2d);
-			headingEstimator.reset(pose2d.getRotation());
-		}, PathPlannerUtil.getGuiRobotConfig().orElse(getRobotConfig()));
+		swerve.configPathPlanner(
+			poseEstimator::getEstimatedPose,
+			poseEstimator::resetPose,
+			PathPlannerUtil.getGuiRobotConfig().orElse(getRobotConfig())
+		);
 	}
 
 	public void periodic() {

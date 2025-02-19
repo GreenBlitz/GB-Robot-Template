@@ -34,17 +34,19 @@ public class RobotCommander extends GBSubsystem {
 		this.swerve = robot.getSwerve();
 		this.superstructure = new Superstructure("StateMachine/Superstructure", robot);
 		this.currentState = RobotState.DRIVE;
+	}
 
+	public Superstructure getSuperstructure() {
+		return superstructure;
+	}
+
+	public void initializeDefaultCommand() {
 		setDefaultCommand(
 			new DeferredCommand(
 				() -> endState(currentState),
 				Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
 			)
 		);
-	}
-
-	public Superstructure getSuperstructure() {
-		return superstructure;
 	}
 
 	/**

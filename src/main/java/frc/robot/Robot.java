@@ -129,15 +129,6 @@ public class Robot {
 		this.simulationManager = new SimulationManager("SimulationManager", this);
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
 
-		configPathPlanner();
-	}
-
-	public void configPathPlanner() {
-		swerve.configPathPlanner(
-			poseEstimator::getEstimatedPose,
-			poseEstimator::resetPose,
-			PathPlannerUtil.getGuiRobotConfig().orElse(getRobotConfig())
-		);
 	}
 
 	public void periodic() {

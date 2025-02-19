@@ -161,7 +161,8 @@ public class Superstructure extends GBSubsystem {
 			new DeferredCommand(
 				() -> new ParallelCommandGroup(
 					new SequentialCommandGroup(
-						armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmPreScore()).until(() -> robot.getElevator().isPastPosition(StateMachineConstants.ELEVATOR_POSITION_TO_MOVE_ARM_TO_SCORE_L4)),
+						armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmPreScore())
+							.until(() -> robot.getElevator().isPastPosition(StateMachineConstants.ELEVATOR_POSITION_TO_MOVE_ARM_TO_SCORE_L4)),
 						armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmScore())
 					),
 					elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorPreScore()),

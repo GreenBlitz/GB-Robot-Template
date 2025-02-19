@@ -15,8 +15,8 @@ public class Solenoid extends GBSubsystem {
 		super(logPath);
 		this.motor = motor;
 		this.voltageSignal = voltageSignal;
-		this.commandsBuilder = new SolenoidCommandsBuilder(this);
 		this.powerSignal = powerSignal;
+		this.commandsBuilder = new SolenoidCommandsBuilder(this);
 
 		updateInputs();
 	}
@@ -27,6 +27,7 @@ public class Solenoid extends GBSubsystem {
 
 	public void updateInputs() {
 		motor.updateInputs(voltageSignal, powerSignal);
+		motor.updateSimulation();
 	}
 
 	@Override

@@ -130,8 +130,6 @@ public class RobotCommander extends GBSubsystem {
 			case PRE_SCORE -> preScore();
 			case SCORE_WITHOUT_RELEASE -> scoreWithoutRelease();
 			case SCORE -> score();
-			case PRE_CLIMB -> preClimb();
-			case CLIMB -> climb();
 		};
 	}
 
@@ -251,20 +249,6 @@ public class RobotCommander extends GBSubsystem {
 		}, Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector()));
 	}
 
-	private Command preClimb() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(superstructure.preClimb(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
-			RobotState.PRE_CLIMB
-		);
-	}
-
-	private Command climb() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(superstructure.climb(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
-			RobotState.CLIMB
-		);
-	}
-
 	private Command asSubsystemCommand(Command command, RobotState state) {
 		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
 	}
@@ -275,8 +259,6 @@ public class RobotCommander extends GBSubsystem {
 			case ARM_PRE_SCORE -> armPreScore();
 			case PRE_SCORE -> preScore();
 			case SCORE, SCORE_WITHOUT_RELEASE -> closeAfterScore();
-			case PRE_CLIMB -> preClimb();
-			case CLIMB -> climb();
 		};
 	}
 

@@ -7,6 +7,7 @@ import frc.constants.field.enums.Branch;
 import frc.constants.field.enums.ReefSide;
 import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.utils.math.AngleTransform;
+import frc.utils.math.FieldMath;
 import org.littletonrobotics.junction.Logger;
 
 public class ButtonDriverHelper {
@@ -41,16 +42,16 @@ public class ButtonDriverHelper {
 
 	private static final double DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS = 0.45;
 	private static final double SCORE_LEVEL_Y_AXIS = 6.85;
-	private static final double LEFT_RIGHT_BRANCH_TOGGLE_X_AXIS = 7.22;
+	private static final double LEFT_RIGHT_BRANCH_TOGGLE_X_AXIS = 16;
 
 	private static final Pose2d L1_DISPLAY_PLACEMENT = Field
-		.getAllianceRelative(new Pose2d(3.22, SCORE_LEVEL_Y_AXIS, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
+		.getAllianceRelative(new Pose2d(12.22, SCORE_LEVEL_Y_AXIS, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
 	private static final Pose2d L2_DISPLAY_PLACEMENT = Field
-		.getAllianceRelative(new Pose2d(4.55, SCORE_LEVEL_Y_AXIS, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
+		.getAllianceRelative(new Pose2d(13.55, SCORE_LEVEL_Y_AXIS, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
 	private static final Pose2d L3_DISPLAY_PLACEMENT = Field
-		.getAllianceRelative(new Pose2d(5.88, SCORE_LEVEL_Y_AXIS, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
+		.getAllianceRelative(new Pose2d(14.88, SCORE_LEVEL_Y_AXIS, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
 	private static final Pose2d L4_DISPLAY_PLACEMENT = Field
-		.getAllianceRelative(new Pose2d(7.22, SCORE_LEVEL_Y_AXIS, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
+		.getAllianceRelative(new Pose2d(16, SCORE_LEVEL_Y_AXIS, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
 
 	private static int chosenSideIndex;
 	private static int chosenScoreLevelIndex;
@@ -59,12 +60,14 @@ public class ButtonDriverHelper {
 	private static int darkToggleIndex;
 
 	private static final Pose2d[] REEF_SIDES = {
-		Field.getPointFromCertainDistance(Field.getReefSideMiddle(ReefSide.A), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS),
-		Field.getPointFromCertainDistance(Field.getReefSideMiddle(ReefSide.B), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS),
-		Field.getPointFromCertainDistance(Field.getReefSideMiddle(ReefSide.C), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS),
-		Field.getPointFromCertainDistance(Field.getReefSideMiddle(ReefSide.D), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS),
-		Field.getPointFromCertainDistance(Field.getReefSideMiddle(ReefSide.E), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS),
-		Field.getPointFromCertainDistance(Field.getReefSideMiddle(ReefSide.F), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS)};
+		Field.getPointFromCertainDistance(FieldMath.mirror(Field.getReefSideMiddle(ReefSide.D), true, false, AngleTransform.MIRROR_X), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS),
+		Field.getPointFromCertainDistance(FieldMath.mirror(Field.getReefSideMiddle(ReefSide.C), true, false, AngleTransform.MIRROR_X), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS),
+		Field.getPointFromCertainDistance(FieldMath.mirror(Field.getReefSideMiddle(ReefSide.B), true, false, AngleTransform.MIRROR_X), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS),
+        Field.getPointFromCertainDistance(FieldMath.mirror(Field.getReefSideMiddle(ReefSide.A), true, false, AngleTransform.MIRROR_X), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS),
+        Field.getPointFromCertainDistance(FieldMath.mirror(Field.getReefSideMiddle(ReefSide.F), true, false, AngleTransform.MIRROR_X), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS),
+		Field.getPointFromCertainDistance(FieldMath.mirror(Field.getReefSideMiddle(ReefSide.E), true, false, AngleTransform.MIRROR_X), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS)};
+
+
 
 	private static final Pose2d[] SCORE_LEVEL_PLACEMENTS = {
 		L1_DISPLAY_PLACEMENT,

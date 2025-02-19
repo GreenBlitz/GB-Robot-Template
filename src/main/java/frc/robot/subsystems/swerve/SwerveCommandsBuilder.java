@@ -20,7 +20,6 @@ import frc.utils.calibration.swervecalibration.maxvelocityacceleration.VelocityT
 import frc.utils.calibration.swervecalibration.wheelradius.WheelRadiusCharacterization;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.utilcommands.InitExecuteCommand;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -210,10 +209,10 @@ public class SwerveCommandsBuilder {
 	}
 
 	public Command pidToPose(Supplier<Pose2d> currentPose, Pose2d targetPose) {
-		return swerve.asSubsystemCommand(new InitExecuteCommand(() -> {
-			swerve.resetPIDControllers();
-			Logger.recordOutput("Test/tr", targetPose);
-		}, () -> swerve.moveToPoseByPID(currentPose.get(), targetPose)), "PID to pose: " + targetPose);
+		return swerve.asSubsystemCommand(
+			new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.moveToPoseByPID(currentPose.get(), targetPose)),
+			"PID to pose: " + targetPose
+		);
 	}
 
 }

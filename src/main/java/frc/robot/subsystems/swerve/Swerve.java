@@ -349,10 +349,7 @@ public class Swerve extends GBSubsystem {
 			);
 		joystick.getAxisAsButton(Axis.RIGHT_TRIGGER)
 			.onTrue(
-				new DeferredCommand(
-					() -> getCommandsBuilder().pidToPose(robotPoseSupplier, new Pose2d(5,6, new Rotation2d())),
-					Set.of(this)
-			)
+				new DeferredCommand(() -> getCommandsBuilder().pidToPose(robotPoseSupplier, new Pose2d(5, 6, new Rotation2d())), Set.of(this))
 			);
 	}
 

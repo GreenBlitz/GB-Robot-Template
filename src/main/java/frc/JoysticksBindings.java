@@ -9,8 +9,6 @@ import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
-import frc.robot.subsystems.swerve.ChassisPowers;
-import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.statemachine.RobotState;
 import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.subsystems.swerve.ChassisPowers;
@@ -79,7 +77,9 @@ public class JoysticksBindings {
 		// bindings...
 
 		usedJoystick.R1.onTrue(robot.getRobotCommander().scoreForButton());
-		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
+		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
+		usedJoystick.X.onTrue(robot.getRobotCommander().setState(RobotState.SCORE));
+
 		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
 	}
 

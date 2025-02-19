@@ -7,8 +7,12 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.constants.field.enums.*;
+import frc.constants.field.enums.Branch;
+import frc.constants.field.enums.Cage;
+import frc.constants.field.enums.CoralStation;
+import frc.constants.field.enums.ReefSide;
 import frc.utils.DriverStationUtil;
+import frc.constants.field.enums.CoralStationSlot;
 import frc.utils.math.AngleTransform;
 import frc.utils.math.FieldMath;
 
@@ -19,7 +23,6 @@ public class Field {
 	public static boolean isFieldConventionAlliance() {
 		return DriverStationUtil.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE;
 	}
-
 
 	public static final double LENGTH_METERS = 17.548225;
 	public static final double WIDTH_METERS = 8.0518;
@@ -66,26 +69,27 @@ public class Field {
 		new Pose2d(0.84319, 0.65078, Rotation2d.fromDegrees(54)),
 		new Pose2d(0.84319, 7.41395, Rotation2d.fromDegrees(-54))};
 
-	public static final Pose2d[] CORAL_STATION_SLOTS_MIDDLES = new Pose2d[] {
-		new Pose2d(0.18502 + BUMPER_SIZE_DY_METERS, WIDTH_METERS - 1.1278 - BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
-		new Pose2d(0.34944 + BUMPER_SIZE_DY_METERS, WIDTH_METERS - 1.1278 + 0.11941 * 1 - BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
-		new Pose2d(0.51386 + BUMPER_SIZE_DY_METERS, WIDTH_METERS - 1.1278 + 0.11941 * 2 - BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
-		new Pose2d(0.67828 + BUMPER_SIZE_DY_METERS, WIDTH_METERS - 1.1278 + 0.11941 * 3 - BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
-		new Pose2d(0.8427 + BUMPER_SIZE_DY_METERS, WIDTH_METERS - 1.1278 + 0.11941 * 4 - BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
-		new Pose2d(1.00712 + BUMPER_SIZE_DY_METERS, WIDTH_METERS - 1.1278 + 0.11941 * 5 - BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
-		new Pose2d(1.7154 + BUMPER_SIZE_DY_METERS, WIDTH_METERS - 1.1278 + 0.11941 * 6 - BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
-		new Pose2d(1.33596 + BUMPER_SIZE_DY_METERS, WIDTH_METERS - 1.1278 + 0.11941 * 7 - BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
-		new Pose2d(1.50038 + BUMPER_SIZE_DY_METERS, WIDTH_METERS - 1.1278 + 0.11941 * 8 - BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
-
-		new Pose2d(0.18502 + BUMPER_SIZE_DY_METERS, 1.1278 + BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(-135)),
-		new Pose2d(0.34944 + BUMPER_SIZE_DY_METERS, 1.1278 - 0.11941 * 1 + BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(-135)),
-		new Pose2d(0.51386 + BUMPER_SIZE_DY_METERS, 1.1278 - 0.11941 * 2 + BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(-135)),
-		new Pose2d(0.67828 + BUMPER_SIZE_DY_METERS, 1.1278 - 0.11941 * 3 + BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(-135)),
-		new Pose2d(0.8427 + BUMPER_SIZE_DY_METERS, 1.1278 - 0.11941 * 4 + BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(-135)),
-		new Pose2d(1.00712 + BUMPER_SIZE_DY_METERS, 1.1278 - 0.11941 * 5 + BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(-135)),
-		new Pose2d(1.7154 + BUMPER_SIZE_DY_METERS, 1.1278 - 0.11941 * 6 + BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(-135)),
-		new Pose2d(1.33596 + BUMPER_SIZE_DY_METERS, 1.1278 - 0.11941 * 7 + BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(-135)),
-		new Pose2d(1.50038 + BUMPER_SIZE_DY_METERS, 1.1278 - 0.11941 * 8 + BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(-135)),};
+	public static final Pose2d[] CORAL_STATION_SLOTS_MIDDLES = new Pose2d[]{
+			new Pose2d(0.18502+BUMPER_SIZE_DY_METERS, WIDTH_METERS-1.1278-BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
+			new Pose2d(0.34944+BUMPER_SIZE_DY_METERS, WIDTH_METERS-1.1278+0.11941*1-BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
+			new Pose2d(0.51386+BUMPER_SIZE_DY_METERS, WIDTH_METERS-1.1278+0.11941*2-BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
+			new Pose2d(0.67828+BUMPER_SIZE_DY_METERS, WIDTH_METERS-1.1278+0.11941*3-BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
+			new Pose2d(0.8427+BUMPER_SIZE_DY_METERS, WIDTH_METERS-1.1278+0.11941*4-BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
+			new Pose2d(1.00712+BUMPER_SIZE_DY_METERS,WIDTH_METERS-1.1278+0.11941*5-BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
+			new Pose2d(1.7154+BUMPER_SIZE_DY_METERS,WIDTH_METERS-1.1278+0.11941*6-BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
+			new Pose2d(1.33596+BUMPER_SIZE_DY_METERS, WIDTH_METERS-1.1278+0.11941*7-BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
+			new Pose2d(1.50038+BUMPER_SIZE_DY_METERS, WIDTH_METERS-1.1278+0.11941*8-BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
+			
+			new Pose2d(0.18502+BUMPER_SIZE_DY_METERS, 1.1278+BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(-135)),
+			new Pose2d(0.34944+BUMPER_SIZE_DY_METERS, 1.1278-0.11941*1+BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(-135)),
+			new Pose2d(0.51386+BUMPER_SIZE_DY_METERS, 1.1278-0.11941*2+BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(-135)),
+			new Pose2d(0.67828+BUMPER_SIZE_DY_METERS, 1.1278-0.11941*3+BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(-135)),
+			new Pose2d(0.8427+BUMPER_SIZE_DY_METERS, 1.1278-0.11941*4+BUMPER_SIZE_DX_METERS , Rotation2d.fromDegrees(-135)),
+			new Pose2d(1.00712+BUMPER_SIZE_DY_METERS,1.1278-0.11941*5+BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(-135)),
+			new Pose2d(1.7154+BUMPER_SIZE_DY_METERS,1.1278-0.11941*6+BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(-135)),
+			new Pose2d(1.33596+BUMPER_SIZE_DY_METERS,1.1278-0.11941*7+BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(-135)),
+			new Pose2d(1.50038+BUMPER_SIZE_DY_METERS, 1.1278-0.11941*8+BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(-135)),
+	};
 
 	public static final double FEEDER_WIDTH_METERS = 1.9304;
 
@@ -117,16 +121,8 @@ public class Field {
 	public static Pose2d getCoralStationSlotsPose2d(CoralStationSlot coralStationSlot) {
 		return getAllianceRelative(CORAL_STATION_SLOTS_MIDDLES[coralStationSlot.getIndex()], true, true, AngleTransform.INVERT);
 	}
-
-	public static Translation2d getCoralStationTranslation2d(CoralStationSlot coralStationSlot) {
-		return getAllianceRelative(
-			new Translation2d(
-				CORAL_STATION_SLOTS_MIDDLES[coralStationSlot.getIndex()].getX(),
-				CORAL_STATION_SLOTS_MIDDLES[coralStationSlot.getIndex()].getY()
-			),
-			true,
-			true
-		);
+	public static Translation2d getCoralStationTranslation2d(CoralStationSlot coralStationSlot){
+		return getAllianceRelative(new Translation2d(CORAL_STATION_SLOTS_MIDDLES[coralStationSlot.getIndex()].getX(),CORAL_STATION_SLOTS_MIDDLES[coralStationSlot.getIndex()].getY() ),true,true);
 	}
 
 	public static Pose2d getAllianceRelative(Pose2d pose, boolean mirrorX, boolean mirrorY, AngleTransform angleTransform) {

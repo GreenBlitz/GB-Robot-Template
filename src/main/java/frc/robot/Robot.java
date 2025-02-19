@@ -116,6 +116,7 @@ public class Robot {
 		swerve.getStateHandler().setBranchSupplier(() -> Optional.of(ScoringHelpers.getTargetBranch()));
 		swerve.getStateHandler().setReefSideSupplier(() -> Optional.of(ScoringHelpers.getTargetReefSide()));
 		swerve.getStateHandler().setCoralStationSupplier(() -> Optional.of(ScoringHelpers.getTargetCoralStation(this)));
+		swerve.getStateHandler().setCoralStationSlotSupplier(() -> Optional.of(ScoringHelpers.targetcoralStationSlot));
 
 		this.elevator = ElevatorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Elevator");
 		BrakeStateManager.add(() -> elevator.setBrake(true), () -> elevator.setBrake(false));
@@ -128,8 +129,6 @@ public class Robot {
 		this.simulationManager = new SimulationManager("SimulationManager", this);
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
 
-		swerve.getStateHandler().setCoralStationSlotSupplier(() -> Optional.of(ScoringHelpers.targetcoralStationSlot));
-
 		configPathPlanner();
 	}
 
@@ -137,8 +136,7 @@ public class Robot {
 		swerve.configPathPlanner(
 			poseEstimator::getEstimatedPose,
 			poseEstimator::resetPose,
-			PathPlannerUtil.getGuiRobotConfig()
-				.orElse(new RobotConfig(70, 0.0001, new ModuleConfig(0.048, 5.24, 0.96, DCMotor.getFalcon500Foc(1), 60, 1), 0.577))
+			PathPlannerUtil.getGuiRobotConfig().orElse(getRobotConfig())
 		);
 	}
 

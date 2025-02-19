@@ -32,8 +32,6 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.factory.ElevatorFactory;
 import frc.robot.subsystems.endeffector.EndEffector;
 import frc.robot.subsystems.endeffector.factory.EndEffectorFactory;
-import frc.robot.subsystems.climb.lifter.Lifter;
-import frc.robot.subsystems.climb.lifter.factory.LifterFactory;
 import frc.robot.subsystems.climb.solenoid.Solenoid;
 import frc.robot.subsystems.climb.solenoid.factory.SolenoidFactory;
 import frc.robot.subsystems.swerve.Swerve;

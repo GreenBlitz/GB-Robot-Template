@@ -158,6 +158,7 @@ public class RobotCommander extends GBSubsystem {
 			case PRE_ALGAE_REMOVE -> preAlgaeRemove();
 			case ALGAE_REMOVE_WITHOUT_RELEASE -> algaeRemoveWithoutRelease();
 			case ALGAE_REMOVE_WITH_RELEASE -> algaeRemoveWithRelease();
+			case ALGAE_OUTTAKE -> algaeOuttake();
 		};
 	}
 
@@ -180,9 +181,9 @@ public class RobotCommander extends GBSubsystem {
 
 	public Command fullyPreAlgaeRemove() {
 		return new SequentialCommandGroup(
-				armPreAlgaeRemove().until(this::isReadyToOpenSuperstructure),
-				preScore().until(this::isReadyToRemoveAlgae),
-				scoreWithoutRelease()
+			armPreAlgaeRemove().until(this::isReadyToOpenSuperstructure),
+			preAlgaeRemove().until(this::isReadyToRemoveAlgae),
+			algaeRemoveWithoutRelease()
 		);
 	}
 
@@ -307,7 +308,7 @@ public class RobotCommander extends GBSubsystem {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				superstructure.armPreAlgaeRemove(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE))
 			).until(superstructure::isAlgaeIn),
 			RobotState.ARM_PRE_ALGAE_REMOVE.name()
 		);
@@ -343,13 +344,23 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
+	public Command algaeOuttake(){
+		return asSubsystemCommand(
+				new ParallelCommandGroup(
+						superstructure.algaeOutTake(),
+						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+				),
+				RobotState.ALGAE_OUTTAKE
+		);
+	}
+
 	private Command asSubsystemCommand(Command command, RobotState state) {
 		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
 	}
 
 	private Command endState(RobotState state) {
 		return switch (state) {
-			case INTAKE, OUTTAKE, DRIVE, ALIGN_REEF, PRE_ALGAE_REMOVE, ARM_PRE_ALGAE_REMOVE -> drive();
+			case INTAKE, OUTTAKE, DRIVE, ALIGN_REEF, PRE_ALGAE_REMOVE, ARM_PRE_ALGAE_REMOVE, ALGAE_OUTTAKE -> drive();
 			case ARM_PRE_SCORE -> armPreScore();
 			case PRE_SCORE -> preScore();
 			case ALGAE_REMOVE_WITHOUT_RELEASE, ALGAE_REMOVE_WITH_RELEASE -> closeAfterAlgaeRemove();

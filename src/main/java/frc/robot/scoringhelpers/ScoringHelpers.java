@@ -16,10 +16,7 @@ public class ScoringHelpers {
 
 	public static final Translation2d END_EFFECTOR_OFFSET_FROM_MID_ROBOT = new Translation2d(0, 0.014);
 
-	private static final Translation2d LEFT_CORAL_STATION_TRANSLATION = Field.getCoralStationMiddle(CoralStation.LEFT).getTranslation();
-	private static final Translation2d RIGHT_CORAL_STATION_TRANSLATION = Field.getCoralStationMiddle(CoralStation.RIGHT).getTranslation();
-
-	public static ScoreLevel targetScoreLevel = ScoreLevel.L2;
+	public static ScoreLevel targetScoreLevel = ScoreLevel.L4;
 
 	private static boolean isFarReefHalf = false;
 	private static Side targetSideForReef = Side.MIDDLE;
@@ -36,7 +33,9 @@ public class ScoringHelpers {
 
 	public static CoralStation getTargetCoralStation(Robot robot) {
 		Translation2d robotTranslation = robot.getPoseEstimator().getEstimatedPose().getTranslation();
-		if (robotTranslation.getDistance(LEFT_CORAL_STATION_TRANSLATION) < robotTranslation.getDistance(RIGHT_CORAL_STATION_TRANSLATION)) {
+		Translation2d leftCoralStationTranslation = Field.getCoralStationMiddle(CoralStation.LEFT).getTranslation();
+		Translation2d rightCoralStationTranslation = Field.getCoralStationMiddle(CoralStation.RIGHT).getTranslation();
+		if (robotTranslation.getDistance(leftCoralStationTranslation) < robotTranslation.getDistance(rightCoralStationTranslation)) {
 			latestWantedCoralStation = CoralStation.LEFT;
 		} else {
 			latestWantedCoralStation = CoralStation.RIGHT;

@@ -13,7 +13,7 @@ public enum ArmState {
 	L2(Rotation2d.fromDegrees(-11)),
 	PRE_L3(Rotation2d.fromDegrees(-2)),
 	L3(Rotation2d.fromDegrees(-2)),
-	PRE_L4(Rotation2d.fromDegrees(-25)),
+	PRE_L4(Rotation2d.fromDegrees(37)),
 	L4(Rotation2d.fromDegrees(-25));
 
 	private final Rotation2d position;

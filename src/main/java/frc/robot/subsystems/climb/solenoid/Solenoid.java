@@ -8,13 +8,15 @@ public class Solenoid extends GBSubsystem {
 
 	private final IMotor motor;
 	private final InputSignal<Double> voltageSignal;
+	private final InputSignal<Double> powerSignal;
 	private final SolenoidCommandsBuilder commandsBuilder;
 
-	public Solenoid(String logPath, IMotor motor, InputSignal<Double> voltageSignal) {
+	public Solenoid(String logPath, IMotor motor, InputSignal<Double> voltageSignal, InputSignal<Double> powerSignal) {
 		super(logPath);
 		this.motor = motor;
 		this.voltageSignal = voltageSignal;
 		this.commandsBuilder = new SolenoidCommandsBuilder(this);
+		this.powerSignal = powerSignal;
 
 		updateInputs();
 	}
@@ -24,7 +26,7 @@ public class Solenoid extends GBSubsystem {
 	}
 
 	public void updateInputs() {
-		motor.updateInputs(voltageSignal);
+		motor.updateInputs(voltageSignal, powerSignal);
 	}
 
 	@Override

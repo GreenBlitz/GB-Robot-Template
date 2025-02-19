@@ -18,7 +18,7 @@ public class SparkMaxSolenoidBuilder {
 	private static final int CURRENT_LIMIT = 20;
 
 	// Gear ratio in SparkMAX is output / input (as opposed to input / output in CTRE)
-	private static final double GEAR_RATIO = 25.0 / 6.0;
+	private static final double GEAR_RATIO = 1;
 	private static final double MOMENT_OF_INERTIA = 0.001;
 
 	private static void configMotor(SparkMaxMotor sparkMaxMotor) {
@@ -50,10 +50,11 @@ public class SparkMaxSolenoidBuilder {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(IDs.SparkMAXIDs.SOLENOID);
 
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
+		SuppliedDoubleSignal powerSignal = new SuppliedDoubleSignal("power", sparkMaxWrapper::get);
 
-		BrushedSparkMAXMotor motor = generateMotor(logPath + "/Solenoid", sparkMaxWrapper);
+		BrushedSparkMAXMotor motor = generateMotor(logPath, sparkMaxWrapper);
 
-		return new Solenoid(logPath, motor, voltageSignal);
+		return new Solenoid(logPath, motor, voltageSignal, powerSignal);
 	}
 
 }

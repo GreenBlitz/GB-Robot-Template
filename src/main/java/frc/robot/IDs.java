@@ -38,6 +38,8 @@ public class IDs {
 
 		public static final Phoenix6DeviceID ARM = new Phoenix6DeviceID(20, BusChain.ROBORIO);
 
+		public static final Phoenix6DeviceID LIFTER = new Phoenix6DeviceID(40, BusChain.ROBORIO);
+
 	}
 
 	public static class SparkMAXIDs {

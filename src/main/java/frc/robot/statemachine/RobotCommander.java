@@ -18,6 +18,7 @@ import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.pose.PoseUtil;
 
 import java.util.Set;
+import java.util.function.Supplier;
 
 public class RobotCommander extends GBSubsystem {
 
@@ -132,6 +133,29 @@ public class RobotCommander extends GBSubsystem {
 			case SCORE_WITHOUT_RELEASE -> scoreWithoutRelease();
 			case SCORE -> score();
 		};
+	}
+
+	public Command autoScore() {
+		Supplier<Command> fullySuperstructureScore = () -> new SequentialCommandGroup(
+			superstructure.armPreScore().until(this::isReadyToOpenSuperstructure),
+			superstructure.preScore().until(superstructure::isPreScoreReady),
+			superstructure.scoreWithoutRelease().until(this::isReadyToScore),
+			superstructure.scoreWithRelease()
+		);
+
+		Supplier<Command> driveToPath = () -> swerve.getCommandsBuilder()
+			.driveToPath(
+				() -> robot.getPoseEstimator().getEstimatedPose(),
+				ScoringPathsHelper.getPathByBranch(ScoringHelpers.getTargetBranch())
+			);
+
+		return asSubsystemCommand(
+			new DeferredCommand(
+				() -> new ParallelDeadlineGroup(fullySuperstructureScore.get(), driveToPath.get()),
+				Set.of(superstructure, this, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
+			),
+			RobotState.SCORE
+		);
 	}
 
 	public Command fullyScore() {
@@ -261,39 +285,6 @@ public class RobotCommander extends GBSubsystem {
 			case PRE_SCORE -> preScore();
 			case SCORE, SCORE_WITHOUT_RELEASE -> closeAfterScore();
 		};
-	}
-
-	public Command autoScore() {
-		return asSubsystemCommand(
-			new DeferredCommand(
-				() -> Commands
-					.parallel(
-						swerve.getCommandsBuilder()
-							.driveToPath(
-								() -> robot.getPoseEstimator().getEstimatedPose(),
-								ScoringPathsHelper.getPathByBranch(ScoringHelpers.getTargetBranch())
-							),
-						Commands.sequence(
-							superstructure.armPreScore()
-								.until(
-									() -> ScoringHelpers.isAfterOpeningDistance(
-										robot.getPoseEstimator().getEstimatedPose(),
-										ScoringHelpers.getTargetBranch(),
-										StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS,
-										StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS
-
-									)
-								),
-							superstructure.preScore().until(superstructure::isPreScoreReady),
-							superstructure.scoreWithoutRelease().until(this::isReadyToScore),
-							superstructure.scoreWithRelease()
-						)
-					)
-					.until(superstructure::isCoralOut),
-				Set.of(superstructure, this, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
-			),
-			RobotState.SCORE
-		);
 	}
 
 }

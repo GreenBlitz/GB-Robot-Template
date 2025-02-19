@@ -13,6 +13,7 @@ import frc.robot.vision.sources.VisionSource;
 import frc.robot.vision.sources.limelights.DynamicSwitchingLimelight;
 import frc.robot.vision.sources.limelights.LimeLightSource;
 import frc.utils.alerts.Alert;
+import frc.utils.pose.PoseUtil;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
@@ -132,10 +133,19 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	}
 
 	private void logAprilTagPoseData() {
+		List<Integer> seenApriltagIDs = new ArrayList<>();
 		for (AprilTagVisionData visionData : getUnfilteredVisionData()) {
 			int aprilTagID = visionData.getTrackedAprilTagId();
 			Optional<Pose3d> aprilTag = VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(aprilTagID);
-			aprilTag.ifPresent((pose) -> Logger.recordOutput(logPath + "targets/" + aprilTagID, pose));
+			aprilTag.ifPresent((pose) -> {
+				Logger.recordOutput(logPath + "targets/" + aprilTagID, pose);
+				seenApriltagIDs.add(aprilTagID);
+			});
+		}
+		for (int aprilTagID = 1; aprilTagID <= VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTags().size(); aprilTagID++) {
+			if (!seenApriltagIDs.contains(aprilTagID)) {
+				Logger.recordOutput(logPath + "targets/" + aprilTagID, PoseUtil.EMPTY_POSE2D);
+			}
 		}
 	}
 

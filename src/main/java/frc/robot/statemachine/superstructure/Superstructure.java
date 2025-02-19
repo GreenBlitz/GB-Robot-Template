@@ -159,13 +159,13 @@ public class Superstructure extends GBSubsystem {
 	private Command l4PreScore() {
 		return asSubsystemCommand(
 			new DeferredCommand(
-				() -> new SequentialCommandGroup(
-					genericPreScore().until(this::isPreScoreReady),
-					new ParallelCommandGroup(
-						elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorPreScore()),
-						armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmScore()),
-						endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
-					)
+				() -> new ParallelCommandGroup(
+					new SequentialCommandGroup(
+						armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmPreScore()).until(() -> robot.getElevator().isPastPosition(StateMachineConstants.ELEVATOR_POSITION_TO_MOVE_ARM_TO_SCORE_L4)),
+						armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmScore())
+					),
+					elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorPreScore()),
+					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
 				),
 				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector())
 			),

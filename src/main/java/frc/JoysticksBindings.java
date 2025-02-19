@@ -77,8 +77,8 @@ public class JoysticksBindings {
 		// bindings...
 
 		usedJoystick.R1.onTrue(robot.getRobotCommander().scoreForButton());
-		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_REMOVE));
-		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
+		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.PRE_ALGAE_REMOVE));
+		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_REMOVE_WITH_RELEASE));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

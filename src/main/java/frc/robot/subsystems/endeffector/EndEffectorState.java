@@ -7,7 +7,6 @@ public enum EndEffectorState {
 	L1_OUTTAKE(-0.4),
 	BRANCH_OUTTAKE(-0.8),
 	OUTTAKE(-0.7),
-	NET_OUTTAKE(0.7),
 	DEFAULT(0.05);
 
 	private final double power;

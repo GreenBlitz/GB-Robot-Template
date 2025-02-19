@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.constants.field.enums.AlgaeRemoveLevel;
 import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.StateMachineConstants;
@@ -75,6 +76,14 @@ public class Superstructure extends GBSubsystem {
 			&& elevatorStateHandler.getCurrentState() == targetScoreLevel.getElevatorScore()
 			&& robot.getArm().isAtPosition(targetScoreLevel.getArmScore().getPosition(), Tolerances.ARM_POSITION)
 			&& armStateHandler.getCurrentState() == targetScoreLevel.getArmScore();
+	}
+
+	public boolean isReadyToRemoveAlgae() {
+		AlgaeRemoveLevel algaeRemoveLevel = ScoringHelpers.getAlgaeRemoveLevel();
+		return robot.getElevator().isAtPosition(algaeRemoveLevel.getElevatorState().getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
+			&& elevatorStateHandler.getCurrentState() == algaeRemoveLevel.getElevatorState()
+			&& robot.getArm().isAtPosition(algaeRemoveLevel.getArmState().getPosition(), Tolerances.ARM_POSITION)
+			&& armStateHandler.getCurrentState() == algaeRemoveLevel.getArmState();
 	}
 
 	@Override
@@ -183,7 +192,7 @@ public class Superstructure extends GBSubsystem {
 						elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorScore()),
 						armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmScore()),
 						endEffectorStateHandler.setState(ScoringHelpers.targetScoreLevel.getEndEffectorScore())
-					).withTimeout(StateMachineConstants.SCORE_OUTTAKE_TIME_AFTER_BEAM_BREAK_SECONDS)
+					).withTimeout(StateMachineConstants.INTACK_TIME_AFTER_BEAM_BREAK_SECONDS)
 				),
 				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector())
 			),
@@ -203,58 +212,54 @@ public class Superstructure extends GBSubsystem {
 		).until(() -> robot.getElevator().isAtPosition(ElevatorState.CLOSED.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS));
 	}
 
-	public Command algaeRemove() {
+	public Command armPreAlgaeRemove() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.CLOSED),
+				armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getPreArmState()),
+				endEffectorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getEndEffectorState())
+			),
+			SuperstructureState.PRE_ALGAE_REMOVE.name()
+		);
+	}
+
+	public Command preAlgaeRemove() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getPreElevatorState()),
+				armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getPreArmState()),
+				endEffectorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getEndEffectorState())
+			),
+			SuperstructureState.PRE_ALGAE_REMOVE.name()
+		);
+	}
+
+	public Command algaeRemoveWithoutRelease() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getElevatorState()),
 				armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getArmState()),
-				endEffectorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getEndEffectorState())
-			).until(this::isAlgaeIn),
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+			),
 			SuperstructureState.ALGAE_REMOVE.name()
 		);
 	}
 
-	public Command armPreNet() {
+	public Command algaeRemoveWithRelease() {
 		return asSubsystemCommand(
+			new SequentialCommandGroup(
 				new ParallelCommandGroup(
-						elevatorStateHandler.setState(ElevatorState.NET_WHILE_DRIVE),
-						armStateHandler.setState(ArmState.PRE_NET),
-						endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
-				),
-				SuperstructureState.ARM_PRE_NET.name()
-		);
-	}
-
-	public Command preNet() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.PRE_NET),
-				armStateHandler.setState(ArmState.PRE_NET),
-				endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+					elevatorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getElevatorState()),
+					armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getArmState()),
+					endEffectorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getEndEffectorState())
+				).until(this::isAlgaeIn),
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getElevatorState()),
+					armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getArmState()),
+					endEffectorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getEndEffectorState())
+				).withTimeout(StateMachineConstants.INTACK_TIME_AFTER_BEAM_BREAK_SECONDS)
 			),
-			SuperstructureState.PRE_NET.name()
-		);
-	}
-
-	public Command NetWithoutRelease() {
-		return asSubsystemCommand(
-				new ParallelCommandGroup(
-						elevatorStateHandler.setState(ElevatorState.NET),
-						armStateHandler.setState(ArmState.NET),
-						endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
-				).until(() -> !isAlgaeIn()),
-				SuperstructureState.NET.name()
-		);
-	}
-
-	public Command NetWithRelease() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.NET),
-				armStateHandler.setState(ArmState.NET),
-				endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE)
-			).until(() -> !isAlgaeIn()),
-			SuperstructureState.NET.name()
+			SuperstructureState.ALGAE_REMOVE.name()
 		);
 	}
 
@@ -264,8 +269,7 @@ public class Superstructure extends GBSubsystem {
 
 	private Command endState(SuperstructureState state) {
 		return switch (state) {
-			case PRE_NET, ARM_PRE_NET, NET_WITHOUT_RELEASE, NET -> preNet();
-			case INTAKE, OUTTAKE, IDLE, ALGAE_REMOVE -> idle();
+			case INTAKE, OUTTAKE, IDLE, ALGAE_REMOVE, PRE_ALGAE_REMOVE -> idle();
 			case ARM_PRE_SCORE -> armPreScore();
 			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> preScore();
 		};

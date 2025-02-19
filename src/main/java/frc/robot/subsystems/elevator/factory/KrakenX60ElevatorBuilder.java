@@ -78,7 +78,7 @@ public class KrakenX60ElevatorBuilder {
 			configuration.Slot0.kA = 0.071671;
 
 			// PID
-			configuration.Slot1.kP = 8;
+			configuration.Slot1.kP = 10;
 			configuration.Slot1.kI = 0;
 			configuration.Slot1.kD = 0.5;
 			configuration.Slot1.kG = kG;

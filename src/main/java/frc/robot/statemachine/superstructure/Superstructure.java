@@ -214,12 +214,57 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
+	public Command armPreNet() {
+		return asSubsystemCommand(
+				new ParallelCommandGroup(
+						elevatorStateHandler.setState(ElevatorState.NET_WHILE_DRIVE),
+						armStateHandler.setState(ArmState.PRE_NET),
+						endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+				),
+				SuperstructureState.ARM_PRE_NET.name()
+		);
+	}
+
+	public Command preNet() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.PRE_NET),
+				armStateHandler.setState(ArmState.PRE_NET),
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+			),
+			SuperstructureState.PRE_NET.name()
+		);
+	}
+
+	public Command NetWithoutRelease() {
+		return asSubsystemCommand(
+				new ParallelCommandGroup(
+						elevatorStateHandler.setState(ElevatorState.NET),
+						armStateHandler.setState(ArmState.NET),
+						endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+				).until(() -> !isAlgaeIn()),
+				SuperstructureState.NET.name()
+		);
+	}
+
+	public Command NetWithRelease() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.NET),
+				armStateHandler.setState(ArmState.NET),
+				endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE)
+			).until(() -> !isAlgaeIn()),
+			SuperstructureState.NET.name()
+		);
+	}
+
 	private Command asSubsystemCommand(Command command, SuperstructureState state) {
 		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
 	}
 
 	private Command endState(SuperstructureState state) {
 		return switch (state) {
+			case PRE_NET, ARM_PRE_NET, NET_WITHOUT_RELEASE, NET -> preNet();
 			case INTAKE, OUTTAKE, IDLE, ALGAE_REMOVE -> idle();
 			case ARM_PRE_SCORE -> armPreScore();
 			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> preScore();

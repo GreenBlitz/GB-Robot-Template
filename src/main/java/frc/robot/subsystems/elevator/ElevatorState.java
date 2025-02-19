@@ -15,7 +15,10 @@ public enum ElevatorState {
 	PRE_L4(1.18),
 	L4(1.18),
 	LOW_ALGAE_REMOVE(2),
-	HIGH_ALGAE_REMOVE(0.25);
+	HIGH_ALGAE_REMOVE(0.25),
+	NET_WHILE_DRIVE(2),
+	PRE_NET(2),
+	NET(2);
 
 
 	private final double heightMeters;

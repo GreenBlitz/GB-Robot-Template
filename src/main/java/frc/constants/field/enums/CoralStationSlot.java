@@ -1,5 +1,8 @@
 package frc.constants.field.enums;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import frc.constants.field.Field;
+
 public enum CoralStationSlot {
 
 	R1(0),
@@ -22,13 +25,19 @@ public enum CoralStationSlot {
 	L9(17);
 
 	private final int index;
+	private final Pose2d position;
 
 	CoralStationSlot(int index) {
 		this.index = index;
+		this.position = Field.getCoralStationSlotsPose2d(this);
 	}
 
 	public int getIndex() {
 		return this.index;
+	}
+	
+	public Pose2d getPosition(){
+		return this.position;
 	}
 
 }

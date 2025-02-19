@@ -30,9 +30,6 @@ public class Field {
 	private static final Translation2d REEF_MIDDLE = new Translation2d(4.48934, 4.03225);
 
 	public static final double REEF_SIDE_LENGTH_METERS = 0.96;
-	public static final double BUMPER_SIZE_DX_METERS = 0.27;
-	public static final double BUMPER_SIZE_DY_METERS = 0.36;
-
 
 	private static final Pose2d[] REEF_SIDE_MIDDLES = new Pose2d[] {
 		new Pose2d(3.65760, 4.03220, Rotation2d.fromDegrees(0)),
@@ -70,25 +67,25 @@ public class Field {
 		new Pose2d(0.84319, 7.41395, Rotation2d.fromDegrees(-54))};
 
 	public static final Pose2d[] CORAL_STATION_SLOTS_MIDDLES = new Pose2d[]{
-			new Pose2d(0.18502+BUMPER_SIZE_DY_METERS, WIDTH_METERS-1.1278-BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
-			new Pose2d(0.34944+BUMPER_SIZE_DY_METERS, WIDTH_METERS-1.1278+0.11941*1-BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
-			new Pose2d(0.51386+BUMPER_SIZE_DY_METERS, WIDTH_METERS-1.1278+0.11941*2-BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
-			new Pose2d(0.67828+BUMPER_SIZE_DY_METERS, WIDTH_METERS-1.1278+0.11941*3-BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
-			new Pose2d(0.8427+BUMPER_SIZE_DY_METERS, WIDTH_METERS-1.1278+0.11941*4-BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
-			new Pose2d(1.00712+BUMPER_SIZE_DY_METERS,WIDTH_METERS-1.1278+0.11941*5-BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
-			new Pose2d(1.7154+BUMPER_SIZE_DY_METERS,WIDTH_METERS-1.1278+0.11941*6-BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
-			new Pose2d(1.33596+BUMPER_SIZE_DY_METERS, WIDTH_METERS-1.1278+0.11941*7-BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
-			new Pose2d(1.50038+BUMPER_SIZE_DY_METERS, WIDTH_METERS-1.1278+0.11941*8-BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(135)),
+			new Pose2d(0.18502, 1.1278, Rotation2d.fromDegrees(54)),
+			new Pose2d(0.34944, 1.1278-0.11941*1, Rotation2d.fromDegrees(54)),
+			new Pose2d(0.51386, 1.1278-0.11941*2, Rotation2d.fromDegrees(54)),
+			new Pose2d(0.67828, 1.1278-0.11941*3, Rotation2d.fromDegrees(54)),
+			new Pose2d(0.8427, 1.1278-0.11941*4 , Rotation2d.fromDegrees(54)),
+			new Pose2d(1.00712,1.1278-0.11941*5, Rotation2d.fromDegrees(54)),
+			new Pose2d(1.7154,1.1278-0.11941*6, Rotation2d.fromDegrees(54)),
+			new Pose2d(1.33596,1.1278-0.11941*7, Rotation2d.fromDegrees(54)),
+			new Pose2d(1.50038, 1.1278-0.11941*8, Rotation2d.fromDegrees(54)),
 			
-			new Pose2d(0.18502+BUMPER_SIZE_DY_METERS, 1.1278+BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(-135)),
-			new Pose2d(0.34944+BUMPER_SIZE_DY_METERS, 1.1278-0.11941*1+BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(-135)),
-			new Pose2d(0.51386+BUMPER_SIZE_DY_METERS, 1.1278-0.11941*2+BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(-135)),
-			new Pose2d(0.67828+BUMPER_SIZE_DY_METERS, 1.1278-0.11941*3+BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(-135)),
-			new Pose2d(0.8427+BUMPER_SIZE_DY_METERS, 1.1278-0.11941*4+BUMPER_SIZE_DX_METERS , Rotation2d.fromDegrees(-135)),
-			new Pose2d(1.00712+BUMPER_SIZE_DY_METERS,1.1278-0.11941*5+BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(-135)),
-			new Pose2d(1.7154+BUMPER_SIZE_DY_METERS,1.1278-0.11941*6+BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(-135)),
-			new Pose2d(1.33596+BUMPER_SIZE_DY_METERS,1.1278-0.11941*7+BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(-135)),
-			new Pose2d(1.50038+BUMPER_SIZE_DY_METERS, 1.1278-0.11941*8+BUMPER_SIZE_DX_METERS, Rotation2d.fromDegrees(-135)),
+			new Pose2d(0.18502, WIDTH_METERS-1.1278, Rotation2d.fromDegrees(-54)),
+			new Pose2d(0.34944, WIDTH_METERS-1.1278+0.11941*1, Rotation2d.fromDegrees(-54)),
+			new Pose2d(0.51386, WIDTH_METERS-1.1278+0.11941*2, Rotation2d.fromDegrees(-54)),
+			new Pose2d(0.67828, WIDTH_METERS-1.1278+0.11941*3, Rotation2d.fromDegrees(-54)),
+			new Pose2d(0.8427, WIDTH_METERS-1.1278+0.11941*4, Rotation2d.fromDegrees(-54)),
+			new Pose2d(1.00712,WIDTH_METERS-1.1278+0.11941*5, Rotation2d.fromDegrees(-54)),
+			new Pose2d(1.7154,WIDTH_METERS-1.1278+0.11941*6, Rotation2d.fromDegrees(-54)),
+			new Pose2d(1.33596, WIDTH_METERS-1.1278+0.11941*7, Rotation2d.fromDegrees(-54)),
+			new Pose2d(1.50038, WIDTH_METERS-1.1278+0.11941*8, Rotation2d.fromDegrees(-54)),
 	};
 
 	public static final double FEEDER_WIDTH_METERS = 1.9304;

@@ -15,13 +15,13 @@ import org.littletonrobotics.junction.Logger;
 
 public class ScoringHelpers {
 
-	public static CoralStationSlot targetcoralStationSlot = CoralStationSlot.R4;
+	public static CoralStationSlot targetCoralStationSlot = CoralStationSlot.R1;
 
-	public static final Translation2d END_EFFECTOR_OFFSET_FROM_MID_ROBOT = new Translation2d(0, 0.014);
+	public static final Translation2d END_EFFECTOR_OFFSET_FROM_MID_ROBOT = new Translation2d(0, 0);
 
 	private static final Translation2d LEFT_CORAL_STATION_TRANSLATION = Field.getCoralStationMiddle(CoralStation.LEFT).getTranslation();
 	private static final Translation2d RIGHT_CORAL_STATION_TRANSLATION = Field.getCoralStationMiddle(CoralStation.RIGHT).getTranslation();
-
+	
 	public static ScoreLevel targetScoreLevel = ScoreLevel.L2;
 	public static Branch targetBranch = Branch.C;
 
@@ -47,8 +47,40 @@ public class ScoringHelpers {
 		}
 		return latestWantedCoralStation;
 	}
-
-
+	
+	public static CoralStationSlot getTargetCoralStationSlot(Robot robot) {
+		Translation2d robotTranslation = robot.getPoseEstimator().getEstimatedPose().getTranslation();
+		Translation2d robotTranslationWithOffset = robot.getPoseEstimator().getEstimatedPose().getTranslation().minus(END_EFFECTOR_OFFSET_FROM_MID_ROBOT);
+		targetCoralStationSlot = switch (getTargetCoralStation(robot)) {
+			case RIGHT -> {
+				double distanceFromLeftSlot = robotTranslation.getDistance(CoralStationSlot.R2.getPosition().getTranslation());
+				double distanceFromMiddleSlot = robotTranslation.getDistance(CoralStationSlot.R5.getPosition().getTranslation());
+				double distanceFromRightSlot = robotTranslation.getDistance(CoralStationSlot.R8.getPosition().getTranslation());
+				if (distanceFromLeftSlot < distanceFromMiddleSlot && distanceFromLeftSlot < distanceFromRightSlot) {
+					yield CoralStationSlot.R2;
+				}
+				if (distanceFromMiddleSlot < distanceFromRightSlot) {
+					yield CoralStationSlot.R5;
+				}
+				yield CoralStationSlot.R8;
+			}
+			case LEFT -> {
+				double distanceFromLeftSlot = robotTranslation.getDistance(CoralStationSlot.L2.getPosition().getTranslation());
+				double distanceFromMiddleSlot = robotTranslation.getDistance(CoralStationSlot.L5.getPosition().getTranslation());
+				double distanceFromRightSlot = robotTranslation.getDistance(CoralStationSlot.L8.getPosition().getTranslation());
+				if (distanceFromLeftSlot < distanceFromMiddleSlot && distanceFromLeftSlot < distanceFromRightSlot) {
+					yield CoralStationSlot.L2;
+				}
+				if (distanceFromMiddleSlot < distanceFromRightSlot) {
+					yield CoralStationSlot.L5;
+				}
+				yield CoralStationSlot.L8;
+			}
+		};
+		
+		return targetCoralStationSlot;
+	}
+	
 	public static void toggleIsFarReefHalf() {
 		isFarReefHalf = !isFarReefHalf;
 	}
@@ -60,7 +92,6 @@ public class ScoringHelpers {
 	public static void setTargetSideForReef(Side side) {
 		targetSideForReef = side;
 	}
-
 
 	public static Pose2d getRobotBranchScoringPose(Branch branch, double distanceFromBranchMeters) {
 		Translation2d branchTranslation = Field.getCoralPlacement(branch);
@@ -74,6 +105,7 @@ public class ScoringHelpers {
 		Logger.recordOutput(logPath + "/TargetBranch", getTargetBranch());
 		Logger.recordOutput(logPath + "/TargetReefSide", getTargetReefSide());
 		Logger.recordOutput(logPath + "/TargetCoralStation", latestWantedCoralStation);
+		Logger.recordOutput(logPath + "/TargetCoralStationSlot", targetCoralStationSlot);
 		Logger.recordOutput(logPath + "/TargetScoreLevel", targetScoreLevel);
 	}
 

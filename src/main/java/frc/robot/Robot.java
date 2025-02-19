@@ -183,6 +183,10 @@ public class Robot {
 		return endEffector;
 	}
 
+	public Lifter getLifter() {
+		return lifter;
+	}
+
 	public RobotCommander getRobotCommander() {
 		return robotCommander;
 	}

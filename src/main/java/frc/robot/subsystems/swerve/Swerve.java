@@ -313,7 +313,7 @@ public class Swerve extends GBSubsystem {
 
 		// Apply 12 volts on x-axis. Use it for max velocity calibrations.
 		// See what velocity the swerve log after it stops accelerating and use it as max.
-//		joystick.START.whileTrue(commandsBuilder.maxVelocityAccelerationCalibration(VelocityType.TRANSLATIONAL));
+		joystick.START.whileTrue(commandsBuilder.maxVelocityAccelerationCalibration(VelocityType.TRANSLATIONAL));
 
 		// Apply 12 volts on rotation-axis.
 		// Use it for max velocity calibrations. See what velocity the swerve log after it stops accelerating and use it as max.
@@ -329,7 +329,7 @@ public class Swerve extends GBSubsystem {
 		joystick.X.whileTrue(getCommandsBuilder().driveCalibration(false, SysIdRoutine.Direction.kForward));
 		joystick.B.whileTrue(getCommandsBuilder().driveCalibration(false, SysIdRoutine.Direction.kReverse));
 		// MAKE SURE TO PRESS IT ON THE END OF THE SYSID ROUTINE SO YOU CAN READ THE DATA FROM SIGNAL LOGGER.
-		joystick.START.onTrue(new InstantCommand(SignalLogger::stop));
+		joystick.L3.onTrue(new InstantCommand(SignalLogger::stop));
 
 		// Remember to test the drive pid ff calib with the POVS commands
 

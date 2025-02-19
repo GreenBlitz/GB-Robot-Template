@@ -36,7 +36,6 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
-import frc.utils.auto.PathPlannerUtil;
 import frc.robot.vision.VisionFilters;
 import frc.robot.vision.data.VisionData;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
@@ -128,7 +127,6 @@ public class Robot {
 
 		this.simulationManager = new SimulationManager("SimulationManager", this);
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
-
 	}
 
 	public void periodic() {

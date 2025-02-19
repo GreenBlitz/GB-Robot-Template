@@ -20,42 +20,42 @@ import frc.utils.math.AngleUnit;
 
 public class Falcon500LifterBuilder {
 
-    private static final double DRUM_RADIUS = 0.024384;
-    private static final int DIGITAL_INPUT_CHANNEL = 9;
-    private static final double DEBOUNCE_TIME = 0.05;
+	private static final double DRUM_RADIUS = 0.024384;
+	private static final int DIGITAL_INPUT_CHANNEL = 9;
+	private static final double DEBOUNCE_TIME = 0.05;
 
-    private static final int NUMBER_OF_MOTORS = 1;
+	private static final int NUMBER_OF_MOTORS = 1;
 
-    private static final double GEAR_RATIO = 25.0 / 6.0;
-    private static final double SENSOR_TO_MECHANISM_RATIO = 7 * GEAR_RATIO;
-    private static final double MOMENT_OF_INERTIA = 0.001;
+	private static final double GEAR_RATIO = 25.0 / 6.0;
+	private static final double SENSOR_TO_MECHANISM_RATIO = 7 * GEAR_RATIO;
+	private static final double MOMENT_OF_INERTIA = 0.001;
 
-    private static TalonFXConfiguration generateMotorConfiguration() {
-        TalonFXConfiguration configuration = new TalonFXConfiguration();
+	private static TalonFXConfiguration generateMotorConfiguration() {
+		TalonFXConfiguration configuration = new TalonFXConfiguration();
 
-        configuration.Feedback.SensorToMechanismRatio = SENSOR_TO_MECHANISM_RATIO;
+		configuration.Feedback.SensorToMechanismRatio = SENSOR_TO_MECHANISM_RATIO;
 
-        return configuration;
-    }
+		return configuration;
+	}
 
-    private static IDigitalInput generateLimitSwitch() {
-        return new ChanneledDigitalInput(new DigitalInput(DIGITAL_INPUT_CHANNEL), new Debouncer(DEBOUNCE_TIME), true);
-    }
+	private static IDigitalInput generateLimitSwitch() {
+		return new ChanneledDigitalInput(new DigitalInput(DIGITAL_INPUT_CHANNEL), new Debouncer(DEBOUNCE_TIME), true);
+	}
 
-    protected static Lifter createLifter(String logPath) {
-        SimpleMotorSimulation simulation = new SimpleMotorSimulation(
-                new DCMotorSim(
-                        LinearSystemId.createDCMotorSystem(DCMotor.getFalcon500Foc(NUMBER_OF_MOTORS), MOMENT_OF_INERTIA, 1 / GEAR_RATIO),
-                        DCMotor.getFalcon500Foc(NUMBER_OF_MOTORS)
-                )
-        );
-        TalonFXMotor lifter = new TalonFXMotor(logPath, IDs.TalonFXIDs.LIFTER, new SysIdRoutine.Config(), simulation);
-        lifter.applyConfiguration(generateMotorConfiguration());
+	protected static Lifter createLifter(String logPath) {
+		SimpleMotorSimulation simulation = new SimpleMotorSimulation(
+			new DCMotorSim(
+				LinearSystemId.createDCMotorSystem(DCMotor.getFalcon500Foc(NUMBER_OF_MOTORS), MOMENT_OF_INERTIA, 1 / GEAR_RATIO),
+				DCMotor.getFalcon500Foc(NUMBER_OF_MOTORS)
+			)
+		);
+		TalonFXMotor lifter = new TalonFXMotor(logPath, IDs.TalonFXIDs.LIFTER, new SysIdRoutine.Config(), simulation);
+		lifter.applyConfiguration(generateMotorConfiguration());
 
-        Phoenix6AngleSignal positionSignal = Phoenix6SignalBuilder
-                .build(lifter.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+		Phoenix6AngleSignal positionSignal = Phoenix6SignalBuilder
+			.build(lifter.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
 
-        return new Lifter(logPath, lifter, positionSignal, generateLimitSwitch(), DRUM_RADIUS);
-    }
+		return new Lifter(logPath, lifter, positionSignal, generateLimitSwitch(), DRUM_RADIUS);
+	}
 
 }

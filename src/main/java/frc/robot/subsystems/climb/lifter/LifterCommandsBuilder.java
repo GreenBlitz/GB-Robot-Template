@@ -7,22 +7,22 @@ import java.util.function.DoubleSupplier;
 
 public class LifterCommandsBuilder {
 
-    private final Lifter lifter;
+	private final Lifter lifter;
 
-    public LifterCommandsBuilder(Lifter lifter) {
-        this.lifter = lifter;
-    }
+	public LifterCommandsBuilder(Lifter lifter) {
+		this.lifter = lifter;
+	}
 
-    public Command setPower(double power) {
-        return lifter.asSubsystemCommand(new RunCommand(() -> lifter.setPower(power)), "Set power to " + power);
-    }
+	public Command setPower(double power) {
+		return lifter.asSubsystemCommand(new RunCommand(() -> lifter.setPower(power)), "Set power to " + power);
+	}
 
-    public Command stop() {
-        return lifter.asSubsystemCommand(new RunCommand(lifter::stop), "Stop");
-    }
+	public Command stop() {
+		return lifter.asSubsystemCommand(new RunCommand(lifter::stop), "Stop");
+	}
 
-    public Command setPower(DoubleSupplier powerSupplier) {
-        return lifter.asSubsystemCommand(new RunCommand(() -> lifter.setPower(powerSupplier.getAsDouble())), "Set power by supplier");
-    }
+	public Command setPower(DoubleSupplier powerSupplier) {
+		return lifter.asSubsystemCommand(new RunCommand(() -> lifter.setPower(powerSupplier.getAsDouble())), "Set power by supplier");
+	}
 
 }

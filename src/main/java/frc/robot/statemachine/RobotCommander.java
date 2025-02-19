@@ -209,10 +209,11 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	private Command scoreWithoutRelease() {
-		return asSubsystemCommand(new ParallelCommandGroup(switch (ScoringHelpers.targetScoreLevel) {
-			case L4 -> superstructure.l4ScoreWithoutRelease();
-			case L1, L2, L3 -> superstructure.scoreWithoutRelease();
-		}, swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))),
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				superstructure.scoreWithoutRelease(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
+			),
 			RobotState.SCORE_WITHOUT_RELEASE
 		);
 	}

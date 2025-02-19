@@ -142,7 +142,7 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command preScore() {
+	private Command genericPreScore() {
 		return asSubsystemCommand(
 			new DeferredCommand(
 				() -> new ParallelCommandGroup(
@@ -156,13 +156,16 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command scoreWithoutRelease() {
+	private Command l4PreScore() {
 		return asSubsystemCommand(
 			new DeferredCommand(
-				() -> new ParallelCommandGroup(
-					elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorScore()),
-					armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmScore()),
-					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+				() -> new SequentialCommandGroup(
+					genericPreScore().until(this::isPreScoreReady),
+					new ParallelCommandGroup(
+						elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorPreScore()),
+						armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmScore()),
+						endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+					)
 				),
 				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector())
 			),
@@ -170,16 +173,19 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command l4ScoreWithoutRelease() {
+	public Command preScore() {
+		return new DeferredCommand(() -> switch (ScoringHelpers.targetScoreLevel) {
+			case L4 -> l4PreScore();
+			case L1, L2, L3 -> genericPreScore();
+		}, Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector()));
+	}
+
+	public Command scoreWithoutRelease() {
 		return asSubsystemCommand(
 			new DeferredCommand(
 				() -> new ParallelCommandGroup(
-					elevatorStateHandler.setState(ElevatorState.L4),
-					new SequentialCommandGroup(
-						armStateHandler.setState(ArmState.WHILE_DRIVE_L4)
-							.until(() -> robot.getElevator().isPastPosition(StateMachineConstants.ELEVATOR_POSITION_TO_MOVE_ARM_TO_SCORE_L4)),
-						armStateHandler.setState(ArmState.L4)
-					),
+					elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorScore()),
+					armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmScore()),
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
 				),
 				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector())

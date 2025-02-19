@@ -17,7 +17,7 @@ public class ScoringHelpers {
 
 	public static CoralStationSlot targetCoralStationSlot = CoralStationSlot.R1;
 
-	public static final Translation2d END_EFFECTOR_OFFSET_FROM_MID_ROBOT = new Translation2d(0, 0);
+	public static final Translation2d END_EFFECTOR_OFFSET_FROM_MID_ROBOT = new Translation2d(0, 0.14);
 
 	private static final Translation2d LEFT_CORAL_STATION_TRANSLATION = Field.getCoralStationMiddle(CoralStation.LEFT).getTranslation();
 	private static final Translation2d RIGHT_CORAL_STATION_TRANSLATION = Field.getCoralStationMiddle(CoralStation.RIGHT).getTranslation();
@@ -53,9 +53,9 @@ public class ScoringHelpers {
 		Translation2d robotTranslationWithOffset = robot.getPoseEstimator().getEstimatedPose().getTranslation().minus(END_EFFECTOR_OFFSET_FROM_MID_ROBOT);
 		targetCoralStationSlot = switch (getTargetCoralStation(robot)) {
 			case RIGHT -> {
-				double distanceFromLeftSlot = robotTranslation.getDistance(CoralStationSlot.R2.getPosition().getTranslation());
-				double distanceFromMiddleSlot = robotTranslation.getDistance(CoralStationSlot.R5.getPosition().getTranslation());
-				double distanceFromRightSlot = robotTranslation.getDistance(CoralStationSlot.R8.getPosition().getTranslation());
+				double distanceFromLeftSlot = robotTranslationWithOffset.getDistance(CoralStationSlot.R2.getPosition().getTranslation());
+				double distanceFromMiddleSlot = robotTranslationWithOffset.getDistance(CoralStationSlot.R5.getPosition().getTranslation());
+				double distanceFromRightSlot = robotTranslationWithOffset.getDistance(CoralStationSlot.R8.getPosition().getTranslation());
 				if (distanceFromLeftSlot < distanceFromMiddleSlot && distanceFromLeftSlot < distanceFromRightSlot) {
 					yield CoralStationSlot.R2;
 				}
@@ -65,9 +65,9 @@ public class ScoringHelpers {
 				yield CoralStationSlot.R8;
 			}
 			case LEFT -> {
-				double distanceFromLeftSlot = robotTranslation.getDistance(CoralStationSlot.L2.getPosition().getTranslation());
-				double distanceFromMiddleSlot = robotTranslation.getDistance(CoralStationSlot.L5.getPosition().getTranslation());
-				double distanceFromRightSlot = robotTranslation.getDistance(CoralStationSlot.L8.getPosition().getTranslation());
+				double distanceFromLeftSlot = robotTranslationWithOffset.getDistance(CoralStationSlot.L2.getPosition().getTranslation());
+				double distanceFromMiddleSlot = robotTranslationWithOffset.getDistance(CoralStationSlot.L5.getPosition().getTranslation());
+				double distanceFromRightSlot = robotTranslationWithOffset.getDistance(CoralStationSlot.L8.getPosition().getTranslation());
 				if (distanceFromLeftSlot < distanceFromMiddleSlot && distanceFromLeftSlot < distanceFromRightSlot) {
 					yield CoralStationSlot.L2;
 				}

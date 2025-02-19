@@ -78,6 +78,8 @@ public class JoysticksBindings {
 
 		usedJoystick.R1.onTrue(robot.getRobotCommander().scoreForButton());
 		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
+		usedJoystick.X.onTrue(robot.getRobotCommander().setState(RobotState.SCORE));
+
 		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
 	}
 

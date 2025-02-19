@@ -15,7 +15,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class ScoringHelpers {
 
-	public static CoralStationSlot targetcoralStationSlot = CoralStationSlot.L4;
+	public static CoralStationSlot targetcoralStationSlot = CoralStationSlot.R4;
 
 	public static final Translation2d END_EFFECTOR_OFFSET_FROM_MID_ROBOT = new Translation2d(0, 0.014);
 	private static final Translation2d LEFT_CORAL_STATION_TRANSLATION = Field.getCoralStationMiddle(CoralStation.LEFT).getTranslation();
@@ -77,7 +77,7 @@ public class ScoringHelpers {
 	}
 
 	public static Pose2d getRobotFeederPose(CoralStationSlot coralStationSlot, double distanceFromSlots) {
-		Translation2d coralStationTranslation = Field.getCoralStationTranslation2d(coralStationSlot);
+		Translation2d coralStationTranslation = Field.getCoralStationSlotsPose2d(coralStationSlot).getTranslation();
 		Rotation2d targetRobotAngle = Field.getCoralStationSlotsPose2d(coralStationSlot).getRotation();
 		Translation2d differenceTranslation = new Translation2d(distanceFromSlots, targetRobotAngle);
 		return new Pose2d(coralStationTranslation.minus(differenceTranslation), targetRobotAngle);

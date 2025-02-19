@@ -145,11 +145,11 @@ public class SwerveStateHandler {
 		CoralStationSlot coralStationSlot,
 		SwerveState swerveState
 	) {
-		Translation2d branch = Field.getCoralStationTranslation2d(coralStationSlot);
-		Rotation2d headingToReefSide = Field.getCoralStationSlotsPose2d(coralStationSlot).getRotation();
+		Translation2d slot = Field.getCoralStationSlotsPose2d(coralStationSlot).getTranslation();
+		Rotation2d headingToCoralStation = Field.getCoralStationSlotsPose2d(coralStationSlot).getRotation();
 
-		chassisSpeeds = AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotPose.getRotation(), headingToReefSide, swerveConstants);
-		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, headingToReefSide, branch, swerveConstants, swerveState);
+		chassisSpeeds = AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotPose.getRotation(), headingToCoralStation, swerveConstants);
+		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, headingToCoralStation, slot, swerveConstants, swerveState);
 	}
 
 	private ChassisSpeeds handleAlgaeAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, ReefSide reefSide, SwerveState swerveState) {

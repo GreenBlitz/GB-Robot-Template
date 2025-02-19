@@ -170,6 +170,24 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
+	public Command l4ScoreWithoutRelease() {
+		return asSubsystemCommand(
+			new DeferredCommand(
+				() -> new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.L4),
+					new SequentialCommandGroup(
+						armStateHandler.setState(ArmState.WHILE_DRIVE_L4)
+							.until(() -> robot.getElevator().isPastPosition(StateMachineConstants.ELEVATOR_POSITION_TO_MOVE_ARM_TO_SCORE_L4)),
+						armStateHandler.setState(ArmState.L4)
+					),
+					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+				),
+				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector())
+			),
+			SuperstructureState.SCORE_WITHOUT_RELEASE
+		);
+	}
+
 	public Command scoreWithRelease() {
 		return asSubsystemCommand(
 			new DeferredCommand(

@@ -79,7 +79,6 @@ public class JoysticksBindings {
 		usedJoystick.R1.onTrue(robot.getRobotCommander().scoreForButton());
 		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
 		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
-		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getHeadingEstimator().startRecalibratingGyroOffset()));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

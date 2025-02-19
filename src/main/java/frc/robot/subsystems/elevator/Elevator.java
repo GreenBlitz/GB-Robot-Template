@@ -171,6 +171,10 @@ public class Elevator extends GBSubsystem {
 		return MathUtil.isNear(positionMeters, getElevatorPositionMeters(), toleranceMeters);
 	}
 
+	public boolean isPastPosition(double positionMeters) {
+		return getElevatorPositionMeters() > positionMeters;
+	}
+
 	private boolean shouldResetByMinimumPosition() {
 		return getElevatorPositionMeters() <= ElevatorConstants.MINIMUM_HEIGHT_METERS;
 	}

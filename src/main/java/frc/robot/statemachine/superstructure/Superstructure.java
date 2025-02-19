@@ -151,7 +151,7 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command preScore() {
+	private Command genericPreScore() {
 		return asSubsystemCommand(
 			new DeferredCommand(
 				() -> new ParallelCommandGroup(
@@ -163,6 +163,31 @@ public class Superstructure extends GBSubsystem {
 			),
 			SuperstructureState.PRE_SCORE
 		);
+	}
+
+	private Command l4PreScore() {
+		return asSubsystemCommand(
+			new DeferredCommand(
+				() -> new ParallelCommandGroup(
+					new SequentialCommandGroup(
+						armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmPreScore())
+							.until(() -> robot.getElevator().isPastPosition(StateMachineConstants.ELEVATOR_POSITION_TO_MOVE_ARM_TO_SCORE_L4)),
+						armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmScore())
+					),
+					elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorPreScore()),
+					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+				),
+				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector())
+			),
+			SuperstructureState.SCORE_WITHOUT_RELEASE
+		);
+	}
+
+	public Command preScore() {
+		return new DeferredCommand(() -> switch (ScoringHelpers.targetScoreLevel) {
+			case L4 -> l4PreScore();
+			case L1, L2, L3 -> genericPreScore();
+		}, Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector()));
 	}
 
 	public Command scoreWithoutRelease() {
@@ -275,16 +300,20 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command algaeOutTake(){
+	public Command algaeOutTake() {
 		return asSubsystemCommand(
-				new SequentialCommandGroup(
-						new ParallelCommandGroup(
-								elevatorStateHandler.setState(ElevatorState.CLOSED).until(() -> robot.getElevator().isAtPosition(ElevatorState.CLOSED.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)),
-								armStateHandler.setState(ArmState.CLOSED).until(() -> robot.getArm().isAtPosition(ArmState.CLOSED.getPosition(), Tolerances.ARM_POSITION))
+			new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.CLOSED)
+						.until(
+							() -> robot.getElevator().isAtPosition(ElevatorState.CLOSED.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
 						),
-						endEffectorStateHandler.setState(EndEffectorState.ALGAE_OUTTAKE)
+					armStateHandler.setState(ArmState.CLOSED)
+						.until(() -> robot.getArm().isAtPosition(ArmState.CLOSED.getPosition(), Tolerances.ARM_POSITION))
 				),
-				SuperstructureState.ALGAE_OUTTAKE.name()
+				endEffectorStateHandler.setState(EndEffectorState.ALGAE_OUTTAKE)
+			),
+			SuperstructureState.ALGAE_OUTTAKE.name()
 		);
 	}
 

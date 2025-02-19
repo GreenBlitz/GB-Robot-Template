@@ -82,22 +82,16 @@ public class JoysticksBindings {
 		usedJoystick.R1.onTrue(robot.getRobotCommander().autoScore());
 		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
 		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
-
-		usedJoystick.POV_UP.onTrue(new PathPlannerAuto("Straight 2m"));
-		usedJoystick.POV_DOWN.onTrue(new PathPlannerAuto("Rotate 2m"));
-
-		usedJoystick.X.whileTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(MathConstants.HALF_CIRCLE));
-		usedJoystick.Y.whileTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(new Rotation2d()));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
 
-		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getRobotCommander().setState(RobotState.ALIGN_REEF));
+//		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getRobotCommander().setState(RobotState.ALIGN_REEF));
 //		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getRobotCommander().fullyPreScore());
 //		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getRobotCommander().fullyScore());
-//		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getRobotCommander().scoreSequence());
+//		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getRobotCommander().autoScore());
 
 
 		usedJoystick.A.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L1));

@@ -1,16 +1,12 @@
 package frc.robot.statemachine;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.constants.field.Field;
-import frc.constants.field.enums.Branch;
 import frc.robot.Robot;
-import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.scoringhelpers.ScoringPathsHelper;
 import frc.robot.statemachine.superstructure.Superstructure;
@@ -20,10 +16,8 @@ import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.pose.PoseUtil;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
-import java.util.function.Supplier;
 
 public class RobotCommander extends GBSubsystem {
 
@@ -73,11 +67,6 @@ public class RobotCommander extends GBSubsystem {
 		ChassisSpeeds allianceRelativeSpeeds = swerve.getAllianceRelativeVelocity();
 		ChassisSpeeds reefRelativeSpeeds = SwerveMath
 			.robotToAllianceRelativeSpeeds(allianceRelativeSpeeds, Field.getAllianceRelative(reefAngle.unaryMinus()));
-
-		Logger.recordOutput(
-			"checkin/ a",
-			ScoringHelpers.getRobotBranchScoringPose(ScoringHelpers.getTargetBranch(), scoringPoseDistanceFromReefMeters)
-		);
 
 		return switch (ScoringHelpers.targetScoreLevel) {
 			case L1 -> PoseUtil.isAtPose(reefRelativeRobotPose, reefRelativeTargetPose, reefRelativeSpeeds, l1Tolerances, l1Deadbands);
@@ -274,20 +263,16 @@ public class RobotCommander extends GBSubsystem {
 		};
 	}
 
-	private PathPlannerPath getPathByBranch(Branch branch) {
-		return ScoringPathsHelper.getPathByTargetBranch(branch);
-	}
-
-
-	public Command scoreSequence() {
+	public Command autoScore() {
 		return asSubsystemCommand(
 			new DeferredCommand(
 				() -> Commands
 					.parallel(
-						swerve.getCommandsBuilder().driveToPath(
-							() -> robot.getPoseEstimator().getEstimatedPose(),
-							getPathByBranch(ScoringHelpers.getTargetBranch())
-						),
+						swerve.getCommandsBuilder()
+							.driveToPath(
+								() -> robot.getPoseEstimator().getEstimatedPose(),
+								ScoringPathsHelper.getPathByBranch(ScoringHelpers.getTargetBranch())
+							),
 						Commands.sequence(
 							superstructure.armPreScore()
 								.until(
@@ -295,7 +280,7 @@ public class RobotCommander extends GBSubsystem {
 										robot.getPoseEstimator().getEstimatedPose(),
 										ScoringHelpers.getTargetBranch(),
 										StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS,
-										StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS_NOT_ATUO
+										StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS
 
 									)
 								),

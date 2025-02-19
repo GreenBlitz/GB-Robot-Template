@@ -24,14 +24,15 @@ public class ScoringPathsHelper {
 		return branchToPathMap;
 	}
 
-	public static PathPlannerPath getPathByTargetBranch(Branch branch) {
+
+	public static PathPlannerPath getPathByBranch(Branch branch) {
 		return BRANCH_PATH_PLANNER_PATH_HASH_MAP.get(branch);
 	}
 
 	private static PathPlannerPath generatePathToTargetBranch(Branch branch) {
 		return new PathPlannerPath(
 			PathPlannerPath.waypointsFromPoses(
-				ScoringHelpers.getRobotBranchScoringPose(branch, StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS),
+				ScoringHelpers.getRobotBranchScoringPose(branch, StateMachineConstants.DISTANCE_TO_BRANCH_FOR_STARTING_PATH),
 				ScoringHelpers.getRobotBranchScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
 			),
 			new PathConstraints(0.5, 0.5, 1, 0.5),

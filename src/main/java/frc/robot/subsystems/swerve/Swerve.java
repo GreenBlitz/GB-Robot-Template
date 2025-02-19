@@ -142,10 +142,6 @@ public class Swerve extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/OdometrySamples", getNumberOfOdometrySamples());
 	}
 
-	public ChassisSpeeds getChassisSpeeds() {
-		return kinematics.toChassisSpeeds(getModules().getCurrentStates());
-	}
-
 	public int getNumberOfOdometrySamples() {
 		return Math.min(gyroSignals.yawSignal().asArray().length, modules.getNumberOfOdometrySamples());
 	}
@@ -210,7 +206,7 @@ public class Swerve extends GBSubsystem {
 		ChassisSpeeds targetAllianceRelativeSpeeds = new ChassisSpeeds(
 			xVelocityMetersPerSecond * direction,
 			yVelocityMetersPerSecond * direction,
-			0//rotationVelocityPerSecond.getRadians()
+			0// rotationVelocityPerSecond.getRadians()
 		);
 		driveByState(targetAllianceRelativeSpeeds, SwerveState.DEFAULT_DRIVE);
 	}

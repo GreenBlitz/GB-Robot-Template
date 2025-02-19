@@ -1,20 +1,14 @@
 package frc;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.constants.field.enums.Branch;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
-import frc.robot.scoringhelpers.ScoringPathsHelper;
 import frc.robot.statemachine.RobotState;
 import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.subsystems.swerve.ChassisPowers;
@@ -82,7 +76,7 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 
-		usedJoystick.R1.onTrue(robot.getRobotCommander().scoreSequence());
+		usedJoystick.R1.onTrue(robot.getRobotCommander().autoScore());
 		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
 		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
 	}

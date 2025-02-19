@@ -4,11 +4,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public enum ArmState {
 
-	CLOSED(Rotation2d.fromDegrees(210)),
+	CLOSED(Rotation2d.fromDegrees(195)),
 	INTAKE(Rotation2d.fromDegrees(185)),
 	OUTTAKE(Rotation2d.fromDegrees(13)),
-	PRE_L1(Rotation2d.fromDegrees(215)),
-	L1(Rotation2d.fromDegrees(215)),
+	PRE_L1(Rotation2d.fromDegrees(195)),
+	L1(Rotation2d.fromDegrees(195)),
 	PRE_L2(Rotation2d.fromDegrees(-11)),
 	L2(Rotation2d.fromDegrees(-11)),
 	PRE_L3(Rotation2d.fromDegrees(-4)),

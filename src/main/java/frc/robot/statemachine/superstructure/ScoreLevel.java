@@ -9,7 +9,7 @@ public enum ScoreLevel {
 	L1(EndEffectorState.L1_OUTTAKE, ElevatorState.L1, ElevatorState.PRE_L1, ElevatorState.PRE_L1, ArmState.L1, ArmState.PRE_L1),
 	L2(EndEffectorState.BRANCH_OUTTAKE, ElevatorState.L2, ElevatorState.PRE_L2, ElevatorState.PRE_L2, ArmState.L2, ArmState.PRE_L2),
 	L3(EndEffectorState.BRANCH_OUTTAKE, ElevatorState.L3, ElevatorState.PRE_L3, ElevatorState.PRE_L3, ArmState.L3, ArmState.PRE_L3),
-	L4(EndEffectorState.BRANCH_OUTTAKE, ElevatorState.L4, ElevatorState.PRE_L4, ElevatorState.WHILE_DRIVE_L4, ArmState.L4, ArmState.WHILE_DRIVE_L4);
+	L4(EndEffectorState.BRANCH_OUTTAKE, ElevatorState.L4, ElevatorState.PRE_L4, ElevatorState.WHILE_DRIVE_L4, ArmState.L4, ArmState.PRE_L4);
 
 	private final EndEffectorState endEffectorScore;
 	private final ElevatorState elevatorScore;

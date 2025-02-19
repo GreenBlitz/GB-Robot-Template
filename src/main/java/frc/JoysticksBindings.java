@@ -1,9 +1,12 @@
 package frc;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.constants.MathConstants;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
@@ -79,6 +82,13 @@ public class JoysticksBindings {
 		usedJoystick.R1.onTrue(robot.getRobotCommander().autoScore());
 		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
 		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
+		
+		usedJoystick.POV_UP.onTrue(new PathPlannerAuto("Straight 2m"));
+		usedJoystick.POV_DOWN.onTrue(new PathPlannerAuto("Rotate 2m"));
+		
+		usedJoystick.X
+				.whileTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(MathConstants.HALF_CIRCLE));
+		usedJoystick.Y.whileTrue(robot.getSwerve().getCommandsBuilder().turnToHeading(new Rotation2d()));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

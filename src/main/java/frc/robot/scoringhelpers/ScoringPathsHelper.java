@@ -35,7 +35,12 @@ public class ScoringPathsHelper {
 				ScoringHelpers.getRobotBranchScoringPose(branch, StateMachineConstants.DISTANCE_TO_BRANCH_FOR_STARTING_PATH),
 				ScoringHelpers.getRobotBranchScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
 			),
-			new PathConstraints(0.5, 0.5, 1, 0.5),
+			new PathConstraints(
+				StateMachineConstants.MAX_VELOCITY_WHILE_ELEVATOR_L4_METERS_PER_SECOND,
+				StateMachineConstants.MAX_ACCELERATION_WHILE_ELEVATOR_L4_METERS_PER_SECOND_SQUARED,
+				StateMachineConstants.MAX_VELOCITY_WHILE_ELEVATOR_L4_PER_SECOND.getRadians(),
+				StateMachineConstants.MAX_ACCELERATION_WHILE_ELEVATOR_L4_PER_SECOND_SQUARED.getRadians()
+			),
 			new IdealStartingState(0.5, Field.getReefSideMiddle(branch.getReefSide()).getRotation()),
 			new GoalEndState(0, Field.getReefSideMiddle(branch.getReefSide()).getRotation())
 		);

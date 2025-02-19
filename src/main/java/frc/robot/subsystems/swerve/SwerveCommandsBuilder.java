@@ -20,6 +20,7 @@ import frc.utils.calibration.swervecalibration.maxvelocityacceleration.VelocityT
 import frc.utils.calibration.swervecalibration.wheelradius.WheelRadiusCharacterization;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.utilcommands.InitExecuteCommand;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -198,28 +199,21 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-	public Command driveToPath(Supplier<Pose2d> currentPose, PathPlannerPath path) {
+	public Command driveToPath(Supplier<Pose2d> currentPose, PathPlannerPath path, Pose2d targetPose) {
 		return new DeferredCommand(
 			() -> new SequentialCommandGroup(
 				AutoBuilder.pathfindThenFollowPath(path, AutonomousConstants.getRealTimeConstraints(swerve)),
-				pidToPose(currentPose, path.getPathPoses().get(path.getPathPoses().size() - 1))
+				pidToPose(currentPose, targetPose)
 			),
 			Set.of(swerve)
 		);
 	}
 
-	public Command pathToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose) {
-		return swerve.asSubsystemCommand(
-			new DeferredCommand(() -> pathToPose(currentPose.get(), targetPose.get()), Set.of(swerve)),
-			"path to pose: " + targetPose.get().toString()
-		);
-	}
-
 	public Command pidToPose(Supplier<Pose2d> currentPose, Pose2d targetPose) {
-		return swerve.asSubsystemCommand(
-			new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.moveToPoseByPID(currentPose.get(), targetPose)),
-			"PID to pose: " + targetPose
-		);
+		return swerve.asSubsystemCommand(new InitExecuteCommand(() -> {
+			swerve.resetPIDControllers();
+			Logger.recordOutput("Test/tr", targetPose);
+		}, () -> swerve.moveToPoseByPID(currentPose.get(), targetPose)), "PID to pose: " + targetPose);
 	}
 
 }

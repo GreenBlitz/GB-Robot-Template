@@ -206,7 +206,7 @@ public class Swerve extends GBSubsystem {
 		ChassisSpeeds targetAllianceRelativeSpeeds = new ChassisSpeeds(
 			xVelocityMetersPerSecond * direction,
 			yVelocityMetersPerSecond * direction,
-			0// rotationVelocityPerSecond.getRadians()
+			rotationVelocityPerSecond.getRadians()
 		);
 		driveByState(targetAllianceRelativeSpeeds, SwerveState.DEFAULT_DRIVE);
 	}

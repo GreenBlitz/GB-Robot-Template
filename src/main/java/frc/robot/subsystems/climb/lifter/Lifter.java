@@ -79,6 +79,7 @@ public class Lifter extends GBSubsystem {
 		}
 
 		updateInputs();
+		motor.updateSimulation();
 	}
 
 	private void updateInputs() {

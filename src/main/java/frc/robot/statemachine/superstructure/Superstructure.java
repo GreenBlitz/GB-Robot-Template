@@ -64,6 +64,7 @@ public class Superstructure extends GBSubsystem {
 	public boolean isPreScoreReady() {
 		ScoreLevel targetScoreLevel = ScoringHelpers.targetScoreLevel;
 		ArmState targetArmState = targetScoreLevel == ScoreLevel.L4 ? targetScoreLevel.getArmScore() : targetScoreLevel.getArmPreScore();
+
 		return robot.getElevator().isAtPosition(targetScoreLevel.getElevatorPreScore().getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
 			&& elevatorStateHandler.getCurrentState() == targetScoreLevel.getElevatorPreScore()
 			&& robot.getArm().isAtPosition(targetArmState.getPosition(), Tolerances.ARM_POSITION)

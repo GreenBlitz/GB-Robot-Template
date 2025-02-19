@@ -15,8 +15,6 @@ import org.littletonrobotics.junction.Logger;
 
 public class ScoringHelpers {
 
-	public static CoralStationSlot targetCoralStationSlot = CoralStationSlot.R1;
-
 	public static final Translation2d END_EFFECTOR_OFFSET_FROM_MID_ROBOT = new Translation2d(0, 0.14);
 
 	private static final Translation2d LEFT_CORAL_STATION_TRANSLATION = Field.getCoralStationMiddle(CoralStation.LEFT).getTranslation();
@@ -24,6 +22,7 @@ public class ScoringHelpers {
 
 	public static ScoreLevel targetScoreLevel = ScoreLevel.L2;
 	public static Branch targetBranch = Branch.C;
+	public static CoralStationSlot targetCoralStationSlot = CoralStationSlot.R1;
 
 	private static boolean isFarReefHalf = false;
 	private static Side targetSideForReef = Side.MIDDLE;

@@ -26,6 +26,7 @@ public class Falcon500LifterBuilder {
 
 	private static final int NUMBER_OF_MOTORS = 1;
 
+	private static final boolean SET_BRAKE = true;
 	private static final double GEAR_RATIO = 25.0 / 6.0;
 	private static final double SENSOR_TO_MECHANISM_RATIO = 7 * GEAR_RATIO;
 	private static final double MOMENT_OF_INERTIA = 0.001;
@@ -51,6 +52,7 @@ public class Falcon500LifterBuilder {
 		);
 		TalonFXMotor lifter = new TalonFXMotor(logPath, IDs.TalonFXIDs.LIFTER, new SysIdRoutine.Config(), simulation);
 		lifter.applyConfiguration(generateMotorConfiguration());
+		lifter.setBrake(SET_BRAKE);
 
 		Phoenix6AngleSignal positionSignal = Phoenix6SignalBuilder
 			.build(lifter.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);

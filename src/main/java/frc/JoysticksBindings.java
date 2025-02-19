@@ -39,7 +39,7 @@ public class JoysticksBindings {
 		Trigger noteIn = new Trigger(robot.getRobotCommander().getSuperstructure()::isCoralIn);
 		noteIn.onTrue(noteInRumble(MAIN_JOYSTICK).alongWith(noteInRumble(SECOND_JOYSTICK)));
 
-		Trigger noteOut = new Trigger(robot.getRobotCommander().getSuperstructure()::isCoralOut);
+		Trigger noteOut = new Trigger(() -> !robot.getRobotCommander().getSuperstructure().isCoralIn());
 		noteOut.onTrue(noteInRumble(MAIN_JOYSTICK).alongWith(noteInRumble(SECOND_JOYSTICK)));
 	}
 
@@ -77,7 +77,7 @@ public class JoysticksBindings {
 		// bindings...
 
 		usedJoystick.R1.onTrue(robot.getRobotCommander().scoreForButton());
-		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
+		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_REMOVE));
 		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
 	}
 

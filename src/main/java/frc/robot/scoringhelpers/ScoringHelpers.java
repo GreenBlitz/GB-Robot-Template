@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.constants.field.Field;
+import frc.constants.field.enums.AlgaeRemoveLevel;
 import frc.constants.field.enums.Branch;
 import frc.constants.field.enums.CoralStation;
 import frc.constants.field.enums.ReefSide;
@@ -44,6 +45,19 @@ public class ScoringHelpers {
 		return latestWantedCoralStation;
 	}
 
+	public static AlgaeRemoveLevel getAlgaeRemoveLevel() {
+		if (isFarReefHalf) {
+			return switch (targetSideForReef) {
+				case LEFT, RIGHT -> AlgaeRemoveLevel.LOW;
+				case MIDDLE -> AlgaeRemoveLevel.HIGH;
+			};
+		} else {
+			return switch (targetSideForReef) {
+				case LEFT, RIGHT -> AlgaeRemoveLevel.HIGH;
+				case MIDDLE -> AlgaeRemoveLevel.LOW;
+			};
+		}
+	}
 
 	public static void toggleIsFarReefHalf() {
 		isFarReefHalf = !isFarReefHalf;

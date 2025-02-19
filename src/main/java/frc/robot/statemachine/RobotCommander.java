@@ -130,6 +130,7 @@ public class RobotCommander extends GBSubsystem {
 			case PRE_SCORE -> preScore();
 			case SCORE_WITHOUT_RELEASE -> scoreWithoutRelease();
 			case SCORE -> score();
+			case ALGAE_REMOVE -> algaeRemove();
 		};
 	}
 
@@ -249,13 +250,23 @@ public class RobotCommander extends GBSubsystem {
 		}, Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector()));
 	}
 
+	public Command algaeRemove() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				superstructure.algaeRemove(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE))
+			).until(superstructure::isAlgaeIn),
+			RobotState.ALGAE_REMOVE.name()
+		);
+	}
+
 	private Command asSubsystemCommand(Command command, RobotState state) {
 		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
 	}
 
 	private Command endState(RobotState state) {
 		return switch (state) {
-			case INTAKE, OUTTAKE, DRIVE, ALIGN_REEF -> drive();
+			case INTAKE, OUTTAKE, DRIVE, ALIGN_REEF, ALGAE_REMOVE -> drive();
 			case ARM_PRE_SCORE -> armPreScore();
 			case PRE_SCORE -> preScore();
 			case SCORE, SCORE_WITHOUT_RELEASE -> closeAfterScore();

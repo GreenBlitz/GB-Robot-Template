@@ -28,7 +28,7 @@ public class EndEffectorStateHandler {
 	}
 
 	private double defaultStatePower() {
-		return endEffector.isCoralInBack() ? EndEffectorState.DEFAULT.getPower() : -EndEffectorState.DEFAULT.getPower();
+		return endEffector.isCoralIn() ? EndEffectorState.DEFAULT.getPower() : -EndEffectorState.DEFAULT.getPower();
 	}
 
 

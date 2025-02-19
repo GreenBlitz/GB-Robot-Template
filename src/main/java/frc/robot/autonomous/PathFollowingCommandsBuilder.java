@@ -56,7 +56,7 @@ public class PathFollowingCommandsBuilder {
 	public static Command followPathOrPathfindAndFollowPath(Robot robot, PathPlannerPath path) {
 		return new ConditionalCommand(
 			followPath(path),
-			pathfindThenFollowPath(path, AutonomousConstants.REAL_TIME_CONSTRAINTS),
+			pathfindThenFollowPath(path, AutonomousConstants.getRealTimeConstraints(robot.getSwerve())),
 			() -> PathPlannerUtil.isRobotInPathfindingDeadband(
 				robot.getPoseEstimator().getEstimatedPose(),
 				Field.getAllianceRelative(PathPlannerUtil.getPathStartingPose(path), true, true, AngleTransform.INVERT)

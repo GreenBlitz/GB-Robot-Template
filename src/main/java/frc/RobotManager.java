@@ -61,6 +61,7 @@ public class RobotManager extends LoggedRobot {
 		if (auto != null) {
 			auto.cancel();
 		}
+		robot.getRobotCommander().initializeDefaultCommand();
 	}
 
 	@Override

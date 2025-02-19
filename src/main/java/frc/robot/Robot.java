@@ -144,14 +144,14 @@ public class Robot {
 		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());
 
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
-//		headingEstimator.updateGyroAngle(new TimedValue<>(poseEstimator.getOdometryPose().getRotation(), TimeUtil.getCurrentTimeSeconds()));
-//		for (TimedValue<Rotation2d> headingData : multiAprilTagVisionSources.getRawRobotHeadings()) {
-//			headingEstimator.updateVisionIfGyroOffsetIsNotCalibrated(
-//				headingData,
-//				RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION,
-//				RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE
-//			);
-//		}
+		headingEstimator.updateGyroAngle(new TimedValue<>(poseEstimator.getOdometryPose().getRotation(), TimeUtil.getCurrentTimeSeconds()));
+		for (TimedValue<Rotation2d> headingData : multiAprilTagVisionSources.getRawRobotHeadings()) {
+			headingEstimator.updateVisionIfGyroOffsetIsNotCalibrated(
+				headingData,
+				RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION,
+				RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE
+			);
+		}
 		poseEstimator.updateVision(multiAprilTagVisionSources.getFilteredVisionData());
 		multiAprilTagVisionSources.log();
 		headingEstimator.log();

@@ -2,9 +2,9 @@ package frc.robot.subsystems.climb.solenoid;
 
 public enum SolenoidState {
 
-	OFF(0),
-	RETRACT(0.8),
-	HOLD(0.2);
+	LOCKED(0),
+	INITIAL_FREE(0.8),
+	HOLD_FREE(0.2);
 
 	private final double power;
 

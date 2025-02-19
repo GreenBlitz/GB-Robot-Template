@@ -35,8 +35,8 @@ public enum CoralStationSlot {
 	public int getIndex() {
 		return this.index;
 	}
-	
-	public Pose2d getPosition(){
+
+	public Pose2d getPosition() {
 		return this.position;
 	}
 

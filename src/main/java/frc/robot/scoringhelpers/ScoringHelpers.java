@@ -21,7 +21,7 @@ public class ScoringHelpers {
 
 	private static final Translation2d LEFT_CORAL_STATION_TRANSLATION = Field.getCoralStationMiddle(CoralStation.LEFT).getTranslation();
 	private static final Translation2d RIGHT_CORAL_STATION_TRANSLATION = Field.getCoralStationMiddle(CoralStation.RIGHT).getTranslation();
-	
+
 	public static ScoreLevel targetScoreLevel = ScoreLevel.L2;
 	public static Branch targetBranch = Branch.C;
 
@@ -47,10 +47,10 @@ public class ScoringHelpers {
 		}
 		return latestWantedCoralStation;
 	}
-	
+
 	public static CoralStationSlot getTargetCoralStationSlot(Robot robot) {
 		Translation2d robotTranslation = robot.getPoseEstimator().getEstimatedPose().getTranslation();
-		Translation2d robotTranslationWithOffset = robot.getPoseEstimator().getEstimatedPose().getTranslation().minus(END_EFFECTOR_OFFSET_FROM_MID_ROBOT);
+		Translation2d robotTranslationWithOffset = robotTranslation.minus(END_EFFECTOR_OFFSET_FROM_MID_ROBOT);
 		targetCoralStationSlot = switch (getTargetCoralStation(robot)) {
 			case RIGHT -> {
 				double distanceFromLeftSlot = robotTranslationWithOffset.getDistance(CoralStationSlot.R2.getPosition().getTranslation());
@@ -77,10 +77,10 @@ public class ScoringHelpers {
 				yield CoralStationSlot.L8;
 			}
 		};
-		
+
 		return targetCoralStationSlot;
 	}
-	
+
 	public static void toggleIsFarReefHalf() {
 		isFarReefHalf = !isFarReefHalf;
 	}

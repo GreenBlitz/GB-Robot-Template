@@ -50,7 +50,7 @@ public class KrakenX60ArmBuilder {
 	private static final Rotation2d STARTING_POSITION = Rotation2d.fromDegrees(17);
 	private static final int NUMBER_OF_MOTORS = 1;
 	private static final double GEAR_RATIO = 450.0 / 7.0;
-	public static final double kG = 0.3165;
+	public static final double kG = 0.33;
 
 	protected static Arm build(String logPath) {
 		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0).withSlot(1), 0, ENABLE_FOC);
@@ -90,7 +90,7 @@ public class KrakenX60ArmBuilder {
 				config.Slot0.kA = 0.5209;
 
 				// PID
-				config.Slot1.kP = 60;
+				config.Slot1.kP = 80;
 				config.Slot1.kI = 0;
 				config.Slot1.kD = 0;
 				config.Slot1.kS = 0.0715;

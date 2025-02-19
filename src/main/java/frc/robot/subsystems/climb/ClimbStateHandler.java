@@ -34,7 +34,7 @@ public class ClimbStateHandler {
 	private Command extend() {
 		return new SequentialCommandGroup(
 			lifterStateHandler.setState(LifterState.BACKWARD).withTimeout(ClimbConstants.SOLENOID_RELEASE_TIME_SECONDS),
-			solenoidStateHandler.setState(SolenoidState.RETRACT).withTimeout(ClimbConstants.SOLENOID_RETRACTING_UNTIL_HOLDING_TIME),
+			solenoidStateHandler.setState(SolenoidState.RETRACT).withTimeout(ClimbConstants.SOLENOID_RETRACTING_UNTIL_HOLDING_TIME_SECONDS),
 			new ParallelRaceGroup(lifterStateHandler.setState(LifterState.EXTENDED), solenoidStateHandler.setState(SolenoidState.HOLD)),
 			solenoidStateHandler.setState(SolenoidState.OFF)
 		);

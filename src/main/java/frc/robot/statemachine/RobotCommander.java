@@ -253,15 +253,15 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command preClimb() {
 		return asSubsystemCommand(
-				new ParallelCommandGroup(superstructure.preClimb(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
-				RobotState.PRE_CLIMB
+			new ParallelCommandGroup(superstructure.preClimb(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			RobotState.PRE_CLIMB
 		);
 	}
 
 	private Command climb() {
 		return asSubsystemCommand(
-				new ParallelCommandGroup(superstructure.climb(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
-				RobotState.CLIMB
+			new ParallelCommandGroup(superstructure.climb(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			RobotState.CLIMB
 		);
 	}
 

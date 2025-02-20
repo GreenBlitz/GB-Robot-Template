@@ -188,19 +188,8 @@ public class Field {
 		return getAllianceRelative(CORAL_STATION_MIDDLES[coralStation.getIndex()], true, true, AngleTransform.INVERT);
 	}
 
-	public static Pose2d getCoralStationSlotsPose2d(CoralStationSlot coralStationSlot) {
+	public static Pose2d getCoralStationSlots(CoralStationSlot coralStationSlot) {
 		return getAllianceRelative(CORAL_STATION_SLOTS_MIDDLES[coralStationSlot.getIndex()], true, true, AngleTransform.INVERT);
-	}
-
-	public static Translation2d getCoralStationTranslation2d(CoralStationSlot coralStationSlot) {
-		return getAllianceRelative(
-			new Translation2d(
-				CORAL_STATION_SLOTS_MIDDLES[coralStationSlot.getIndex()].getX(),
-				CORAL_STATION_SLOTS_MIDDLES[coralStationSlot.getIndex()].getY()
-			),
-			true,
-			true
-		);
 	}
 
 	public static Pose2d getAllianceRelative(Pose2d pose, boolean mirrorX, boolean mirrorY, AngleTransform angleTransform) {

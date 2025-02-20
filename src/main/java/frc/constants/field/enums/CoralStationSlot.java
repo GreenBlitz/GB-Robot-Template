@@ -29,7 +29,7 @@ public enum CoralStationSlot {
 
 	CoralStationSlot(int index) {
 		this.index = index;
-		this.position = Field.getCoralStationSlotsPose2d(this);
+		this.position = Field.getCoralStationSlots(this);
 	}
 
 	public int getIndex() {

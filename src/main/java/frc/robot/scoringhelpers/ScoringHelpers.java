@@ -111,8 +111,8 @@ public class ScoringHelpers {
 	}
 
 	public static Pose2d getRobotFeederPose(CoralStationSlot coralStationSlot, double distanceFromSlots) {
-		Translation2d coralStationTranslation = Field.getCoralStationSlotsPose2d(coralStationSlot).getTranslation();
-		Rotation2d targetRobotAngle = Field.getCoralStationSlotsPose2d(coralStationSlot).getRotation();
+		Translation2d coralStationTranslation = Field.getCoralStationSlots(coralStationSlot).getTranslation();
+		Rotation2d targetRobotAngle = Field.getCoralStationSlots(coralStationSlot).getRotation();
 		Translation2d differenceTranslation = new Translation2d(distanceFromSlots, targetRobotAngle);
 		return new Pose2d(coralStationTranslation.minus(differenceTranslation), targetRobotAngle);
 	}

@@ -3,33 +3,38 @@ package frc.constants.field.enums;
 
 public enum CoralStationSlot {
 
-	R1(0),
-	R2(1),
-	R3(2),
-	R4(3),
-	R5(4),
-	R6(5),
-	R7(6),
-	R8(7),
-	R9(8),
-	L1(9),
-	L2(10),
-	L3(11),
-	L4(12),
-	L5(13),
-	L6(14),
-	L7(15),
-	L8(16),
-	L9(17);
+	R1(0, false),
+	R2(1, false),
+	R3(2, false),
+	R4(3, false),
+	R5(4, false),
+	R6(5,false),
+	R7(6, false),
+	R8(7, false),
+	R9(8, false),
+	L1(0, true),
+	L2(1, true),
+	L3(2, true),
+	L4(3,  true),
+	L5(4, true),
+	L6(5, true),
+	L7(6, true),
+	L8(7,true),
+	L9(8, true);
 
 	private final int index;
+	private final boolean isLeft;
 
-	CoralStationSlot(int index) {
+	CoralStationSlot(int index, boolean isLeft) {
 		this.index = index;
+		this.isLeft = isLeft;
 	}
 
 	public int getIndex() {
 		return this.index;
 	}
 
+	public boolean isLeft() {
+		return isLeft;
+	}
 }

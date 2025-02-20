@@ -120,47 +120,47 @@ public class Field {
 		),
 		new Pose2d(
 			0.18502,
-			WIDTH_METERS - 1.1278 + Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES * (CoralStationSlot.L1.getIndex() % 9),
+			WIDTH_METERS - 1.1278 + Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES * CoralStationSlot.L1.getIndex(),
 			Rotation2d.fromDegrees(LEFT_CORAL_STATION_ANGLE)
 		),
 		new Pose2d(
 			0.34944,
-			WIDTH_METERS - 1.1278 + Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES * (CoralStationSlot.L2.getIndex() % 9),
+			WIDTH_METERS - 1.1278 + Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES * CoralStationSlot.L2.getIndex(),
 			Rotation2d.fromDegrees(LEFT_CORAL_STATION_ANGLE)
 		),
 		new Pose2d(
 			0.51386,
-			WIDTH_METERS - 1.1278 + Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES * (CoralStationSlot.L3.getIndex() % 9),
+			WIDTH_METERS - 1.1278 + Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES * CoralStationSlot.L3.getIndex(),
 			Rotation2d.fromDegrees(LEFT_CORAL_STATION_ANGLE)
 		),
 		new Pose2d(
 			0.67828,
-			WIDTH_METERS - 1.1278 + Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES * (CoralStationSlot.L4.getIndex() % 9),
+			WIDTH_METERS - 1.1278 + Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES * CoralStationSlot.L4.getIndex(),
 			Rotation2d.fromDegrees(LEFT_CORAL_STATION_ANGLE)
 		),
 		new Pose2d(
 			0.8427,
-			WIDTH_METERS - 1.1278 + Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES * (CoralStationSlot.L5.getIndex() % 9),
+			WIDTH_METERS - 1.1278 + Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES * CoralStationSlot.L5.getIndex(),
 			Rotation2d.fromDegrees(LEFT_CORAL_STATION_ANGLE)
 		),
 		new Pose2d(
 			1.00712,
-			WIDTH_METERS - 1.1278 + Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES * (CoralStationSlot.L6.getIndex() % 9),
+			WIDTH_METERS - 1.1278 + Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES * CoralStationSlot.L6.getIndex(),
 			Rotation2d.fromDegrees(LEFT_CORAL_STATION_ANGLE)
 		),
 		new Pose2d(
 			1.7154,
-			WIDTH_METERS - 1.1278 + Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES * (CoralStationSlot.L7.getIndex() % 9),
+			WIDTH_METERS - 1.1278 + Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES * CoralStationSlot.L7.getIndex(),
 			Rotation2d.fromDegrees(LEFT_CORAL_STATION_ANGLE)
 		),
 		new Pose2d(
 			1.33596,
-			WIDTH_METERS - 1.1278 + Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES * (CoralStationSlot.L8.getIndex() % 9),
+			WIDTH_METERS - 1.1278 + Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES * CoralStationSlot.L8.getIndex(),
 			Rotation2d.fromDegrees(LEFT_CORAL_STATION_ANGLE)
 		),
 		new Pose2d(
 			1.50038,
-			WIDTH_METERS - 1.1278 + Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES * (CoralStationSlot.L9.getIndex() % 9),
+			WIDTH_METERS - 1.1278 + Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES * CoralStationSlot.L9.getIndex(),
 			Rotation2d.fromDegrees(LEFT_CORAL_STATION_ANGLE)
 		)};
 
@@ -189,7 +189,7 @@ public class Field {
 	}
 
 	public static Pose2d getCoralStationSlots(CoralStationSlot coralStationSlot) {
-		return getAllianceRelative(CORAL_STATION_SLOTS_MIDDLES[coralStationSlot.getIndex()], true, true, AngleTransform.INVERT);
+		return getAllianceRelative(CORAL_STATION_SLOTS_MIDDLES[coralStationSlot.isLeft() ? coralStationSlot.getIndex() + 9 : coralStationSlot.getIndex()], true, true, AngleTransform.INVERT);
 	}
 
 	public static Pose2d getAllianceRelative(Pose2d pose, boolean mirrorX, boolean mirrorY, AngleTransform angleTransform) {

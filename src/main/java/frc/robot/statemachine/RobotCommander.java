@@ -330,7 +330,7 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 
-	public Command removeAlgaeForButton() {
+	public Command removeAlgaeThenClose() {
 		return new SequentialCommandGroup(algaeRemove(), closeAfterAlgaeRemove());
 	}
 

@@ -10,7 +10,7 @@ public class EndEffectorStateHandler {
 	private EndEffectorState currentState;
 
 	private static final double CORAL_KEEP_POWER = 0.1;
-	private static final double ALGAE_KEEP_POWER = -0.2;
+	private static final double ALGAE_KEEP_POWER = -0.3;
 
 	public EndEffectorStateHandler(EndEffector endEffector) {
 		this.endEffector = endEffector;

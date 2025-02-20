@@ -63,7 +63,7 @@ public class EndEffectorSparkMaxBuilder {
 
 	private static IDigitalInput generateBeamBreaker(SparkMaxWrapper sparkMaxWrapper, String name, LimitSwitchPort limitSwitch) {
 		if (Robot.ROBOT_TYPE.isSimulation()) {
-		return new ChooserDigitalInput(name);
+			return new ChooserDigitalInput(name);
 		}
 
 		return switch (limitSwitch) {

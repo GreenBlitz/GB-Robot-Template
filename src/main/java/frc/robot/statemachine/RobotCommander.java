@@ -81,7 +81,7 @@ public class RobotCommander extends GBSubsystem {
 		Rotation2d reefAngle = Field.getReefSideMiddle(ScoringHelpers.getTargetBranch().getReefSide()).getRotation();
 
 		Pose2d reefRelativeTargetPose = ScoringHelpers
-			.getRobotAlgaeRemovePose(ScoringHelpers.getTargetReefSide(), scoringPoseDistanceFromReefMeters)
+			.getRobotRelativeAlgaeRemovePose(ScoringHelpers.getTargetReefSide(), scoringPoseDistanceFromReefMeters)
 			.rotateBy(reefAngle.unaryMinus());
 		Pose2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus());
 

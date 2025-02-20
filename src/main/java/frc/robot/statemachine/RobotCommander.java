@@ -309,7 +309,7 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	public Command postAlgaeRemove() {
+	private Command postAlgaeRemove() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				superstructure.postAlgaeRemove(),
@@ -319,7 +319,7 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	public Command algaeRemove() {
+	private Command algaeRemove() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				superstructure.algaeRemove(),
@@ -334,7 +334,7 @@ public class RobotCommander extends GBSubsystem {
 		return new SequentialCommandGroup(algaeRemove(), closeAfterAlgaeRemove());
 	}
 
-	public Command algaeOuttake() {
+	private Command algaeOuttake() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(superstructure.algaeOuttake(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE))
 				.until((() -> !superstructure.isAlgaeIn())),

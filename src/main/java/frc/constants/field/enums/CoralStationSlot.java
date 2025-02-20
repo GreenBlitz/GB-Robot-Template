@@ -1,7 +1,5 @@
 package frc.constants.field.enums;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import frc.constants.field.Field;
 
 public enum CoralStationSlot {
 

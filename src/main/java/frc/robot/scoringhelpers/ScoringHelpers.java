@@ -21,8 +21,6 @@ public class ScoringHelpers {
 	private static final Translation2d RIGHT_CORAL_STATION_TRANSLATION = Field.getCoralStationMiddle(CoralStation.RIGHT).getTranslation();
 
 	public static ScoreLevel targetScoreLevel = ScoreLevel.L4;
-	public static Branch targetBranch = Branch.C;
-	public static CoralStationSlot targetCoralStationSlot = CoralStationSlot.R1;
 
 	private static boolean isFarReefHalf = false;
 	private static Side targetSideForReef = Side.MIDDLE;
@@ -52,34 +50,10 @@ public class ScoringHelpers {
 	public static CoralStationSlot getTargetCoralStationSlot(Robot robot) {
 		Translation2d robotTranslation = robot.getPoseEstimator().getEstimatedPose().getTranslation();
 		Translation2d robotTranslationWithOffset = robotTranslation.minus(END_EFFECTOR_OFFSET_FROM_MID_ROBOT);
-		targetCoralStationSlot = switch (getTargetCoralStation(robot)) {
-			case RIGHT -> {
-				double distanceFromLeftSlot = robotTranslationWithOffset.getDistance(Field.getCoralStationSlots(CoralStationSlot.R2).getTranslation());
-				double distanceFromMiddleSlot = robotTranslationWithOffset.getDistance(Field.getCoralStationSlots(CoralStationSlot.R5).getTranslation());
-				double distanceFromRightSlot = robotTranslationWithOffset.getDistance(Field.getCoralStationSlots(CoralStationSlot.R8).getTranslation());
-				if (distanceFromLeftSlot < distanceFromMiddleSlot && distanceFromLeftSlot < distanceFromRightSlot) {
-					yield CoralStationSlot.R2;
-				}
-				if (distanceFromMiddleSlot < distanceFromRightSlot) {
-					yield CoralStationSlot.R5;
-				}
-				yield CoralStationSlot.R8;
-			}
-			case LEFT -> {
-				double distanceFromLeftSlot = robotTranslationWithOffset.getDistance(Field.getCoralStationSlots(CoralStationSlot.L2).getTranslation());
-				double distanceFromMiddleSlot = robotTranslationWithOffset.getDistance(Field.getCoralStationSlots(CoralStationSlot.L5).getTranslation());
-				double distanceFromRightSlot = robotTranslationWithOffset.getDistance(Field.getCoralStationSlots(CoralStationSlot.L8).getTranslation());
-				if (distanceFromLeftSlot < distanceFromMiddleSlot && distanceFromLeftSlot < distanceFromRightSlot) {
-					yield CoralStationSlot.L2;
-				}
-				if (distanceFromMiddleSlot < distanceFromRightSlot) {
-					yield CoralStationSlot.L5;
-				}
-				yield CoralStationSlot.L8;
-			}
+		return switch (getTargetCoralStation(robot)) {
+			case RIGHT -> getClosestCoralStationSlot(robotTranslation, CoralStationSlot.R2, CoralStationSlot.R5, CoralStationSlot.R8);
+			case LEFT -> getClosestCoralStationSlot(robotTranslation, CoralStationSlot.L2, CoralStationSlot.L5, CoralStationSlot.L8);
 		};
-
-		return targetCoralStationSlot;
 	}
 
 	public static void toggleIsFarReefHalf() {
@@ -102,19 +76,34 @@ public class ScoringHelpers {
 		return new Pose2d(branchTranslation.minus(differenceTranslation).minus(endeffectorOffsetDifference), targetRobotAngle);
 	}
 
-	public static void log(String logPath) {
-		Logger.recordOutput(logPath + "/TargetBranch", getTargetBranch());
-		Logger.recordOutput(logPath + "/TargetReefSide", getTargetReefSide());
-		Logger.recordOutput(logPath + "/TargetCoralStation", latestWantedCoralStation);
-		Logger.recordOutput(logPath + "/TargetCoralStationSlot", targetCoralStationSlot);
-		Logger.recordOutput(logPath + "/TargetScoreLevel", targetScoreLevel);
-	}
-
 	public static Pose2d getRobotFeederPose(CoralStationSlot coralStationSlot, double distanceFromSlots) {
 		Translation2d coralStationTranslation = Field.getCoralStationSlots(coralStationSlot).getTranslation();
 		Rotation2d targetRobotAngle = Field.getCoralStationSlots(coralStationSlot).getRotation();
 		Translation2d differenceTranslation = new Translation2d(distanceFromSlots, targetRobotAngle);
 		return new Pose2d(coralStationTranslation.minus(differenceTranslation), targetRobotAngle);
+	}
+
+	public static void log(String logPath, Robot robot) {
+		Logger.recordOutput(logPath + "/TargetBranch", getTargetBranch());
+		Logger.recordOutput(logPath + "/TargetReefSide", getTargetReefSide());
+		Logger.recordOutput(logPath + "/TargetCoralStation", latestWantedCoralStation);
+		Logger.recordOutput(logPath + "/TargetCoralStationSlot", getTargetCoralStationSlot(robot));
+		Logger.recordOutput(logPath + "/TargetScoreLevel", targetScoreLevel);
+	}
+
+	private static CoralStationSlot getClosestCoralStationSlot(Translation2d robotTranslation, CoralStationSlot... slots) {
+		double[] distances = new double[slots.length];
+		int closestSlotIndex = 0;
+
+		for (int i = 0; i < slots.length; i++) {
+			distances[i] = robotTranslation.getDistance(Field.getCoralStationSlots(slots[i]).getTranslation());
+		}
+		for (int i = 1; i < distances.length; i++) {
+			if (distances[i] < distances[closestSlotIndex]) {
+				closestSlotIndex = i;
+			}
+		}
+		return slots[closestSlotIndex];
 	}
 
 }

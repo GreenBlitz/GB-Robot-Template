@@ -102,9 +102,9 @@ public class RobotCommander extends GBSubsystem {
 	 * Checks if the robot is out of the safe zone to close the superstructure
 	 */
 	public boolean isReadyToCloseSuperstructure() {
-		Rotation2d reefAngle = Field.getReefSideMiddle(ScoringHelpers.getTargetBranch().getReefSide()).getRotation();
+		Rotation2d reefAngle = Field.getReefSideMiddle(ScoringHelpers.getTargetReefSide()).getRotation();
 
-		Translation2d reefRelativeReefSideMiddle = Field.getReefSideMiddle(ScoringHelpers.getTargetBranch().getReefSide())
+		Translation2d reefRelativeReefSideMiddle = Field.getReefSideMiddle(ScoringHelpers.getTargetReefSide())
 			.rotateBy(reefAngle.unaryMinus())
 			.getTranslation();
 		Translation2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus()).getTranslation();
@@ -128,12 +128,15 @@ public class RobotCommander extends GBSubsystem {
 		return switch (state) {
 			case DRIVE -> drive();
 			case INTAKE -> intake();
-			case OUTTAKE -> outtake();
+			case CORAL_OUTTAKE -> coralOuttake();
 			case ALIGN_REEF -> alignReef();
 			case ARM_PRE_SCORE -> armPreScore();
 			case PRE_SCORE -> preScore();
 			case SCORE_WITHOUT_RELEASE -> scoreWithoutRelease();
 			case SCORE -> score();
+			case POST_ALGAE_REMOVE -> closeAfterAlgaeRemove();
+			case ALGAE_REMOVE -> algaeRemove();
+			case ALGAE_OUTTAKE -> algaeOuttake();
 		};
 	}
 
@@ -175,6 +178,10 @@ public class RobotCommander extends GBSubsystem {
 		return new SequentialCommandGroup(scoreWithoutRelease().until(this::isReadyToScore), score());
 	}
 
+	public Command removeAlgaeThenClose() {
+		return new SequentialCommandGroup(algaeRemove(), closeAfterAlgaeRemove());
+	}
+
 	public Command fullyPreScore() {
 		return new SequentialCommandGroup(
 			armPreScore().until(this::isReadyToOpenSuperstructure),
@@ -200,10 +207,10 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	private Command outtake() {
+	private Command coralOuttake() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(superstructure.outtake(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
-			RobotState.OUTTAKE
+			RobotState.CORAL_OUTTAKE
 		);
 	}
 
@@ -278,16 +285,51 @@ public class RobotCommander extends GBSubsystem {
 		}, Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector()));
 	}
 
+	private Command closeAfterAlgaeRemove() {
+		return asSubsystemCommand(
+			new DeferredCommand(
+				() -> new SequentialCommandGroup(
+					new ParallelCommandGroup(
+						superstructure.postAlgaeRemove(),
+						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+					).until(this::isReadyToCloseSuperstructure),
+					drive()
+				),
+				Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
+			),
+			RobotState.POST_ALGAE_REMOVE.name()
+		);
+	}
+
+	private Command algaeRemove() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				superstructure.algaeRemove(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE))
+			).until(superstructure::isAlgaeIn),
+			RobotState.ALGAE_REMOVE.name()
+		);
+	}
+
+	private Command algaeOuttake() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(superstructure.algaeOuttake(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE))
+				.until((() -> !superstructure.isAlgaeIn())),
+			RobotState.ALGAE_OUTTAKE
+		);
+	}
+
 	private Command asSubsystemCommand(Command command, RobotState state) {
 		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
 	}
 
 	private Command endState(RobotState state) {
 		return switch (state) {
-			case INTAKE, OUTTAKE, DRIVE, ALIGN_REEF -> drive();
+			case INTAKE, CORAL_OUTTAKE, DRIVE, ALIGN_REEF, POST_ALGAE_REMOVE, ALGAE_OUTTAKE -> drive();
 			case ARM_PRE_SCORE -> armPreScore();
 			case PRE_SCORE -> preScore();
 			case SCORE, SCORE_WITHOUT_RELEASE -> closeAfterScore();
+			case ALGAE_REMOVE -> closeAfterAlgaeRemove();
 		};
 	}
 

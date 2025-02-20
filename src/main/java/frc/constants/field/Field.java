@@ -189,7 +189,12 @@ public class Field {
 	}
 
 	public static Pose2d getCoralStationSlots(CoralStationSlot coralStationSlot) {
-		return getAllianceRelative(CORAL_STATION_SLOTS_MIDDLES[coralStationSlot.isLeft() ? coralStationSlot.getIndex() + 9 : coralStationSlot.getIndex()], true, true, AngleTransform.INVERT);
+		return getAllianceRelative(
+			CORAL_STATION_SLOTS_MIDDLES[coralStationSlot.isLeft() ? coralStationSlot.getIndex() + 9 : coralStationSlot.getIndex()],
+			true,
+			true,
+			AngleTransform.INVERT
+		);
 	}
 
 	public static Pose2d getAllianceRelative(Pose2d pose, boolean mirrorX, boolean mirrorY, AngleTransform angleTransform) {

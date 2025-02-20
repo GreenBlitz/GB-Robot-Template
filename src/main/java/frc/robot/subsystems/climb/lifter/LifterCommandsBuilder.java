@@ -17,12 +17,12 @@ public class LifterCommandsBuilder {
 		return lifter.asSubsystemCommand(new RunCommand(() -> lifter.setPower(power)), "Set power to " + power);
 	}
 
-	public Command stop() {
-		return lifter.asSubsystemCommand(new RunCommand(lifter::stop), "Stop");
-	}
-
 	public Command setPower(DoubleSupplier powerSupplier) {
 		return lifter.asSubsystemCommand(new RunCommand(() -> lifter.setPower(powerSupplier.getAsDouble())), "Set power by supplier");
+	}
+
+	public Command stop() {
+		return lifter.asSubsystemCommand(new RunCommand(lifter::stop), "Stop");
 	}
 
 }

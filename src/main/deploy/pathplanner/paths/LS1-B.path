@@ -20,7 +20,7 @@
         "y": 3.86
       },
       "prevControl": {
-        "x": 1.1987704918032784,
+        "x": 1.1987704918032782,
         "y": 3.7912397540983602
       },
       "nextControl": null,
@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "ARM_PRE_SCORE",
-      "waypointRelativePos": 0,
+      "waypointRelativePos": 0.1,
       "endWaypointRelativePos": null,
       "command": null
     },

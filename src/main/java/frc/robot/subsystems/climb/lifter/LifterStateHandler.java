@@ -15,7 +15,7 @@ public class LifterStateHandler {
 			case HOLD -> lifter.getCommandsBuilder().stop();
 			case FORWARD, BACKWARD -> lifter.getCommandsBuilder().setPower(state.getPower());
 			case DEPLOY -> lifter.getCommandsBuilder().setPower(state.getPower()).until(() -> lifter.isHigher(state.getTargetPosition()));
-			case CLIMB -> lifter.getCommandsBuilder().setPower(state.getPower()).until(lifter::isAtLimitSwitch);
+			case CLIMB -> lifter.getCommandsBuilder().setPower(state.getPower()).until(() -> lifter.isLower(state.getTargetPosition()));
 		};
 	}
 

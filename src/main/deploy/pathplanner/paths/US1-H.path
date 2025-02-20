@@ -1,0 +1,83 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.68,
+        "y": 6.65
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.7741803278688524,
+        "y": 6.512448770491804
+      },
+      "isLocked": false,
+      "linkedName": "US1"
+    },
+    {
+      "anchor": {
+        "x": 5.83,
+        "y": 5.673309426229508
+      },
+      "prevControl": {
+        "x": 5.046365751048578,
+        "y": 5.875332037182694
+      },
+      "nextControl": {
+        "x": 6.341495901639344,
+        "y": 5.5414446721311466
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.83,
+        "y": 4.19
+      },
+      "prevControl": {
+        "x": 7.61219262295082,
+        "y": 4.210809426229508
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "H"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "ARM_PRE_SCORE",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "PRE_SCORE",
+      "waypointRelativePos": 1.85,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": "from coral station",
+  "idealStartingState": {
+    "velocity": 0.0,
+    "rotation": -54.0
+  },
+  "useDefaultConstraints": true
+}

@@ -167,7 +167,7 @@ public class RobotCommander extends GBSubsystem {
 		return switch (state) {
 			case DRIVE -> drive();
 			case INTAKE -> intake();
-			case OUTTAKE -> outtake();
+			case CORAL_OUTTAKE -> coralOuttake();
 			case ALIGN_REEF -> alignReef();
 			case ARM_PRE_SCORE -> armPreScore();
 			case PRE_SCORE -> preScore();
@@ -221,10 +221,10 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	private Command outtake() {
+	private Command coralOuttake() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(superstructure.outtake(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
-			RobotState.OUTTAKE
+			RobotState.CORAL_OUTTAKE
 		);
 	}
 
@@ -334,7 +334,8 @@ public class RobotCommander extends GBSubsystem {
 
 	public Command algaeOuttake() {
 		return asSubsystemCommand(
-			new ParallelCommandGroup(superstructure.algaeOuttake(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			new ParallelCommandGroup(superstructure.algaeOuttake(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE))
+				.until((() -> !superstructure.isAlgaeIn())),
 			RobotState.ALGAE_OUTTAKE
 		);
 	}
@@ -345,7 +346,7 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command endState(RobotState state) {
 		return switch (state) {
-			case INTAKE, OUTTAKE, DRIVE, ALIGN_REEF, PRE_ALGAE_REMOVE, ALGAE_OUTTAKE -> drive();
+			case INTAKE, CORAL_OUTTAKE, DRIVE, ALIGN_REEF, PRE_ALGAE_REMOVE, ALGAE_OUTTAKE -> drive();
 			case ARM_PRE_SCORE -> armPreScore();
 			case PRE_SCORE -> preScore();
 			case SCORE, SCORE_WITHOUT_RELEASE -> closeAfterScore();

@@ -4,7 +4,7 @@ public enum RobotState {
 
 	DRIVE,
 	INTAKE,
-	OUTTAKE,
+	CORAL_OUTTAKE,
 	ALIGN_REEF,
 	ARM_PRE_SCORE,
 	PRE_SCORE,

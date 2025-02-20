@@ -217,7 +217,7 @@ public class Superstructure extends GBSubsystem {
 						elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorScore()),
 						armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmScore()),
 						endEffectorStateHandler.setState(ScoringHelpers.targetScoreLevel.getEndEffectorScore())
-					).withTimeout(StateMachineConstants.INTAKE_TIME_AFTER_BEAM_BREAK_SECONDS)
+					).withTimeout(StateMachineConstants.SCORE_OUTTAKE_TIME_AFTER_BEAM_BREAK_SECONDS)
 				),
 				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector())
 			),
@@ -292,7 +292,7 @@ public class Superstructure extends GBSubsystem {
 						elevatorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getElevatorState()),
 						armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getArmState()),
 						endEffectorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getEndEffectorState())
-					).withTimeout(StateMachineConstants.INTAKE_TIME_AFTER_BEAM_BREAK_SECONDS)
+					).withTimeout(StateMachineConstants.SCORE_OUTTAKE_TIME_AFTER_BEAM_BREAK_SECONDS)
 				),
 				Set.of(robot.getElevator(), robot.getArm(), robot.getEndEffector(), this)
 			),

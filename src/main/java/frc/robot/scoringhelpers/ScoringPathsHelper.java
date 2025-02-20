@@ -38,8 +38,8 @@ public class ScoringPathsHelper {
 			new PathConstraints(
 				StateMachineConstants.MAX_VELOCITY_WHILE_ELEVATOR_L4_METERS_PER_SECOND,
 				StateMachineConstants.MAX_ACCELERATION_WHILE_ELEVATOR_L4_METERS_PER_SECOND_SQUARED,
-				StateMachineConstants.MAX_VELOCITY_WHILE_ELEVATOR_L4_PER_SECOND.getRadians(),
-				StateMachineConstants.MAX_ACCELERATION_WHILE_ELEVATOR_L4_PER_SECOND_SQUARED.getRadians()
+				StateMachineConstants.MAX_VELOCITY_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND.getRadians(),
+				StateMachineConstants.MAX_ACCELERATION_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND_SQUARED.getRadians()
 			),
 			new IdealStartingState(
 				StateMachineConstants.MAX_VELOCITY_WHILE_ELEVATOR_L4_METERS_PER_SECOND,

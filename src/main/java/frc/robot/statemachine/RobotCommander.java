@@ -337,7 +337,7 @@ public class RobotCommander extends GBSubsystem {
 		return asSubsystemCommand(
 				new ParallelCommandGroup(
 						superstructure.preNet(),
-						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
 				),
 				RobotState.PRE_NET.name()
 		);
@@ -347,7 +347,7 @@ public class RobotCommander extends GBSubsystem {
 		return asSubsystemCommand(
 				new ParallelCommandGroup(
 						superstructure.netWithoutRelease(),
-						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
 				),
 				RobotState.NET_WITHOUT_RELEASE.name()
 		);
@@ -357,8 +357,8 @@ public class RobotCommander extends GBSubsystem {
 		return asSubsystemCommand(
 				new ParallelCommandGroup(
 						superstructure.netWithRelease(),
-						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
-				),
+						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
+				).until(() -> !superstructure.isAlgaeIn()),
 				RobotState.NET_WITH_RELEASE.name()
 		);
 	}

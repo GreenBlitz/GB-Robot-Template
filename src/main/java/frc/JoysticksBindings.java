@@ -78,9 +78,9 @@ public class JoysticksBindings {
 
 		usedJoystick.R1.onTrue(robot.getRobotCommander().autoScore());
 		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
-		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
-		usedJoystick.B.onTrue(robot.getRobotCommander().removeAlgaeAndThenClose());
-		usedJoystick.X.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_OUTTAKE));
+		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.ARM_PRE_NET));
+		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.PRE_NET));
+		usedJoystick.X.onTrue(robot.getRobotCommander().setState(RobotState.NET_WITH_RELEASE));
 
 		usedJoystick.POV_UP.onTrue(
 			new InstantCommand(

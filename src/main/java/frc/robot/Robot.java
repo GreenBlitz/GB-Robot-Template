@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
+import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.AutosBuilder;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
 import frc.robot.scoringhelpers.ButtonDriverHelper;
@@ -35,6 +36,8 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.factory.ElevatorFactory;
 import frc.robot.subsystems.endeffector.EndEffector;
 import frc.robot.subsystems.endeffector.factory.EndEffectorFactory;
+import frc.robot.subsystems.climb.solenoid.Solenoid;
+import frc.robot.subsystems.climb.solenoid.factory.SolenoidFactory;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
@@ -46,6 +49,7 @@ import frc.robot.vision.data.VisionData;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
 import frc.utils.Filter;
 import frc.utils.TimedValue;
+import frc.utils.auto.PathPlannerUtil;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
@@ -71,6 +75,7 @@ public class Robot {
 	private final Elevator elevator;
 	private final Arm arm;
 	private final EndEffector endEffector;
+	private final Solenoid solenoid;
 
 	private final SimulationManager simulationManager;
 	private final RobotCommander robotCommander;
@@ -124,7 +129,9 @@ public class Robot {
 			)
 		);
 
-		swerve.setHeadingSupplier(headingEstimator::getEstimatedHeading);
+		swerve.setHeadingSupplier(
+			ROBOT_TYPE.isSimulation() ? () -> poseEstimator.getEstimatedPose().getRotation() : headingEstimator::getEstimatedHeading
+		);
 
 		swerve.getStateHandler().setRobotPoseSupplier(poseEstimator::getEstimatedPose);
 		swerve.getStateHandler().setBranchSupplier(() -> Optional.of(ScoringHelpers.getTargetBranch()));
@@ -138,6 +145,8 @@ public class Robot {
 		BrakeStateManager.add(() -> arm.setBrake(true), () -> arm.setBrake(false));
 
 		this.endEffector = EndEffectorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/EndEffector");
+
+		this.solenoid = SolenoidFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Solenoid");
 
 		this.simulationManager = new SimulationManager("SimulationManager", this);
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
@@ -171,14 +180,32 @@ public class Robot {
 
 		this.startingPointAndWhereToScoreFirstObjectChooser = new AutonomousChooser(
 			"StartingPointAndScoreFirst",
-			AutosBuilder.getAllStartingAndScoringFirstObjectAutos(this, scoringCommand)
+			AutosBuilder.getAllStartingAndScoringFirstObjectAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
 		);
-		this.whereToIntakeSecondObjectChooser = new AutonomousChooser("IntakeSecond", AutosBuilder.getAllIntakingAutos(this, intakingCommand));
-		this.whereToScoreSecondObjectChooser = new AutonomousChooser("ScoreSecond", AutosBuilder.getAllScoringAutos(this, scoringCommand));
-		this.whereToIntakeThirdObjectChooser = new AutonomousChooser("IntakeThird", AutosBuilder.getAllIntakingAutos(this, intakingCommand));
-		this.whereToScoreThirdObjectChooser = new AutonomousChooser("ScoreThird", AutosBuilder.getAllScoringAutos(this, scoringCommand));
-		this.whereToIntakeFourthObjectChooser = new AutonomousChooser("IntakeFourth", AutosBuilder.getAllIntakingAutos(this, intakingCommand));
-		this.whereToScoreFourthObjectChooser = new AutonomousChooser("ScoreFourth", AutosBuilder.getAllScoringAutos(this, scoringCommand));
+		this.whereToIntakeSecondObjectChooser = new AutonomousChooser(
+			"IntakeSecond",
+			AutosBuilder.getAllIntakingAutos(this, intakingCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+		);
+		this.whereToScoreSecondObjectChooser = new AutonomousChooser(
+			"ScoreSecond",
+			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+		);
+		this.whereToIntakeThirdObjectChooser = new AutonomousChooser(
+			"IntakeThird",
+			AutosBuilder.getAllIntakingAutos(this, intakingCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+		);
+		this.whereToScoreThirdObjectChooser = new AutonomousChooser(
+			"ScoreThird",
+			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+		);
+		this.whereToIntakeFourthObjectChooser = new AutonomousChooser(
+			"IntakeFourth",
+			AutosBuilder.getAllIntakingAutos(this, intakingCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+		);
+		this.whereToScoreFourthObjectChooser = new AutonomousChooser(
+			"ScoreFourth",
+			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+		);
 	}
 
 	public void periodic() {
@@ -186,7 +213,7 @@ public class Robot {
 		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());
 
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
-		headingEstimator.updateGyroAngle(new TimedValue<>(poseEstimator.getOdometryPose().getRotation(), TimeUtil.getCurrentTimeSeconds()));
+		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
 		for (TimedValue<Rotation2d> headingData : multiAprilTagVisionSources.getRawRobotHeadings()) {
 			headingEstimator.updateVisionIfGyroOffsetIsNotCalibrated(
 				headingData,
@@ -239,6 +266,10 @@ public class Robot {
 
 	public EndEffector getEndEffector() {
 		return endEffector;
+	}
+
+	public Solenoid getSolenoid() {
+		return solenoid;
 	}
 
 	public RobotCommander getRobotCommander() {

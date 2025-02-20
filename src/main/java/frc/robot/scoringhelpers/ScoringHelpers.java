@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.constants.field.Field;
+import frc.constants.field.enums.AlgaeRemoveLevel;
 import frc.constants.field.enums.Branch;
 import frc.constants.field.enums.CoralStation;
 import frc.constants.field.enums.ReefSide;
@@ -43,6 +44,19 @@ public class ScoringHelpers {
 		return latestWantedCoralStation;
 	}
 
+	public static AlgaeRemoveLevel getAlgaeRemoveLevel() {
+		if (isFarReefHalf) {
+			return switch (targetSideForReef) {
+				case LEFT, RIGHT -> AlgaeRemoveLevel.LOW;
+				case MIDDLE -> AlgaeRemoveLevel.HIGH;
+			};
+		} else {
+			return switch (targetSideForReef) {
+				case LEFT, RIGHT -> AlgaeRemoveLevel.HIGH;
+				case MIDDLE -> AlgaeRemoveLevel.LOW;
+			};
+		}
+	}
 
 	public static void toggleIsFarReefHalf() {
 		isFarReefHalf = !isFarReefHalf;
@@ -63,6 +77,13 @@ public class ScoringHelpers {
 		Translation2d differenceTranslation = new Translation2d(distanceFromBranchMeters, targetRobotAngle);
 		Translation2d endeffectorOffsetDifference = END_EFFECTOR_OFFSET_FROM_MID_ROBOT.rotateBy(targetRobotAngle);
 		return new Pose2d(branchTranslation.minus(differenceTranslation).minus(endeffectorOffsetDifference), targetRobotAngle);
+	}
+
+	public static Pose2d getRobotRelativeAlgaeRemovePose(ReefSide side, double distanceFromReefMeters) {
+		Translation2d reefMiddleTranslation = Field.getReefSideMiddle(side).getTranslation();
+		Rotation2d targetRobotAngle = Field.getReefSideMiddle(side).getRotation();
+		Translation2d differenceTranslation = new Translation2d(distanceFromReefMeters, targetRobotAngle);
+		return new Pose2d(reefMiddleTranslation.minus(differenceTranslation), targetRobotAngle);
 	}
 
 	public static void log(String logPath) {

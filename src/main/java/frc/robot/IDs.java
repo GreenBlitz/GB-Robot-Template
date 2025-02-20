@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.revrobotics.spark.SparkLowLevel;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
@@ -43,6 +44,8 @@ public class IDs {
 	public static class SparkMAXIDs {
 
 		public static final SparkMaxDeviceID END_EFFECTOR = new SparkMaxDeviceID(5);
+
+		public static final SparkMaxDeviceID SOLENOID = new SparkMaxDeviceID(6, SparkLowLevel.MotorType.kBrushed);
 
 	}
 

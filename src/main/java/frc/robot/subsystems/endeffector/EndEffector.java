@@ -14,11 +14,10 @@ public class EndEffector extends GBSubsystem {
 	private final ControllableMotor roller;
 	private final InputSignal<Double> powerSignal;
 	private final InputSignal<Double> currentSignal;
-	// Todo: now there is only one bb connected. We need to add one in the future.
-//	private final IDigitalInput beamBreakerNotWorking;
-//	private final DigitalInputInputsAutoLogged beamBreakerNotWorkingInputs;
-	private final IDigitalInput backBeamBreaker;
-	private final DigitalInputInputsAutoLogged backBeamBreakerInputs;
+	private final IDigitalInput algaeLimitSwitch;
+	private final DigitalInputInputsAutoLogged algaeLimitSwitchInputs;
+	private final IDigitalInput coralBeamBreaker;
+	private final DigitalInputInputsAutoLogged coralBeamBreakerInputs;
 	private final EndEffectorCommandsBuilder commandsBuilder;
 	private double calibrationPower = 0;
 
@@ -27,19 +26,19 @@ public class EndEffector extends GBSubsystem {
 		ControllableMotor roller,
 		InputSignal<Double> powerSignal,
 		InputSignal<Double> currentSignal,
-		IDigitalInput beamBreakerNotWorking,
-		IDigitalInput backBeamBreaker
+		IDigitalInput algaeLimitSwitch,
+		IDigitalInput coralBeamBreaker
 	) {
 		super(logPath);
 		this.roller = roller;
 		this.powerSignal = powerSignal;
 		this.currentSignal = currentSignal;
 
-//		this.beamBreakerNotWorking = beamBreakerNotWorking;
-//		this.beamBreakerNotWorkingInputs = new DigitalInputInputsAutoLogged();
+		this.algaeLimitSwitch = algaeLimitSwitch;
+		this.algaeLimitSwitchInputs = new DigitalInputInputsAutoLogged();
 
-		this.backBeamBreaker = backBeamBreaker;
-		this.backBeamBreakerInputs = new DigitalInputInputsAutoLogged();
+		this.coralBeamBreaker = coralBeamBreaker;
+		this.coralBeamBreakerInputs = new DigitalInputInputsAutoLogged();
 
 		this.commandsBuilder = new EndEffectorCommandsBuilder(this);
 
@@ -52,12 +51,12 @@ public class EndEffector extends GBSubsystem {
 		return commandsBuilder;
 	}
 
-	public boolean isCoralInFront() {
-		return backBeamBreakerInputs.debouncedValue; // beamBreakerNotWorkingInputs.debouncedValue;
+	public boolean isAlgaeIn() {
+		return algaeLimitSwitchInputs.debouncedValue;
 	}
 
-	public boolean isCoralInBack() {
-		return backBeamBreakerInputs.debouncedValue;
+	public boolean isCoralIn() {
+		return coralBeamBreakerInputs.debouncedValue;
 	}
 
 	public double getPower() {
@@ -78,16 +77,16 @@ public class EndEffector extends GBSubsystem {
 		roller.updateSimulation();
 		roller.updateInputs(powerSignal, currentSignal);
 
-//		beamBreakerNotWorking.updateInputs(beamBreakerNotWorkingInputs);
-//		Logger.processInputs(getLogPath() + "/BeamBreakerNotWorking", beamBreakerNotWorkingInputs);
+		algaeLimitSwitch.updateInputs(algaeLimitSwitchInputs);
+		Logger.processInputs(getLogPath() + "/AlgaeBeamBreaker", algaeLimitSwitchInputs);
 
-		backBeamBreaker.updateInputs(backBeamBreakerInputs);
-		Logger.processInputs(getLogPath() + "/BackBeamBreaker", backBeamBreakerInputs);
+		coralBeamBreaker.updateInputs(coralBeamBreakerInputs);
+		Logger.processInputs(getLogPath() + "/CoralBeamBreaker", coralBeamBreakerInputs);
 	}
 
 	private void log() {
-		Logger.recordOutput(getLogPath() + "/isCoralInFront", isCoralInFront());
-		Logger.recordOutput(getLogPath() + "/isCoralInBack", isCoralInBack());
+		Logger.recordOutput(getLogPath() + "/isAlgaeIn", isAlgaeIn());
+		Logger.recordOutput(getLogPath() + "/isCoralIn", isCoralIn());
 	}
 
 	public void setBrake(boolean brake) {
@@ -111,9 +110,12 @@ public class EndEffector extends GBSubsystem {
 		joystick.Y.onTrue(new InstantCommand(() -> calibrationPower = Math.min(calibrationPower + 0.1, 1)));
 
 		joystick.POV_LEFT.onTrue(commandsBuilder.setPower(EndEffectorState.DEFAULT.getPower()));
-		joystick.POV_DOWN.onTrue(commandsBuilder.setPower(EndEffectorState.INTAKE.getPower()).until(this::isCoralInBack));
-		joystick.POV_UP.onTrue(commandsBuilder.setPower(EndEffectorState.BRANCH_OUTTAKE.getPower()).until(() -> !isCoralInFront()));
+		joystick.POV_DOWN.onTrue(commandsBuilder.setPower(EndEffectorState.CORAL_INTAKE.getPower()).until(this::isCoralIn));
+		joystick.POV_UP.onTrue(commandsBuilder.setPower(EndEffectorState.BRANCH_OUTTAKE.getPower()).until(() -> !isCoralIn()));
 		joystick.POV_RIGHT.onTrue(commandsBuilder.stop());
+
+		joystick.L1.onTrue(commandsBuilder.setPower(EndEffectorState.ALGAE_INTAKE.getPower()));
+		joystick.R1.onTrue(commandsBuilder.setPower(EndEffectorState.ALGAE_OUTTAKE.getPower()));
 	}
 
 }

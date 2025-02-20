@@ -17,9 +17,6 @@ import frc.utils.math.AngleUnit;
 
 public class Falcon500LifterBuilder {
 
-	private static final int DIGITAL_INPUT_CHANNEL = 9;
-	private static final double DEBOUNCE_TIME = 0.05;
-
 	private static final int NUMBER_OF_MOTORS = 1;
 
 	private static final double CURRENT_LIMIT = 40;

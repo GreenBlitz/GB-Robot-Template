@@ -62,16 +62,16 @@ public class EndEffectorSparkMaxBuilder {
 	}
 
 	private static IDigitalInput generateBeamBreaker(SparkMaxWrapper sparkMaxWrapper, String name, LimitSwitchPort limitSwitch) {
-		if (Robot.ROBOT_TYPE.isSimulation()) {
+//		if (Robot.ROBOT_TYPE.isSimulation()) {
 			return new ChooserDigitalInput(name);
-		}
+//		}
 
-		return switch (limitSwitch) {
-			case FORWARD ->
-				new SuppliedDigitalInput(() -> sparkMaxWrapper.getForwardLimitSwitch().isPressed(), new Debouncer(DEBOUNCE_TIME_SECONDS));
-			case REVERSE ->
-				new SuppliedDigitalInput(() -> sparkMaxWrapper.getReverseLimitSwitch().isPressed(), new Debouncer(DEBOUNCE_TIME_SECONDS));
-		};
+//		return switch (limitSwitch) {
+//			case FORWARD ->
+//				new SuppliedDigitalInput(() -> sparkMaxWrapper.getForwardLimitSwitch().isPressed(), new Debouncer(DEBOUNCE_TIME_SECONDS));
+//			case REVERSE ->
+//				new SuppliedDigitalInput(() -> sparkMaxWrapper.getReverseLimitSwitch().isPressed(), new Debouncer(DEBOUNCE_TIME_SECONDS));
+//		};
 	}
 
 	public static EndEffector generate(String logPath) {

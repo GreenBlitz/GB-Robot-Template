@@ -166,8 +166,7 @@ public class RobotCommander extends GBSubsystem {
 			case SCORE -> score();
 			case ARM_PRE_ALGAE_REMOVE -> armPreAlgaeRemove();
 			case PRE_ALGAE_REMOVE -> preAlgaeRemove();
-			case ALGAE_REMOVE_WITHOUT_INTAKE -> algaeRemoveWithoutIntake();
-			case ALGAE_REMOVE_WITH_INTAKE -> algaeRemoveWithIntake();
+			case ALGAE_REMOVE -> algaeRemove();
 			case ALGAE_OUTTAKE -> algaeOuttake();
 		};
 	}
@@ -186,14 +185,13 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public Command removeAlgaeForButton() {
-		return new SequentialCommandGroup(fullyPreAlgaeRemove().until(this::isReadyToRemoveAlgae), algaeRemoveWithIntake());
+		return new SequentialCommandGroup(fullyPreAlgaeRemove().until(this::isReadyToRemoveAlgae), algaeRemove());
 	}
 
 	public Command fullyPreAlgaeRemove() {
 		return new SequentialCommandGroup(
 			armPreAlgaeRemove().until(this::isReadyToOpenAlgaeRemove),
-			preAlgaeRemove().until(this::isReadyToRemoveAlgae),
-			algaeRemoveWithoutIntake()
+			preAlgaeRemove().until(this::isReadyToRemoveAlgae)
 		);
 	}
 
@@ -334,23 +332,13 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	public Command algaeRemoveWithoutIntake() {
+	public Command algaeRemove() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
-				superstructure.algaeRemoveWithoutIntake(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE))
-			),
-			RobotState.ALGAE_REMOVE_WITHOUT_INTAKE.name()
-		);
-	}
-
-	public Command algaeRemoveWithIntake() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				superstructure.algaeRemoveWithIntake(),
+				superstructure.algaeRemove(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE))
 			).until(superstructure::isAlgaeIn),
-			RobotState.ALGAE_REMOVE_WITH_INTAKE.name()
+			RobotState.ALGAE_REMOVE.name()
 		);
 	}
 
@@ -370,8 +358,8 @@ public class RobotCommander extends GBSubsystem {
 			case INTAKE, OUTTAKE, DRIVE, ALIGN_REEF, PRE_ALGAE_REMOVE, ARM_PRE_ALGAE_REMOVE, ALGAE_OUTTAKE -> drive();
 			case ARM_PRE_SCORE -> armPreScore();
 			case PRE_SCORE -> preScore();
-			case ALGAE_REMOVE_WITHOUT_INTAKE, ALGAE_REMOVE_WITH_INTAKE -> closeAfterAlgaeRemove();
 			case SCORE, SCORE_WITHOUT_RELEASE -> closeAfterScore();
+			case ALGAE_REMOVE -> algaeRemove();
 		};
 	}
 

@@ -2,6 +2,7 @@ package frc.robot.subsystems.climb.lifter;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.joysticks.SmartJoystick;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
@@ -64,6 +65,16 @@ public class Lifter extends GBSubsystem {
 
 	private void updateInputs() {
 		motor.updateInputs(positionSignal);
+	}
+
+	public void applyCalibrationBindings(SmartJoystick joystick) {
+		LifterStateHandler stateHandler = new LifterStateHandler(this);
+
+		joystick.Y.onTrue(stateHandler.setState(LifterState.BACKWARD));
+		joystick.X.onTrue(stateHandler.setState(LifterState.FORWARD));
+		joystick.B.onTrue(stateHandler.setState(LifterState.CLIMB));
+		joystick.A.onTrue(stateHandler.setState(LifterState.DEPLOY));
+		joystick.R1.onTrue(stateHandler.setState(LifterState.HOLD));
 	}
 
 }

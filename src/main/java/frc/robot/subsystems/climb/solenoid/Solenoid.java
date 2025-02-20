@@ -1,8 +1,11 @@
 package frc.robot.subsystems.climb.solenoid;
 
+import frc.joysticks.SmartJoystick;
 import frc.robot.hardware.interfaces.IMotor;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.subsystems.climb.lifter.LifterState;
+import frc.robot.subsystems.climb.lifter.LifterStateHandler;
 
 public class Solenoid extends GBSubsystem {
 
@@ -41,6 +44,14 @@ public class Solenoid extends GBSubsystem {
 
 	protected void setPower(double power) {
 		motor.setPower(power);
+	}
+
+	public void applyCalibrationBindings(SmartJoystick joystick) {
+		SolenoidStateHandler stateHandler = new SolenoidStateHandler(this);
+
+		joystick.POV_UP.onTrue(stateHandler.setState(SolenoidState.INITIAL_FREE));
+		joystick.POV_LEFT.onTrue(stateHandler.setState(SolenoidState.HOLD_FREE));
+		joystick.POV_DOWN.onTrue(stateHandler.setState(SolenoidState.LOCKED));
 	}
 
 }

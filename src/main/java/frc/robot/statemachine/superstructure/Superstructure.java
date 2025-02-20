@@ -256,7 +256,7 @@ public class Superstructure extends GBSubsystem {
 		).until(() -> robot.getElevator().isAtPosition(ElevatorState.CLOSED.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS));
 	}
 
-	public Command preAlgaeRemove() {
+	public Command postAlgaeRemove() {
 		return asSubsystemCommand(
 			new DeferredCommand(
 				() -> new ParallelCommandGroup(
@@ -266,7 +266,7 @@ public class Superstructure extends GBSubsystem {
 				),
 				Set.of(robot.getElevator(), robot.getArm(), robot.getEndEffector(), this)
 			),
-			SuperstructureState.PRE_ALGAE_REMOVE.name()
+			SuperstructureState.POST_ALGAE_REMOVE.name()
 		);
 	}
 
@@ -308,8 +308,8 @@ public class Superstructure extends GBSubsystem {
 
 	private Command endState(SuperstructureState state) {
 		return switch (state) {
-			case INTAKE, OUTTAKE, IDLE, PRE_ALGAE_REMOVE, ALGAE_OUTTAKE -> idle();
-			case ALGAE_REMOVE -> preAlgaeRemove();
+			case INTAKE, OUTTAKE, IDLE, POST_ALGAE_REMOVE, ALGAE_OUTTAKE -> idle();
+			case ALGAE_REMOVE -> postAlgaeRemove();
 			case ARM_PRE_SCORE -> armPreScore();
 			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> preScore();
 		};

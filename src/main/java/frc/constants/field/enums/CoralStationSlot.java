@@ -25,19 +25,13 @@ public enum CoralStationSlot {
 	L9(17);
 
 	private final int index;
-	private final Pose2d position;
 
 	CoralStationSlot(int index) {
 		this.index = index;
-		this.position = Field.getCoralStationSlots(this);
 	}
 
 	public int getIndex() {
 		return this.index;
-	}
-
-	public Pose2d getPosition() {
-		return this.position;
 	}
 
 }

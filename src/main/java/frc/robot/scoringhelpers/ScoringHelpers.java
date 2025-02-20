@@ -54,9 +54,9 @@ public class ScoringHelpers {
 		Translation2d robotTranslationWithOffset = robotTranslation.minus(END_EFFECTOR_OFFSET_FROM_MID_ROBOT);
 		targetCoralStationSlot = switch (getTargetCoralStation(robot)) {
 			case RIGHT -> {
-				double distanceFromLeftSlot = robotTranslationWithOffset.getDistance(CoralStationSlot.R2.getPosition().getTranslation());
-				double distanceFromMiddleSlot = robotTranslationWithOffset.getDistance(CoralStationSlot.R5.getPosition().getTranslation());
-				double distanceFromRightSlot = robotTranslationWithOffset.getDistance(CoralStationSlot.R8.getPosition().getTranslation());
+				double distanceFromLeftSlot = robotTranslationWithOffset.getDistance(Field.getCoralStationSlots(CoralStationSlot.R2).getTranslation());
+				double distanceFromMiddleSlot = robotTranslationWithOffset.getDistance(Field.getCoralStationSlots(CoralStationSlot.R5).getTranslation());
+				double distanceFromRightSlot = robotTranslationWithOffset.getDistance(Field.getCoralStationSlots(CoralStationSlot.R8).getTranslation());
 				if (distanceFromLeftSlot < distanceFromMiddleSlot && distanceFromLeftSlot < distanceFromRightSlot) {
 					yield CoralStationSlot.R2;
 				}
@@ -66,9 +66,9 @@ public class ScoringHelpers {
 				yield CoralStationSlot.R8;
 			}
 			case LEFT -> {
-				double distanceFromLeftSlot = robotTranslationWithOffset.getDistance(CoralStationSlot.L2.getPosition().getTranslation());
-				double distanceFromMiddleSlot = robotTranslationWithOffset.getDistance(CoralStationSlot.L5.getPosition().getTranslation());
-				double distanceFromRightSlot = robotTranslationWithOffset.getDistance(CoralStationSlot.L8.getPosition().getTranslation());
+				double distanceFromLeftSlot = robotTranslationWithOffset.getDistance(Field.getCoralStationSlots(CoralStationSlot.L2).getTranslation());
+				double distanceFromMiddleSlot = robotTranslationWithOffset.getDistance(Field.getCoralStationSlots(CoralStationSlot.L5).getTranslation());
+				double distanceFromRightSlot = robotTranslationWithOffset.getDistance(Field.getCoralStationSlots(CoralStationSlot.L8).getTranslation());
 				if (distanceFromLeftSlot < distanceFromMiddleSlot && distanceFromLeftSlot < distanceFromRightSlot) {
 					yield CoralStationSlot.L2;
 				}

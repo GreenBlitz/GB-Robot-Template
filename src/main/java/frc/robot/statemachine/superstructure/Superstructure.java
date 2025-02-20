@@ -265,7 +265,7 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command algaeRemoveWithoutRelease() {
+	public Command algaeRemoveWithoutIntake() {
 		return asSubsystemCommand(
 			new DeferredCommand(
 				() -> new ParallelCommandGroup(
@@ -275,7 +275,7 @@ public class Superstructure extends GBSubsystem {
 				),
 				Set.of(robot.getElevator(), robot.getArm(), robot.getEndEffector(), this)
 			),
-			SuperstructureState.ALGAE_REMOVE.name()
+			SuperstructureState.ALGAE_REMOVE_WITHOUT_INTAKE.name()
 		);
 	}
 
@@ -296,7 +296,7 @@ public class Superstructure extends GBSubsystem {
 				),
 				Set.of(robot.getElevator(), robot.getArm(), robot.getEndEffector(), this)
 			),
-			SuperstructureState.ALGAE_REMOVE.name()
+			SuperstructureState.ALGAE_REMOVE_WITH_INTAKE.name()
 		);
 	}
 
@@ -323,7 +323,7 @@ public class Superstructure extends GBSubsystem {
 
 	private Command endState(SuperstructureState state) {
 		return switch (state) {
-			case INTAKE, OUTTAKE, IDLE, ALGAE_REMOVE, PRE_ALGAE_REMOVE, ALGAE_OUTTAKE, ARM_PRE_ALGAE_REMOVE -> idle();
+			case INTAKE, OUTTAKE, IDLE, ALGAE_REMOVE_WITH_INTAKE, ALGAE_REMOVE_WITHOUT_INTAKE, PRE_ALGAE_REMOVE, ALGAE_OUTTAKE, ARM_PRE_ALGAE_REMOVE -> idle();
 			case ARM_PRE_SCORE -> armPreScore();
 			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> preScore();
 		};

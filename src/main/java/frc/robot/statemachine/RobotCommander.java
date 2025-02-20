@@ -15,6 +15,7 @@ import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.pose.PoseUtil;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 
@@ -147,6 +148,11 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public boolean isReadyToOpenAlgaeRemove() {
+		Logger.recordOutput("isReadyToOpenAlgaeRemove", isAtRemoveAlgaePose(
+				StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS,
+				Tolerances.REEF_RELATIVE_SCORING_POSITION,
+				Tolerances.REEF_RELATIVE_SCORING_DEADBANDS
+		));
 		return isAtRemoveAlgaePose(
 				StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS,
 				Tolerances.REEF_RELATIVE_SCORING_POSITION,
@@ -337,7 +343,7 @@ public class RobotCommander extends GBSubsystem {
 	public Command algaeRemoveWithoutRelease() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
-				superstructure.algaeRemoveWithoutRelease(),
+				superstructure.algaeRemoveWithoutIntake(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE))
 			),
 			RobotState.ALGAE_REMOVE_WITHOUT_RELEASE.name()

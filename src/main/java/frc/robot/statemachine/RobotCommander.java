@@ -134,7 +134,7 @@ public class RobotCommander extends GBSubsystem {
 			case PRE_SCORE -> preScore();
 			case SCORE_WITHOUT_RELEASE -> scoreWithoutRelease();
 			case SCORE -> score();
-			case POST_ALGAE_REMOVE -> postAlgaeRemove();
+			case POST_ALGAE_REMOVE -> closeAfterAlgaeRemove();
 			case ALGAE_REMOVE -> algaeRemove();
 			case ALGAE_OUTTAKE -> algaeOuttake();
 		};
@@ -176,6 +176,10 @@ public class RobotCommander extends GBSubsystem {
 
 	public Command scoreForButton() {
 		return new SequentialCommandGroup(scoreWithoutRelease().until(this::isReadyToScore), score());
+	}
+
+	public Command removeAlgaeThenClose() {
+		return new SequentialCommandGroup(algaeRemove(), closeAfterAlgaeRemove());
 	}
 
 	public Command fullyPreScore() {
@@ -282,23 +286,16 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	private Command closeAfterAlgaeRemove() {
-		return new DeferredCommand(
-			() -> new SequentialCommandGroup(
-				new ParallelCommandGroup(
-					superstructure.postAlgaeRemove(),
-					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
-				).until(this::isReadyToCloseSuperstructure),
-				drive()
-			),
-			Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
-		);
-	}
-
-	private Command postAlgaeRemove() {
 		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				superstructure.postAlgaeRemove(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE))
+			new DeferredCommand(
+				() -> new SequentialCommandGroup(
+					new ParallelCommandGroup(
+						superstructure.postAlgaeRemove(),
+						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+					).until(this::isReadyToCloseSuperstructure),
+					drive()
+				),
+				Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
 			),
 			RobotState.POST_ALGAE_REMOVE.name()
 		);
@@ -312,11 +309,6 @@ public class RobotCommander extends GBSubsystem {
 			).until(superstructure::isAlgaeIn),
 			RobotState.ALGAE_REMOVE.name()
 		);
-	}
-
-
-	public Command removeAlgaeThenClose() {
-		return new SequentialCommandGroup(algaeRemove(), closeAfterAlgaeRemove());
 	}
 
 	private Command algaeOuttake() {

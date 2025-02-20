@@ -6,11 +6,11 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 public class EndEffectorStateHandler {
 
-	private final EndEffector endEffector;
-	private EndEffectorState currentState;
-
 	private static final double CORAL_KEEP_POWER = 0.1;
 	private static final double ALGAE_KEEP_POWER = -0.3;
+
+	private final EndEffector endEffector;
+	private EndEffectorState currentState;
 
 	public EndEffectorStateHandler(EndEffector endEffector) {
 		this.endEffector = endEffector;

@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.constants.field.enums.AlgaeRemoveLevel;
 import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.StateMachineConstants;
@@ -80,22 +79,6 @@ public class Superstructure extends GBSubsystem {
 			&& elevatorStateHandler.getCurrentState() == targetScoreLevel.getElevatorScore()
 			&& robot.getArm().isAtPosition(targetScoreLevel.getArmScore().getPosition(), Tolerances.ARM_POSITION)
 			&& armStateHandler.getCurrentState() == targetScoreLevel.getArmScore();
-	}
-
-	public boolean isPreRemoveAlgaeReady() {
-		AlgaeRemoveLevel algaeRemoveLevel = ScoringHelpers.getAlgaeRemoveLevel();
-		return robot.getElevator().isAtPosition(algaeRemoveLevel.getPreElevatorState().getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
-			&& elevatorStateHandler.getCurrentState() == algaeRemoveLevel.getPreElevatorState()
-			&& robot.getArm().isAtPosition(algaeRemoveLevel.getPreArmState().getPosition(), Tolerances.ARM_POSITION)
-			&& armStateHandler.getCurrentState() == algaeRemoveLevel.getPreArmState();
-	}
-
-	public boolean isReadyToRemoveAlgae() {
-		AlgaeRemoveLevel algaeRemoveLevel = ScoringHelpers.getAlgaeRemoveLevel();
-		return robot.getElevator().isAtPosition(algaeRemoveLevel.getElevatorState().getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
-			&& elevatorStateHandler.getCurrentState() == algaeRemoveLevel.getElevatorState()
-			&& robot.getArm().isAtPosition(algaeRemoveLevel.getArmState().getPosition(), Tolerances.ARM_POSITION)
-			&& armStateHandler.getCurrentState() == algaeRemoveLevel.getArmState();
 	}
 
 	public boolean isReadyToOuttakeAlgae() {
@@ -283,7 +266,7 @@ public class Superstructure extends GBSubsystem {
 						elevatorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getElevatorState()),
 						armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getArmState()),
 						endEffectorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getEndEffectorState())
-					).withTimeout(StateMachineConstants.SCORE_OUTTAKE_TIME_AFTER_BEAM_BREAK_SECONDS)
+					).withTimeout(StateMachineConstants.ALGAE_REMOVE_TIME_AFTER_LIMIT_SWITCH_SECONDS)
 				),
 				Set.of(robot.getElevator(), robot.getArm(), robot.getEndEffector(), this)
 			),
@@ -297,7 +280,7 @@ public class Superstructure extends GBSubsystem {
 				new ParallelCommandGroup(elevatorStateHandler.setState(ElevatorState.CLOSED), armStateHandler.setState(ArmState.CLOSED))
 					.until(this::isReadyToOuttakeAlgae),
 				endEffectorStateHandler.setState(EndEffectorState.ALGAE_OUTTAKE)
-			),
+			).until(() -> !isAlgaeIn()),
 			SuperstructureState.ALGAE_OUTTAKE.name()
 		);
 	}

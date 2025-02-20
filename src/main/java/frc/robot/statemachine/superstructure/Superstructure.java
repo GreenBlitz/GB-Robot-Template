@@ -279,7 +279,7 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command algaeRemoveWithRelease() {
+	public Command algaeRemoveWithIntake() {
 		return asSubsystemCommand(
 			new DeferredCommand(
 				() -> new SequentialCommandGroup(

@@ -166,8 +166,8 @@ public class RobotCommander extends GBSubsystem {
 			case SCORE -> score();
 			case ARM_PRE_ALGAE_REMOVE -> armPreAlgaeRemove();
 			case PRE_ALGAE_REMOVE -> preAlgaeRemove();
-			case ALGAE_REMOVE_WITHOUT_RELEASE -> algaeRemoveWithoutRelease();
-			case ALGAE_REMOVE_WITH_RELEASE -> algaeRemoveWithRelease();
+			case ALGAE_REMOVE_WITHOUT_INTAKE -> algaeRemoveWithoutIntake();
+			case ALGAE_REMOVE_WITH_INTAKE -> algaeRemoveWithIntake();
 			case ALGAE_OUTTAKE -> algaeOuttake();
 		};
 	}
@@ -186,14 +186,14 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public Command removeAlgaeForButton() {
-		return new SequentialCommandGroup(fullyPreAlgaeRemove().until(this::isReadyToRemoveAlgae), algaeRemoveWithRelease());
+		return new SequentialCommandGroup(fullyPreAlgaeRemove().until(this::isReadyToRemoveAlgae), algaeRemoveWithIntake());
 	}
 
 	public Command fullyPreAlgaeRemove() {
 		return new SequentialCommandGroup(
 			armPreAlgaeRemove().until(this::isReadyToOpenAlgaeRemove),
 			preAlgaeRemove().until(this::isReadyToRemoveAlgae),
-			algaeRemoveWithoutRelease()
+			algaeRemoveWithoutIntake()
 		);
 	}
 
@@ -334,23 +334,23 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	public Command algaeRemoveWithoutRelease() {
+	public Command algaeRemoveWithoutIntake() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				superstructure.algaeRemoveWithoutIntake(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE))
 			),
-			RobotState.ALGAE_REMOVE_WITHOUT_RELEASE.name()
+			RobotState.ALGAE_REMOVE_WITHOUT_INTAKE.name()
 		);
 	}
 
-	public Command algaeRemoveWithRelease() {
+	public Command algaeRemoveWithIntake() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
-				superstructure.algaeRemoveWithRelease(),
+				superstructure.algaeRemoveWithIntake(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE))
 			).until(superstructure::isAlgaeIn),
-			RobotState.ALGAE_REMOVE_WITH_RELEASE.name()
+			RobotState.ALGAE_REMOVE_WITH_INTAKE.name()
 		);
 	}
 
@@ -370,7 +370,7 @@ public class RobotCommander extends GBSubsystem {
 			case INTAKE, OUTTAKE, DRIVE, ALIGN_REEF, PRE_ALGAE_REMOVE, ARM_PRE_ALGAE_REMOVE, ALGAE_OUTTAKE -> drive();
 			case ARM_PRE_SCORE -> armPreScore();
 			case PRE_SCORE -> preScore();
-			case ALGAE_REMOVE_WITHOUT_RELEASE, ALGAE_REMOVE_WITH_RELEASE -> closeAfterAlgaeRemove();
+			case ALGAE_REMOVE_WITHOUT_INTAKE, ALGAE_REMOVE_WITH_INTAKE -> closeAfterAlgaeRemove();
 			case SCORE, SCORE_WITHOUT_RELEASE -> closeAfterScore();
 		};
 	}

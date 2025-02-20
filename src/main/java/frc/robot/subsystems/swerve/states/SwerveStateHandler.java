@@ -109,7 +109,7 @@ public class SwerveStateHandler {
 				return speeds;
 			}
 		}
-		if (swerveState.getAimAssist() == AimAssist.CORAL_STATION_SLOTS) {
+		if (swerveState.getAimAssist() == AimAssist.CORAL_STATION_SLOT) {
 			if (coralStationSlotSupplier.get().isPresent()) {
 				return handleCoralStationSlotAimAssist(speeds, robotPoseSupplier.get().get(), coralStationSlotSupplier.get().get(), swerveState);
 			} else {

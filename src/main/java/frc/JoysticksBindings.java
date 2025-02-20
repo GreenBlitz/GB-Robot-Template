@@ -79,7 +79,7 @@ public class JoysticksBindings {
 		usedJoystick.R1.onTrue(robot.getRobotCommander().scoreForButton());
 		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.PRE_ALGAE_REMOVE));
 		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_REMOVE_WITH_RELEASE));
-		usedJoystick.X.onTrue(robot.getRobotCommander().fullyPreAlgaeRemove());
+		usedJoystick.X.onTrue(robot.getRobotCommander().removeAlgaeForButton());
 		usedJoystick.Y.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
 		usedJoystick.POV_UP.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_OUTTAKE));
 	}
@@ -93,7 +93,7 @@ public class JoysticksBindings {
 		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getRobotCommander().fullyScore());
 
 		usedJoystick.A.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L1));
-		usedJoystick.B.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L2));
+//		usedJoystick.B.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L2));
 		usedJoystick.X.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L3));
 		usedJoystick.Y.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4));
 
@@ -103,7 +103,7 @@ public class JoysticksBindings {
 		usedJoystick.POV_UP.onTrue(new InstantCommand(() -> ScoringHelpers.setTargetSideForReef(Side.MIDDLE)));
 		usedJoystick.POV_DOWN.onTrue(new InstantCommand(() -> ScoringHelpers.setTargetSideForReef(Side.MIDDLE)));
 		usedJoystick.POV_LEFT.onTrue(new InstantCommand(() -> ScoringHelpers.setTargetSideForReef(Side.LEFT)));
-		usedJoystick.POV_RIGHT.onTrue(new InstantCommand(() -> ScoringHelpers.setTargetSideForReef(Side.RIGHT)));
+		usedJoystick.B.onTrue(new InstantCommand(() -> ScoringHelpers.setTargetSideForReef(Side.RIGHT)));
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {

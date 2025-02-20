@@ -138,12 +138,20 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public boolean isReadyToRemoveAlgae() {
-		return superstructure.isReadyToRemoveAlgae()
+		return superstructure.isPreRemoveAlgaeReady()
 			&& isAtRemoveAlgaePose(
-				StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS,
+				StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS,
 				Tolerances.REEF_RELATIVE_SCORING_POSITION,
 				Tolerances.REEF_RELATIVE_SCORING_DEADBANDS
 			);
+	}
+
+	public boolean isReadyToOpenAlgaeRemove() {
+		return isAtRemoveAlgaePose(
+				StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS,
+				Tolerances.REEF_RELATIVE_SCORING_POSITION,
+				Tolerances.REEF_RELATIVE_SCORING_DEADBANDS
+		);
 	}
 
 	public Command setState(RobotState state) {
@@ -178,12 +186,12 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public Command removeAlgaeForButton() {
-		return new SequentialCommandGroup(algaeRemoveWithoutRelease().until(this::isReadyToRemoveAlgae), algaeRemoveWithRelease());
+		return new SequentialCommandGroup(fullyPreAlgaeRemove().until(this::isReadyToRemoveAlgae), algaeRemoveWithRelease());
 	}
 
 	public Command fullyPreAlgaeRemove() {
 		return new SequentialCommandGroup(
-			armPreAlgaeRemove().until(this::isReadyToOpenSuperstructure),
+			armPreAlgaeRemove().until(this::isReadyToOpenAlgaeRemove),
 			preAlgaeRemove().until(this::isReadyToRemoveAlgae),
 			algaeRemoveWithoutRelease()
 		);
@@ -311,7 +319,7 @@ public class RobotCommander extends GBSubsystem {
 			new ParallelCommandGroup(
 				superstructure.armPreAlgaeRemove(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE))
-			).until(superstructure::isAlgaeIn),
+			),
 			RobotState.ARM_PRE_ALGAE_REMOVE.name()
 		);
 	}
@@ -341,7 +349,7 @@ public class RobotCommander extends GBSubsystem {
 			new ParallelCommandGroup(
 				superstructure.algaeRemoveWithRelease(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE))
-			).until(() -> !superstructure.isAlgaeIn()),
+			).until(superstructure::isAlgaeIn),
 			RobotState.ALGAE_REMOVE_WITH_RELEASE.name()
 		);
 	}

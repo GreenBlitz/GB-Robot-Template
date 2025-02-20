@@ -78,12 +78,12 @@ public class Superstructure extends GBSubsystem {
 			&& armStateHandler.getCurrentState() == targetScoreLevel.getArmScore();
 	}
 
-	public boolean isReadyToRemoveAlgae() {
+	public boolean isPreRemoveAlgaeReady() {
 		AlgaeRemoveLevel algaeRemoveLevel = ScoringHelpers.getAlgaeRemoveLevel();
-		return robot.getElevator().isAtPosition(algaeRemoveLevel.getElevatorState().getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
-			&& elevatorStateHandler.getCurrentState() == algaeRemoveLevel.getElevatorState()
-			&& robot.getArm().isAtPosition(algaeRemoveLevel.getArmState().getPosition(), Tolerances.ARM_POSITION)
-			&& armStateHandler.getCurrentState() == algaeRemoveLevel.getArmState();
+		return robot.getElevator().isAtPosition(algaeRemoveLevel.getPreElevatorState().getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
+			&& elevatorStateHandler.getCurrentState() == algaeRemoveLevel.getPreElevatorState()
+			&& robot.getArm().isAtPosition(algaeRemoveLevel.getPreArmState().getPosition(), Tolerances.ARM_POSITION)
+			&& armStateHandler.getCurrentState() == algaeRemoveLevel.getPreArmState();
 	}
 
 	@Override
@@ -243,11 +243,11 @@ public class Superstructure extends GBSubsystem {
 				() -> new ParallelCommandGroup(
 					elevatorStateHandler.setState(ElevatorState.CLOSED),
 					armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getPreArmState()),
-					endEffectorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getEndEffectorState())
+					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
 				),
 				Set.of(robot.getElevator(), robot.getArm(), robot.getEndEffector(), this)
 			),
-			SuperstructureState.PRE_ALGAE_REMOVE.name()
+			SuperstructureState.ARM_PRE_ALGAE_REMOVE.name()
 		);
 	}
 
@@ -323,7 +323,7 @@ public class Superstructure extends GBSubsystem {
 
 	private Command endState(SuperstructureState state) {
 		return switch (state) {
-			case INTAKE, OUTTAKE, IDLE, ALGAE_REMOVE, PRE_ALGAE_REMOVE, ALGAE_OUTTAKE -> idle();
+			case INTAKE, OUTTAKE, IDLE, ALGAE_REMOVE, PRE_ALGAE_REMOVE, ALGAE_OUTTAKE, ARM_PRE_ALGAE_REMOVE -> idle();
 			case ARM_PRE_SCORE -> armPreScore();
 			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> preScore();
 		};

@@ -14,7 +14,12 @@ public enum ArmState {
 	PRE_L3(Rotation2d.fromDegrees(10)),
 	L3(Rotation2d.fromDegrees(10)),
 	PRE_L4(Rotation2d.fromDegrees(37)),
-	L4(Rotation2d.fromDegrees(-25));
+	L4(Rotation2d.fromDegrees(-25)),
+	PRE_LOW_ALGAE_REMOVE(Rotation2d.fromDegrees(-30)),
+	LOW_ALGAE_REMOVE(Rotation2d.fromDegrees(-30)),
+	PRE_HIGH_ALGAE_REMOVE(Rotation2d.fromDegrees(1)),
+	HIGH_ALGAE_REMOVE(Rotation2d.fromDegrees(1));
+
 
 	private final Rotation2d position;
 

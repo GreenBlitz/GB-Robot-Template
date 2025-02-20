@@ -81,11 +81,14 @@ public class JoysticksBindings {
 		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
 		usedJoystick.B.onTrue(robot.getRobotCommander().removeAlgaeForButton());
 		usedJoystick.X.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_OUTTAKE));
-		
-		usedJoystick.POV_UP.onTrue(new InstantCommand(() -> robot.getRobotCommander().getSuperstructure().driverIsAlgaeInOverride =
-				!robot.getRobotCommander().getSuperstructure().driverIsAlgaeInOverride
-				
-		));
+
+		usedJoystick.POV_UP.onTrue(
+			new InstantCommand(
+				() -> robot.getRobotCommander()
+					.getSuperstructure().driverIsAlgaeInOverride = !robot.getRobotCommander().getSuperstructure().driverIsAlgaeInOverride
+
+			)
+		);
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

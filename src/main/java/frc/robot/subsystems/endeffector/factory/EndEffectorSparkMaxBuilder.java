@@ -2,16 +2,13 @@ package frc.robot.subsystems.endeffector.factory;
 
 import com.revrobotics.spark.config.LimitSwitchConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.IDs;
-import frc.robot.Robot;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.digitalinput.chooser.ChooserDigitalInput;
-import frc.robot.hardware.digitalinput.supplied.SuppliedDigitalInput;
 import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
 import frc.robot.hardware.rev.motors.*;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
@@ -63,7 +60,7 @@ public class EndEffectorSparkMaxBuilder {
 
 	private static IDigitalInput generateBeamBreaker(SparkMaxWrapper sparkMaxWrapper, String name, LimitSwitchPort limitSwitch) {
 //		if (Robot.ROBOT_TYPE.isSimulation()) {
-			return new ChooserDigitalInput(name);
+		return new ChooserDigitalInput(name);
 //		}
 
 //		return switch (limitSwitch) {

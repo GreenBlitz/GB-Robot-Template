@@ -323,7 +323,16 @@ public class Superstructure extends GBSubsystem {
 
 	private Command endState(SuperstructureState state) {
 		return switch (state) {
-			case INTAKE, OUTTAKE, IDLE, ALGAE_REMOVE_WITH_INTAKE, ALGAE_REMOVE_WITHOUT_INTAKE, PRE_ALGAE_REMOVE, ALGAE_OUTTAKE, ARM_PRE_ALGAE_REMOVE -> idle();
+			case
+				INTAKE,
+				OUTTAKE,
+				IDLE,
+				ALGAE_REMOVE_WITH_INTAKE,
+				ALGAE_REMOVE_WITHOUT_INTAKE,
+				PRE_ALGAE_REMOVE,
+				ALGAE_OUTTAKE,
+				ARM_PRE_ALGAE_REMOVE ->
+				idle();
 			case ARM_PRE_SCORE -> armPreScore();
 			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> preScore();
 		};

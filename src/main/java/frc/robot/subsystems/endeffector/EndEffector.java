@@ -14,8 +14,8 @@ public class EndEffector extends GBSubsystem {
 	private final ControllableMotor roller;
 	private final InputSignal<Double> powerSignal;
 	private final InputSignal<Double> currentSignal;
-	private final IDigitalInput algaeBeamBreaker;
-	private final DigitalInputInputsAutoLogged algaeBeamBreakerInputs;
+	private final IDigitalInput algaeLimitSwitch;
+	private final DigitalInputInputsAutoLogged algaeLimitSwitchInputs;
 	private final IDigitalInput coralBeamBreaker;
 	private final DigitalInputInputsAutoLogged coralBeamBreakerInputs;
 	private final EndEffectorCommandsBuilder commandsBuilder;
@@ -26,7 +26,7 @@ public class EndEffector extends GBSubsystem {
 		ControllableMotor roller,
 		InputSignal<Double> powerSignal,
 		InputSignal<Double> currentSignal,
-		IDigitalInput algaeBeamBreaker,
+		IDigitalInput algaeLimitSwitch,
 		IDigitalInput coralBeamBreaker
 	) {
 		super(logPath);
@@ -34,8 +34,8 @@ public class EndEffector extends GBSubsystem {
 		this.powerSignal = powerSignal;
 		this.currentSignal = currentSignal;
 
-		this.algaeBeamBreaker = algaeBeamBreaker;
-		this.algaeBeamBreakerInputs = new DigitalInputInputsAutoLogged();
+		this.algaeLimitSwitch = algaeLimitSwitch;
+		this.algaeLimitSwitchInputs = new DigitalInputInputsAutoLogged();
 
 		this.coralBeamBreaker = coralBeamBreaker;
 		this.coralBeamBreakerInputs = new DigitalInputInputsAutoLogged();
@@ -52,7 +52,7 @@ public class EndEffector extends GBSubsystem {
 	}
 
 	public boolean isAlgaeIn() {
-		return algaeBeamBreakerInputs.debouncedValue;
+		return algaeLimitSwitchInputs.debouncedValue;
 	}
 
 	public boolean isCoralIn() {
@@ -77,8 +77,8 @@ public class EndEffector extends GBSubsystem {
 		roller.updateSimulation();
 		roller.updateInputs(powerSignal, currentSignal);
 
-		algaeBeamBreaker.updateInputs(algaeBeamBreakerInputs);
-		Logger.processInputs(getLogPath() + "/AlgaeBeamBreaker", algaeBeamBreakerInputs);
+		algaeLimitSwitch.updateInputs(algaeLimitSwitchInputs);
+		Logger.processInputs(getLogPath() + "/AlgaeBeamBreaker", algaeLimitSwitchInputs);
 
 		coralBeamBreaker.updateInputs(coralBeamBreakerInputs);
 		Logger.processInputs(getLogPath() + "/CoralBeamBreaker", coralBeamBreakerInputs);
@@ -113,6 +113,9 @@ public class EndEffector extends GBSubsystem {
 		joystick.POV_DOWN.onTrue(commandsBuilder.setPower(EndEffectorState.CORAL_INTAKE.getPower()).until(this::isCoralIn));
 		joystick.POV_UP.onTrue(commandsBuilder.setPower(EndEffectorState.BRANCH_OUTTAKE.getPower()).until(() -> !isCoralIn()));
 		joystick.POV_RIGHT.onTrue(commandsBuilder.stop());
+
+		joystick.L1.onTrue(commandsBuilder.setPower(EndEffectorState.ALGAE_INTAKE.getPower()));
+		joystick.R1.onTrue(commandsBuilder.setPower(EndEffectorState.ALGAE_INTAKE.getPower()));
 	}
 
 }

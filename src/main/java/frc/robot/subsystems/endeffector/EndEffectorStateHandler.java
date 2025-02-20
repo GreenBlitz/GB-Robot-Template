@@ -9,6 +9,9 @@ public class EndEffectorStateHandler {
 	private final EndEffector endEffector;
 	private EndEffectorState currentState;
 
+	private static final double CORAL_KEEP_POWER = 0.1;
+	private static final double ALGAE_KEEP_POWER = -0.2;
+
 	public EndEffectorStateHandler(EndEffector endEffector) {
 		this.endEffector = endEffector;
 	}
@@ -28,7 +31,7 @@ public class EndEffectorStateHandler {
 	}
 
 	private double defaultStatePower() {
-		return endEffector.isCoralIn() ? EndEffectorState.DEFAULT.getPower() : -EndEffectorState.DEFAULT.getPower();
+		return endEffector.isCoralIn() ? CORAL_KEEP_POWER : -ALGAE_KEEP_POWER;
 	}
 
 

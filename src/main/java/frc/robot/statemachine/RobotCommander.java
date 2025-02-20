@@ -137,8 +137,17 @@ public class RobotCommander extends GBSubsystem {
 			);
 	}
 
-	public boolean isReadyToRemoveAlgae() {
+	public boolean isPreRemoveAlgaeReady() {
 		return superstructure.isPreRemoveAlgaeReady()
+			&& isAtRemoveAlgaePose(
+				StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS,
+				Tolerances.REEF_RELATIVE_SCORING_POSITION,
+				Tolerances.REEF_RELATIVE_SCORING_DEADBANDS
+			);
+	}
+
+	public boolean isReadyToRemoveAlgae() {
+		return superstructure.isReadyToRemoveAlgae()
 			&& isAtRemoveAlgaePose(
 				StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS,
 				Tolerances.REEF_RELATIVE_SCORING_POSITION,
@@ -164,7 +173,6 @@ public class RobotCommander extends GBSubsystem {
 			case PRE_SCORE -> preScore();
 			case SCORE_WITHOUT_RELEASE -> scoreWithoutRelease();
 			case SCORE -> score();
-			case ARM_PRE_ALGAE_REMOVE -> armPreAlgaeRemove();
 			case PRE_ALGAE_REMOVE -> preAlgaeRemove();
 			case ALGAE_REMOVE -> algaeRemove();
 			case ALGAE_OUTTAKE -> algaeOuttake();
@@ -185,14 +193,7 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public Command removeAlgaeForButton() {
-		return new SequentialCommandGroup(fullyPreAlgaeRemove().until(this::isReadyToRemoveAlgae), algaeRemove());
-	}
-
-	public Command fullyPreAlgaeRemove() {
-		return new SequentialCommandGroup(
-			armPreAlgaeRemove().until(this::isReadyToOpenAlgaeRemove),
-			preAlgaeRemove().until(this::isReadyToRemoveAlgae)
-		);
+		return new SequentialCommandGroup(preAlgaeRemove().until(this::isPreRemoveAlgaeReady), algaeRemove());
 	}
 
 	public Command fullyPreScore() {
@@ -311,17 +312,6 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-
-	public Command armPreAlgaeRemove() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				superstructure.armPreAlgaeRemove(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE))
-			),
-			RobotState.ARM_PRE_ALGAE_REMOVE.name()
-		);
-	}
-
 	public Command preAlgaeRemove() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
@@ -344,7 +334,7 @@ public class RobotCommander extends GBSubsystem {
 
 	public Command algaeOuttake() {
 		return asSubsystemCommand(
-			new ParallelCommandGroup(superstructure.algaeOutTake(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			new ParallelCommandGroup(superstructure.algaeOuttake(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
 			RobotState.ALGAE_OUTTAKE
 		);
 	}
@@ -355,11 +345,11 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command endState(RobotState state) {
 		return switch (state) {
-			case INTAKE, OUTTAKE, DRIVE, ALIGN_REEF, PRE_ALGAE_REMOVE, ARM_PRE_ALGAE_REMOVE, ALGAE_OUTTAKE -> drive();
+			case INTAKE, OUTTAKE, DRIVE, ALIGN_REEF, PRE_ALGAE_REMOVE, ALGAE_OUTTAKE -> drive();
 			case ARM_PRE_SCORE -> armPreScore();
 			case PRE_SCORE -> preScore();
 			case SCORE, SCORE_WITHOUT_RELEASE -> closeAfterScore();
-			case ALGAE_REMOVE -> algaeRemove();
+			case ALGAE_REMOVE -> closeAfterAlgaeRemove();
 		};
 	}
 

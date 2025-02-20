@@ -82,7 +82,7 @@ public class EndEffectorSparkMaxBuilder {
 
 		BrushlessSparkMAXMotor motor = generateMotor(logPath + "/Roller", sparkMaxWrapper);
 
-		IDigitalInput algaeDigitalInput = generateBeamBreaker(sparkMaxWrapper, "AlgaeBeamBreaker", LimitSwitchPort.FORWARD);
+		IDigitalInput algaeDigitalInput = generateBeamBreaker(sparkMaxWrapper, "AlgaeLimitSwitch", LimitSwitchPort.FORWARD);
 		IDigitalInput coralDigitalInput = generateBeamBreaker(sparkMaxWrapper, "CoralBeamBreaker", LimitSwitchPort.REVERSE);
 
 		return new EndEffector(logPath, motor, powerSignal, currentSignal, algaeDigitalInput, coralDigitalInput);

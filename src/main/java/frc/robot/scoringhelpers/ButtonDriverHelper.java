@@ -60,13 +60,30 @@ public class ButtonDriverHelper {
 	private static int darkToggleIndex;
 
 	private static final Pose2d[] REEF_SIDES = {
-		Field.getPointFromCertainDistance(FieldMath.mirror(Field.getReefSideMiddle(ReefSide.D), true, false, AngleTransform.MIRROR_X), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS),
-		Field.getPointFromCertainDistance(FieldMath.mirror(Field.getReefSideMiddle(ReefSide.C), true, false, AngleTransform.MIRROR_X), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS),
-		Field.getPointFromCertainDistance(FieldMath.mirror(Field.getReefSideMiddle(ReefSide.B), true, false, AngleTransform.MIRROR_X), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS),
-        Field.getPointFromCertainDistance(FieldMath.mirror(Field.getReefSideMiddle(ReefSide.A), true, false, AngleTransform.MIRROR_X), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS),
-        Field.getPointFromCertainDistance(FieldMath.mirror(Field.getReefSideMiddle(ReefSide.F), true, false, AngleTransform.MIRROR_X), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS),
-		Field.getPointFromCertainDistance(FieldMath.mirror(Field.getReefSideMiddle(ReefSide.E), true, false, AngleTransform.MIRROR_X), DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS)};
-
+		Field.getPointFromCertainDistance(
+			FieldMath.mirror(Field.getReefSideMiddle(ReefSide.D), true, false, AngleTransform.MIRROR_X),
+			DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS
+		),
+		Field.getPointFromCertainDistance(
+			FieldMath.mirror(Field.getReefSideMiddle(ReefSide.C), true, false, AngleTransform.MIRROR_X),
+			DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS
+		),
+		Field.getPointFromCertainDistance(
+			FieldMath.mirror(Field.getReefSideMiddle(ReefSide.B), true, false, AngleTransform.MIRROR_X),
+			DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS
+		),
+		Field.getPointFromCertainDistance(
+			FieldMath.mirror(Field.getReefSideMiddle(ReefSide.A), true, false, AngleTransform.MIRROR_X),
+			DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS
+		),
+		Field.getPointFromCertainDistance(
+			FieldMath.mirror(Field.getReefSideMiddle(ReefSide.F), true, false, AngleTransform.MIRROR_X),
+			DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS
+		),
+		Field.getPointFromCertainDistance(
+			FieldMath.mirror(Field.getReefSideMiddle(ReefSide.E), true, false, AngleTransform.MIRROR_X),
+			DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS
+		)};
 
 
 	private static final Pose2d[] SCORE_LEVEL_PLACEMENTS = {

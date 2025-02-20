@@ -27,7 +27,7 @@ public class Falcon500LifterBuilder {
 
 	private static final boolean SET_BRAKE = true;
 	private static final boolean INVERTED = false;
-	private static final double GEAR_RATIO = 1;
+	private static final double GEAR_RATIO = 70.0;
 	private static final double SENSOR_TO_MECHANISM_RATIO = 1;
 	private static final double MOMENT_OF_INERTIA = 0.001;
 
@@ -48,7 +48,7 @@ public class Falcon500LifterBuilder {
 		SingleJointedArmSimulation simulation = new SingleJointedArmSimulation(
 				new SingleJointedArmSim(
 						DCMotor.getFalcon500Foc(NUMBER_OF_MOTORS),
-						GEAR_RATIO,
+						1 / GEAR_RATIO,
 						MOMENT_OF_INERTIA,
 						LifterConstants.LIFTER_LENGTH_METERS,
 						LifterConstants.MINIMUM_ACHIEVABLE_POSITION.getRadians(),

@@ -27,8 +27,6 @@ public class Falcon500LifterBuilder {
 
 	private static final boolean SET_BRAKE = true;
 	private static final boolean INVERTED = false;
-	private static final double GEAR_RATIO = 70.0;
-	private static final double SENSOR_TO_MECHANISM_RATIO = 1;
 	private static final double MOMENT_OF_INERTIA = 0.001;
 
 	private static final Rotation2d MAXIMUM_POSITION = Rotation2d.fromDegrees(200);
@@ -36,7 +34,7 @@ public class Falcon500LifterBuilder {
 	private static TalonFXConfiguration generateMotorConfiguration() {
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
 
-		configuration.Feedback.SensorToMechanismRatio = SENSOR_TO_MECHANISM_RATIO;
+		configuration.Feedback.SensorToMechanismRatio = LifterConstants.GEAR_RATIO;
 		configuration.MotorOutput.Inverted = INVERTED ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive;
 		configuration.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT;
 		configuration.CurrentLimits.StatorCurrentLimitEnable = true;
@@ -48,7 +46,7 @@ public class Falcon500LifterBuilder {
 		SingleJointedArmSimulation simulation = new SingleJointedArmSimulation(
 				new SingleJointedArmSim(
 						DCMotor.getFalcon500Foc(NUMBER_OF_MOTORS),
-						1 / GEAR_RATIO,
+						LifterConstants.GEAR_RATIO,
 						MOMENT_OF_INERTIA,
 						LifterConstants.LIFTER_LENGTH_METERS,
 						LifterConstants.MINIMUM_ACHIEVABLE_POSITION.getRadians(),
@@ -56,7 +54,7 @@ public class Falcon500LifterBuilder {
 						false,
 						Rotation2d.fromDegrees(0).getRadians()
 				),
-				GEAR_RATIO
+				LifterConstants.GEAR_RATIO
 		);
 
 		TalonFXMotor lifter = new TalonFXMotor(logPath, IDs.TalonFXIDs.LIFTER, new SysIdRoutine.Config(), simulation);

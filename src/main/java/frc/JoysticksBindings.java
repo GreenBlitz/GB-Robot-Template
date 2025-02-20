@@ -78,15 +78,9 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 
-//		usedJoystick.R1.onTrue(robot.getRobotCommander().scoreForButton());
-//		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
-//		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
-		LifterStateHandler lifterStateHandler = new LifterStateHandler(robot.getLifter());
-		usedJoystick.A.onTrue(lifterStateHandler.setState(LifterState.HOLD));
-		usedJoystick.B.onTrue(lifterStateHandler.setState(LifterState.FORWARD));
-		usedJoystick.X.onTrue(lifterStateHandler.setState(LifterState.BACKWARD));
-		usedJoystick.Y.onTrue(lifterStateHandler.setState(LifterState.DEPLOY));
-		usedJoystick.POV_UP.onTrue(lifterStateHandler.setState(LifterState.CLIMB));
+		usedJoystick.R1.onTrue(robot.getRobotCommander().scoreForButton());
+		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
+		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

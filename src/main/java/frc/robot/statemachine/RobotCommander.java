@@ -154,7 +154,6 @@ public class RobotCommander extends GBSubsystem {
 			case ALGAE_OUTTAKE -> algaeOuttake();
 		};
 	}
-
 	public Command autoScore() {
 		Supplier<Command> fullySuperstructureScore = () -> new SequentialCommandGroup(
 			superstructure.armPreScore().until(this::isReadyToOpenSuperstructure),

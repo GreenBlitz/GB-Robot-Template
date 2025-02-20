@@ -77,21 +77,6 @@ public class RobotCommander extends GBSubsystem {
 		};
 	}
 
-	private boolean isAtRemoveAlgaePose(double scoringPoseDistanceFromReefMeters, Pose2d tolerances, Pose2d deadbands) {
-		Rotation2d reefAngle = Field.getReefSideMiddle(ScoringHelpers.getTargetBranch().getReefSide()).getRotation();
-
-		Pose2d reefRelativeTargetPose = ScoringHelpers
-			.getRobotRelativeAlgaeRemovePose(ScoringHelpers.getTargetReefSide(), scoringPoseDistanceFromReefMeters)
-			.rotateBy(reefAngle.unaryMinus());
-		Pose2d reefRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(reefAngle.unaryMinus());
-
-		ChassisSpeeds allianceRelativeSpeeds = swerve.getAllianceRelativeVelocity();
-		ChassisSpeeds reefRelativeSpeeds = SwerveMath
-			.robotToAllianceRelativeSpeeds(allianceRelativeSpeeds, Field.getAllianceRelative(reefAngle.unaryMinus()));
-
-		return PoseUtil.isAtPose(reefRelativeRobotPose, reefRelativeTargetPose, reefRelativeSpeeds, tolerances, deadbands);
-	}
-
 	private boolean isReadyToOpenSuperstructure() {
 		return isAtReefScoringPose(
 			StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS,

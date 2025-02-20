@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
+import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.AutosBuilder;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
 import frc.robot.scoringhelpers.ButtonDriverHelper;
@@ -171,14 +172,32 @@ public class Robot {
 
 		this.startingPointAndWhereToScoreFirstObjectChooser = new AutonomousChooser(
 			"StartingPointAndScoreFirst",
-			AutosBuilder.getAllStartingAndScoringFirstObjectAutos(this, scoringCommand)
+			AutosBuilder.getAllStartingAndScoringFirstObjectAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
 		);
-		this.whereToIntakeSecondObjectChooser = new AutonomousChooser("IntakeSecond", AutosBuilder.getAllIntakingAutos(this, intakingCommand));
-		this.whereToScoreSecondObjectChooser = new AutonomousChooser("ScoreSecond", AutosBuilder.getAllScoringAutos(this, scoringCommand));
-		this.whereToIntakeThirdObjectChooser = new AutonomousChooser("IntakeThird", AutosBuilder.getAllIntakingAutos(this, intakingCommand));
-		this.whereToScoreThirdObjectChooser = new AutonomousChooser("ScoreThird", AutosBuilder.getAllScoringAutos(this, scoringCommand));
-		this.whereToIntakeFourthObjectChooser = new AutonomousChooser("IntakeFourth", AutosBuilder.getAllIntakingAutos(this, intakingCommand));
-		this.whereToScoreFourthObjectChooser = new AutonomousChooser("ScoreFourth", AutosBuilder.getAllScoringAutos(this, scoringCommand));
+		this.whereToIntakeSecondObjectChooser = new AutonomousChooser(
+			"IntakeSecond",
+			AutosBuilder.getAllIntakingAutos(this, intakingCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+		);
+		this.whereToScoreSecondObjectChooser = new AutonomousChooser(
+			"ScoreSecond",
+			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+		);
+		this.whereToIntakeThirdObjectChooser = new AutonomousChooser(
+			"IntakeThird",
+			AutosBuilder.getAllIntakingAutos(this, intakingCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+		);
+		this.whereToScoreThirdObjectChooser = new AutonomousChooser(
+			"ScoreThird",
+			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+		);
+		this.whereToIntakeFourthObjectChooser = new AutonomousChooser(
+			"IntakeFourth",
+			AutosBuilder.getAllIntakingAutos(this, intakingCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+		);
+		this.whereToScoreFourthObjectChooser = new AutonomousChooser(
+			"ScoreFourth",
+			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+		);
 	}
 
 	public void periodic() {

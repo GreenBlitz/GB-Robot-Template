@@ -15,6 +15,7 @@ import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.StateMachineConstants;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.math.AngleTransform;
+import frc.utils.math.ToleranceMath;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -25,13 +26,20 @@ public class PathFollowingCommandsBuilder {
 		Robot robot,
 		PathPlannerPath path,
 		Supplier<Command> commandSupplier,
-		Optional<Branch> targetBranch
+		Optional<Branch> targetBranch,
+		Pose2d tolerance
 	) {
-		return new ParallelCommandGroup(commandSupplier.get(), followAdjustedPath(robot, path, targetBranch));
+		return new ParallelCommandGroup(commandSupplier.get(), followAdjustedPath(robot, path, targetBranch, tolerance));
 	}
 
-	public static Command commandAfterPath(Robot robot, PathPlannerPath path, Supplier<Command> commandSupplier, Optional<Branch> targetBranch) {
-		return new SequentialCommandGroup(followAdjustedPath(robot, path, targetBranch), commandSupplier.get());
+	public static Command commandAfterPath(
+		Robot robot,
+		PathPlannerPath path,
+		Supplier<Command> commandSupplier,
+		Optional<Branch> targetBranch,
+		Pose2d tolerance
+	) {
+		return new SequentialCommandGroup(followAdjustedPath(robot, path, targetBranch, tolerance), commandSupplier.get());
 	}
 
 
@@ -76,7 +84,7 @@ public class PathFollowingCommandsBuilder {
 		return robot.getSwerve().getCommandsBuilder().moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, targetPose);
 	}
 
-	public static Command followAdjustedPath(Robot robot, PathPlannerPath path, Optional<Branch> targetBranch) {
+	public static Command followAdjustedPath(Robot robot, PathPlannerPath path, Optional<Branch> targetBranch, Pose2d tolerance) {
 		return followPathOrPathfindAndFollowPath(robot, path)
 			.andThen(
 				moveToPoseByPID(
@@ -89,7 +97,16 @@ public class PathFollowingCommandsBuilder {
 						.orElse(Field.getAllianceRelative(PathPlannerUtil.getLastPathPose(path), true, true, AngleTransform.INVERT))
 				)
 			)
-			.until(() -> robot.getRobotCommander().isReadyToScore())
+			.until(
+				() -> targetBranch.map(branch -> robot.getRobotCommander().isAtBranchScoringPose(branch))
+					.orElse(
+						ToleranceMath.isNear(
+							Field.getAllianceRelative(PathPlannerUtil.getLastPathPose(path), true, true, AngleTransform.INVERT),
+							robot.getPoseEstimator().getEstimatedPose(),
+							tolerance
+						)
+					)
+			)
 			.andThen(robot.getSwerve().getCommandsBuilder().resetTargetSpeeds());
 	}
 

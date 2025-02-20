@@ -11,8 +11,6 @@ import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.RobotState;
 import frc.robot.statemachine.superstructure.ScoreLevel;
-import frc.robot.subsystems.climb.lifter.LifterState;
-import frc.robot.subsystems.climb.lifter.LifterStateHandler;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.utils.pose.Side;

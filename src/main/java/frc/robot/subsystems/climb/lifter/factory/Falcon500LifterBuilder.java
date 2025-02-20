@@ -4,13 +4,10 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.IDs;
 import frc.robot.RobotConstants;
-import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
 import frc.robot.hardware.mechanisms.wpilib.SingleJointedArmSimulation;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
@@ -44,17 +41,17 @@ public class Falcon500LifterBuilder {
 
 	protected static Lifter createLifter(String logPath) {
 		SingleJointedArmSimulation simulation = new SingleJointedArmSimulation(
-				new SingleJointedArmSim(
-						DCMotor.getFalcon500Foc(NUMBER_OF_MOTORS),
-						LifterConstants.GEAR_RATIO,
-						MOMENT_OF_INERTIA,
-						LifterConstants.LIFTER_LENGTH_METERS,
-						LifterConstants.MINIMUM_ACHIEVABLE_POSITION.getRadians(),
-						MAXIMUM_POSITION.getRadians(),
-						false,
-						Rotation2d.fromDegrees(0).getRadians()
-				),
-				LifterConstants.GEAR_RATIO
+			new SingleJointedArmSim(
+				DCMotor.getFalcon500Foc(NUMBER_OF_MOTORS),
+				LifterConstants.GEAR_RATIO,
+				MOMENT_OF_INERTIA,
+				LifterConstants.LIFTER_LENGTH_METERS,
+				LifterConstants.MINIMUM_ACHIEVABLE_POSITION.getRadians(),
+				MAXIMUM_POSITION.getRadians(),
+				false,
+				Rotation2d.fromDegrees(0).getRadians()
+			),
+			LifterConstants.GEAR_RATIO
 		);
 
 		TalonFXMotor lifter = new TalonFXMotor(logPath, IDs.TalonFXIDs.LIFTER, new SysIdRoutine.Config(), simulation);

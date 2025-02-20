@@ -1,6 +1,6 @@
 # Calibrations
 
-- [ ] Gear Ratio
-- [ ] Sensor to mechanism ratio
+- [x] Gear Ratio
+- [x] Sensor to mechanism ratio
 - [ ] Inverted
 - [ ] Current Limit

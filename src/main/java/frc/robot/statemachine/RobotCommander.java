@@ -124,6 +124,13 @@ public class RobotCommander extends GBSubsystem {
 			);
 	}
 
+	private boolean isReadyToStartCageAimAssist() {
+		Translation2d robotTranslation = robot.getPoseEstimator().getEstimatedPose().getTranslation();
+		Translation2d cageTranslation = Field.getCage(ScoringHelpers.targetCage).getTranslation();
+
+		return robotTranslation.getDistance(cageTranslation) <= StateMachineConstants.DISTANCE_FROM_CAGE_TO_START_AIM_ASSIST;
+	}
+
 	public Command setState(RobotState state) {
 		return switch (state) {
 			case DRIVE -> drive();
@@ -313,7 +320,16 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command preClimb() {
 		return asSubsystemCommand(
-			new ParallelCommandGroup(superstructure.preClimb(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			new ParallelCommandGroup(
+				superstructure.preClimb(),
+				new SequentialCommandGroup(
+					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE).until(this::isReadyToStartCageAimAssist),
+					swerve.getCommandsBuilder()
+						.driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CAGE))
+						.withTimeout(StateMachineConstants.CAGE_AIM_ASSIST_TIMEOUT),
+					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+				)
+			),
 			RobotState.PRE_CLIMB
 		);
 	}

@@ -1,9 +1,6 @@
 package frc.robot.subsystems.climb;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.subsystems.climb.lifter.LifterState;
 import frc.robot.subsystems.climb.lifter.LifterStateHandler;
 import frc.robot.subsystems.climb.solenoid.SolenoidState;
@@ -28,20 +25,20 @@ public class ClimbStateHandler {
 	}
 
 	private Command stop() {
-		return new ParallelCommandGroup(lifterStateHandler.setState(LifterState.HOLD), solenoidStateHandler.setState(SolenoidState.OFF));
+		return new ParallelCommandGroup(lifterStateHandler.setState(LifterState.HOLD), solenoidStateHandler.setState(SolenoidState.LOCKED));
 	}
 
 	private Command extend() {
 		return new SequentialCommandGroup(
 			lifterStateHandler.setState(LifterState.BACKWARD).withTimeout(ClimbConstants.SOLENOID_RELEASE_TIME_SECONDS),
-			solenoidStateHandler.setState(SolenoidState.RETRACT).withTimeout(ClimbConstants.SOLENOID_RETRACTING_UNTIL_HOLDING_TIME_SECONDS),
-			new ParallelRaceGroup(lifterStateHandler.setState(LifterState.EXTENDED), solenoidStateHandler.setState(SolenoidState.HOLD)),
-			solenoidStateHandler.setState(SolenoidState.OFF)
+			solenoidStateHandler.setState(SolenoidState.INITIAL_FREE).withTimeout(ClimbConstants.SOLENOID_RETRACTING_UNTIL_HOLDING_TIME_SECONDS),
+			new ParallelDeadlineGroup(lifterStateHandler.setState(LifterState.EXTENDED), solenoidStateHandler.setState(SolenoidState.HOLD_FREE)),
+			solenoidStateHandler.setState(SolenoidState.LOCKED)
 		);
 	}
 
 	private Command retract() {
-		return new ParallelCommandGroup(lifterStateHandler.setState(LifterState.RETRACTED), solenoidStateHandler.setState(SolenoidState.OFF));
+		return new ParallelCommandGroup(lifterStateHandler.setState(LifterState.RETRACTED), solenoidStateHandler.setState(SolenoidState.LOCKED));
 	}
 
 }

@@ -332,43 +332,40 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	private Command armPreNet(){
+	private Command armPreNet() {
 		return asSubsystemCommand(
-				new ParallelCommandGroup(
-						superstructure.armPreNet(),
-						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
-				),
-				RobotState.ARM_PRE_NET.name()
+			new ParallelCommandGroup(superstructure.armPreNet(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			RobotState.ARM_PRE_NET.name()
 		);
 	}
 
-	private Command preNet(){
+	private Command preNet() {
 		return asSubsystemCommand(
-				new ParallelCommandGroup(
-						superstructure.preNet(),
-						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
-				),
-				RobotState.PRE_NET.name()
+			new ParallelCommandGroup(
+				superstructure.preNet(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
+			),
+			RobotState.PRE_NET.name()
 		);
 	}
 
-	private Command netWithoutRelease(){
+	private Command netWithoutRelease() {
 		return asSubsystemCommand(
-				new ParallelCommandGroup(
-						superstructure.netWithoutRelease(),
-						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
-				),
-				RobotState.NET_WITHOUT_RELEASE.name()
+			new ParallelCommandGroup(
+				superstructure.netWithoutRelease(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
+			),
+			RobotState.NET_WITHOUT_RELEASE.name()
 		);
 	}
 
-	private Command netWithRelease(){
+	private Command netWithRelease() {
 		return asSubsystemCommand(
-				new ParallelCommandGroup(
-						superstructure.netWithRelease(),
-						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
-				).until(() -> !superstructure.isAlgaeIn()),
-				RobotState.NET_WITH_RELEASE.name()
+			new ParallelCommandGroup(
+				superstructure.netWithRelease(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
+			).until(() -> !superstructure.isAlgaeIn()),
+			RobotState.NET_WITH_RELEASE.name()
 		);
 	}
 

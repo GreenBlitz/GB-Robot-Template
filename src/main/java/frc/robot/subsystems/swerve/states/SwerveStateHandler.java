@@ -102,7 +102,7 @@ public class SwerveStateHandler {
 				return speeds;
 			}
 		}
-		if (swerveState.getAimAssist() == AimAssist.NET){
+		if (swerveState.getAimAssist() == AimAssist.NET) {
 			return handleNetAimAssist(speeds, robotPoseSupplier.get().get().getRotation());
 		}
 

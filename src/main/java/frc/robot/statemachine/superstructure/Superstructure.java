@@ -287,48 +287,48 @@ public class Superstructure extends GBSubsystem {
 
 	public Command armPreNet() {
 		return asSubsystemCommand(
-				new ParallelCommandGroup(
-						elevatorStateHandler.setState(ElevatorState.WHILE_DRIVE_NET),
-						armStateHandler.setState(ArmState.PRE_NET),
-						endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
-				),
-				SuperstructureState.ARM_PRE_NET.name()
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.WHILE_DRIVE_NET),
+				armStateHandler.setState(ArmState.PRE_NET),
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+			),
+			SuperstructureState.ARM_PRE_NET.name()
 		);
 	}
 
 
 	public Command preNet() {
 		return asSubsystemCommand(
-				new ParallelCommandGroup(
-						elevatorStateHandler.setState(ElevatorState.PRE_NET),
-						armStateHandler.setState(ArmState.PRE_NET),
-						endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
-				),
-				SuperstructureState.PRE_NET.name()
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.PRE_NET),
+				armStateHandler.setState(ArmState.PRE_NET),
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+			),
+			SuperstructureState.PRE_NET.name()
 		);
 	}
 
 
 	public Command netWithoutRelease() {
 		return asSubsystemCommand(
-				new ParallelCommandGroup(
-						elevatorStateHandler.setState(ElevatorState.NET),
-						armStateHandler.setState(ArmState.NET),
-						endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
-				).until(() -> !isAlgaeIn()),
-				SuperstructureState.NET_WITHOUT_RELEASE.name()
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.NET),
+				armStateHandler.setState(ArmState.NET),
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+			).until(() -> !isAlgaeIn()),
+			SuperstructureState.NET_WITHOUT_RELEASE.name()
 		);
 	}
 
 
 	public Command netWithRelease() {
 		return asSubsystemCommand(
-				new ParallelCommandGroup(
-						elevatorStateHandler.setState(ElevatorState.NET),
-						armStateHandler.setState(ArmState.NET),
-						endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE)
-				).until(() -> !isAlgaeIn()),
-				SuperstructureState.NET_WITH_RELEASE.name()
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.NET),
+				armStateHandler.setState(ArmState.NET),
+				endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE)
+			).until(() -> !isAlgaeIn()),
+			SuperstructureState.NET_WITH_RELEASE.name()
 		);
 	}
 

@@ -52,6 +52,8 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void autonomousInit() {
+		robot.getRobotCommander().removeDefaultCommand();
+
 		this.autonomousCommand = robot.getAutonomousCommand();
 
 		if (autonomousCommand != null) {
@@ -64,6 +66,7 @@ public class RobotManager extends LoggedRobot {
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 		}
+		robot.getRobotCommander().initializeDefaultCommand();
 	}
 
 	@Override

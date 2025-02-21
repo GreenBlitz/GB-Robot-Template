@@ -6,6 +6,9 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 public class EndEffectorStateHandler {
 
+	private static final double CORAL_KEEP_POWER = 0.1;
+	private static final double ALGAE_KEEP_POWER = -0.3;
+
 	private final EndEffector endEffector;
 	private EndEffectorState currentState;
 
@@ -28,7 +31,7 @@ public class EndEffectorStateHandler {
 	}
 
 	private double defaultStatePower() {
-		return endEffector.isCoralInBack() ? EndEffectorState.DEFAULT.getPower() : -EndEffectorState.DEFAULT.getPower();
+		return endEffector.isCoralIn() ? CORAL_KEEP_POWER : ALGAE_KEEP_POWER;
 	}
 
 

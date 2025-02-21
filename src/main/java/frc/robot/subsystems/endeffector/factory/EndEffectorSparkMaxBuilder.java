@@ -20,7 +20,7 @@ import frc.robot.subsystems.endeffector.EndEffector;
 public class EndEffectorSparkMaxBuilder {
 
 	private static final int NUMBER_OF_MOTORS = 1;
-	private static final boolean IS_INVERTED = true;
+	private static final boolean IS_INVERTED = false;
 	private static final boolean SET_BRAKE = false;
 	private static final int CURRENT_LIMIT = 20;
 
@@ -82,10 +82,10 @@ public class EndEffectorSparkMaxBuilder {
 
 		BrushlessSparkMAXMotor motor = generateMotor(logPath + "/Roller", sparkMaxWrapper);
 
-		IDigitalInput frontDigitalInput = generateBeamBreaker(sparkMaxWrapper, "FrontBeamBreaker", LimitSwitchPort.FORWARD);
-		IDigitalInput backDigitalInput = generateBeamBreaker(sparkMaxWrapper, "BackBeamBreaker", LimitSwitchPort.REVERSE);
+		IDigitalInput algaeDigitalInput = generateBeamBreaker(sparkMaxWrapper, "AlgaeLimitSwitch", LimitSwitchPort.FORWARD);
+		IDigitalInput coralDigitalInput = generateBeamBreaker(sparkMaxWrapper, "CoralBeamBreaker", LimitSwitchPort.REVERSE);
 
-		return new EndEffector(logPath, motor, powerSignal, currentSignal, frontDigitalInput, backDigitalInput);
+		return new EndEffector(logPath, motor, powerSignal, currentSignal, algaeDigitalInput, coralDigitalInput);
 	}
 
 }

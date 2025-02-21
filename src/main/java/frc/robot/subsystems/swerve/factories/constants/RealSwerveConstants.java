@@ -6,13 +6,13 @@ import frc.robot.subsystems.swerve.SwerveConstants;
 
 public class RealSwerveConstants {
 
-	public static final double VELOCITY_AT_12_VOLTS_METERS_PER_SECOND = 4;
+	public static final double VELOCITY_AT_12_VOLTS_METERS_PER_SECOND = 3.7;
 	public static final double ACCELERATION_AT_12_VOLTS_METERS_PER_SECOND_SQUARED = 2;
 	public static final double MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND = 4;
 	public static final Rotation2d MAX_ROTATIONAL_VELOCITY_PER_SECOND = Rotation2d.fromRadians(7.9);
 
-	private static final PIDConstants TRANSLATION_METERS_PID_CONSTANTS = new PIDConstants(3.6, 0, 0);
-	private static final PIDConstants ROTATION_DEGREES_PID_CONSTANTS = new PIDConstants(4.3, 0, 0);
+	private static final PIDConstants TRANSLATION_METERS_PID_CONSTANTS = new PIDConstants(3, 0, 0);
+	private static final PIDConstants ROTATION_DEGREES_PID_CONSTANTS = new PIDConstants(3, 0, 0);
 
 	static SwerveConstants getSwerveConstants(String logPath) {
 		return new SwerveConstants(

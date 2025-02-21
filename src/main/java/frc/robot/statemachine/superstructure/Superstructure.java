@@ -63,6 +63,13 @@ public class Superstructure extends GBSubsystem {
 		return robot.getEndEffector().isAlgaeIn() || driverIsAlgaeInOverride;
 	}
 
+	public boolean isClosed() {
+		return robot.getElevator().isAtPosition(ElevatorState.CLOSED.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
+			&& elevatorStateHandler.getCurrentState() == ElevatorState.CLOSED
+			&& robot.getArm().isAtPosition(ArmState.CLOSED.getPosition(), Tolerances.ARM_POSITION)
+			&& armStateHandler.getCurrentState() == ArmState.CLOSED;
+	}
+
 	public boolean isPreScoreReady() {
 		ScoreLevel targetScoreLevel = ScoringHelpers.targetScoreLevel;
 		ArmState targetArmState = targetScoreLevel == ScoreLevel.L4 ? targetScoreLevel.getArmScore() : targetScoreLevel.getArmPreScore();
@@ -228,15 +235,29 @@ public class Superstructure extends GBSubsystem {
 	}
 
 	public Command closeL4AfterScore() {
-		return new ParallelCommandGroup(
-			armStateHandler.setState(ArmState.CLOSED),
-			new SequentialCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.PRE_L4)
-					.until(() -> robot.getArm().isPastPosition(StateMachineConstants.ARM_POSITION_TO_CLOSE_ELEVATOR_L4)),
-				elevatorStateHandler.setState(ElevatorState.CLOSED)
-			),
-			endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
-		).until(() -> robot.getElevator().isAtPosition(ElevatorState.CLOSED.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS));
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				new SequentialCommandGroup(
+					armStateHandler.setState(ArmState.MID_WAY_CLOSE)
+						.until(() -> !robot.getElevator().isPastPosition(StateMachineConstants.ELEVATOR_POSITION_TO_CLOSE_ARM)),
+					armStateHandler.setState(ArmState.CLOSED)
+				),
+				new SequentialCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.PRE_L4)
+						.until(() -> robot.getArm().isPastPosition(StateMachineConstants.ARM_POSITION_TO_CLOSE_ELEVATOR_L4)),
+					elevatorStateHandler.setState(ElevatorState.CLOSED)
+				),
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+			).until(this::isClosed),
+			SuperstructureState.CLOSE_L4
+		);
+	}
+
+	private Command afterScore() {
+		return new DeferredCommand(
+			() -> ScoringHelpers.targetScoreLevel == ScoreLevel.L4 ? closeL4AfterScore() : preScore(),
+			Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector())
+		);
 	}
 
 	public Command algaeRemove() {
@@ -298,10 +319,10 @@ public class Superstructure extends GBSubsystem {
 
 	private Command endState(SuperstructureState state) {
 		return switch (state) {
-			case INTAKE, OUTTAKE, IDLE, POST_ALGAE_REMOVE, ALGAE_OUTTAKE -> idle();
+			case INTAKE, OUTTAKE, IDLE, POST_ALGAE_REMOVE, ALGAE_OUTTAKE, CLOSE_L4 -> idle();
 			case ALGAE_REMOVE -> postAlgaeRemove();
 			case ARM_PRE_SCORE -> armPreScore();
-			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> preScore();
+			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> afterScore();
 		};
 	}
 

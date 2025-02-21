@@ -244,8 +244,7 @@ public class Robot {
 				whereToScoreThirdObjectChooser.getChosenValue(),
 				whereToIntakeFourthObjectChooser.getChosenValue(),
 				whereToScoreFourthObjectChooser.getChosenValue()
-			)
-			.withResetPose(poseEstimator::resetPose);
+			);
 	}
 
 	public IPoseEstimator getPoseEstimator() {

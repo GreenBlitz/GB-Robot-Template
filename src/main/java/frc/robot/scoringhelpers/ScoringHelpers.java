@@ -4,10 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.constants.field.Field;
-import frc.constants.field.enums.AlgaeRemoveLevel;
-import frc.constants.field.enums.Branch;
-import frc.constants.field.enums.CoralStation;
-import frc.constants.field.enums.ReefSide;
+import frc.constants.field.enums.*;
 import frc.robot.Robot;
 import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.utils.pose.Side;
@@ -18,6 +15,7 @@ public class ScoringHelpers {
 	public static final Translation2d END_EFFECTOR_OFFSET_FROM_MID_ROBOT = new Translation2d(0, 0.014);
 
 	public static ScoreLevel targetScoreLevel = ScoreLevel.L4;
+	public static Cage targetCage = Cage.FIELD_CENTER;
 
 	private static boolean isFarReefHalf = false;
 	private static Side targetSideForReef = Side.MIDDLE;

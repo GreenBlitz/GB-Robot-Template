@@ -239,20 +239,6 @@ public class Superstructure extends GBSubsystem {
 		).until(() -> robot.getElevator().isAtPosition(ElevatorState.CLOSED.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS));
 	}
 
-	public Command postAlgaeRemove() {
-		return asSubsystemCommand(
-			new DeferredCommand(
-				() -> new ParallelCommandGroup(
-					elevatorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getPreElevatorState()),
-					armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getPreArmState()),
-					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
-				),
-				Set.of(robot.getElevator(), robot.getArm(), robot.getEndEffector(), this)
-			),
-			SuperstructureState.POST_ALGAE_REMOVE.name()
-		);
-	}
-
 	public Command algaeRemove() {
 		return asSubsystemCommand(
 			new DeferredCommand(
@@ -270,18 +256,39 @@ public class Superstructure extends GBSubsystem {
 				),
 				Set.of(robot.getElevator(), robot.getArm(), robot.getEndEffector(), this)
 			),
-			SuperstructureState.ALGAE_REMOVE.name()
+			SuperstructureState.ALGAE_REMOVE
+		);
+	}
+
+	public Command postAlgaeRemove() {
+		return asSubsystemCommand(
+			new DeferredCommand(
+				() -> new ParallelCommandGroup(
+					elevatorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getPostElevatorState()),
+					armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getPostArmState()),
+					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+				),
+				Set.of(robot.getElevator(), robot.getArm(), robot.getEndEffector(), this)
+			),
+			SuperstructureState.POST_ALGAE_REMOVE
 		);
 	}
 
 	public Command algaeOuttake() {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
-				new ParallelCommandGroup(elevatorStateHandler.setState(ElevatorState.CLOSED), armStateHandler.setState(ArmState.CLOSED))
-					.until(this::isReadyToOuttakeAlgae),
-				endEffectorStateHandler.setState(EndEffectorState.ALGAE_OUTTAKE)
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.CLOSED),
+					armStateHandler.setState(ArmState.CLOSED),
+					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+				).until(this::isReadyToOuttakeAlgae),
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.CLOSED),
+					armStateHandler.setState(ArmState.CLOSED),
+					endEffectorStateHandler.setState(EndEffectorState.ALGAE_OUTTAKE)
+				)
 			).until(() -> !isAlgaeIn()),
-			SuperstructureState.ALGAE_OUTTAKE.name()
+			SuperstructureState.ALGAE_OUTTAKE
 		);
 	}
 

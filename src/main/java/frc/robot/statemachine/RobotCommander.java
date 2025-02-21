@@ -178,10 +178,6 @@ public class RobotCommander extends GBSubsystem {
 		return new SequentialCommandGroup(scoreWithoutRelease().until(this::isReadyToScore), score());
 	}
 
-	public Command removeAlgaeThenClose() {
-		return new SequentialCommandGroup(algaeRemove(), closeAfterAlgaeRemove());
-	}
-
 	public Command fullyPreScore() {
 		return new SequentialCommandGroup(
 			armPreScore().until(this::isReadyToOpenSuperstructure),
@@ -285,6 +281,16 @@ public class RobotCommander extends GBSubsystem {
 		}, Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector()));
 	}
 
+	private Command algaeRemove() {
+		return asSubsystemCommand(
+			new ParallelDeadlineGroup(
+				superstructure.algaeRemove(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE))
+			),
+			RobotState.ALGAE_REMOVE
+		);
+	}
+
 	private Command closeAfterAlgaeRemove() {
 		return asSubsystemCommand(
 			new DeferredCommand(
@@ -297,24 +303,16 @@ public class RobotCommander extends GBSubsystem {
 				),
 				Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
 			),
-			RobotState.POST_ALGAE_REMOVE.name()
-		);
-	}
-
-	private Command algaeRemove() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				superstructure.algaeRemove(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE))
-			).until(superstructure::isAlgaeIn),
-			RobotState.ALGAE_REMOVE.name()
+			RobotState.POST_ALGAE_REMOVE
 		);
 	}
 
 	private Command algaeOuttake() {
 		return asSubsystemCommand(
-			new ParallelCommandGroup(superstructure.algaeOuttake(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE))
-				.until((() -> !superstructure.isAlgaeIn())),
+			new ParallelDeadlineGroup(
+				superstructure.algaeOuttake(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+			),
 			RobotState.ALGAE_OUTTAKE
 		);
 	}

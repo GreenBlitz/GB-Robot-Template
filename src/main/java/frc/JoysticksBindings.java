@@ -79,7 +79,7 @@ public class JoysticksBindings {
 		usedJoystick.R1.onTrue(robot.getRobotCommander().autoScore());
 		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
 		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.ARM_PRE_NET));
-		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.PRE_NET));
+		usedJoystick.B.onTrue(robot.getRobotCommander().fullyPreNet());
 		usedJoystick.X.onTrue(robot.getRobotCommander().setState(RobotState.NET_WITH_RELEASE));
 
 		usedJoystick.POV_UP.onTrue(

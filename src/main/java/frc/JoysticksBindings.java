@@ -77,17 +77,17 @@ public class JoysticksBindings {
 
 	private static Command algaeHandler(Robot robot) {
 		return new DeferredCommand(
-				() -> robot.getRobotCommander().getSuperstructure().isCoralIn()
-						? robot.getRobotCommander().autoScore()
-						: robot.getRobotCommander().removeAlgaeAndThenClose(),
-				Set.of(
-						robot.getRobotCommander(),
-						robot.getRobotCommander().getSuperstructure(),
-						robot.getSwerve(),
-						robot.getElevator(),
-						robot.getArm(),
-						robot.getEndEffector()
-				)
+			() -> robot.getRobotCommander().getSuperstructure().isCoralIn()
+				? robot.getRobotCommander().autoScore()
+				: robot.getRobotCommander().removeAlgaeAndThenClose(),
+			Set.of(
+				robot.getRobotCommander(),
+				robot.getRobotCommander().getSuperstructure(),
+				robot.getSwerve(),
+				robot.getElevator(),
+				robot.getArm(),
+				robot.getEndEffector()
+			)
 		);
 	}
 

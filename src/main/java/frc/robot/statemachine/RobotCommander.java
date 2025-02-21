@@ -124,6 +124,11 @@ public class RobotCommander extends GBSubsystem {
 			);
 	}
 
+	public boolean isCloseToNet() {
+		double distanceFromMidXAxis = Math.abs(robot.getPoseEstimator().getEstimatedPose().getTranslation().getX() - (Field.LENGTH_METERS / 2));
+		return distanceFromMidXAxis < StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_NET_METERS;
+	}
+
 	public Command setState(RobotState state) {
 		return switch (state) {
 			case DRIVE -> drive();
@@ -192,6 +197,10 @@ public class RobotCommander extends GBSubsystem {
 			preScore().until(this::isPreScoreReady),
 			scoreWithoutRelease()
 		);
+	}
+
+	public Command fullyPreNet() {
+		return new SequentialCommandGroup(armPreNet().until(this::isCloseToNet), netWithoutRelease());
 	}
 
 	private Command drive() {

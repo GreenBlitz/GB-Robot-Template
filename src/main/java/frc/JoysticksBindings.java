@@ -75,7 +75,7 @@ public class JoysticksBindings {
 		).withTimeout(NOTE_IN_RUMBLE_TIME_SECONDS);
 	}
 
-	private static Command algaeHandler(Robot robot) {
+	private static Command reefActionChooser(Robot robot) {
 		return new DeferredCommand(
 			() -> robot.getRobotCommander().getSuperstructure().isCoralIn()
 				? robot.getRobotCommander().autoScore()
@@ -95,7 +95,7 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 
-		usedJoystick.R1.onTrue(algaeHandler(robot));
+		usedJoystick.R1.onTrue(reefActionChooser(robot));
 		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
 		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
 		usedJoystick.B.onTrue(robot.getRobotCommander().removeAlgaeAndThenClose());

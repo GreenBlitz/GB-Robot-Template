@@ -83,7 +83,7 @@ public class RobotCommander extends GBSubsystem {
 		};
 	}
 
-	private boolean isAtReefScoringPose(
+	private boolean isAtBranchScoringPose(
 		Branch targetBranch,
 		double scoringPoseDistanceFromReefMeters,
 		Pose2d l1Tolerances,
@@ -155,7 +155,7 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public boolean isAtBranchScoringPose(Branch branch) {
-		return isAtReefScoringPose(
+		return isAtBranchScoringPose(
 			branch,
 			StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS,
 			Tolerances.REEF_RELATIVE_L1_SCORING_POSITION,

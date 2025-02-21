@@ -4,6 +4,8 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.constants.field.Field;
+import frc.utils.math.AngleTransform;
 
 import java.util.function.Consumer;
 
@@ -33,7 +35,7 @@ public class PathPlannerAutoWrapper extends PathPlannerAuto {
 
 	public PathPlannerAutoWrapper withResetPose(Consumer<Pose2d> resetPose) {
 		return new PathPlannerAutoWrapper(
-			this.beforeStarting(() -> resetPose.accept(this.getStartingPose())),
+			this.beforeStarting(() -> resetPose.accept(Field.getAllianceRelative(this.getStartingPose(), true, true, AngleTransform.INVERT))),
 			this.getStartingPose(),
 			this.getName(),
 			true

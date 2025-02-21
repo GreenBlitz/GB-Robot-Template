@@ -326,7 +326,7 @@ public class Superstructure extends GBSubsystem {
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.NET),
 				armStateHandler.setState(ArmState.NET),
-				endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE)
+				endEffectorStateHandler.setState(EndEffectorState.ALGAE_OUTTAKE)
 			).until(() -> !isAlgaeIn()),
 			SuperstructureState.NET_WITH_RELEASE.name()
 		);

@@ -47,13 +47,13 @@ public class ScoringHelpers {
 	public static AlgaeRemoveLevel getAlgaeRemoveLevel() {
 		if (isFarReefHalf) {
 			return switch (targetSideForReef) {
-				case LEFT, RIGHT -> AlgaeRemoveLevel.LOW;
-				case MIDDLE -> AlgaeRemoveLevel.HIGH;
+				case LEFT, RIGHT -> AlgaeRemoveLevel.HIGH;
+				case MIDDLE -> AlgaeRemoveLevel.LOW;
 			};
 		} else {
 			return switch (targetSideForReef) {
-				case LEFT, RIGHT -> AlgaeRemoveLevel.HIGH;
-				case MIDDLE -> AlgaeRemoveLevel.LOW;
+				case LEFT, RIGHT -> AlgaeRemoveLevel.LOW;
+				case MIDDLE -> AlgaeRemoveLevel.HIGH;
 			};
 		}
 	}

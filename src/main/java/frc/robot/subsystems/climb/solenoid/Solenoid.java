@@ -4,8 +4,6 @@ import frc.joysticks.SmartJoystick;
 import frc.robot.hardware.interfaces.IMotor;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.subsystems.climb.lifter.LifterState;
-import frc.robot.subsystems.climb.lifter.LifterStateHandler;
 
 public class Solenoid extends GBSubsystem {
 

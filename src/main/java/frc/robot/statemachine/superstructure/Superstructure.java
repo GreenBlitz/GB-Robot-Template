@@ -339,11 +339,18 @@ public class Superstructure extends GBSubsystem {
 
 	public Command netWithRelease() {
 		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.NET),
-				armStateHandler.setState(ArmState.NET),
-				endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE)
-			).until(() -> !isAlgaeIn()),
+			new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.NET),
+					armStateHandler.setState(ArmState.NET),
+					endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE)
+				).until(() -> !isAlgaeIn()),
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.NET),
+					armStateHandler.setState(ArmState.NET),
+					endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE)
+				).withTimeout(StateMachineConstants.NET_OUTTAKE_TIME_AFTER_LIMIT_SWITCH_SECONDS)
+			),
 			SuperstructureState.NET_WITH_RELEASE
 		);
 	}

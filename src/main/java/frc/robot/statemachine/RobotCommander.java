@@ -206,8 +206,7 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public Command fullyNet() {
-		return new SequentialCommandGroup(fullyPreNet().until(this::isAtScoreDistanceFromNet), netWithRelease())
-			.until(() -> !superstructure.isAlgaeIn());
+		return new SequentialCommandGroup(fullyPreNet().until(this::isAtScoreDistanceFromNet), netWithRelease());
 	}
 
 	private Command drive() {

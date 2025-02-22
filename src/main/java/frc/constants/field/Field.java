@@ -60,7 +60,7 @@ public class Field {
 
 	public static final Translation2d BARGE_CENTER = new Translation2d(LENGTH_METERS / 2, WIDTH_METERS / 2);
 
-	private static final Pose2d PROCESSOR = new Pose2d(5.98744, 0.00749, Rotation2d.fromDegrees(270));
+	private static final Pose2d PROCESSOR = new Pose2d(5.98744, 0.00749, Rotation2d.fromDegrees(90));
 
 	private static final Pose2d[] CORAL_STATION_MIDDLES = new Pose2d[] {
 		new Pose2d(0.84319, 0.65078, Rotation2d.fromDegrees(54)),

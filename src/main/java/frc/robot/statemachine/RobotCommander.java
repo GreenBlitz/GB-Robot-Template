@@ -169,7 +169,7 @@ public class RobotCommander extends GBSubsystem {
 			case SCORE -> score();
 			case POST_ALGAE_REMOVE -> closeAfterAlgaeRemove();
 			case ALGAE_REMOVE -> algaeRemove();
-			case ALGAE_OUTTAKE -> fullyProcessorOuttake();
+			case ALGAE_OUTTAKE -> algaeOuttake();
 			case PRE_NET -> preNet();
 			case NET_WITHOUT_RELEASE -> netWithoutRelease();
 			case NET_WITH_RELEASE -> netWithRelease();
@@ -227,14 +227,14 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 
-	private Command fullyProcessorOuttake() {
+	public Command fullyProcessorScore() {
 		return asSubsystemCommand(
-				new ParallelCommandGroup(
-						swerve.getCommandsBuilder()
-								.driveToPose(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers::getAllianceRelativeProcessorScoringPose),
-						new SequentialCommandGroup(superstructure.idle().until(this::isAtProcessorScoringPose), superstructure.processorOuttake())
-				).until(() -> !superstructure.isAlgaeIn()),
-				RobotState.SCORE.name()
+			new ParallelCommandGroup(
+				swerve.getCommandsBuilder()
+					.driveToPose(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers::getAllianceRelativeProcessorScoringPose),
+				new SequentialCommandGroup(superstructure.idle().until(this::isAtProcessorScoringPose), superstructure.algaeOuttake())
+			).until(() -> !superstructure.isAlgaeIn()),
+			RobotState.SCORE.name()
 		);
 	}
 
@@ -356,6 +356,14 @@ public class RobotCommander extends GBSubsystem {
 				Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
 			),
 			RobotState.POST_ALGAE_REMOVE.name()
+		);
+	}
+
+	private Command algaeOuttake() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(superstructure.algaeOuttake(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE))
+				.until(() -> !superstructure.isAlgaeIn()),
+			RobotState.ALGAE_OUTTAKE
 		);
 	}
 

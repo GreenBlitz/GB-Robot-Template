@@ -17,7 +17,7 @@ import org.littletonrobotics.junction.Logger;
 public class ScoringHelpers {
 
 	public static final Translation2d END_EFFECTOR_OFFSET_FROM_MID_ROBOT = new Translation2d(0, 0.014);
-	private static final Pose2d PROCESSOR_SCORING_POSE = new Pose2d(2, 2, Field.getProcessor().getRotation());
+	private static final Pose2d PROCESSOR_SCORING_POSE = new Pose2d(6, 0.7, Field.getProcessor().getRotation());
 
 	public static ScoreLevel targetScoreLevel = ScoreLevel.L4;
 

@@ -295,7 +295,7 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command processorOuttake() {
+	public Command algaeOuttake() {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(

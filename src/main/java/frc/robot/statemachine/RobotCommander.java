@@ -148,7 +148,6 @@ public class RobotCommander extends GBSubsystem {
 			case PRE_SCORE -> preScore();
 			case SCORE_WITHOUT_RELEASE -> scoreWithoutRelease();
 			case SCORE -> score();
-			case POST_ALGAE_REMOVE -> closeAfterAlgaeRemove();
 			case ALGAE_REMOVE -> algaeRemove();
 			case ALGAE_OUTTAKE -> processorOuttake();
 			case PRE_NET -> preNet();
@@ -313,18 +312,15 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	private Command closeAfterAlgaeRemove() {
-		return asSubsystemCommand(
-			new DeferredCommand(
-				() -> new SequentialCommandGroup(
-					new ParallelCommandGroup(
-						superstructure.postAlgaeRemove(),
-						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
-					).until(this::isReadyToCloseSuperstructure),
-					drive()
-				),
-				Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
+		return new DeferredCommand(
+			() -> new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					superstructure.postAlgaeRemove(),
+					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+				).until(this::isReadyToCloseSuperstructure),
+				drive()
 			),
-			RobotState.POST_ALGAE_REMOVE
+			Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
 		);
 	}
 
@@ -374,7 +370,7 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command endState(RobotState state) {
 		return switch (state) {
-			case INTAKE, CORAL_OUTTAKE, DRIVE, ALIGN_REEF, POST_ALGAE_REMOVE, ALGAE_OUTTAKE -> drive();
+			case INTAKE, CORAL_OUTTAKE, DRIVE, ALIGN_REEF, ALGAE_OUTTAKE -> drive();
 			case ARM_PRE_SCORE -> armPreScore();
 			case PRE_SCORE -> preScore();
 			case SCORE, SCORE_WITHOUT_RELEASE -> closeAfterScore();

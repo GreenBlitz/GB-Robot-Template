@@ -24,6 +24,8 @@ public class ScoringHelpers {
 	private static Side targetSideForReef = Side.MIDDLE;
 	private static boolean isLeftBranch = false;
 	private static CoralStation latestWantedCoralStation = CoralStation.LEFT;
+	private static CoralStationSlot latestWantedCoralStationSlot = CoralStationSlot.L1;
+
 
 	public static ReefSide getTargetReefSide() {
 		return ReefSide.getReefSideBySideAndFar(targetSideForReef, isFarReefHalf);
@@ -47,10 +49,12 @@ public class ScoringHelpers {
 
 	public static CoralStationSlot getTargetCoralStationSlot(Robot robot) {
 		Translation2d robotTranslation = robot.getPoseEstimator().getEstimatedPose().getTranslation();
-		return switch (getTargetCoralStation(robot)) {
-			case RIGHT -> getClosestCoralStationSlot(robotTranslation, CoralStationSlot.R2, CoralStationSlot.R8);
-			case LEFT -> getClosestCoralStationSlot(robotTranslation, CoralStationSlot.L2, CoralStationSlot.L8);
-		};
+		if (getTargetCoralStation(robot) == CoralStation.RIGHT) {
+			latestWantedCoralStationSlot = getClosestCoralStationSlot(robotTranslation, CoralStationSlot.R2, CoralStationSlot.R8);
+		} else {
+			latestWantedCoralStationSlot = getClosestCoralStationSlot(robotTranslation, CoralStationSlot.L2, CoralStationSlot.L8);
+		}
+		return latestWantedCoralStationSlot;
 	}
 
 	public static AlgaeRemoveLevel getAlgaeRemoveLevel() {
@@ -103,7 +107,7 @@ public class ScoringHelpers {
 		Logger.recordOutput(logPath + "/TargetBranch", getTargetBranch());
 		Logger.recordOutput(logPath + "/TargetReefSide", getTargetReefSide());
 		Logger.recordOutput(logPath + "/TargetCoralStation", latestWantedCoralStation);
-		Logger.recordOutput(logPath + "/TargetCoralStationSlot", getTargetCoralStationSlot(robot));
+		Logger.recordOutput(logPath + "/TargetCoralStationSlot", latestWantedCoralStationSlot);
 		Logger.recordOutput(logPath + "/TargetScoreLevel", targetScoreLevel);
 	}
 
@@ -112,7 +116,7 @@ public class ScoringHelpers {
 		int closestSlotIndex = 0;
 
 		for (int i = 0; i < slots.length; i++) {
-			distances[i] = robotTranslation.getDistance(Field.getCoralStationSlots(slots[i]).getTranslation());
+			distances[i] = robotTranslation.getDistance(Field.getCoralStationSlot(slots[i]).getTranslation());
 		}
 		for (int i = 1; i < distances.length; i++) {
 			if (distances[i] < distances[closestSlotIndex]) {

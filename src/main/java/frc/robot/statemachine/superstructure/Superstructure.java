@@ -117,6 +117,17 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
+	public Command stayInPlace(){
+		return asSubsystemCommand(
+				new ParallelCommandGroup(
+						elevatorStateHandler.setState(ElevatorState.STAY_IN_PLACE),
+						armStateHandler.setState(ArmState.STAY_IN_PLACE),
+						endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+				),
+				SuperstructureState.STAY_IN_PLACE
+		);
+	}
+
 	public Command intake() {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
@@ -138,8 +149,8 @@ public class Superstructure extends GBSubsystem {
 	public Command outtake() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.OUTTAKE),
-				armStateHandler.setState(ArmState.OUTTAKE),
+				elevatorStateHandler.setState(ElevatorState.STAY_IN_PLACE),
+				armStateHandler.setState(ArmState.STAY_IN_PLACE),
 				endEffectorStateHandler.setState(EndEffectorState.CORAL_OUTTAKE)
 			).until(() -> !isCoralIn()),
 			SuperstructureState.OUTTAKE
@@ -319,6 +330,7 @@ public class Superstructure extends GBSubsystem {
 
 	private Command endState(SuperstructureState state) {
 		return switch (state) {
+			case STAY_IN_PLACE -> stayInPlace();
 			case INTAKE, OUTTAKE, IDLE, POST_ALGAE_REMOVE, ALGAE_OUTTAKE, CLOSE_L4 -> idle();
 			case ALGAE_REMOVE -> postAlgaeRemove();
 			case ARM_PRE_SCORE -> armPreScore();

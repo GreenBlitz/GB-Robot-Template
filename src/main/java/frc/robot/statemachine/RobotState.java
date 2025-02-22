@@ -3,6 +3,7 @@ package frc.robot.statemachine;
 public enum RobotState {
 
 	DRIVE,
+	STAY_IN_PLACE,
 	INTAKE,
 	CORAL_OUTTAKE,
 	ALIGN_REEF,

@@ -15,20 +15,10 @@ public class ButtonDriverHelper {
 	private enum LeftRightTogglePlacements {
 
 		LEFT_TOGGLE_BRANCH_PLACEMENT(
-				Field.getAllianceRelative(
-						new Pose2d(X_AXIS_FOR_TOGGLES, 4.55, Rotation2d.fromDegrees(0)),
-						true,
-						true,
-						AngleTransform.INVERT
-				)
+			Field.getAllianceRelative(new Pose2d(X_AXIS_FOR_TOGGLES, 4.55, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT)
 		),
 		RIGHT_TOGGLE_BRANCH_PLACEMENT(
-				Field.getAllianceRelative(
-						new Pose2d(X_AXIS_FOR_TOGGLES, 3.55, Rotation2d.fromDegrees(0)),
-						true,
-						true,
-						AngleTransform.INVERT
-				)
+			Field.getAllianceRelative(new Pose2d(X_AXIS_FOR_TOGGLES, 3.55, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT)
 		),
 		HIDDEN_PLACEMENT_LEFT_RIGHT_TOGGLE(new Pose2d(-10, -10, Rotation2d.fromDegrees(90)));
 
@@ -41,19 +31,19 @@ public class ButtonDriverHelper {
 	}
 
 	private enum IsRemovingAlgaeToggle {
-		IS_ALGAE_REMOVED_PLACEMENT(Field.getAllianceRelative(
-				new Pose2d(X_AXIS_FOR_TOGGLES, 1.5, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT
-		)),
-		HIDDEN_PLACEMENT_ALGAE_TOGGLE(
-				new Pose2d(-10, -10, Rotation2d.fromDegrees(90))
-		);
+
+		IS_ALGAE_REMOVED_PLACEMENT(
+			Field.getAllianceRelative(new Pose2d(X_AXIS_FOR_TOGGLES, 1.5, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT)
+		),
+		HIDDEN_PLACEMENT_ALGAE_TOGGLE(new Pose2d(-10, -10, Rotation2d.fromDegrees(90)));
 
 
 		private final Pose2d placement;
 
-		IsRemovingAlgaeToggle(Pose2d placement){
+		IsRemovingAlgaeToggle(Pose2d placement) {
 			this.placement = placement;
 		}
+
 	}
 
 	private static final double DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS = 0.45;
@@ -61,15 +51,16 @@ public class ButtonDriverHelper {
 	private static final double X_AXIS_FOR_TOGGLES = 16;
 
 	private static final Pose2d L1_DISPLAY_PLACEMENT = Field
-			.getAllianceRelative(new Pose2d(12.22, SCORE_LEVEL_Y_AXIS, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
+		.getAllianceRelative(new Pose2d(12.22, SCORE_LEVEL_Y_AXIS, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
 	private static final Pose2d L2_DISPLAY_PLACEMENT = Field
-			.getAllianceRelative(new Pose2d(13.55, SCORE_LEVEL_Y_AXIS, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
+		.getAllianceRelative(new Pose2d(13.55, SCORE_LEVEL_Y_AXIS, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
 	private static final Pose2d L3_DISPLAY_PLACEMENT = Field
-			.getAllianceRelative(new Pose2d(14.88, SCORE_LEVEL_Y_AXIS, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
+		.getAllianceRelative(new Pose2d(14.88, SCORE_LEVEL_Y_AXIS, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
 	private static final Pose2d L4_DISPLAY_PLACEMENT = Field
-			.getAllianceRelative(new Pose2d(16, SCORE_LEVEL_Y_AXIS, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
+		.getAllianceRelative(new Pose2d(16, SCORE_LEVEL_Y_AXIS, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
 
-	private static final Pose2d IS_ALGAE_REMOVED_PLACEMENT = Field.getAllianceRelative(new Pose2d(X_AXIS_FOR_TOGGLES, 1.5, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
+	private static final Pose2d IS_ALGAE_REMOVED_PLACEMENT = Field
+		.getAllianceRelative(new Pose2d(X_AXIS_FOR_TOGGLES, 1.5, Rotation2d.fromDegrees(0)), true, true, AngleTransform.INVERT);
 	private static final Pose2d HIDDEN_PLACEMENT = new Pose2d(-10, -10, Rotation2d.fromDegrees(0));
 
 	private static int chosenSideIndex;
@@ -81,42 +72,39 @@ public class ButtonDriverHelper {
 	private static int darkAlgaeToggleIndex;
 
 	private static final Pose2d[] REEF_SIDES = {
-			Field.getPointFromCertainDistance(
-					FieldMath.mirror(Field.getReefSideMiddle(ReefSide.D), true, false, AngleTransform.MIRROR_X),
-					DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS
-			),
-			Field.getPointFromCertainDistance(
-					FieldMath.mirror(Field.getReefSideMiddle(ReefSide.C), true, false, AngleTransform.MIRROR_X),
-					DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS
-			),
-			Field.getPointFromCertainDistance(
-					FieldMath.mirror(Field.getReefSideMiddle(ReefSide.B), true, false, AngleTransform.MIRROR_X),
-					DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS
-			),
-			Field.getPointFromCertainDistance(
-					FieldMath.mirror(Field.getReefSideMiddle(ReefSide.A), true, false, AngleTransform.MIRROR_X),
-					DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS
-			),
-			Field.getPointFromCertainDistance(
-					FieldMath.mirror(Field.getReefSideMiddle(ReefSide.F), true, false, AngleTransform.MIRROR_X),
-					DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS
-			),
-			Field.getPointFromCertainDistance(
-					FieldMath.mirror(Field.getReefSideMiddle(ReefSide.E), true, false, AngleTransform.MIRROR_X),
-					DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS
-			)};
+		Field.getPointFromCertainDistance(
+			FieldMath.mirror(Field.getReefSideMiddle(ReefSide.D), true, false, AngleTransform.MIRROR_X),
+			DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS
+		),
+		Field.getPointFromCertainDistance(
+			FieldMath.mirror(Field.getReefSideMiddle(ReefSide.C), true, false, AngleTransform.MIRROR_X),
+			DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS
+		),
+		Field.getPointFromCertainDistance(
+			FieldMath.mirror(Field.getReefSideMiddle(ReefSide.B), true, false, AngleTransform.MIRROR_X),
+			DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS
+		),
+		Field.getPointFromCertainDistance(
+			FieldMath.mirror(Field.getReefSideMiddle(ReefSide.A), true, false, AngleTransform.MIRROR_X),
+			DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS
+		),
+		Field.getPointFromCertainDistance(
+			FieldMath.mirror(Field.getReefSideMiddle(ReefSide.F), true, false, AngleTransform.MIRROR_X),
+			DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS
+		),
+		Field.getPointFromCertainDistance(
+			FieldMath.mirror(Field.getReefSideMiddle(ReefSide.E), true, false, AngleTransform.MIRROR_X),
+			DISTANCE_FROM_REEF_FOR_SIDE_HIGHLIGHTING_METERS
+		)};
 
 
 	private static final Pose2d[] SCORE_LEVEL_PLACEMENTS = {
-			L1_DISPLAY_PLACEMENT,
-			L2_DISPLAY_PLACEMENT,
-			L3_DISPLAY_PLACEMENT,
-			L4_DISPLAY_PLACEMENT};
+		L1_DISPLAY_PLACEMENT,
+		L2_DISPLAY_PLACEMENT,
+		L3_DISPLAY_PLACEMENT,
+		L4_DISPLAY_PLACEMENT};
 
-	private static final Pose2d[] IS_REMOVING_ALGAE_TOGGLE = {
-			IS_ALGAE_REMOVED_PLACEMENT,
-			HIDDEN_PLACEMENT
-	};
+	private static final Pose2d[] IS_REMOVING_ALGAE_TOGGLE = {IS_ALGAE_REMOVED_PLACEMENT, HIDDEN_PLACEMENT};
 
 	private static void updateChosenReefSideIndex(ReefSide reefSide) {
 		chosenSideIndex = reefSide.getIndex();
@@ -138,12 +126,11 @@ public class ButtonDriverHelper {
 		}
 	}
 
-	private static void updateAlgaeRemovingToggle(){
-		if (ScoringHelpers.isTakingAlgae){
+	private static void updateAlgaeRemovingToggle() {
+		if (ScoringHelpers.isTakingAlgae) {
 			algaeRemovingIndex = IsRemovingAlgaeToggle.IS_ALGAE_REMOVED_PLACEMENT.ordinal();
 			darkAlgaeToggleIndex = IsRemovingAlgaeToggle.HIDDEN_PLACEMENT_ALGAE_TOGGLE.ordinal();
-		}
-		else{
+		} else {
 			algaeRemovingIndex = IsRemovingAlgaeToggle.HIDDEN_PLACEMENT_ALGAE_TOGGLE.ordinal();
 			darkAlgaeToggleIndex = IsRemovingAlgaeToggle.IS_ALGAE_REMOVED_PLACEMENT.ordinal();
 		}

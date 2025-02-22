@@ -89,7 +89,8 @@ public class ScoringHelpers {
 		Rotation2d targetRobotAngle = Field.getReefSideMiddle(side).getRotation();
 		Translation2d differenceTranslation = new Translation2d(distanceFromReefMeters, targetRobotAngle);
 		Translation2d endeffectorOffsetDifference = END_EFFECTOR_OFFSET_FROM_MID_ROBOT.rotateBy(targetRobotAngle);
-		return new Pose2d(reefMiddleTranslation.minus(differenceTranslation).minus(endeffectorOffsetDifference), targetRobotAngle);	}
+		return new Pose2d(reefMiddleTranslation.minus(differenceTranslation).minus(endeffectorOffsetDifference), targetRobotAngle);
+	}
 
 	public static void log(String logPath) {
 		Logger.recordOutput(logPath + "/TargetBranch", getTargetBranch());

@@ -284,14 +284,14 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command closeAfterAlgaeRemove() {
 		return new DeferredCommand(
-				() -> new SequentialCommandGroup(
-						new ParallelCommandGroup(
-								superstructure.postAlgaeRemove(),
-								swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
-						).until(this::isReadyToCloseSuperstructure),
-						drive()
-				),
-				Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
+			() -> new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					superstructure.postAlgaeRemove(),
+					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+				).until(this::isReadyToCloseSuperstructure),
+				drive()
+			),
+			Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
 		);
 	}
 

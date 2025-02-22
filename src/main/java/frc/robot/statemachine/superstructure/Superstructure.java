@@ -331,7 +331,7 @@ public class Superstructure extends GBSubsystem {
 				elevatorStateHandler.setState(ElevatorState.NET),
 				armStateHandler.setState(ArmState.NET),
 				endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
-			).until(() -> !isAlgaeIn()),
+			),
 			SuperstructureState.NET_WITHOUT_RELEASE
 		);
 	}

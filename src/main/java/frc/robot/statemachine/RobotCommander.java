@@ -144,8 +144,7 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public boolean isCloseToNetByDistance(double distance) {
-		double distanceFromMidXAxis = Math
-			.abs(robot.getPoseEstimator().getEstimatedPose().getTranslation().getX() - Field.getReefMiddle().getX());
+		double distanceFromMidXAxis = Math.abs(robot.getPoseEstimator().getEstimatedPose().getTranslation().getX() - Field.LENGTH_METERS / 2);
 		return distanceFromMidXAxis < distance;
 	}
 
@@ -242,7 +241,8 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public Command fullyNet() {
-		return new SequentialCommandGroup(fullyPreNet().until(this::isAtScoreDistanceFromNet), netWithRelease());
+		return new SequentialCommandGroup(fullyPreNet().until(this::isAtScoreDistanceFromNet), netWithRelease())
+			.until(() -> !superstructure.isAlgaeIn());
 	}
 
 	private Command drive() {

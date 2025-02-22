@@ -8,11 +8,7 @@ import frc.robot.statemachine.superstructure.Superstructure;
 public class EndEffectorStateHandler {
 
 	private static final double CORAL_KEEP_POWER = 0.1;
-<<<<<<< HEAD
-	private static final double ALGAE_KEEP_POWER = -0.4;
-=======
 	private static final double ALGAE_KEEP_POWER = -0.6;
->>>>>>> master
 
 	private final EndEffector endEffector;
 	private final Superstructure superstructure;

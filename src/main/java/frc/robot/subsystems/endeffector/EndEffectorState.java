@@ -8,12 +8,8 @@ public enum EndEffectorState {
 	BRANCH_OUTTAKE(-0.8),
 	CORAL_OUTTAKE(-0.7),
 	DEFAULT(0.1),
-<<<<<<< HEAD
-	PROCESSOR_OUTTAKE(0.4),
+	PROCESSOR_OUTTAKE(0.5),
 	NET_OUTTAKE(0.7);
-=======
-	ALGAE_OUTTAKE(0.5);
->>>>>>> master
 
 	private final double power;
 

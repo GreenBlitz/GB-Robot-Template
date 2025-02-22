@@ -124,17 +124,17 @@ public class RobotCommander extends GBSubsystem {
 			);
 	}
 
-	public boolean isCloseToNetByDistance(double distance) {
+	public boolean isCloseToNet(double distance) {
 		double distanceFromMidXAxis = Math.abs(robot.getPoseEstimator().getEstimatedPose().getTranslation().getX() - Field.LENGTH_METERS / 2);
 		return distanceFromMidXAxis < distance;
 	}
 
 	public boolean isAtOpenSuperstructureDistanceFromNet() {
-		return isCloseToNetByDistance(StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_NET_METERS);
+		return isCloseToNet(StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_NET_METERS);
 	}
 
 	public boolean isReadyForNet() {
-		return isCloseToNetByDistance(StateMachineConstants.SCORE_DISTANCE_FROM_NET_METERS) && superstructure.isReadyForNet();
+		return isCloseToNet(StateMachineConstants.SCORE_DISTANCE_FROM_NET_METERS) && superstructure.isReadyForNet();
 	}
 
 	public Command setState(RobotState state) {

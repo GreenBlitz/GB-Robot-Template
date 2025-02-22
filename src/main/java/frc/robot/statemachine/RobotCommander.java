@@ -137,6 +137,10 @@ public class RobotCommander extends GBSubsystem {
 		return isCloseToNetByDistance(StateMachineConstants.SCORE_DISTANCE_FROM_NET_METERS);
 	}
 
+	public boolean isReadyForNet() {
+		return isAtScoreDistanceFromNet() && superstructure.isReadyForNet();
+	}
+
 	public Command setState(RobotState state) {
 		return switch (state) {
 			case DRIVE -> drive();
@@ -206,7 +210,7 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public Command fullyNet() {
-		return new SequentialCommandGroup(fullyPreNet().until(this::isAtScoreDistanceFromNet), netWithRelease());
+		return new SequentialCommandGroup(fullyPreNet().until(this::isReadyForNet), netWithRelease());
 	}
 
 	private Command drive() {

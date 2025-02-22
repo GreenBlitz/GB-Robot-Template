@@ -3,17 +3,20 @@ package frc.robot.subsystems.endeffector;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import frc.robot.statemachine.superstructure.Superstructure;
 
 public class EndEffectorStateHandler {
 
 	private static final double CORAL_KEEP_POWER = 0.1;
-	private static final double ALGAE_KEEP_POWER = -0.3;
+	private static final double ALGAE_KEEP_POWER = -0.6;
 
 	private final EndEffector endEffector;
+	private final Superstructure superstructure;
 	private EndEffectorState currentState;
 
-	public EndEffectorStateHandler(EndEffector endEffector) {
+	public EndEffectorStateHandler(EndEffector endEffector, Superstructure superstructure) {
 		this.endEffector = endEffector;
+		this.superstructure = superstructure;
 	}
 
 	public EndEffectorState getCurrentState() {
@@ -31,7 +34,7 @@ public class EndEffectorStateHandler {
 	}
 
 	private double defaultStatePower() {
-		return endEffector.isCoralIn() ? CORAL_KEEP_POWER : ALGAE_KEEP_POWER;
+		return superstructure.isCoralIn() ? CORAL_KEEP_POWER : ALGAE_KEEP_POWER;
 	}
 
 

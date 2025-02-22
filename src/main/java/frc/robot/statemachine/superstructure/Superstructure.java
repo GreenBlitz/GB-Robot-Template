@@ -38,7 +38,7 @@ public class Superstructure extends GBSubsystem {
 		this.robot = robot;
 		this.elevatorStateHandler = new ElevatorStateHandler(robot.getElevator());
 		this.armStateHandler = new ArmStateHandler(robot.getArm());
-		this.endEffectorStateHandler = new EndEffectorStateHandler(robot.getEndEffector());
+		this.endEffectorStateHandler = new EndEffectorStateHandler(robot.getEndEffector(), this);
 
 		this.currentState = SuperstructureState.IDLE;
 		this.driverIsCoralInOverride = false;

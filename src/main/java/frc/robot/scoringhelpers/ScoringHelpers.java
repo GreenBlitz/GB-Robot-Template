@@ -47,10 +47,9 @@ public class ScoringHelpers {
 
 	public static CoralStationSlot getTargetCoralStationSlot(Robot robot) {
 		Translation2d robotTranslation = robot.getPoseEstimator().getEstimatedPose().getTranslation();
-		Translation2d robotTranslationWithOffset = robotTranslation.minus(END_EFFECTOR_OFFSET_FROM_MID_ROBOT);
 		return switch (getTargetCoralStation(robot)) {
-			case RIGHT -> getClosestCoralStationSlot(robotTranslation, CoralStationSlot.R2, CoralStationSlot.R5, CoralStationSlot.R8);
-			case LEFT -> getClosestCoralStationSlot(robotTranslation, CoralStationSlot.L2, CoralStationSlot.L5, CoralStationSlot.L8);
+			case RIGHT -> getClosestCoralStationSlot(robotTranslation, CoralStationSlot.R2, CoralStationSlot.R8);
+			case LEFT -> getClosestCoralStationSlot(robotTranslation, CoralStationSlot.L2, CoralStationSlot.L8);
 		};
 	}
 

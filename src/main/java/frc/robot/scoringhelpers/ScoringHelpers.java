@@ -18,7 +18,6 @@ public class ScoringHelpers {
 	public static final Translation2d END_EFFECTOR_OFFSET_FROM_MID_ROBOT = new Translation2d(0, 0.014);
 
 	public static ScoreLevel targetScoreLevel = ScoreLevel.L4;
-	public static boolean isTakingAlgae = false;
 
 	private static boolean isFarReefHalf = false;
 	private static Side targetSideForReef = Side.MIDDLE;
@@ -84,12 +83,11 @@ public class ScoringHelpers {
 		return getRobotBranchScoringPose(branch, distanceFromBranchMeters, true);
 	}
 
-	public static Pose2d getRobotAlgaeRemovePose(ReefSide side, double distanceFromReefMeters) {
+	public static Pose2d getRobotRelativeAlgaeRemovePose(ReefSide side, double distanceFromReefMeters) {
 		Translation2d reefMiddleTranslation = Field.getReefSideMiddle(side).getTranslation();
 		Rotation2d targetRobotAngle = Field.getReefSideMiddle(side).getRotation();
 		Translation2d differenceTranslation = new Translation2d(distanceFromReefMeters, targetRobotAngle);
-		Translation2d endeffectorOffsetDifference = END_EFFECTOR_OFFSET_FROM_MID_ROBOT.rotateBy(targetRobotAngle);
-		return new Pose2d(reefMiddleTranslation.minus(differenceTranslation).minus(endeffectorOffsetDifference), targetRobotAngle);
+		return new Pose2d(reefMiddleTranslation.minus(differenceTranslation), targetRobotAngle);
 	}
 
 	public static void log(String logPath) {
@@ -97,7 +95,6 @@ public class ScoringHelpers {
 		Logger.recordOutput(logPath + "/TargetReefSide", getTargetReefSide());
 		Logger.recordOutput(logPath + "/TargetCoralStation", latestWantedCoralStation);
 		Logger.recordOutput(logPath + "/TargetScoreLevel", targetScoreLevel);
-		Logger.recordOutput(logPath + "/IsTakingAlgae", isTakingAlgae);
 	}
 
 }

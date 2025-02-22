@@ -97,9 +97,9 @@ public class Superstructure extends GBSubsystem {
 
 	public boolean isReadyForNet() {
 		return robot.getElevator().isAtPosition(ElevatorState.NET.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
-				&& elevatorStateHandler.getCurrentState() == ElevatorState.NET
-				&& robot.getArm().isAtPosition(ArmState.NET.getPosition(), Tolerances.ARM_POSITION)
-				&& armStateHandler.getCurrentState() == ArmState.NET;
+			&& elevatorStateHandler.getCurrentState() == ElevatorState.NET
+			&& robot.getArm().isAtPosition(ArmState.NET.getPosition(), Tolerances.ARM_POSITION)
+			&& armStateHandler.getCurrentState() == ArmState.NET;
 	}
 
 	@Override

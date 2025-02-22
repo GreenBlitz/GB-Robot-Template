@@ -195,8 +195,8 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command stayInPlace() {
 		return asSubsystemCommand(
-				new ParallelCommandGroup(superstructure.stayInPlace(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
-				RobotState.STAY_IN_PLACE
+			new ParallelCommandGroup(superstructure.stayInPlace(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			RobotState.STAY_IN_PLACE
 		);
 	}
 

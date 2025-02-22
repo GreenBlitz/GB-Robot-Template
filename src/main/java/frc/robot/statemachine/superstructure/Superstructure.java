@@ -117,14 +117,14 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command stayInPlace(){
+	public Command stayInPlace() {
 		return asSubsystemCommand(
-				new ParallelCommandGroup(
-						elevatorStateHandler.setState(ElevatorState.STAY_IN_PLACE),
-						armStateHandler.setState(ArmState.STAY_IN_PLACE),
-						endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
-				),
-				SuperstructureState.STAY_IN_PLACE
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.STAY_IN_PLACE),
+				armStateHandler.setState(ArmState.STAY_IN_PLACE),
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+			),
+			SuperstructureState.STAY_IN_PLACE
 		);
 	}
 

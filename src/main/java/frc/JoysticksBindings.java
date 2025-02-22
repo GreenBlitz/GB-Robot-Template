@@ -2,7 +2,6 @@ package frc;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.joysticks.Axis;
@@ -17,7 +16,6 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.utils.pose.Side;
 import frc.utils.utilcommands.ExecuteEndCommand;
 
-import java.util.Set;
 
 public class JoysticksBindings {
 
@@ -75,27 +73,11 @@ public class JoysticksBindings {
 		).withTimeout(NOTE_IN_RUMBLE_TIME_SECONDS);
 	}
 
-	private static Command reefActionChooser(Robot robot) {
-		return new DeferredCommand(
-			() -> robot.getRobotCommander().getSuperstructure().isCoralIn()
-				? robot.getRobotCommander().autoScore()
-				: robot.getRobotCommander().removeAlgaeAndThenClose(),
-			Set.of(
-				robot.getRobotCommander(),
-				robot.getRobotCommander().getSuperstructure(),
-				robot.getSwerve(),
-				robot.getElevator(),
-				robot.getArm(),
-				robot.getEndEffector()
-			)
-		);
-	}
-
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 
-		usedJoystick.R1.onTrue(reefActionChooser(robot));
+		usedJoystick.R1.onTrue(robot.getRobotCommander().autoScore());
 		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
 		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
 		usedJoystick.B.onTrue(robot.getRobotCommander().removeAlgaeAndThenClose());

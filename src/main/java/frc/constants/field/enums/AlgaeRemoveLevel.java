@@ -8,14 +8,14 @@ public enum AlgaeRemoveLevel {
 
 	LOW(
 		ElevatorState.LOW_ALGAE_REMOVE,
-		ElevatorState.PRE_LOW_ALGAE_REMOVE,
+		ElevatorState.POST_LOW_ALGAE_REMOVE,
 		ArmState.LOW_ALGAE_REMOVE,
 		ArmState.PRE_LOW_ALGAE_REMOVE,
 		EndEffectorState.ALGAE_INTAKE
 	),
 	HIGH(
 		ElevatorState.HIGH_ALGAE_REMOVE,
-		ElevatorState.PRE_HIGH_ALGAE_REMOVE,
+		ElevatorState.POST_HIGH_ALGAE_REMOVE,
 		ArmState.HIGH_ALGAE_REMOVE,
 		ArmState.PRE_HIGH_ALGAE_REMOVE,
 		EndEffectorState.ALGAE_INTAKE

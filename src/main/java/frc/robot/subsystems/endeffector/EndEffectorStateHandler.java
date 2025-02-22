@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 public class EndEffectorStateHandler {
 
 	private static final double CORAL_KEEP_POWER = 0.1;
-	private static final double ALGAE_KEEP_POWER = -0.3;
+	private static final double ALGAE_KEEP_POWER = -0.4;
 
 	private final EndEffector endEffector;
 	private EndEffectorState currentState;

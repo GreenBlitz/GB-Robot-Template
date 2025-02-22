@@ -295,7 +295,7 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command processorOuttake() {
+	public Command algaeOuttake() {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
@@ -306,10 +306,10 @@ public class Superstructure extends GBSubsystem {
 				new ParallelCommandGroup(
 					elevatorStateHandler.setState(ElevatorState.CLOSED),
 					armStateHandler.setState(ArmState.CLOSED),
-					endEffectorStateHandler.setState(EndEffectorState.PROCESSOR_OUTTAKE)
+					endEffectorStateHandler.setState(EndEffectorState.ALGAE_OUTTAKE)
 				)
 			).until(() -> !isAlgaeIn()),
-			SuperstructureState.ALGAE_OUTTAKE.name()
+			SuperstructureState.ALGAE_OUTTAKE
 		);
 	}
 
@@ -320,7 +320,7 @@ public class Superstructure extends GBSubsystem {
 				armStateHandler.setState(ArmState.PRE_NET),
 				endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
 			),
-			SuperstructureState.PRE_NET.name()
+			SuperstructureState.PRE_NET
 		);
 	}
 
@@ -332,7 +332,7 @@ public class Superstructure extends GBSubsystem {
 				armStateHandler.setState(ArmState.NET),
 				endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
 			).until(() -> !isAlgaeIn()),
-			SuperstructureState.NET_WITHOUT_RELEASE.name()
+			SuperstructureState.NET_WITHOUT_RELEASE
 		);
 	}
 
@@ -344,7 +344,7 @@ public class Superstructure extends GBSubsystem {
 				armStateHandler.setState(ArmState.NET),
 				endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE)
 			).until(() -> !isAlgaeIn()),
-			SuperstructureState.NET_WITH_RELEASE.name()
+			SuperstructureState.NET_WITH_RELEASE
 		);
 	}
 

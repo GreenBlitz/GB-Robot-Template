@@ -148,7 +148,7 @@ public class RobotCommander extends GBSubsystem {
 			case SCORE_WITHOUT_RELEASE -> scoreWithoutRelease();
 			case SCORE -> score();
 			case ALGAE_REMOVE -> algaeRemove();
-			case ALGAE_OUTTAKE -> processorOuttake();
+			case ALGAE_OUTTAKE -> algaeOuttake();
 			case PRE_NET -> preNet();
 			case NET_WITHOUT_RELEASE -> netWithoutRelease();
 			case NET_WITH_RELEASE -> netWithRelease();
@@ -191,10 +191,6 @@ public class RobotCommander extends GBSubsystem {
 
 	public Command scoreForButton() {
 		return new SequentialCommandGroup(scoreWithoutRelease().until(this::isReadyToScore), score());
-	}
-
-	public Command removeAlgaeAndThenClose() {
-		return new SequentialCommandGroup(algaeRemove(), closeAfterAlgaeRemove());
 	}
 
 	public Command fullyPreScore() {
@@ -324,10 +320,10 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	private Command processorOuttake() {
+	private Command algaeOuttake() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
-				superstructure.processorOuttake(),
+				superstructure.algaeOuttake(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
 			).until((() -> !superstructure.isAlgaeIn())),
 			RobotState.ALGAE_OUTTAKE
@@ -340,7 +336,7 @@ public class RobotCommander extends GBSubsystem {
 				superstructure.preNet(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
 			),
-			RobotState.PRE_NET.name()
+			RobotState.PRE_NET
 		);
 	}
 
@@ -350,7 +346,7 @@ public class RobotCommander extends GBSubsystem {
 				superstructure.netWithoutRelease(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
 			),
-			RobotState.NET_WITHOUT_RELEASE.name()
+			RobotState.NET_WITHOUT_RELEASE
 		);
 	}
 
@@ -360,7 +356,7 @@ public class RobotCommander extends GBSubsystem {
 				superstructure.netWithRelease(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
 			),
-			RobotState.NET_WITH_RELEASE.name()
+			RobotState.NET_WITH_RELEASE
 		);
 	}
 

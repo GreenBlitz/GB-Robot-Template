@@ -54,9 +54,9 @@ public class Field {
 		new Translation2d(3.93194, 4.62493)};
 
 	private static final Pose2d[] CAGES = new Pose2d[] {
-		new Pose2d(8.77412, 7.26599, Rotation2d.fromDegrees(0)),
-		new Pose2d(8.77412, 6.17538, Rotation2d.fromDegrees(0)),
-		new Pose2d(8.77412, 5.08476, Rotation2d.fromDegrees(0))};
+		new Pose2d(8.77412, 7.26599, Rotation2d.fromDegrees(180)),
+		new Pose2d(8.77412, 6.17538, Rotation2d.fromDegrees(180)),
+		new Pose2d(8.77412, 5.08476, Rotation2d.fromDegrees(180))};
 
 	public static final Translation2d BARGE_CENTER = new Translation2d(LENGTH_METERS / 2, WIDTH_METERS / 2);
 

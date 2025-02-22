@@ -325,7 +325,7 @@ public class Superstructure extends GBSubsystem {
 				elevatorStateHandler.setState(ElevatorState.CLOSED),
 				armStateHandler.setState(ArmState.CLIMB),
 				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
-				climbStateHandler.setState(ClimbState.EXTEND)
+				climbStateHandler.setState(ClimbState.DEPLOY)
 			),
 			SuperstructureState.PRE_CLIMB
 		);
@@ -337,7 +337,7 @@ public class Superstructure extends GBSubsystem {
 				elevatorStateHandler.setState(ElevatorState.CLOSED),
 				armStateHandler.setState(ArmState.CLIMB),
 				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
-				climbStateHandler.setState(ClimbState.RETRACT)
+				climbStateHandler.setState(ClimbState.CLIMB)
 			),
 			SuperstructureState.CLIMB
 		);

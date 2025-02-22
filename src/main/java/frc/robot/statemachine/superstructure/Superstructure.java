@@ -310,13 +310,13 @@ public class Superstructure extends GBSubsystem {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
-					elevatorStateHandler.setState(ElevatorState.OUTTAKE),
-					armStateHandler.setState(ArmState.OUTTAKE),
+					elevatorStateHandler.setState(ElevatorState.ALGAE_OUTTAKE),
+					armStateHandler.setState(ArmState.ALGAE_OUTTAKE),
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
 				).until(this::isReadyToOuttakeAlgae),
 				new ParallelCommandGroup(
-					elevatorStateHandler.setState(ElevatorState.OUTTAKE),
-					armStateHandler.setState(ArmState.OUTTAKE),
+					elevatorStateHandler.setState(ElevatorState.ALGAE_OUTTAKE),
+					armStateHandler.setState(ArmState.ALGAE_OUTTAKE),
 					endEffectorStateHandler.setState(EndEffectorState.ALGAE_OUTTAKE)
 				)
 			).until(() -> !isAlgaeIn()),
@@ -330,8 +330,8 @@ public class Superstructure extends GBSubsystem {
 
 	private Command endState(SuperstructureState state) {
 		return switch (state) {
-			case STAY_IN_PLACE -> stayInPlace();
-			case INTAKE, OUTTAKE, IDLE, POST_ALGAE_REMOVE, ALGAE_OUTTAKE, CLOSE_L4 -> idle();
+			case STAY_IN_PLACE, OUTTAKE -> stayInPlace();
+			case INTAKE, IDLE, POST_ALGAE_REMOVE, ALGAE_OUTTAKE, CLOSE_L4 -> idle();
 			case ALGAE_REMOVE -> postAlgaeRemove();
 			case ARM_PRE_SCORE -> armPreScore();
 			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> afterScore();

@@ -1,6 +1,5 @@
 package frc.constants.field.enums;
 
-
 public enum CoralStationSlot {
 
 	R1(0, false),

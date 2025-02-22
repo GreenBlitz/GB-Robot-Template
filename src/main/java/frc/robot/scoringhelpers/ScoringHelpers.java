@@ -92,13 +92,6 @@ public class ScoringHelpers {
 		return getRobotBranchScoringPose(branch, distanceFromBranchMeters, true);
 	}
 
-	public static Pose2d getRobotFeederPose(CoralStationSlot coralStationSlot, double distanceFromSlots) {
-		Translation2d coralStationTranslation = Field.getCoralStationSlots(coralStationSlot).getTranslation();
-		Rotation2d targetRobotAngle = Field.getCoralStationSlots(coralStationSlot).getRotation();
-		Translation2d differenceTranslation = new Translation2d(distanceFromSlots, targetRobotAngle);
-		return new Pose2d(coralStationTranslation.minus(differenceTranslation), targetRobotAngle);
-	}
-
 	public static Pose2d getRobotRelativeAlgaeRemovePose(ReefSide side, double distanceFromReefMeters) {
 		Translation2d reefMiddleTranslation = Field.getReefSideMiddle(side).getTranslation();
 		Rotation2d targetRobotAngle = Field.getReefSideMiddle(side).getRotation();

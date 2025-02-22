@@ -97,11 +97,11 @@ public class JoysticksBindings {
 
 		usedJoystick.R1.onTrue(reefActionChooser(robot));
 		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
-		
+
 		usedJoystick.X.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_OUTTAKE));
-		
+
 		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
-		
+
 		usedJoystick.POV_UP.onTrue(
 			new InstantCommand(
 				() -> robot.getRobotCommander()

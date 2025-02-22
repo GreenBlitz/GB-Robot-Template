@@ -212,8 +212,7 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command coralOuttake() {
 		return asSubsystemCommand(
-			new ParallelCommandGroup(superstructure.outtake(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE))
-				.until(() -> !superstructure.isCoralIn()),
+			new ParallelDeadlineGroup(superstructure.outtake(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
 			RobotState.CORAL_OUTTAKE
 		);
 	}

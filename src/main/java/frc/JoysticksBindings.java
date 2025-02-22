@@ -79,7 +79,7 @@ public class JoysticksBindings {
 		usedJoystick.R1.onTrue(robot.getRobotCommander().autoScore());
 		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
 		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
-		usedJoystick.B.onTrue(robot.getRobotCommander().removeAlgaeThenClose());
+		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_REMOVE));
 		usedJoystick.X.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_OUTTAKE));
 
 		usedJoystick.POV_UP.onTrue(
@@ -124,7 +124,10 @@ public class JoysticksBindings {
 	private static void fifthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = FIFTH_JOYSTICK;
 		// bindings...
-		robot.getArm().applyCalibrationBindings(usedJoystick);
+//		robot.getArm().applyCalibrationBindings(usedJoystick);
+
+		robot.getSolenoid().applyCalibrationBindings(usedJoystick);
+		robot.getLifter().applyCalibrationBindings(usedJoystick);
 	}
 
 	private static void sixthJoystickButtons(Robot robot) {

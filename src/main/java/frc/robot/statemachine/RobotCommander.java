@@ -134,7 +134,6 @@ public class RobotCommander extends GBSubsystem {
 			case PRE_SCORE -> preScore();
 			case SCORE_WITHOUT_RELEASE -> scoreWithoutRelease();
 			case SCORE -> score();
-			case POST_ALGAE_REMOVE -> closeAfterAlgaeRemove();
 			case ALGAE_REMOVE -> algaeRemove();
 			case ALGAE_OUTTAKE -> algaeOuttake();
 		};
@@ -176,10 +175,6 @@ public class RobotCommander extends GBSubsystem {
 
 	public Command scoreForButton() {
 		return new SequentialCommandGroup(scoreWithoutRelease().until(this::isReadyToScore), score());
-	}
-
-	public Command removeAlgaeThenClose() {
-		return new SequentialCommandGroup(algaeRemove(), closeAfterAlgaeRemove());
 	}
 
 	public Command fullyPreScore() {
@@ -265,56 +260,47 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	private Command closeAfterScore() {
-		return new DeferredCommand(() -> switch (ScoringHelpers.targetScoreLevel) {
-			case L4 ->
-				new SequentialCommandGroup(
-					new ParallelDeadlineGroup(
-						superstructure.closeL4AfterScore(),
-						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
-					),
-					drive()
-				);
-			case L1, L2, L3 ->
-				new SequentialCommandGroup(
-					new ParallelCommandGroup(
-						superstructure.preScore(),
-						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
-					).until(this::isReadyToCloseSuperstructure),
-					drive()
-				);
-		}, Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector()));
-	}
-
-	private Command closeAfterAlgaeRemove() {
-		return asSubsystemCommand(
-			new DeferredCommand(
-				() -> new SequentialCommandGroup(
-					new ParallelCommandGroup(
-						superstructure.postAlgaeRemove(),
-						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
-					).until(this::isReadyToCloseSuperstructure),
-					drive()
-				),
-				Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
+		return new DeferredCommand(
+			() -> new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					superstructure.afterScore(),
+					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+				).until(this::isReadyToCloseSuperstructure),
+				drive()
 			),
-			RobotState.POST_ALGAE_REMOVE.name()
+			Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
 		);
 	}
 
 	private Command algaeRemove() {
 		return asSubsystemCommand(
-			new ParallelCommandGroup(
+			new ParallelDeadlineGroup(
 				superstructure.algaeRemove(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE))
-			).until(superstructure::isAlgaeIn),
-			RobotState.ALGAE_REMOVE.name()
+			),
+			RobotState.ALGAE_REMOVE
+		);
+	}
+
+	private Command closeAfterAlgaeRemove() {
+		return new DeferredCommand(
+			() -> new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					superstructure.postAlgaeRemove(),
+					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+				).until(this::isReadyToCloseSuperstructure),
+				drive()
+			),
+			Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
 		);
 	}
 
 	private Command algaeOuttake() {
 		return asSubsystemCommand(
-			new ParallelCommandGroup(superstructure.algaeOuttake(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE))
-				.until((() -> !superstructure.isAlgaeIn())),
+			new ParallelDeadlineGroup(
+				superstructure.algaeOuttake(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+			),
 			RobotState.ALGAE_OUTTAKE
 		);
 	}
@@ -325,7 +311,7 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command endState(RobotState state) {
 		return switch (state) {
-			case INTAKE, CORAL_OUTTAKE, DRIVE, ALIGN_REEF, POST_ALGAE_REMOVE, ALGAE_OUTTAKE -> drive();
+			case INTAKE, CORAL_OUTTAKE, DRIVE, ALIGN_REEF, ALGAE_OUTTAKE -> drive();
 			case ARM_PRE_SCORE -> armPreScore();
 			case PRE_SCORE -> preScore();
 			case SCORE, SCORE_WITHOUT_RELEASE -> closeAfterScore();

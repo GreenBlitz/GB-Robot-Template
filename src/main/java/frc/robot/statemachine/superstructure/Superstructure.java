@@ -16,6 +16,7 @@ import frc.robot.subsystems.arm.ArmState;
 import frc.robot.subsystems.arm.ArmStateHandler;
 import frc.robot.subsystems.climb.ClimbState;
 import frc.robot.subsystems.climb.ClimbStateHandler;
+import frc.robot.subsystems.climb.lifter.LifterStateHandler;
 import frc.robot.subsystems.climb.solenoid.SolenoidStateHandler;
 import frc.robot.subsystems.elevator.ElevatorState;
 import frc.robot.subsystems.elevator.ElevatorStateHandler;

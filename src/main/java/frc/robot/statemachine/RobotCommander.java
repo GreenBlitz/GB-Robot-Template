@@ -77,6 +77,25 @@ public class RobotCommander extends GBSubsystem {
 		};
 	}
 
+	private boolean isAtProcessorScoringPose() {
+		Rotation2d processorAngle = Field.getProcessor().getRotation();
+
+		Pose2d processorRelativeTargetPose = ScoringHelpers.getAllianceRelativeProcessorScoringPose().rotateBy(processorAngle.unaryMinus());
+		Pose2d processorRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(processorAngle.unaryMinus());
+
+		ChassisSpeeds allianceRelativeSpeeds = swerve.getAllianceRelativeVelocity();
+		ChassisSpeeds processorRelativeSpeeds = SwerveMath
+			.robotToAllianceRelativeSpeeds(allianceRelativeSpeeds, Field.getAllianceRelative(processorAngle.unaryMinus()));
+
+		return PoseUtil.isAtPose(
+			processorRelativeRobotPose,
+			processorRelativeTargetPose,
+			processorRelativeSpeeds,
+			Tolerances.PROCESSOR_RELATIVE_SCORING_POSITION,
+			Tolerances.PROCESSOR_RELATIVE_SCORING_DEADBANDS
+		);
+	}
+
 	private boolean isReadyToOpenSuperstructure() {
 		return isAtReefScoringPose(
 			StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS,
@@ -150,7 +169,7 @@ public class RobotCommander extends GBSubsystem {
 			case SCORE -> score();
 			case POST_ALGAE_REMOVE -> closeAfterAlgaeRemove();
 			case ALGAE_REMOVE -> algaeRemove();
-			case ALGAE_OUTTAKE -> processorOuttake();
+			case ALGAE_OUTTAKE -> fullyProcessorOuttake();
 			case PRE_NET -> preNet();
 			case NET_WITHOUT_RELEASE -> netWithoutRelease();
 			case NET_WITH_RELEASE -> netWithRelease();
@@ -207,6 +226,18 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
+
+	private Command fullyProcessorOuttake() {
+		return asSubsystemCommand(
+				new ParallelCommandGroup(
+						swerve.getCommandsBuilder()
+								.driveToPose(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers::getAllianceRelativeProcessorScoringPose),
+						new SequentialCommandGroup(superstructure.idle().until(this::isAtProcessorScoringPose), superstructure.processorOuttake())
+				).until(() -> !superstructure.isAlgaeIn()),
+				RobotState.SCORE.name()
+		);
+	}
+
 	public Command fullyPreNet() {
 		return new SequentialCommandGroup(preNet().until(this::isAtOpenSuperstructureDistanceFromNet), netWithoutRelease());
 	}
@@ -218,7 +249,7 @@ public class RobotCommander extends GBSubsystem {
 	private Command drive() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(superstructure.idle(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
-			RobotState.DRIVE
+			RobotState.DRIVE.name()
 		);
 	}
 
@@ -228,14 +259,14 @@ public class RobotCommander extends GBSubsystem {
 				superstructure.intake(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CORAL_STATION))
 			),
-			RobotState.INTAKE
+			RobotState.INTAKE.name()
 		);
 	}
 
 	private Command coralOuttake() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(superstructure.outtake(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
-			RobotState.CORAL_OUTTAKE
+			RobotState.CORAL_OUTTAKE.name()
 		);
 	}
 
@@ -245,7 +276,7 @@ public class RobotCommander extends GBSubsystem {
 				superstructure.idle(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.REEF))
 			),
-			RobotState.ALIGN_REEF
+			RobotState.ALIGN_REEF.name()
 		);
 	}
 
@@ -255,7 +286,7 @@ public class RobotCommander extends GBSubsystem {
 				superstructure.armPreScore(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
 			),
-			RobotState.ARM_PRE_SCORE
+			RobotState.ARM_PRE_SCORE.name()
 		);
 	}
 
@@ -265,7 +296,7 @@ public class RobotCommander extends GBSubsystem {
 				superstructure.preScore(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
 			),
-			RobotState.PRE_SCORE
+			RobotState.PRE_SCORE.name()
 		);
 	}
 
@@ -275,7 +306,7 @@ public class RobotCommander extends GBSubsystem {
 				superstructure.scoreWithoutRelease(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
 			),
-			RobotState.SCORE_WITHOUT_RELEASE
+			RobotState.SCORE_WITHOUT_RELEASE.name()
 		);
 	}
 
@@ -285,7 +316,7 @@ public class RobotCommander extends GBSubsystem {
 				superstructure.scoreWithRelease(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
 			),
-			RobotState.SCORE
+			RobotState.SCORE.name()
 		);
 	}
 
@@ -308,7 +339,7 @@ public class RobotCommander extends GBSubsystem {
 				superstructure.algaeRemove(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE))
 			),
-			RobotState.ALGAE_REMOVE
+			RobotState.ALGAE_REMOVE.name()
 		);
 	}
 
@@ -324,17 +355,7 @@ public class RobotCommander extends GBSubsystem {
 				),
 				Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
 			),
-			RobotState.POST_ALGAE_REMOVE
-		);
-	}
-
-	private Command processorOuttake() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				superstructure.processorOuttake(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
-			).until((() -> !superstructure.isAlgaeIn())),
-			RobotState.ALGAE_OUTTAKE
+			RobotState.POST_ALGAE_REMOVE.name()
 		);
 	}
 

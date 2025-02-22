@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public enum ArmState {
 
-	STAY_IN_PLACE(Rotation2d.fromDegrees(-999)),
+	STAY_IN_PLACE(Rotation2d.fromDegrees(Double.NaN)),
 	CLOSED(Rotation2d.fromDegrees(185)),
 	MID_WAY_CLOSE(Rotation2d.fromDegrees(150)),
 	INTAKE(Rotation2d.fromDegrees(185)),

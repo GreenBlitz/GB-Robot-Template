@@ -10,7 +10,7 @@ public enum AlgaeRemoveLevel {
 		ElevatorState.LOW_ALGAE_REMOVE,
 		ElevatorState.POST_LOW_ALGAE_REMOVE,
 		ArmState.LOW_ALGAE_REMOVE,
-		ArmState.PRE_LOW_ALGAE_REMOVE,
+		ArmState.POST_LOW_ALGAE_REMOVE,
 		EndEffectorState.ALGAE_INTAKE
 	),
 	HIGH(
@@ -22,22 +22,22 @@ public enum AlgaeRemoveLevel {
 	);
 
 	private final ElevatorState elevatorState;
-	private final ElevatorState preElevatorState;
+	private final ElevatorState postElevatorState;
 	private final ArmState armState;
-	private final ArmState preArmState;
+	private final ArmState postArmState;
 	private final EndEffectorState endEffectorState;
 
 	AlgaeRemoveLevel(
 		ElevatorState elevatorState,
-		ElevatorState preElevatorState,
+		ElevatorState postElevatorState,
 		ArmState armState,
-		ArmState preArmState,
+		ArmState postArmState,
 		EndEffectorState endEffectorState
 	) {
 		this.elevatorState = elevatorState;
-		this.preElevatorState = preElevatorState;
+		this.postElevatorState = postElevatorState;
 		this.armState = armState;
-		this.preArmState = preArmState;
+		this.postArmState = postArmState;
 		this.endEffectorState = endEffectorState;
 	}
 
@@ -45,16 +45,16 @@ public enum AlgaeRemoveLevel {
 		return elevatorState;
 	}
 
-	public ElevatorState getPreElevatorState() {
-		return preElevatorState;
+	public ElevatorState getPostElevatorState() {
+		return postElevatorState;
 	}
 
 	public ArmState getArmState() {
 		return armState;
 	}
 
-	public ArmState getPreArmState() {
-		return preArmState;
+	public ArmState getPostArmState() {
+		return postArmState;
 	}
 
 	public EndEffectorState getEndEffectorState() {

@@ -290,24 +290,26 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	private Command closeAfterScore() {
-		return new DeferredCommand(() -> switch (ScoringHelpers.targetScoreLevel) {
-			case L4 ->
-				new SequentialCommandGroup(
-					new ParallelDeadlineGroup(
-						superstructure.closeL4AfterScore(),
-						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
-					),
-					drive()
-				);
-			case L1, L2, L3 ->
-				new SequentialCommandGroup(
-					new ParallelCommandGroup(
-						superstructure.preScore(),
-						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
-					).until(this::isReadyToCloseSuperstructure),
-					drive()
-				);
-		}, Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector()));
+		return new DeferredCommand(
+			() -> new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					superstructure.afterScore(),
+					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+				).until(this::isReadyToCloseSuperstructure),
+				drive()
+			),
+			Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
+		);
+	}
+
+	private Command algaeRemove() {
+		return asSubsystemCommand(
+			new ParallelDeadlineGroup(
+				superstructure.algaeRemove(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE))
+			),
+			RobotState.ALGAE_REMOVE
+		);
 	}
 
 	private Command closeAfterAlgaeRemove() {
@@ -322,17 +324,7 @@ public class RobotCommander extends GBSubsystem {
 				),
 				Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
 			),
-			RobotState.POST_ALGAE_REMOVE.name()
-		);
-	}
-
-	private Command algaeRemove() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				superstructure.algaeRemove(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE))
-			).until(superstructure::isAlgaeIn),
-			RobotState.ALGAE_REMOVE.name()
+			RobotState.POST_ALGAE_REMOVE
 		);
 	}
 

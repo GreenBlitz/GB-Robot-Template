@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public enum ArmState {
 
 	CLOSED(Rotation2d.fromDegrees(185)),
+	MID_WAY_CLOSE(Rotation2d.fromDegrees(150)),
 	INTAKE(Rotation2d.fromDegrees(185)),
 	OUTTAKE(Rotation2d.fromDegrees(13)),
 	PRE_L1(Rotation2d.fromDegrees(185)),
@@ -15,7 +16,7 @@ public enum ArmState {
 	L3(Rotation2d.fromDegrees(10)),
 	PRE_L4(Rotation2d.fromDegrees(37)),
 	L4(Rotation2d.fromDegrees(-25)),
-	PRE_LOW_ALGAE_REMOVE(Rotation2d.fromDegrees(-30)),
+	POST_LOW_ALGAE_REMOVE(Rotation2d.fromDegrees(-30)),
 	LOW_ALGAE_REMOVE(Rotation2d.fromDegrees(-30)),
 	PRE_HIGH_ALGAE_REMOVE(Rotation2d.fromDegrees(1)),
 	HIGH_ALGAE_REMOVE(Rotation2d.fromDegrees(1)),

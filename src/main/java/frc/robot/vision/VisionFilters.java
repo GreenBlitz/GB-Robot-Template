@@ -14,10 +14,10 @@ import java.util.function.Supplier;
 
 public class VisionFilters {
 
-	public static Filter<VisionData> isDataFromMegaTag1() {
+	public static Filter<VisionData> isDataFromMegaTag2() {
 		return new Filter<>(
 			data -> data instanceof LimeLightAprilTagVisionData visionData
-				&& visionData.getPoseEstimationMethod() == LimelightPoseEstimationMethod.MEGATAG_1
+				&& visionData.getPoseEstimationMethod() == LimelightPoseEstimationMethod.MEGATAG_2
 		);
 	}
 
@@ -43,7 +43,7 @@ public class VisionFilters {
 	}
 
 	public static Filter<VisionData> isYawAtAngleForMegaTag2(Supplier<Rotation2d> wantedYawSupplier, Rotation2d yawTolerance) {
-		return isDataFromMegaTag1().implies(isYawAtAngle(wantedYawSupplier, yawTolerance));
+		return isDataFromMegaTag2().implies(isYawAtAngle(wantedYawSupplier, yawTolerance));
 	}
 
 	public static Filter<VisionData> isOnGround(double distanceFromGroundToleranceMeters) {

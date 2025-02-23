@@ -22,12 +22,24 @@ public class Filter<T> {
 		return new Filter<>(data -> !apply(data));
 	}
 
-	public Filter<T> and(Filter<T> otherFilter) {
+	public <E extends T> Filter<E> and(Filter<E> otherFilter) {
 		return new Filter<>(data -> apply(data) && otherFilter.apply(data));
 	}
 
-	public Filter<T> or(Filter<T> otherFilter) {
+	public <E extends T> Filter<E> or(Filter<E> otherFilter) {
 		return new Filter<>(data -> apply(data) || otherFilter.apply(data));
+	}
+
+	public <E extends T> Filter<E> xor(Filter<E> otherFilter) {
+		return new Filter<>(data -> apply(data) ^ otherFilter.apply(data));
+	}
+
+	public <E extends T> Filter<E> implies(Filter<E> otherFilter) {
+		return new Filter<>(data -> !apply(data) || otherFilter.apply(data));
+	}
+
+	public <E extends T> Filter<E> iff(Filter<E> otherFIlter) {
+		return new Filter<>(data -> apply(data) == otherFIlter.apply(data));
 	}
 
 }

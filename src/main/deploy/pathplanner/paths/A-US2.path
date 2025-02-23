@@ -8,7 +8,7 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8622499999999993,
+        "x": 1.862249999999999,
         "y": 4.278499999999999
       },
       "isLocked": false,
@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "INTAKE",
-      "waypointRelativePos": 0.1,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": null
     }

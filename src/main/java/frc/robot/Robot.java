@@ -179,7 +179,7 @@ public class Robot {
 		new EventTrigger("PRE_SCORE").onTrue(
 			new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4).andThen(robotCommander.getSuperstructure().preScore())
 		);
-		new EventTrigger("INTAKE").onTrue(robotCommander.getSuperstructure().intake());
+		new EventTrigger("INTAKE").onTrue(robotCommander.getSuperstructure().closeL4AfterScore().andThen(robotCommander.getSuperstructure().intake()));
 		new EventTrigger("ARM_PRE_SCORE").onTrue(
 			new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4).andThen(robotCommander.getSuperstructure().armPreScore())
 		);

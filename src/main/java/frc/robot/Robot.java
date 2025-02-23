@@ -201,7 +201,7 @@ public class Robot {
 					ScoringHelpers.toggleIsFarReefHalf();
 				}
 				ScoringHelpers.setTargetSideForReef(branch.getReefSide().getSide());
-			}).andThen(robotCommander.autoScore()));
+			}).andThen(robotCommander.autoScoreForAutonomous()));
 		}
 		chooser.setDefaultOption("None", Commands.none());
 

@@ -160,7 +160,8 @@ public class RobotCommander extends GBSubsystem {
 			case PRE_NET -> preNet();
 			case NET_WITHOUT_RELEASE -> netWithoutRelease();
 			case NET_WITH_RELEASE -> netWithRelease();
-			case PRE_CLIMB -> preClimb();
+			case PRE_CLIMB_WITH_AIM_ASSIST -> preClimbWithAimAssist();
+			case PRE_CLIMB_WITHOUT_AIM_ASSIST -> preClimbWithoutAimAssist();
 			case CLIMB -> climb();
 		};
 	}
@@ -376,19 +377,20 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	private Command preClimb() {
+	private Command preClimbWithAimAssist() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				superstructure.preClimb(),
-				new SequentialCommandGroup(
-					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE).until(this::isReadyToStartCageAimAssist),
-					swerve.getCommandsBuilder()
-						.driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CAGE))
-						.withTimeout(StateMachineConstants.CAGE_AIM_ASSIST_TIMEOUT),
-					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
-				)
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CAGE))
 			),
-			RobotState.PRE_CLIMB
+			RobotState.PRE_CLIMB_WITH_AIM_ASSIST
+		);
+	}
+
+	private Command preClimbWithoutAimAssist() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(superstructure.preClimb(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			RobotState.PRE_CLIMB_WITHOUT_AIM_ASSIST
 		);
 	}
 
@@ -412,7 +414,8 @@ public class RobotCommander extends GBSubsystem {
 			case SCORE, SCORE_WITHOUT_RELEASE -> closeAfterScore();
 			case ALGAE_REMOVE -> closeAfterAlgaeRemove();
 			case PRE_NET, NET_WITHOUT_RELEASE, NET_WITH_RELEASE -> preNet();
-			case PRE_CLIMB -> preClimb();
+			case PRE_CLIMB_WITH_AIM_ASSIST -> preClimbWithAimAssist();
+			case PRE_CLIMB_WITHOUT_AIM_ASSIST -> preClimbWithoutAimAssist();
 			case CLIMB -> climb();
 		};
 	}

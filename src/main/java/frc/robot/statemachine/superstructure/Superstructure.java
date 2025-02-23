@@ -14,6 +14,10 @@ import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmState;
 import frc.robot.subsystems.arm.ArmStateHandler;
+import frc.robot.subsystems.climb.ClimbState;
+import frc.robot.subsystems.climb.ClimbStateHandler;
+import frc.robot.subsystems.climb.lifter.LifterStateHandler;
+import frc.robot.subsystems.climb.solenoid.SolenoidStateHandler;
 import frc.robot.subsystems.elevator.ElevatorState;
 import frc.robot.subsystems.elevator.ElevatorStateHandler;
 import frc.robot.subsystems.endeffector.EndEffectorState;
@@ -28,6 +32,7 @@ public class Superstructure extends GBSubsystem {
 	private final ElevatorStateHandler elevatorStateHandler;
 	private final ArmStateHandler armStateHandler;
 	private final EndEffectorStateHandler endEffectorStateHandler;
+	private final ClimbStateHandler climbStateHandler;
 
 	private SuperstructureState currentState;
 	public boolean driverIsCoralInOverride;
@@ -39,6 +44,7 @@ public class Superstructure extends GBSubsystem {
 		this.elevatorStateHandler = new ElevatorStateHandler(robot.getElevator());
 		this.armStateHandler = new ArmStateHandler(robot.getArm());
 		this.endEffectorStateHandler = new EndEffectorStateHandler(robot.getEndEffector(), this);
+		this.climbStateHandler = new ClimbStateHandler(new SolenoidStateHandler(robot.getSolenoid()), new LifterStateHandler(robot.getLifter()));
 
 		this.currentState = SuperstructureState.IDLE;
 		this.driverIsCoralInOverride = false;
@@ -95,6 +101,13 @@ public class Superstructure extends GBSubsystem {
 			&& armStateHandler.getCurrentState() == ArmState.CLOSED;
 	}
 
+	public boolean isReadyForNet() {
+		return robot.getElevator().isAtPosition(ElevatorState.NET.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
+			&& elevatorStateHandler.getCurrentState() == ElevatorState.NET
+			&& robot.getArm().isAtPosition(ArmState.NET.getPosition(), Tolerances.ARM_POSITION)
+			&& armStateHandler.getCurrentState() == ArmState.NET;
+	}
+
 	@Override
 	protected void subsystemPeriodic() {
 		log();
@@ -114,6 +127,17 @@ public class Superstructure extends GBSubsystem {
 				endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
 			),
 			SuperstructureState.IDLE
+		);
+	}
+
+	public Command stayInPlace() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.STAY_IN_PLACE),
+				armStateHandler.setState(ArmState.STAY_IN_PLACE),
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+			),
+			SuperstructureState.STAY_IN_PLACE
 		);
 	}
 
@@ -138,8 +162,8 @@ public class Superstructure extends GBSubsystem {
 	public Command outtake() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.OUTTAKE),
-				armStateHandler.setState(ArmState.OUTTAKE),
+				elevatorStateHandler.setState(ElevatorState.STAY_IN_PLACE),
+				armStateHandler.setState(ArmState.STAY_IN_PLACE),
 				endEffectorStateHandler.setState(EndEffectorState.CORAL_OUTTAKE)
 			).until(() -> !isCoralIn()),
 			SuperstructureState.OUTTAKE
@@ -268,12 +292,13 @@ public class Superstructure extends GBSubsystem {
 						elevatorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getElevatorState()),
 						armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getArmState()),
 						endEffectorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getEndEffectorState())
-					).until(this::isAlgaeIn),
-					new ParallelCommandGroup(
-						elevatorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getElevatorState()),
-						armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getArmState()),
-						endEffectorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getEndEffectorState())
-					).withTimeout(StateMachineConstants.ALGAE_REMOVE_TIME_AFTER_LIMIT_SWITCH_SECONDS)
+					)
+//							.until(this::isAlgaeIn),
+//					new ParallelCommandGroup(
+//						elevatorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getElevatorState()),
+//						armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getArmState()),
+//						endEffectorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getEndEffectorState())
+//					).withTimeout(StateMachineConstants.ALGAE_REMOVE_TIME_AFTER_LIMIT_SWITCH_SECONDS)
 				),
 				Set.of(robot.getElevator(), robot.getArm(), robot.getEndEffector(), this)
 			),
@@ -299,17 +324,86 @@ public class Superstructure extends GBSubsystem {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
-					elevatorStateHandler.setState(ElevatorState.CLOSED),
-					armStateHandler.setState(ArmState.CLOSED),
+					elevatorStateHandler.setState(ElevatorState.ALGAE_OUTTAKE),
+					armStateHandler.setState(ArmState.ALGAE_OUTTAKE),
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
 				).until(this::isReadyToOuttakeAlgae),
 				new ParallelCommandGroup(
-					elevatorStateHandler.setState(ElevatorState.CLOSED),
-					armStateHandler.setState(ArmState.CLOSED),
+					elevatorStateHandler.setState(ElevatorState.ALGAE_OUTTAKE),
+					armStateHandler.setState(ArmState.ALGAE_OUTTAKE),
 					endEffectorStateHandler.setState(EndEffectorState.ALGAE_OUTTAKE)
 				)
-			).until(() -> !isAlgaeIn()),
+			),
+			// .until(() -> !isAlgaeIn()),
 			SuperstructureState.ALGAE_OUTTAKE
+		);
+	}
+
+	public Command preNet() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.WHILE_DRIVE_NET),
+				armStateHandler.setState(ArmState.PRE_NET),
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+			),
+			SuperstructureState.PRE_NET
+		);
+	}
+
+
+	public Command netWithoutRelease() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.NET),
+				armStateHandler.setState(ArmState.NET),
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+			),
+			SuperstructureState.NET_WITHOUT_RELEASE
+		);
+	}
+
+
+	public Command netWithRelease() {
+		return asSubsystemCommand(
+			new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.NET),
+					armStateHandler.setState(ArmState.NET),
+					endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE)
+				)
+//						.until(() -> !isAlgaeIn()),
+//				new ParallelCommandGroup(
+//					elevatorStateHandler.setState(ElevatorState.NET),
+//					armStateHandler.setState(ArmState.NET),
+//					endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE)
+//				).withTimeout(StateMachineConstants.NET_OUTTAKE_TIME_AFTER_LIMIT_SWITCH_SECONDS)
+			),
+			SuperstructureState.NET_WITH_RELEASE
+		);
+	}
+
+
+	public Command preClimb() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.CLOSED),
+				armStateHandler.setState(ArmState.CLIMB),
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
+				climbStateHandler.setState(ClimbState.DEPLOY)
+			),
+			SuperstructureState.PRE_CLIMB
+		);
+	}
+
+	public Command climb() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.CLOSED),
+				armStateHandler.setState(ArmState.CLIMB),
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
+				climbStateHandler.setState(ClimbState.CLIMB)
+			),
+			SuperstructureState.CLIMB
 		);
 	}
 
@@ -333,10 +427,14 @@ public class Superstructure extends GBSubsystem {
 
 	private Command endState(SuperstructureState state) {
 		return switch (state) {
-			case INTAKE, OUTTAKE, IDLE, POST_ALGAE_REMOVE, ALGAE_OUTTAKE, CLOSE_L4 -> idle();
+			case STAY_IN_PLACE, OUTTAKE -> stayInPlace();
+			case INTAKE, IDLE, POST_ALGAE_REMOVE, ALGAE_OUTTAKE, CLOSE_L4 -> idle();
 			case ALGAE_REMOVE -> postAlgaeRemove();
 			case ARM_PRE_SCORE, AUTO_RELEASE_SEQUENCE -> armPreScore();
 			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> afterScore();
+			case PRE_NET, NET_WITHOUT_RELEASE, NET_WITH_RELEASE -> preNet();
+			case PRE_CLIMB -> preClimb();
+			case CLIMB -> climb();
 		};
 	}
 

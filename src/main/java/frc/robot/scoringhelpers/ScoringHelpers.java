@@ -6,8 +6,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import frc.constants.field.Field;
 import frc.constants.field.enums.AlgaeRemoveLevel;
 import frc.constants.field.enums.Branch;
+import frc.constants.field.enums.CoralStationSlot;
 import frc.constants.field.enums.CoralStation;
 import frc.constants.field.enums.ReefSide;
+import frc.constants.field.enums.*;
 import frc.robot.Robot;
 import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.utils.pose.Side;
@@ -18,11 +20,14 @@ public class ScoringHelpers {
 	public static final Translation2d END_EFFECTOR_OFFSET_FROM_MID_ROBOT = new Translation2d(0, 0.014);
 
 	public static ScoreLevel targetScoreLevel = ScoreLevel.L4;
+	public static Cage targetCage = Cage.FIELD_CENTER;
 
 	private static boolean isFarReefHalf = false;
 	private static Side targetSideForReef = Side.MIDDLE;
 	private static boolean isLeftBranch = false;
 	private static CoralStation latestWantedCoralStation = CoralStation.LEFT;
+	private static CoralStationSlot latestWantedCoralStationSlot = CoralStationSlot.L1;
+
 
 	public static ReefSide getTargetReefSide() {
 		return ReefSide.getReefSideBySideAndFar(targetSideForReef, isFarReefHalf);
@@ -42,6 +47,16 @@ public class ScoringHelpers {
 			latestWantedCoralStation = CoralStation.RIGHT;
 		}
 		return latestWantedCoralStation;
+	}
+
+	public static CoralStationSlot getTargetCoralStationSlot(Robot robot) {
+		Translation2d robotTranslation = robot.getPoseEstimator().getEstimatedPose().getTranslation();
+		if (getTargetCoralStation(robot) == CoralStation.RIGHT) {
+			latestWantedCoralStationSlot = getClosestCoralStationSlot(robotTranslation, CoralStationSlot.R2, CoralStationSlot.R8);
+		} else {
+			latestWantedCoralStationSlot = getClosestCoralStationSlot(robotTranslation, CoralStationSlot.L2, CoralStationSlot.L8);
+		}
+		return latestWantedCoralStationSlot;
 	}
 
 	public static AlgaeRemoveLevel getAlgaeRemoveLevel() {
@@ -94,7 +109,23 @@ public class ScoringHelpers {
 		Logger.recordOutput(logPath + "/TargetBranch", getTargetBranch());
 		Logger.recordOutput(logPath + "/TargetReefSide", getTargetReefSide());
 		Logger.recordOutput(logPath + "/TargetCoralStation", latestWantedCoralStation);
+		Logger.recordOutput(logPath + "/TargetCoralStationSlot", latestWantedCoralStationSlot);
 		Logger.recordOutput(logPath + "/TargetScoreLevel", targetScoreLevel);
+	}
+
+	private static CoralStationSlot getClosestCoralStationSlot(Translation2d robotTranslation, CoralStationSlot... slots) {
+		double[] distances = new double[slots.length];
+		int closestSlotIndex = 0;
+
+		for (int i = 0; i < slots.length; i++) {
+			distances[i] = robotTranslation.getDistance(Field.getCoralStationSlot(slots[i]).getTranslation());
+		}
+		for (int i = 1; i < distances.length; i++) {
+			if (distances[i] < distances[closestSlotIndex]) {
+				closestSlotIndex = i;
+			}
+		}
+		return slots[closestSlotIndex];
 	}
 
 }

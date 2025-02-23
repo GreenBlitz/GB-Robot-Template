@@ -12,6 +12,8 @@ public enum SuperstructureState {
 	CLOSE_L4,
 	POST_ALGAE_REMOVE,
 	ALGAE_REMOVE,
-	ALGAE_OUTTAKE;
+	ALGAE_OUTTAKE,
+	PRE_CLIMB,
+	CLIMB;
 
 }

@@ -5,9 +5,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.constants.field.Field;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.data.VisionData;
+import frc.robot.vision.sources.limelights.LimeLightSource;
+import frc.robot.vision.sources.limelights.LimelightPoseEstimationMethod;
 import frc.utils.Filter;
 import frc.utils.math.ToleranceMath;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class VisionFilters {
@@ -30,6 +33,20 @@ public class VisionFilters {
 		return new Filter<>(
 			visionData -> ToleranceMath
 				.isNearWrapped(wantedYawSupplier.get(), Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getZ()), yawTolerance)
+		);
+	}
+
+	public static Filter<VisionData> isYawAtAngleForMegaTag2(Supplier<Rotation2d> wantedYawSupplier, Rotation2d yawTolerance) {
+		return new Filter<>(
+			data -> VisionFilters.isYawAtAngle(() -> {
+				if (
+					data.getSource() instanceof LimeLightSource limelightSource
+						&& limelightSource.getPoseEstimationMethod() == LimelightPoseEstimationMethod.MEGATAG_2
+				) {
+					return wantedYawSupplier.get();
+				}
+				return data.getEstimatedPose().getRotation().toRotation2d();
+			}, yawTolerance).apply(data)
 		);
 	}
 

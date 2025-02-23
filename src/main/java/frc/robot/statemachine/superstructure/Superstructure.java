@@ -333,19 +333,19 @@ public class Superstructure extends GBSubsystem {
 
 	public Command algaeOuttake() {
 		return asSubsystemCommand(
-				new SequentialCommandGroup(
-						new ParallelCommandGroup(
-								elevatorStateHandler.setState(ElevatorState.ALGAE_OUTTAKE),
-								armStateHandler.setState(ArmState.ALGAE_OUTTAKE),
-								endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
-						).until(this::isReadyToOuttakeAlgae),
-						new ParallelCommandGroup(
-								elevatorStateHandler.setState(ElevatorState.ALGAE_OUTTAKE),
-								armStateHandler.setState(ArmState.ALGAE_OUTTAKE),
-								endEffectorStateHandler.setState(EndEffectorState.ALGAE_OUTTAKE)
-						)
-				).until(() -> !isAlgaeIn()),
-				SuperstructureState.ALGAE_OUTTAKE
+			new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.ALGAE_OUTTAKE),
+					armStateHandler.setState(ArmState.ALGAE_OUTTAKE),
+					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+				).until(this::isReadyToOuttakeAlgae),
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.ALGAE_OUTTAKE),
+					armStateHandler.setState(ArmState.ALGAE_OUTTAKE),
+					endEffectorStateHandler.setState(EndEffectorState.ALGAE_OUTTAKE)
+				)
+			).until(() -> !isAlgaeIn()),
+			SuperstructureState.ALGAE_OUTTAKE
 		);
 	}
 

@@ -26,7 +26,6 @@ public enum ArmState {
 	PROCESSOR_OUTTAKE(Rotation2d.fromDegrees(180));
 
 
-
 	private final Rotation2d position;
 
 	ArmState(Rotation2d position) {

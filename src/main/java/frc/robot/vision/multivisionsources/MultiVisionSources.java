@@ -67,7 +67,7 @@ public class MultiVisionSources<T extends VisionData> {
 
 	protected static <T extends VisionData> void logPoses(String logPath, List<T> observations) {
 		for (T observation : observations) {
-			Logger.recordOutput(logPath + observation.getSourceName(), observation.getEstimatedPose());
+			Logger.recordOutput(logPath + observation.getSource().getName(), observation.getEstimatedPose());
 		}
 	}
 

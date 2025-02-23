@@ -43,6 +43,8 @@ import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.vision.VisionFilters;
 import frc.robot.vision.data.VisionData;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
+import frc.robot.vision.sources.limelights.LimeLightSource;
+import frc.robot.vision.sources.limelights.LimelightPoseEstimationMethod;
 import frc.utils.Filter;
 import frc.utils.TimedValue;
 import frc.utils.auto.PathPlannerUtil;
@@ -107,14 +109,9 @@ public class Robot {
 			VisionConstants.VISION_SOURCES
 		);
 
-		multiAprilTagVisionSources.applyFunctionOnAllFilters(
-			filters -> filters.and(
-				new Filter<>(
-					data -> VisionFilters.isYawAtAngle(headingEstimator::getEstimatedHeading, VisionConstants.YAW_FILTER_TOLERANCE)
-						.apply((VisionData) data)
-				)
-			)
-		);
+		multiAprilTagVisionSources.applyFunctionOnAllFilters(filters -> filters.and(
+			new Filter<>(data -> RobotHeadingEstimatorConstants.YAW_FILTER_FOR_HEADING_ESTIMATION.apply(headingEstimator).apply((VisionData) data))
+		));
 
 		swerve.setHeadingSupplier(
 			ROBOT_TYPE.isSimulation() ? () -> poseEstimator.getEstimatedPose().getRotation() : headingEstimator::getEstimatedHeading
@@ -159,7 +156,7 @@ public class Robot {
 
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
-		for (TimedValue<Rotation2d> headingData : multiAprilTagVisionSources.getRawRobotHeadings()) {
+		for (TimedValue<Rotation2d> headingData : multiAprilTagVisionSources.getFilteredRobotHeading()) {
 			headingEstimator.updateVisionIfGyroOffsetIsNotCalibrated(
 				headingData,
 				RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION,

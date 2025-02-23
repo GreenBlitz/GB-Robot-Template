@@ -8,6 +8,8 @@ import java.util.function.Function;
 
 public interface VisionSource<T extends VisionData> {
 
+	String getName();
+
 	void update();
 
 	Optional<T> getVisionData();

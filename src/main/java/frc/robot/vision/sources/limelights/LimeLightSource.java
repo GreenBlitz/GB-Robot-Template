@@ -88,6 +88,11 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	}
 
 	@Override
+	public String getName() {
+		return sourceName;
+	}
+
+	@Override
 	public void update() {
 		lastSeenAprilTagId = getAprilTagID();
 		robotOrientationEntry.setDoubleArray(robotAngleValues.asArray());
@@ -151,7 +156,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		Optional<Pair<Pose3d, Double>> poseEstimation = getUpdatedPose3DEstimation();
 		return poseEstimation.map(
 			pose3dDoublePair -> new AprilTagVisionData(
-				sourceName,
+				this,
 				pose3dDoublePair.getFirst(),
 				pose3dDoublePair.getSecond(),
 				new StandardDeviations3D(standardDeviationsArray),
@@ -189,6 +194,10 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	@Override
 	public void updateRobotAngleValues(RobotAngleValues robotAngleValues) {
 		this.robotAngleValues = robotAngleValues;
+	}
+
+	public LimelightPoseEstimationMethod getPoseEstimationMethod() {
+		return poseEstimationMethod;
 	}
 
 	private void updateCameraPoseOffset(Pose3d cameraPoseOffset) {

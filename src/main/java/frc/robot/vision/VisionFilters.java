@@ -15,31 +15,23 @@ import java.util.function.Supplier;
 public class VisionFilters {
 
 	public static Filter<VisionData> isDataFromMegaTag2() {
-		return new Filter<>(
-			data -> data instanceof LimeLightAprilTagVisionData visionData
-				&& visionData.getPoseEstimationMethod() == LimelightPoseEstimationMethod.MEGATAG_2
-		);
+		return data -> data instanceof LimeLightAprilTagVisionData visionData
+			&& visionData.getPoseEstimationMethod() == LimelightPoseEstimationMethod.MEGATAG_2;
 	}
 
 	public static Filter<VisionData> isRollAtAngle(Rotation2d wantedRoll, Rotation2d rollTolerance) {
-		return new Filter<>(
-			visionData -> ToleranceMath
-				.isNearWrapped(wantedRoll, Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getX()), rollTolerance)
-		);
+		return visionData -> ToleranceMath
+			.isNearWrapped(wantedRoll, Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getX()), rollTolerance);
 	}
 
 	public static Filter<VisionData> isPitchAtAngle(Rotation2d wantedPitch, Rotation2d pitchTolerance) {
-		return new Filter<>(
-			visionData -> ToleranceMath
-				.isNearWrapped(wantedPitch, Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getY()), pitchTolerance)
-		);
+		return visionData -> ToleranceMath
+			.isNearWrapped(wantedPitch, Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getY()), pitchTolerance);
 	}
 
 	public static Filter<VisionData> isYawAtAngle(Supplier<Rotation2d> wantedYawSupplier, Rotation2d yawTolerance) {
-		return new Filter<>(
-			visionData -> ToleranceMath
-				.isNearWrapped(wantedYawSupplier.get(), Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getZ()), yawTolerance)
-		);
+		return visionData -> ToleranceMath
+			.isNearWrapped(wantedYawSupplier.get(), Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getZ()), yawTolerance);
 	}
 
 	public static Filter<VisionData> isYawAtAngleForMegaTag2(Supplier<Rotation2d> wantedYawSupplier, Rotation2d yawTolerance) {
@@ -47,29 +39,23 @@ public class VisionFilters {
 	}
 
 	public static Filter<VisionData> isOnGround(double distanceFromGroundToleranceMeters) {
-		return new Filter<>(visionData -> MathUtil.isNear(0, visionData.getEstimatedPose().getZ(), distanceFromGroundToleranceMeters));
+		return visionData -> MathUtil.isNear(0, visionData.getEstimatedPose().getZ(), distanceFromGroundToleranceMeters);
 	}
 
 	public static Filter<AprilTagVisionData> isAprilTagHeightValid(double aprilTagHeightToleranceMeters) {
-		return new Filter<>(
-			aprilTagVisionData -> MathUtil.isNear(
-				VisionUtils.getAprilTagHeightByID(aprilTagVisionData.getTrackedAprilTagId()),
-				aprilTagVisionData.getAprilTagHeightMeters(),
-				aprilTagHeightToleranceMeters
-			)
+		return aprilTagVisionData -> MathUtil.isNear(
+			VisionUtils.getAprilTagHeightByID(aprilTagVisionData.getTrackedAprilTagId()),
+			aprilTagVisionData.getAprilTagHeightMeters(),
+			aprilTagHeightToleranceMeters
 		);
 	}
 
 	public static Filter<VisionData> isXInField(double xToleranceMeters) {
-		return new Filter<>(
-			visionData -> ToleranceMath.isInRange(visionData.getEstimatedPose().getX(), 0, Field.LENGTH_METERS, xToleranceMeters)
-		);
+		return visionData -> ToleranceMath.isInRange(visionData.getEstimatedPose().getX(), 0, Field.LENGTH_METERS, xToleranceMeters);
 	}
 
 	public static Filter<VisionData> isYInField(double yToleranceMeters) {
-		return new Filter<>(
-			visionData -> ToleranceMath.isInRange(visionData.getEstimatedPose().getY(), 0, Field.WIDTH_METERS, yToleranceMeters)
-		);
+		return visionData -> ToleranceMath.isInRange(visionData.getEstimatedPose().getY(), 0, Field.WIDTH_METERS, yToleranceMeters);
 	}
 
 	public static Filter<VisionData> isInField(double positionToleranceMeters) {

@@ -1,45 +1,36 @@
 package frc.utils;
 
-import java.util.function.Function;
 
-public class Filter<T> {
+public interface Filter<T> {
 
-	private final Function<T, Boolean> filter;
-
-	public Filter(Function<T, Boolean> filter) {
-		this.filter = filter;
+	static <T> Filter<T> nonFilteringFilter() {
+		return data -> true;
 	}
 
-	public static <T> Filter<T> nonFilteringFilter() {
-		return new Filter<>(data -> true);
+	boolean apply(T data);
+
+	default Filter<T> not() {
+		return data -> !apply(data);
 	}
 
-	public boolean apply(T data) {
-		return filter.apply(data);
+	default <E extends T> Filter<E> and(Filter<E> otherFilter) {
+		return data -> apply(data) && otherFilter.apply(data);
 	}
 
-	public Filter<T> not() {
-		return new Filter<>(data -> !apply(data));
+	default <E extends T> Filter<E> or(Filter<E> otherFilter) {
+		return data -> apply(data) || otherFilter.apply(data);
 	}
 
-	public <E extends T> Filter<E> and(Filter<E> otherFilter) {
-		return new Filter<>(data -> apply(data) && otherFilter.apply(data));
+	default <E extends T> Filter<E> xor(Filter<E> otherFilter) {
+		return data -> apply(data) ^ otherFilter.apply(data);
 	}
 
-	public <E extends T> Filter<E> or(Filter<E> otherFilter) {
-		return new Filter<>(data -> apply(data) || otherFilter.apply(data));
+	default <E extends T> Filter<E> implies(Filter<E> otherFilter) {
+		return data -> !apply(data) || otherFilter.apply(data);
 	}
 
-	public <E extends T> Filter<E> xor(Filter<E> otherFilter) {
-		return new Filter<>(data -> apply(data) ^ otherFilter.apply(data));
-	}
-
-	public <E extends T> Filter<E> implies(Filter<E> otherFilter) {
-		return new Filter<>(data -> !apply(data) || otherFilter.apply(data));
-	}
-
-	public <E extends T> Filter<E> ifAndOnlyIf(Filter<E> otherFIlter) {
-		return new Filter<>(data -> apply(data) == otherFIlter.apply(data));
+	default <E extends T> Filter<E> ifAndOnlyIf(Filter<E> otherFIlter) {
+		return data -> apply(data) == otherFIlter.apply(data);
 	}
 
 }

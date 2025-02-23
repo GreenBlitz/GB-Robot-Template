@@ -26,8 +26,4 @@ public class LifterStateHandler {
 		return lifter.isLower(position);
 	}
 
-	public boolean isAtLimitSwitch() {
-		return lifter.isAtLimitSwitch();
-	}
-
 }

@@ -406,14 +406,9 @@ public class Superstructure extends GBSubsystem {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				new SequentialCommandGroup(
-					new ParallelCommandGroup(
-							armStateHandler.setState(ArmState.CLIMB),
-							climbStateHandler.setState(ClimbState.STOP)
-					).until(() -> robot.getArm().isPastPosition(Rotation2d.fromDegrees(0))),
-					new ParallelCommandGroup(
-							climbStateHandler.setState(ClimbState.DEPLOY),
-							armStateHandler.setState(ArmState.CLIMB)
-					)
+					new ParallelCommandGroup(armStateHandler.setState(ArmState.CLIMB), climbStateHandler.setState(ClimbState.STOP))
+						.until(() -> robot.getArm().isPastPosition(StateMachineConstants.ARM_POSITION_TO_DEPLOY_LIFTER)),
+					new ParallelCommandGroup(climbStateHandler.setState(ClimbState.DEPLOY), armStateHandler.setState(ArmState.CLIMB))
 				),
 				elevatorStateHandler.setState(ElevatorState.CLOSED),
 				endEffectorStateHandler.setState(EndEffectorState.STOP)
@@ -434,7 +429,7 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command climbSTOP() {
+	public Command climbStop() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.CLOSED),
@@ -442,7 +437,7 @@ public class Superstructure extends GBSubsystem {
 				endEffectorStateHandler.setState(EndEffectorState.STOP),
 				climbStateHandler.setState(ClimbState.STOP)
 			),
-			SuperstructureState.CLIMB
+			SuperstructureState.CLIMB_STOP
 		);
 	}
 
@@ -459,7 +454,7 @@ public class Superstructure extends GBSubsystem {
 			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> afterScore();
 			case PRE_NET, NET_WITHOUT_RELEASE, NET_WITH_RELEASE -> preNet();
 			case PRE_CLIMB -> preClimb();
-			case CLIMB -> climb();
+			case CLIMB, CLIMB_STOP -> climbStop();
 		};
 	}
 

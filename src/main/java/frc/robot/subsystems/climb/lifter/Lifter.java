@@ -2,29 +2,22 @@ package frc.robot.subsystems.climb.lifter;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.joysticks.SmartJoystick;
-import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
-import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
-import org.littletonrobotics.junction.Logger;
 
 public class Lifter extends GBSubsystem {
 
 	private final ControllableMotor motor;
 	private final LifterCommandsBuilder lifterCommandsBuilder;
 	private final InputSignal<Rotation2d> positionSignal;
-	private final IDigitalInput limitSwitch;
-	private final DigitalInputInputsAutoLogged limitSwitchInputs;
 
-	public Lifter(String logPath, ControllableMotor motor, InputSignal<Rotation2d> positionSignal, IDigitalInput limitSwitch) {
+	public Lifter(String logPath, ControllableMotor motor, InputSignal<Rotation2d> positionSignal) {
 		super(logPath);
 
 		this.motor = motor;
 		this.lifterCommandsBuilder = new LifterCommandsBuilder(this);
 		this.positionSignal = positionSignal;
-		this.limitSwitch = limitSwitch;
-		this.limitSwitchInputs = new DigitalInputInputsAutoLogged();
 
 		motor.resetPosition(new Rotation2d());
 		updateInputs();
@@ -51,10 +44,6 @@ public class Lifter extends GBSubsystem {
 		return !isHigher(position);
 	}
 
-	public boolean isAtLimitSwitch() {
-		return limitSwitchInputs.debouncedValue;
-	}
-
 	public LifterCommandsBuilder getCommandsBuilder() {
 		return lifterCommandsBuilder;
 	}
@@ -71,8 +60,6 @@ public class Lifter extends GBSubsystem {
 
 	private void updateInputs() {
 		motor.updateInputs(positionSignal);
-		limitSwitch.updateInputs(limitSwitchInputs);
-		Logger.processInputs(getLogPath() + "/LimitSwitch", limitSwitchInputs);
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick) {

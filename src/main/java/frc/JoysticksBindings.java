@@ -12,9 +12,6 @@ import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.RobotState;
 import frc.robot.statemachine.superstructure.ScoreLevel;
-import frc.robot.subsystems.climb.ClimbStateHandler;
-import frc.robot.subsystems.climb.lifter.LifterStateHandler;
-import frc.robot.subsystems.climb.solenoid.SolenoidStateHandler;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.utils.pose.Side;
@@ -97,46 +94,22 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+		usedJoystick.R1.onTrue(reefActionChooser(robot));
+		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
 
-//		usedJoystick.R1.onTrue(reefActionChooser(robot));
-//		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
-//
-//		usedJoystick.Y.onTrue(robot.getRobotCommander().setState(RobotState.CORAL_OUTTAKE));
-//		usedJoystick.X.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_OUTTAKE));
-//		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.PROCESSOR_SCORE));
-//
-//		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
-//
-//		usedJoystick.POV_UP.onTrue(
-//			new InstantCommand(
-//				() -> robot.getRobotCommander()
-//					.getSuperstructure().driverIsAlgaeInOverride = !robot.getRobotCommander().getSuperstructure().driverIsAlgaeInOverride
-//
-//			)
-//		);
+		usedJoystick.Y.onTrue(robot.getRobotCommander().setState(RobotState.CORAL_OUTTAKE));
+		usedJoystick.X.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_OUTTAKE));
+		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.PROCESSOR_SCORE));
 
-		SolenoidStateHandler solenoidStateHandler = new SolenoidStateHandler(robot.getSolenoid());
-		LifterStateHandler lifterStateHandler = new LifterStateHandler(robot.getLifter());
+		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
 
-		ClimbStateHandler climbStateHandler = new ClimbStateHandler(solenoidStateHandler, lifterStateHandler);
+		usedJoystick.POV_UP.onTrue(
+			new InstantCommand(
+				() -> robot.getRobotCommander()
+					.getSuperstructure().driverIsAlgaeInOverride = !robot.getRobotCommander().getSuperstructure().driverIsAlgaeInOverride
 
-
-		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.PRE_CLIMB_WITHOUT_AIM_ASSIST));
-		usedJoystick.R1.onTrue(robot.getRobotCommander().setState(RobotState.CLIMB));
-		usedJoystick.A.onTrue(robot.getRobotCommander().climbSTOP());
-
-//		usedJoystick.A.onTrue(climbStateHandler.setState(ClimbState.STOP));
-//		usedJoystick.B.onTrue(climbStateHandler.setState(ClimbState.DEPLOY));
-//		usedJoystick.X.onTrue(climbStateHandler.setState(ClimbState.CLIMB));
-//		usedJoystick.Y.onTrue(climbStateHandler.setState(ClimbState.CLOSE));
-
-//		usedJoystick.POV_DOWN.onTrue(solenoidStateHandler.setState(SolenoidState.INITIAL_FREE));
-//		usedJoystick.POV_RIGHT.onTrue(solenoidStateHandler.setState(SolenoidState.HOLD_FREE));
-//		usedJoystick.POV_LEFT.onTrue(solenoidStateHandler.setState(SolenoidState.LOCKED));
-//
-//		usedJoystick.POV_UP.onTrue(lifterStateHandler.setState(LifterState.FORWARD));
-//		usedJoystick.L1.onTrue(lifterStateHandler.setState(LifterState.CLIMB));
-//		usedJoystick.R1.onTrue(lifterStateHandler.setState(LifterState.HOLD));
+			)
+		);
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

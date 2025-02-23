@@ -313,6 +313,20 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
+	public Command autoReleaseSequence(){
+		return asSubsystemCommand(new SequentialCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.AUTO_RELEASE).until(() -> robot.getElevator().isPastPosition(ElevatorState.AUTO_RELEASE.getHeightMeters())),
+				new DeferredCommand(
+						() -> new ParallelCommandGroup(
+								elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorWhileDrive()),
+								armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmPreScore()),
+								endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
+
+						)
+				)
+		), SuperstructureState.AUTO_RELEASE_SEQUENCE);
+	}
+
 	private Command asSubsystemCommand(Command command, SuperstructureState state) {
 		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
 	}
@@ -321,7 +335,7 @@ public class Superstructure extends GBSubsystem {
 		return switch (state) {
 			case INTAKE, OUTTAKE, IDLE, POST_ALGAE_REMOVE, ALGAE_OUTTAKE, CLOSE_L4 -> idle();
 			case ALGAE_REMOVE -> postAlgaeRemove();
-			case ARM_PRE_SCORE -> armPreScore();
+			case ARM_PRE_SCORE, AUTO_RELEASE_SEQUENCE -> armPreScore();
 			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> afterScore();
 		};
 	}

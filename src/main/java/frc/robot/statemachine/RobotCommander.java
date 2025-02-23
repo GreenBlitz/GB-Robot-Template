@@ -438,6 +438,13 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
+	public Command climbSTOP() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(superstructure.climbSTOP(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			RobotState.CLIMB
+		);
+	}
+
 	private Command asSubsystemCommand(Command command, RobotState state) {
 		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
 	}

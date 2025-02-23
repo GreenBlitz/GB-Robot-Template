@@ -9,10 +9,13 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.events.EventTrigger;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
+import frc.constants.field.enums.Branch;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.AutosBuilder;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
@@ -51,11 +54,11 @@ import frc.robot.vision.data.VisionData;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
 import frc.utils.Filter;
 import frc.utils.TimedValue;
-import frc.utils.auto.PathPlannerUtil;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -83,7 +86,7 @@ public class Robot {
 	private final SimulationManager simulationManager;
 	private final RobotCommander robotCommander;
 
-	private AutonomousChooser startingPointAndWhereToScoreFirstObjectChooser;
+	private LoggedDashboardChooser<Command> whereToScoreFirstObjectChooser;
 	private AutonomousChooser whereToIntakeSecondObjectChooser;
 	private AutonomousChooser whereToScoreSecondObjectChooser;
 	private AutonomousChooser whereToIntakeThirdObjectChooser;
@@ -187,10 +190,22 @@ public class Robot {
 			new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4).andThen(robotCommander.getSuperstructure().armPreScore())
 		);
 
-		this.startingPointAndWhereToScoreFirstObjectChooser = new AutonomousChooser(
-			"StartingPointAndScoreFirst",
-			AutosBuilder.getAllStartingAndScoringFirstObjectAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
-		);
+		SendableChooser<Command> chooser = new SendableChooser<>();
+		for (Branch branch : Branch.values()) {
+			chooser.addOption(branch.name(), new InstantCommand(() -> {
+				ScoringHelpers.targetScoreLevel = ScoreLevel.L4;
+				if (branch.isLeft() != ScoringHelpers.getTargetBranch().isLeft()) {
+					ScoringHelpers.toggleIsLeftBranch();
+				}
+				if (branch.getReefSide().isFar() != ScoringHelpers.getTargetReefSide().isFar()) {
+					ScoringHelpers.toggleIsFarReefHalf();
+				}
+				ScoringHelpers.setTargetSideForReef(branch.getReefSide().getSide());
+			}).andThen(robotCommander.autoScore()));
+		}
+		chooser.setDefaultOption("None", Commands.none());
+
+		this.whereToScoreFirstObjectChooser = new LoggedDashboardChooser<>("ScoreFirst", chooser);
 		this.whereToIntakeSecondObjectChooser = new AutonomousChooser(
 			"IntakeSecond",
 			AutosBuilder.getAllIntakingAutos(this, intakingCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
@@ -243,16 +258,18 @@ public class Robot {
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 
-	public PathPlannerAutoWrapper getAuto() {
-		return PathPlannerAutoWrapper.chainAutos(
-			startingPointAndWhereToScoreFirstObjectChooser.getChosenValue(),
-			whereToIntakeSecondObjectChooser.getChosenValue(),
-			whereToScoreSecondObjectChooser.getChosenValue(),
-			whereToIntakeThirdObjectChooser.getChosenValue(),
-			whereToScoreThirdObjectChooser.getChosenValue(),
-			whereToIntakeFourthObjectChooser.getChosenValue(),
-			whereToScoreFourthObjectChooser.getChosenValue()
-		);
+	public Command getAuto() {
+		return whereToScoreFirstObjectChooser.get()
+			.andThen(
+				PathPlannerAutoWrapper.chainAutos(
+					whereToIntakeSecondObjectChooser.getChosenValue(),
+					whereToScoreSecondObjectChooser.getChosenValue(),
+					whereToIntakeThirdObjectChooser.getChosenValue(),
+					whereToScoreThirdObjectChooser.getChosenValue(),
+					whereToIntakeFourthObjectChooser.getChosenValue(),
+					whereToScoreFourthObjectChooser.getChosenValue()
+				)
+			);
 	}
 
 	public IPoseEstimator getPoseEstimator() {

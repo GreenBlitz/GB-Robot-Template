@@ -4,9 +4,9 @@
 
 package frc;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.utils.auto.PathPlannerUtil;
-import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtil;
 import frc.utils.time.TimeUtil;
@@ -23,7 +23,7 @@ import org.littletonrobotics.junction.Logger;
 public class RobotManager extends LoggedRobot {
 
 	private final Robot robot;
-	private PathPlannerAutoWrapper auto;
+	private Command auto;
 	private int roborioCycles;
 
 	public RobotManager() {

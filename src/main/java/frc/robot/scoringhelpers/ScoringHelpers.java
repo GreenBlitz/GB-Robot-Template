@@ -16,7 +16,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class ScoringHelpers {
 
-	public static final Translation2d END_EFFECTOR_OFFSET_FROM_MID_ROBOT = new Translation2d(0, 5);
+	public static final Translation2d END_EFFECTOR_OFFSET_FROM_MID_ROBOT = new Translation2d(0, 0.014);
 
 	public static ScoreLevel targetScoreLevel = ScoreLevel.L4;
 
@@ -116,7 +116,7 @@ public class ScoringHelpers {
 		int closestSlotIndex = 0;
 
 		for (int i = 0; i < slots.length; i++) {
-			distances[i] = robotTranslation.getDistance(Field.getCoralStationSlotWithEndEffectorOffset(slots[i]).getTranslation());
+			distances[i] = robotTranslation.getDistance(Field.getCoralStationSlot(slots[i]).getTranslation());
 		}
 		for (int i = 1; i < distances.length; i++) {
 			if (distances[i] < distances[closestSlotIndex]) {
@@ -124,6 +124,13 @@ public class ScoringHelpers {
 			}
 		}
 		return slots[closestSlotIndex];
+	}
+
+	public static Pose2d getCoralStationSlotPose(CoralStationSlot coralStationSlot) {
+		Pose2d coralStationSlotPose = Field.getCoralStationSlot(coralStationSlot);
+		Translation2d rotatedEndEffectorOffset = ScoringHelpers.END_EFFECTOR_OFFSET_FROM_MID_ROBOT.rotateBy(coralStationSlotPose.getRotation());
+
+		return new Pose2d(coralStationSlotPose.getTranslation().plus(rotatedEndEffectorOffset), coralStationSlotPose.getRotation());
 	}
 
 }

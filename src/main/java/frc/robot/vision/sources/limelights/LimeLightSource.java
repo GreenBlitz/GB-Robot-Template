@@ -156,7 +156,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		Optional<Pair<Pose3d, Double>> poseEstimation = getUpdatedPose3DEstimation();
 		return poseEstimation.map(
 			pose3dDoublePair -> new AprilTagVisionData(
-				this,
+				getName(),
 				pose3dDoublePair.getFirst(),
 				pose3dDoublePair.getSecond(),
 				new StandardDeviations3D(standardDeviationsArray),

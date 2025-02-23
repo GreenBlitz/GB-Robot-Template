@@ -1,7 +1,6 @@
 package frc.robot.vision.data;
 
 import edu.wpi.first.math.geometry.Pose3d;
-import frc.robot.vision.sources.VisionSource;
 import frc.utils.math.StandardDeviations3D;
 
 public class AprilTagVisionData extends VisionData {
@@ -12,7 +11,7 @@ public class AprilTagVisionData extends VisionData {
 	private final int aprilTagId;
 
 	public AprilTagVisionData(
-		VisionSource<? extends AprilTagVisionData> source,
+		String sourceName,
 		Pose3d estimatedRobotPosition,
 		double timestamp,
 		StandardDeviations3D standardDeviations,
@@ -20,7 +19,7 @@ public class AprilTagVisionData extends VisionData {
 		double distanceFromAprilTagMeters,
 		int aprilTagId
 	) {
-		super(source, estimatedRobotPosition, timestamp);
+		super(sourceName, estimatedRobotPosition, timestamp);
 		this.standardDeviations = standardDeviations;
 		this.aprilTagHeightMeters = aprilTagHeightMeters;
 		this.distanceFromAprilTagMeters = distanceFromAprilTagMeters;
@@ -31,15 +30,15 @@ public class AprilTagVisionData extends VisionData {
 		return standardDeviations;
 	}
 
-	public double getAprilTagHeightMeters() {
+	public final double getAprilTagHeightMeters() {
 		return aprilTagHeightMeters;
 	}
 
-	public double getDistanceFromAprilTagMeters() {
+	public final double getDistanceFromAprilTagMeters() {
 		return distanceFromAprilTagMeters;
 	}
 
-	public int getTrackedAprilTagId() {
+	public final int getTrackedAprilTagId() {
 		return aprilTagId;
 	}
 

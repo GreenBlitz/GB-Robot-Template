@@ -4,8 +4,8 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.constants.field.Field;
 import frc.robot.vision.data.AprilTagVisionData;
+import frc.robot.vision.data.LimeLightAprilTagVisionData;
 import frc.robot.vision.data.VisionData;
-import frc.robot.vision.sources.limelights.LimeLightSource;
 import frc.robot.vision.sources.limelights.LimelightPoseEstimationMethod;
 import frc.utils.Filter;
 import frc.utils.math.ToleranceMath;
@@ -16,8 +16,8 @@ public class VisionFilters {
 
 	public static Filter<VisionData> isDataFromMegaTag1() {
 		return new Filter<>(
-			data -> data.getSource() instanceof LimeLightSource limeLightSource
-				&& limeLightSource.getPoseEstimationMethod() == LimelightPoseEstimationMethod.MEGATAG_1
+			data -> data instanceof LimeLightAprilTagVisionData visionData
+				&& visionData.getPoseEstimationMethod() == LimelightPoseEstimationMethod.MEGATAG_1
 		);
 	}
 

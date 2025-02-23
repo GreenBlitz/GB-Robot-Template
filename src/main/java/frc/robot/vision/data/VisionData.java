@@ -1,29 +1,28 @@
 package frc.robot.vision.data;
 
 import edu.wpi.first.math.geometry.Pose3d;
-import frc.robot.vision.sources.VisionSource;
 
 public class VisionData {
 
-	private final VisionSource<? extends VisionData> source;
+	private final String source;
 	private final Pose3d estimatedPose;
 	private final double timestamp;
 
-	public VisionData(VisionSource<? extends VisionData> source, Pose3d estimatedPose, double timestamp) {
-		this.source = source;
+	public VisionData(String sourceName, Pose3d estimatedPose, double timestamp) {
+		this.source = sourceName;
 		this.estimatedPose = estimatedPose;
 		this.timestamp = timestamp;
 	}
 
-	public VisionSource<? extends VisionData> getSource() {
+	public final String getSourceName() {
 		return source;
 	}
 
-	public Pose3d getEstimatedPose() {
+	public final Pose3d getEstimatedPose() {
 		return estimatedPose;
 	}
 
-	public double getTimestamp() {
+	public final double getTimestamp() {
 		return timestamp;
 	}
 

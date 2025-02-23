@@ -22,7 +22,7 @@ public enum ElevatorState {
 	WHILE_DRIVE_NET(0.4),
 	NET(1.18),
 	PROCESSOR_OUTTAKE(0.02),
-	AUTO_RELEASE(0.12);
+	AUTO_RELEASE(0.13);
 
 
 	private final double heightMeters;

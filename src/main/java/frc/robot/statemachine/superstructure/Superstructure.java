@@ -430,7 +430,7 @@ public class Superstructure extends GBSubsystem {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.AUTO_RELEASE)
-					.until(() -> robot.getElevator().isPastPosition(ElevatorState.AUTO_RELEASE.getHeightMeters())),
+					.until(() -> robot.getElevator().isPastPosition(StateMachineConstants.ELEVATOR_HEIGHT_AUTO_RELEASE_METERS)),
 				new DeferredCommand(
 					() -> new ParallelCommandGroup(
 						climbStateHandler.setState(ClimbState.CLOSE),

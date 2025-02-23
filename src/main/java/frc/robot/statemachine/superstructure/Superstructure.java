@@ -89,10 +89,10 @@ public class Superstructure extends GBSubsystem {
 	}
 
 	public boolean isReadyToOuttakeAlgae() {
-		return robot.getElevator().isAtPosition(ElevatorState.CLOSED.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
-			&& elevatorStateHandler.getCurrentState() == ElevatorState.CLOSED
-			&& robot.getArm().isAtPosition(ArmState.CLOSED.getPosition(), Tolerances.ARM_POSITION)
-			&& armStateHandler.getCurrentState() == ArmState.CLOSED;
+		return robot.getElevator().isAtPosition(ElevatorState.PROCESSOR_OUTTAKE.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
+			&& elevatorStateHandler.getCurrentState() == ElevatorState.PROCESSOR_OUTTAKE
+			&& robot.getArm().isAtPosition(ArmState.PROCESSOR_OUTTAKE.getPosition(), Tolerances.ARM_POSITION)
+			&& armStateHandler.getCurrentState() == ArmState.PROCESSOR_OUTTAKE;
 	}
 
 	public boolean isReadyForNet() {
@@ -317,11 +317,13 @@ public class Superstructure extends GBSubsystem {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
+					new InstantCommand(() -> System.out.println("aaa")),
 					elevatorStateHandler.setState(ElevatorState.PROCESSOR_OUTTAKE),
 					armStateHandler.setState(ArmState.PROCESSOR_OUTTAKE),
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
 				).until(this::isReadyToOuttakeAlgae),
 				new ParallelCommandGroup(
+					new InstantCommand(() -> System.out.println("bbb")),
 					elevatorStateHandler.setState(ElevatorState.PROCESSOR_OUTTAKE),
 					armStateHandler.setState(ArmState.PROCESSOR_OUTTAKE),
 					endEffectorStateHandler.setState(EndEffectorState.PROCESSOR_OUTTAKE)

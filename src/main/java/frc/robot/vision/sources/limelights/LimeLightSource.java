@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.poseestimator.Pose3dComponentsValue;
+import frc.robot.vision.data.LimeLightAprilTagVisionData;
 import frc.utils.math.StandardDeviations3D;
 import frc.robot.vision.VisionConstants;
 import frc.robot.vision.RobotAngleValues;
@@ -155,14 +156,15 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	public Optional<AprilTagVisionData> getVisionData() {
 		Optional<Pair<Pose3d, Double>> poseEstimation = getUpdatedPose3DEstimation();
 		return poseEstimation.map(
-			pose3dDoublePair -> new AprilTagVisionData(
+			pose3dDoublePair -> new LimeLightAprilTagVisionData(
 				getName(),
 				pose3dDoublePair.getFirst(),
 				pose3dDoublePair.getSecond(),
 				new StandardDeviations3D(standardDeviationsArray),
 				getAprilTagValueInRobotSpace(Pose3dComponentsValue.Z_VALUE),
 				getDistanceFromTag(),
-				lastSeenAprilTagId
+				lastSeenAprilTagId,
+				poseEstimationMethod
 			)
 		);
 	}

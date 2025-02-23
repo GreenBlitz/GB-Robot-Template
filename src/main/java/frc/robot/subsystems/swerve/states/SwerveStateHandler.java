@@ -148,8 +148,8 @@ public class SwerveStateHandler {
 		CoralStationSlot coralStationSlot,
 		SwerveState swerveState
 	) {
-		Translation2d slot = Field.getCoralStationSlot(coralStationSlot).getTranslation();
-		Rotation2d headingToCoralStation = Field.getCoralStationSlot(coralStationSlot).getRotation();
+		Translation2d slot = Field.getCoralStationSlotWithEndEffectorOffset(coralStationSlot).getTranslation();
+		Rotation2d headingToCoralStation = Field.getCoralStationSlotWithEndEffectorOffset(coralStationSlot).getRotation();
 
 		chassisSpeeds = AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotPose.getRotation(), headingToCoralStation, swerveConstants);
 		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, headingToCoralStation, slot, swerveConstants, swerveState);

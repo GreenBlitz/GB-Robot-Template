@@ -11,6 +11,7 @@ import frc.constants.field.enums.Branch;
 import frc.constants.field.enums.Cage;
 import frc.constants.field.enums.CoralStation;
 import frc.constants.field.enums.ReefSide;
+import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.utils.DriverStationUtil;
 import frc.constants.field.enums.CoralStationSlot;
 import frc.utils.math.AngleTransform;
@@ -116,7 +117,7 @@ public class Field {
 		return getAllianceRelative(CORAL_STATION_MIDDLES[coralStation.getIndex()], true, true, AngleTransform.INVERT);
 	}
 
-	public static Pose2d getCoralStationSlot(CoralStationSlot coralStationSlot) {
+	public static Pose2d getCoralStationSlotWithEndEffectorOffset(CoralStationSlot coralStationSlot) {
 		Pose2d coralStationSlotPose = new Pose2d(CORAL_STATION_SLOTS_MIDDLES[coralStationSlot.getIndex()], new Rotation2d());
 
 		if (coralStationSlot.getCoralStation() == CoralStation.LEFT) {
@@ -124,6 +125,9 @@ public class Field {
 		} else {
 			coralStationSlotPose = new Pose2d(coralStationSlotPose.getX(), coralStationSlotPose.getY(), RIGHT_CORAL_STATION_ANGLE);
 		}
+
+		Translation2d rotatedEndEffectorOffset = ScoringHelpers.END_EFFECTOR_OFFSET_FROM_MID_ROBOT.rotateBy(coralStationSlotPose.getRotation());
+		coralStationSlotPose = new Pose2d(coralStationSlotPose.getTranslation().plus(rotatedEndEffectorOffset), coralStationSlotPose.getRotation());
 
 		return getAllianceRelative(coralStationSlotPose, true, true, AngleTransform.INVERT);
 	}

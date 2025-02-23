@@ -1,6 +1,5 @@
 package frc.robot.subsystems.elevator;
 
-
 public enum ElevatorState {
 
 	STAY_IN_PLACE(Double.NaN),

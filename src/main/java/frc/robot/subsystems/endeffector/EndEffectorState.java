@@ -12,7 +12,6 @@ public enum EndEffectorState {
 	NET_OUTTAKE(0.5),
 	PROCESSOR_OUTTAKE(0.5);
 
-
 	private final double power;
 
 	EndEffectorState(double power) {

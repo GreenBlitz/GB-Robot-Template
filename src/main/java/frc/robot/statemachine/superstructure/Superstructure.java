@@ -407,18 +407,23 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command autoReleaseSequence(){
-		return asSubsystemCommand(new SequentialCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.AUTO_RELEASE).until(() -> robot.getElevator().isPastPosition(ElevatorState.AUTO_RELEASE.getHeightMeters())),
+	public Command autoReleaseSequence() {
+		return asSubsystemCommand(
+			new SequentialCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.AUTO_RELEASE)
+					.until(() -> robot.getElevator().isPastPosition(ElevatorState.AUTO_RELEASE.getHeightMeters())),
 				new DeferredCommand(
-						() -> new ParallelCommandGroup(
-								elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorWhileDrive()),
-								armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmPreScore()),
-								endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
-
-						)
+					() -> new ParallelCommandGroup(
+						elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorWhileDrive()),
+						armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmPreScore()),
+						endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+						// climb - waiting for state closed
+					),
+					Set.of(robot.getElevator(), robot.getArm(), robot.getEndEffector(), this)
 				)
-		), SuperstructureState.AUTO_RELEASE_SEQUENCE);
+			),
+			SuperstructureState.AUTO_RELEASE_SEQUENCE
+		);
 	}
 
 	private Command asSubsystemCommand(Command command, SuperstructureState state) {
@@ -430,11 +435,12 @@ public class Superstructure extends GBSubsystem {
 			case STAY_IN_PLACE, OUTTAKE -> stayInPlace();
 			case INTAKE, IDLE, POST_ALGAE_REMOVE, ALGAE_OUTTAKE, CLOSE_L4 -> idle();
 			case ALGAE_REMOVE -> postAlgaeRemove();
-			case ARM_PRE_SCORE, AUTO_RELEASE_SEQUENCE -> armPreScore();
+			case ARM_PRE_SCORE -> armPreScore();
 			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> afterScore();
 			case PRE_NET, NET_WITHOUT_RELEASE, NET_WITH_RELEASE -> preNet();
 			case PRE_CLIMB -> preClimb();
 			case CLIMB -> climb();
+			case AUTO_RELEASE_SEQUENCE -> autoReleaseSequence();
 		};
 	}
 

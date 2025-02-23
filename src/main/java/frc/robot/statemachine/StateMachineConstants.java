@@ -12,6 +12,8 @@ public class StateMachineConstants {
 	public static final double SCORE_DISTANCE_FROM_NET_METERS = 2;
 
 
+	public static final double DISTANCE_FROM_CORAL_STATION_SLOT_TO_START_AIM_ASSIST_METERS = 2;
+
 	public static final double DISTANCE_FROM_CAGE_TO_START_AIM_ASSIST = 1;
 	public static final double CAGE_AIM_ASSIST_TIMEOUT = 2;
 

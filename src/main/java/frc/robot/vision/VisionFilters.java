@@ -14,6 +14,10 @@ import java.util.function.Supplier;
 
 public class VisionFilters {
 
+	public static Filter<VisionData> isDataFromMegaTag2() {
+		return new Filter<>(data -> data.getSource() instanceof LimeLightSource limeLightSource && limeLightSource.getPoseEstimationMethod() == LimelightPoseEstimationMethod.MEGATAG_2);
+	}
+
 	public static Filter<VisionData> isRollAtAngle(Rotation2d wantedRoll, Rotation2d rollTolerance) {
 		return new Filter<>(
 			visionData -> ToleranceMath
@@ -36,15 +40,7 @@ public class VisionFilters {
 	}
 
 	public static Filter<VisionData> isYawAtAngleForMegaTag2(Supplier<Rotation2d> wantedYawSupplier, Rotation2d yawTolerance) {
-		return new Filter<>(data -> VisionFilters.isYawAtAngle(() -> {
-			if (
-				data.getSource() instanceof LimeLightSource limelightSource
-					&& limelightSource.getPoseEstimationMethod() == LimelightPoseEstimationMethod.MEGATAG_2
-			) {
-				return wantedYawSupplier.get();
-			}
-			return data.getEstimatedPose().getRotation().toRotation2d();
-		}, yawTolerance).apply(data));
+		return isDataFromMegaTag2().not().or(isYawAtAngle(wantedYawSupplier, yawTolerance));
 	}
 
 	public static Filter<VisionData> isOnGround(double distanceFromGroundToleranceMeters) {

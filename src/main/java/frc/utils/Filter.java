@@ -18,6 +18,10 @@ public class Filter<T> {
 		return filter.apply(data);
 	}
 
+	public Filter<T> not() {
+		return new Filter<>(data -> !apply(data));
+	}
+
 	public Filter<T> and(Filter<T> otherFilter) {
 		return new Filter<>(data -> apply(data) && otherFilter.apply(data));
 	}

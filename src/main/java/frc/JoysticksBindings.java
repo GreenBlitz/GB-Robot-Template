@@ -101,7 +101,7 @@ public class JoysticksBindings {
 		usedJoystick.Y.onTrue(robot.getRobotCommander().setState(RobotState.CORAL_OUTTAKE));
 		usedJoystick.X.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_OUTTAKE));
 
-		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
+		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
 
 		usedJoystick.POV_UP.onTrue(
 			new InstantCommand(

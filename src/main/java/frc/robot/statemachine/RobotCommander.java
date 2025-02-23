@@ -107,6 +107,25 @@ public class RobotCommander extends GBSubsystem {
 		};
 	}
 
+	private boolean isAtProcessorScoringPose() {
+		Rotation2d processorAngle = Field.getProcessor().getRotation();
+
+		Pose2d processorRelativeTargetPose = ScoringHelpers.getAllianceRelativeProcessorScoringPose().rotateBy(processorAngle.unaryMinus());
+		Pose2d processorRelativeRobotPose = robot.getPoseEstimator().getEstimatedPose().rotateBy(processorAngle.unaryMinus());
+
+		ChassisSpeeds allianceRelativeSpeeds = swerve.getAllianceRelativeVelocity();
+		ChassisSpeeds processorRelativeSpeeds = SwerveMath
+			.robotToAllianceRelativeSpeeds(allianceRelativeSpeeds, Field.getAllianceRelative(processorAngle.unaryMinus()));
+
+		return PoseUtil.isAtPose(
+			processorRelativeRobotPose,
+			processorRelativeTargetPose,
+			processorRelativeSpeeds,
+			Tolerances.PROCESSOR_RELATIVE_SCORING_POSITION,
+			Tolerances.PROCESSOR_RELATIVE_SCORING_DEADBANDS
+		);
+	}
+
 	private boolean isReadyToOpenSuperstructure() {
 		return isAtReefScoringPose(
 			StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS,
@@ -201,6 +220,7 @@ public class RobotCommander extends GBSubsystem {
 			case PRE_NET -> preNet();
 			case NET_WITHOUT_RELEASE -> netWithoutRelease();
 			case NET_WITH_RELEASE -> netWithRelease();
+			case PROCESSOR_SCORE -> fullyProcessorScore();
 			case PRE_CLIMB_WITH_AIM_ASSIST -> preClimbWithAimAssist();
 			case PRE_CLIMB_WITHOUT_AIM_ASSIST -> preClimbWithoutAimAssist();
 			case CLIMB -> climb();
@@ -276,6 +296,18 @@ public class RobotCommander extends GBSubsystem {
 			armPreScore().until(this::isReadyToOpenSuperstructure),
 			preScore().until(this::isPreScoreReady),
 			scoreWithoutRelease()
+		);
+	}
+
+
+	public Command fullyProcessorScore() {
+		return asSubsystemCommand(
+			new ParallelDeadlineGroup(
+				new SequentialCommandGroup(superstructure.idle().until(this::isAtProcessorScoringPose), superstructure.processorScore()),
+				swerve.getCommandsBuilder()
+					.driveToPose(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers::getAllianceRelativeProcessorScoringPose)
+			),
+			RobotState.PROCESSOR_SCORE
 		);
 	}
 
@@ -490,7 +522,7 @@ public class RobotCommander extends GBSubsystem {
 	private Command endState(RobotState state) {
 		return switch (state) {
 			case STAY_IN_PLACE, CORAL_OUTTAKE -> stayInPlace();
-			case INTAKE, DRIVE, ALIGN_REEF, ALGAE_OUTTAKE -> drive();
+			case INTAKE, DRIVE, ALIGN_REEF, ALGAE_OUTTAKE, PROCESSOR_SCORE -> drive();
 			case ARM_PRE_SCORE -> armPreScore();
 			case PRE_SCORE -> preScore();
 			case SCORE, SCORE_WITHOUT_RELEASE -> closeAfterScore();

@@ -4,6 +4,7 @@ public enum ClimbState {
 
 	CLIMB,
 	DEPLOY,
-	STOP
+	STOP,
+	CLOSE
 
 }

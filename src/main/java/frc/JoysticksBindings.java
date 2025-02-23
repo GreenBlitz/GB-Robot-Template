@@ -12,6 +12,10 @@ import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.RobotState;
 import frc.robot.statemachine.superstructure.ScoreLevel;
+import frc.robot.subsystems.climb.ClimbState;
+import frc.robot.subsystems.climb.ClimbStateHandler;
+import frc.robot.subsystems.climb.lifter.LifterStateHandler;
+import frc.robot.subsystems.climb.solenoid.SolenoidStateHandler;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.utils.pose.Side;
@@ -101,7 +105,13 @@ public class JoysticksBindings {
 		usedJoystick.Y.onTrue(robot.getRobotCommander().setState(RobotState.CORAL_OUTTAKE));
 		usedJoystick.X.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_OUTTAKE));
 
-		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
+		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
+
+		ClimbStateHandler climbStateHandler = new ClimbStateHandler(
+			new SolenoidStateHandler(robot.getSolenoid()),
+			new LifterStateHandler(robot.getLifter())
+		);
+		usedJoystick.A.onTrue(climbStateHandler.setState(ClimbState.CLOSE));
 
 		usedJoystick.POV_UP.onTrue(
 			new InstantCommand(

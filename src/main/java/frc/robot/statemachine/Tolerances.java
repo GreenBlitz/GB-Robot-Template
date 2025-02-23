@@ -34,4 +34,7 @@ public class Tolerances {
 	);
 	public static final Pose2d REEF_RELATIVE_L1_OPEN_SUPERSTRUCTURE_DEADBANDS = new Pose2d(4, 1, Rotation2d.fromRadians(0.1));
 
+	public static final Pose2d PROCESSOR_RELATIVE_SCORING_POSITION = new Pose2d(0.2, 0.2, Rotation2d.fromDegrees(3));
+	public static final Pose2d PROCESSOR_RELATIVE_SCORING_DEADBANDS = new Pose2d(0.5, 0.5, Rotation2d.fromRadians(2));
+
 }

@@ -132,4 +132,11 @@ public class ScoringHelpers {
 		return slots[closestSlotIndex];
 	}
 
+	public static Pose2d getIntakePose(CoralStationSlot coralStationSlot) {
+		Pose2d coralStationSlotPose = Field.getCoralStationSlot(coralStationSlot);
+		Translation2d rotatedEndEffectorOffset = ScoringHelpers.END_EFFECTOR_OFFSET_FROM_MID_ROBOT.rotateBy(coralStationSlotPose.getRotation());
+
+		return new Pose2d(coralStationSlotPose.getTranslation().plus(rotatedEndEffectorOffset), coralStationSlotPose.getRotation());
+	}
+
 }

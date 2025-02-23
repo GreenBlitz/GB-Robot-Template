@@ -2,12 +2,15 @@ package frc.robot.subsystems.climb.lifter.factory;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.IDs;
 import frc.robot.RobotConstants;
+import frc.robot.hardware.digitalinput.IDigitalInput;
+import frc.robot.hardware.digitalinput.supplied.SuppliedDigitalInput;
 import frc.robot.hardware.mechanisms.wpilib.SingleJointedArmSimulation;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
@@ -25,6 +28,8 @@ public class Falcon500LifterBuilder {
 	private static final boolean SET_BRAKE = true;
 	private static final boolean INVERTED = false;
 	private static final double MOMENT_OF_INERTIA = 0.001;
+
+	private static final double DEBOUNCE_TIME = 0.02;
 
 	private static final Rotation2d MAXIMUM_POSITION = Rotation2d.fromDegrees(200);
 
@@ -61,7 +66,13 @@ public class Falcon500LifterBuilder {
 		Phoenix6AngleSignal positionSignal = Phoenix6SignalBuilder
 			.build(lifter.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
 
-		return new Lifter(logPath, lifter, positionSignal);
+		IDigitalInput limitSwitch = new SuppliedDigitalInput(
+			() -> lifter.getDevice().getReverseLimit().asSupplier().get().value == 0,
+			new Debouncer(DEBOUNCE_TIME)
+		);
+
+
+		return new Lifter(logPath, lifter, positionSignal, limitSwitch);
 	}
 
 }

@@ -42,7 +42,7 @@ public class ClimbStateHandler {
 	private Command climb() {
 		return new SequentialCommandGroup(
 			new ParallelCommandGroup(lifterStateHandler.setState(LifterState.CLIMB), solenoidStateHandler.setState(SolenoidState.LOCKED))
-				.until(() -> lifterStateHandler.isLower(LifterState.CLIMB.getTargetPosition())),
+				.until(lifterStateHandler::isAtLimitSwitch),
 			new ParallelCommandGroup(lifterStateHandler.setState(LifterState.HOLD), solenoidStateHandler.setState(SolenoidState.LOCKED))
 		);
 	}
@@ -50,7 +50,7 @@ public class ClimbStateHandler {
 	private Command close() {
 		return new SequentialCommandGroup(
 			new ParallelCommandGroup(lifterStateHandler.setState(LifterState.CLOSE), solenoidStateHandler.setState(SolenoidState.LOCKED))
-				.until(() -> lifterStateHandler.isLower(LifterState.CLOSE.getTargetPosition())),
+				.until(lifterStateHandler::isAtLimitSwitch),
 			new ParallelCommandGroup(lifterStateHandler.setState(LifterState.HOLD), solenoidStateHandler.setState(SolenoidState.LOCKED))
 		);
 	}

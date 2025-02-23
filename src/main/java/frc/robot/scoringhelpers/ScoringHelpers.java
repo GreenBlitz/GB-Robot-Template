@@ -12,12 +12,14 @@ import frc.constants.field.enums.ReefSide;
 import frc.constants.field.enums.*;
 import frc.robot.Robot;
 import frc.robot.statemachine.superstructure.ScoreLevel;
+import frc.utils.math.AngleTransform;
 import frc.utils.pose.Side;
 import org.littletonrobotics.junction.Logger;
 
 public class ScoringHelpers {
 
 	public static final Translation2d END_EFFECTOR_OFFSET_FROM_MID_ROBOT = new Translation2d(0, 0.014);
+	private static final Pose2d PROCESSOR_SCORING_POSE = new Pose2d(6, 0.7, Field.getProcessor().getRotation());
 
 	public static ScoreLevel targetScoreLevel = ScoreLevel.L4;
 	public static Cage targetCage = Cage.FIELD_CENTER;
@@ -105,6 +107,10 @@ public class ScoringHelpers {
 		return new Pose2d(reefMiddleTranslation.minus(differenceTranslation), targetRobotAngle);
 	}
 
+	public static Pose2d getAllianceRelativeProcessorScoringPose() {
+		return Field.getAllianceRelative(PROCESSOR_SCORING_POSE, true, true, AngleTransform.KEEP);
+	}
+
 	public static void log(String logPath) {
 		Logger.recordOutput(logPath + "/TargetBranch", getTargetBranch());
 		Logger.recordOutput(logPath + "/TargetReefSide", getTargetReefSide());
@@ -126,6 +132,13 @@ public class ScoringHelpers {
 			}
 		}
 		return slots[closestSlotIndex];
+	}
+
+	public static Pose2d getIntakePose(CoralStationSlot coralStationSlot) {
+		Pose2d coralStationSlotPose = Field.getCoralStationSlot(coralStationSlot);
+		Translation2d rotatedEndEffectorOffset = ScoringHelpers.END_EFFECTOR_OFFSET_FROM_MID_ROBOT.rotateBy(coralStationSlotPose.getRotation());
+
+		return new Pose2d(coralStationSlotPose.getTranslation().plus(rotatedEndEffectorOffset), coralStationSlotPose.getRotation());
 	}
 
 }

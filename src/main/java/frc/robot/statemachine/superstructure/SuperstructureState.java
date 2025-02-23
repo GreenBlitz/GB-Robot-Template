@@ -17,6 +17,7 @@ public enum SuperstructureState {
 	PRE_NET,
 	NET_WITHOUT_RELEASE,
 	NET_WITH_RELEASE,
+	PROCESSOR_OUTTAKE,
 	PRE_CLIMB,
 	CLIMB;
 

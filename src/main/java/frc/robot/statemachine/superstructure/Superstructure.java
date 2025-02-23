@@ -313,21 +313,39 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command algaeOuttake() {
+	public Command processorScore() {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
-					elevatorStateHandler.setState(ElevatorState.ALGAE_OUTTAKE),
-					armStateHandler.setState(ArmState.ALGAE_OUTTAKE),
+					elevatorStateHandler.setState(ElevatorState.PROCESSOR_OUTTAKE),
+					armStateHandler.setState(ArmState.PROCESSOR_OUTTAKE),
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
 				).until(this::isReadyToOuttakeAlgae),
 				new ParallelCommandGroup(
-					elevatorStateHandler.setState(ElevatorState.ALGAE_OUTTAKE),
-					armStateHandler.setState(ArmState.ALGAE_OUTTAKE),
-					endEffectorStateHandler.setState(EndEffectorState.ALGAE_OUTTAKE)
+					elevatorStateHandler.setState(ElevatorState.PROCESSOR_OUTTAKE),
+					armStateHandler.setState(ArmState.PROCESSOR_OUTTAKE),
+					endEffectorStateHandler.setState(EndEffectorState.PROCESSOR_OUTTAKE)
 				)
 			).until(() -> !isAlgaeIn()),
-			SuperstructureState.ALGAE_OUTTAKE
+			SuperstructureState.PROCESSOR_OUTTAKE
+		);
+	}
+
+	public Command algaeOuttake() {
+		return asSubsystemCommand(
+				new SequentialCommandGroup(
+						new ParallelCommandGroup(
+								elevatorStateHandler.setState(ElevatorState.ALGAE_OUTTAKE),
+								armStateHandler.setState(ArmState.ALGAE_OUTTAKE),
+								endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+						).until(this::isReadyToOuttakeAlgae),
+						new ParallelCommandGroup(
+								elevatorStateHandler.setState(ElevatorState.ALGAE_OUTTAKE),
+								armStateHandler.setState(ArmState.ALGAE_OUTTAKE),
+								endEffectorStateHandler.setState(EndEffectorState.ALGAE_OUTTAKE)
+						)
+				).until(() -> !isAlgaeIn()),
+				SuperstructureState.ALGAE_OUTTAKE
 		);
 	}
 
@@ -381,7 +399,7 @@ public class Superstructure extends GBSubsystem {
 	private Command endState(SuperstructureState state) {
 		return switch (state) {
 			case STAY_IN_PLACE, OUTTAKE -> stayInPlace();
-			case INTAKE, IDLE, POST_ALGAE_REMOVE, ALGAE_OUTTAKE, CLOSE_L4 -> idle();
+			case INTAKE, IDLE, POST_ALGAE_REMOVE, ALGAE_OUTTAKE, CLOSE_L4, PROCESSOR_OUTTAKE -> idle();
 			case ALGAE_REMOVE -> postAlgaeRemove();
 			case ARM_PRE_SCORE -> armPreScore();
 			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> afterScore();

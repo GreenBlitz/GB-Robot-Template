@@ -95,6 +95,13 @@ public class Superstructure extends GBSubsystem {
 			&& armStateHandler.getCurrentState() == ArmState.CLOSED;
 	}
 
+	public boolean isReadyForNet() {
+		return robot.getElevator().isAtPosition(ElevatorState.NET.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
+			&& elevatorStateHandler.getCurrentState() == ElevatorState.NET
+			&& robot.getArm().isAtPosition(ArmState.NET.getPosition(), Tolerances.ARM_POSITION)
+			&& armStateHandler.getCurrentState() == ArmState.NET;
+	}
+
 	@Override
 	protected void subsystemPeriodic() {
 		log();
@@ -324,6 +331,49 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
+	public Command preNet() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.WHILE_DRIVE_NET),
+				armStateHandler.setState(ArmState.PRE_NET),
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+			),
+			SuperstructureState.PRE_NET
+		);
+	}
+
+
+	public Command netWithoutRelease() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.NET),
+				armStateHandler.setState(ArmState.NET),
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+			),
+			SuperstructureState.NET_WITHOUT_RELEASE
+		);
+	}
+
+
+	public Command netWithRelease() {
+		return asSubsystemCommand(
+			new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.NET),
+					armStateHandler.setState(ArmState.NET),
+					endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE)
+				).until(() -> !isAlgaeIn()),
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.NET),
+					armStateHandler.setState(ArmState.NET),
+					endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE)
+				).withTimeout(StateMachineConstants.NET_OUTTAKE_TIME_AFTER_LIMIT_SWITCH_SECONDS)
+			),
+			SuperstructureState.NET_WITH_RELEASE
+		);
+	}
+
+
 	private Command asSubsystemCommand(Command command, SuperstructureState state) {
 		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
 	}
@@ -335,6 +385,7 @@ public class Superstructure extends GBSubsystem {
 			case ALGAE_REMOVE -> postAlgaeRemove();
 			case ARM_PRE_SCORE -> armPreScore();
 			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> afterScore();
+			case PRE_NET, NET_WITHOUT_RELEASE, NET_WITH_RELEASE -> preNet();
 		};
 	}
 

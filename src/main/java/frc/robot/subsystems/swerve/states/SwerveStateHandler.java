@@ -96,11 +96,14 @@ public class SwerveStateHandler {
 		}
 		if (swerveState.getAimAssist() == AimAssist.ALGAE_REMOVE) {
 			if (reefSideSupplier.get().isPresent()) {
-				return handleAlgaeAimAssist(speeds, robotPoseSupplier.get().get(), reefSideSupplier.get().get(), swerveState);
+				return handleAlgaeRemoveAimAssist(speeds, robotPoseSupplier.get().get(), reefSideSupplier.get().get(), swerveState);
 			} else {
 				reportMissingSupplier("reef side");
 				return speeds;
 			}
+		}
+		if (swerveState.getAimAssist() == AimAssist.NET) {
+			return handleNetAimAssist(speeds, robotPoseSupplier.get().get().getRotation());
 		}
 
 		return speeds;
@@ -124,12 +127,18 @@ public class SwerveStateHandler {
 		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, headingToReefSide, branch, swerveConstants, swerveState);
 	}
 
-	private ChassisSpeeds handleAlgaeAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, ReefSide reefSide, SwerveState swerveState) {
+	private ChassisSpeeds handleAlgaeRemoveAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, ReefSide reefSide, SwerveState swerveState) {
 		Translation2d reefSideMiddle = Field.getReefSideMiddle(reefSide).getTranslation();
 		Rotation2d headingToReefSide = Field.getReefSideMiddle(reefSide).getRotation();
 
 		chassisSpeeds = AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotPose.getRotation(), headingToReefSide, swerveConstants);
 		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, headingToReefSide, reefSideMiddle, swerveConstants, swerveState);
+	}
+
+	private ChassisSpeeds handleNetAimAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading) {
+		Rotation2d headingToBarge = Field.getAllianceRelative(Rotation2d.fromDegrees(0));
+
+		return AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotHeading, headingToBarge, swerveConstants);
 	}
 
 	public Translation2d getRotationAxis(RotateAxis rotationAxisState) {

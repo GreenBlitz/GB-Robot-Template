@@ -38,7 +38,7 @@ public class Filter<T> {
 		return new Filter<>(data -> !apply(data) || otherFilter.apply(data));
 	}
 
-	public <E extends T> Filter<E> iff(Filter<E> otherFIlter) {
+	public <E extends T> Filter<E> ifAndOnlyIf(Filter<E> otherFIlter) {
 		return new Filter<>(data -> apply(data) == otherFIlter.apply(data));
 	}
 

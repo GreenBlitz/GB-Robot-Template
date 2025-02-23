@@ -15,7 +15,10 @@ import java.util.function.Supplier;
 public class VisionFilters {
 
 	public static Filter<VisionData> isDataFromMegaTag2() {
-		return new Filter<>(data -> data.getSource() instanceof LimeLightSource limeLightSource && limeLightSource.getPoseEstimationMethod() == LimelightPoseEstimationMethod.MEGATAG_2);
+		return new Filter<>(
+			data -> data.getSource() instanceof LimeLightSource limeLightSource
+				&& limeLightSource.getPoseEstimationMethod() == LimelightPoseEstimationMethod.MEGATAG_2
+		);
 	}
 
 	public static Filter<VisionData> isRollAtAngle(Rotation2d wantedRoll, Rotation2d rollTolerance) {

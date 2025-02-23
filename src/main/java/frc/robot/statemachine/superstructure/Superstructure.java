@@ -433,12 +433,12 @@ public class Superstructure extends GBSubsystem {
 					.until(() -> robot.getElevator().isPastPosition(ElevatorState.AUTO_RELEASE.getHeightMeters())),
 				new DeferredCommand(
 					() -> new ParallelCommandGroup(
+						climbStateHandler.setState(ClimbState.CLOSE),
 						elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorWhileDrive()),
 						armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmPreScore()),
 						endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
-						// climb - waiting for state closed
 					),
-					Set.of(robot.getElevator(), robot.getArm(), robot.getEndEffector(), this)
+					Set.of(robot.getLifter(), robot.getSolenoid(), robot.getElevator(), robot.getArm(), robot.getEndEffector(), this)
 				)
 			),
 			SuperstructureState.AUTO_RELEASE_SEQUENCE

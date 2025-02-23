@@ -131,13 +131,6 @@ public class RobotCommander extends GBSubsystem {
 			<= StateMachineConstants.DISTANCE_FROM_CORAL_STATION_SLOT_TO_START_AIM_ASSIST_METERS;
 	}
 
-	private boolean isReadyToStartCageAimAssist() {
-		Translation2d robotTranslation = robot.getPoseEstimator().getEstimatedPose().getTranslation();
-		Translation2d cageTranslation = Field.getCage(ScoringHelpers.targetCage).getTranslation();
-
-		return robotTranslation.getDistance(cageTranslation) <= StateMachineConstants.DISTANCE_FROM_CAGE_TO_START_AIM_ASSIST;
-	}
-
 	public boolean isCloseToNet(double distance) {
 		double distanceFromMidXAxis = Math.abs(robot.getPoseEstimator().getEstimatedPose().getTranslation().getX() - Field.LENGTH_METERS / 2);
 		return distanceFromMidXAxis < distance;

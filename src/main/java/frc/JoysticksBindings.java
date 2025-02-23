@@ -107,12 +107,6 @@ public class JoysticksBindings {
 
 		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
 
-		ClimbStateHandler climbStateHandler = new ClimbStateHandler(
-			new SolenoidStateHandler(robot.getSolenoid()),
-			new LifterStateHandler(robot.getLifter())
-		);
-		usedJoystick.A.onTrue(climbStateHandler.setState(ClimbState.CLOSE));
-
 		usedJoystick.POV_UP.onTrue(
 			new InstantCommand(
 				() -> robot.getRobotCommander()

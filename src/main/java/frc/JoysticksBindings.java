@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.constants.field.enums.Cage;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
@@ -11,8 +12,16 @@ import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.RobotState;
 import frc.robot.statemachine.superstructure.ScoreLevel;
+import frc.robot.subsystems.climb.ClimbState;
+import frc.robot.subsystems.climb.ClimbStateHandler;
+import frc.robot.subsystems.climb.lifter.LifterState;
+import frc.robot.subsystems.climb.lifter.LifterStateHandler;
+import frc.robot.subsystems.climb.solenoid.SolenoidState;
+import frc.robot.subsystems.climb.solenoid.SolenoidStateHandler;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.states.SwerveState;
+import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.pose.Side;
 import frc.utils.utilcommands.ExecuteEndCommand;
 
@@ -112,7 +121,32 @@ public class JoysticksBindings {
 	private static void thirdJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = THIRD_JOYSTICK;
 		// bindings...
-		robot.getSwerve().applyCalibrationBindings(usedJoystick, () -> robot.getPoseEstimator().getEstimatedPose());
+//		robot.getSwerve().applyCalibrationBindings(usedJoystick, () -> robot.getPoseEstimator().getEstimatedPose());
+
+		SolenoidStateHandler solenoidStateHandler = new SolenoidStateHandler(robot.getSolenoid());
+		LifterStateHandler lifterStateHandler = new LifterStateHandler(robot.getLifter());
+
+		//RobotCommander - FULL CLIMB testing
+		usedJoystick.L3.onTrue(robot.getRobotCommander().setState(RobotState.PRE_CLIMB));
+		usedJoystick.R3.onTrue(robot.getRobotCommander().setState(RobotState.CLIMB));
+
+		// Climb State Testing
+
+		ClimbStateHandler climbStateHandler = new ClimbStateHandler(solenoidStateHandler, lifterStateHandler);
+
+		usedJoystick.A.onTrue(climbStateHandler.setState(ClimbState.STOP));
+		usedJoystick.B.onTrue(climbStateHandler.setState(ClimbState.DEPLOY));
+		usedJoystick.X.onTrue(climbStateHandler.setState(ClimbState.CLIMB));
+
+		// Manual Climbing for Lifter Position
+		usedJoystick.POV_DOWN.onTrue(solenoidStateHandler.setState(SolenoidState.INITIAL_FREE));
+		usedJoystick.POV_RIGHT.onTrue(solenoidStateHandler.setState(SolenoidState.HOLD_FREE));
+		usedJoystick.POV_LEFT.onTrue(solenoidStateHandler.setState(SolenoidState.LOCKED));
+
+		usedJoystick.L1.onTrue(lifterStateHandler.setState(LifterState.DEPLOY));
+		usedJoystick.R1.onTrue(lifterStateHandler.setState(LifterState.CLIMB));
+		usedJoystick.Y.onTrue(lifterStateHandler.setState(LifterState.HOLD));
+
 	}
 
 	private static void fourthJoystickButtons(Robot robot) {

@@ -318,13 +318,13 @@ public class RobotCommander extends GBSubsystem {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				superstructure.preClimb(),
-				new SequentialCommandGroup(
-					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE).until(this::isReadyToStartCageAimAssist),
-					swerve.getCommandsBuilder()
-						.driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CAGE))
-						.withTimeout(StateMachineConstants.CAGE_AIM_ASSIST_TIMEOUT),
+//				new SequentialCommandGroup(
+//					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE).until(this::isReadyToStartCageAimAssist),
+//					swerve.getCommandsBuilder()
+//						.driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CAGE))
+//						.withTimeout(StateMachineConstants.CAGE_AIM_ASSIST_TIMEOUT),
 					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
-				)
+//				)
 			),
 			RobotState.PRE_CLIMB
 		);

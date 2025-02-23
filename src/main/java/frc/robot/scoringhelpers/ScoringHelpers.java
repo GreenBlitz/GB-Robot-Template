@@ -103,7 +103,7 @@ public class ScoringHelpers {
 		return new Pose2d(reefMiddleTranslation.minus(differenceTranslation), targetRobotAngle);
 	}
 
-	public static void log(String logPath, Robot robot) {
+	public static void log(String logPath) {
 		Logger.recordOutput(logPath + "/TargetBranch", getTargetBranch());
 		Logger.recordOutput(logPath + "/TargetReefSide", getTargetReefSide());
 		Logger.recordOutput(logPath + "/TargetCoralStation", latestWantedCoralStation);

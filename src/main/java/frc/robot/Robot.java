@@ -173,7 +173,7 @@ public class Robot {
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		simulationManager.logPoses();
-		ScoringHelpers.log("Scoring", this);
+		ScoringHelpers.log("Scoring");
 		ButtonDriverHelper.log("Scoring/ButtonDriverDisplay");
 
 		CommandScheduler.getInstance().run(); // Should be last

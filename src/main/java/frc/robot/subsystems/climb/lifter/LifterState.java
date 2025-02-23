@@ -8,7 +8,8 @@ public enum LifterState {
 	FORWARD(Rotation2d.fromDegrees(0), 0.2),
 	BACKWARD(Rotation2d.fromDegrees(0), -0.2),
 	CLIMB(Rotation2d.fromDegrees(0), -0.9),
-	DEPLOY(Rotation2d.fromDegrees(100), 0.4);
+	DEPLOY(Rotation2d.fromDegrees(100), 0.4),
+	CLOSE(Rotation2d.fromDegrees(-9), -0.3);
 
 	private final Rotation2d targetPosition;
 	private final double power;

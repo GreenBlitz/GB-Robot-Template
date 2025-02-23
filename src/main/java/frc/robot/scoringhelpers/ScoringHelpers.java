@@ -9,6 +9,7 @@ import frc.constants.field.enums.Branch;
 import frc.constants.field.enums.CoralStationSlot;
 import frc.constants.field.enums.CoralStation;
 import frc.constants.field.enums.ReefSide;
+import frc.constants.field.enums.*;
 import frc.robot.Robot;
 import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.utils.math.AngleTransform;
@@ -21,6 +22,7 @@ public class ScoringHelpers {
 	private static final Pose2d PROCESSOR_SCORING_POSE = new Pose2d(6, 0.7, Field.getProcessor().getRotation());
 
 	public static ScoreLevel targetScoreLevel = ScoreLevel.L4;
+	public static Cage targetCage = Cage.FIELD_CENTER;
 
 	private static boolean isFarReefHalf = false;
 	private static Side targetSideForReef = Side.MIDDLE;

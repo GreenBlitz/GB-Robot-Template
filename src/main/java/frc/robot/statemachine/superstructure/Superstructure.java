@@ -14,6 +14,10 @@ import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmState;
 import frc.robot.subsystems.arm.ArmStateHandler;
+import frc.robot.subsystems.climb.ClimbState;
+import frc.robot.subsystems.climb.ClimbStateHandler;
+import frc.robot.subsystems.climb.lifter.LifterStateHandler;
+import frc.robot.subsystems.climb.solenoid.SolenoidStateHandler;
 import frc.robot.subsystems.elevator.ElevatorState;
 import frc.robot.subsystems.elevator.ElevatorStateHandler;
 import frc.robot.subsystems.endeffector.EndEffectorState;
@@ -28,6 +32,7 @@ public class Superstructure extends GBSubsystem {
 	private final ElevatorStateHandler elevatorStateHandler;
 	private final ArmStateHandler armStateHandler;
 	private final EndEffectorStateHandler endEffectorStateHandler;
+	private final ClimbStateHandler climbStateHandler;
 
 	private SuperstructureState currentState;
 	public boolean driverIsCoralInOverride;
@@ -39,6 +44,7 @@ public class Superstructure extends GBSubsystem {
 		this.elevatorStateHandler = new ElevatorStateHandler(robot.getElevator());
 		this.armStateHandler = new ArmStateHandler(robot.getArm());
 		this.endEffectorStateHandler = new EndEffectorStateHandler(robot.getEndEffector(), this);
+		this.climbStateHandler = new ClimbStateHandler(new SolenoidStateHandler(robot.getSolenoid()), new LifterStateHandler(robot.getLifter()));
 
 		this.currentState = SuperstructureState.IDLE;
 		this.driverIsCoralInOverride = false;
@@ -396,6 +402,49 @@ public class Superstructure extends GBSubsystem {
 	}
 
 
+	public Command preClimb() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.CLOSED),
+				armStateHandler.setState(ArmState.CLIMB),
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
+				climbStateHandler.setState(ClimbState.DEPLOY)
+			),
+			SuperstructureState.PRE_CLIMB
+		);
+	}
+
+	public Command climb() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.CLOSED),
+				armStateHandler.setState(ArmState.CLIMB),
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
+				climbStateHandler.setState(ClimbState.CLIMB)
+			),
+			SuperstructureState.CLIMB
+		);
+	}
+
+	public Command autoReleaseSequence() {
+		return asSubsystemCommand(
+			new SequentialCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.AUTO_RELEASE)
+					.until(() -> robot.getElevator().isPastPosition(StateMachineConstants.ELEVATOR_HEIGHT_AUTO_RELEASE_METERS)),
+				new DeferredCommand(
+					() -> new ParallelCommandGroup(
+						climbStateHandler.setState(ClimbState.CLOSE),
+						elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorWhileDrive()),
+						armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmPreScore()),
+						endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+					),
+					Set.of(robot.getLifter(), robot.getSolenoid(), robot.getElevator(), robot.getArm(), robot.getEndEffector(), this)
+				)
+			),
+			SuperstructureState.AUTO_RELEASE_SEQUENCE
+		);
+	}
+
 	private Command asSubsystemCommand(Command command, SuperstructureState state) {
 		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
 	}
@@ -408,6 +457,9 @@ public class Superstructure extends GBSubsystem {
 			case ARM_PRE_SCORE -> armPreScore();
 			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> afterScore();
 			case PRE_NET, NET_WITHOUT_RELEASE, NET_WITH_RELEASE -> preNet();
+			case PRE_CLIMB -> preClimb();
+			case CLIMB -> climb();
+			case AUTO_RELEASE_SEQUENCE -> autoReleaseSequence();
 		};
 	}
 

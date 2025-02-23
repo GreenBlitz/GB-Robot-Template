@@ -7,6 +7,7 @@ public enum AimAssist {
 	BRANCH,
 	ALGAE_REMOVE,
 	CORAL_STATION,
-	CAGE;
+	CAGE,
+	NET;
 
 }

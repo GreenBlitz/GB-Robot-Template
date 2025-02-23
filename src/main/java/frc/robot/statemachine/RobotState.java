@@ -2,6 +2,7 @@ package frc.robot.statemachine;
 
 public enum RobotState {
 
+	STAY_IN_PLACE,
 	DRIVE,
 	INTAKE,
 	CORAL_OUTTAKE,
@@ -12,6 +13,9 @@ public enum RobotState {
 	SCORE,
 	ALGAE_REMOVE,
 	ALGAE_OUTTAKE,
+	PRE_NET,
+	NET_WITHOUT_RELEASE,
+	NET_WITH_RELEASE,
 	PRE_CLIMB,
 	CLIMB;
 

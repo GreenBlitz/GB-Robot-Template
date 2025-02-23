@@ -2,6 +2,7 @@ package frc.robot.statemachine.superstructure;
 
 public enum SuperstructureState {
 
+	STAY_IN_PLACE,
 	IDLE,
 	INTAKE,
 	OUTTAKE,
@@ -13,6 +14,9 @@ public enum SuperstructureState {
 	POST_ALGAE_REMOVE,
 	ALGAE_REMOVE,
 	ALGAE_OUTTAKE,
+	PRE_NET,
+	NET_WITHOUT_RELEASE,
+	NET_WITH_RELEASE,
 	PRE_CLIMB,
 	CLIMB;
 

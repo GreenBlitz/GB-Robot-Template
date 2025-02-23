@@ -131,9 +131,23 @@ public class RobotCommander extends GBSubsystem {
 		return robotTranslation.getDistance(cageTranslation) <= StateMachineConstants.DISTANCE_FROM_CAGE_TO_START_AIM_ASSIST;
 	}
 
+	public boolean isCloseToNet(double distance) {
+		double distanceFromMidXAxis = Math.abs(robot.getPoseEstimator().getEstimatedPose().getTranslation().getX() - Field.LENGTH_METERS / 2);
+		return distanceFromMidXAxis < distance;
+	}
+
+	public boolean isAtOpenSuperstructureDistanceFromNet() {
+		return isCloseToNet(StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_NET_METERS);
+	}
+
+	public boolean isReadyForNet() {
+		return isCloseToNet(StateMachineConstants.SCORE_DISTANCE_FROM_NET_METERS) && superstructure.isReadyForNet();
+	}
+
 	public Command setState(RobotState state) {
 		return switch (state) {
 			case DRIVE -> drive();
+			case STAY_IN_PLACE -> stayInPlace();
 			case INTAKE -> intake();
 			case CORAL_OUTTAKE -> coralOuttake();
 			case ALIGN_REEF -> alignReef();
@@ -143,6 +157,9 @@ public class RobotCommander extends GBSubsystem {
 			case SCORE -> score();
 			case ALGAE_REMOVE -> algaeRemove();
 			case ALGAE_OUTTAKE -> algaeOuttake();
+			case PRE_NET -> preNet();
+			case NET_WITHOUT_RELEASE -> netWithoutRelease();
+			case NET_WITH_RELEASE -> netWithRelease();
 			case PRE_CLIMB -> preClimb();
 			case CLIMB -> climb();
 		};
@@ -194,10 +211,25 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
+	public Command fullyPreNet() {
+		return new SequentialCommandGroup(preNet().until(this::isAtOpenSuperstructureDistanceFromNet), netWithoutRelease());
+	}
+
+	public Command fullyNet() {
+		return new SequentialCommandGroup(fullyPreNet().until(this::isReadyForNet), netWithRelease());
+	}
+
 	private Command drive() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(superstructure.idle(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
 			RobotState.DRIVE
+		);
+	}
+
+	private Command stayInPlace() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(superstructure.stayInPlace(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			RobotState.STAY_IN_PLACE
 		);
 	}
 
@@ -213,7 +245,7 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command coralOuttake() {
 		return asSubsystemCommand(
-			new ParallelCommandGroup(superstructure.outtake(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			new ParallelDeadlineGroup(superstructure.outtake(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
 			RobotState.CORAL_OUTTAKE
 		);
 	}
@@ -314,17 +346,47 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
+	private Command preNet() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				superstructure.preNet(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
+			),
+			RobotState.PRE_NET
+		);
+	}
+
+	private Command netWithoutRelease() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				superstructure.netWithoutRelease(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
+			),
+			RobotState.NET_WITHOUT_RELEASE
+		);
+	}
+
+	private Command netWithRelease() {
+		return asSubsystemCommand(
+			new ParallelDeadlineGroup(
+				superstructure.netWithRelease(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
+			),
+			RobotState.NET_WITH_RELEASE
+		);
+	}
+
 	private Command preClimb() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				superstructure.preClimb(),
-//				new SequentialCommandGroup(
-//					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE).until(this::isReadyToStartCageAimAssist),
-//					swerve.getCommandsBuilder()
-//						.driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CAGE))
-//						.withTimeout(StateMachineConstants.CAGE_AIM_ASSIST_TIMEOUT),
+				new SequentialCommandGroup(
+					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE).until(this::isReadyToStartCageAimAssist),
+					swerve.getCommandsBuilder()
+						.driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CAGE))
+						.withTimeout(StateMachineConstants.CAGE_AIM_ASSIST_TIMEOUT),
 					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
-//				)
+				)
 			),
 			RobotState.PRE_CLIMB
 		);
@@ -343,11 +405,13 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command endState(RobotState state) {
 		return switch (state) {
-			case INTAKE, CORAL_OUTTAKE, DRIVE, ALIGN_REEF, ALGAE_OUTTAKE -> drive();
+			case STAY_IN_PLACE, CORAL_OUTTAKE -> stayInPlace();
+			case INTAKE, DRIVE, ALIGN_REEF, ALGAE_OUTTAKE -> drive();
 			case ARM_PRE_SCORE -> armPreScore();
 			case PRE_SCORE -> preScore();
 			case SCORE, SCORE_WITHOUT_RELEASE -> closeAfterScore();
 			case ALGAE_REMOVE -> closeAfterAlgaeRemove();
+			case PRE_NET, NET_WITHOUT_RELEASE, NET_WITH_RELEASE -> preNet();
 			case PRE_CLIMB -> preClimb();
 			case CLIMB -> climb();
 		};

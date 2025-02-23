@@ -86,7 +86,7 @@ public class Robot {
 	private final SimulationManager simulationManager;
 	private final RobotCommander robotCommander;
 
-	private LoggedDashboardChooser<Command> whereToScoreFirstObjectChooser;
+	private LoggedDashboardChooser<Supplier<Command>> whereToScoreFirstObjectChooser;
 	private AutonomousChooser whereToIntakeSecondObjectChooser;
 	private AutonomousChooser whereToScoreSecondObjectChooser;
 	private AutonomousChooser whereToIntakeThirdObjectChooser;
@@ -189,9 +189,9 @@ public class Robot {
 			new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4).andThen(robotCommander.getSuperstructure().armPreScore())
 		);
 
-		SendableChooser<Command> chooser = new SendableChooser<>();
+		SendableChooser<Supplier<Command>> chooser = new SendableChooser<>();
 		for (Branch branch : Branch.values()) {
-			chooser.addOption(branch.name(), new InstantCommand(() -> {
+			chooser.addOption(branch.name(), () -> new InstantCommand(() -> {
 				ScoringHelpers.targetScoreLevel = ScoreLevel.L4;
 				if (branch.isLeft() != ScoringHelpers.getTargetBranch().isLeft()) {
 					ScoringHelpers.toggleIsLeftBranch();
@@ -202,7 +202,7 @@ public class Robot {
 				ScoringHelpers.setTargetSideForReef(branch.getReefSide().getSide());
 			}).andThen(robotCommander.autoScore()));
 		}
-		chooser.setDefaultOption("None", Commands.none());
+		chooser.setDefaultOption("None", Commands::none);
 
 		this.whereToScoreFirstObjectChooser = new LoggedDashboardChooser<>("ScoreFirst", chooser);
 		this.whereToIntakeSecondObjectChooser = new AutonomousChooser(
@@ -258,7 +258,7 @@ public class Robot {
 	}
 
 	public Command getAuto() {
-		return whereToScoreFirstObjectChooser.get()
+		return whereToScoreFirstObjectChooser.get().get()
 			.andThen(
 				PathPlannerAutoWrapper.chainAutos(
 					whereToIntakeSecondObjectChooser.getChosenValue(),

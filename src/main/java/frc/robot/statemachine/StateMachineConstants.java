@@ -10,6 +10,7 @@ public class StateMachineConstants {
 	public static final double DISTANCE_TO_BRANCH_FOR_STARTING_PATH = 0.7;
 	public static final double OPEN_SUPERSTRUCTURE_DISTANCE_FROM_NET_METERS = 2.4;
 	public static final double SCORE_DISTANCE_FROM_NET_METERS = 2;
+	public static final Rotation2d TARGET_HEADING_FOR_NET = Rotation2d.fromDegrees(0);
 
 
 	public static final double DISTANCE_FROM_CORAL_STATION_SLOT_TO_START_AIM_ASSIST_METERS = 2;

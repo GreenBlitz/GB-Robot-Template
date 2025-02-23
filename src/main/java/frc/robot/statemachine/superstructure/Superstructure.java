@@ -91,7 +91,7 @@ public class Superstructure extends GBSubsystem {
 	public boolean isReadyToOuttakeAlgae() {
 		return robot.getElevator().isAtPosition(ElevatorState.ALGAE_OUTTAKE.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
 			&& elevatorStateHandler.getCurrentState() == ElevatorState.ALGAE_OUTTAKE
-			&& robot.getArm().isAtPosition(ArmState.ALGAE_OUTTAKE.getPosition(), Tolerances.ARM_POSITION_ALGAE)
+			&& robot.getArm().isAtPosition(ArmState.ALGAE_OUTTAKE.getPosition(), Tolerances.ALGAE_RELEASE_ARM_POSITION)
 			&& armStateHandler.getCurrentState() == ArmState.ALGAE_OUTTAKE;
 	}
 

@@ -105,14 +105,6 @@ public class JoysticksBindings {
 		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.PROCESSOR_SCORE));
 
 		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
-
-		usedJoystick.POV_UP.onTrue(
-			new InstantCommand(
-				() -> robot.getRobotCommander()
-					.getSuperstructure().driverIsAlgaeInOverride = !robot.getRobotCommander().getSuperstructure().driverIsAlgaeInOverride
-
-			)
-		);
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

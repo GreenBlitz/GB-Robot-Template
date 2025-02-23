@@ -12,6 +12,8 @@ public class StateMachineConstants {
 	public static final double SCORE_DISTANCE_FROM_NET_METERS = 2;
 
 
+	public static final double DISTANCE_FROM_CORAL_STATION_SLOT_TO_START_AIM_ASSIST_METERS = 2;
+
 	public static final Translation2d CLOSE_SUPERSTRUCTURE_LENGTH_AND_WIDTH = new Translation2d(0.79, 1.03);
 
 	public static final double SCORE_OUTTAKE_TIME_AFTER_BEAM_BREAK_SECONDS = 0;

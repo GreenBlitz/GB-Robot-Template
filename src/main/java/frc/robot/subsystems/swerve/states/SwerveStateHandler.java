@@ -8,6 +8,7 @@ import frc.constants.MathConstants;
 import frc.constants.field.Field;
 import frc.constants.field.enums.Branch;
 import frc.constants.field.enums.CoralStation;
+import frc.constants.field.enums.CoralStationSlot;
 import frc.constants.field.enums.ReefSide;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.subsystems.swerve.Swerve;
@@ -29,6 +30,7 @@ public class SwerveStateHandler {
 	private Supplier<Optional<ReefSide>> reefSideSupplier;
 	private Supplier<Optional<CoralStation>> coralStationSupplier;
 	private Supplier<Optional<Branch>> branchSupplier;
+	private Supplier<Optional<CoralStationSlot>> coralStationSlotSupplier;
 
 	public SwerveStateHandler(Swerve swerve) {
 		this.swerve = swerve;
@@ -38,6 +40,7 @@ public class SwerveStateHandler {
 		this.reefSideSupplier = Optional::empty;
 		this.coralStationSupplier = Optional::empty;
 		this.branchSupplier = Optional::empty;
+		this.coralStationSlotSupplier = Optional::empty;
 	}
 
 	public void setRobotPoseSupplier(Supplier<Pose2d> robotPoseSupplier) {
@@ -54,6 +57,10 @@ public class SwerveStateHandler {
 
 	public void setBranchSupplier(Supplier<Optional<Branch>> branchSupplier) {
 		this.branchSupplier = branchSupplier;
+	}
+
+	public void setCoralStationSlotSupplier(Supplier<Optional<CoralStationSlot>> coralStationSlotSupplier) {
+		this.coralStationSlotSupplier = coralStationSlotSupplier;
 	}
 
 	private void reportMissingSupplier(String supplierName) {
@@ -105,6 +112,14 @@ public class SwerveStateHandler {
 		if (swerveState.getAimAssist() == AimAssist.NET) {
 			return handleNetAimAssist(speeds, robotPoseSupplier.get().get().getRotation());
 		}
+		if (swerveState.getAimAssist() == AimAssist.CORAL_STATION_SLOT) {
+			if (coralStationSlotSupplier.get().isPresent()) {
+				return handleCoralStationSlotAimAssist(speeds, robotPoseSupplier.get().get(), coralStationSlotSupplier.get().get(), swerveState);
+			} else {
+				reportMissingSupplier("coral station slots");
+				return speeds;
+			}
+		}
 
 		return speeds;
 	}
@@ -125,6 +140,19 @@ public class SwerveStateHandler {
 
 		chassisSpeeds = AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotPose.getRotation(), headingToReefSide, swerveConstants);
 		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, headingToReefSide, branch, swerveConstants, swerveState);
+	}
+
+	private ChassisSpeeds handleCoralStationSlotAimAssist(
+		ChassisSpeeds chassisSpeeds,
+		Pose2d robotPose,
+		CoralStationSlot coralStationSlot,
+		SwerveState swerveState
+	) {
+		Translation2d slot = Field.getCoralStationSlot(coralStationSlot).getTranslation();
+		Rotation2d headingToCoralStation = Field.getCoralStationSlot(coralStationSlot).getRotation();
+
+		chassisSpeeds = AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotPose.getRotation(), headingToCoralStation, swerveConstants);
+		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, headingToCoralStation, slot, swerveConstants, swerveState);
 	}
 
 	private ChassisSpeeds handleAlgaeRemoveAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, ReefSide reefSide, SwerveState swerveState) {

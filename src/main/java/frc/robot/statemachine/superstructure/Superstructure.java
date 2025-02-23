@@ -286,12 +286,13 @@ public class Superstructure extends GBSubsystem {
 						elevatorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getElevatorState()),
 						armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getArmState()),
 						endEffectorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getEndEffectorState())
-					).until(this::isAlgaeIn),
-					new ParallelCommandGroup(
-						elevatorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getElevatorState()),
-						armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getArmState()),
-						endEffectorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getEndEffectorState())
-					).withTimeout(StateMachineConstants.ALGAE_REMOVE_TIME_AFTER_LIMIT_SWITCH_SECONDS)
+					)
+//							.until(this::isAlgaeIn),
+//					new ParallelCommandGroup(
+//						elevatorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getElevatorState()),
+//						armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getArmState()),
+//						endEffectorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getEndEffectorState())
+//					).withTimeout(StateMachineConstants.ALGAE_REMOVE_TIME_AFTER_LIMIT_SWITCH_SECONDS)
 				),
 				Set.of(robot.getElevator(), robot.getArm(), robot.getEndEffector(), this)
 			),
@@ -346,7 +347,8 @@ public class Superstructure extends GBSubsystem {
 					armStateHandler.setState(ArmState.ALGAE_OUTTAKE),
 					endEffectorStateHandler.setState(EndEffectorState.ALGAE_OUTTAKE)
 				)
-			).until(() -> !isAlgaeIn()),
+			),
+			// .until(() -> !isAlgaeIn()),
 			SuperstructureState.ALGAE_OUTTAKE
 		);
 	}
@@ -382,12 +384,13 @@ public class Superstructure extends GBSubsystem {
 					elevatorStateHandler.setState(ElevatorState.NET),
 					armStateHandler.setState(ArmState.NET),
 					endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE)
-				).until(() -> !isAlgaeIn()),
-				new ParallelCommandGroup(
-					elevatorStateHandler.setState(ElevatorState.NET),
-					armStateHandler.setState(ArmState.NET),
-					endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE)
-				).withTimeout(StateMachineConstants.NET_OUTTAKE_TIME_AFTER_LIMIT_SWITCH_SECONDS)
+				)
+//						.until(() -> !isAlgaeIn()),
+//				new ParallelCommandGroup(
+//					elevatorStateHandler.setState(ElevatorState.NET),
+//					armStateHandler.setState(ArmState.NET),
+//					endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE)
+//				).withTimeout(StateMachineConstants.NET_OUTTAKE_TIME_AFTER_LIMIT_SWITCH_SECONDS)
 			),
 			SuperstructureState.NET_WITH_RELEASE
 		);

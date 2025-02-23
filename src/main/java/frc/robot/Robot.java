@@ -179,7 +179,8 @@ public class Robot {
 		new EventTrigger("PRE_SCORE").onTrue(
 			new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4).andThen(robotCommander.getSuperstructure().preScore())
 		);
-		new EventTrigger("INTAKE").onTrue(robotCommander.getSuperstructure().closeL4AfterScore().andThen(robotCommander.getSuperstructure().intake()));
+		new EventTrigger("INTAKE")
+			.onTrue(robotCommander.getSuperstructure().closeL4AfterScore().andThen(robotCommander.getSuperstructure().intake()));
 		new EventTrigger("ARM_PRE_SCORE").onTrue(
 			new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4).andThen(robotCommander.getSuperstructure().armPreScore())
 		);
@@ -241,16 +242,15 @@ public class Robot {
 	}
 
 	public PathPlannerAutoWrapper getAuto() {
-		return PathPlannerAutoWrapper
-			.chainAutos(
-				startingPointAndWhereToScoreFirstObjectChooser.getChosenValue(),
-				whereToIntakeSecondObjectChooser.getChosenValue(),
-				whereToScoreSecondObjectChooser.getChosenValue(),
-				whereToIntakeThirdObjectChooser.getChosenValue(),
-				whereToScoreThirdObjectChooser.getChosenValue(),
-				whereToIntakeFourthObjectChooser.getChosenValue(),
-				whereToScoreFourthObjectChooser.getChosenValue()
-			);
+		return PathPlannerAutoWrapper.chainAutos(
+			startingPointAndWhereToScoreFirstObjectChooser.getChosenValue(),
+			whereToIntakeSecondObjectChooser.getChosenValue(),
+			whereToScoreSecondObjectChooser.getChosenValue(),
+			whereToIntakeThirdObjectChooser.getChosenValue(),
+			whereToScoreThirdObjectChooser.getChosenValue(),
+			whereToIntakeFourthObjectChooser.getChosenValue(),
+			whereToScoreFourthObjectChooser.getChosenValue()
+		);
 	}
 
 	public IPoseEstimator getPoseEstimator() {

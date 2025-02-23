@@ -390,7 +390,7 @@ public class RobotCommander extends GBSubsystem {
 				).until(
 					() -> robot.getSwerve()
 						.isAtHeading(
-							StateMachineConstants.TARGET_HEADING_FOR_NET,
+							ScoringHelpers.HEADING_FOR_NET,
 							Tolerances.HEADING_FOR_NET,
 							Tolerances.HEADING_FOR_NET_DEADBAND
 						)

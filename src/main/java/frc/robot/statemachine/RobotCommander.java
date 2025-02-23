@@ -389,11 +389,7 @@ public class RobotCommander extends GBSubsystem {
 					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
 				).until(
 					() -> robot.getSwerve()
-						.isAtHeading(
-							ScoringHelpers.HEADING_FOR_NET,
-							Tolerances.HEADING_FOR_NET,
-							Tolerances.HEADING_FOR_NET_DEADBAND
-						)
+						.isAtHeading(ScoringHelpers.HEADING_FOR_NET, Tolerances.HEADING_FOR_NET, Tolerances.HEADING_FOR_NET_DEADBAND)
 				),
 				new ParallelCommandGroup(
 					superstructure.preNet(),

@@ -2,6 +2,7 @@ package frc.robot.statemachine.superstructure;
 
 public enum SuperstructureState {
 
+	STAY_IN_PLACE,
 	IDLE,
 	INTAKE,
 	OUTTAKE,

@@ -10,10 +10,7 @@ import com.pathplanner.lib.events.EventTrigger;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.RobotManager;
 import frc.constants.field.enums.Branch;
 import frc.robot.autonomous.AutonomousConstants;
@@ -259,17 +256,16 @@ public class Robot {
 	}
 
 	public Command getAuto() {
-		return whereToScoreFirstObjectChooser.get().get()
-			.andThen(
-				PathPlannerAutoWrapper.chainAutos(
-					whereToIntakeSecondObjectChooser.getChosenValue(),
-					whereToScoreSecondObjectChooser.getChosenValue(),
-					whereToIntakeThirdObjectChooser.getChosenValue(),
-					whereToScoreThirdObjectChooser.getChosenValue(),
-					whereToIntakeFourthObjectChooser.getChosenValue(),
-					whereToScoreFourthObjectChooser.getChosenValue()
-				)
-			);
+		PathPlannerAutoWrapper auto = PathPlannerAutoWrapper.chainAutos(
+				whereToIntakeSecondObjectChooser.getChosenValue(),
+				whereToScoreSecondObjectChooser.getChosenValue(),
+				whereToIntakeThirdObjectChooser.getChosenValue(),
+				whereToScoreThirdObjectChooser.getChosenValue(),
+				whereToIntakeFourthObjectChooser.getChosenValue(),
+				whereToScoreFourthObjectChooser.getChosenValue()
+		);
+		auto.addRequirements(robotCommander);
+		return whereToScoreFirstObjectChooser.get().get().andThen(auto);
 	}
 
 	public IPoseEstimator getPoseEstimator() {

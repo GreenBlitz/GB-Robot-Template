@@ -35,34 +35,146 @@ public enum AutoPath {
 	AUTO_LINE_7_TO_D(AutonomousConstants.LinkedWaypoints.AUTO_LINE_7, AutonomousConstants.LinkedWaypoints.D, Optional.of(Branch.D)),
 	AUTO_LINE_7_TO_E(AutonomousConstants.LinkedWaypoints.AUTO_LINE_7, AutonomousConstants.LinkedWaypoints.E, Optional.of(Branch.E)),
 	AUTO_LINE_7_TO_F(AutonomousConstants.LinkedWaypoints.AUTO_LINE_7, AutonomousConstants.LinkedWaypoints.F, Optional.of(Branch.F)),
-	A_TO_UPPER_CORAL_STATION_2(AutonomousConstants.LinkedWaypoints.A, AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2, Optional.empty()),
-	A_TO_LOWER_CORAL_STATION_2(AutonomousConstants.LinkedWaypoints.A, AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2, Optional.empty()),
-	B_TO_LOWER_CORAL_STATION_2(AutonomousConstants.LinkedWaypoints.B, AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2, Optional.empty()),
-	B_TO_UPPER_CORAL_STATION_2(AutonomousConstants.LinkedWaypoints.B, AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2, Optional.empty()),
-	C_TO_LOWER_CORAL_STATION_2(AutonomousConstants.LinkedWaypoints.C, AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2, Optional.empty()),
-	D_TO_LOWER_CORAL_STATION_2(AutonomousConstants.LinkedWaypoints.D, AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2, Optional.empty()),
-	E_TO_LOWER_CORAL_STATION_2(AutonomousConstants.LinkedWaypoints.E, AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2, Optional.empty()),
-	F_TO_LOWER_CORAL_STATION_2(AutonomousConstants.LinkedWaypoints.F, AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2, Optional.empty()),
-	G_TO_LOWER_CORAL_STATION_2(AutonomousConstants.LinkedWaypoints.G, AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2, Optional.empty()),
-	H_TO_UPPER_CORAL_STATION_2(AutonomousConstants.LinkedWaypoints.H, AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2, Optional.empty()),
-	I_TO_UPPER_CORAL_STATION_2(AutonomousConstants.LinkedWaypoints.I, AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2, Optional.empty()),
-	J_TO_UPPER_CORAL_STATION_2(AutonomousConstants.LinkedWaypoints.J, AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2, Optional.empty()),
-	K_TO_UPPER_CORAL_STATION_2(AutonomousConstants.LinkedWaypoints.K, AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2, Optional.empty()),
-	L_TO_UPPER_CORAL_STATION_2(AutonomousConstants.LinkedWaypoints.L, AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2, Optional.empty()),
-	LOWER_CORAL_STATION_2_TO_A(AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2, AutonomousConstants.LinkedWaypoints.A, Optional.of(Branch.A)),
-	LOWER_CORAL_STATION_2_TO_B(AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2, AutonomousConstants.LinkedWaypoints.B, Optional.of(Branch.B)),
-	LOWER_CORAL_STATION_2_TO_C(AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2, AutonomousConstants.LinkedWaypoints.C, Optional.of(Branch.C)),
-	LOWER_CORAL_STATION_2_TO_D(AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2, AutonomousConstants.LinkedWaypoints.D, Optional.of(Branch.D)),
-	LOWER_CORAL_STATION_2_TO_E(AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2, AutonomousConstants.LinkedWaypoints.E, Optional.of(Branch.E)),
-	LOWER_CORAL_STATION_2_TO_F(AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2, AutonomousConstants.LinkedWaypoints.F, Optional.of(Branch.F)),
-	LOWER_CORAL_STATION_2_TO_G(AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2, AutonomousConstants.LinkedWaypoints.G, Optional.of(Branch.G)),
-	UPPER_CORAL_STATION_2_TO_A(AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2, AutonomousConstants.LinkedWaypoints.A, Optional.of(Branch.A)),
-	UPPER_CORAL_STATION_2_TO_B(AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2, AutonomousConstants.LinkedWaypoints.B, Optional.of(Branch.B)),
-	UPPER_CORAL_STATION_2_TO_H(AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2, AutonomousConstants.LinkedWaypoints.H, Optional.of(Branch.H)),
-	UPPER_CORAL_STATION_2_TO_I(AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2, AutonomousConstants.LinkedWaypoints.I, Optional.of(Branch.I)),
-	UPPER_CORAL_STATION_2_TO_J(AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2, AutonomousConstants.LinkedWaypoints.J, Optional.of(Branch.J)),
-	UPPER_CORAL_STATION_2_TO_K(AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2, AutonomousConstants.LinkedWaypoints.K, Optional.of(Branch.K)),
-	UPPER_CORAL_STATION_2_TO_L(AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2, AutonomousConstants.LinkedWaypoints.L, Optional.of(Branch.L));
+	A_TO_UPPER_CORAL_STATION_2(
+		AutonomousConstants.LinkedWaypoints.A,
+		AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2,
+		Optional.empty()
+	),
+	A_TO_LOWER_CORAL_STATION_2(
+		AutonomousConstants.LinkedWaypoints.A,
+		AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2,
+		Optional.empty()
+	),
+	B_TO_LOWER_CORAL_STATION_2(
+		AutonomousConstants.LinkedWaypoints.B,
+		AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2,
+		Optional.empty()
+	),
+	B_TO_UPPER_CORAL_STATION_2(
+		AutonomousConstants.LinkedWaypoints.B,
+		AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2,
+		Optional.empty()
+	),
+	C_TO_LOWER_CORAL_STATION_2(
+		AutonomousConstants.LinkedWaypoints.C,
+		AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2,
+		Optional.empty()
+	),
+	D_TO_LOWER_CORAL_STATION_2(
+		AutonomousConstants.LinkedWaypoints.D,
+		AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2,
+		Optional.empty()
+	),
+	E_TO_LOWER_CORAL_STATION_2(
+		AutonomousConstants.LinkedWaypoints.E,
+		AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2,
+		Optional.empty()
+	),
+	F_TO_LOWER_CORAL_STATION_2(
+		AutonomousConstants.LinkedWaypoints.F,
+		AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2,
+		Optional.empty()
+	),
+	G_TO_LOWER_CORAL_STATION_2(
+		AutonomousConstants.LinkedWaypoints.G,
+		AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2,
+		Optional.empty()
+	),
+	H_TO_UPPER_CORAL_STATION_2(
+		AutonomousConstants.LinkedWaypoints.H,
+		AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2,
+		Optional.empty()
+	),
+	I_TO_UPPER_CORAL_STATION_2(
+		AutonomousConstants.LinkedWaypoints.I,
+		AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2,
+		Optional.empty()
+	),
+	J_TO_UPPER_CORAL_STATION_2(
+		AutonomousConstants.LinkedWaypoints.J,
+		AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2,
+		Optional.empty()
+	),
+	K_TO_UPPER_CORAL_STATION_2(
+		AutonomousConstants.LinkedWaypoints.K,
+		AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2,
+		Optional.empty()
+	),
+	L_TO_UPPER_CORAL_STATION_2(
+		AutonomousConstants.LinkedWaypoints.L,
+		AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2,
+		Optional.empty()
+	),
+	LOWER_CORAL_STATION_2_TO_A(
+		AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2,
+		AutonomousConstants.LinkedWaypoints.A,
+		Optional.of(Branch.A)
+	),
+	LOWER_CORAL_STATION_2_TO_B(
+		AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2,
+		AutonomousConstants.LinkedWaypoints.B,
+		Optional.of(Branch.B)
+	),
+	LOWER_CORAL_STATION_2_TO_C(
+		AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2,
+		AutonomousConstants.LinkedWaypoints.C,
+		Optional.of(Branch.C)
+	),
+	LOWER_CORAL_STATION_2_TO_D(
+		AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2,
+		AutonomousConstants.LinkedWaypoints.D,
+		Optional.of(Branch.D)
+	),
+	LOWER_CORAL_STATION_2_TO_E(
+		AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2,
+		AutonomousConstants.LinkedWaypoints.E,
+		Optional.of(Branch.E)
+	),
+	LOWER_CORAL_STATION_2_TO_F(
+		AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2,
+		AutonomousConstants.LinkedWaypoints.F,
+		Optional.of(Branch.F)
+	),
+	LOWER_CORAL_STATION_2_TO_G(
+		AutonomousConstants.LinkedWaypoints.LOWER_CORAL_STATION_2,
+		AutonomousConstants.LinkedWaypoints.G,
+		Optional.of(Branch.G)
+	),
+	UPPER_CORAL_STATION_2_TO_A(
+		AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2,
+		AutonomousConstants.LinkedWaypoints.A,
+		Optional.of(Branch.A)
+	),
+	UPPER_CORAL_STATION_2_TO_B(
+		AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2,
+		AutonomousConstants.LinkedWaypoints.B,
+		Optional.of(Branch.B)
+	),
+	UPPER_CORAL_STATION_2_TO_H(
+		AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2,
+		AutonomousConstants.LinkedWaypoints.H,
+		Optional.of(Branch.H)
+	),
+	UPPER_CORAL_STATION_2_TO_I(
+		AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2,
+		AutonomousConstants.LinkedWaypoints.I,
+		Optional.of(Branch.I)
+	),
+	UPPER_CORAL_STATION_2_TO_J(
+		AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2,
+		AutonomousConstants.LinkedWaypoints.J,
+		Optional.of(Branch.J)
+	),
+	UPPER_CORAL_STATION_2_TO_K(
+		AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2,
+		AutonomousConstants.LinkedWaypoints.K,
+		Optional.of(Branch.K)
+	),
+	UPPER_CORAL_STATION_2_TO_L(
+		AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2,
+		AutonomousConstants.LinkedWaypoints.L,
+		Optional.of(Branch.L)
+	);
 
 	private final Pair<String, Pose2d> startingPoint;
 	private final Pair<String, Pose2d> endPoint;

@@ -212,7 +212,7 @@ public class SwerveCommandsBuilder {
 		return new DeferredCommand(
 			() -> new SequentialCommandGroup(
 				PathFollowingCommandsBuilder.pathfindThenFollowPath(path, AutonomousConstants.getRealTimeConstraints(swerve)),
-                moveToPoseByPID(currentPose, targetPose)
+				moveToPoseByPID(currentPose, targetPose)
 			),
 			Set.of(swerve)
 		);

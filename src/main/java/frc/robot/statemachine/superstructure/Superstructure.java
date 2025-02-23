@@ -327,7 +327,8 @@ public class Superstructure extends GBSubsystem {
 					armStateHandler.setState(ArmState.PROCESSOR_OUTTAKE),
 					endEffectorStateHandler.setState(EndEffectorState.PROCESSOR_OUTTAKE)
 				)
-			).until(() -> !isAlgaeIn()),
+			),
+//					.until(() -> !isAlgaeIn()),
 			SuperstructureState.PROCESSOR_OUTTAKE
 		);
 	}

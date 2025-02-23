@@ -40,11 +40,8 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
-import frc.robot.vision.VisionFilters;
 import frc.robot.vision.data.VisionData;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
-import frc.robot.vision.sources.limelights.LimeLightSource;
-import frc.robot.vision.sources.limelights.LimelightPoseEstimationMethod;
 import frc.utils.Filter;
 import frc.utils.TimedValue;
 import frc.utils.auto.PathPlannerUtil;
@@ -109,9 +106,16 @@ public class Robot {
 			VisionConstants.VISION_SOURCES
 		);
 
-		multiAprilTagVisionSources.applyFunctionOnAllFilters(filters -> filters.and(
-			new Filter<>(data -> RobotHeadingEstimatorConstants.YAW_FILTER_FOR_HEADING_ESTIMATION.apply(headingEstimator).apply((VisionData) data))
-		));
+		multiAprilTagVisionSources
+			.applyFunctionOnAllFilters(
+				filters -> filters
+					.and(
+						new Filter<>(
+							data -> RobotHeadingEstimatorConstants.YAW_FILTER_FOR_HEADING_ESTIMATION.apply(headingEstimator)
+								.apply((VisionData) data)
+						)
+					)
+			);
 
 		swerve.setHeadingSupplier(
 			ROBOT_TYPE.isSimulation() ? () -> poseEstimator.getEstimatedPose().getRotation() : headingEstimator::getEstimatedHeading

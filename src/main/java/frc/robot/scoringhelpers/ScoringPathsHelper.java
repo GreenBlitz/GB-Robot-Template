@@ -32,8 +32,8 @@ public class ScoringPathsHelper {
 	private static PathPlannerPath generatePathToTargetBranch(Branch branch) {
 		return new PathPlannerPath(
 			PathPlannerPath.waypointsFromPoses(
-				ScoringHelpers.getRobotBranchScoringPose(branch, StateMachineConstants.DISTANCE_TO_BRANCH_FOR_STARTING_PATH),
-				ScoringHelpers.getRobotBranchScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
+				ScoringHelpers.getRobotBranchScoringPose(branch, StateMachineConstants.DISTANCE_TO_BRANCH_FOR_STARTING_PATH, false),
+				ScoringHelpers.getRobotBranchScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS, false)
 			),
 			new PathConstraints(
 				StateMachineConstants.MAX_VELOCITY_WHILE_ELEVATOR_L4_METERS_PER_SECOND,
@@ -43,9 +43,9 @@ public class ScoringPathsHelper {
 			),
 			new IdealStartingState(
 				StateMachineConstants.MAX_VELOCITY_WHILE_ELEVATOR_L4_METERS_PER_SECOND,
-				Field.getReefSideMiddle(branch.getReefSide()).getRotation()
+				Field.getReefSideMiddle(branch.getReefSide(), false).getRotation()
 			),
-			new GoalEndState(0, Field.getReefSideMiddle(branch.getReefSide()).getRotation())
+			new GoalEndState(0, Field.getReefSideMiddle(branch.getReefSide(), false).getRotation())
 		);
 	}
 

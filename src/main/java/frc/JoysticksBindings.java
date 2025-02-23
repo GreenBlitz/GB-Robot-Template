@@ -2,6 +2,7 @@ package frc;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.joysticks.Axis;
@@ -15,6 +16,8 @@ import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.utils.pose.Side;
 import frc.utils.utilcommands.ExecuteEndCommand;
+
+import java.util.Set;
 
 public class JoysticksBindings {
 
@@ -72,15 +75,32 @@ public class JoysticksBindings {
 		).withTimeout(NOTE_IN_RUMBLE_TIME_SECONDS);
 	}
 
+	private static Command reefActionChooser(Robot robot) {
+		return new DeferredCommand(
+			() -> robot.getRobotCommander().getSuperstructure().isCoralIn()
+				? robot.getRobotCommander().autoScore()
+				: robot.getRobotCommander().setState(RobotState.ALGAE_REMOVE),
+			Set.of(
+				robot.getRobotCommander(),
+				robot.getRobotCommander().getSuperstructure(),
+				robot.getSwerve(),
+				robot.getElevator(),
+				robot.getArm(),
+				robot.getEndEffector()
+			)
+		);
+	}
+
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 
-		usedJoystick.R1.onTrue(robot.getRobotCommander().autoScore());
+		usedJoystick.R1.onTrue(reefActionChooser(robot));
 		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
-		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
-		usedJoystick.B.onTrue(robot.getRobotCommander().removeAlgaeThenClose());
+
 		usedJoystick.X.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_OUTTAKE));
+
+		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
 
 		usedJoystick.POV_UP.onTrue(
 			new InstantCommand(
@@ -124,7 +144,10 @@ public class JoysticksBindings {
 	private static void fifthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = FIFTH_JOYSTICK;
 		// bindings...
-		robot.getArm().applyCalibrationBindings(usedJoystick);
+//		robot.getArm().applyCalibrationBindings(usedJoystick);
+
+		robot.getSolenoid().applyCalibrationBindings(usedJoystick);
+		robot.getLifter().applyCalibrationBindings(usedJoystick);
 	}
 
 	private static void sixthJoystickButtons(Robot robot) {

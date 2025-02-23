@@ -11,12 +11,14 @@ import frc.constants.field.enums.CoralStation;
 import frc.constants.field.enums.ReefSide;
 import frc.robot.Robot;
 import frc.robot.statemachine.superstructure.ScoreLevel;
+import frc.utils.math.AngleTransform;
 import frc.utils.pose.Side;
 import org.littletonrobotics.junction.Logger;
 
 public class ScoringHelpers {
 
 	public static final Translation2d END_EFFECTOR_OFFSET_FROM_MID_ROBOT = new Translation2d(0, 0.014);
+	private static final Pose2d PROCESSOR_SCORING_POSE = new Pose2d(6, 0.7, Field.getProcessor().getRotation());
 
 	public static ScoreLevel targetScoreLevel = ScoreLevel.L4;
 
@@ -101,6 +103,10 @@ public class ScoringHelpers {
 		Rotation2d targetRobotAngle = Field.getReefSideMiddle(side).getRotation();
 		Translation2d differenceTranslation = new Translation2d(distanceFromReefMeters, targetRobotAngle);
 		return new Pose2d(reefMiddleTranslation.minus(differenceTranslation), targetRobotAngle);
+	}
+
+	public static Pose2d getAllianceRelativeProcessorScoringPose() {
+		return Field.getAllianceRelative(PROCESSOR_SCORING_POSE, true, true, AngleTransform.KEEP);
 	}
 
 	public static void log(String logPath) {

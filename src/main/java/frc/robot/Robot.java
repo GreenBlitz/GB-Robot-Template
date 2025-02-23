@@ -107,16 +107,14 @@ public class Robot {
 			VisionConstants.VISION_SOURCES
 		);
 
-		multiAprilTagVisionSources
-			.applyFunctionOnAllFilters(
-				filters -> filters
-					.and(
-						new Filter<>(
-							data -> VisionFilters.isYawAtAngleForMegaTag2(headingEstimator::getEstimatedHeading, VisionConstants.YAW_FILTER_TOLERANCE)
-								.apply((VisionData)data)
-						)
-					)
-			);
+		multiAprilTagVisionSources.applyFunctionOnAllFilters(
+			filters -> filters.and(
+				new Filter<>(
+					data -> VisionFilters.isYawAtAngleForMegaTag2(headingEstimator::getEstimatedHeading, VisionConstants.YAW_FILTER_TOLERANCE)
+						.apply((VisionData) data)
+				)
+			)
+		);
 
 		swerve.setHeadingSupplier(
 			ROBOT_TYPE.isSimulation() ? () -> poseEstimator.getEstimatedPose().getRotation() : headingEstimator::getEstimatedHeading

@@ -25,12 +25,20 @@ public interface Filter<T> {
 		return data -> apply(data) ^ otherFilter.apply(data);
 	}
 
-	default <E extends T> Filter<E> implies(Filter<E> otherFilter) {
-		return data -> !apply(data) || otherFilter.apply(data);
+	default <E extends T> Filter<E> nand(Filter<E> otherFilter) {
+		return data -> and(otherFilter).not().apply(data);
 	}
 
-	default <E extends T> Filter<E> ifAndOnlyIf(Filter<E> otherFIlter) {
-		return data -> apply(data) == otherFIlter.apply(data);
+	default <E extends T> Filter<E> nor(Filter<E> otherFilter) {
+		return data -> or(otherFilter).not().apply(data);
+	}
+
+	default <E extends T> Filter<E> xnor(Filter<E> otherFilter) {
+		return data -> xor(otherFilter).not().apply(data);
+	}
+
+	default <E extends T> Filter<E> implies(Filter<E> otherFilter) {
+		return data -> !apply(data) || otherFilter.apply(data);
 	}
 
 }

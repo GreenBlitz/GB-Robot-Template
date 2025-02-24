@@ -19,7 +19,7 @@ public class Lifter extends GBSubsystem {
 		this.lifterCommandsBuilder = new LifterCommandsBuilder(this);
 		this.positionSignal = positionSignal;
 
-		motor.resetPosition(new Rotation2d());
+		motor.resetPosition(LifterConstants.MINIMUM_ACHIEVABLE_POSITION);
 		updateInputs();
 		setDefaultCommand(lifterCommandsBuilder.stop());
 	}

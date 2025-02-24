@@ -33,7 +33,7 @@ public class RobotCommander extends GBSubsystem {
 		this.robot = robot;
 		this.swerve = robot.getSwerve();
 		this.superstructure = new Superstructure("StateMachine/Superstructure", robot);
-		this.currentState = RobotState.DRIVE;
+		this.currentState = RobotState.STAY_IN_PLACE;
 	}
 
 	public Superstructure getSuperstructure() {
@@ -458,7 +458,7 @@ public class RobotCommander extends GBSubsystem {
 
 	public Command closeClimb() {
 		return asSubsystemCommand(
-			new ParallelCommandGroup(superstructure.closeClimb(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			new ParallelDeadlineGroup(superstructure.closeClimb(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
 			RobotState.CLOSE_CLIMB
 		);
 	}

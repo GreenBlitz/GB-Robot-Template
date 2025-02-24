@@ -47,7 +47,7 @@ public class Superstructure extends GBSubsystem {
 		this.endEffectorStateHandler = new EndEffectorStateHandler(robot.getEndEffector(), this);
 		this.climbStateHandler = new ClimbStateHandler(new SolenoidStateHandler(robot.getSolenoid()), new LifterStateHandler(robot.getLifter()));
 
-		this.currentState = SuperstructureState.IDLE;
+		this.currentState = SuperstructureState.STAY_IN_PLACE;
 		this.driverIsCoralInOverride = false;
 		this.driverIsAlgaeInOverride = false;
 		setDefaultCommand(
@@ -433,8 +433,7 @@ public class Superstructure extends GBSubsystem {
 					new ParallelCommandGroup(climbStateHandler.setState(ClimbState.DEPLOY), armStateHandler.setState(ArmState.CLIMB))
 				),
 				elevatorStateHandler.setState(ElevatorState.CLOSED),
-				endEffectorStateHandler.setState(EndEffectorState.STOP),
-				climbStateHandler.setState(ClimbState.STOP)
+				endEffectorStateHandler.setState(EndEffectorState.STOP)
 			),
 			SuperstructureState.PRE_CLIMB
 		);
@@ -468,7 +467,7 @@ public class Superstructure extends GBSubsystem {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				new SequentialCommandGroup(
-					new ParallelCommandGroup(armStateHandler.setState(ArmState.STAY_IN_PLACE), climbStateHandler.setState(ClimbState.STOP))
+					new ParallelCommandGroup(armStateHandler.setState(ArmState.START_GAME), climbStateHandler.setState(ClimbState.STOP))
 						.until(() -> robot.getElevator().isPastPosition(StateMachineConstants.ELEVATOR_POSITION_TO_CLOSE_CLIMB)),
 					new ParallelCommandGroup(armStateHandler.setState(ArmState.PRE_L4), climbStateHandler.setState(ClimbState.CLOSE))
 				),

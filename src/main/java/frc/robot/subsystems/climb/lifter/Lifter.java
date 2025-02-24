@@ -36,11 +36,11 @@ public class Lifter extends GBSubsystem {
 		motor.setBrake(brake);
 	}
 
-	protected boolean isHigher(Rotation2d position) {
+	public boolean isHigher(Rotation2d position) {
 		return positionSignal.isGreater(position);
 	}
 
-	protected boolean isLower(Rotation2d position) {
+	public boolean isLower(Rotation2d position) {
 		return !isHigher(position);
 	}
 

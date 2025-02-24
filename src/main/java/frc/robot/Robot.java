@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -177,7 +178,7 @@ public class Robot {
 	}
 
 	public Command getAutonomousCommand() {
-		return new InstantCommand();
+		return new PathPlannerAuto("Rotate 2m");
 	}
 
 	public IPoseEstimator getPoseEstimator() {

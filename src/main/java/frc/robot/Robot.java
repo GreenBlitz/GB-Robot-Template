@@ -164,7 +164,8 @@ public class Robot {
 
 	private void configureAuto() {
 		Supplier<Command> scoringCommand = () -> new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4)
-			.andThen(robotCommander.getSuperstructure().scoreWithRelease()).asProxy();
+			.andThen(robotCommander.getSuperstructure().scoreWithRelease())
+			.asProxy();
 		Supplier<Command> intakingCommand = () -> robotCommander.getSuperstructure().intake().asProxy();
 
 		swerve.configPathPlanner(
@@ -252,15 +253,20 @@ public class Robot {
 	}
 
 	public Command getAuto() {
-		PathPlannerAutoWrapper auto = PathPlannerAutoWrapper.chainAutos(
-			whereToIntakeSecondObjectChooser.getChosenValue(),
-			whereToScoreSecondObjectChooser.getChosenValue(),
-			whereToIntakeThirdObjectChooser.getChosenValue(),
-			whereToScoreThirdObjectChooser.getChosenValue(),
-			whereToIntakeFourthObjectChooser.getChosenValue(),
-			whereToScoreFourthObjectChooser.getChosenValue()
-		);
-		return whereToScoreFirstObjectChooser.get().get().andThen(auto.asProxy());
+		return whereToScoreFirstObjectChooser.get()
+			.get()
+			.andThen(
+				PathPlannerAutoWrapper
+					.chainAutos(
+						whereToIntakeSecondObjectChooser.getChosenValue(),
+						whereToScoreSecondObjectChooser.getChosenValue(),
+						whereToIntakeThirdObjectChooser.getChosenValue(),
+						whereToScoreThirdObjectChooser.getChosenValue(),
+						whereToIntakeFourthObjectChooser.getChosenValue(),
+						whereToScoreFourthObjectChooser.getChosenValue()
+					)
+					.asProxy()
+			);
 	}
 
 	public IPoseEstimator getPoseEstimator() {

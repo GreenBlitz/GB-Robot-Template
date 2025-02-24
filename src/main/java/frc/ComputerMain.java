@@ -20,7 +20,6 @@ public class ComputerMain {
 		if (KeyboardController.ENABLE_KEYBOARD) {
 			CMDHandler.runPythonClass(Path.of("KeyboardToNetworkTables"), connectedIP);
 		}
-
 	}
 
 }

@@ -113,7 +113,9 @@ public class KeyboardController {
 	}
 
 	private Trigger getKey(String name) {
-		return new Trigger(NetworkTableInstance.getDefault().getTable(KEYBOARD_TABLE).getBooleanTopic(KEYS_TAB + "/" + name).subscribe(false)::get);
+		return new Trigger(
+			NetworkTableInstance.getDefault().getTable(KEYBOARD_TABLE).getBooleanTopic(KEYS_TAB + "/" + name).subscribe(false)::get
+		);
 	}
 
 	public double getValueByButtons(Trigger positiveButton, Trigger negativeButton) {

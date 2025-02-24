@@ -1,6 +1,5 @@
 package frc;
 
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.controllers.joysticks.JoystickPorts;
 import frc.controllers.joysticks.SmartJoystick;
 import frc.controllers.keyboard.KeyboardController;

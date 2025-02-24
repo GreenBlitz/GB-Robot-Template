@@ -453,9 +453,18 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command preNet() {
 		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				superstructure.preNet(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
+			new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					superstructure.idle(),
+					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
+				).until(
+					() -> robot.getSwerve()
+						.isAtHeading(ScoringHelpers.HEADING_FOR_NET, Tolerances.HEADING_FOR_NET, Tolerances.HEADING_FOR_NET_DEADBAND)
+				),
+				new ParallelCommandGroup(
+					superstructure.preNet(),
+					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
+				)
 			),
 			RobotState.PRE_NET
 		);

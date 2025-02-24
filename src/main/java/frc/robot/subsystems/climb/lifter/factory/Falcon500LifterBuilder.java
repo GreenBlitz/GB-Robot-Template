@@ -63,7 +63,6 @@ public class Falcon500LifterBuilder {
 		Phoenix6AngleSignal positionSignal = Phoenix6SignalBuilder
 			.build(lifter.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
 
-
 		return new Lifter(logPath, lifter, positionSignal);
 	}
 

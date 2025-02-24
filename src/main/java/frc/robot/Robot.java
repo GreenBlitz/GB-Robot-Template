@@ -17,6 +17,7 @@ import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.AutosBuilder;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
 import frc.robot.scoringhelpers.ButtonDriverHelper;
+import frc.robot.statemachine.RobotState;
 import frc.robot.subsystems.climb.lifter.Lifter;
 import frc.robot.subsystems.climb.lifter.factory.LifterFactory;
 import frc.robot.subsystems.swerve.factories.modules.drive.KrakenX60DriveBuilder;
@@ -179,17 +180,19 @@ public class Robot {
 		);
 
 		new EventTrigger("PRE_SCORE").onTrue(
-			new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4).andThen(robotCommander.getSuperstructure().preScore())
+			(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4).andThen(robotCommander.getSuperstructure().preScore()))
+				.asProxy()
 		);
 		new EventTrigger("INTAKE")
-			.onTrue(robotCommander.getSuperstructure().closeL4AfterScore().andThen(robotCommander.getSuperstructure().intake()));
+			.onTrue((robotCommander.getSuperstructure().closeL4AfterScore().andThen(robotCommander.getSuperstructure().intake())).asProxy());
 		new EventTrigger("ARM_PRE_SCORE").onTrue(
-			new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4).andThen(robotCommander.getSuperstructure().armPreScore())
+			(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4).andThen(robotCommander.getSuperstructure().armPreScore()))
+				.asProxy()
 		);
 
 		SendableChooser<Supplier<Command>> chooser = new SendableChooser<>();
 		for (Branch branch : Branch.values()) {
-			chooser.addOption(branch.name(), () -> new InstantCommand(() -> {
+			chooser.addOption(branch.name(), () -> (new InstantCommand(() -> {
 				ScoringHelpers.targetScoreLevel = ScoreLevel.L4;
 				if (branch.isLeft() != ScoringHelpers.getTargetBranch().isLeft()) {
 					ScoringHelpers.toggleIsLeftBranch();
@@ -198,7 +201,8 @@ public class Robot {
 					ScoringHelpers.toggleIsFarReefHalf();
 				}
 				ScoringHelpers.setTargetSideForReef(branch.getReefSide().getSide());
-			}).andThen(robotCommander.autoScoreForAutonomous()));
+			}).andThen(robotCommander.autoScoreForAutonomous()).andThen((robotCommander.setState(RobotState.DRIVE).until(() -> true)))).asProxy()
+			);
 		}
 		chooser.setDefaultOption("None", Commands::none);
 
@@ -257,12 +261,12 @@ public class Robot {
 
 	public Command getAuto() {
 		PathPlannerAutoWrapper auto = PathPlannerAutoWrapper.chainAutos(
-				whereToIntakeSecondObjectChooser.getChosenValue(),
-				whereToScoreSecondObjectChooser.getChosenValue(),
-				whereToIntakeThirdObjectChooser.getChosenValue(),
-				whereToScoreThirdObjectChooser.getChosenValue(),
-				whereToIntakeFourthObjectChooser.getChosenValue(),
-				whereToScoreFourthObjectChooser.getChosenValue()
+			whereToIntakeSecondObjectChooser.getChosenValue(),
+			whereToScoreSecondObjectChooser.getChosenValue(),
+			whereToIntakeThirdObjectChooser.getChosenValue(),
+			whereToScoreThirdObjectChooser.getChosenValue(),
+			whereToIntakeFourthObjectChooser.getChosenValue(),
+			whereToScoreFourthObjectChooser.getChosenValue()
 		);
 		auto.addRequirements(robotCommander);
 		return whereToScoreFirstObjectChooser.get().get().andThen(auto);

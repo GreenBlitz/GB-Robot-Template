@@ -119,7 +119,7 @@ public class JoysticksBindings {
 		usedJoystick.R1.onTrue(new InstantCommand(ScoringHelpers::toggleIsLeftBranch));
 		usedJoystick.L1.onTrue(new InstantCommand(ScoringHelpers::toggleIsFarReefHalf));
 		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getRobotCommander().autoScoreForAutonomous());
-		
+
 		usedJoystick.POV_UP.onTrue(new InstantCommand(() -> ScoringHelpers.setTargetSideForReef(Side.MIDDLE)));
 		usedJoystick.POV_DOWN.onTrue(new InstantCommand(() -> ScoringHelpers.setTargetSideForReef(Side.MIDDLE)));
 		usedJoystick.POV_LEFT.onTrue(new InstantCommand(() -> ScoringHelpers.setTargetSideForReef(Side.LEFT)));

@@ -85,29 +85,33 @@ public class PathFollowingCommandsBuilder {
 	}
 
 	public static Command followAdjustedPath(Robot robot, PathPlannerPath path, Optional<Branch> targetBranch, Pose2d tolerance) {
-		return followPathOrPathfindAndFollowPath(robot, path)
-			.andThen(
-				moveToPoseByPID(
-					robot,
-					targetBranch
-						.map(
-							branch -> ScoringHelpers
-								.getRobotBranchScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
-						)
-						.orElse(Field.getAllianceRelative(PathPlannerUtil.getLastPathPose(path), true, true, AngleTransform.INVERT))
-				)
-			)
-			.until(
-				() -> targetBranch.map(branch -> robot.getRobotCommander().isAtBranchScoringPose(branch))
-					.orElse(
-						ToleranceMath.isNear(
-							Field.getAllianceRelative(PathPlannerUtil.getLastPathPose(path), true, true, AngleTransform.INVERT),
-							robot.getPoseEstimator().getEstimatedPose(),
-							tolerance
+		return robot.getSwerve()
+			.asSubsystemCommand(
+				followPathOrPathfindAndFollowPath(robot, path)
+					.andThen(
+						moveToPoseByPID(
+							robot,
+							targetBranch
+								.map(
+									branch -> ScoringHelpers
+										.getRobotBranchScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
+								)
+								.orElse(Field.getAllianceRelative(PathPlannerUtil.getLastPathPose(path), true, true, AngleTransform.INVERT))
 						)
 					)
-			)
-			.andThen(robot.getSwerve().getCommandsBuilder().resetTargetSpeeds());
+					.until(
+						() -> targetBranch.map(branch -> robot.getRobotCommander().isAtBranchScoringPose(branch))
+							.orElse(
+								ToleranceMath.isNear(
+									Field.getAllianceRelative(PathPlannerUtil.getLastPathPose(path), true, true, AngleTransform.INVERT),
+									robot.getPoseEstimator().getEstimatedPose(),
+									tolerance
+								)
+							)
+					)
+					.andThen(robot.getSwerve().getCommandsBuilder().resetTargetSpeeds()),
+				"Follow Adjusted " + path.name
+			);
 	}
 
 }

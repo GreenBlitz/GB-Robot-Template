@@ -26,8 +26,6 @@ public class Falcon500LifterBuilder {
 	private static final boolean INVERTED = false;
 	private static final double MOMENT_OF_INERTIA = 0.001;
 
-	private static final double DEBOUNCE_TIME = 0.02;
-
 	private static final Rotation2d MAXIMUM_POSITION = Rotation2d.fromDegrees(200);
 
 	private static TalonFXConfiguration generateMotorConfiguration() {

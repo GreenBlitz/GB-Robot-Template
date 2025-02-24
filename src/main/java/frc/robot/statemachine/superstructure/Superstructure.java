@@ -51,7 +51,10 @@ public class Superstructure extends GBSubsystem {
 		this.driverIsCoralInOverride = false;
 		this.driverIsAlgaeInOverride = false;
 		setDefaultCommand(
-			new DeferredCommand(() -> endState(currentState), Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector()))
+			new DeferredCommand(
+				() -> endState(currentState),
+				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector(), robot.getLifter(), robot.getSolenoid())
+			)
 		);
 	}
 
@@ -186,7 +189,7 @@ public class Superstructure extends GBSubsystem {
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 					climbStateHandler.setState(ClimbState.STOP)
 				),
-				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector())
+				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector(), robot.getLifter(), robot.getSolenoid())
 			),
 			SuperstructureState.ARM_PRE_SCORE
 		);
@@ -201,7 +204,7 @@ public class Superstructure extends GBSubsystem {
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 					climbStateHandler.setState(ClimbState.STOP)
 				),
-				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector())
+				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector(), robot.getLifter(), robot.getSolenoid())
 			),
 			SuperstructureState.PRE_SCORE
 		);
@@ -220,7 +223,7 @@ public class Superstructure extends GBSubsystem {
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 					climbStateHandler.setState(ClimbState.STOP)
 				),
-				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector())
+				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector(), robot.getLifter(), robot.getSolenoid())
 			),
 			SuperstructureState.SCORE_WITHOUT_RELEASE
 		);
@@ -230,7 +233,7 @@ public class Superstructure extends GBSubsystem {
 		return new DeferredCommand(() -> switch (ScoringHelpers.targetScoreLevel) {
 			case L4 -> l4PreScore();
 			case L1, L2, L3 -> genericPreScore();
-		}, Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector()));
+		}, Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector(), robot.getLifter(), robot.getSolenoid()));
 	}
 
 	public Command scoreWithoutRelease() {
@@ -242,7 +245,7 @@ public class Superstructure extends GBSubsystem {
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 					climbStateHandler.setState(ClimbState.STOP)
 				),
-				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector())
+				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector(), robot.getLifter(), robot.getSolenoid())
 			),
 			SuperstructureState.SCORE_WITHOUT_RELEASE
 		);
@@ -265,7 +268,7 @@ public class Superstructure extends GBSubsystem {
 						climbStateHandler.setState(ClimbState.STOP)
 					).withTimeout(StateMachineConstants.SCORE_OUTTAKE_TIME_AFTER_BEAM_BREAK_SECONDS)
 				),
-				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector())
+				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector(), robot.getLifter(), robot.getSolenoid())
 			),
 			SuperstructureState.SCORE
 		);
@@ -294,7 +297,7 @@ public class Superstructure extends GBSubsystem {
 	public Command afterScore() {
 		return new DeferredCommand(
 			() -> ScoringHelpers.targetScoreLevel == ScoreLevel.L4 ? closeL4AfterScore() : preScore(),
-			Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector())
+			Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector(), robot.getLifter(), robot.getSolenoid())
 		);
 	}
 
@@ -315,7 +318,7 @@ public class Superstructure extends GBSubsystem {
 //						endEffectorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getEndEffectorState())
 //					).withTimeout(StateMachineConstants.ALGAE_REMOVE_TIME_AFTER_LIMIT_SWITCH_SECONDS)
 				),
-				Set.of(robot.getElevator(), robot.getArm(), robot.getEndEffector(), this)
+				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector(), robot.getLifter(), robot.getSolenoid())
 			),
 			SuperstructureState.ALGAE_REMOVE
 		);
@@ -330,7 +333,7 @@ public class Superstructure extends GBSubsystem {
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 					climbStateHandler.setState(ClimbState.STOP)
 				),
-				Set.of(robot.getElevator(), robot.getArm(), robot.getEndEffector(), this)
+				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector(), robot.getLifter(), robot.getSolenoid())
 			),
 			SuperstructureState.POST_ALGAE_REMOVE
 		);

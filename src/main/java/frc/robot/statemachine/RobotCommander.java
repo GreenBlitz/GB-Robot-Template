@@ -286,11 +286,8 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command intakeWithoutAimAssist() {
 		return asSubsystemCommand(
-				new ParallelDeadlineGroup(
-						superstructure.intake(),
-						swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
-				),
-				RobotState.INTAKE_WITHOUT_AIM_ASSIST
+			new ParallelDeadlineGroup(superstructure.intake(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			RobotState.INTAKE_WITHOUT_AIM_ASSIST
 		);
 	}
 

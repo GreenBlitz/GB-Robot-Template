@@ -178,6 +178,14 @@ public class Robot {
 			PathPlannerUtil.getGuiRobotConfig().orElse(getRobotConfig())
 		);
 
+		new EventTrigger("PULL_OUT_ARM").onTrue(
+				robotCommander.getSuperstructure()
+						.closeClimb()
+						.andThen(
+								new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4)
+										.andThen(robotCommander.getSuperstructure().armPreScore())
+						)
+		);
 		new EventTrigger("PRE_SCORE").onTrue(
 			new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4).andThen(robotCommander.getSuperstructure().preScore())
 		);

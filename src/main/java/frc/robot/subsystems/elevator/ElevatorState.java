@@ -24,7 +24,6 @@ public enum ElevatorState {
 	PROCESSOR_OUTTAKE(0.02),
 	AUTO_RELEASE(0.13);
 
-
 	private final double heightMeters;
 
 	ElevatorState(double heightMeters) {

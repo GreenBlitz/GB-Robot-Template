@@ -39,7 +39,7 @@ public class RobotCommander extends GBSubsystem {
 		this.robot = robot;
 		this.swerve = robot.getSwerve();
 		this.superstructure = new Superstructure("StateMachine/Superstructure", robot);
-		this.currentState = RobotState.DRIVE;
+		this.currentState = RobotState.STAY_IN_PLACE;
 	}
 
 	public Superstructure getSuperstructure() {
@@ -224,7 +224,8 @@ public class RobotCommander extends GBSubsystem {
 			case PRE_CLIMB_WITH_AIM_ASSIST -> preClimbWithAimAssist();
 			case PRE_CLIMB_WITHOUT_AIM_ASSIST -> preClimbWithoutAimAssist();
 			case CLIMB -> climb();
-			case AUTO_RELEASE_SEQUENCE -> autoReleaseSequence();
+			case STOP_CLIMB -> climbStop();
+			case CLOSE_CLIMB -> closeClimb();
 		};
 	}
 
@@ -255,7 +256,7 @@ public class RobotCommander extends GBSubsystem {
 
 	public Command autoScoreForAutonomous() {
 		Supplier<Command> fullySuperstructureScore = () -> new SequentialCommandGroup(
-			superstructure.autoReleaseSequence().until(this::isReadyToOpenSuperstructure),
+			superstructure.closeClimb().until(this::isReadyToOpenSuperstructure),
 			superstructure.preScore().until(superstructure::isPreScoreReady),
 			superstructure.scoreWithoutRelease().until(this::isReadyToScore),
 			superstructure.scoreWithRelease()
@@ -514,13 +515,17 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	private Command autoReleaseSequence() {
+	public Command climbStop() {
 		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				superstructure.autoReleaseSequence(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.BRANCH))
-			),
-			RobotState.ALGAE_REMOVE
+			new ParallelCommandGroup(superstructure.climbStop(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			RobotState.STOP_CLIMB
+		);
+	}
+
+	public Command closeClimb() {
+		return asSubsystemCommand(
+			new ParallelDeadlineGroup(superstructure.closeClimb(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			RobotState.CLOSE_CLIMB
 		);
 	}
 
@@ -532,15 +537,14 @@ public class RobotCommander extends GBSubsystem {
 		return switch (state) {
 			case STAY_IN_PLACE, CORAL_OUTTAKE -> stayInPlace();
 			case INTAKE, DRIVE, ALIGN_REEF, ALGAE_OUTTAKE, PROCESSOR_SCORE -> drive();
-			case ARM_PRE_SCORE -> armPreScore();
+			case ARM_PRE_SCORE, CLOSE_CLIMB -> armPreScore();
 			case PRE_SCORE -> preScore();
 			case SCORE, SCORE_WITHOUT_RELEASE -> closeAfterScore();
 			case ALGAE_REMOVE -> closeAfterAlgaeRemove();
 			case PRE_NET, NET_WITHOUT_RELEASE, NET_WITH_RELEASE -> preNet();
 			case PRE_CLIMB_WITH_AIM_ASSIST -> preClimbWithAimAssist();
 			case PRE_CLIMB_WITHOUT_AIM_ASSIST -> preClimbWithoutAimAssist();
-			case CLIMB -> climb();
-			case AUTO_RELEASE_SEQUENCE -> autoReleaseSequence();
+			case CLIMB, STOP_CLIMB -> climbStop();
 		};
 	}
 

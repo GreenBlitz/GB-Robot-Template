@@ -20,6 +20,7 @@ public enum SuperstructureState {
 	PROCESSOR_OUTTAKE,
 	PRE_CLIMB,
 	CLIMB,
-	AUTO_RELEASE_SEQUENCE;
+	STOP_CLIMB,
+	CLOSE_CLIMB;
 
 }

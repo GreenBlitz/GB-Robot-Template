@@ -1,6 +1,5 @@
 package frc.robot.subsystems.climb.lifter;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.joysticks.SmartJoystick;
 import frc.robot.hardware.interfaces.ControllableMotor;
@@ -20,7 +19,7 @@ public class Lifter extends GBSubsystem {
 		this.lifterCommandsBuilder = new LifterCommandsBuilder(this);
 		this.positionSignal = positionSignal;
 
-		motor.resetPosition(new Rotation2d());
+		motor.resetPosition(LifterConstants.MINIMUM_ACHIEVABLE_POSITION);
 		updateInputs();
 		setDefaultCommand(lifterCommandsBuilder.stop());
 	}
@@ -37,16 +36,12 @@ public class Lifter extends GBSubsystem {
 		motor.setBrake(brake);
 	}
 
-	protected boolean isHigher(Rotation2d position) {
+	public boolean isHigher(Rotation2d position) {
 		return positionSignal.isGreater(position);
 	}
 
-	protected boolean isLower(Rotation2d position) {
+	public boolean isLower(Rotation2d position) {
 		return !isHigher(position);
-	}
-
-	public boolean isAtPosition(Rotation2d position, Rotation2d tolerance) {
-		return MathUtil.isNear(position.getRotations(), positionSignal.getLatestValue().getRotations(), tolerance.getRotations());
 	}
 
 	public LifterCommandsBuilder getCommandsBuilder() {

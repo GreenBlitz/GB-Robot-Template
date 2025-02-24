@@ -39,7 +39,7 @@ public class RobotCommander extends GBSubsystem {
 		this.robot = robot;
 		this.swerve = robot.getSwerve();
 		this.superstructure = new Superstructure("StateMachine/Superstructure", robot);
-		this.currentState = RobotState.DRIVE;
+		this.currentState = RobotState.STAY_IN_PLACE;
 	}
 
 	public Superstructure getSuperstructure() {
@@ -221,6 +221,11 @@ public class RobotCommander extends GBSubsystem {
 			case NET_WITHOUT_RELEASE -> netWithoutRelease();
 			case NET_WITH_RELEASE -> netWithRelease();
 			case PROCESSOR_SCORE -> fullyProcessorScore();
+			case PRE_CLIMB_WITH_AIM_ASSIST -> preClimbWithAimAssist();
+			case PRE_CLIMB_WITHOUT_AIM_ASSIST -> preClimbWithoutAimAssist();
+			case CLIMB -> climb();
+			case STOP_CLIMB -> climbStop();
+			case CLOSE_CLIMB -> closeClimb();
 		};
 	}
 
@@ -461,6 +466,44 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
+	private Command preClimbWithAimAssist() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				superstructure.preClimb(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CAGE))
+			),
+			RobotState.PRE_CLIMB_WITH_AIM_ASSIST
+		);
+	}
+
+	private Command preClimbWithoutAimAssist() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(superstructure.preClimb(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			RobotState.PRE_CLIMB_WITHOUT_AIM_ASSIST
+		);
+	}
+
+	private Command climb() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(superstructure.climb(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			RobotState.CLIMB
+		);
+	}
+
+	public Command climbStop() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(superstructure.climbStop(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			RobotState.STOP_CLIMB
+		);
+	}
+
+	public Command closeClimb() {
+		return asSubsystemCommand(
+			new ParallelDeadlineGroup(superstructure.closeClimb(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			RobotState.CLOSE_CLIMB
+		);
+	}
+
 	private Command asSubsystemCommand(Command command, RobotState state) {
 		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
 	}
@@ -469,11 +512,14 @@ public class RobotCommander extends GBSubsystem {
 		return switch (state) {
 			case STAY_IN_PLACE, CORAL_OUTTAKE -> stayInPlace();
 			case INTAKE, DRIVE, ALIGN_REEF, ALGAE_OUTTAKE, PROCESSOR_SCORE -> drive();
-			case ARM_PRE_SCORE -> armPreScore();
+			case ARM_PRE_SCORE, CLOSE_CLIMB -> armPreScore();
 			case PRE_SCORE -> preScore();
 			case SCORE, SCORE_WITHOUT_RELEASE -> closeAfterScore();
 			case ALGAE_REMOVE -> closeAfterAlgaeRemove();
 			case PRE_NET, NET_WITHOUT_RELEASE, NET_WITH_RELEASE -> preNet();
+			case PRE_CLIMB_WITH_AIM_ASSIST -> preClimbWithAimAssist();
+			case PRE_CLIMB_WITHOUT_AIM_ASSIST -> preClimbWithoutAimAssist();
+			case CLIMB, STOP_CLIMB -> climbStop();
 		};
 	}
 

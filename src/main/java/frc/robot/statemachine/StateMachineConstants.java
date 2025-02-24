@@ -22,6 +22,8 @@ public class StateMachineConstants {
 	public static final double INTAKE_TIME_AFTER_BEAM_BREAK_SECONDS = 0;
 
 	public static final Rotation2d ARM_POSITION_TO_CLOSE_ELEVATOR_L4 = Rotation2d.fromDegrees(37);
+	public static final Rotation2d ARM_POSITION_TO_DEPLOY_LIFTER = Rotation2d.fromDegrees(0);
+	public static final double ELEVATOR_POSITION_TO_CLOSE_CLIMB = 0.28;
 	public static final double ELEVATOR_POSITION_TO_MOVE_ARM_TO_SCORE_L4 = 0.5;
 	public static final double ELEVATOR_POSITION_TO_CLOSE_ARM = 0.2;
 

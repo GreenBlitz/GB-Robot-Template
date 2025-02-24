@@ -9,6 +9,7 @@ import frc.constants.field.enums.Branch;
 import frc.constants.field.enums.CoralStationSlot;
 import frc.constants.field.enums.CoralStation;
 import frc.constants.field.enums.ReefSide;
+import frc.constants.field.enums.*;
 import frc.robot.Robot;
 import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.utils.math.AngleTransform;
@@ -18,6 +19,7 @@ import org.littletonrobotics.junction.Logger;
 public class ScoringHelpers {
 
 	public static final Translation2d END_EFFECTOR_OFFSET_FROM_MID_ROBOT = new Translation2d(0, 0.014);
+	public static final Rotation2d HEADING_FOR_NET = Rotation2d.fromDegrees(0);
 	private static final Pose2d PROCESSOR_SCORING_POSE = new Pose2d(6, 0.7, Field.getProcessor().getRotation());
 
 	public static ScoreLevel targetScoreLevel = ScoreLevel.L4;
@@ -27,6 +29,7 @@ public class ScoringHelpers {
 	private static boolean isLeftBranch = false;
 	private static CoralStation latestWantedCoralStation = CoralStation.LEFT;
 	private static CoralStationSlot latestWantedCoralStationSlot = CoralStationSlot.L1;
+	private static Cage latestWantedCage = Cage.FIELD_WALL;
 
 
 	public static ReefSide getTargetReefSide() {
@@ -57,6 +60,12 @@ public class ScoringHelpers {
 			latestWantedCoralStationSlot = getClosestCoralStationSlot(robotTranslation, CoralStationSlot.L2, CoralStationSlot.L8);
 		}
 		return latestWantedCoralStationSlot;
+	}
+
+	public static Cage getTargetCage(Robot robot) {
+		Translation2d robotTranslation = robot.getPoseEstimator().getEstimatedPose().getTranslation();
+		latestWantedCage = getClosestCage(robotTranslation, Cage.FIELD_WALL, Cage.MIDDLE, Cage.FIELD_CENTER);
+		return latestWantedCage;
 	}
 
 	public static AlgaeRemoveLevel getAlgaeRemoveLevel() {
@@ -115,6 +124,7 @@ public class ScoringHelpers {
 		Logger.recordOutput(logPath + "/TargetCoralStation", latestWantedCoralStation);
 		Logger.recordOutput(logPath + "/TargetCoralStationSlot", latestWantedCoralStationSlot);
 		Logger.recordOutput(logPath + "/TargetScoreLevel", targetScoreLevel);
+		Logger.recordOutput(logPath + "/TargetCage", latestWantedCage);
 	}
 
 	private static CoralStationSlot getClosestCoralStationSlot(Translation2d robotTranslation, CoralStationSlot... slots) {
@@ -137,6 +147,21 @@ public class ScoringHelpers {
 		Translation2d rotatedEndEffectorOffset = ScoringHelpers.END_EFFECTOR_OFFSET_FROM_MID_ROBOT.rotateBy(coralStationSlotPose.getRotation());
 
 		return new Pose2d(coralStationSlotPose.getTranslation().plus(rotatedEndEffectorOffset), coralStationSlotPose.getRotation());
+	}
+
+	private static Cage getClosestCage(Translation2d robotTranslation, Cage... cages) {
+		double[] distances = new double[cages.length];
+		int closestSlotIndex = 0;
+
+		for (int i = 0; i < cages.length; i++) {
+			distances[i] = robotTranslation.getDistance(Field.getCage(cages[i]).getTranslation());
+		}
+		for (int i = 1; i < distances.length; i++) {
+			if (distances[i] < distances[closestSlotIndex]) {
+				closestSlotIndex = i;
+			}
+		}
+		return cages[closestSlotIndex];
 	}
 
 }

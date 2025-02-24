@@ -4,7 +4,7 @@ public enum ElevatorState {
 
 	STAY_IN_PLACE(Double.NaN),
 	CLOSED(0.02),
-	INTAKE(0.02),
+	INTAKE(0.05),
 	ALGAE_OUTTAKE(0.02),
 	PRE_L1(0),
 	L1(0.02),
@@ -17,12 +17,11 @@ public enum ElevatorState {
 	L4(1.18),
 	LOW_ALGAE_REMOVE(0.02),
 	POST_LOW_ALGAE_REMOVE(0.02),
-	HIGH_ALGAE_REMOVE(0.08),
-	POST_HIGH_ALGAE_REMOVE(0.08),
+	HIGH_ALGAE_REMOVE(0.4),
+	POST_HIGH_ALGAE_REMOVE(0.4),
 	WHILE_DRIVE_NET(0.4),
 	NET(1.18),
 	PROCESSOR_OUTTAKE(0.02);
-
 
 	private final double heightMeters;
 

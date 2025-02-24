@@ -47,9 +47,7 @@ import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.utils.auto.AutonomousChooser;
 import frc.utils.auto.PathPlannerUtil;
 import frc.robot.vision.VisionFilters;
-import frc.robot.vision.data.VisionData;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
-import frc.utils.Filter;
 import frc.utils.TimedValue;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.auto.PathPlannerAutoWrapper;
@@ -125,10 +123,8 @@ public class Robot {
 
 		multiAprilTagVisionSources.applyFunctionOnAllFilters(
 			filters -> filters.and(
-				new Filter<>(
-					data -> VisionFilters.isYawAtAngle(headingEstimator::getEstimatedHeading, VisionConstants.YAW_FILTER_TOLERANCE)
-						.apply((VisionData) data)
-				)
+				data -> VisionFilters.isYawAtAngleForMegaTag2(headingEstimator::getEstimatedHeading, VisionConstants.YAW_FILTER_TOLERANCE)
+					.apply(data)
 			)
 		);
 
@@ -232,7 +228,7 @@ public class Robot {
 
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
-		for (TimedValue<Rotation2d> headingData : multiAprilTagVisionSources.getRawRobotHeadings()) {
+		for (TimedValue<Rotation2d> headingData : multiAprilTagVisionSources.getFilteredRobotHeading()) {
 			headingEstimator.updateVisionIfGyroOffsetIsNotCalibrated(
 				headingData,
 				RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION,

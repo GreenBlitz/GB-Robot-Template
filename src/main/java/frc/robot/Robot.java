@@ -17,7 +17,6 @@ import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.AutosBuilder;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
 import frc.robot.scoringhelpers.ButtonDriverHelper;
-import frc.robot.statemachine.RobotState;
 import frc.robot.subsystems.climb.lifter.Lifter;
 import frc.robot.subsystems.climb.lifter.factory.LifterFactory;
 import frc.robot.subsystems.swerve.factories.modules.drive.KrakenX60DriveBuilder;
@@ -165,12 +164,7 @@ public class Robot {
 
 	private void configureAuto() {
 		Supplier<Command> scoringCommand = () -> new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4)
-			.andThen(
-				robotCommander.getSuperstructure()
-					.scoreWithRelease()
-					.andThen(robotCommander.getSuperstructure().preScore().until(() -> robotCommander.getSuperstructure().isPreScoreReady()))
-			)
-			.asProxy();
+			.andThen(robotCommander.getSuperstructure().scoreWithRelease()).asProxy();
 		Supplier<Command> intakingCommand = () -> robotCommander.getSuperstructure().intake().asProxy();
 
 		swerve.configPathPlanner(
@@ -181,13 +175,12 @@ public class Robot {
 
 		new EventTrigger("PRE_SCORE").onTrue(
 			(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4).andThen(robotCommander.getSuperstructure().preScore()))
-				.asProxy()
 		);
 		new EventTrigger("INTAKE")
-			.onTrue((robotCommander.getSuperstructure().closeL4AfterScore().andThen(robotCommander.getSuperstructure().intake())).asProxy());
+			.onTrue((robotCommander.getSuperstructure().closeL4AfterScore().andThen(robotCommander.getSuperstructure().intake())));
 		new EventTrigger("ARM_PRE_SCORE").onTrue(
 			(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4).andThen(robotCommander.getSuperstructure().armPreScore()))
-				.asProxy()
+
 		);
 
 		SendableChooser<Supplier<Command>> chooser = new SendableChooser<>();
@@ -201,8 +194,7 @@ public class Robot {
 					ScoringHelpers.toggleIsFarReefHalf();
 				}
 				ScoringHelpers.setTargetSideForReef(branch.getReefSide().getSide());
-			}).andThen(robotCommander.autoScoreForAutonomous()).andThen((robotCommander.setState(RobotState.DRIVE).until(() -> true)))).asProxy()
-			);
+			}).andThen(robotCommander.autoScoreForAutonomous())));
 		}
 		chooser.setDefaultOption("None", Commands::none);
 
@@ -268,8 +260,7 @@ public class Robot {
 			whereToIntakeFourthObjectChooser.getChosenValue(),
 			whereToScoreFourthObjectChooser.getChosenValue()
 		);
-		auto.addRequirements(robotCommander);
-		return whereToScoreFirstObjectChooser.get().get().andThen(auto);
+		return whereToScoreFirstObjectChooser.get().get().andThen(auto.asProxy());
 	}
 
 	public IPoseEstimator getPoseEstimator() {

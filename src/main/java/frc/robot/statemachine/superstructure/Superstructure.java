@@ -118,7 +118,7 @@ public class Superstructure extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/ElevatorState", elevatorStateHandler.getCurrentState());
 		Logger.recordOutput(getLogPath() + "/ArmState", armStateHandler.getCurrentState());
 		Logger.recordOutput(getLogPath() + "/EndEffectorState", endEffectorStateHandler.getCurrentState());
-		Logger.recordOutput(getLogPath() + "/ClimberState", climbStateHandler.getCurrentState());
+		Logger.recordOutput(getLogPath() + "/ClimbState", climbStateHandler.getCurrentState());
 	}
 
 	public Command idle() {

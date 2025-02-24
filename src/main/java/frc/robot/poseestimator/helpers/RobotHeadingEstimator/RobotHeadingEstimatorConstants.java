@@ -12,6 +12,7 @@ public class RobotHeadingEstimatorConstants {
 
 	public static final String VISION_HEADING_INPUT_LOGPATH_ADDITION = "VisionHeadingInput/";
 
+
 	public static final double POSE_BUFFER_SIZE_SECONDS = 2.0;
 
 	public static final int AMOUNT_OF_SOURCE_TYPES = 2;

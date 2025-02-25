@@ -27,7 +27,7 @@ public class StateMachineConstants {
 	public static final double ELEVATOR_POSITION_TO_MOVE_ARM_TO_SCORE_L4 = 0.5;
 	public static final double ELEVATOR_POSITION_TO_CLOSE_ARM = 0.2;
 
-	public static final double MAX_VELOCITY_WHILE_ELEVATOR_L4_METERS_PER_SECOND = 1;
+	public static final double MAX_VELOCITY_WHILE_ELEVATOR_L4_METERS_PER_SECOND = 0.75;
 	public static final double MAX_ACCELERATION_WHILE_ELEVATOR_L4_METERS_PER_SECOND_SQUARED = 0.5;
 	public static final Rotation2d MAX_VELOCITY_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND = Rotation2d.fromRadians(2);
 	public static final Rotation2d MAX_ACCELERATION_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND_SQUARED = Rotation2d.fromRadians(1);

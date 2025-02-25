@@ -10,19 +10,24 @@ public class ClimbStateHandler {
 
 	private final SolenoidStateHandler solenoidStateHandler;
 	private final LifterStateHandler lifterStateHandler;
+	private ClimbState currentState;
 
 	public ClimbStateHandler(SolenoidStateHandler solenoidStateHandler, LifterStateHandler lifterStateHandler) {
 		this.solenoidStateHandler = solenoidStateHandler;
 		this.lifterStateHandler = lifterStateHandler;
 	}
 
+	public ClimbState getCurrentState() {
+		return currentState;
+	}
+
 	public Command setState(ClimbState state) {
-		return switch (state) {
+		return new ParallelCommandGroup(new InstantCommand(() -> currentState = state), switch (state) {
 			case STOP -> stop();
 			case DEPLOY -> deploy();
 			case CLIMB -> climb();
 			case CLOSE -> close();
-		};
+		});
 	}
 
 	private Command stop() {

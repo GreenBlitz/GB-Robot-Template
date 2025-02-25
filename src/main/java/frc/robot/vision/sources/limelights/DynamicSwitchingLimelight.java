@@ -19,6 +19,7 @@ import java.util.Optional;
  */
 public class DynamicSwitchingLimelight implements IndpendentHeadingVisionSource, RobotHeadingRequiringVisionSource {
 
+	private final String sourceName;
 	private final IndpendentHeadingVisionSource independentPoseEstimatingLimelight;
 	private final RobotHeadingRequiringVisionSource headingRequiringLimelight;
 	private boolean useGyroForPoseEstimating;
@@ -31,6 +32,7 @@ public class DynamicSwitchingLimelight implements IndpendentHeadingVisionSource,
 		Filter<? super AprilTagVisionData> filter,
 		Pose3d cameraPoseOffset
 	) {
+		this.sourceName = sourceName;
 		this.useGyroForPoseEstimating = defaultUseGyroForPoseEstimating;
 		this.independentPoseEstimatingLimelight = LimelightFactory.createRobotHeadingEstimatingLimelight(
 			cameraNetworkTablesName,
@@ -50,6 +52,11 @@ public class DynamicSwitchingLimelight implements IndpendentHeadingVisionSource,
 
 	public void setUseRobotHeadingForPoseEstimating(boolean useGyroForPoseEstimating) {
 		this.useGyroForPoseEstimating = useGyroForPoseEstimating;
+	}
+
+	@Override
+	public String getName() {
+		return sourceName;
 	}
 
 	@Override

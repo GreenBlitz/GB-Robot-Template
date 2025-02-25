@@ -51,7 +51,7 @@ public class AutosBuilder {
 				() -> createAutoFromAutoPath(
 					autoPath,
 					pathPlannerPath -> PathFollowingCommandsBuilder
-						.commandAfterPath(robot, pathPlannerPath, intakingCommand, autoPath.getTargetBranch(), tolerance)
+						.deadlinePathWithCommand(robot, pathPlannerPath, intakingCommand, autoPath.getTargetBranch(), tolerance)
 				)
 			);
 		}

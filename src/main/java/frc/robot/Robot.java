@@ -162,7 +162,7 @@ public class Robot {
 		Supplier<Command> scoringCommand = () -> new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4)
 			.andThen(robotCommander.getSuperstructure().scoreWithRelease())
 			.asProxy();
-		Supplier<Command> intakingCommand = () -> robotCommander.getSuperstructure().intake().asProxy();
+		Supplier<Command> intakingCommand = () -> robotCommander.getSuperstructure().closeL4AfterScore().andThen(robotCommander.getSuperstructure().intake()).asProxy();
 
 		swerve.configPathPlanner(
 			poseEstimator::getEstimatedPose,
@@ -181,8 +181,8 @@ public class Robot {
 		new EventTrigger("PRE_SCORE").onTrue(
 			(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4).andThen(robotCommander.getSuperstructure().preScore()))
 		);
-		new EventTrigger("INTAKE")
-			.onTrue((robotCommander.getSuperstructure().closeL4AfterScore().andThen(robotCommander.getSuperstructure().intake())));
+//		new EventTrigger("INTAKE")
+//			.onTrue((robotCommander.getSuperstructure().closeL4AfterScore().andThen(robotCommander.getSuperstructure().intake())));
 		new EventTrigger("ARM_PRE_SCORE").onTrue(
 			(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4).andThen(robotCommander.getSuperstructure().armPreScore()))
 
@@ -244,7 +244,7 @@ public class Robot {
 			);
 		}
 		poseEstimator.updateVision(multiAprilTagVisionSources.getFilteredVisionData());
-		multiAprilTagVisionSources.log();
+//		multiAprilTagVisionSources.log();
 		headingEstimator.log();
 
 		BatteryUtil.logStatus();

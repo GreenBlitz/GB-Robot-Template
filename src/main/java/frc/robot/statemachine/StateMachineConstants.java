@@ -10,9 +10,7 @@ public class StateMachineConstants {
 	public static final double DISTANCE_TO_BRANCH_FOR_STARTING_PATH = 0.7;
 	public static final double OPEN_SUPERSTRUCTURE_DISTANCE_FROM_NET_METERS = 2.4;
 	public static final double SCORE_DISTANCE_FROM_NET_METERS = 2;
-
-	public static final double ELEVATOR_HEIGHT_AUTO_RELEASE_METERS = 0.12;
-
+	
 	public static final double DISTANCE_FROM_CORAL_STATION_SLOT_TO_START_AIM_ASSIST_METERS = 2;
 
 	// Field relative
@@ -29,9 +27,9 @@ public class StateMachineConstants {
 	public static final double ELEVATOR_POSITION_TO_MOVE_ARM_TO_SCORE_L4 = 0.5;
 	public static final double ELEVATOR_POSITION_TO_CLOSE_ARM = 0.2;
 
-	public static final double MAX_VELOCITY_WHILE_ELEVATOR_L4_METERS_PER_SECOND = 0.5;
+	public static final double MAX_VELOCITY_WHILE_ELEVATOR_L4_METERS_PER_SECOND = 1;
 	public static final double MAX_ACCELERATION_WHILE_ELEVATOR_L4_METERS_PER_SECOND_SQUARED = 0.5;
-	public static final Rotation2d MAX_VELOCITY_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND = Rotation2d.fromRadians(1);
-	public static final Rotation2d MAX_ACCELERATION_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND_SQUARED = Rotation2d.fromRadians(0.5);
+	public static final Rotation2d MAX_VELOCITY_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND = Rotation2d.fromRadians(2);
+	public static final Rotation2d MAX_ACCELERATION_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND_SQUARED = Rotation2d.fromRadians(1);
 
 }

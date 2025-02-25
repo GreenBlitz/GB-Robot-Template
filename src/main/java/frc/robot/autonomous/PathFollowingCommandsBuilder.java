@@ -28,13 +28,13 @@ public class PathFollowingCommandsBuilder {
 	) {
 		return new ParallelCommandGroup(commandSupplier.get(), followAdjustedPath(robot, path, targetBranch, tolerance));
 	}
-	
+
 	public static Command deadlinePathWithCommand(
-			Robot robot,
-			PathPlannerPath path,
-			Supplier<Command> commandSupplier,
-			Optional<Branch> targetBranch,
-			Pose2d tolerance
+		Robot robot,
+		PathPlannerPath path,
+		Supplier<Command> commandSupplier,
+		Optional<Branch> targetBranch,
+		Pose2d tolerance
 	) {
 		return new ParallelDeadlineGroup(commandSupplier.get(), followAdjustedPath(robot, path, targetBranch, tolerance));
 	}

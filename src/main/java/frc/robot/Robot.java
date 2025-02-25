@@ -182,8 +182,6 @@ public class Robot {
 					.until(() -> robotCommander.getSuperstructure().isPreScoreReady())
 					.andThen(robotCommander.getSuperstructure().scoreWithoutRelease())
 		);
-//		new EventTrigger("INTAKE")
-//			.onTrue((robotCommander.getSuperstructure().closeL4AfterScore().andThen(robotCommander.getSuperstructure().intake())));
 		new EventTrigger("ARM_PRE_SCORE").onTrue(robotCommander.getSuperstructure().armPreScore());
 
 		SendableChooser<Supplier<Command>> chooser = new SendableChooser<>();

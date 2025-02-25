@@ -50,7 +50,16 @@ public class RobotCommander extends GBSubsystem {
 		setDefaultCommand(
 			new DeferredCommand(
 				() -> endState(currentState),
-				Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
+				Set.of(
+					this,
+					superstructure,
+					swerve,
+					robot.getElevator(),
+					robot.getArm(),
+					robot.getEndEffector(),
+					robot.getLifter(),
+					robot.getSolenoid()
+				)
 			)
 		);
 	}
@@ -208,7 +217,8 @@ public class RobotCommander extends GBSubsystem {
 		return switch (state) {
 			case DRIVE -> drive();
 			case STAY_IN_PLACE -> stayInPlace();
-			case INTAKE -> intake();
+			case INTAKE_WITH_AIM_ASSIST -> intakeWithAimAssist();
+			case INTAKE_WITHOUT_AIM_ASSIST -> intakeWithoutAimAssist();
 			case CORAL_OUTTAKE -> coralOuttake();
 			case ALIGN_REEF -> alignReef();
 			case ARM_PRE_SCORE -> armPreScore();
@@ -248,7 +258,16 @@ public class RobotCommander extends GBSubsystem {
 		return asSubsystemCommand(
 			new DeferredCommand(
 				() -> new ParallelDeadlineGroup(fullySuperstructureScore.get(), driveToPath.get()),
-				Set.of(superstructure, this, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
+				Set.of(
+					this,
+					superstructure,
+					swerve,
+					robot.getElevator(),
+					robot.getArm(),
+					robot.getEndEffector(),
+					robot.getLifter(),
+					robot.getSolenoid()
+				)
 			),
 			RobotState.SCORE
 		);
@@ -256,7 +275,8 @@ public class RobotCommander extends GBSubsystem {
 
 	public Command autoScoreForAutonomous() {
 		Supplier<Command> fullySuperstructureScore = () -> new SequentialCommandGroup(
-			superstructure.closeClimb().until(this::isReadyToOpenSuperstructure),
+			superstructure.closeClimb(),
+			superstructure.armPreScore().until(this::isReadyToOpenSuperstructure),
 			superstructure.preScore().until(superstructure::isPreScoreReady),
 			superstructure.scoreWithoutRelease().until(this::isReadyToScore),
 			superstructure.scoreWithRelease()
@@ -273,7 +293,16 @@ public class RobotCommander extends GBSubsystem {
 		return asSubsystemCommand(
 			new DeferredCommand(
 				() -> new ParallelDeadlineGroup(fullySuperstructureScore.get(), driveToPath.get()),
-				Set.of(superstructure, this, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
+				Set.of(
+					this,
+					superstructure,
+					swerve,
+					robot.getElevator(),
+					robot.getArm(),
+					robot.getEndEffector(),
+					robot.getLifter(),
+					robot.getSolenoid()
+				)
 			),
 			RobotState.SCORE
 		);
@@ -334,7 +363,7 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	private Command intake() {
+	private Command intakeWithAimAssist() {
 		return asSubsystemCommand(
 			new ParallelDeadlineGroup(
 				superstructure.intake(),
@@ -345,7 +374,14 @@ public class RobotCommander extends GBSubsystem {
 					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CORAL_STATION_SLOT))
 				)
 			),
-			RobotState.INTAKE
+			RobotState.INTAKE_WITH_AIM_ASSIST
+		);
+	}
+
+	private Command intakeWithoutAimAssist() {
+		return asSubsystemCommand(
+			new ParallelDeadlineGroup(superstructure.intake(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			RobotState.INTAKE_WITHOUT_AIM_ASSIST
 		);
 	}
 
@@ -415,7 +451,16 @@ public class RobotCommander extends GBSubsystem {
 				).until(this::isReadyToCloseSuperstructure),
 				drive()
 			),
-			Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
+			Set.of(
+				this,
+				superstructure,
+				swerve,
+				robot.getElevator(),
+				robot.getArm(),
+				robot.getEndEffector(),
+				robot.getLifter(),
+				robot.getSolenoid()
+			)
 		);
 	}
 
@@ -438,7 +483,16 @@ public class RobotCommander extends GBSubsystem {
 				).until(this::isReadyToCloseSuperstructure),
 				drive()
 			),
-			Set.of(this, superstructure, swerve, robot.getElevator(), robot.getArm(), robot.getEndEffector())
+			Set.of(
+				this,
+				superstructure,
+				swerve,
+				robot.getElevator(),
+				robot.getArm(),
+				robot.getEndEffector(),
+				robot.getLifter(),
+				robot.getSolenoid()
+			)
 		);
 	}
 
@@ -536,7 +590,7 @@ public class RobotCommander extends GBSubsystem {
 	private Command endState(RobotState state) {
 		return switch (state) {
 			case STAY_IN_PLACE, CORAL_OUTTAKE -> stayInPlace();
-			case INTAKE, DRIVE, ALIGN_REEF, ALGAE_OUTTAKE, PROCESSOR_SCORE -> drive();
+			case INTAKE_WITH_AIM_ASSIST, INTAKE_WITHOUT_AIM_ASSIST, DRIVE, ALIGN_REEF, ALGAE_OUTTAKE, PROCESSOR_SCORE -> drive();
 			case ARM_PRE_SCORE, CLOSE_CLIMB -> armPreScore();
 			case PRE_SCORE -> preScore();
 			case SCORE, SCORE_WITHOUT_RELEASE -> closeAfterScore();

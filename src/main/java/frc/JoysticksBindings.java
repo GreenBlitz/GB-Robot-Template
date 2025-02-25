@@ -86,7 +86,9 @@ public class JoysticksBindings {
 				robot.getSwerve(),
 				robot.getElevator(),
 				robot.getArm(),
-				robot.getEndEffector()
+				robot.getEndEffector(),
+				robot.getLifter(),
+				robot.getSolenoid()
 			)
 		);
 	}
@@ -95,7 +97,8 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 		usedJoystick.R1.onTrue(reefActionChooser(robot));
-		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
+		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE_WITH_AIM_ASSIST));
+		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getRobotCommander().setState(RobotState.INTAKE_WITHOUT_AIM_ASSIST));
 
 		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getRobotCommander().fullyNet());
 

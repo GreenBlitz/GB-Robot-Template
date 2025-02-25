@@ -14,12 +14,12 @@ public class AutonomousConstants {
 
 	public static final double PATHFINDING_DEADBAND_METERS = 0.5;
 
-	public static final Pose2d TARGET_POSE_TOLERANCES = new Pose2d(0.02, 0.02, Rotation2d.fromDegrees(2));
+	public static final Pose2d TARGET_POSE_TOLERANCES = new Pose2d(0.035, 0.035, Rotation2d.fromDegrees(2));
 
 	public static PathConstraints getRealTimeConstraints(Swerve swerve) {
 		return new PathConstraints(
-			swerve.getConstants().velocityAt12VoltsMetersPerSecond() / 2,
-			RealSwerveConstants.ACCELERATION_AT_12_VOLTS_METERS_PER_SECOND_SQUARED / 2,
+			swerve.getConstants().velocityAt12VoltsMetersPerSecond(),
+			RealSwerveConstants.ACCELERATION_AT_12_VOLTS_METERS_PER_SECOND_SQUARED / 1.3,
 			swerve.getConstants().maxRotationalVelocityPerSecond().getRadians(),
 			RealSwerveConstants.MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND
 		);

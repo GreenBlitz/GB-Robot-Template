@@ -4,10 +4,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.constants.field.Field;
 import frc.constants.field.enums.Branch;
 import frc.robot.Robot;
@@ -30,6 +27,16 @@ public class PathFollowingCommandsBuilder {
 		Pose2d tolerance
 	) {
 		return new ParallelCommandGroup(commandSupplier.get(), followAdjustedPath(robot, path, targetBranch, tolerance));
+	}
+
+	public static Command deadlinePathWithCommand(
+		Robot robot,
+		PathPlannerPath path,
+		Supplier<Command> commandSupplier,
+		Optional<Branch> targetBranch,
+		Pose2d tolerance
+	) {
+		return new ParallelDeadlineGroup(commandSupplier.get(), followAdjustedPath(robot, path, targetBranch, tolerance));
 	}
 
 	public static Command commandAfterPath(

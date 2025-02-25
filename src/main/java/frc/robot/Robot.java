@@ -171,16 +171,13 @@ public class Robot {
 			PathPlannerUtil.getGuiRobotConfig().orElse(getRobotConfig())
 		);
 
-		new EventTrigger("PULL_OUT_ARM").onTrue(
-			robotCommander.getSuperstructure()
-				.closeClimb()
-				.andThen(robotCommander.getSuperstructure().armPreScore())
-		);
+		new EventTrigger("PULL_OUT_ARM")
+			.onTrue(robotCommander.getSuperstructure().closeClimb().andThen(robotCommander.getSuperstructure().armPreScore()));
 		new EventTrigger("PRE_SCORE").onTrue(
-				robotCommander.getSuperstructure()
-					.preScore()
-					.until(() -> robotCommander.getSuperstructure().isPreScoreReady())
-					.andThen(robotCommander.getSuperstructure().scoreWithoutRelease())
+			robotCommander.getSuperstructure()
+				.preScore()
+				.until(() -> robotCommander.getSuperstructure().isPreScoreReady())
+				.andThen(robotCommander.getSuperstructure().scoreWithoutRelease())
 		);
 		new EventTrigger("ARM_PRE_SCORE").onTrue(robotCommander.getSuperstructure().armPreScore());
 

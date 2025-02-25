@@ -159,9 +159,7 @@ public class Robot {
 	}
 
 	private void configureAuto() {
-		Supplier<Command> scoringCommand = () -> new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4)
-			.andThen(robotCommander.getSuperstructure().scoreWithRelease())
-			.asProxy();
+		Supplier<Command> scoringCommand = () -> robotCommander.getSuperstructure().scoreWithRelease().asProxy();
 		Supplier<Command> intakingCommand = () -> robotCommander.getSuperstructure()
 			.closeL4AfterScore()
 			.andThen(robotCommander.getSuperstructure().intake())
@@ -176,25 +174,17 @@ public class Robot {
 		new EventTrigger("PULL_OUT_ARM").onTrue(
 			robotCommander.getSuperstructure()
 				.closeClimb()
-				.andThen(
-					new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4)
-						.andThen(robotCommander.getSuperstructure().armPreScore())
-				)
+				.andThen(robotCommander.getSuperstructure().armPreScore())
 		);
 		new EventTrigger("PRE_SCORE").onTrue(
-			(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4).andThen(
 				robotCommander.getSuperstructure()
 					.preScore()
 					.until(() -> robotCommander.getSuperstructure().isPreScoreReady())
 					.andThen(robotCommander.getSuperstructure().scoreWithoutRelease())
-			))
 		);
 //		new EventTrigger("INTAKE")
 //			.onTrue((robotCommander.getSuperstructure().closeL4AfterScore().andThen(robotCommander.getSuperstructure().intake())));
-		new EventTrigger("ARM_PRE_SCORE").onTrue(
-			(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4).andThen(robotCommander.getSuperstructure().armPreScore()))
-
-		);
+		new EventTrigger("ARM_PRE_SCORE").onTrue(robotCommander.getSuperstructure().armPreScore());
 
 		SendableChooser<Supplier<Command>> chooser = new SendableChooser<>();
 		for (Branch branch : Branch.values()) {

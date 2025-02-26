@@ -110,7 +110,7 @@ public class ScoringHelpers {
 		isFarReefHalf = closestBranch.getReefSide().isFar();
 	}
 
-	public static Branch getNearestBranch(Pose2d robotPose){
+	public static Branch getNearestBranch(Pose2d robotPose) {
 		Branch[] branches = Branch.values();
 		Branch closetBranch = branches[0];
 
@@ -187,7 +187,7 @@ public class ScoringHelpers {
 		return cages[closestSlotIndex];
 	}
 
-	public static void reset(){
+	public static void reset() {
 		targetScoreLevel = ScoreLevel.L4;
 		isFarReefHalf = false;
 		isLeftBranch = false;

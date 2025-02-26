@@ -9,7 +9,6 @@ import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.climb.ClimbState;
 import frc.robot.subsystems.climb.ClimbStateHandler;
 import frc.robot.subsystems.climb.solenoid.SolenoidStateHandler;
-import org.littletonrobotics.junction.Logger;
 
 public class Lifter extends GBSubsystem {
 
@@ -68,7 +67,10 @@ public class Lifter extends GBSubsystem {
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, Robot robot) {
-		ClimbStateHandler stateHandler = new ClimbStateHandler(new SolenoidStateHandler(robot.getSolenoid()),new LifterStateHandler(robot.getLifter()));
+		ClimbStateHandler stateHandler = new ClimbStateHandler(
+			new SolenoidStateHandler(robot.getSolenoid()),
+			new LifterStateHandler(robot.getLifter())
+		);
 
 		joystick.X.onTrue(stateHandler.setState(ClimbState.CLIMB));
 		joystick.B.onTrue(stateHandler.setState(ClimbState.DEPLOY));

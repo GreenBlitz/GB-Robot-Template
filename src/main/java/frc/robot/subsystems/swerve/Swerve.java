@@ -342,7 +342,7 @@ public class Swerve extends GBSubsystem {
 			.onTrue(
 				new DeferredCommand(
 					() -> getCommandsBuilder()
-						.pidToPose(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(1, 1, new Rotation2d()))),
+						.moveToPoseByPID(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(1, 1, new Rotation2d()))),
 					Set.of(this)
 				)
 			);
@@ -350,7 +350,7 @@ public class Swerve extends GBSubsystem {
 			.onTrue(
 				new DeferredCommand(
 					() -> getCommandsBuilder()
-						.pidToPose(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(-1, -1, new Rotation2d()))),
+						.moveToPoseByPID(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(-1, -1, new Rotation2d()))),
 					Set.of(this)
 				)
 			);

@@ -86,7 +86,9 @@ public class JoysticksBindings {
 				robot.getSwerve(),
 				robot.getElevator(),
 				robot.getArm(),
-				robot.getEndEffector()
+				robot.getEndEffector(),
+				robot.getLifter(),
+				robot.getSolenoid()
 			)
 		);
 	}

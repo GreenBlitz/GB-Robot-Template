@@ -1,0 +1,67 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.58,
+        "y": 3.0
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.098,
+        "y": 2.7769999999999992
+      },
+      "isLocked": false,
+      "linkedName": "AL5"
+    },
+    {
+      "anchor": {
+        "x": 5.3,
+        "y": 5.08
+      },
+      "prevControl": {
+        "x": 6.7275,
+        "y": 7.115749999999999
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "I"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "ARM_PRE_SCORE",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "PRE_SCORE",
+      "waypointRelativePos": 0.9,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -119.99999999999999
+  },
+  "reversed": false,
+  "folder": "from auto line",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 157.0
+  },
+  "useDefaultConstraints": true
+}

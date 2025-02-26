@@ -12,7 +12,7 @@ public enum ElevatorState {
 	L2(0.02),
 	PRE_L3(0.16),
 	L3(0.16),
-	WHILE_DRIVE_L4(0.35),
+	WHILE_DRIVE_L4(0.4),
 	PRE_L4(1.18),
 	L4(1.18),
 	LOW_ALGAE_REMOVE(0.02),

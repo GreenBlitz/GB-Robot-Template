@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
@@ -80,7 +81,27 @@ public class JoysticksBindings {
 		return new DeferredCommand(
 			() -> robot.getRobotCommander().getSuperstructure().isCoralIn()
 				? robot.getRobotCommander().autoScore()
-				: robot.getRobotCommander().setState(RobotState.ALGAE_REMOVE),
+				: new InstantCommand(() -> ScoringHelpers.setClosetReefSideTarget(robot.getPoseEstimator().getEstimatedPose()))
+					.andThen(robot.getRobotCommander().setState(RobotState.ALGAE_REMOVE)),
+			Set.of(
+				robot.getRobotCommander(),
+				robot.getRobotCommander().getSuperstructure(),
+				robot.getSwerve(),
+				robot.getElevator(),
+				robot.getArm(),
+				robot.getEndEffector(),
+				robot.getLifter(),
+				robot.getSolenoid()
+			)
+		);
+	}
+
+	private static Command closeScore(Robot robot) {
+		return new DeferredCommand(
+			() -> new SequentialCommandGroup(
+				new InstantCommand(() -> ScoringHelpers.setClosetReefSideTarget(robot.getPoseEstimator().getEstimatedPose())),
+				reefActionChooser(robot)
+			),
 			Set.of(
 				robot.getRobotCommander(),
 				robot.getRobotCommander().getSuperstructure(),
@@ -116,14 +137,16 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 		usedJoystick.R1.onTrue(reefActionChooser(robot));
+		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(closeScore(robot));
+
 		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE_WITH_AIM_ASSIST));
 		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getRobotCommander().setState(RobotState.INTAKE_WITHOUT_AIM_ASSIST));
 
-		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getRobotCommander().fullyNet());
+		usedJoystick.B.onTrue(robot.getRobotCommander().fullyNet());
 
 		usedJoystick.Y.onTrue(robot.getRobotCommander().setState(RobotState.CORAL_OUTTAKE));
 		usedJoystick.X.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_OUTTAKE));
-		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.PROCESSOR_SCORE));
+		usedJoystick.BACK.onTrue(robot.getRobotCommander().setState(RobotState.PROCESSOR_SCORE));
 		usedJoystick.A.onTrue(driveActionChooser(robot));
 
 		usedJoystick.POV_UP.onTrue(robot.getRobotCommander().setState(RobotState.PRE_CLIMB_WITH_AIM_ASSIST));

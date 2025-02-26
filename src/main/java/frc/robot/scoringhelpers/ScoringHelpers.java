@@ -103,6 +103,28 @@ public class ScoringHelpers {
 		return new Pose2d(branchTranslation.minus(differenceTranslation).minus(endeffectorOffsetDifference), targetRobotAngle);
 	}
 
+	public static void setClosetReefSideTarget(Pose2d robotPose) {
+		ReefSide closetReefSide = getNearestReefSide(robotPose);
+		targetSideForReef = closetReefSide.getSide();
+		isFarReefHalf = closetReefSide.isFar();
+	}
+
+	public static ReefSide getNearestReefSide(Pose2d robotPose) {
+		ReefSide[] reefSides = ReefSide.values();
+		ReefSide closetSide = reefSides[0];
+
+		double minDistance = robotPose.getTranslation().getDistance(Field.getReefSideMiddle(closetSide).getTranslation());
+		for (int i = 1; i < reefSides.length; i++) {
+			double distanceFromBranch = robotPose.getTranslation().getDistance(Field.getReefSideMiddle(reefSides[i]).getTranslation());
+			if (distanceFromBranch < minDistance) {
+				closetSide = reefSides[i];
+				minDistance = distanceFromBranch;
+			}
+		}
+
+		return closetSide;
+	}
+
 	public static Pose2d getRobotBranchScoringPose(Branch branch, double distanceFromBranchMeters) {
 		return getRobotBranchScoringPose(branch, distanceFromBranchMeters, true);
 	}
@@ -165,7 +187,6 @@ public class ScoringHelpers {
 	}
 
 	public static void reset() {
-		targetScoreLevel = ScoreLevel.L4;
 		isFarReefHalf = false;
 		isLeftBranch = false;
 		targetSideForReef = Side.MIDDLE;

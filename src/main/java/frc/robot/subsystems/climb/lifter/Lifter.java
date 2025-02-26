@@ -2,9 +2,14 @@ package frc.robot.subsystems.climb.lifter;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.joysticks.SmartJoystick;
+import frc.robot.Robot;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.subsystems.climb.ClimbState;
+import frc.robot.subsystems.climb.ClimbStateHandler;
+import frc.robot.subsystems.climb.solenoid.SolenoidStateHandler;
+import org.littletonrobotics.junction.Logger;
 
 public class Lifter extends GBSubsystem {
 
@@ -62,14 +67,12 @@ public class Lifter extends GBSubsystem {
 		motor.updateInputs(positionSignal);
 	}
 
-	public void applyCalibrationBindings(SmartJoystick joystick) {
-		LifterStateHandler stateHandler = new LifterStateHandler(this);
+	public void applyCalibrationBindings(SmartJoystick joystick, Robot robot) {
+		ClimbStateHandler stateHandler = new ClimbStateHandler(new SolenoidStateHandler(robot.getSolenoid()),new LifterStateHandler(robot.getLifter()));
 
-		joystick.Y.onTrue(stateHandler.setState(LifterState.BACKWARD));
-		joystick.X.onTrue(stateHandler.setState(LifterState.FORWARD));
-		joystick.B.onTrue(stateHandler.setState(LifterState.CLIMB));
-		joystick.A.onTrue(stateHandler.setState(LifterState.DEPLOY));
-		joystick.R1.onTrue(stateHandler.setState(LifterState.HOLD));
+		joystick.X.onTrue(stateHandler.setState(ClimbState.CLIMB));
+		joystick.B.onTrue(stateHandler.setState(ClimbState.DEPLOY));
+		joystick.A.onTrue(stateHandler.setState(ClimbState.STOP));
 	}
 
 }

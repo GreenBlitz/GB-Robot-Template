@@ -112,6 +112,13 @@ public class JoysticksBindings {
 		usedJoystick.POV_LEFT.onTrue(robot.getRobotCommander().setState(RobotState.PRE_CLIMB_WITHOUT_AIM_ASSIST));
 		usedJoystick.POV_DOWN.onTrue(robot.getRobotCommander().setState(RobotState.CLIMB));
 		usedJoystick.POV_RIGHT.onTrue(robot.getRobotCommander().setState(RobotState.STOP_CLIMB));
+		
+		Command climbUp = robot.getLifter().getCommandsBuilder().setPower(-0.3);
+		climbUp.addRequirements(robot.getRobotCommander(), robot.getRobotCommander().getSuperstructure());
+		
+		usedJoystick.START.whileTrue(
+			climbUp
+		);
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
@@ -135,13 +142,26 @@ public class JoysticksBindings {
 	private static void thirdJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = THIRD_JOYSTICK;
 		// bindings...
-		robot.getSwerve().applyCalibrationBindings(usedJoystick, () -> robot.getPoseEstimator().getEstimatedPose());
+		usedJoystick.A.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L1));
+		usedJoystick.B.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L2));
+		usedJoystick.X.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L3));
+		usedJoystick.Y.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4));
+		
+		usedJoystick.R1.onTrue(robot.getRobotCommander().getSuperstructure().preScore());
+		usedJoystick.L1.onTrue(robot.getRobotCommander().getSuperstructure().intake());
+		usedJoystick.POV_UP.onTrue(robot.getRobotCommander().getSuperstructure().scoreWithRelease());
+		usedJoystick.POV_RIGHT.onTrue(robot.getRobotCommander().getSuperstructure().algaeOuttake());
+		usedJoystick.POV_LEFT.onTrue(robot.getRobotCommander().getSuperstructure().algaeRemove());
+		
+		usedJoystick.START.onTrue(robot.getRobotCommander().getSuperstructure().idle());
 	}
 
 	private static void fourthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = FOURTH_JOYSTICK;
 		// bindings...
-		robot.getElevator().applyCalibrationBindings(usedJoystick);
+//		robot.getElevator().applyCalibrationBindings(usedJoystick);
+		usedJoystick.A.onTrue(robot.getRobotCommander().getSuperstructure().idle());
+		usedJoystick.B.onTrue(robot.getRobotCommander().getSuperstructure().preScore());
 	}
 
 	private static void fifthJoystickButtons(Robot robot) {
@@ -150,7 +170,7 @@ public class JoysticksBindings {
 //		robot.getArm().applyCalibrationBindings(usedJoystick);
 
 		robot.getSolenoid().applyCalibrationBindings(usedJoystick);
-		robot.getLifter().applyCalibrationBindings(usedJoystick);
+		robot.getLifter().applyCalibrationBindings(usedJoystick, robot);
 	}
 
 	private static void sixthJoystickButtons(Robot robot) {

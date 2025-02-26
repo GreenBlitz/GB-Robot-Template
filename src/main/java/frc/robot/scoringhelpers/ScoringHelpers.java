@@ -103,6 +103,29 @@ public class ScoringHelpers {
 		return new Pose2d(branchTranslation.minus(differenceTranslation).minus(endeffectorOffsetDifference), targetRobotAngle);
 	}
 
+	public static void setClosetBranchTarget(Pose2d robotPose) {
+		Branch closestBranch = getNearestBranch(robotPose);
+		isLeftBranch = closestBranch.isLeft();
+		targetSideForReef = closestBranch.getReefSide().getSide();
+		isFarReefHalf = closestBranch.getReefSide().isFar();
+	}
+
+	public static Branch getNearestBranch(Pose2d robotPose){
+		Branch[] branches = Branch.values();
+		Branch closetBranch = branches[0];
+
+		double minDistance = robotPose.getTranslation().getDistance(Field.getCoralPlacement(closetBranch));
+		for (int i = 1; i < branches.length; i++) {
+			double distanceFromBranch = robotPose.getTranslation().getDistance(Field.getCoralPlacement(branches[i]));
+			if (distanceFromBranch < minDistance) {
+				closetBranch = branches[i];
+				minDistance = distanceFromBranch;
+			}
+		}
+
+		return closetBranch;
+	}
+
 	public static Pose2d getRobotBranchScoringPose(Branch branch, double distanceFromBranchMeters) {
 		return getRobotBranchScoringPose(branch, distanceFromBranchMeters, true);
 	}

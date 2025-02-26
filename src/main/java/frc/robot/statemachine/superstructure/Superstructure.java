@@ -143,8 +143,10 @@ public class Superstructure extends GBSubsystem {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				new SequentialCommandGroup(
-					armStateHandler.setState(ArmState.HALF_WAY_CLOSED)
-						.until(() -> robot.getArm().isAtPosition(ArmState.HALF_WAY_CLOSED.getPosition(), Tolerances.ARM_POSITION)),
+					armStateHandler.setState(ArmState.FIRST_WAYPOINT_TO_CLOSE)
+						.until(() -> robot.getArm().isAtPosition(ArmState.FIRST_WAYPOINT_TO_CLOSE.getPosition(), Tolerances.ARM_POSITION)),
+					armStateHandler.setState(ArmState.SECOND_WAYPOINT_TO_CLOSE)
+						.until(() -> robot.getArm().isAtPosition(ArmState.SECOND_WAYPOINT_TO_CLOSE.getPosition(), Tolerances.ARM_POSITION)),
 					armStateHandler.setState(ArmState.CLOSED)
 				),
 				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),

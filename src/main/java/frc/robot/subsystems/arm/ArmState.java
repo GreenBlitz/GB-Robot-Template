@@ -8,7 +8,7 @@ public enum ArmState {
 	CLOSED(Rotation2d.fromDegrees(180)),
 	START_GAME(Rotation2d.fromDegrees(207)),
 	MID_WAY_CLOSE(Rotation2d.fromDegrees(130)),
-	INTAKE(Rotation2d.fromDegrees(185)),
+	INTAKE(Rotation2d.fromDegrees(186)),
 	ALGAE_OUTTAKE(Rotation2d.fromDegrees(185)),
 	PRE_L1(Rotation2d.fromDegrees(190)),
 	L1(Rotation2d.fromDegrees(190)),

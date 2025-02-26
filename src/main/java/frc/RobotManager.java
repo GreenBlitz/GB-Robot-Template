@@ -46,7 +46,6 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void disabledExit() {
 		BrakeStateManager.brake();
-		
 	}
 
 	@Override

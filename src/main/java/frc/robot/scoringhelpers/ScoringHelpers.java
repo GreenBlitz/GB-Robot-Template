@@ -164,7 +164,7 @@ public class ScoringHelpers {
 		return cages[closestSlotIndex];
 	}
 
-	public static void reset(){
+	public static void reset() {
 		targetScoreLevel = ScoreLevel.L4;
 		isFarReefHalf = false;
 		isLeftBranch = false;

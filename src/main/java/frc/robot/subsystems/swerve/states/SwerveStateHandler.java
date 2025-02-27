@@ -33,6 +33,7 @@ public class SwerveStateHandler {
 	private Supplier<Optional<Branch>> branchSupplier;
 	private Supplier<Optional<CoralStationSlot>> coralStationSlotSupplier;
 	private Supplier<Optional<Cage>> cageSupplier;
+	private Supplier<Optional<Rotation2d>> cageAngleSupplier;
 
 	public SwerveStateHandler(Swerve swerve) {
 		this.swerve = swerve;
@@ -44,6 +45,7 @@ public class SwerveStateHandler {
 		this.branchSupplier = Optional::empty;
 		this.coralStationSlotSupplier = Optional::empty;
 		this.cageSupplier = Optional::empty;
+		this.cageAngleSupplier = Optional::empty;
 	}
 
 	public void setRobotPoseSupplier(Supplier<Pose2d> robotPoseSupplier) {
@@ -57,7 +59,11 @@ public class SwerveStateHandler {
 	public void setCoralStationSupplier(Supplier<Optional<CoralStation>> coralStationSupplier) {
 		this.coralStationSupplier = coralStationSupplier;
 	}
-
+	
+	public void setCageAngleSupplier(Supplier<Optional<Rotation2d>> cageAngleSupplier) {
+		this.cageAngleSupplier = cageAngleSupplier;
+	}
+	
 	public void setBranchSupplier(Supplier<Optional<Branch>> branchSupplier) {
 		this.branchSupplier = branchSupplier;
 	}
@@ -116,8 +122,12 @@ public class SwerveStateHandler {
 				return speeds;
 			}
 		}
+		
 		if (swerveState.getAimAssist() == AimAssist.NET) {
 			return handleNetAimAssist(speeds, robotPoseSupplier.get().get().getRotation());
+		}
+		if(swerveState.getAimAssist() == AimAssist.CAGE_ROTATION){
+			return handleAngleCageAssist(speeds, robotPoseSupplier.get().get().getRotation());
 		}
 		if (swerveState.getAimAssist() == AimAssist.CORAL_STATION_SLOT) {
 			if (coralStationSlotSupplier.get().isPresent()) {
@@ -181,6 +191,12 @@ public class SwerveStateHandler {
 	private ChassisSpeeds handleNetAimAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading) {
 		Rotation2d headingToBarge = Field.getAllianceRelative(ScoringHelpers.HEADING_FOR_NET);
 
+		return AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotHeading, headingToBarge, swerveConstants);
+	}
+	
+	private ChassisSpeeds handleAngleCageAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading){
+		Rotation2d headingToBarge = Field.getAllianceRelative(Rotation2d.fromDegrees(-180));
+		
 		return AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotHeading, headingToBarge, swerveConstants);
 	}
 

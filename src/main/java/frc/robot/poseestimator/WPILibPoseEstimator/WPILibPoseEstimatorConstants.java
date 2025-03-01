@@ -29,7 +29,7 @@ public class WPILibPoseEstimatorConstants {
 
 	public static final Pose2d STARTING_ODOMETRY_POSE = new Pose2d();
 
-	public static final double VISION_TRANSLATION_STANDARD_DEVIATION_FACTOR = 0.005;
+	public static final double VISION_TRANSLATION_STANDARD_DEVIATION_FACTOR = 0.0035;
 
 	public static final double VISION_ROTATION_STANDARD_DEVIATION_FACTOR = 0.05;
 

@@ -216,6 +216,7 @@ public class RobotCommander extends GBSubsystem {
 	public Command setState(RobotState state) {
 		return switch (state) {
 			case DRIVE -> drive();
+			case DRIVE_AFTER_ALGAE_REMOVE -> driveAfterAlgaeRemove();
 			case STAY_IN_PLACE -> stayInPlace();
 			case INTAKE_WITH_AIM_ASSIST -> intakeWithAimAssist();
 			case INTAKE_WITHOUT_AIM_ASSIST -> intakeWithoutAimAssist();
@@ -244,7 +245,8 @@ public class RobotCommander extends GBSubsystem {
 			superstructure.armPreScore().until(this::isReadyToOpenSuperstructure),
 			superstructure.preScore().until(superstructure::isPreScoreReady),
 			superstructure.scoreWithoutRelease().until(this::isReadyToScore),
-			superstructure.scoreWithRelease()
+			superstructure.scoreWithRelease(),
+			new InstantCommand(ScoringHelpers::reset)
 		);
 
 		Supplier<Command> driveToPath = () -> swerve.getCommandsBuilder()
@@ -353,6 +355,16 @@ public class RobotCommander extends GBSubsystem {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(superstructure.idle(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
 			RobotState.DRIVE
+		);
+	}
+
+	private Command driveAfterAlgaeRemove() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				superstructure.idleAfterAlgaeRemove(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+			).until(superstructure::isClosed),
+			RobotState.DRIVE_AFTER_ALGAE_REMOVE
 		);
 	}
 
@@ -557,7 +569,10 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command preClimbWithoutAimAssist() {
 		return asSubsystemCommand(
-			new ParallelCommandGroup(superstructure.preClimb(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			new ParallelCommandGroup(
+				superstructure.preClimb(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CAGE_ROTATION))
+			),
 			RobotState.PRE_CLIMB_WITHOUT_AIM_ASSIST
 		);
 	}
@@ -590,7 +605,15 @@ public class RobotCommander extends GBSubsystem {
 	private Command endState(RobotState state) {
 		return switch (state) {
 			case STAY_IN_PLACE, CORAL_OUTTAKE -> stayInPlace();
-			case INTAKE_WITH_AIM_ASSIST, INTAKE_WITHOUT_AIM_ASSIST, DRIVE, ALIGN_REEF, ALGAE_OUTTAKE, PROCESSOR_SCORE -> drive();
+			case
+				INTAKE_WITH_AIM_ASSIST,
+				INTAKE_WITHOUT_AIM_ASSIST,
+				DRIVE,
+				DRIVE_AFTER_ALGAE_REMOVE,
+				ALIGN_REEF,
+				ALGAE_OUTTAKE,
+				PROCESSOR_SCORE ->
+				drive();
 			case ARM_PRE_SCORE, CLOSE_CLIMB -> armPreScore();
 			case PRE_SCORE -> preScore();
 			case SCORE, SCORE_WITHOUT_RELEASE -> closeAfterScore();

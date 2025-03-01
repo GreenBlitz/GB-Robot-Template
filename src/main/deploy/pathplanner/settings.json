@@ -3,7 +3,10 @@
   "robotLength": 0.9,
   "holonomicMode": true,
   "pathFolders": [
-    "test"
+    "from auto line",
+    "from coral station",
+    "test",
+    "to coral station"
   ],
   "autoFolders": [
     "test"

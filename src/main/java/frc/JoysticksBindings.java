@@ -136,23 +136,23 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-		usedJoystick.R1.onTrue(reefActionChooser(robot));
 		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(closeScore(robot));
 
 		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE_WITH_AIM_ASSIST));
 		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getRobotCommander().setState(RobotState.INTAKE_WITHOUT_AIM_ASSIST));
 
-		usedJoystick.B.onTrue(robot.getRobotCommander().fullyNet());
+		usedJoystick.R1.onTrue(robot.getRobotCommander().fullyNet());
 
 		usedJoystick.Y.onTrue(robot.getRobotCommander().setState(RobotState.CORAL_OUTTAKE));
 		usedJoystick.X.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_OUTTAKE));
-		usedJoystick.BACK.onTrue(robot.getRobotCommander().setState(RobotState.PROCESSOR_SCORE));
+//		usedJoystick.POV_DOWN.onTrue(robot.getRobotCommander().setState(RobotState.PROCESSOR_SCORE));
+
+		usedJoystick.POV_LEFT.onTrue(robot.getRobotCommander().setState(RobotState.PRE_CLIMB_WITH_AIM_ASSIST));
+		usedJoystick.POV_UP.onTrue(robot.getRobotCommander().setState(RobotState.PRE_CLIMB_WITHOUT_AIM_ASSIST));
+		usedJoystick.POV_DOWN.onTrue(robot.getRobotCommander().setState(RobotState.CLIMB));
 		usedJoystick.A.onTrue(driveActionChooser(robot));
 
-		usedJoystick.POV_UP.onTrue(robot.getRobotCommander().setState(RobotState.PRE_CLIMB_WITH_AIM_ASSIST));
-		usedJoystick.POV_LEFT.onTrue(robot.getRobotCommander().setState(RobotState.PRE_CLIMB_WITHOUT_AIM_ASSIST));
-		usedJoystick.POV_DOWN.onTrue(robot.getRobotCommander().setState(RobotState.CLIMB));
-		usedJoystick.POV_RIGHT.onTrue(robot.getRobotCommander().setState(RobotState.STOP_CLIMB));
+//		usedJoystick.POV_RIGHT.onTrue(robot.getRobotCommander().setState(RobotState.STOP_CLIMB));
 
 		Command climbUp = robot.getLifter().getCommandsBuilder().setPower(-0.5);
 		climbUp.addRequirements(robot.getRobotCommander(), robot.getRobotCommander().getSuperstructure());

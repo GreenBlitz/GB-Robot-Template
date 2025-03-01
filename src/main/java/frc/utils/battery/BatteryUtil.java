@@ -31,7 +31,7 @@ public class BatteryUtil {
 
 	public static void logStatus() {
 		Logger.recordOutput(BatteryConstants.LOG_PATH + "/Voltage", getCurrentVoltage());
-		Logger.recordOutput(BatteryConstants.LOG_PATH + "/Current", getTotalCurrent());
+//		Logger.recordOutput(BatteryConstants.LOG_PATH + "/Current", getTotalCurrent());
 	}
 
 }

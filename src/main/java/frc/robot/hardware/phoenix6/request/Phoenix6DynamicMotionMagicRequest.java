@@ -31,6 +31,12 @@ public class Phoenix6DynamicMotionMagicRequest extends Phoenix6FeedForwardReques
 	}
 
 	@Override
+	public Phoenix6DynamicMotionMagicRequest withSetPoint(Rotation2d setPoint) {
+		super.withSetPoint(setPoint);
+		return this;
+	}
+
+	@Override
 	public IDynamicMotionMagicRequest withMaxVelocityRotation2dPerSecond(Rotation2d maxVelocityRotation2dPerSecond) {
 		maxVelocity = maxVelocityRotation2dPerSecond;
 		setMaxVelocity.accept(maxVelocity);

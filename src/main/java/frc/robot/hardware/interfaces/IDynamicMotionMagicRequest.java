@@ -4,6 +4,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public interface IDynamicMotionMagicRequest extends IRequest<Rotation2d> {
 
+	@Override
+	IDynamicMotionMagicRequest withSetPoint(Rotation2d setPoint);
+
 	IDynamicMotionMagicRequest withMaxVelocityRotation2dPerSecond(Rotation2d maxVelocityRotation2dPerSecond);
 
 	Rotation2d getMaxVelocityRotation2dPerSecond();

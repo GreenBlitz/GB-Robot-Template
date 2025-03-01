@@ -38,6 +38,14 @@ public class VisionFilters {
 		return isDataFromMegaTag2().implies(isYawAtAngle(wantedYawSupplier, yawTolerance));
 	}
 
+	public static Filter<VisionData> isYawAngleNotZero() {
+		return (visionData) -> visionData.getEstimatedPose().getRotation().getZ() != 0.0;
+	}
+
+	public static Filter<VisionData> isYawAngleNotZeroForMegaTag2() {
+		return isDataFromMegaTag2().implies(isYawAngleNotZero());
+	}
+
 	public static Filter<VisionData> isOnGround(double distanceFromGroundToleranceMeters) {
 		return (visionData) -> MathUtil.isNear(0, visionData.getEstimatedPose().getZ(), distanceFromGroundToleranceMeters);
 	}

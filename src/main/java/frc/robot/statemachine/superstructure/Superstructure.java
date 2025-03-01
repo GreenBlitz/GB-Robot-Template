@@ -58,6 +58,22 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
+	public ElevatorStateHandler getElevatorStateHandler() {
+		return elevatorStateHandler;
+	}
+
+	public ArmStateHandler getArmStateHandler() {
+		return armStateHandler;
+	}
+
+	public EndEffectorStateHandler getEndEffectorStateHandler() {
+		return endEffectorStateHandler;
+	}
+
+	public ClimbStateHandler getClimbStateHandler() {
+		return climbStateHandler;
+	}
+
 	public SuperstructureState getCurrentState() {
 		return currentState;
 	}
@@ -152,7 +168,7 @@ public class Superstructure extends GBSubsystem {
 				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 				climbStateHandler.setState(ClimbState.STOP),
 				elevatorStateHandler.setState(ElevatorState.CLOSED)
-			).until(() -> robot.getArm().isAtPosition(ArmState.CLOSED.getPosition(), Tolerances.ARM_POSITION)),
+			).until(this::isClosed),
 			SuperstructureState.IDLE_AFTER_ALGAE_REMOVE
 		);
 	}
@@ -504,9 +520,7 @@ public class Superstructure extends GBSubsystem {
 	}
 
 	private Command asSubsystemCommand(Command command, SuperstructureState state) {
-		return new SequentialCommandGroup(
-			new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state))
-		);
+		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
 	}
 
 	private Command endState(SuperstructureState state) {

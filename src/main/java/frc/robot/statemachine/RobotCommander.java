@@ -17,7 +17,6 @@ import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.scoringhelpers.ScoringPathsHelper;
 import frc.robot.statemachine.superstructure.Superstructure;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.subsystems.arm.ArmState;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
@@ -246,7 +245,7 @@ public class RobotCommander extends GBSubsystem {
 			superstructure.armPreScore().until(this::isReadyToOpenSuperstructure),
 			superstructure.preScore().until(superstructure::isPreScoreReady),
 			superstructure.scoreWithoutRelease().until(this::isReadyToScore),
-			superstructure.scoreWithRelease().until(() -> !superstructure.isCoralIn()),
+			superstructure.scoreWithRelease(),
 			new InstantCommand(ScoringHelpers::reset)
 		);
 
@@ -364,7 +363,7 @@ public class RobotCommander extends GBSubsystem {
 			new ParallelCommandGroup(
 				superstructure.idleAfterAlgaeRemove(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
-			).until(() -> robot.getArm().isAtPosition(ArmState.CLOSED.getPosition(), Tolerances.ARM_POSITION)),
+			).until(superstructure::isClosed),
 			RobotState.DRIVE_AFTER_ALGAE_REMOVE
 		);
 	}
@@ -570,7 +569,10 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command preClimbWithoutAimAssist() {
 		return asSubsystemCommand(
-			new ParallelCommandGroup(superstructure.preClimb(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CAGE_ROTATION))),
+			new ParallelCommandGroup(
+				superstructure.preClimb(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CAGE_ROTATION))
+			),
 			RobotState.PRE_CLIMB_WITHOUT_AIM_ASSIST
 		);
 	}

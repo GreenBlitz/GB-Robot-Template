@@ -236,8 +236,8 @@ public class Robot {
 				RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE
 			);
 		}
-		poseEstimator.updateVision(multiAprilTagVisionSources.getFilteredVisionData());
-//		multiAprilTagVisionSources.log();
+		// poseEstimator.updateVision(multiAprilTagVisionSources.getFilteredVisionData());
+		// multiAprilTagVisionSources.log();
 		headingEstimator.log();
 
 		BatteryUtil.logStatus();

@@ -20,6 +20,7 @@ public class ScoringHelpers {
 
 	public static final Translation2d END_EFFECTOR_OFFSET_FROM_MID_ROBOT = new Translation2d(0, 0.014);
 	public static final Rotation2d HEADING_FOR_NET = Rotation2d.fromDegrees(0);
+	public static final Rotation2d HEADING_FOR_CAGE = Rotation2d.fromDegrees(180);
 	private static final Pose2d PROCESSOR_SCORING_POSE = new Pose2d(6, 0.7, Field.getProcessor().getRotation());
 
 	public static ScoreLevel targetScoreLevel = ScoreLevel.L4;
@@ -103,6 +104,28 @@ public class ScoringHelpers {
 		return new Pose2d(branchTranslation.minus(differenceTranslation).minus(endeffectorOffsetDifference), targetRobotAngle);
 	}
 
+	public static void setClosetReefSideTarget(Pose2d robotPose) {
+		ReefSide closetReefSide = getNearestReefSide(robotPose);
+		targetSideForReef = closetReefSide.getSide();
+		isFarReefHalf = closetReefSide.isFar();
+	}
+
+	public static ReefSide getNearestReefSide(Pose2d robotPose) {
+		ReefSide[] reefSides = ReefSide.values();
+		ReefSide closetSide = reefSides[0];
+
+		double minDistance = robotPose.getTranslation().getDistance(Field.getReefSideMiddle(closetSide).getTranslation());
+		for (int i = 1; i < reefSides.length; i++) {
+			double distanceFromBranch = robotPose.getTranslation().getDistance(Field.getReefSideMiddle(reefSides[i]).getTranslation());
+			if (distanceFromBranch < minDistance) {
+				closetSide = reefSides[i];
+				minDistance = distanceFromBranch;
+			}
+		}
+
+		return closetSide;
+	}
+
 	public static Pose2d getRobotBranchScoringPose(Branch branch, double distanceFromBranchMeters) {
 		return getRobotBranchScoringPose(branch, distanceFromBranchMeters, true);
 	}
@@ -162,6 +185,12 @@ public class ScoringHelpers {
 			}
 		}
 		return cages[closestSlotIndex];
+	}
+
+	public static void reset() {
+		isFarReefHalf = false;
+		isLeftBranch = false;
+		targetSideForReef = Side.MIDDLE;
 	}
 
 }

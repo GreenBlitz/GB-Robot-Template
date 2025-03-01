@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
@@ -54,11 +55,12 @@ public class KrakenX60ArmBuilder {
 
 	protected static Arm build(String logPath) {
 		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(
-			new DynamicMotionMagicVoltage(
-				0,
-				ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND.getRotations(),
-				ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED.getRotations(),
+			new MotionMagicVoltage(
 				0
+//					,
+//				ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND.getRotations(),
+//				ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED.getRotations(),
+//				0
 			).withSlot(0),
 			0,
 			ENABLE_FOC
@@ -90,12 +92,12 @@ public class KrakenX60ArmBuilder {
 		switch (Robot.ROBOT_TYPE) {
 			case REAL -> {
 				// Motion magic
-				config.Slot0.kP = 30;
+				config.Slot0.kP = 28;
 				config.Slot0.kI = 0;
 				config.Slot0.kD = 0;
 				config.Slot0.kS = 0.0715;
 				config.Slot0.kG = kG;
-				config.Slot0.kV = 7.9;
+				config.Slot0.kV = 9.0000095367432;
 				config.Slot0.kA = 0.5209;
 
 				// PID

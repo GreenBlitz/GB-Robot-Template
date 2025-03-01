@@ -1,6 +1,7 @@
 package frc.robot.subsystems.climb;
 
 import edu.wpi.first.wpilibj2.command.*;
+import frc.joysticks.SmartJoystick;
 import frc.robot.subsystems.climb.lifter.LifterState;
 import frc.robot.subsystems.climb.lifter.LifterStateHandler;
 import frc.robot.subsystems.climb.solenoid.SolenoidState;
@@ -58,6 +59,12 @@ public class ClimbStateHandler {
 				.until(() -> lifterStateHandler.isLower(LifterState.CLOSE.getTargetPosition())),
 			new ParallelCommandGroup(lifterStateHandler.setState(LifterState.HOLD), solenoidStateHandler.setState(SolenoidState.LOCKED))
 		);
+	}
+
+	public void applyCalibrationBindings(SmartJoystick joystick) {
+		joystick.X.onTrue(setState(ClimbState.CLIMB));
+		joystick.B.onTrue(setState(ClimbState.DEPLOY));
+		joystick.A.onTrue(setState(ClimbState.STOP));
 	}
 
 }

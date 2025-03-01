@@ -12,6 +12,7 @@ import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.RobotState;
+import frc.robot.statemachine.StateMachineConstants;
 import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.statemachine.superstructure.SuperstructureState;
 import frc.robot.subsystems.swerve.ChassisPowers;
@@ -96,7 +97,7 @@ public class JoysticksBindings {
 		);
 	}
 
-	private static Command closeScore(Robot robot) {
+	private static Command closeReefActionChooser(Robot robot) {
 		return new DeferredCommand(
 			() -> new SequentialCommandGroup(
 				new InstantCommand(() -> ScoringHelpers.setClosetReefSideTarget(robot.getPoseEstimator().getEstimatedPose())),
@@ -136,7 +137,7 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(closeScore(robot));
+		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(closeReefActionChooser(robot));
 
 		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE_WITH_AIM_ASSIST));
 		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getRobotCommander().setState(RobotState.INTAKE_WITHOUT_AIM_ASSIST));
@@ -152,9 +153,7 @@ public class JoysticksBindings {
 		usedJoystick.POV_DOWN.onTrue(robot.getRobotCommander().setState(RobotState.CLIMB));
 		usedJoystick.A.onTrue(driveActionChooser(robot));
 
-//		usedJoystick.POV_RIGHT.onTrue(robot.getRobotCommander().setState(RobotState.STOP_CLIMB));
-
-		Command climbUp = robot.getLifter().getCommandsBuilder().setPower(-0.5);
+		Command climbUp = robot.getLifter().getCommandsBuilder().setPower(StateMachineConstants.POWER_FOR_MANUAL_CLIMB);
 		climbUp.addRequirements(robot.getRobotCommander(), robot.getRobotCommander().getSuperstructure());
 
 		usedJoystick.START.whileTrue(climbUp);
@@ -176,48 +175,34 @@ public class JoysticksBindings {
 		usedJoystick.POV_DOWN.onTrue(new InstantCommand(() -> ScoringHelpers.setTargetSideForReef(Side.MIDDLE)));
 		usedJoystick.POV_LEFT.onTrue(new InstantCommand(() -> ScoringHelpers.setTargetSideForReef(Side.LEFT)));
 		usedJoystick.POV_RIGHT.onTrue(new InstantCommand(() -> ScoringHelpers.setTargetSideForReef(Side.RIGHT)));
-		
-		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getRobotCommander().setState(RobotState.PRE_CLIMB_WITHOUT_AIM_ASSIST));
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = THIRD_JOYSTICK;
 		// bindings...
-		usedJoystick.A.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L1));
-		usedJoystick.B.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L2));
-		usedJoystick.X.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L3));
-		usedJoystick.Y.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4));
 
-		usedJoystick.R1.onTrue(robot.getRobotCommander().getSuperstructure().preScore());
-		usedJoystick.L1.onTrue(robot.getRobotCommander().getSuperstructure().intake());
-		usedJoystick.POV_UP.onTrue(robot.getRobotCommander().getSuperstructure().scoreWithRelease());
-		usedJoystick.POV_RIGHT.onTrue(robot.getRobotCommander().getSuperstructure().algaeOuttake());
-		usedJoystick.POV_LEFT.onTrue(robot.getRobotCommander().getSuperstructure().algaeRemove());
-
-		usedJoystick.START.onTrue(robot.getRobotCommander().getSuperstructure().idle());
+		robot.getSwerve().applyCalibrationBindings(usedJoystick, () -> robot.getPoseEstimator().getEstimatedPose());
 	}
 
 	private static void fourthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = FOURTH_JOYSTICK;
 		// bindings...
-//		robot.getElevator().applyCalibrationBindings(usedJoystick);
-		usedJoystick.A.onTrue(robot.getRobotCommander().getSuperstructure().idle());
-		usedJoystick.B.onTrue(robot.getRobotCommander().getSuperstructure().preScore());
+
+		robot.getElevator().applyCalibrationBindings(usedJoystick);
 	}
 
 	private static void fifthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = FIFTH_JOYSTICK;
 		// bindings...
-//		robot.getArm().applyCalibrationBindings(usedJoystick);
 
-		robot.getSolenoid().applyCalibrationBindings(usedJoystick);
-		robot.getLifter().applyCalibrationBindings(usedJoystick, robot);
+		robot.getRobotCommander().getSuperstructure().getClimbStateHandler().applyCalibrationBindings(usedJoystick);
 	}
 
 	private static void sixthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SIXTH_JOYSTICK;
 
-		robot.getEndEffector().applyCalibrationsBindings(usedJoystick);
+		robot.getArm().applyCalibrationBindings(usedJoystick);
+//		robot.getEndEffector().applyCalibrationsBindings(usedJoystick);
 	}
 
 }

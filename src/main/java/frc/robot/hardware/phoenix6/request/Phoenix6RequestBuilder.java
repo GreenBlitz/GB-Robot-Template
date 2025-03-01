@@ -45,16 +45,18 @@ public class Phoenix6RequestBuilder {
 		);
 	}
 
-	public static Phoenix6FeedForwardRequest build(
+	public static Phoenix6DynamicMotionMagicRequest build(
 		DynamicMotionMagicVoltage dynamicMotionMagicVoltage,
 		double defaultArbitraryFeedForward,
 		boolean enableFOC
 	) {
-		return new Phoenix6FeedForwardRequest(
+		return new Phoenix6DynamicMotionMagicRequest(
 			Rotation2d.fromRotations(dynamicMotionMagicVoltage.Position),
 			dynamicMotionMagicVoltage.withEnableFOC(enableFOC),
 			setPoint -> dynamicMotionMagicVoltage.withPosition(setPoint.getRotations()),
 			dynamicMotionMagicVoltage::withFeedForward,
+			maxVelocity -> dynamicMotionMagicVoltage.withVelocity(maxVelocity.getRotations()),
+			maxAcceleration -> dynamicMotionMagicVoltage.withAcceleration(maxAcceleration.getRotations()),
 			defaultArbitraryFeedForward
 		);
 	}

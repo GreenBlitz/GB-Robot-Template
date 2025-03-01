@@ -16,6 +16,9 @@ def ROBOT_MAIN_CLASS = "frc.Main"
 def COMPUTER_MAIN_CLASS = "frc.ComputerMain"
 def ROUTER_IP = "10.45.90.2"
 def USB_B_IP = "172.22.11.2"
+
+final MAX_JAVA_HEAP_SIZE_MB=100;
+
 def IPS = [ROUTER_IP, USB_B_IP]
 def reachableIP
 
@@ -43,6 +46,12 @@ deploy {
 					jvmArgs.add('-Dcom.sun.management.jmxremote.ssl=false')
 					jvmArgs.add('-Dcom.sun.management.jmxremote.authenticate=false')
 					jvmArgs.add("-Djava.rmi.server.hostname=${IPS[0]}")
+					jvmArgs.add("-XX:+UnlockExperimentalVMOptions")
+					jvmArgs.add("-XX:MaxGCPauseMillis=50")
+					jvmArgs.add("-XX:GCTimeRatio=5")
+					jvmArgs.add("-Xmx" + MAX_JAVA_HEAP_SIZE_MB + "M")
+					jvmArgs.add("-Xms" + MAX_JAVA_HEAP_SIZE_MB + "M")
+					jvmArgs.add("-XX:+AlwaysPreTouch")
 				}
 
 				// Static files artifact

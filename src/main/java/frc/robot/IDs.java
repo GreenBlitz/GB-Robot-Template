@@ -1,15 +1,11 @@
 package frc.robot;
 
 import com.revrobotics.spark.SparkLowLevel;
-import edu.wpi.first.wpilibj.PowerDistribution;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.rev.motors.SparkMaxDeviceID;
-import frc.utils.battery.PowerDistributionDeviceID;
 
 public class IDs {
-
-	public static final PowerDistributionDeviceID POWER_DISTRIBUTION = new PowerDistributionDeviceID(20, PowerDistribution.ModuleType.kRev);
 
 	public static final Phoenix6DeviceID SWERVE_PIGEON_2 = new Phoenix6DeviceID(0, BusChain.CANIVORE);
 

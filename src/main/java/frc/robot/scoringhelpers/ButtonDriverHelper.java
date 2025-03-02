@@ -113,14 +113,12 @@ public class ButtonDriverHelper {
 	}
 
 	public static Pose2d[] setUpDisplay() {
-		updateChosenReefSideIndex(ScoringHelpers.getTargetReefSide());
 		updateScoreLevelIndex(ScoringHelpers.targetScoreLevel);
 		updateLeftRightToggleIndexes(ScoringHelpers.getTargetBranch());
 
-		Pose2d[] darkDisplay = new Pose2d[REEF_SIDES.length + SCORE_LEVEL_PLACEMENTS.length - 1];
+		Pose2d[] darkDisplay = new Pose2d[SCORE_LEVEL_PLACEMENTS.length];
 		int darkDisplayIndex = 0;
 
-		darkDisplayIndex = addArrayToArrayWithoutSpecificIndex(darkDisplay, darkDisplayIndex, REEF_SIDES, chosenSideIndex);
 		darkDisplayIndex = addArrayToArrayWithoutSpecificIndex(darkDisplay, darkDisplayIndex, SCORE_LEVEL_PLACEMENTS, chosenScoreLevelIndex);
 		darkDisplay[darkDisplayIndex] = LeftRightTogglePlacements.values()[darkToggleIndex].placement;
 
@@ -129,7 +127,6 @@ public class ButtonDriverHelper {
 
 	public static void log(String logPath) {
 		Logger.recordOutput(logPath + "/DarkDisplay", setUpDisplay());
-		Logger.recordOutput(logPath + "/ChosenReefSide", REEF_SIDES[chosenSideIndex]);
 		Logger.recordOutput(logPath + "/ChosenScoreLevel", SCORE_LEVEL_PLACEMENTS[chosenScoreLevelIndex]);
 		Logger.recordOutput(logPath + "/LeftToggle", LeftRightTogglePlacements.values()[leftIndex].placement);
 		Logger.recordOutput(logPath + "/RightToggle", LeftRightTogglePlacements.values()[rightIndex].placement);

@@ -50,12 +50,12 @@ public class Superstructure extends GBSubsystem {
 		this.currentState = SuperstructureState.STAY_IN_PLACE;
 		this.driverIsCoralInOverride = false;
 		this.driverIsAlgaeInOverride = false;
-//		setDefaultCommand(
-//			new DeferredCommand(
-//				() -> endState(currentState),
-//				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector(), robot.getLifter(), robot.getSolenoid())
-//			)
-//		);
+		setDefaultCommand(
+			new DeferredCommand(
+				() -> endState(currentState),
+				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector(), robot.getLifter(), robot.getSolenoid())
+			)
+		);
 	}
 
 	public ElevatorStateHandler getElevatorStateHandler() {

@@ -168,8 +168,8 @@ public class JoysticksBindings {
 		usedJoystick.X.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L3));
 		usedJoystick.Y.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4));
 
-		usedJoystick.R1.onTrue(new InstantCommand(() -> ScoringHelpers.isLeftBranch = true));
-		usedJoystick.L1.onTrue(new InstantCommand(() -> ScoringHelpers.isLeftBranch = false));
+		usedJoystick.R1.onTrue(new InstantCommand(() -> ScoringHelpers.isLeftBranch = false));
+		usedJoystick.L1.onTrue(new InstantCommand(() -> ScoringHelpers.isLeftBranch = true));
 
 	}
 

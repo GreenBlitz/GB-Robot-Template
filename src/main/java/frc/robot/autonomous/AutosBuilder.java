@@ -2,9 +2,9 @@ package frc.robot.autonomous;
 
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Robot;
+import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.utils.auto.AutoPath;
 import frc.utils.auto.PathHelper;
 import frc.utils.auto.PathPlannerAutoWrapper;
@@ -80,6 +80,23 @@ public class AutosBuilder {
 			pathOptional.map(PathPlannerUtil::getPathStartingPose).orElse(path.getStartingPoint().getSecond()),
 			path.getPathName(),
 			pathOptional.isPresent()
+		);
+	}
+
+	public static PathPlannerAutoWrapper createDefaultAuto(Robot robot) {
+		return new PathPlannerAutoWrapper(
+			new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					robot.getSwerve().getCommandsBuilder().drive(() -> new ChassisPowers(AutonomousConstants.DEFAULT_AUTO_DRIVE_POWER, 0, 0)),
+					robot.getElevator()
+						.getCommandsBuilder()
+						.setTargetPositionMeters(AutonomousConstants.ELEVATOR_HEIGHT_METERS_FOR_OPENING_SEQUENCE)
+				).withTimeout(AutonomousConstants.DEFAULT_AUTO_DRIVE_TIME_SECONDS),
+				robot.getRobotCommander().getSuperstructure().idle()
+			),
+			Pose2d.kZero,
+			"DefaultAuto",
+			true
 		);
 	}
 

@@ -124,10 +124,10 @@ public class Superstructure extends GBSubsystem {
 			&& armStateHandler.getCurrentState() == ArmState.ALGAE_OUTTAKE;
 	}
 
-	public boolean isReadyForNet() {
-		return robot.getElevator().isAtPosition(ElevatorState.NET.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
+	public boolean isReadyForNetRelease() {
+		return robot.getElevator().isPastPosition(StateMachineConstants.ELEVATOR_POSITION_TO_RELEASE_NET)
 			&& elevatorStateHandler.getCurrentState() == ElevatorState.NET
-			&& robot.getArm().isAtPosition(ArmState.NET.getPosition(), Tolerances.ARM_POSITION)
+			&& robot.getArm().isPastPosition(StateMachineConstants.ARM_POSITION_TO_RELEASE_NET)
 			&& armStateHandler.getCurrentState() == ArmState.NET;
 	}
 
@@ -430,35 +430,18 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-
-	public Command netWithoutRelease() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.NET),
-				armStateHandler.setState(ArmState.NET),
-				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
-				climbStateHandler.setState(ClimbState.STOP)
-			),
-			SuperstructureState.NET_WITHOUT_RELEASE
-		);
-	}
-
-
 	public Command netWithRelease() {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					elevatorStateHandler.setState(ElevatorState.NET),
 					armStateHandler.setState(ArmState.NET),
-					endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE),
-					climbStateHandler.setState(ClimbState.STOP)
+					climbStateHandler.setState(ClimbState.STOP),
+					new SequentialCommandGroup(
+						endEffectorStateHandler.setState(EndEffectorState.DEFAULT).until(this::isReadyForNetRelease),
+						endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE)
+					)
 				)
-//						.until(() -> !isAlgaeIn()),
-//				new ParallelCommandGroup(
-//					elevatorStateHandler.setState(ElevatorState.NET),
-//					armStateHandler.setState(ArmState.NET),
-//					endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE)
-//				).withTimeout(StateMachineConstants.NET_OUTTAKE_TIME_AFTER_LIMIT_SWITCH_SECONDS)
 			),
 			SuperstructureState.NET_WITH_RELEASE
 		);
@@ -530,7 +513,7 @@ public class Superstructure extends GBSubsystem {
 			case ALGAE_REMOVE -> postAlgaeRemove();
 			case ARM_PRE_SCORE, CLOSE_CLIMB -> armPreScore();
 			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> afterScore();
-			case PRE_NET, NET_WITHOUT_RELEASE, NET_WITH_RELEASE -> preNet();
+			case PRE_NET, NET_WITH_RELEASE -> preNet();
 			case PRE_CLIMB -> preClimb();
 			case CLIMB, STOP_CLIMB -> climbStop();
 		};

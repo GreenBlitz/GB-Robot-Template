@@ -238,12 +238,12 @@ public class Robot {
 
 	public PathPlannerAutoWrapper getAuto() {
 		if (preBuiltAutosChooser.isDefaultOptionChosen()) {
-			return getMultiChooserAuto();
+			return getMultiChoosersAuto();
 		}
 		return preBuiltAutosChooser.getChosenValue();
 	}
 
-	private PathPlannerAutoWrapper getMultiChooserAuto() {
+	private PathPlannerAutoWrapper getMultiChoosersAuto() {
 		return PathPlannerAutoWrapper.chainAutos(
 				firstObjectScoringLocationChooser.getChosenValue(),
 				PathPlannerAutoWrapper

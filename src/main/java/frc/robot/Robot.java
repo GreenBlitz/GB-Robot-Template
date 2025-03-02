@@ -232,7 +232,7 @@ public class Robot {
 	}
 
 	public PathPlannerAutoWrapper getAuto() {
-		return !firstObjectScoringLocationChooser.equals("None")
+		return !firstObjectScoringLocationChooser.isDefaultOptionChosen()
 			? PathPlannerAutoWrapper.chainAutos(
 				firstObjectScoringLocationChooser.getChosenValue(),
 				PathPlannerAutoWrapper

@@ -4,6 +4,7 @@
 
 package frc;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.utils.auto.PathPlannerUtil;
@@ -14,6 +15,7 @@ import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
 import frc.utils.brakestate.BrakeStateManager;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the TimedRobot
@@ -33,6 +35,7 @@ public class RobotManager extends LoggedRobot {
 		this.roborioCycles = 0;
 		this.robot = new Robot();
 
+		createAutoReadyForConstructionChooser();
 		JoysticksBindings.configureBindings(robot);
 	}
 
@@ -52,7 +55,9 @@ public class RobotManager extends LoggedRobot {
 	public void autonomousInit() {
 		robot.getRobotCommander().removeDefaultCommand();
 
-		this.auto = robot.getAuto();
+		if (auto == null) {
+			this.auto = robot.getAuto();
+		}
 		auto.schedule();
 	}
 
@@ -70,6 +75,18 @@ public class RobotManager extends LoggedRobot {
 		JoysticksBindings.setDriversInputsToSwerve(robot.getSwerve());
 		robot.periodic();
 		AlertManager.reportAlerts();
+	}
+
+	private void createAutoReadyForConstructionChooser() {
+		SendableChooser<Boolean> autoReadyForConstructionSendableChooser = new SendableChooser<>();
+		autoReadyForConstructionSendableChooser.setDefaultOption("false", false);
+		autoReadyForConstructionSendableChooser.addOption("true", true);
+		autoReadyForConstructionSendableChooser.onChange(aBoolean -> {
+			if (aBoolean) {
+				auto = robot.getAuto();
+			}
+		});
+		new LoggedDashboardChooser<>("AutoReadyForConstruction", autoReadyForConstructionSendableChooser);
 	}
 
 	private void updateTimeRelatedData() {

@@ -77,6 +77,7 @@ public class Robot {
 	private final SimulationManager simulationManager;
 	private final RobotCommander robotCommander;
 
+	private AutonomousChooser preBuiltAutosChooser;
 	private AutonomousChooser firstObjectScoringLocationChooser;
 	private AutonomousChooser secondObjectIntakingLocationChooser;
 	private AutonomousChooser secondObjectScoringLocationChooser;
@@ -177,6 +178,10 @@ public class Robot {
 		);
 		new EventTrigger("ARM_PRE_SCORE").onTrue(robotCommander.getSuperstructure().armPreScore());
 
+		this.preBuiltAutosChooser = new AutonomousChooser(
+			"PreBuiltAutos",
+			AutosBuilder.getAllPreBuiltAutos(this, intakingCommand, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+		);
 		this.firstObjectScoringLocationChooser = new AutonomousChooser("ScoreFirst", AutosBuilder.getAllAutoScoringAutos(this));
 		this.secondObjectIntakingLocationChooser = new AutonomousChooser(
 			"IntakeSecond",
@@ -231,19 +236,22 @@ public class Robot {
 	}
 
 	public PathPlannerAutoWrapper getAuto() {
-		return PathPlannerAutoWrapper.chainAutos(
-			firstObjectScoringLocationChooser.getChosenValue(),
-			PathPlannerAutoWrapper
-				.chainAutos(
-					secondObjectIntakingLocationChooser.getChosenValue(),
-					secondObjectScoringLocationChooser.getChosenValue(),
-					thirdObjectIntakingLocationChooser.getChosenValue(),
-					thirdObjectScoringLocationChooser.getChosenValue(),
-					fourthObjectIntakingLocationChooser.getChosenValue(),
-					fourthObjectScoringLocationChooser.getChosenValue()
-				)
-				.asProxyAuto()
-		);
+		if (preBuiltAutosChooser.getChosenValue().getName().equals("None")) {
+			return PathPlannerAutoWrapper.chainAutos(
+					firstObjectScoringLocationChooser.getChosenValue(),
+					PathPlannerAutoWrapper
+							.chainAutos(
+									secondObjectIntakingLocationChooser.getChosenValue(),
+									secondObjectScoringLocationChooser.getChosenValue(),
+									thirdObjectIntakingLocationChooser.getChosenValue(),
+									thirdObjectScoringLocationChooser.getChosenValue(),
+									fourthObjectIntakingLocationChooser.getChosenValue(),
+									fourthObjectScoringLocationChooser.getChosenValue()
+							)
+							.asProxyAuto()
+			);
+		}
+		return preBuiltAutosChooser.getChosenValue();
 	}
 
 	public IPoseEstimator getPoseEstimator() {

@@ -237,7 +237,7 @@ public class Robot {
 	}
 
 	public PathPlannerAutoWrapper getAuto() {
-		if (preBuiltAutosChooser.getChosenValue().getName().equals("None")) {
+		if (preBuiltAutosChooser.isDefaultOptionChosen()) {
 			return PathPlannerAutoWrapper.chainAutos(
 					firstObjectScoringLocationChooser.getChosenValue(),
 					PathPlannerAutoWrapper

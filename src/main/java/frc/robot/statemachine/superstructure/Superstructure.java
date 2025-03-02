@@ -155,24 +155,6 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command idleAfterAlgaeRemove() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				new SequentialCommandGroup(
-					armStateHandler.setState(ArmState.FIRST_WAYPOINT_TO_CLOSE)
-						.until(() -> robot.getArm().isAtPosition(ArmState.FIRST_WAYPOINT_TO_CLOSE.getPosition(), Tolerances.ARM_POSITION)),
-					armStateHandler.setState(ArmState.SECOND_WAYPOINT_TO_CLOSE)
-						.until(() -> robot.getArm().isAtPosition(ArmState.SECOND_WAYPOINT_TO_CLOSE.getPosition(), Tolerances.ARM_POSITION)),
-					armStateHandler.setState(ArmState.CLOSED)
-				),
-				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
-				climbStateHandler.setState(ClimbState.STOP),
-				elevatorStateHandler.setState(ElevatorState.CLOSED)
-			).until(this::isClosed),
-			SuperstructureState.IDLE_AFTER_ALGAE_REMOVE
-		);
-	}
-
 	public Command stayInPlace() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
@@ -361,21 +343,6 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command postAlgaeRemove() {
-		return asSubsystemCommand(
-			new DeferredCommand(
-				() -> new ParallelCommandGroup(
-					elevatorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getPostElevatorState()),
-					armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getPostArmState()),
-					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
-					climbStateHandler.setState(ClimbState.STOP)
-				),
-				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector(), robot.getLifter(), robot.getSolenoid())
-			),
-			SuperstructureState.POST_ALGAE_REMOVE
-		);
-	}
-
 	public Command processorScore() {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
@@ -526,8 +493,7 @@ public class Superstructure extends GBSubsystem {
 	private Command endState(SuperstructureState state) {
 		return switch (state) {
 			case STAY_IN_PLACE, OUTTAKE -> stayInPlace();
-			case INTAKE, IDLE, IDLE_AFTER_ALGAE_REMOVE, POST_ALGAE_REMOVE, ALGAE_OUTTAKE, CLOSE_L4, PROCESSOR_OUTTAKE -> idle();
-			case ALGAE_REMOVE -> postAlgaeRemove();
+			case INTAKE, IDLE, ALGAE_REMOVE, ALGAE_OUTTAKE, CLOSE_L4, PROCESSOR_OUTTAKE -> idle();
 			case ARM_PRE_SCORE, CLOSE_CLIMB -> armPreScore();
 			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> afterScore();
 			case PRE_NET, NET_WITHOUT_RELEASE, NET_WITH_RELEASE -> preNet();

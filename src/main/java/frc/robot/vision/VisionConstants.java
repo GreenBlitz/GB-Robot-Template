@@ -75,6 +75,11 @@ public class VisionConstants {
 		AngleUnit.DEGREES.toRotation3d(8.81, -25.55, 19.96)
 	);
 
+	public static final Pose3d LIMELIGHT_FEEDER_CAMERA_ROBOT_POSE = new Pose3d(
+		new Translation3d(-0.07575, 0.27, 0.93),
+		AngleUnit.DEGREES.toRotation3d(-2.7, 51.44, -177.6)
+	);
+
 	public static final VisionSource<AprilTagVisionData> LIMELIGHT_LEFT = new DynamicSwitchingLimelight(
 		true,
 		"limelight-left",
@@ -91,6 +96,15 @@ public class VisionConstants {
 		"limelight3gb-front",
 		VisionConstants.DEFAULT_VISION_FILTER,
 		LIMELIGHT_RIGHT_CAMERA_ROBOT_POSE
+	);
+
+	public static final VisionSource<AprilTagVisionData> LIMELIGHT_FEEDER = new DynamicSwitchingLimelight(
+		true,
+		"limelight-feeder",
+		VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
+		"limelight3-feeder",
+		VisionConstants.DEFAULT_VISION_FILTER,
+		LIMELIGHT_FEEDER_CAMERA_ROBOT_POSE
 	);
 
 	public static final List<VisionSource<AprilTagVisionData>> VISION_SOURCES = List.of(LIMELIGHT_LEFT, LIMELIGHT_RIGHT);

@@ -56,7 +56,7 @@ public class KrakenX60ArmBuilder {
 	protected static Arm build(String logPath) {
 		Phoenix6FeedForwardRequest positionRequest = Robot.ROBOT_TYPE.isReal()
 			? Phoenix6RequestBuilder.build(new MotionMagicVoltage(0).withSlot(0), 0, ENABLE_FOC)
-			: Phoenix6RequestBuilder.build(new PositionVoltage(0).withSlot(1), 0, true);
+			: Phoenix6RequestBuilder.build(new PositionVoltage(0).withSlot(1), 0, ENABLE_FOC);
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), ENABLE_FOC);
 
 		TalonFXMotor motor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ARM, buildSysidConfig(), buildArmSimulation());

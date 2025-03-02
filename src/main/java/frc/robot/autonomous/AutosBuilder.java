@@ -87,9 +87,7 @@ public class AutosBuilder {
 	public static PathPlannerAutoWrapper autoScoreToBranch(Branch branch, Robot robot) {
 		return new PathPlannerAutoWrapper(new InstantCommand(() -> {
 			ScoringHelpers.targetScoreLevel = ScoreLevel.L4;
-			if (branch.isLeft() != ScoringHelpers.getTargetBranch().isLeft()) {
-				ScoringHelpers.toggleIsLeftBranch();
-			}
+			ScoringHelpers.isLeftBranch = branch.isLeft();
 			if (branch.getReefSide().isFar() != ScoringHelpers.getTargetReefSide().isFar()) {
 				ScoringHelpers.toggleIsFarReefHalf();
 			}

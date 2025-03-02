@@ -23,6 +23,7 @@ import frc.utils.alerts.PeriodicAlert;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 
@@ -160,7 +161,15 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 				getName(),
 				pose3dDoublePair.getFirst(),
 				pose3dDoublePair.getSecond(),
-				new StandardDeviations3D(standardDeviationsArray),
+				new StandardDeviations3D(
+					poseEstimationMethod.equals(LimelightPoseEstimationMethod.MEGATAG_1)
+						? Arrays.copyOfRange(standardDeviationsArray, 0, Pose3dComponentsValue.values().length)
+						: Arrays.copyOfRange(
+							standardDeviationsArray,
+							Pose3dComponentsValue.values().length,
+							2 * Pose3dComponentsValue.values().length
+						)
+				),
 				getAprilTagValueInRobotSpace(Pose3dComponentsValue.Z_VALUE),
 				getDistanceFromTag(),
 				lastSeenAprilTagId,

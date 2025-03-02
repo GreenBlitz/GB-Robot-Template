@@ -45,9 +45,7 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void disabledExit() {
-		if (!DriverStationUtil.isMatch()) {
-			BrakeStateManager.brake();
-		}
+		BrakeStateManager.brake();
 	}
 
 	@Override

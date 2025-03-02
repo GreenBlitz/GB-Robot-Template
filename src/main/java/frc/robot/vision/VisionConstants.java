@@ -54,7 +54,7 @@ public class VisionConstants {
 
 	public static Rotation2d PITCH_FILTER_TOLERANCE = Rotation2d.fromDegrees(5);
 
-	public static Rotation2d YAW_FILTER_TOLERANCE = Rotation2d.fromDegrees(1);
+	public static Rotation2d YAW_FILTER_TOLERANCE = Rotation2d.fromDegrees(2);
 
 	public static double ROBOT_POSITION_IN_FIELD_TOLERANCE_METERS = 0.1;
 

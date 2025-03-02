@@ -115,24 +115,6 @@ public class JoysticksBindings {
 		);
 	}
 
-	private static Command driveActionChooser(Robot robot) {
-		return new DeferredCommand(
-			() -> robot.getRobotCommander().getSuperstructure().getCurrentState() == SuperstructureState.ALGAE_REMOVE
-				? robot.getRobotCommander().setState(RobotState.DRIVE_AFTER_ALGAE_REMOVE)
-				: robot.getRobotCommander().setState(RobotState.DRIVE),
-			Set.of(
-				robot.getRobotCommander(),
-				robot.getRobotCommander().getSuperstructure(),
-				robot.getSwerve(),
-				robot.getElevator(),
-				robot.getArm(),
-				robot.getEndEffector(),
-				robot.getLifter(),
-				robot.getSolenoid()
-			)
-		);
-	}
-
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
@@ -150,7 +132,7 @@ public class JoysticksBindings {
 		usedJoystick.POV_LEFT.onTrue(robot.getRobotCommander().setState(RobotState.PRE_CLIMB_WITH_AIM_ASSIST));
 		usedJoystick.POV_UP.onTrue(robot.getRobotCommander().setState(RobotState.PRE_CLIMB_WITHOUT_AIM_ASSIST));
 		usedJoystick.POV_DOWN.onTrue(robot.getRobotCommander().setState(RobotState.CLIMB));
-		usedJoystick.A.onTrue(driveActionChooser(robot));
+		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
 
 		Command climbUp = robot.getLifter().getCommandsBuilder().setPower(StateMachineConstants.POWER_FOR_MANUAL_CLIMB);
 		climbUp.addRequirements(robot.getRobotCommander(), robot.getRobotCommander().getSuperstructure());

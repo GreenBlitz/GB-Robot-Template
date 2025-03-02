@@ -4,7 +4,6 @@ public enum SuperstructureState {
 
 	STAY_IN_PLACE,
 	IDLE,
-	IDLE_AFTER_ALGAE_REMOVE,
 	INTAKE,
 	OUTTAKE,
 	ARM_PRE_SCORE,

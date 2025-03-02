@@ -245,9 +245,7 @@ public class AutosBuilder {
 		return new PathPlannerAutoWrapper(new InstantCommand(() -> {
 			ScoringHelpers.targetScoreLevel = ScoreLevel.L4;
 			ScoringHelpers.isLeftBranch = branch.isLeft();
-			if (branch.getReefSide().isFar() != ScoringHelpers.getTargetReefSide().isFar()) {
-				ScoringHelpers.toggleIsFarReefHalf();
-			}
+			ScoringHelpers.isFarReefHalf = branch.getReefSide().isFar();
 			ScoringHelpers.setTargetSideForReef(branch.getReefSide().getSide());
 		}).andThen(robot.getRobotCommander().autoScoreForAutonomous()), Pose2d.kZero, branch.name() + " Auto Score", true);
 	}

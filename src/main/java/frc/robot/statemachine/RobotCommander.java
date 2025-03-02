@@ -201,8 +201,10 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public boolean isCloseToNet(double distanceOnXAxis, double distanceOnYAxis) {
-		boolean isPastX = robot.getPoseEstimator().getEstimatedPose().getTranslation().getX() > Field.LENGTH_METERS / 2 - distanceOnXAxis;
-		boolean isPastY = robot.getPoseEstimator().getEstimatedPose().getTranslation().getY() > Field.WIDTH_METERS / 2 - distanceOnYAxis;
+		boolean isPastX = Field.getAllianceRelative(robot.getPoseEstimator().getEstimatedPose().getTranslation(), true, true).getX()
+			> Field.LENGTH_METERS / 2 - distanceOnXAxis;
+		boolean isPastY = Field.getAllianceRelative(robot.getPoseEstimator().getEstimatedPose().getTranslation(), true, true).getY()
+			> Field.WIDTH_METERS / 2 - distanceOnYAxis;
 		return isPastX && isPastY;
 	}
 

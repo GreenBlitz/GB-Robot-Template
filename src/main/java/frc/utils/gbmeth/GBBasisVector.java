@@ -33,7 +33,7 @@ public final class GBBasisVector<S extends Num> implements Cloneable, Iterable<D
 		this(anotherVector, clone, new int[anotherVector.getSize()]);
 	}
 
-	public GBBasisVector(double[] data) {
+	protected GBBasisVector(double[] data) {
 		this.data = data;
 		this.clone = false;
 		this.factorOf = 1;
@@ -42,11 +42,11 @@ public final class GBBasisVector<S extends Num> implements Cloneable, Iterable<D
 		this.appliedFunction = x -> x;
 	}
 
-	public <E extends Num> GBBasisVector(edu.wpi.first.math.Vector<E> vector) {
+	protected <E extends Num> GBBasisVector(edu.wpi.first.math.Vector<E> vector) {
 		this(vector.getData());
 	}
 
-	public GBBasisVector(Collection<Double> data) {
+	protected GBBasisVector(Collection<Double> data) {
 		this(data.stream().mapToDouble(x -> x).toArray());
 	}
 
@@ -101,14 +101,14 @@ public final class GBBasisVector<S extends Num> implements Cloneable, Iterable<D
 	@Override
 	public void plus(Vector<S> anotherVector) {
 		for (int i = 0; i < assertSizeGetMinimum(anotherVector); i++) {
-			data[i] += anotherVector.get(i);
+			data[i] = this.get(i) + anotherVector.get(i);
 		}
 	}
 
 	@Override
 	public void minus(Vector<S> anotherVector) {
 		for (int i = 0; i < assertSizeGetMinimum(anotherVector); i++) {
-			data[i] -= anotherVector.get(i);
+			data[i] = this.get(i) - anotherVector.get(i);
 		}
 	}
 

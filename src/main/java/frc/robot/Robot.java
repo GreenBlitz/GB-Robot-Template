@@ -15,6 +15,8 @@ import frc.RobotManager;
 import frc.constants.field.enums.Branch;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.AutosBuilder;
+import frc.robot.hardware.phoenix6.leds.CANdleWrapper;
+import frc.robot.led.LEDStateHandler;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
 import frc.robot.scoringhelpers.ButtonDriverHelper;
 import frc.robot.subsystems.climb.lifter.Lifter;
@@ -89,6 +91,9 @@ public class Robot {
 	private AutonomousChooser whereToIntakeFourthObjectChooser;
 	private AutonomousChooser whereToScoreFourthObjectChooser;
 
+	public CANdleWrapper caNdleWrapper;
+	public LEDStateHandler ledStateHandler;
+
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 
@@ -155,6 +160,8 @@ public class Robot {
 		this.simulationManager = new SimulationManager("SimulationManager", this);
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
 
+		this.caNdleWrapper = new CANdleWrapper();
+		this.ledStateHandler = new LEDStateHandler();
 		configureAuto();
 	}
 

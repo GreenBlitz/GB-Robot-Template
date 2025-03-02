@@ -14,7 +14,6 @@ import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.RobotState;
 import frc.robot.statemachine.StateMachineConstants;
 import frc.robot.statemachine.superstructure.ScoreLevel;
-import frc.robot.statemachine.superstructure.SuperstructureState;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.utils.utilcommands.ExecuteEndCommand;

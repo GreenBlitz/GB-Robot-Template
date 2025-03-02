@@ -236,17 +236,17 @@ public class Robot {
 			? PathPlannerAutoWrapper.chainAutos(
 				firstObjectScoringLocationChooser.getChosenValue(),
 				PathPlannerAutoWrapper
-						.chainAutos(
-								secondObjectIntakingLocationChooser.getChosenValue(),
-								secondObjectScoringLocationChooser.getChosenValue(),
-								thirdObjectIntakingLocationChooser.getChosenValue(),
-								thirdObjectScoringLocationChooser.getChosenValue(),
-								fourthObjectIntakingLocationChooser.getChosenValue(),
-								fourthObjectScoringLocationChooser.getChosenValue()
-						)
-						.asProxyAuto()
-		)
-		: AutosBuilder.createDefaultAuto(this);
+					.chainAutos(
+						secondObjectIntakingLocationChooser.getChosenValue(),
+						secondObjectScoringLocationChooser.getChosenValue(),
+						thirdObjectIntakingLocationChooser.getChosenValue(),
+						thirdObjectScoringLocationChooser.getChosenValue(),
+						fourthObjectIntakingLocationChooser.getChosenValue(),
+						fourthObjectScoringLocationChooser.getChosenValue()
+					)
+					.asProxyAuto()
+			)
+			: AutosBuilder.createDefaultAuto(this);
 	}
 
 	public IPoseEstimator getPoseEstimator() {

@@ -66,7 +66,7 @@ public class VisionFilters {
 		return (visionData) -> visionData.getTrackedAprilTagId() == tagID;
 	}
 
-	public static Filter<AprilTagVisionData> isMissingTags(int... tags) {
+	public static Filter<AprilTagVisionData> isNotSeeingTags(int... tags) {
 		Filter<AprilTagVisionData> filter = isSeeingTag(VisionConstants.NO_APRILTAG_ID);
 
 		for (int id : tags) {

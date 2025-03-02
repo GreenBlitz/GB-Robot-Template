@@ -17,7 +17,6 @@ import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.statemachine.superstructure.SuperstructureState;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.utils.pose.Side;
 import frc.utils.utilcommands.ExecuteEndCommand;
 
 import java.util.Set;
@@ -170,7 +169,6 @@ public class JoysticksBindings {
 
 		usedJoystick.R1.onTrue(new InstantCommand(() -> ScoringHelpers.isLeftBranch = false));
 		usedJoystick.L1.onTrue(new InstantCommand(() -> ScoringHelpers.isLeftBranch = true));
-
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {

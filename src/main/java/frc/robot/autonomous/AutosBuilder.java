@@ -4,7 +4,11 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.constants.field.enums.Branch;
 import frc.robot.Robot;
+import frc.robot.scoringhelpers.ScoringHelpers;
+import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.utils.auto.AutoPath;
 import frc.utils.auto.PathHelper;
 import frc.utils.auto.PathPlannerAutoWrapper;
@@ -44,6 +48,14 @@ public class AutosBuilder {
 		return autos;
 	}
 
+	public static List<Supplier<PathPlannerAutoWrapper>> getAllAutoScoringAutos(Robot robot) {
+		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
+		for (Branch branch : Branch.values()) {
+			autos.add(() -> autoScoreToBranch(branch, robot));
+		}
+		return autos;
+	}
+
 	public static List<Supplier<PathPlannerAutoWrapper>> getAllIntakingAutos(Robot robot, Supplier<Command> intakingCommand, Pose2d tolerance) {
 		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
 		for (AutoPath autoPath : PathHelper.getAllIntakingPaths()) {
@@ -70,6 +82,15 @@ public class AutosBuilder {
 			);
 		}
 		return autos;
+	}
+
+	public static PathPlannerAutoWrapper autoScoreToBranch(Branch branch, Robot robot) {
+		return new PathPlannerAutoWrapper(new InstantCommand(() -> {
+			ScoringHelpers.targetScoreLevel = ScoreLevel.L4;
+			ScoringHelpers.isLeftBranch = branch.isLeft();
+			ScoringHelpers.isFarReefHalf = branch.getReefSide().isFar();
+			ScoringHelpers.setTargetSideForReef(branch.getReefSide().getSide());
+		}).andThen(robot.getRobotCommander().autoScoreForAutonomous()), Pose2d.kZero, branch.name() + " Auto Score", true);
 	}
 
 	public static PathPlannerAutoWrapper createAutoFromAutoPath(AutoPath path, Function<PathPlannerPath, Command> pathFollowingCommand) {

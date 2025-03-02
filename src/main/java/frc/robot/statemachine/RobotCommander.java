@@ -142,9 +142,13 @@ public class RobotCommander extends GBSubsystem {
 
 	public Command fullyScore() {
 		return new SequentialCommandGroup(
+			//aim assist
 			armPreScore().until(this::isReadyToOpenSuperstructure),
+			//is in pos
 			preScore().until(this::isPreScoreReady),
+			//
 			scoreWithoutRelease().until(this::isReadyToScore),
+			//is ready to scopre
 			score()
 		);
 	}

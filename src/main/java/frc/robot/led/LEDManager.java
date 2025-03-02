@@ -21,8 +21,6 @@ public class LEDManager {
         this.robot = robot;
     }
 
-
-
     public void addCondition(Pair<BooleanSupplier, LEDState> ledStatePair){
         suppliersList.add(ledStatePair);
     }

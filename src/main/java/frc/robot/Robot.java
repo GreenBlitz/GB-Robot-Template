@@ -77,13 +77,13 @@ public class Robot {
 	private final SimulationManager simulationManager;
 	private final RobotCommander robotCommander;
 
-	private AutonomousChooser whereToScoreFirstObjectChooser;
-	private AutonomousChooser whereToIntakeSecondObjectChooser;
-	private AutonomousChooser whereToScoreSecondObjectChooser;
-	private AutonomousChooser whereToIntakeThirdObjectChooser;
-	private AutonomousChooser whereToScoreThirdObjectChooser;
-	private AutonomousChooser whereToIntakeFourthObjectChooser;
-	private AutonomousChooser whereToScoreFourthObjectChooser;
+	private AutonomousChooser firstObjectScoringLocationChooser;
+	private AutonomousChooser secondObjectIntakingLocationChooser;
+	private AutonomousChooser secondObjectScoringLocationChooser;
+	private AutonomousChooser thirdObjectIntakingLocationChooser;
+	private AutonomousChooser thirdObjectScoringLocationChooser;
+	private AutonomousChooser fourthObjectIntakingLocationChooser;
+	private AutonomousChooser fourthObjectScoringLocationChooser;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -177,28 +177,28 @@ public class Robot {
 		);
 		new EventTrigger("ARM_PRE_SCORE").onTrue(robotCommander.getSuperstructure().armPreScore());
 
-		this.whereToScoreFirstObjectChooser = new AutonomousChooser("ScoreFirst", AutosBuilder.getAllAutoScoringAutos(this));
-		this.whereToIntakeSecondObjectChooser = new AutonomousChooser(
+		this.firstObjectScoringLocationChooser = new AutonomousChooser("ScoreFirst", AutosBuilder.getAllAutoScoringAutos(this));
+		this.secondObjectIntakingLocationChooser = new AutonomousChooser(
 			"IntakeSecond",
 			AutosBuilder.getAllIntakingAutos(this, intakingCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
 		);
-		this.whereToScoreSecondObjectChooser = new AutonomousChooser(
+		this.secondObjectScoringLocationChooser = new AutonomousChooser(
 			"ScoreSecond",
 			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
 		);
-		this.whereToIntakeThirdObjectChooser = new AutonomousChooser(
+		this.thirdObjectIntakingLocationChooser = new AutonomousChooser(
 			"IntakeThird",
 			AutosBuilder.getAllIntakingAutos(this, intakingCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
 		);
-		this.whereToScoreThirdObjectChooser = new AutonomousChooser(
+		this.thirdObjectScoringLocationChooser = new AutonomousChooser(
 			"ScoreThird",
 			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
 		);
-		this.whereToIntakeFourthObjectChooser = new AutonomousChooser(
+		this.fourthObjectIntakingLocationChooser = new AutonomousChooser(
 			"IntakeFourth",
 			AutosBuilder.getAllIntakingAutos(this, intakingCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
 		);
-		this.whereToScoreFourthObjectChooser = new AutonomousChooser(
+		this.fourthObjectScoringLocationChooser = new AutonomousChooser(
 			"ScoreFourth",
 			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
 		);
@@ -232,15 +232,15 @@ public class Robot {
 
 	public PathPlannerAutoWrapper getAuto() {
 		return PathPlannerAutoWrapper.chainAutos(
-			whereToScoreFirstObjectChooser.getChosenValue(),
+			firstObjectScoringLocationChooser.getChosenValue(),
 			PathPlannerAutoWrapper
 				.chainAutos(
-					whereToIntakeSecondObjectChooser.getChosenValue(),
-					whereToScoreSecondObjectChooser.getChosenValue(),
-					whereToIntakeThirdObjectChooser.getChosenValue(),
-					whereToScoreThirdObjectChooser.getChosenValue(),
-					whereToIntakeFourthObjectChooser.getChosenValue(),
-					whereToScoreFourthObjectChooser.getChosenValue()
+					secondObjectIntakingLocationChooser.getChosenValue(),
+					secondObjectScoringLocationChooser.getChosenValue(),
+					thirdObjectIntakingLocationChooser.getChosenValue(),
+					thirdObjectScoringLocationChooser.getChosenValue(),
+					fourthObjectIntakingLocationChooser.getChosenValue(),
+					fourthObjectScoringLocationChooser.getChosenValue()
 				)
 				.asProxyAuto()
 		);

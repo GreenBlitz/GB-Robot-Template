@@ -69,13 +69,13 @@ public class KrakenX60ElevatorBuilder {
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
 		if (Robot.ROBOT_TYPE.isReal()) {
 			// Motion Magic
-			configuration.Slot0.kP = 3.5;
+			configuration.Slot0.kP = 15;
 			configuration.Slot0.kI = 0;
 			configuration.Slot0.kD = 0;
 			configuration.Slot0.kG = kG;
 			configuration.Slot0.kS = 0.050413;
-			configuration.Slot0.kV = 0.5684;
-			configuration.Slot0.kA = 0.071671;
+			configuration.Slot0.kV = 0.5037;
+			configuration.Slot0.kA = 0.02775;
 
 			// PID
 			configuration.Slot1.kP = 10;

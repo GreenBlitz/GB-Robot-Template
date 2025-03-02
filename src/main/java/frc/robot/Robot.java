@@ -230,20 +230,20 @@ public class Robot {
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 
-	public Command getAuto() {
-		return whereToScoreFirstObjectChooser.getChosenValue()
-			.andThen(
-				PathPlannerAutoWrapper
-					.chainAutos(
-						whereToIntakeSecondObjectChooser.getChosenValue(),
-						whereToScoreSecondObjectChooser.getChosenValue(),
-						whereToIntakeThirdObjectChooser.getChosenValue(),
-						whereToScoreThirdObjectChooser.getChosenValue(),
-						whereToIntakeFourthObjectChooser.getChosenValue(),
-						whereToScoreFourthObjectChooser.getChosenValue()
-					)
-					.asProxy()
-			);
+	public PathPlannerAutoWrapper getAuto() {
+		return PathPlannerAutoWrapper.chainAutos(
+			whereToScoreFirstObjectChooser.getChosenValue(),
+			PathPlannerAutoWrapper
+				.chainAutos(
+					whereToIntakeSecondObjectChooser.getChosenValue(),
+					whereToScoreSecondObjectChooser.getChosenValue(),
+					whereToIntakeThirdObjectChooser.getChosenValue(),
+					whereToScoreThirdObjectChooser.getChosenValue(),
+					whereToIntakeFourthObjectChooser.getChosenValue(),
+					whereToScoreFourthObjectChooser.getChosenValue()
+				)
+				.asProxyAuto()
+		);
 	}
 
 	public IPoseEstimator getPoseEstimator() {

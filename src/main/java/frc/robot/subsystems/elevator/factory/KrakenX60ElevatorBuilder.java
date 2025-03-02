@@ -3,6 +3,7 @@ package frc.robot.subsystems.elevator.factory;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -172,7 +173,9 @@ public class KrakenX60ElevatorBuilder {
 	private static Elevator create(String logPath, TalonFXMotor rightMotor, TalonFXMotor leftMotor) {
 		IDigitalInput digitalInput = generateDigitalInput();
 
-		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(new MotionMagicVoltage(0).withSlot(0), 0, true);
+		Phoenix6FeedForwardRequest positionRequest = Robot.ROBOT_TYPE.isReal()
+			? Phoenix6RequestBuilder.build(new MotionMagicVoltage(0).withSlot(0), 0, true)
+			: Phoenix6RequestBuilder.build(new PositionVoltage(0).withSlot(1), 0, true);
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), true);
 
 		return new Elevator(

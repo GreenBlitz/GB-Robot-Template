@@ -251,20 +251,22 @@ public class Robot {
 	}
 
 	public Command getAuto() {
-		return whereToScoreFirstObjectChooser.get()
-			.get()
-			.andThen(
-				PathPlannerAutoWrapper
-					.chainAutos(
-						whereToIntakeSecondObjectChooser.getChosenValue(),
-						whereToScoreSecondObjectChooser.getChosenValue(),
-						whereToIntakeThirdObjectChooser.getChosenValue(),
-						whereToScoreThirdObjectChooser.getChosenValue(),
-						whereToIntakeFourthObjectChooser.getChosenValue(),
-						whereToScoreFourthObjectChooser.getChosenValue()
-					)
-					.asProxy()
-			);
+		return !whereToScoreFirstObjectChooser.get().get().getName().equals("None")
+			? whereToScoreFirstObjectChooser.get()
+				.get()
+				.andThen(
+					PathPlannerAutoWrapper
+						.chainAutos(
+							whereToIntakeSecondObjectChooser.getChosenValue(),
+							whereToScoreSecondObjectChooser.getChosenValue(),
+							whereToIntakeThirdObjectChooser.getChosenValue(),
+							whereToScoreThirdObjectChooser.getChosenValue(),
+							whereToIntakeFourthObjectChooser.getChosenValue(),
+							whereToScoreFourthObjectChooser.getChosenValue()
+						)
+						.asProxy()
+				)
+			: AutosBuilder.createDefaultAuto(this);
 	}
 
 	public IPoseEstimator getPoseEstimator() {

@@ -24,10 +24,10 @@ public class ScoringHelpers {
 	private static final Pose2d PROCESSOR_SCORING_POSE = new Pose2d(6, 0.7, Field.getProcessor().getRotation());
 
 	public static ScoreLevel targetScoreLevel = ScoreLevel.L4;
-
-	private static boolean isFarReefHalf = false;
-	private static Side targetSideForReef = Side.MIDDLE;
+	public static boolean isFarReefHalf = false;
 	public static boolean isLeftBranch = false;
+
+	private static Side targetSideForReef = Side.MIDDLE;
 	private static CoralStation latestWantedCoralStation = CoralStation.LEFT;
 	private static CoralStationSlot latestWantedCoralStationSlot = CoralStationSlot.L1;
 	private static Cage latestWantedCage = Cage.FIELD_WALL;

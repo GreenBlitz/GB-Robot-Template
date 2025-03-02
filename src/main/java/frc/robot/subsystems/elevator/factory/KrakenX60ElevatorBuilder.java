@@ -2,7 +2,7 @@ package frc.robot.subsystems.elevator.factory;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -61,7 +61,7 @@ public class KrakenX60ElevatorBuilder {
 			CONFIG_RAMP_RATE,
 			CONFIG_STEP_VOLTAGE,
 			CONFIG_TIMEOUT,
-			state -> SignalLogger.writeString("state", state.toString())
+			state -> SignalLogger.writeString("Elevator/state", state.toString())
 		);
 	}
 
@@ -69,13 +69,13 @@ public class KrakenX60ElevatorBuilder {
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
 		if (Robot.ROBOT_TYPE.isReal()) {
 			// Motion Magic
-			configuration.Slot0.kP = 3.5;
+			configuration.Slot0.kP = 15;
 			configuration.Slot0.kI = 0;
 			configuration.Slot0.kD = 0;
 			configuration.Slot0.kG = kG;
 			configuration.Slot0.kS = 0.050413;
-			configuration.Slot0.kV = 0.5684;
-			configuration.Slot0.kA = 0.071671;
+			configuration.Slot0.kV = 0.5037;
+			configuration.Slot0.kA = 0.02775;
 
 			// PID
 			configuration.Slot1.kP = 10;
@@ -172,7 +172,7 @@ public class KrakenX60ElevatorBuilder {
 	private static Elevator create(String logPath, TalonFXMotor rightMotor, TalonFXMotor leftMotor) {
 		IDigitalInput digitalInput = generateDigitalInput();
 
-		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0).withSlot(1), 0, true);
+		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(new MotionMagicVoltage(0).withSlot(0), 0, true);
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), true);
 
 		return new Elevator(

@@ -22,6 +22,8 @@ public class AutonomousConstants {
 
 	public static final double DEFAULT_AUTO_DRIVE_TIME_SECONDS = 1;
 
+	public static final double INTAKING_TIMEOUT_SECONDS = 6;
+
 	public static PathConstraints getRealTimeConstraints(Swerve swerve) {
 		return new PathConstraints(
 			swerve.getConstants().velocityAt12VoltsMetersPerSecond(),

@@ -214,7 +214,10 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public boolean isReadyForNet() {
-		return isCloseToNet(StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_NET_METRES.getX(), StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_NET_METRES.getY());
+		return isCloseToNet(
+			StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_NET_METRES.getX(),
+			StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_NET_METRES.getY()
+		);
 	}
 
 	public Command setState(RobotState state) {

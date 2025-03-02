@@ -31,7 +31,7 @@ public class Phoenix6RequestBuilder {
 		);
 	}
 
-	public static Phoenix6FeedForwardRequest build(
+	public static Phoenix6MotionMagicRequest build(
 		MotionMagicVoltage motionMagicVoltage,
 		double defaultArbitraryFeedForward,
 		boolean enableFOC

@@ -5,6 +5,7 @@
 package frc;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.utils.auto.PathPlannerUtil;
@@ -86,7 +87,7 @@ public class RobotManager extends LoggedRobot {
 				auto = robot.getAuto();
 			}
 		});
-		new LoggedDashboardChooser<>("AutoReadyForConstruction", autoReadyForConstructionSendableChooser);
+		SmartDashboard.putData("AutoReadyForConstruction", autoReadyForConstructionSendableChooser);
 	}
 
 	private void updateTimeRelatedData() {

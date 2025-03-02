@@ -4,7 +4,6 @@ public enum SuperstructureState {
 
 	STAY_IN_PLACE,
 	IDLE,
-	IDLE_AFTER_ALGAE_REMOVE,
 	INTAKE,
 	OUTTAKE,
 	ARM_PRE_SCORE,
@@ -12,7 +11,6 @@ public enum SuperstructureState {
 	SCORE_WITHOUT_RELEASE,
 	SCORE,
 	CLOSE_L4,
-	POST_ALGAE_REMOVE,
 	ALGAE_REMOVE,
 	ALGAE_OUTTAKE,
 	PRE_NET,

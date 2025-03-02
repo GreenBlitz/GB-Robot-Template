@@ -223,7 +223,6 @@ public class RobotCommander extends GBSubsystem {
 	public Command setState(RobotState state) {
 		return switch (state) {
 			case DRIVE -> drive();
-			case DRIVE_AFTER_ALGAE_REMOVE -> driveAfterAlgaeRemove();
 			case STAY_IN_PLACE -> stayInPlace();
 			case INTAKE_WITH_AIM_ASSIST -> intakeWithAimAssist();
 			case INTAKE_WITHOUT_AIM_ASSIST -> intakeWithoutAimAssist();
@@ -365,16 +364,6 @@ public class RobotCommander extends GBSubsystem {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(superstructure.idle(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
 			RobotState.DRIVE
-		);
-	}
-
-	private Command driveAfterAlgaeRemove() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				superstructure.idleAfterAlgaeRemove(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
-			).until(superstructure::isClosed),
-			RobotState.DRIVE_AFTER_ALGAE_REMOVE
 		);
 	}
 
@@ -576,28 +565,6 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	private Command closeAfterAlgaeRemove() {
-		return new DeferredCommand(
-			() -> new SequentialCommandGroup(
-				new ParallelCommandGroup(
-					superstructure.postAlgaeRemove(),
-					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
-				).until(this::isReadyToCloseSuperstructure),
-				drive()
-			),
-			Set.of(
-				this,
-				superstructure,
-				swerve,
-				robot.getElevator(),
-				robot.getArm(),
-				robot.getEndEffector(),
-				robot.getLifter(),
-				robot.getSolenoid()
-			)
-		);
-	}
-
 	private Command asSubsystemCommand(Command command, RobotState state) {
 		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
 	}
@@ -605,19 +572,10 @@ public class RobotCommander extends GBSubsystem {
 	private Command endState(RobotState state) {
 		return switch (state) {
 			case STAY_IN_PLACE, CORAL_OUTTAKE -> stayInPlace();
-			case
-				INTAKE_WITH_AIM_ASSIST,
-				INTAKE_WITHOUT_AIM_ASSIST,
-				DRIVE,
-				DRIVE_AFTER_ALGAE_REMOVE,
-				ALIGN_REEF,
-				ALGAE_OUTTAKE,
-				PROCESSOR_SCORE ->
-				drive();
+			case INTAKE_WITH_AIM_ASSIST, INTAKE_WITHOUT_AIM_ASSIST, DRIVE, ALIGN_REEF, ALGAE_REMOVE, ALGAE_OUTTAKE, PROCESSOR_SCORE -> drive();
 			case ARM_PRE_SCORE, CLOSE_CLIMB -> armPreScore();
 			case PRE_SCORE -> preScore();
 			case SCORE, SCORE_WITHOUT_RELEASE -> closeAfterScore();
-			case ALGAE_REMOVE -> closeAfterAlgaeRemove();
 			case DRIVE_PRE_NET, PRE_NET, NET -> preNet();
 			case PRE_CLIMB_WITH_AIM_ASSIST -> preClimbWithAimAssist();
 			case PRE_CLIMB_WITHOUT_AIM_ASSIST -> preClimbWithoutAimAssist();

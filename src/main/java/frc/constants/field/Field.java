@@ -12,6 +12,7 @@ import frc.constants.field.enums.Cage;
 import frc.constants.field.enums.CoralStation;
 import frc.constants.field.enums.ReefSide;
 import frc.utils.DriverStationUtil;
+import frc.constants.field.enums.CoralStationSlot;
 import frc.utils.math.AngleTransform;
 import frc.utils.math.FieldMath;
 
@@ -22,7 +23,6 @@ public class Field {
 	public static boolean isFieldConventionAlliance() {
 		return DriverStationUtil.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE;
 	}
-
 
 	public static final double LENGTH_METERS = 17.548225;
 	public static final double WIDTH_METERS = 8.0518;
@@ -53,36 +53,59 @@ public class Field {
 		new Translation2d(4.24258, 4.78825),
 		new Translation2d(3.93194, 4.62493)};
 
-	private static final Translation2d[] CAGES = new Translation2d[] {
-		new Translation2d(8.77412, 7.26599),
-		new Translation2d(8.77412, 6.17538),
-		new Translation2d(8.77412, 5.08476)};
+	private static final Pose2d[] CAGES = new Pose2d[] {
+		new Pose2d(8.77412, 7.26599, Rotation2d.fromDegrees(180)),
+		new Pose2d(8.77412, 6.17538, Rotation2d.fromDegrees(180)),
+		new Pose2d(8.77412, 5.08476, Rotation2d.fromDegrees(180))};
 
 	public static final Translation2d BARGE_CENTER = new Translation2d(LENGTH_METERS / 2, WIDTH_METERS / 2);
 
-	private static final Pose2d PROCESSOR = new Pose2d(5.98744, 0.00749, Rotation2d.fromDegrees(270));
+	private static final Pose2d PROCESSOR = new Pose2d(5.98744, 0.00749, Rotation2d.fromDegrees(-90));
+
+	private static final Rotation2d RIGHT_CORAL_STATION_ANGLE = Rotation2d.fromDegrees(54);
+	private static final Rotation2d LEFT_CORAL_STATION_ANGLE = Rotation2d.fromDegrees(-54);
 
 	private static final Pose2d[] CORAL_STATION_MIDDLES = new Pose2d[] {
-		new Pose2d(0.84319, 0.65078, Rotation2d.fromDegrees(54)),
-		new Pose2d(0.84319, 7.41395, Rotation2d.fromDegrees(-54))};
+		new Pose2d(0.84319, 0.65078, RIGHT_CORAL_STATION_ANGLE),
+		new Pose2d(0.84319, 7.41395, LEFT_CORAL_STATION_ANGLE)};
 
+	private static final double Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES = 0.11941;
 	public static final double FEEDER_WIDTH_METERS = 1.9304;
-
+	public static final Translation2d[] CORAL_STATION_SLOTS_MIDDLES = new Translation2d[] {
+		new Translation2d(0.18502, 1.1278),
+		new Translation2d(0.34944, 1.1278 - Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES),
+		new Translation2d(0.51386, 1.1278 - Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES * 2),
+		new Translation2d(0.67828, 1.1278 - Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES * 3),
+		new Translation2d(0.8427, 1.1278 - Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES * 4),
+		new Translation2d(1.00712, 1.1278 - Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES * 5),
+		new Translation2d(1.7154, 1.1278 - Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES * 6),
+		new Translation2d(1.33596, 1.1278 - Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES * 7),
+		new Translation2d(1.50038, 1.1278 - Y_DIFFERENCE_BETWEEN_STATION_SLOTS_MIDDLES * 8)};
 
 	public static Translation2d getReefMiddle() {
 		return getAllianceRelative(REEF_MIDDLE, true, false);
 	}
 
+	public static Pose2d getReefSideMiddle(ReefSide side, boolean isAllianceRelative) {
+		Pose2d sideBlueRelativePose = REEF_SIDE_MIDDLES[side.getIndex()];
+		return isAllianceRelative ? getAllianceRelative(sideBlueRelativePose, true, true, AngleTransform.INVERT) : sideBlueRelativePose;
+	}
+
 	public static Pose2d getReefSideMiddle(ReefSide side) {
-		return getAllianceRelative(REEF_SIDE_MIDDLES[side.getIndex()], true, true, AngleTransform.INVERT);
+		return getReefSideMiddle(side, true);
+	}
+
+	public static Translation2d getCoralPlacement(Branch branch, boolean isAllianceRelative) {
+		Translation2d branchBlueRelativeTranslation = CORAL_BRANCHES[branch.getIndex()];
+		return isAllianceRelative ? getAllianceRelative(branchBlueRelativeTranslation, true, true) : branchBlueRelativeTranslation;
 	}
 
 	public static Translation2d getCoralPlacement(Branch branch) {
-		return getAllianceRelative(CORAL_BRANCHES[branch.getIndex()], true, true);
+		return getCoralPlacement(branch, true);
 	}
 
-	public static Translation2d getCage(Cage cage) {
-		return getAllianceRelative(CAGES[cage.getIndex()], false, true);
+	public static Pose2d getCage(Cage cage) {
+		return getAllianceRelative(CAGES[cage.getIndex()], false, true, AngleTransform.INVERT);
 	}
 
 	public static Pose2d getProcessor() {
@@ -91,6 +114,18 @@ public class Field {
 
 	public static Pose2d getCoralStationMiddle(CoralStation coralStation) {
 		return getAllianceRelative(CORAL_STATION_MIDDLES[coralStation.getIndex()], true, true, AngleTransform.INVERT);
+	}
+
+	public static Pose2d getCoralStationSlot(CoralStationSlot coralStationSlot) {
+		Pose2d coralStationSlotPose = new Pose2d(CORAL_STATION_SLOTS_MIDDLES[coralStationSlot.getIndex()], new Rotation2d());
+
+		if (coralStationSlot.getCoralStation() == CoralStation.LEFT) {
+			coralStationSlotPose = new Pose2d(coralStationSlotPose.getX(), WIDTH_METERS - coralStationSlotPose.getY(), LEFT_CORAL_STATION_ANGLE);
+		} else {
+			coralStationSlotPose = new Pose2d(coralStationSlotPose.getX(), coralStationSlotPose.getY(), RIGHT_CORAL_STATION_ANGLE);
+		}
+
+		return getAllianceRelative(coralStationSlotPose, true, true, AngleTransform.INVERT);
 	}
 
 	public static Pose2d getAllianceRelative(Pose2d pose, boolean mirrorX, boolean mirrorY, AngleTransform angleTransform) {

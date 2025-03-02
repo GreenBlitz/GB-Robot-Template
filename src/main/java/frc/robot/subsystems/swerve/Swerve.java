@@ -120,13 +120,6 @@ public class Swerve extends GBSubsystem {
 		this.driversPowerInputs = powers;
 	}
 
-	public void setHeading(Rotation2d heading) {
-		gyro.setYaw(heading);
-		gyro.updateInputs(gyroSignals.yawSignal());
-		headingStabilizer.unlockTarget();
-		headingStabilizer.setTargetHeading(heading);
-	}
-
 	protected void resetPIDControllers() {
 		constants.xMetersPIDController().reset();
 		constants.yMetersPIDController().reset();
@@ -349,7 +342,7 @@ public class Swerve extends GBSubsystem {
 			.onTrue(
 				new DeferredCommand(
 					() -> getCommandsBuilder()
-						.pidToPose(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(2, 0, new Rotation2d()))),
+						.moveToPoseByPID(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(1, 1, new Rotation2d()))),
 					Set.of(this)
 				)
 			);
@@ -357,7 +350,7 @@ public class Swerve extends GBSubsystem {
 			.onTrue(
 				new DeferredCommand(
 					() -> getCommandsBuilder()
-						.pidToPose(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(-2, 0, new Rotation2d()))),
+						.moveToPoseByPID(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(-1, -1, new Rotation2d()))),
 					Set.of(this)
 				)
 			);

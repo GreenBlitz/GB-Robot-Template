@@ -35,29 +35,45 @@ public class RobotHeadingEstimator {
 	public void reset(Rotation2d newHeading) {
 		estimatedHeading = newHeading;
 		unOffsetedGyroAngleInterpolator.clear();
+		estimationAndGyroBuffer.clear();
+	}
+
+	public void startRecalibratingGyroOffset() {
+		estimationAndGyroBuffer.clear();
+	}
+
+	public void updateByGyroReset(Rotation2d newGyroHeading) {
+		Rotation2d differenceInGyroAngle = AngleMath.getAngleDifference(newGyroHeading, lastGyroAngle);
+		lastGyroAngle = newGyroHeading;
+		reset(estimatedHeading.plus(differenceInGyroAngle));
 	}
 
 	public Rotation2d getEstimatedHeading() {
 		return estimatedHeading;
 	}
 
-	public void updateVisionIfNotCalibrated(
-		TimedValue<Rotation2d> visionHeadingData,
-		double visionStandardDeviation,
-		double maximumStandardDeviationTolerance
-	) {
-		double visionNoiseStandardDeviation = StatisticsMath.calculateStandardDeviations(
+	public boolean isGyroOffsetCalibrated(double maximumStandardDeviationTolerance) {
+		double calculatedVisionNoiseStandardDeviation = StatisticsMath.calculateStandardDeviations(
 			estimationAndGyroBuffer,
 			estimationVisionPair -> Math
 				.abs(AngleMath.getAngleDifference(estimationVisionPair.getFirst(), estimationVisionPair.getSecond()).getRadians())
 		);
-
+		boolean isGyroOffsetCalibrated = calculatedVisionNoiseStandardDeviation < maximumStandardDeviationTolerance
+			&& estimationAndGyroBuffer.isFull();
 		Logger.recordOutput(
 			logPath + RobotHeadingEstimatorConstants.VISION_NOISE_STANDARD_DEVIATION_LOGPATH_ADDITION,
-			visionNoiseStandardDeviation
+			calculatedVisionNoiseStandardDeviation
 		);
+		Logger.recordOutput(logPath + "isGyroOffsetCalibrated/", isGyroOffsetCalibrated);
+		return isGyroOffsetCalibrated;
+	}
 
-		if (visionNoiseStandardDeviation > maximumStandardDeviationTolerance || !estimationAndGyroBuffer.isFull()) {
+	public void updateVisionIfGyroOffsetIsNotCalibrated(
+		TimedValue<Rotation2d> visionHeadingData,
+		double visionStandardDeviation,
+		double maximumStandardDeviationTolerance
+	) {
+		if (!isGyroOffsetCalibrated(maximumStandardDeviationTolerance)) {
 			updateVisionHeading(visionHeadingData, visionStandardDeviation);
 			estimationAndGyroBuffer.insert(Pair.of(estimatedHeading, lastGyroAngle));
 		}

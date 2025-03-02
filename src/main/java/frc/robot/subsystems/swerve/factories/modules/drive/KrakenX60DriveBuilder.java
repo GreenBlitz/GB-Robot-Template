@@ -26,10 +26,10 @@ import frc.robot.subsystems.swerve.module.records.DriveRequests;
 import frc.robot.subsystems.swerve.module.records.DriveSignals;
 import frc.utils.math.AngleUnit;
 
-class KrakenX60DriveBuilder {
+public class KrakenX60DriveBuilder {
 
-	private static final double SLIP_CURRENT = 60;
-	private static final double GEAR_RATIO = 7.13;
+	public static final double SLIP_CURRENT = 60;
+	public static final double GEAR_RATIO = 7.13;
 	private static final double MOMENT_OF_INERTIA_METERS_SQUARED = 0.001;
 
 	private static SysIdRoutine.Config buildSysidConfig() {
@@ -64,9 +64,9 @@ class KrakenX60DriveBuilder {
 		driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
 		if (Robot.ROBOT_TYPE.isReal()) {
-			driveConfig.Slot0.kS = 0.1629;
-			driveConfig.Slot0.kV = 0.87762;
-			driveConfig.Slot0.kA = 0.085594;
+			driveConfig.Slot0.kS = 0.15916;
+			driveConfig.Slot0.kV = 0.90548;
+			driveConfig.Slot0.kA = 0.079923;
 			driveConfig.Slot0.kP = 3;
 			driveConfig.Slot0.kI = 0;
 			driveConfig.Slot0.kD = 0;

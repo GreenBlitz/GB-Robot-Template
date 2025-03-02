@@ -1,14 +1,11 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.PowerDistribution;
+import com.revrobotics.spark.SparkLowLevel;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.rev.motors.SparkMaxDeviceID;
-import frc.utils.battery.PowerDistributionDeviceID;
 
 public class IDs {
-
-	public static final PowerDistributionDeviceID POWER_DISTRIBUTION = new PowerDistributionDeviceID(20, PowerDistribution.ModuleType.kRev);
 
 	public static final Phoenix6DeviceID SWERVE_PIGEON_2 = new Phoenix6DeviceID(0, BusChain.CANIVORE);
 
@@ -38,6 +35,8 @@ public class IDs {
 
 		public static final Phoenix6DeviceID ARM = new Phoenix6DeviceID(20, BusChain.ROBORIO);
 
+		public static final Phoenix6DeviceID LIFTER = new Phoenix6DeviceID(40, BusChain.ROBORIO);
+
 	}
 
 	public static class CANDle{
@@ -48,6 +47,8 @@ public class IDs {
 	public static class SparkMAXIDs {
 
 		public static final SparkMaxDeviceID END_EFFECTOR = new SparkMaxDeviceID(5);
+
+		public static final SparkMaxDeviceID SOLENOID = new SparkMaxDeviceID(10, SparkLowLevel.MotorType.kBrushed);
 
 	}
 

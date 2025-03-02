@@ -18,10 +18,14 @@ public class ElevatorStateHandler {
 	}
 
 	public Command setState(ElevatorState state) {
-		return new ParallelCommandGroup(
-			new InstantCommand(() -> currentState = state),
-			elevator.getCommandsBuilder().setTargetPositionMeters(state.getHeightMeters())
-		);
+		if (state == ElevatorState.STAY_IN_PLACE) {
+			return new ParallelCommandGroup(new InstantCommand(() -> currentState = state), elevator.getCommandsBuilder().stayInPlace());
+		} else {
+			return new ParallelCommandGroup(
+				new InstantCommand(() -> currentState = state),
+				elevator.getCommandsBuilder().setTargetPositionMeters(state.getHeightMeters())
+			);
+		}
 	}
 
 }

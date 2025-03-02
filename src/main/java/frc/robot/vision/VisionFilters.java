@@ -73,4 +73,18 @@ public class VisionFilters {
 		return isXInField(positionToleranceMeters).and(isYInField(positionToleranceMeters));
 	}
 
+	public static Filter<AprilTagVisionData> isSeeingTag(int tagID) {
+		return (visionData) -> visionData.getTrackedAprilTagId() == tagID;
+	}
+
+	public static Filter<AprilTagVisionData> isNotSeeingTags(int... tags) {
+		Filter<AprilTagVisionData> filter = isSeeingTag(VisionConstants.NO_APRILTAG_ID);
+
+		for (int id : tags) {
+			filter = filter.or(isSeeingTag(id));
+		}
+
+		return filter.not();
+	}
+
 }

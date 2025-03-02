@@ -142,7 +142,6 @@ public class JoysticksBindings {
 		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getRobotCommander().setState(RobotState.INTAKE_WITHOUT_AIM_ASSIST));
 
 		usedJoystick.R1.onTrue(robot.getRobotCommander().setState(RobotState.NET));
-		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE_WITH_AIM_ASSIST));
 
 		usedJoystick.Y.onTrue(robot.getRobotCommander().setState(RobotState.CORAL_OUTTAKE));
 		usedJoystick.X.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_OUTTAKE));

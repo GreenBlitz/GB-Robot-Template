@@ -60,6 +60,8 @@ public class VisionConstants {
 
 	public static double ROBOT_DISTANCE_TO_GROUND_TOLERANCE_METERS = 0.5;
 
+	public static int[] TAGS_TO_IGNORE_FOR_LIMELIGHT_FEEDER = {4, 5, 14, 15};
+
 	public static final Filter<VisionData> DEFAULT_VISION_FILTER = VisionFilters.isInField(ROBOT_POSITION_IN_FIELD_TOLERANCE_METERS)
 		.and(VisionFilters.isRollAtAngle(Rotation2d.fromDegrees(0), ROLL_FILTER_TOLERANCE))
 		.and(VisionFilters.isPitchAtAngle(Rotation2d.fromDegrees(0), PITCH_FILTER_TOLERANCE))
@@ -103,10 +105,10 @@ public class VisionConstants {
 		"limelight-feeder",
 		VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
 		"limelight3-feeder",
-		VisionConstants.DEFAULT_VISION_FILTER,
+		VisionConstants.DEFAULT_VISION_FILTER.and(VisionFilters.isNotSeeingTags(TAGS_TO_IGNORE_FOR_LIMELIGHT_FEEDER)),
 		LIMELIGHT_FEEDER_CAMERA_ROBOT_POSE
 	);
 
-	public static final List<VisionSource<AprilTagVisionData>> VISION_SOURCES = List.of(LIMELIGHT_LEFT, LIMELIGHT_RIGHT);
+	public static final List<VisionSource<AprilTagVisionData>> VISION_SOURCES = List.of(LIMELIGHT_LEFT, LIMELIGHT_RIGHT, LIMELIGHT_FEEDER);
 
 }

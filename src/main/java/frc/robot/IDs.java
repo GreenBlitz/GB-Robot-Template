@@ -49,15 +49,15 @@ public class IDs {
 
 	public static class CANCodersIDs {
 
-		public static final Phoenix6DeviceID SWERVE_FRONT_LEFT = new Phoenix6DeviceID(0, BusChain.SUPERSTRUCTURE_CANIVORE);
+		public static final Phoenix6DeviceID SWERVE_FRONT_LEFT = new Phoenix6DeviceID(0, BusChain.SWERVE_CANIVORE);
 
-		public static final Phoenix6DeviceID SWERVE_FRONT_RIGHT = new Phoenix6DeviceID(1, BusChain.SUPERSTRUCTURE_CANIVORE);
+		public static final Phoenix6DeviceID SWERVE_FRONT_RIGHT = new Phoenix6DeviceID(1, BusChain.SWERVE_CANIVORE);
 
-		public static final Phoenix6DeviceID SWERVE_BACK_LEFT = new Phoenix6DeviceID(2, BusChain.SUPERSTRUCTURE_CANIVORE);
+		public static final Phoenix6DeviceID SWERVE_BACK_LEFT = new Phoenix6DeviceID(2, BusChain.SWERVE_CANIVORE);
 
-		public static final Phoenix6DeviceID SWERVE_BACK_RIGHT = new Phoenix6DeviceID(3, BusChain.SUPERSTRUCTURE_CANIVORE);
+		public static final Phoenix6DeviceID SWERVE_BACK_RIGHT = new Phoenix6DeviceID(3, BusChain.SWERVE_CANIVORE);
 
-		public static final Phoenix6DeviceID ARM = new Phoenix6DeviceID(20, BusChain.ROBORIO);
+		public static final Phoenix6DeviceID ARM = new Phoenix6DeviceID(20, BusChain.SUPERSTRUCTURE_CANIVORE);
 
 	}
 

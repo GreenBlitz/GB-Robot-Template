@@ -121,6 +121,7 @@ public class Robot {
 		multiAprilTagVisionSources.applyFunctionOnAllFilters(
 			filters -> filters.and(
 				data -> VisionFilters.isYawAtAngleForMegaTag2(headingEstimator::getEstimatedHeading, VisionConstants.YAW_FILTER_TOLERANCE)
+					.and(VisionFilters.isYawAngleNotZeroForMegaTag2())
 					.apply(data)
 			)
 		);

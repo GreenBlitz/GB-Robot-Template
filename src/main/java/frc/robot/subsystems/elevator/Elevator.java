@@ -10,6 +10,7 @@ import frc.robot.Robot;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.ControllableMotor;
+import frc.robot.hardware.interfaces.IDynamicMotionMagicRequest;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.elevator.factory.KrakenX60ElevatorBuilder;
@@ -29,7 +30,7 @@ public class Elevator extends GBSubsystem {
 	private final ControllableMotor leftMotor;
 	private final ElevatorMotorSignals leftMotorSignals;
 
-	private final IRequest<Rotation2d> positionRequest;
+	private final IDynamicMotionMagicRequest positionRequest;
 	private final IRequest<Double> voltageRequest;
 
 	private final IDigitalInput limitSwitch;
@@ -48,7 +49,7 @@ public class Elevator extends GBSubsystem {
 		ElevatorMotorSignals rightMotorSignals,
 		ControllableMotor leftMotor,
 		ElevatorMotorSignals leftMotorSignals,
-		IRequest<Rotation2d> positionRequest,
+		IDynamicMotionMagicRequest positionRequest,
 		IRequest<Double> voltageRequest,
 		IDigitalInput limitSwitch
 	) {
@@ -161,6 +162,25 @@ public class Elevator extends GBSubsystem {
 		Rotation2d targetPosition = convertMetersToRotations(targetPositionMeters);
 		rightMotor.applyRequest(positionRequest.withSetPoint(targetPosition));
 		leftMotor.applyRequest(positionRequest.withSetPoint(targetPosition));
+	}
+
+	protected void setTargetPositionMeters(
+		double targetPositionMeters,
+		Rotation2d maxVelocityRotation2dPerSecond,
+		Rotation2d maxAccelerationRotation2dPerSecondSquared
+	) {
+		currentTargetPositionMeters = targetPositionMeters;
+		Rotation2d targetPosition = convertMetersToRotations(targetPositionMeters);
+		rightMotor.applyRequest(
+			positionRequest.withSetPoint(targetPosition)
+				.withMaxVelocityRotation2dPerSecond(maxVelocityRotation2dPerSecond)
+				.withMaxAccelerationRotation2dPerSecondSquared(maxAccelerationRotation2dPerSecondSquared)
+		);
+		leftMotor.applyRequest(
+			positionRequest.withSetPoint(targetPosition)
+				.withMaxVelocityRotation2dPerSecond(maxVelocityRotation2dPerSecond)
+				.withMaxAccelerationRotation2dPerSecondSquared(maxAccelerationRotation2dPerSecondSquared)
+		);
 	}
 
 	protected void stayInPlace() {

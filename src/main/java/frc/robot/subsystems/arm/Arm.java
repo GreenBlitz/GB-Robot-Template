@@ -5,10 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
-import frc.robot.hardware.interfaces.ControllableMotor;
-import frc.robot.hardware.interfaces.IAngleEncoder;
-import frc.robot.hardware.interfaces.IRequest;
-import frc.robot.hardware.interfaces.InputSignal;
+import frc.robot.hardware.interfaces.*;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.arm.factory.KrakenX60ArmBuilder;
 import frc.utils.alerts.Alert;
@@ -19,7 +16,7 @@ import org.littletonrobotics.junction.Logger;
 public class Arm extends GBSubsystem {
 
 	private final ControllableMotor motor;
-	private final IRequest<Rotation2d> positionRequest;
+	private final IDynamicMotionMagicRequest positionRequest;
 	private final IRequest<Double> voltageRequest;
 	private final InputSignal<Rotation2d> motorPositionSignal;
 	private final InputSignal<Double> motorVoltageSignal;
@@ -32,7 +29,7 @@ public class Arm extends GBSubsystem {
 	public Arm(
 		String logPath,
 		ControllableMotor motor,
-		IRequest<Rotation2d> positionRequest,
+		IDynamicMotionMagicRequest positionRequest,
 		IRequest<Double> voltageRequest,
 		InputSignal<Rotation2d> motorPositionSignal,
 		InputSignal<Double> motorVoltageSignal,
@@ -112,6 +109,23 @@ public class Arm extends GBSubsystem {
 	protected void setTargetPosition(Rotation2d targetPosition) {
 		if (reversedSoftLimit.getDegrees() <= targetPosition.getDegrees()) {
 			motor.applyRequest(positionRequest.withSetPoint(targetPosition));
+		} else {
+			new Alert(Alert.AlertType.WARNING, getLogPath() + "/TargetPoseUnderLimit").report();
+			stayInPlace();
+		}
+	}
+
+	protected void setTargetPosition(
+		Rotation2d targetPosition,
+		Rotation2d maxVelocityRotation2dPerSecond,
+		Rotation2d maxAccelerationRotation2dPerSecondSquared
+	) {
+		if (reversedSoftLimit.getDegrees() <= targetPosition.getDegrees()) {
+			motor.applyRequest(
+				positionRequest.withSetPoint(targetPosition)
+					.withMaxVelocityRotation2dPerSecond(maxVelocityRotation2dPerSecond)
+					.withMaxAccelerationRotation2dPerSecondSquared(maxAccelerationRotation2dPerSecondSquared)
+			);
 		} else {
 			new Alert(Alert.AlertType.WARNING, getLogPath() + "/TargetPoseUnderLimit").report();
 			stayInPlace();

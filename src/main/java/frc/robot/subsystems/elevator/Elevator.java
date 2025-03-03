@@ -158,40 +158,28 @@ public class Elevator extends GBSubsystem {
 	}
 
 	protected void setTargetPositionMeters(double targetPositionMeters) {
-		currentTargetPositionMeters = targetPositionMeters;
-		Rotation2d targetPosition = convertMetersToRotations(targetPositionMeters);
-		rightMotor.applyRequest(
-			positionRequest.withSetPoint(targetPosition)
-				.withMaxVelocityRotation2dPerSecond(convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND))
-				.withMaxAccelerationRotation2dPerSecondSquared(
-					convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
-				)
-		);
-		leftMotor.applyRequest(
-			positionRequest.withSetPoint(targetPosition)
-				.withMaxVelocityRotation2dPerSecond(convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND))
-				.withMaxAccelerationRotation2dPerSecondSquared(
-					convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
-				)
-		);
+		setTargetPositionMeters(targetPositionMeters, ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND, ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED);
 	}
 
 	protected void setTargetPositionMeters(
 		double targetPositionMeters,
-		Rotation2d maxVelocityRotation2dPerSecond,
-		Rotation2d maxAccelerationRotation2dPerSecondSquared
+		double maxVelocityMetersPerSecond,
+		double maxAccelerationMetersPerSecondSquared
 	) {
 		currentTargetPositionMeters = targetPositionMeters;
 		Rotation2d targetPosition = convertMetersToRotations(targetPositionMeters);
+		Rotation2d maxVelocityRotation2dPerSecond = convertMetersToRotations(maxVelocityMetersPerSecond);
+		Rotation2d maxAccelerationRotation2dPerSecond = convertMetersToRotations(maxAccelerationMetersPerSecondSquared);
+		
 		rightMotor.applyRequest(
 			positionRequest.withSetPoint(targetPosition)
 				.withMaxVelocityRotation2dPerSecond(maxVelocityRotation2dPerSecond)
-				.withMaxAccelerationRotation2dPerSecondSquared(maxAccelerationRotation2dPerSecondSquared)
+				.withMaxAccelerationRotation2dPerSecondSquared(maxAccelerationRotation2dPerSecond)
 		);
 		leftMotor.applyRequest(
 			positionRequest.withSetPoint(targetPosition)
-				.withMaxVelocityRotation2dPerSecond(maxVelocityRotation2dPerSecond)
-				.withMaxAccelerationRotation2dPerSecondSquared(maxAccelerationRotation2dPerSecondSquared)
+				.withMaxVelocityRotation2dPerSecond(convertMetersToRotations(maxVelocityMetersPerSecond))
+				.withMaxAccelerationRotation2dPerSecondSquared(maxAccelerationRotation2dPerSecond)
 		);
 	}
 
@@ -246,11 +234,13 @@ public class Elevator extends GBSubsystem {
 		// wpilib sysid in google)
 		sysIdCalibrator.setAllButtonsForCalibration(joystick);
 
+		ElevatorStateHandler elevatorStateHandler = new ElevatorStateHandler(this);
+
 		// PID Testing
-		joystick.POV_DOWN.onTrue(commandsBuilder.setTargetPositionMeters(ElevatorState.L1.getHeightMeters()));
-		joystick.POV_LEFT.onTrue(commandsBuilder.setTargetPositionMeters(ElevatorState.L2.getHeightMeters()));
-		joystick.POV_RIGHT.onTrue(commandsBuilder.setTargetPositionMeters(ElevatorState.L3.getHeightMeters()));
-		joystick.POV_UP.onTrue(commandsBuilder.setTargetPositionMeters(ElevatorState.L4.getHeightMeters()));
+		joystick.POV_DOWN.onTrue(elevatorStateHandler.setState(ElevatorState.CLOSED));
+		joystick.POV_LEFT.onTrue(elevatorStateHandler.setState(ElevatorState.NET));
+		joystick.POV_RIGHT.onTrue(elevatorStateHandler.setState(ElevatorState.PRE_L4));
+		joystick.POV_UP.onTrue(elevatorStateHandler.setState(ElevatorState.L3));
 
 		// Calibrate max acceleration and cruse velocity by the equations: max acceleration = (12 + Ks)/2kA cruise velocity = (12 + Ks)/kV
 	}

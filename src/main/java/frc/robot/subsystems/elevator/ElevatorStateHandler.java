@@ -26,8 +26,8 @@ public class ElevatorStateHandler {
 				elevator.getCommandsBuilder()
 					.setTargetPositionMeters(
 						state.getHeightMeters(),
-						state.getMaxVelocityRotation2dPerSecond(),
-						state.getMaxAccelerationRotation2dPerSecondSquared()
+						state.getMaxVelocityMetersPerSecond(),
+						state.getMaxAccelerationMetersPerSecondSquared()
 					)
 			);
 		}

@@ -40,13 +40,13 @@ public class ElevatorCommandsBuilder {
 
 	public Command setTargetPositionMeters(
 		double targetPositionMeters,
-		Rotation2d maxVelocityRotation2dPerSecond,
-		Rotation2d maxAccelerationRotation2dPerSecondSquared
+		double maxVelocityMetersPerSecond,
+		double maxAccelerationMetersPerSecondSquared
 	) {
 		return elevator.asSubsystemCommand(
 			new InitExecuteCommand(
 				() -> elevator
-					.setTargetPositionMeters(targetPositionMeters, maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared),
+					.setTargetPositionMeters(targetPositionMeters, maxVelocityMetersPerSecond, maxAccelerationMetersPerSecondSquared),
 				() -> {},
 				elevator
 			),

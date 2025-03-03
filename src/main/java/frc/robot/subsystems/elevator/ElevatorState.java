@@ -4,8 +4,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public enum ElevatorState {
 
-	STAY_IN_PLACE(Double.NaN, Rotation2d.fromRotations(0), Rotation2d.fromDegrees(0)),
-	CLOSED(0.02),
+	STAY_IN_PLACE(Double.NaN, 0, 0),
+	CLOSED(0.02, 2.5, 2.5),
 	INTAKE(0.06),
 	ALGAE_OUTTAKE(0.02),
 	PRE_L1(0),
@@ -13,31 +13,31 @@ public enum ElevatorState {
 	PRE_L2(0.02),
 	L2(0.02),
 	PRE_L3(0.19),
-	L3(0.19),
+	L3(0.19, 2.5, 0.5),
 	WHILE_DRIVE_L4(0.4),
-	PRE_L4(1.18),
+	PRE_L4(1.18, 0.5, 2.5),
 	L4(1.18),
 	LOW_ALGAE_REMOVE(0.02),
 	HIGH_ALGAE_REMOVE(0.4),
 	WHILE_DRIVE_NET(0.4),
-	NET(1.18),
+	NET(1.18, 0.5, 0.5),
 	PROCESSOR_OUTTAKE(0.02);
 
 	private final double heightMeters;
-	private final Rotation2d maxVelocityRotation2dPerSecond;
-	private final Rotation2d maxAccelerationRotation2dPerSecondSquared;
+	private final double maxVelocityMetersPerSecond;
+	private final double maxAccelerationMetersPerSecondSquared;
 
-	ElevatorState(double heightMeters, Rotation2d maxVelocityRotation2dPerSecond, Rotation2d maxAccelerationRotation2dPerSecondSquared) {
+	ElevatorState(double heightMeters, double maxVelocityMetersPerSecond, double maxAccelerationMetersPerSecondSquared) {
 		this.heightMeters = heightMeters;
-		this.maxVelocityRotation2dPerSecond = maxVelocityRotation2dPerSecond;
-		this.maxAccelerationRotation2dPerSecondSquared = maxAccelerationRotation2dPerSecondSquared;
+		this.maxVelocityMetersPerSecond = maxVelocityMetersPerSecond;
+		this.maxAccelerationMetersPerSecondSquared = maxAccelerationMetersPerSecondSquared;
 	}
 
 	ElevatorState(double heightMeters) {
 		this(
 			heightMeters,
-			Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
-			Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
+			ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND,
+			ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED
 		);
 	}
 
@@ -45,12 +45,12 @@ public enum ElevatorState {
 		return heightMeters;
 	}
 
-	public Rotation2d getMaxVelocityRotation2dPerSecond() {
-		return maxVelocityRotation2dPerSecond;
+	public double getMaxVelocityMetersPerSecond() {
+		return maxVelocityMetersPerSecond;
 	}
 
-	public Rotation2d getMaxAccelerationRotation2dPerSecondSquared() {
-		return maxAccelerationRotation2dPerSecondSquared;
+	public double getMaxAccelerationMetersPerSecondSquared() {
+		return maxAccelerationMetersPerSecondSquared;
 	}
 
 }

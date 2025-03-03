@@ -4,28 +4,113 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public enum ArmState {
 
-	STAY_IN_PLACE(Rotation2d.fromDegrees(Double.NaN), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)),
-	CLOSED(Rotation2d.fromDegrees(180), Rotation2d.fromDegrees(300), Rotation2d.fromDegrees(600)),
-	FIRST_WAYPOINT_TO_CLOSE(Rotation2d.fromDegrees(40), Rotation2d.fromDegrees(300), Rotation2d.fromDegrees(600)),
-	SECOND_WAYPOINT_TO_CLOSE(Rotation2d.fromDegrees(110), Rotation2d.fromDegrees(300), Rotation2d.fromDegrees(600)),
-	START_GAME(Rotation2d.fromDegrees(207), Rotation2d.fromDegrees(300), Rotation2d.fromDegrees(600)),
-	MID_WAY_CLOSE(Rotation2d.fromDegrees(130), Rotation2d.fromDegrees(300), Rotation2d.fromDegrees(600)),
-	INTAKE(Rotation2d.fromDegrees(186), Rotation2d.fromDegrees(300), Rotation2d.fromDegrees(600)),
-	ALGAE_OUTTAKE(Rotation2d.fromDegrees(185), Rotation2d.fromDegrees(300), Rotation2d.fromDegrees(600)),
-	PRE_L1(Rotation2d.fromDegrees(190), Rotation2d.fromDegrees(300), Rotation2d.fromDegrees(600)),
-	L1(Rotation2d.fromDegrees(190), Rotation2d.fromDegrees(300), Rotation2d.fromDegrees(600)),
-	PRE_L2(Rotation2d.fromDegrees(-13), Rotation2d.fromDegrees(300), Rotation2d.fromDegrees(600)),
-	L2(Rotation2d.fromDegrees(-13), Rotation2d.fromDegrees(300), Rotation2d.fromDegrees(600)),
-	PRE_L3(Rotation2d.fromDegrees(10), Rotation2d.fromDegrees(300), Rotation2d.fromDegrees(600)),
-	L3(Rotation2d.fromDegrees(10), Rotation2d.fromDegrees(300), Rotation2d.fromDegrees(600)),
-	PRE_L4(Rotation2d.fromDegrees(55), Rotation2d.fromDegrees(300), Rotation2d.fromDegrees(600)),
-	L4(Rotation2d.fromDegrees(-25), Rotation2d.fromDegrees(300), Rotation2d.fromDegrees(600)),
-	LOW_ALGAE_REMOVE(Rotation2d.fromDegrees(-30), Rotation2d.fromDegrees(300), Rotation2d.fromDegrees(600)),
-	HIGH_ALGAE_REMOVE(Rotation2d.fromDegrees(-30), Rotation2d.fromDegrees(300), Rotation2d.fromDegrees(600)),
-	PRE_NET(Rotation2d.fromDegrees(60), Rotation2d.fromDegrees(300), Rotation2d.fromDegrees(600)),
-	NET(Rotation2d.fromDegrees(45), Rotation2d.fromDegrees(300), Rotation2d.fromDegrees(600)),
-	PROCESSOR_OUTTAKE(Rotation2d.fromDegrees(180), Rotation2d.fromDegrees(300), Rotation2d.fromDegrees(600)),
-	CLIMB(Rotation2d.fromDegrees(-11), Rotation2d.fromDegrees(300), Rotation2d.fromDegrees(600));
+	// @formatter:off
+	STAY_IN_PLACE(
+		Rotation2d.fromDegrees(Double.NaN),
+		Rotation2d.fromDegrees(0),
+		Rotation2d.fromDegrees(0)
+	),
+	CLOSED(
+		Rotation2d.fromDegrees(180),
+		ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND,
+		ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED),
+	FIRST_WAYPOINT_TO_CLOSE(
+		Rotation2d.fromDegrees(40),
+		ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND,
+		ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED
+	),
+	SECOND_WAYPOINT_TO_CLOSE(
+		Rotation2d.fromDegrees(110),
+		ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND,
+		ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED
+	),
+	START_GAME(
+		Rotation2d.fromDegrees(207),
+		ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND,
+		ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED
+	),
+	MID_WAY_CLOSE(
+		Rotation2d.fromDegrees(130),
+		ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND,
+		ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED
+	),
+	INTAKE(Rotation2d.fromDegrees(186), ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND, ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED),
+	ALGAE_OUTTAKE(
+		Rotation2d.fromDegrees(185),
+		ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND,
+		ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED
+	),
+	PRE_L1(
+		Rotation2d.fromDegrees(190),
+		ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND,
+		ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED
+	),
+	L1(
+		Rotation2d.fromDegrees(190),
+		ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND,
+		ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED
+	),
+	PRE_L2(
+		Rotation2d.fromDegrees(-13),
+		ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND,
+		ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED
+	),
+	L2(
+		Rotation2d.fromDegrees(-13),
+		ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND,
+		ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED
+	),
+	PRE_L3(
+		Rotation2d.fromDegrees(10),
+		ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND,
+		ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED
+	),
+	L3(
+		Rotation2d.fromDegrees(10),
+		ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND,
+		ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED
+	),
+	PRE_L4(
+		Rotation2d.fromDegrees(55),
+		ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND,
+		ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED
+	),
+	L4(
+		Rotation2d.fromDegrees(-25),
+		ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND,
+		ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED
+	),
+	LOW_ALGAE_REMOVE(
+		Rotation2d.fromDegrees(-30),
+		ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND,
+		ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED
+	),
+	HIGH_ALGAE_REMOVE(
+		Rotation2d.fromDegrees(-30),
+		ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND,
+		ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED
+	),
+	PRE_NET(
+		Rotation2d.fromDegrees(60),
+		ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND,
+		ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED
+	),
+	NET(
+		Rotation2d.fromDegrees(45),
+		ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND,
+		ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED
+	),
+	PROCESSOR_OUTTAKE(
+		Rotation2d.fromDegrees(180),
+		ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND,
+		ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED
+	),
+	CLIMB(
+		Rotation2d.fromDegrees(-11),
+		ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND,
+		ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED
+	);
+	// @formatter:on
 
 	private final Rotation2d position;
 	private final Rotation2d maxVelocityRotation2dPerSecond;

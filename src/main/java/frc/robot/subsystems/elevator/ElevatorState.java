@@ -5,23 +5,91 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public enum ElevatorState {
 
 	STAY_IN_PLACE(Double.NaN, Rotation2d.fromRotations(0), Rotation2d.fromDegrees(0)),
-	CLOSED(0.02, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
-	INTAKE(0.06, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
-	ALGAE_OUTTAKE(0.02, Rotation2d.fromRotations(1000), Rotation2d.fromRotations(300)),
-	PRE_L1(0, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
-	L1(0.02, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
-	PRE_L2(0.02, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
-	L2(0.02, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
-	PRE_L3(0.19, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
-	L3(0.19, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
-	WHILE_DRIVE_L4(0.4, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
-	PRE_L4(1.18, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
-	L4(1.18, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
-	LOW_ALGAE_REMOVE(0.02, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
-	HIGH_ALGAE_REMOVE(0.4, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
-	WHILE_DRIVE_NET(0.4, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
-	NET(1.18, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
-	PROCESSOR_OUTTAKE(0.02, Rotation2d.fromRotations(1000), Rotation2d.fromRotations(300));
+	CLOSED(
+		0.02,
+		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
+		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
+	),
+	INTAKE(
+		0.06,
+		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
+		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
+	),
+	ALGAE_OUTTAKE(
+		0.02,
+		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
+		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
+	),
+	PRE_L1(
+		0,
+		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
+		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
+	),
+	L1(
+		0.02,
+		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
+		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
+	),
+	PRE_L2(
+		0.02,
+		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
+		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
+	),
+	L2(
+		0.02,
+		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
+		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
+	),
+	PRE_L3(
+		0.19,
+		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
+		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
+	),
+	L3(
+		0.19,
+		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
+		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
+	),
+	WHILE_DRIVE_L4(
+		0.4,
+		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
+		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
+	),
+	PRE_L4(
+		1.18,
+		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
+		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
+	),
+	L4(
+		1.18,
+		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
+		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
+	),
+	LOW_ALGAE_REMOVE(
+		0.02,
+		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
+		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
+	),
+	HIGH_ALGAE_REMOVE(
+		0.4,
+		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
+		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
+	),
+	WHILE_DRIVE_NET(
+		0.4,
+		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
+		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
+	),
+	NET(
+		1.18,
+		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
+		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
+	),
+	PROCESSOR_OUTTAKE(
+		0.02,
+		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
+		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
+	);
 
 	private final double heightMeters;
 	private final Rotation2d maxVelocityRotation2dPerSecond;

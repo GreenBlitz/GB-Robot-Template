@@ -50,7 +50,6 @@ import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.time.TimeUtil;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -78,6 +77,7 @@ public class Robot {
 	private final SimulationManager simulationManager;
 	private final RobotCommander robotCommander;
 
+	private AutonomousChooser preBuiltAutosChooser;
 	private AutonomousChooser firstObjectScoringLocationChooser;
 	private AutonomousChooser secondObjectIntakingLocationChooser;
 	private AutonomousChooser secondObjectScoringLocationChooser;
@@ -179,6 +179,10 @@ public class Robot {
 		);
 		new EventTrigger("ARM_PRE_SCORE").onTrue(robotCommander.getSuperstructure().armPreScore());
 
+		this.preBuiltAutosChooser = new AutonomousChooser(
+			"PreBuiltAutos",
+			AutosBuilder.getAllPreBuiltAutos(this, intakingCommand, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+		);
 		this.firstObjectScoringLocationChooser = new AutonomousChooser("ScoreFirst", AutosBuilder.getAllAutoScoringAutos(this));
 		this.secondObjectIntakingLocationChooser = new AutonomousChooser(
 			"IntakeSecond",
@@ -233,21 +237,28 @@ public class Robot {
 	}
 
 	public PathPlannerAutoWrapper getAuto() {
+		if (preBuiltAutosChooser.isDefaultOptionChosen()) {
+			return getMultiChoosersAuto();
+		}
+		return preBuiltAutosChooser.getChosenValue();
+	}
+
+	private PathPlannerAutoWrapper getMultiChoosersAuto() {
 		return !firstObjectScoringLocationChooser.isDefaultOptionChosen()
-			? PathPlannerAutoWrapper.chainAutos(
+				? PathPlannerAutoWrapper.chainAutos(
 				firstObjectScoringLocationChooser.getChosenValue(),
 				PathPlannerAutoWrapper
-					.chainAutos(
-						secondObjectIntakingLocationChooser.getChosenValue(),
-						secondObjectScoringLocationChooser.getChosenValue(),
-						thirdObjectIntakingLocationChooser.getChosenValue(),
-						thirdObjectScoringLocationChooser.getChosenValue(),
-						fourthObjectIntakingLocationChooser.getChosenValue(),
-						fourthObjectScoringLocationChooser.getChosenValue()
-					)
-					.asProxyAuto()
-			)
-			: AutosBuilder.createDefaultAuto(this);
+						.chainAutos(
+								secondObjectIntakingLocationChooser.getChosenValue(),
+								secondObjectScoringLocationChooser.getChosenValue(),
+								thirdObjectIntakingLocationChooser.getChosenValue(),
+								thirdObjectScoringLocationChooser.getChosenValue(),
+								fourthObjectIntakingLocationChooser.getChosenValue(),
+								fourthObjectScoringLocationChooser.getChosenValue()
+						)
+						.asProxyAuto()
+		)
+				: AutosBuilder.createDefaultAuto(this);
 	}
 
 	public IPoseEstimator getPoseEstimator() {

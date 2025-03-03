@@ -41,7 +41,7 @@ public class ScoringHelpers {
 
 	private static Translation2d getRobotTranslationWithSpeedsHandle(Robot robot) {
 		Translation2d robotTranslation = robot.getPoseEstimator().getEstimatedPose().getTranslation();
-		ChassisSpeeds allianceSpeeds = robot.getSwerve().getAllianceRelativeVelocity();
+		ChassisSpeeds allianceSpeeds = robot.getSwerve().getFieldRelativeVelocity();
 		Translation2d diffBySpeed = new Translation2d(
 				allianceSpeeds.vxMetersPerSecond * TIME_FOR_POSE_MOVEMENT_SECONDS,
 				allianceSpeeds.vyMetersPerSecond * TIME_FOR_POSE_MOVEMENT_SECONDS

@@ -18,14 +18,14 @@ public enum ArmState {
 	L2(Rotation2d.fromDegrees(-13)),
 	PRE_L3(Rotation2d.fromDegrees(10)),
 	L3(Rotation2d.fromDegrees(10)),
-	PRE_L4(Rotation2d.fromDegrees(55)),
+	PRE_L4(Rotation2d.fromDegrees(55), Rotation2d.fromRotations(3), Rotation2d.fromRotations(0.5)),
 	L4(Rotation2d.fromDegrees(-25)),
 	LOW_ALGAE_REMOVE(Rotation2d.fromDegrees(-30)),
 	HIGH_ALGAE_REMOVE(Rotation2d.fromDegrees(-30)),
 	PRE_NET(Rotation2d.fromDegrees(60)),
-	NET(Rotation2d.fromDegrees(45)),
+	NET(Rotation2d.fromDegrees(45), Rotation2d.fromRotations(1), Rotation2d.fromRotations(2)),
 	PROCESSOR_OUTTAKE(Rotation2d.fromDegrees(180)),
-	CLIMB(Rotation2d.fromDegrees(-11));
+	CLIMB(Rotation2d.fromDegrees(-11), Rotation2d.fromRotations(0.5), Rotation2d.fromRotations(0.5));
 
 	private final Rotation2d position;
 	private final Rotation2d maxVelocityRotation2dPerSecond;

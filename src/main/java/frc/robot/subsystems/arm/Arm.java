@@ -164,11 +164,13 @@ public class Arm extends GBSubsystem {
 		// Calibrate feed forward using sys id:
 		sysIdCalibrator.setAllButtonsForCalibration(joystick);
 
+		ArmStateHandler armStateHandler = new ArmStateHandler(this);
+		
 		// Calibrate PID using phoenix tuner and these bindings:
-		joystick.POV_UP.onTrue(commandsBuilder.moveToPosition(ArmState.L4.getPosition()));
-		joystick.POV_DOWN.onTrue(commandsBuilder.moveToPosition(ArmState.INTAKE.getPosition()));
-		joystick.POV_LEFT.onTrue(commandsBuilder.moveToPosition(ArmState.L1.getPosition()));
-		joystick.POV_RIGHT.onTrue(commandsBuilder.moveToPosition(ArmState.L2.getPosition()));
+		joystick.POV_UP.onTrue(armStateHandler.setState(ArmState.CLOSED));
+		joystick.POV_RIGHT.onTrue(armStateHandler.setState(ArmState.CLIMB));
+		joystick.POV_LEFT.onTrue(armStateHandler.setState(ArmState.NET));
+		joystick.POV_DOWN.onTrue(armStateHandler.setState(ArmState.PRE_L4));
 
 		// Calibrate max acceleration and cruise velocity by the equations: max acceleration = (12 + Ks)/2kA, cruise velocity =(12 + Ks)/kV
 	}

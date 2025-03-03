@@ -81,8 +81,8 @@ public class RobotManager extends LoggedRobot {
 		SendableChooser<Boolean> autoReadyForConstructionSendableChooser = new SendableChooser<>();
 		autoReadyForConstructionSendableChooser.setDefaultOption("false", false);
 		autoReadyForConstructionSendableChooser.addOption("true", true);
-		autoReadyForConstructionSendableChooser.onChange(aBoolean -> {
-			if (aBoolean) {
+		autoReadyForConstructionSendableChooser.onChange(isReady -> {
+			if (isReady) {
 				auto = robot.getAuto();
 			}
 		});

@@ -127,7 +127,7 @@ public class Superstructure extends GBSubsystem {
 	public boolean isReadyForNetRelease() {
 		return robot.getElevator().isPastPosition(StateMachineConstants.ELEVATOR_POSITION_TO_RELEASE_NET)
 			&& elevatorStateHandler.getCurrentState() == ElevatorState.NET
-			&& robot.getArm().isPastPosition(StateMachineConstants.ARM_POSITION_TO_RELEASE_NET)
+			&& robot.getArm().isBehindPosition(StateMachineConstants.ARM_POSITION_TO_RELEASE_NET)
 			&& armStateHandler.getCurrentState() == ArmState.NET;
 	}
 

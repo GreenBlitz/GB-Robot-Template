@@ -20,9 +20,7 @@ public enum ArmState {
 	L3(Rotation2d.fromDegrees(10)),
 	PRE_L4(Rotation2d.fromDegrees(55)),
 	L4(Rotation2d.fromDegrees(-25)),
-	POST_LOW_ALGAE_REMOVE(Rotation2d.fromDegrees(-30)),
 	LOW_ALGAE_REMOVE(Rotation2d.fromDegrees(-30)),
-	PRE_HIGH_ALGAE_REMOVE(Rotation2d.fromDegrees(-30)),
 	HIGH_ALGAE_REMOVE(Rotation2d.fromDegrees(-30)),
 	PRE_NET(Rotation2d.fromDegrees(60)),
 	NET(Rotation2d.fromDegrees(45)),
@@ -30,13 +28,29 @@ public enum ArmState {
 	CLIMB(Rotation2d.fromDegrees(-11));
 
 	private final Rotation2d position;
+	private final Rotation2d maxVelocityRotation2dPerSecond;
+	private final Rotation2d maxAccelerationRotation2dPerSecondSquared;
+
+	ArmState(Rotation2d position, Rotation2d maxVelocityRotation2dPerSecond, Rotation2d maxAccelerationRotation2dPerSecondSquared) {
+		this.position = position;
+		this.maxVelocityRotation2dPerSecond = maxVelocityRotation2dPerSecond;
+		this.maxAccelerationRotation2dPerSecondSquared = maxAccelerationRotation2dPerSecondSquared;
+	}
 
 	ArmState(Rotation2d position) {
-		this.position = position;
+		this(position, ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND, ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED);
 	}
 
 	public Rotation2d getPosition() {
 		return position;
+	}
+
+	public Rotation2d getMaxVelocityRotation2dPerSecond() {
+		return maxVelocityRotation2dPerSecond;
+	}
+
+	public Rotation2d getMaxAccelerationRotation2dPerSecondSquared() {
+		return maxAccelerationRotation2dPerSecondSquared;
 	}
 
 }

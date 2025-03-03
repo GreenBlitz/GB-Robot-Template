@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
+import frc.robot.hardware.interfaces.IDynamicMotionMagicRequest;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.interfaces.IRequest;
@@ -19,7 +20,7 @@ import org.littletonrobotics.junction.Logger;
 public class Arm extends GBSubsystem {
 
 	private final ControllableMotor motor;
-	private final IRequest<Rotation2d> positionRequest;
+	private final IDynamicMotionMagicRequest positionRequest;
 	private final IRequest<Double> voltageRequest;
 	private final InputSignal<Rotation2d> motorPositionSignal;
 	private final InputSignal<Double> motorVoltageSignal;
@@ -32,7 +33,7 @@ public class Arm extends GBSubsystem {
 	public Arm(
 		String logPath,
 		ControllableMotor motor,
-		IRequest<Rotation2d> positionRequest,
+		IDynamicMotionMagicRequest positionRequest,
 		IRequest<Double> voltageRequest,
 		InputSignal<Rotation2d> motorPositionSignal,
 		InputSignal<Double> motorVoltageSignal,
@@ -110,8 +111,20 @@ public class Arm extends GBSubsystem {
 	}
 
 	protected void setTargetPosition(Rotation2d targetPosition) {
+		setTargetPosition(targetPosition, ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND, ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED);
+	}
+
+	protected void setTargetPosition(
+		Rotation2d targetPosition,
+		Rotation2d maxVelocityRotation2dPerSecond,
+		Rotation2d maxAccelerationRotation2dPerSecondSquared
+	) {
 		if (reversedSoftLimit.getDegrees() <= targetPosition.getDegrees()) {
-			motor.applyRequest(positionRequest.withSetPoint(targetPosition));
+			motor.applyRequest(
+				positionRequest.withSetPoint(targetPosition)
+					.withMaxVelocityRotation2dPerSecond(maxVelocityRotation2dPerSecond)
+					.withMaxAccelerationRotation2dPerSecondSquared(maxAccelerationRotation2dPerSecondSquared)
+			);
 		} else {
 			new Alert(Alert.AlertType.WARNING, getLogPath() + "/TargetPoseUnderLimit").report();
 			stayInPlace();
@@ -155,11 +168,13 @@ public class Arm extends GBSubsystem {
 		// Calibrate feed forward using sys id:
 		sysIdCalibrator.setAllButtonsForCalibration(joystick);
 
+		ArmStateHandler armStateHandler = new ArmStateHandler(this);
+
 		// Calibrate PID using phoenix tuner and these bindings:
-		joystick.POV_UP.onTrue(commandsBuilder.moveToPosition(ArmState.L4.getPosition()));
-		joystick.POV_DOWN.onTrue(commandsBuilder.moveToPosition(ArmState.INTAKE.getPosition()));
-		joystick.POV_LEFT.onTrue(commandsBuilder.moveToPosition(ArmState.L1.getPosition()));
-		joystick.POV_RIGHT.onTrue(commandsBuilder.moveToPosition(ArmState.L2.getPosition()));
+		joystick.POV_UP.onTrue(armStateHandler.setState(ArmState.CLOSED));
+		joystick.POV_RIGHT.onTrue(armStateHandler.setState(ArmState.CLIMB));
+		joystick.POV_LEFT.onTrue(armStateHandler.setState(ArmState.NET));
+		joystick.POV_DOWN.onTrue(armStateHandler.setState(ArmState.PRE_L4));
 
 		// Calibrate max acceleration and cruise velocity by the equations: max acceleration = (12 + Ks)/2kA, cruise velocity =(12 + Ks)/kV
 	}

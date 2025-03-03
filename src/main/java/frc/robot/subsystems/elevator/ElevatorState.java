@@ -1,5 +1,6 @@
 package frc.robot.subsystems.elevator;
 
+
 public enum ElevatorState {
 
 	STAY_IN_PLACE(Double.NaN),
@@ -16,22 +17,36 @@ public enum ElevatorState {
 	PRE_L4(1.18),
 	L4(1.18),
 	LOW_ALGAE_REMOVE(0.02),
-	POST_LOW_ALGAE_REMOVE(0.02),
 	HIGH_ALGAE_REMOVE(0.4),
-	POST_HIGH_ALGAE_REMOVE(0.4),
 	WHILE_DRIVE_NET(0.4),
 	NET(1.18),
 	PROCESSOR_OUTTAKE(0.02),
 	OPENING_HEIGHT(0.12);
 
 	private final double heightMeters;
+	private final double maxVelocityMetersPerSecond;
+	private final double maxAccelerationMetersPerSecondSquared;
+
+	ElevatorState(double heightMeters, double maxVelocityMetersPerSecond, double maxAccelerationMetersPerSecondSquared) {
+		this.heightMeters = heightMeters;
+		this.maxVelocityMetersPerSecond = maxVelocityMetersPerSecond;
+		this.maxAccelerationMetersPerSecondSquared = maxAccelerationMetersPerSecondSquared;
+	}
 
 	ElevatorState(double heightMeters) {
-		this.heightMeters = heightMeters;
+		this(heightMeters, ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND, ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED);
 	}
 
 	public double getHeightMeters() {
 		return heightMeters;
+	}
+
+	public double getMaxVelocityMetersPerSecond() {
+		return maxVelocityMetersPerSecond;
+	}
+
+	public double getMaxAccelerationMetersPerSecondSquared() {
+		return maxAccelerationMetersPerSecondSquared;
 	}
 
 }

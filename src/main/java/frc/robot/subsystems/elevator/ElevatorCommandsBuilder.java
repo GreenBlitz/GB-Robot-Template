@@ -37,6 +37,23 @@ public class ElevatorCommandsBuilder {
 		);
 	}
 
+	public Command setTargetPositionMeters(
+		double targetPositionMeters,
+		double maxVelocityMetersPerSecond,
+		double maxAccelerationMetersPerSecondSquared
+	) {
+		return elevator
+			.asSubsystemCommand(
+				new InitExecuteCommand(
+					() -> elevator
+						.setTargetPositionMeters(targetPositionMeters, maxVelocityMetersPerSecond, maxAccelerationMetersPerSecondSquared),
+					() -> {},
+					elevator
+				),
+				"Set Target Position To " + targetPositionMeters + " Meters"
+			);
+	}
+
 	public Command stayInPlace() {
 		return elevator.asSubsystemCommand(new InitExecuteCommand(elevator::stayInPlace, () -> {}, elevator), "Stay in place");
 	}

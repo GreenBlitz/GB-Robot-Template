@@ -1,5 +1,6 @@
 package frc.robot.subsystems.elevator;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.utils.utilcommands.InitExecuteCommand;
@@ -33,6 +34,22 @@ public class ElevatorCommandsBuilder {
 	public Command setTargetPositionMeters(double targetPositionMeters) {
 		return elevator.asSubsystemCommand(
 			new InitExecuteCommand(() -> elevator.setTargetPositionMeters(targetPositionMeters), () -> {}, elevator),
+			"Set Target Position To " + targetPositionMeters + " Meters"
+		);
+	}
+
+	public Command setTargetPositionMeters(
+		double targetPositionMeters,
+		Rotation2d maxVelocityRotation2dPerSecond,
+		Rotation2d maxAccelerationRotation2dPerSecondSquared
+	) {
+		return elevator.asSubsystemCommand(
+			new InitExecuteCommand(
+				() -> elevator
+					.setTargetPositionMeters(targetPositionMeters, maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared),
+				() -> {},
+				elevator
+			),
 			"Set Target Position To " + targetPositionMeters + " Meters"
 		);
 	}

@@ -238,27 +238,28 @@ public class Robot {
 
 	public PathPlannerAutoWrapper getAuto() {
 		if (preBuiltAutosChooser.isDefaultOptionChosen()) {
+			if (firstObjectScoringLocationChooser.isDefaultOptionChosen()) {
+				return AutosBuilder.createDefaultAuto(this);
+			}
 			return getMultiChoosersAuto();
 		}
 		return preBuiltAutosChooser.getChosenValue();
 	}
 
 	private PathPlannerAutoWrapper getMultiChoosersAuto() {
-		return !firstObjectScoringLocationChooser.isDefaultOptionChosen()
-				? PathPlannerAutoWrapper.chainAutos(
+		return PathPlannerAutoWrapper.chainAutos(
 				firstObjectScoringLocationChooser.getChosenValue(),
 				PathPlannerAutoWrapper
-						.chainAutos(
-								secondObjectIntakingLocationChooser.getChosenValue(),
-								secondObjectScoringLocationChooser.getChosenValue(),
-								thirdObjectIntakingLocationChooser.getChosenValue(),
-								thirdObjectScoringLocationChooser.getChosenValue(),
-								fourthObjectIntakingLocationChooser.getChosenValue(),
-								fourthObjectScoringLocationChooser.getChosenValue()
-						)
-						.asProxyAuto()
-		)
-				: AutosBuilder.createDefaultAuto(this);
+					.chainAutos(
+						secondObjectIntakingLocationChooser.getChosenValue(),
+						secondObjectScoringLocationChooser.getChosenValue(),
+						thirdObjectIntakingLocationChooser.getChosenValue(),
+						thirdObjectScoringLocationChooser.getChosenValue(),
+						fourthObjectIntakingLocationChooser.getChosenValue(),
+						fourthObjectScoringLocationChooser.getChosenValue()
+					)
+					.asProxyAuto()
+			);
 	}
 
 	public IPoseEstimator getPoseEstimator() {

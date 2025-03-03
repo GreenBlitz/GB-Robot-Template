@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.constants.field.enums.Branch;
 import frc.robot.Robot;
+import frc.robot.subsystems.elevator.ElevatorState;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.superstructure.ScoreLevel;
@@ -281,14 +282,13 @@ public class AutosBuilder {
 
 	public static PathPlannerAutoWrapper createDefaultAuto(Robot robot) {
 		return new PathPlannerAutoWrapper(
-			new SequentialCommandGroup(
-				robot.getSwerve().getCommandsBuilder().drive(() -> new ChassisPowers(AutonomousConstants.DEFAULT_AUTO_DRIVE_POWER, 0, 0)).withTimeout(AutonomousConstants.DEFAULT_AUTO_DRIVE_TIME_SECONDS),
-				new ParallelCommandGroup(
-					robot.getSwerve().getCommandsBuilder().resetTargetSpeeds(),
-					robot.getElevator()
-							.getCommandsBuilder()
-							.setTargetPositionMeters(AutonomousConstants.ELEVATOR_HEIGHT_METERS_FOR_OPENING_SEQUENCE)
-				)
+			new ParallelCommandGroup(
+				robot.getSwerve()
+					.getCommandsBuilder()
+					.drive(() -> new ChassisPowers(AutonomousConstants.DEFAULT_AUTO_DRIVE_POWER, 0, 0))
+					.withTimeout(AutonomousConstants.DEFAULT_AUTO_DRIVE_TIME_SECONDS)
+					.andThen(robot.getSwerve().getCommandsBuilder().resetTargetSpeeds()),
+				robot.getRobotCommander().getSuperstructure().elevatorOpening()
 			),
 			Pose2d.kZero,
 			"DefaultAuto",

@@ -51,6 +51,7 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void autonomousInit() {
 		robot.getRobotCommander().removeDefaultCommand();
+//		robot.getRobotCommander().getSuperstructure().removeDefaultCommand();
 
 		this.auto = robot.getAuto();
 		auto.schedule();

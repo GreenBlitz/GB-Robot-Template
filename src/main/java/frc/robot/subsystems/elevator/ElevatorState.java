@@ -4,24 +4,24 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public enum ElevatorState {
 
-	STAY_IN_PLACE(Double.NaN, Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)),
-	CLOSED(0.02, Rotation2d.fromDegrees(150), Rotation2d.fromDegrees(100)),
-	INTAKE(0.06, Rotation2d.fromDegrees(150), Rotation2d.fromDegrees(100)),
-	ALGAE_OUTTAKE(0.02, Rotation2d.fromDegrees(150), Rotation2d.fromDegrees(100)),
-	PRE_L1(0, Rotation2d.fromDegrees(150), Rotation2d.fromDegrees(100)),
-	L1(0.02, Rotation2d.fromDegrees(150), Rotation2d.fromDegrees(100)),
-	PRE_L2(0.02, Rotation2d.fromDegrees(150), Rotation2d.fromDegrees(100)),
-	L2(0.02, Rotation2d.fromDegrees(150), Rotation2d.fromDegrees(100)),
-	PRE_L3(0.19, Rotation2d.fromDegrees(150), Rotation2d.fromDegrees(100)),
-	L3(0.19, Rotation2d.fromDegrees(150), Rotation2d.fromDegrees(100)),
-	WHILE_DRIVE_L4(0.4, Rotation2d.fromDegrees(150), Rotation2d.fromDegrees(100)),
-	PRE_L4(1.18, Rotation2d.fromDegrees(150), Rotation2d.fromDegrees(100)),
-	L4(1.18, Rotation2d.fromDegrees(150), Rotation2d.fromDegrees(100)),
-	LOW_ALGAE_REMOVE(0.02, Rotation2d.fromDegrees(150), Rotation2d.fromDegrees(100)),
-	HIGH_ALGAE_REMOVE(0.4, Rotation2d.fromDegrees(150), Rotation2d.fromDegrees(100)),
-	WHILE_DRIVE_NET(0.4, Rotation2d.fromDegrees(150), Rotation2d.fromDegrees(100)),
-	NET(1.18, Rotation2d.fromDegrees(150), Rotation2d.fromDegrees(100)),
-	PROCESSOR_OUTTAKE(0.02, Rotation2d.fromDegrees(150), Rotation2d.fromDegrees(100));
+	STAY_IN_PLACE(Double.NaN, Rotation2d.fromRotations(0), Rotation2d.fromDegrees(0)),
+	CLOSED(0.02, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
+	INTAKE(0.06, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
+	ALGAE_OUTTAKE(0.02, Rotation2d.fromRotations(1000), Rotation2d.fromRotations(300)),
+	PRE_L1(0, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
+	L1(0.02, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
+	PRE_L2(0.02, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
+	L2(0.02, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
+	PRE_L3(0.19, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
+	L3(0.19, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
+	WHILE_DRIVE_L4(0.4, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
+	PRE_L4(1.18, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
+	L4(1.18, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
+	LOW_ALGAE_REMOVE(0.02, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
+	HIGH_ALGAE_REMOVE(0.4, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
+	WHILE_DRIVE_NET(0.4, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
+	NET(1.18, Rotation2d.fromRotations(100), Rotation2d.fromRotations(300)),
+	PROCESSOR_OUTTAKE(0.02, Rotation2d.fromRotations(1000), Rotation2d.fromRotations(300));
 
 	private final double heightMeters;
 	private final Rotation2d maxVelocityRotation2dPerSecond;

@@ -50,6 +50,7 @@ import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 import java.util.function.Supplier;

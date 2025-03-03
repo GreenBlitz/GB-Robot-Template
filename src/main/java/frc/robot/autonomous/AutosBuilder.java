@@ -15,6 +15,7 @@ import frc.utils.auto.AutoPath;
 import frc.utils.auto.PathHelper;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.auto.PathPlannerUtil;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,13 +110,13 @@ public class AutosBuilder {
 	public static PathPlannerAutoWrapper createDefaultAuto(Robot robot) {
 		return new PathPlannerAutoWrapper(
 			new SequentialCommandGroup(
+				robot.getSwerve().getCommandsBuilder().drive(() -> new ChassisPowers(AutonomousConstants.DEFAULT_AUTO_DRIVE_POWER, 0, 0)).withTimeout(AutonomousConstants.DEFAULT_AUTO_DRIVE_TIME_SECONDS),
 				new ParallelCommandGroup(
-					robot.getSwerve().getCommandsBuilder().drive(() -> new ChassisPowers(AutonomousConstants.DEFAULT_AUTO_DRIVE_POWER, 0, 0)),
+					robot.getSwerve().getCommandsBuilder().resetTargetSpeeds(),
 					robot.getElevator()
-						.getCommandsBuilder()
-						.setTargetPositionMeters(AutonomousConstants.ELEVATOR_HEIGHT_METERS_FOR_OPENING_SEQUENCE)
-				).withTimeout(AutonomousConstants.DEFAULT_AUTO_DRIVE_TIME_SECONDS),
-				robot.getRobotCommander().getSuperstructure().idle()
+							.getCommandsBuilder()
+							.setTargetPositionMeters(AutonomousConstants.ELEVATOR_HEIGHT_METERS_FOR_OPENING_SEQUENCE)
+				)
 			),
 			Pose2d.kZero,
 			"DefaultAuto",

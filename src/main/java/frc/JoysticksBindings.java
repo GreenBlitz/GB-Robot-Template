@@ -80,7 +80,7 @@ public class JoysticksBindings {
 		return new DeferredCommand(
 			() -> robot.getRobotCommander().getSuperstructure().isCoralIn()
 				? robot.getRobotCommander().autoScore()
-				: new InstantCommand(() -> ScoringHelpers.setClosetReefSideTarget(robot.getPoseEstimator().getEstimatedPose()))
+				: new InstantCommand(() -> ScoringHelpers.setClosetReefSideTarget(robot))
 					.andThen(robot.getRobotCommander().setState(RobotState.ALGAE_REMOVE)),
 			Set.of(
 				robot.getRobotCommander(),
@@ -97,10 +97,7 @@ public class JoysticksBindings {
 
 	private static Command closeReefActionChooser(Robot robot) {
 		return new DeferredCommand(
-			() -> new SequentialCommandGroup(
-				new InstantCommand(() -> ScoringHelpers.setClosetReefSideTarget(robot.getPoseEstimator().getEstimatedPose())),
-				reefActionChooser(robot)
-			),
+			() -> new SequentialCommandGroup(new InstantCommand(() -> ScoringHelpers.setClosetReefSideTarget(robot)), reefActionChooser(robot)),
 			Set.of(
 				robot.getRobotCommander(),
 				robot.getRobotCommander().getSuperstructure(),

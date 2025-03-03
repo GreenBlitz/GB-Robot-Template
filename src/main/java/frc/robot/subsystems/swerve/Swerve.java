@@ -338,7 +338,7 @@ public class Swerve extends GBSubsystem {
 		// Remember to test the drive pid ff calib with the POVS commands
 
 		// Rotational pid tests
-		joystick.R1.whileTrue(getCommandsBuilder().turnToHeading(MathConstants.HALF_CIRCLE));
+		joystick.R1.whileTrue(getCommandsBuilder().turnToHeading(Rotation2d.fromDegrees(180)));
 		joystick.L1.whileTrue(getCommandsBuilder().turnToHeading(new Rotation2d()));
 
 		// Translation pid tests

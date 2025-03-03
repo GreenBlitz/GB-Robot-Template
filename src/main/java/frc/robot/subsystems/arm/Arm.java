@@ -112,7 +112,11 @@ public class Arm extends GBSubsystem {
 
 	protected void setTargetPosition(Rotation2d targetPosition) {
 		if (reversedSoftLimit.getDegrees() <= targetPosition.getDegrees()) {
-			motor.applyRequest(positionRequest.withSetPoint(targetPosition));
+			motor.applyRequest(
+				positionRequest.withSetPoint(targetPosition)
+					.withMaxVelocityRotation2dPerSecond(ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND)
+					.withMaxAccelerationRotation2dPerSecondSquared(ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED)
+			);
 		} else {
 			new Alert(Alert.AlertType.WARNING, getLogPath() + "/TargetPoseUnderLimit").report();
 			stayInPlace();

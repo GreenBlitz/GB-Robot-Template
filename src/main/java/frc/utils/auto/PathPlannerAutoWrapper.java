@@ -46,6 +46,10 @@ public class PathPlannerAutoWrapper extends PathPlannerAuto {
 		return isFullyCreated;
 	}
 
+	public PathPlannerAutoWrapper asProxyAuto() {
+		return new PathPlannerAutoWrapper(this.asProxy(), this.getStartingPose(), this.getName(), true);
+	}
+
 	public static PathPlannerAutoWrapper chainAutos(PathPlannerAutoWrapper... autos) {
 		return new PathPlannerAutoWrapper(Commands.none().andThen(autos), autos[0].getStartingPose(), chainAutoNames(autos), true);
 	}

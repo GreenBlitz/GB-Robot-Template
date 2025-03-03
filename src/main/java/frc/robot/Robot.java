@@ -9,10 +9,8 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.events.EventTrigger;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.RobotManager;
-import frc.constants.field.enums.Branch;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.AutosBuilder;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
@@ -31,7 +29,6 @@ import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimator;
 import frc.robot.statemachine.RobotCommander;
-import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.factory.ArmFactory;
 import frc.robot.subsystems.elevator.Elevator;
@@ -53,7 +50,6 @@ import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.time.TimeUtil;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -81,13 +77,13 @@ public class Robot {
 	private final SimulationManager simulationManager;
 	private final RobotCommander robotCommander;
 
-	private LoggedDashboardChooser<Supplier<Command>> whereToScoreFirstObjectChooser;
-	private AutonomousChooser whereToIntakeSecondObjectChooser;
-	private AutonomousChooser whereToScoreSecondObjectChooser;
-	private AutonomousChooser whereToIntakeThirdObjectChooser;
-	private AutonomousChooser whereToScoreThirdObjectChooser;
-	private AutonomousChooser whereToIntakeFourthObjectChooser;
-	private AutonomousChooser whereToScoreFourthObjectChooser;
+	private AutonomousChooser firstObjectScoringLocationChooser;
+	private AutonomousChooser secondObjectIntakingLocationChooser;
+	private AutonomousChooser secondObjectScoringLocationChooser;
+	private AutonomousChooser thirdObjectIntakingLocationChooser;
+	private AutonomousChooser thirdObjectScoringLocationChooser;
+	private AutonomousChooser fourthObjectIntakingLocationChooser;
+	private AutonomousChooser fourthObjectScoringLocationChooser;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -163,7 +159,7 @@ public class Robot {
 		Supplier<Command> scoringCommand = () -> robotCommander.getSuperstructure().scoreWithRelease().asProxy();
 		Supplier<Command> intakingCommand = () -> robotCommander.getSuperstructure()
 			.closeL4AfterScore()
-			.andThen(robotCommander.getSuperstructure().intake())
+			.andThen(robotCommander.getSuperstructure().intake().withTimeout(AutonomousConstants.INTAKING_TIMEOUT_SECONDS))
 			.asProxy();
 
 		swerve.configPathPlanner(
@@ -182,43 +178,28 @@ public class Robot {
 		);
 		new EventTrigger("ARM_PRE_SCORE").onTrue(robotCommander.getSuperstructure().armPreScore());
 
-		SendableChooser<Supplier<Command>> chooser = new SendableChooser<>();
-		for (Branch branch : Branch.values()) {
-			chooser.addOption(branch.name(), () -> (new InstantCommand(() -> {
-				ScoringHelpers.targetScoreLevel = ScoreLevel.L4;
-				if (branch.isLeft() != ScoringHelpers.getTargetBranch().isLeft()) {
-					ScoringHelpers.toggleIsLeftBranch();
-				}
-				if (branch.getReefSide().isFar() != ScoringHelpers.getTargetReefSide().isFar()) {
-					ScoringHelpers.toggleIsFarReefHalf();
-				}
-				ScoringHelpers.setTargetSideForReef(branch.getReefSide().getSide());
-			}).andThen(robotCommander.autoScoreForAutonomous())));
-		}
-		chooser.setDefaultOption("None", Commands::none);
-
-		this.whereToScoreFirstObjectChooser = new LoggedDashboardChooser<>("ScoreFirst", chooser);
-		this.whereToIntakeSecondObjectChooser = new AutonomousChooser(
+		this.firstObjectScoringLocationChooser = new AutonomousChooser("ScoreFirst", AutosBuilder.getAllAutoScoringAutos(this));
+		this.secondObjectIntakingLocationChooser = new AutonomousChooser(
 			"IntakeSecond",
 			AutosBuilder.getAllIntakingAutos(this, intakingCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
 		);
-		this.whereToScoreSecondObjectChooser = new AutonomousChooser(
+		this.secondObjectScoringLocationChooser = new AutonomousChooser(
 			"ScoreSecond",
 			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
 		);
-		this.whereToIntakeThirdObjectChooser = new AutonomousChooser(
+		this.thirdObjectIntakingLocationChooser = new AutonomousChooser(
 			"IntakeThird",
 			AutosBuilder.getAllIntakingAutos(this, intakingCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
 		);
-		this.whereToScoreThirdObjectChooser = new AutonomousChooser(
+		this.thirdObjectScoringLocationChooser = new AutonomousChooser(
 			"ScoreThird",
 			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
 		);
-		this.whereToIntakeFourthObjectChooser = new AutonomousChooser(
+		this.fourthObjectIntakingLocationChooser = new AutonomousChooser(
 			"IntakeFourth",
 			AutosBuilder.getAllIntakingAutos(this, intakingCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
 		);
-		this.whereToScoreFourthObjectChooser = new AutonomousChooser(
+		this.fourthObjectScoringLocationChooser = new AutonomousChooser(
 			"ScoreFourth",
 			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
 		);
@@ -250,21 +231,20 @@ public class Robot {
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 
-	public Command getAuto() {
-		return whereToScoreFirstObjectChooser.get()
-			.get()
-			.andThen(
-				PathPlannerAutoWrapper
-					.chainAutos(
-						whereToIntakeSecondObjectChooser.getChosenValue(),
-						whereToScoreSecondObjectChooser.getChosenValue(),
-						whereToIntakeThirdObjectChooser.getChosenValue(),
-						whereToScoreThirdObjectChooser.getChosenValue(),
-						whereToIntakeFourthObjectChooser.getChosenValue(),
-						whereToScoreFourthObjectChooser.getChosenValue()
-					)
-					.asProxy()
-			);
+	public PathPlannerAutoWrapper getAuto() {
+		return PathPlannerAutoWrapper.chainAutos(
+			firstObjectScoringLocationChooser.getChosenValue(),
+			PathPlannerAutoWrapper
+				.chainAutos(
+					secondObjectIntakingLocationChooser.getChosenValue(),
+					secondObjectScoringLocationChooser.getChosenValue(),
+					thirdObjectIntakingLocationChooser.getChosenValue(),
+					thirdObjectScoringLocationChooser.getChosenValue(),
+					fourthObjectIntakingLocationChooser.getChosenValue(),
+					fourthObjectScoringLocationChooser.getChosenValue()
+				)
+				.asProxyAuto()
+		);
 	}
 
 	public IPoseEstimator getPoseEstimator() {

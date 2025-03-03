@@ -486,7 +486,7 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command elevatorOpening(){
+	public Command elevatorOpening() {
 		return asSubsystemCommand(elevatorStateHandler.setState(ElevatorState.OPENING_HEIGHT), SuperstructureState.ELEVATOR_OPENING);
 	}
 

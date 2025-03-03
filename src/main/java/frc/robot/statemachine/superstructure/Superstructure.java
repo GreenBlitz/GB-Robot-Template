@@ -476,7 +476,7 @@ public class Superstructure extends GBSubsystem {
 			new ParallelCommandGroup(
 				new SequentialCommandGroup(
 					new ParallelCommandGroup(armStateHandler.setState(ArmState.START_GAME), climbStateHandler.setState(ClimbState.STOP))
-						.until(() -> robot.getElevator().isPastPosition(StateMachineConstants.ELEVATOR_POSITION_FOR_OPENING)),
+						.until(() -> robot.getElevator().isPastPosition(StateMachineConstants.ELEVATOR_POSITION_TO_CLOSE_CLIMB)),
 					new ParallelCommandGroup(armStateHandler.setState(ArmState.PRE_L4), climbStateHandler.setState(ClimbState.CLOSE))
 				),
 				elevatorStateHandler.setState(ElevatorState.WHILE_DRIVE_L4),

@@ -44,4 +44,5 @@ public enum ElevatorState {
 	public Rotation2d getMaxAccelerationRotation2dPerSecondSquared() {
 		return maxAccelerationRotation2dPerSecondSquared;
 	}
+
 }

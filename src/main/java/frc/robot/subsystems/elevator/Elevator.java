@@ -158,7 +158,11 @@ public class Elevator extends GBSubsystem {
 	}
 
 	protected void setTargetPositionMeters(double targetPositionMeters) {
-		setTargetPositionMeters(targetPositionMeters, ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND, ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED);
+		setTargetPositionMeters(
+			targetPositionMeters,
+			ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND,
+			ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED
+		);
 	}
 
 	protected void setTargetPositionMeters(
@@ -170,7 +174,7 @@ public class Elevator extends GBSubsystem {
 		Rotation2d targetPosition = convertMetersToRotations(targetPositionMeters);
 		Rotation2d maxVelocityRotation2dPerSecond = convertMetersToRotations(maxVelocityMetersPerSecond);
 		Rotation2d maxAccelerationRotation2dPerSecond = convertMetersToRotations(maxAccelerationMetersPerSecondSquared);
-		
+
 		rightMotor.applyRequest(
 			positionRequest.withSetPoint(targetPosition)
 				.withMaxVelocityRotation2dPerSecond(maxVelocityRotation2dPerSecond)

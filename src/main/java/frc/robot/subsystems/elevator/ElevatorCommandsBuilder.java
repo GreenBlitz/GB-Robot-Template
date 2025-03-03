@@ -1,6 +1,5 @@
 package frc.robot.subsystems.elevator;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.utils.utilcommands.InitExecuteCommand;
@@ -43,15 +42,16 @@ public class ElevatorCommandsBuilder {
 		double maxVelocityMetersPerSecond,
 		double maxAccelerationMetersPerSecondSquared
 	) {
-		return elevator.asSubsystemCommand(
-			new InitExecuteCommand(
-				() -> elevator
-					.setTargetPositionMeters(targetPositionMeters, maxVelocityMetersPerSecond, maxAccelerationMetersPerSecondSquared),
-				() -> {},
-				elevator
-			),
-			"Set Target Position To " + targetPositionMeters + " Meters"
-		);
+		return elevator
+			.asSubsystemCommand(
+				new InitExecuteCommand(
+					() -> elevator
+						.setTargetPositionMeters(targetPositionMeters, maxVelocityMetersPerSecond, maxAccelerationMetersPerSecondSquared),
+					() -> {},
+					elevator
+				),
+				"Set Target Position To " + targetPositionMeters + " Meters"
+			);
 	}
 
 	public Command stayInPlace() {

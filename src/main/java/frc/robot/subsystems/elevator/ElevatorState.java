@@ -1,6 +1,5 @@
 package frc.robot.subsystems.elevator;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 
 public enum ElevatorState {
 
@@ -34,11 +33,7 @@ public enum ElevatorState {
 	}
 
 	ElevatorState(double heightMeters) {
-		this(
-			heightMeters,
-			ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND,
-			ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED
-		);
+		this(heightMeters, ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND, ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED);
 	}
 
 	public double getHeightMeters() {

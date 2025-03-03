@@ -5,91 +5,23 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public enum ElevatorState {
 
 	STAY_IN_PLACE(Double.NaN, Rotation2d.fromRotations(0), Rotation2d.fromDegrees(0)),
-	CLOSED(
-		0.02,
-		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
-		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
-	),
-	INTAKE(
-		0.06,
-		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
-		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
-	),
-	ALGAE_OUTTAKE(
-		0.02,
-		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
-		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
-	),
-	PRE_L1(
-		0,
-		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
-		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
-	),
-	L1(
-		0.02,
-		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
-		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
-	),
-	PRE_L2(
-		0.02,
-		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
-		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
-	),
-	L2(
-		0.02,
-		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
-		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
-	),
-	PRE_L3(
-		0.19,
-		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
-		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
-	),
-	L3(
-		0.19,
-		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
-		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
-	),
-	WHILE_DRIVE_L4(
-		0.4,
-		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
-		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
-	),
-	PRE_L4(
-		1.18,
-		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
-		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
-	),
-	L4(
-		1.18,
-		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
-		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
-	),
-	LOW_ALGAE_REMOVE(
-		0.02,
-		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
-		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
-	),
-	HIGH_ALGAE_REMOVE(
-		0.4,
-		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
-		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
-	),
-	WHILE_DRIVE_NET(
-		0.4,
-		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
-		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
-	),
-	NET(
-		1.18,
-		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
-		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
-	),
-	PROCESSOR_OUTTAKE(
-		0.02,
-		Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
-		Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
-	);
+	CLOSED(0.02),
+	INTAKE(0.06),
+	ALGAE_OUTTAKE(0.02),
+	PRE_L1(0),
+	L1(0.02),
+	PRE_L2(0.02),
+	L2(0.02),
+	PRE_L3(0.19),
+	L3(0.19),
+	WHILE_DRIVE_L4(0.4),
+	PRE_L4(1.18),
+	L4(1.18),
+	LOW_ALGAE_REMOVE(0.02),
+	HIGH_ALGAE_REMOVE(0.4),
+	WHILE_DRIVE_NET(0.4),
+	NET(1.18),
+	PROCESSOR_OUTTAKE(0.02);
 
 	private final double heightMeters;
 	private final Rotation2d maxVelocityRotation2dPerSecond;
@@ -99,6 +31,14 @@ public enum ElevatorState {
 		this.heightMeters = heightMeters;
 		this.maxVelocityRotation2dPerSecond = maxVelocityRotation2dPerSecond;
 		this.maxAccelerationRotation2dPerSecondSquared = maxAccelerationRotation2dPerSecondSquared;
+	}
+
+	ElevatorState(double heightMeters) {
+		this(
+			heightMeters,
+			Elevator.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND),
+			Elevator.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
+		);
 	}
 
 	public double getHeightMeters() {

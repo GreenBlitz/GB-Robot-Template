@@ -4,8 +4,7 @@ import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
@@ -27,7 +26,7 @@ import frc.robot.hardware.mechanisms.wpilib.SingleJointedArmSimulation;
 import frc.robot.hardware.phoenix6.Phoenix6Util;
 import frc.robot.hardware.phoenix6.angleencoder.CANCoderEncoder;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
-import frc.robot.hardware.phoenix6.request.Phoenix6FeedForwardRequest;
+import frc.robot.hardware.phoenix6.request.Phoenix6DynamicMotionMagicRequest;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
 import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
 import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
@@ -51,12 +50,12 @@ public class KrakenX60ArmBuilder {
 	private static final Rotation2d STARTING_POSITION = Rotation2d.fromDegrees(17);
 	private static final int NUMBER_OF_MOTORS = 1;
 	private static final double GEAR_RATIO = 450.0 / 7.0;
-	public static final double kG = 0.33;
+	public static final double kG = 0.37;
 
 	protected static Arm build(String logPath) {
-		Phoenix6FeedForwardRequest positionRequest = Robot.ROBOT_TYPE.isReal()
-			? Phoenix6RequestBuilder.build(new MotionMagicVoltage(0).withSlot(0), 0, ENABLE_FOC)
-			: Phoenix6RequestBuilder.build(new PositionVoltage(0).withSlot(1), 0, ENABLE_FOC);
+		Phoenix6DynamicMotionMagicRequest positionRequest = Robot.ROBOT_TYPE.isReal()
+			? Phoenix6RequestBuilder.build(new DynamicMotionMagicVoltage(0, 0, 0, 0).withSlot(0), 0, ENABLE_FOC)
+			: Phoenix6RequestBuilder.build(new DynamicMotionMagicVoltage(0, 0, 0, 0).withSlot(1), 0, ENABLE_FOC);
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), ENABLE_FOC);
 
 		TalonFXMotor motor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ARM, buildSysidConfig(), buildArmSimulation());
@@ -87,7 +86,7 @@ public class KrakenX60ArmBuilder {
 				config.Slot0.kP = 28;
 				config.Slot0.kI = 0;
 				config.Slot0.kD = 0;
-				config.Slot0.kS = 0.0715;
+				config.Slot0.kS = 0.065;
 				config.Slot0.kG = kG;
 				config.Slot0.kV = 9.0000095367432;
 				config.Slot0.kA = 0.5209;

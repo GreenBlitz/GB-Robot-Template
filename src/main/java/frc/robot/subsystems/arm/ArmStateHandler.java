@@ -23,7 +23,12 @@ public class ArmStateHandler {
 		} else {
 			return new ParallelCommandGroup(
 				new InstantCommand(() -> currentState = state),
-				arm.getCommandsBuilder().moveToPosition(state.getPosition())
+				arm.getCommandsBuilder()
+					.moveToPosition(
+						state.getPosition(),
+						state.getMaxVelocityRotation2dPerSecond(),
+						state.getMaxAccelerationRotation2dPerSecondSquared()
+					)
 			);
 		}
 	}

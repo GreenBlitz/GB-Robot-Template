@@ -23,7 +23,12 @@ public class ElevatorStateHandler {
 		} else {
 			return new ParallelCommandGroup(
 				new InstantCommand(() -> currentState = state),
-				elevator.getCommandsBuilder().setTargetPositionMeters(state.getHeightMeters())
+				elevator.getCommandsBuilder()
+					.setTargetPositionMeters(
+						state.getHeightMeters(),
+						state.getMaxVelocityMetersPerSecond(),
+						state.getMaxAccelerationMetersPerSecondSquared()
+					)
 			);
 		}
 	}

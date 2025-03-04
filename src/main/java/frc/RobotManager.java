@@ -70,6 +70,7 @@ public class RobotManager extends LoggedRobot {
 			auto.cancel();
 		}
 		robot.getRobotCommander().initializeDefaultCommand();
+		robot.ledStateHandler.setState(LEDState.IDLE).schedule();
 	}
 
 	@Override

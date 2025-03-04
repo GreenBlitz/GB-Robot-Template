@@ -181,9 +181,9 @@ public class Superstructure extends GBSubsystem {
 				).withTimeout(StateMachineConstants.INTAKE_TIME_AFTER_BEAM_BREAK_SECONDS)
 			).andThen(
 				new ConditionalCommand(
-					robot.ledStateHandler.setState(LEDState.HAS_CORAL),
+					robot.ledStateHandler.setState(LEDState.HAS_CORAL).asProxy(),
 					new InstantCommand(),
-					() -> robot.getRobotCommander().getSuperstructure().isCoralIn()
+					this::isCoralIn
 				)
 			),
 			SuperstructureState.INTAKE

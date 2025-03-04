@@ -3,10 +3,11 @@ package frc.robot.led;
 import com.ctre.phoenix.led.*;
 
 public enum LEDState {
-    IDLE(new FireAnimation()),
-    DISABLE(new RainbowAnimation()),
+    IDLE(new ColorFlowAnimation(0,250,0)),
+    DISABLE(new StrobeAnimation(255,30,0)),
+//    DISABLE(new StrobeAnimation(255,50,0)),
     READY_TO_COLLECT(new StrobeAnimation(0, 200, 200)),
-    HAS_CORAL(new StrobeAnimation(200, 0, 200)),
+    HAS_CORAL(new ColorFlowAnimation(200, 0, 200,250,2,100, ColorFlowAnimation.Direction.Forward, 8)),
     START_AIM_ASSIST(new SingleFadeAnimation(200, 0, 0)),
     IS_IN_POSITION_TO_OPEN_ELEVATOR(new StrobeAnimation(255, 0, 0)),
 //    OPENING_SUPERSTRUCTURE(new SingleFadeAnimation(200, 200, 0)),

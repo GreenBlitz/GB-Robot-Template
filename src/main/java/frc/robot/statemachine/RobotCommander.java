@@ -242,13 +242,13 @@ public class RobotCommander extends GBSubsystem {
 
 	public Command autoScore() {
 		Supplier<Command> fullySuperstructureScore = () -> new SequentialCommandGroup(
-			robot.ledStateHandler.setState(LEDState.START_AIM_ASSIST),
+			robot.getLedStateHandler().setState(LEDState.START_AIM_ASSIST),
 			superstructure.armPreScore().until(this::isReadyToOpenSuperstructure),
-			robot.ledStateHandler.setState(LEDState.IS_IN_POSITION_TO_OPEN_ELEVATOR),
+			robot.getLedStateHandler().setState(LEDState.IS_IN_POSITION_TO_OPEN_ELEVATOR),
 			superstructure.preScore().until(superstructure::isPreScoreReady),
-			robot.ledStateHandler.setState(LEDState.SUPERSTRUCTURE_IN_POSITION),
+			robot.getLedStateHandler().setState(LEDState.SUPERSTRUCTURE_IN_POSITION),
 			superstructure.scoreWithoutRelease().until(this::isReadyToScore),
-			robot.ledStateHandler.setState(LEDState.IN_POSITION_TO_SCORE),
+			robot.getLedStateHandler().setState(LEDState.IN_POSITION_TO_SCORE),
 			superstructure.scoreWithRelease(),
 			new InstantCommand(ScoringHelpers::reset)
 		);
@@ -316,13 +316,9 @@ public class RobotCommander extends GBSubsystem {
 
 	public Command fullyScore() {
 		return new SequentialCommandGroup(
-			//aim assist
 			armPreScore().until(this::isReadyToOpenSuperstructure),
-			//is in pos
 			preScore().until(this::isPreScoreReady),
-			//
 			scoreWithoutRelease().until(this::isReadyToScore),
-			//is ready to scopre
 			score()
 		);
 	}

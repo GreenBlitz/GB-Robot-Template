@@ -1,7 +1,11 @@
 package frc.robot.statemachine.superstructure;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Robot;
 import frc.robot.led.LEDState;
 import frc.robot.scoringhelpers.ScoringHelpers;
@@ -179,13 +183,7 @@ public class Superstructure extends GBSubsystem {
 					endEffectorStateHandler.setState(EndEffectorState.CORAL_INTAKE),
 					climbStateHandler.setState(ClimbState.STOP)
 				).withTimeout(StateMachineConstants.INTAKE_TIME_AFTER_BEAM_BREAK_SECONDS)
-			).andThen(
-				new ConditionalCommand(
-					robot.ledStateHandler.setState(LEDState.HAS_CORAL).asProxy(),
-					new InstantCommand(),
-					this::isCoralIn
-				)
-			),
+			).andThen(robot.getLedStateHandler().setState(LEDState.HAS_CORAL).asProxy().onlyIf(this::isCoralIn)),
 			SuperstructureState.INTAKE
 		);
 	}

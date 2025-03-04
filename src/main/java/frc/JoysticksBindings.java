@@ -154,12 +154,12 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = THIRD_JOYSTICK;
 		// bindings...
 
-//		robot.getSwerve().applyCalibrationBindings(usedJoystick, () -> robot.getPoseEstimator().getEstimatedPose());
-	
+		robot.getSwerve().applyCalibrationBindings(usedJoystick, () -> robot.getPoseEstimator().getEstimatedPose());
+
 		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE_WITHOUT_AIM_ASSIST));
 		usedJoystick.X.onTrue(new InstantCommand(() -> robot.getRobotCommander().getSuperstructure().driverIsCoralInOverride = true));
 
-		usedJoystick.POV_DOWN.onTrue(robot.ledStateHandler.setState(LEDState.HAS_CORAL));
+		usedJoystick.POV_DOWN.onTrue(robot.getLedStateHandler().setState(LEDState.HAS_CORAL));
 	}
 
 	private static void fourthJoystickButtons(Robot robot) {

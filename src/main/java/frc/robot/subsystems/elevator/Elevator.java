@@ -10,6 +10,7 @@ import frc.robot.Robot;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.ControllableMotor;
+import frc.robot.hardware.interfaces.IDynamicMotionMagicRequest;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.elevator.factory.KrakenX60ElevatorBuilder;
@@ -29,7 +30,7 @@ public class Elevator extends GBSubsystem {
 	private final ControllableMotor leftMotor;
 	private final ElevatorMotorSignals leftMotorSignals;
 
-	private final IRequest<Rotation2d> positionRequest;
+	private final IDynamicMotionMagicRequest positionRequest;
 	private final IRequest<Double> voltageRequest;
 
 	private final IDigitalInput limitSwitch;
@@ -48,7 +49,7 @@ public class Elevator extends GBSubsystem {
 		ElevatorMotorSignals rightMotorSignals,
 		ControllableMotor leftMotor,
 		ElevatorMotorSignals leftMotorSignals,
-		IRequest<Rotation2d> positionRequest,
+		IDynamicMotionMagicRequest positionRequest,
 		IRequest<Double> voltageRequest,
 		IDigitalInput limitSwitch
 	) {
@@ -157,10 +158,33 @@ public class Elevator extends GBSubsystem {
 	}
 
 	protected void setTargetPositionMeters(double targetPositionMeters) {
+		setTargetPositionMeters(
+			targetPositionMeters,
+			ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND,
+			ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED
+		);
+	}
+
+	protected void setTargetPositionMeters(
+		double targetPositionMeters,
+		double maxVelocityMetersPerSecond,
+		double maxAccelerationMetersPerSecondSquared
+	) {
 		currentTargetPositionMeters = targetPositionMeters;
 		Rotation2d targetPosition = convertMetersToRotations(targetPositionMeters);
-		rightMotor.applyRequest(positionRequest.withSetPoint(targetPosition));
-		leftMotor.applyRequest(positionRequest.withSetPoint(targetPosition));
+		Rotation2d maxVelocityRotation2dPerSecond = convertMetersToRotations(maxVelocityMetersPerSecond);
+		Rotation2d maxAccelerationRotation2dPerSecond = convertMetersToRotations(maxAccelerationMetersPerSecondSquared);
+
+		rightMotor.applyRequest(
+			positionRequest.withSetPoint(targetPosition)
+				.withMaxVelocityRotation2dPerSecond(maxVelocityRotation2dPerSecond)
+				.withMaxAccelerationRotation2dPerSecondSquared(maxAccelerationRotation2dPerSecond)
+		);
+		leftMotor.applyRequest(
+			positionRequest.withSetPoint(targetPosition)
+				.withMaxVelocityRotation2dPerSecond(convertMetersToRotations(maxVelocityMetersPerSecond))
+				.withMaxAccelerationRotation2dPerSecondSquared(maxAccelerationRotation2dPerSecond)
+		);
 	}
 
 	protected void stayInPlace() {
@@ -214,11 +238,13 @@ public class Elevator extends GBSubsystem {
 		// wpilib sysid in google)
 		sysIdCalibrator.setAllButtonsForCalibration(joystick);
 
+		ElevatorStateHandler elevatorStateHandler = new ElevatorStateHandler(this);
+
 		// PID Testing
-		joystick.POV_DOWN.onTrue(commandsBuilder.setTargetPositionMeters(ElevatorState.L1.getHeightMeters()));
-		joystick.POV_LEFT.onTrue(commandsBuilder.setTargetPositionMeters(ElevatorState.L2.getHeightMeters()));
-		joystick.POV_RIGHT.onTrue(commandsBuilder.setTargetPositionMeters(ElevatorState.L3.getHeightMeters()));
-		joystick.POV_UP.onTrue(commandsBuilder.setTargetPositionMeters(ElevatorState.L4.getHeightMeters()));
+		joystick.POV_DOWN.onTrue(elevatorStateHandler.setState(ElevatorState.CLOSED));
+		joystick.POV_LEFT.onTrue(elevatorStateHandler.setState(ElevatorState.NET));
+		joystick.POV_RIGHT.onTrue(elevatorStateHandler.setState(ElevatorState.PRE_L4));
+		joystick.POV_UP.onTrue(elevatorStateHandler.setState(ElevatorState.L3));
 
 		// Calibrate max acceleration and cruse velocity by the equations: max acceleration = (12 + Ks)/2kA cruise velocity = (12 + Ks)/kV
 	}

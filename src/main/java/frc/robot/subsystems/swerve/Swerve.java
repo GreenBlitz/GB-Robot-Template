@@ -184,6 +184,10 @@ public class Swerve extends GBSubsystem {
 		return kinematics.toChassisSpeeds(modules.getCurrentStates());
 	}
 
+	public ChassisSpeeds getFieldRelativeVelocity() {
+		return SwerveMath.robotToAllianceRelativeSpeeds(getRobotRelativeVelocity(), headingSupplier.get());
+	}
+
 	public ChassisSpeeds getAllianceRelativeVelocity() {
 		return SwerveMath.robotToAllianceRelativeSpeeds(getRobotRelativeVelocity(), getAllianceRelativeHeading());
 	}

@@ -3,6 +3,7 @@ package frc.robot.subsystems.arm;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.utils.utilcommands.InitExecuteCommand;
 import frc.utils.utilcommands.LoggedDashboardCommand;
 
 import java.util.function.DoubleSupplier;
@@ -32,11 +33,26 @@ public class ArmCommandsBuilder {
 	}
 
 	public Command moveToPosition(Rotation2d position) {
-		return arm.asSubsystemCommand(new RunCommand(() -> arm.setTargetPosition(position)), "Set target position to: " + position);
+		return arm
+			.asSubsystemCommand(new InitExecuteCommand(() -> arm.setTargetPosition(position), () -> {}), "Set target position to: " + position);
+	}
+
+	public Command moveToPosition(
+		Rotation2d position,
+		Rotation2d maxVelocityRotation2dPerSecond,
+		Rotation2d maxAccelerationRotation2dPerSecondSquared
+	) {
+		return arm.asSubsystemCommand(
+			new InitExecuteCommand(
+				() -> arm.setTargetPosition(position, maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared),
+				() -> {}
+			),
+			"Set target position to: " + position
+		);
 	}
 
 	public Command stayInPlace() {
-		return arm.asSubsystemCommand(new RunCommand(arm::stayInPlace), "Stay in place");
+		return arm.asSubsystemCommand(new InitExecuteCommand(arm::stayInPlace, () -> {}), "Stay in place");
 	}
 
 	public Command loggedDashboardSetVoltage() {

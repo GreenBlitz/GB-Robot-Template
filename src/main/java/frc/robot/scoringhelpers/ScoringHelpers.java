@@ -3,6 +3,7 @@ package frc.robot.scoringhelpers;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.constants.field.Field;
 import frc.constants.field.enums.AlgaeRemoveLevel;
 import frc.constants.field.enums.Branch;
@@ -21,13 +22,14 @@ public class ScoringHelpers {
 	public static final Translation2d END_EFFECTOR_OFFSET_FROM_MID_ROBOT = new Translation2d(0, 0.014);
 	public static final Rotation2d HEADING_FOR_NET = Rotation2d.fromDegrees(0);
 	public static final Rotation2d HEADING_FOR_CAGE = Rotation2d.fromDegrees(180);
+	private static final double TIME_FOR_POSE_MOVEMENT_SECONDS = 0.3;
 	private static final Pose2d PROCESSOR_SCORING_POSE = new Pose2d(6, 0.7, Field.getProcessor().getRotation());
 
 	public static ScoreLevel targetScoreLevel = ScoreLevel.L4;
+	public static boolean isFarReefHalf = false;
+	public static boolean isLeftBranch = false;
 
-	private static boolean isFarReefHalf = false;
 	private static Side targetSideForReef = Side.MIDDLE;
-	private static boolean isLeftBranch = false;
 	private static CoralStation latestWantedCoralStation = CoralStation.LEFT;
 	private static CoralStationSlot latestWantedCoralStationSlot = CoralStationSlot.L1;
 	private static Cage latestWantedCage = Cage.FIELD_WALL;
@@ -37,12 +39,22 @@ public class ScoringHelpers {
 		return ReefSide.getReefSideBySideAndFar(targetSideForReef, isFarReefHalf);
 	}
 
+	private static Translation2d getRobotTranslationWithSpeedsHandle(Robot robot) {
+		Translation2d robotTranslation = robot.getPoseEstimator().getEstimatedPose().getTranslation();
+		ChassisSpeeds allianceSpeeds = robot.getSwerve().getFieldRelativeVelocity();
+		Translation2d diffBySpeed = new Translation2d(
+			allianceSpeeds.vxMetersPerSecond * TIME_FOR_POSE_MOVEMENT_SECONDS,
+			allianceSpeeds.vyMetersPerSecond * TIME_FOR_POSE_MOVEMENT_SECONDS
+		);
+		return robotTranslation.plus(diffBySpeed);
+	}
+
 	public static Branch getTargetBranch() {
 		return Branch.getBranchByReefSideAndSide(getTargetReefSide(), isLeftBranch);
 	}
 
 	public static CoralStation getTargetCoralStation(Robot robot) {
-		Translation2d robotTranslation = robot.getPoseEstimator().getEstimatedPose().getTranslation();
+		Translation2d robotTranslation = getRobotTranslationWithSpeedsHandle(robot);
 		Translation2d leftCoralStationTranslation = Field.getCoralStationMiddle(CoralStation.LEFT).getTranslation();
 		Translation2d rightCoralStationTranslation = Field.getCoralStationMiddle(CoralStation.RIGHT).getTranslation();
 		if (robotTranslation.getDistance(leftCoralStationTranslation) < robotTranslation.getDistance(rightCoralStationTranslation)) {
@@ -54,7 +66,7 @@ public class ScoringHelpers {
 	}
 
 	public static CoralStationSlot getTargetCoralStationSlot(Robot robot) {
-		Translation2d robotTranslation = robot.getPoseEstimator().getEstimatedPose().getTranslation();
+		Translation2d robotTranslation = getRobotTranslationWithSpeedsHandle(robot);
 		if (getTargetCoralStation(robot) == CoralStation.RIGHT) {
 			latestWantedCoralStationSlot = getClosestCoralStationSlot(robotTranslation, CoralStationSlot.R2, CoralStationSlot.R8);
 		} else {
@@ -104,19 +116,19 @@ public class ScoringHelpers {
 		return new Pose2d(branchTranslation.minus(differenceTranslation).minus(endeffectorOffsetDifference), targetRobotAngle);
 	}
 
-	public static void setClosetReefSideTarget(Pose2d robotPose) {
-		ReefSide closetReefSide = getNearestReefSide(robotPose);
+	public static void setClosetReefSideTarget(Robot robot) {
+		ReefSide closetReefSide = getNearestReefSide(getRobotTranslationWithSpeedsHandle(robot));
 		targetSideForReef = closetReefSide.getSide();
 		isFarReefHalf = closetReefSide.isFar();
 	}
 
-	public static ReefSide getNearestReefSide(Pose2d robotPose) {
+	public static ReefSide getNearestReefSide(Translation2d robotTranslation) {
 		ReefSide[] reefSides = ReefSide.values();
 		ReefSide closetSide = reefSides[0];
 
-		double minDistance = robotPose.getTranslation().getDistance(Field.getReefSideMiddle(closetSide).getTranslation());
+		double minDistance = robotTranslation.getDistance(Field.getReefSideMiddle(closetSide).getTranslation());
 		for (int i = 1; i < reefSides.length; i++) {
-			double distanceFromBranch = robotPose.getTranslation().getDistance(Field.getReefSideMiddle(reefSides[i]).getTranslation());
+			double distanceFromBranch = robotTranslation.getDistance(Field.getReefSideMiddle(reefSides[i]).getTranslation());
 			if (distanceFromBranch < minDistance) {
 				closetSide = reefSides[i];
 				minDistance = distanceFromBranch;

@@ -18,10 +18,10 @@ public enum ArmState {
 	L2(Rotation2d.fromDegrees(-13)),
 	PRE_L3(Rotation2d.fromDegrees(10)),
 	L3(Rotation2d.fromDegrees(10)),
-	PRE_L4(Rotation2d.fromDegrees(55), Rotation2d.fromRotations(1.5), Rotation2d.fromRotations(0.5)),
-	L4(Rotation2d.fromDegrees(-25), Rotation2d.fromRotations(1.5), Rotation2d.fromRotations(0.5)),
+	PRE_L4(Rotation2d.fromDegrees(55), Rotation2d.fromRotations(1.5), Rotation2d.fromRotations(1)),
+	L4(Rotation2d.fromDegrees(-25), Rotation2d.fromRotations(1.5), Rotation2d.fromRotations(1)),
 	LOW_ALGAE_REMOVE(Rotation2d.fromDegrees(-30)),
-	HIGH_ALGAE_REMOVE(Rotation2d.fromDegrees(-30)),
+	HIGH_ALGAE_REMOVE(Rotation2d.fromDegrees(8)),
 	PRE_NET(Rotation2d.fromDegrees(60)),
 	NET(Rotation2d.fromDegrees(45)),
 	PROCESSOR_OUTTAKE(Rotation2d.fromDegrees(180)),
@@ -32,7 +32,7 @@ public enum ArmState {
 	private final Rotation2d maxAccelerationRotation2dPerSecondSquared;
 
 	ArmState(Rotation2d position, Rotation2d maxVelocityRotation2dPerSecond, Rotation2d maxAccelerationRotation2dPerSecondSquared) {
-		this.position = position;
+		this.position = Rotation2d.fromDegrees(position.getDegrees() + 8);
 		this.maxVelocityRotation2dPerSecond = maxVelocityRotation2dPerSecond;
 		this.maxAccelerationRotation2dPerSecondSquared = maxAccelerationRotation2dPerSecondSquared;
 	}

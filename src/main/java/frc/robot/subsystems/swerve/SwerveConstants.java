@@ -41,7 +41,8 @@ public record SwerveConstants(
 		);
 		this.xMetersPIDController.setIntegratorRange(-SwerveConstants.DEADBANDS.getX(), SwerveConstants.DEADBANDS.getX());
 		this.yMetersPIDController.setIntegratorRange(-SwerveConstants.DEADBANDS.getY(), SwerveConstants.DEADBANDS.getY());
-		this.rotationDegreesPIDController.setIntegratorRange(-SwerveConstants.DEADBANDS.getRotation().getDegrees(), SwerveConstants.DEADBANDS.getRotation().getDegrees());
+		this.rotationDegreesPIDController
+			.setIntegratorRange(-SwerveConstants.DEADBANDS.getRotation().getDegrees(), SwerveConstants.DEADBANDS.getRotation().getDegrees());
 
 		this.rotationDegreesPIDController
 			.enableContinuousInput(MathConstants.HALF_CIRCLE.unaryMinus().getDegrees(), MathConstants.HALF_CIRCLE.getDegrees());

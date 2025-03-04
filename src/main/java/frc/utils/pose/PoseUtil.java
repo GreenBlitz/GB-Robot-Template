@@ -27,14 +27,14 @@ public class PoseUtil {
 		boolean isAtY = MathUtil.isNear(targetPose.getY(), currentPose.getY(), tolerances.getY());
 		boolean isAtHeading = ToleranceMath.isNearWrapped(targetPose.getRotation(), currentPose.getRotation(), tolerances.getRotation());
 		boolean isStill = SwerveMath.isStill(currentSpeeds, deadbands);
-		
+
 		if (tolerances.getX() < 0.03) {
 			Logger.recordOutput("Tets/x", isAtX);
 			Logger.recordOutput("Tets/y", isAtY);
 			Logger.recordOutput("Tets/rot", isAtHeading);
 			Logger.recordOutput("Tets/dead", isStill);
 		}
-		
+
 		return isAtX && isAtY && isAtHeading && isStill;
 	}
 

@@ -486,6 +486,11 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
+	public Command elevatorOpening() {
+		return asSubsystemCommand(elevatorStateHandler.setState(ElevatorState.OPENING_HEIGHT), SuperstructureState.ELEVATOR_OPENING)
+			.until(() -> robot.getElevator().isPastPosition(StateMachineConstants.ELEVATOR_POSITION_FOR_OPENING));
+	}
+
 	private Command asSubsystemCommand(Command command, SuperstructureState state) {
 		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
 	}
@@ -499,6 +504,7 @@ public class Superstructure extends GBSubsystem {
 			case PRE_NET, NET_WITHOUT_RELEASE, NET_WITH_RELEASE -> preNet();
 			case PRE_CLIMB -> preClimb();
 			case CLIMB, STOP_CLIMB -> climbStop();
+			case ELEVATOR_OPENING -> elevatorOpening();
 		};
 	}
 

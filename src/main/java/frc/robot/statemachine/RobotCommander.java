@@ -200,7 +200,7 @@ public class RobotCommander extends GBSubsystem {
 			<= StateMachineConstants.DISTANCE_FROM_CORAL_STATION_SLOT_TO_START_AIM_ASSIST_METERS;
 	}
 
-	public boolean isCloseToNet(double distanceOnXAxis, double distanceOnYAxis) {
+	private boolean isCloseToNet(double distanceOnXAxis, double distanceOnYAxis) {
 		boolean isPastX = Field.getAllianceRelative(robot.getPoseEstimator().getEstimatedPose().getTranslation(), true, true).getX()
 			> Field.LENGTH_METERS / 2 - distanceOnXAxis;
 		boolean isPastY = Field.getAllianceRelative(robot.getPoseEstimator().getEstimatedPose().getTranslation(), true, true).getY()

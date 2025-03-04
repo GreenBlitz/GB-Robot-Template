@@ -24,7 +24,9 @@ public record SwerveConstants(
 		double velocityAt12VoltsMetersPerSecond,
 		Rotation2d maxRotationalVelocityPerSecond,
 		PIDConstants translationMetersPIDConstants,
-		PIDConstants rotationDegreesPIDConstants
+		PIDConstants rotationDegreesPIDConstants,
+		PIDConstants PPtranslationMetersPIDConstants,
+		PIDConstants PProtationDegreesPIDConstants
 	) {
 		this(
 			logPath,
@@ -35,8 +37,11 @@ public record SwerveConstants(
 			new PIDController(translationMetersPIDConstants.kP, translationMetersPIDConstants.kI, translationMetersPIDConstants.kD),
 			new PIDController(translationMetersPIDConstants.kP, translationMetersPIDConstants.kI, translationMetersPIDConstants.kD),
 			new PIDController(rotationDegreesPIDConstants.kP, rotationDegreesPIDConstants.kI, rotationDegreesPIDConstants.kD),
-			new PPHolonomicDriveController(translationMetersPIDConstants, rotationDegreesPIDConstants)
+			new PPHolonomicDriveController(PPtranslationMetersPIDConstants, PProtationDegreesPIDConstants)
 		);
+		this.xMetersPIDController.setIntegratorRange(-SwerveConstants.DEADBANDS.getX(), SwerveConstants.DEADBANDS.getX());
+		this.yMetersPIDController.setIntegratorRange(-SwerveConstants.DEADBANDS.getY(), SwerveConstants.DEADBANDS.getY());
+		this.rotationDegreesPIDController.setIntegratorRange(-SwerveConstants.DEADBANDS.getRotation().getDegrees(), SwerveConstants.DEADBANDS.getRotation().getDegrees());
 
 		this.rotationDegreesPIDController
 			.enableContinuousInput(MathConstants.HALF_CIRCLE.unaryMinus().getDegrees(), MathConstants.HALF_CIRCLE.getDegrees());
@@ -46,7 +51,7 @@ public record SwerveConstants(
 
 	public static final double AIM_ASSIST_MAGNITUDE_FACTOR = 4;
 
-	static final Pose2d DEADBANDS = new Pose2d(0.008, 0.008, Rotation2d.fromRadians(0.01));
+	public static final Pose2d DEADBANDS = new Pose2d(0.0092, 0.0092, Rotation2d.fromRadians(0.0115));
 	static final Rotation2d CALIBRATION_MODULE_ANGLE_TOLERANCE = Rotation2d.fromDegrees(3);
 	static final Rotation2d CALIBRATION_MODULE_ANGULAR_VELOCITY_PER_SECOND_DEADBAND = Rotation2d.fromDegrees(3);
 

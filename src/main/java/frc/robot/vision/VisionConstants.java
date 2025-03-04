@@ -109,6 +109,6 @@ public class VisionConstants {
 		LIMELIGHT_FEEDER_CAMERA_ROBOT_POSE
 	);
 
-	public static final List<VisionSource<AprilTagVisionData>> VISION_SOURCES = List.of(LIMELIGHT_LEFT, LIMELIGHT_RIGHT, LIMELIGHT_FEEDER);
+	public static final List<VisionSource<AprilTagVisionData>> VISION_SOURCES = List.of(LIMELIGHT_LEFT, LIMELIGHT_RIGHT);
 
 }

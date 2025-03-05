@@ -5,8 +5,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.constants.field.enums.Branch;
 import frc.robot.Robot;
+import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.utils.auto.AutoPath;
@@ -275,6 +277,22 @@ public class AutosBuilder {
 		);
 		auto.setName("left");
 		return auto;
+	}
+
+	public static PathPlannerAutoWrapper createDefaultAuto(Robot robot) {
+		return new PathPlannerAutoWrapper(
+			new ParallelCommandGroup(
+				robot.getSwerve()
+					.getCommandsBuilder()
+					.drive(() -> new ChassisPowers(AutonomousConstants.DEFAULT_AUTO_DRIVE_POWER, 0, 0))
+					.withTimeout(AutonomousConstants.DEFAULT_AUTO_DRIVE_TIME_SECONDS)
+					.andThen(robot.getSwerve().getCommandsBuilder().resetTargetSpeeds()),
+				robot.getRobotCommander().getSuperstructure().elevatorOpening()
+			),
+			Pose2d.kZero,
+			"DefaultAuto",
+			true
+		);
 	}
 
 }

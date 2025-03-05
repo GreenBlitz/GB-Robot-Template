@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.IDs;
 import frc.robot.Robot;
+import frc.robot.RobotConstants;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.digitalinput.channeled.ChanneledDigitalInput;
 import frc.robot.hardware.digitalinput.chooser.ChooserDigitalInput;
@@ -126,8 +127,8 @@ public class KrakenX60ElevatorBuilder {
 
 	private static ElevatorMotorSignals createSignals(TalonFXMotor motor) {
 		return new ElevatorMotorSignals(
-			Phoenix6SignalBuilder.build(motor.getDevice().getPosition(), 250, AngleUnit.ROTATIONS),
-			Phoenix6SignalBuilder.build(motor.getDevice().getMotorVoltage(), 250)
+			Phoenix6SignalBuilder.build(motor.getDevice().getPosition(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS),
+			Phoenix6SignalBuilder.build(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ)
 		);
 	}
 

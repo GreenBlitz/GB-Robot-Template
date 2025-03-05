@@ -385,18 +385,6 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command preNet() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.WHILE_DRIVE_NET),
-				armStateHandler.setState(ArmState.PRE_NET),
-				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
-				climbStateHandler.setState(ClimbState.STOP)
-			),
-			SuperstructureState.PRE_NET
-		);
-	}
-
 	public Command netWithRelease() {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
@@ -410,7 +398,7 @@ public class Superstructure extends GBSubsystem {
 					)
 				)
 			),
-			SuperstructureState.NET_WITH_RELEASE
+			SuperstructureState.NET
 		);
 	}
 
@@ -481,10 +469,9 @@ public class Superstructure extends GBSubsystem {
 	private Command endState(SuperstructureState state) {
 		return switch (state) {
 			case STAY_IN_PLACE, OUTTAKE -> stayInPlace();
-			case INTAKE, IDLE, ALGAE_REMOVE, ALGAE_OUTTAKE, CLOSE_L4, PROCESSOR_OUTTAKE -> idle();
+			case INTAKE, IDLE, ALGAE_REMOVE, ALGAE_OUTTAKE, CLOSE_L4, PROCESSOR_OUTTAKE, NET -> idle();
 			case ARM_PRE_SCORE, CLOSE_CLIMB -> armPreScore();
 			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> afterScore();
-			case PRE_NET, NET_WITH_RELEASE -> preNet();
 			case PRE_CLIMB -> preClimb();
 			case CLIMB, STOP_CLIMB -> climbStop();
 			case ELEVATOR_OPENING -> elevatorOpening();

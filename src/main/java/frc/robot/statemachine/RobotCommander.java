@@ -208,7 +208,7 @@ public class RobotCommander extends GBSubsystem {
 		return isPastX && isPastY;
 	}
 
-	public boolean isAtTurnToHeadingDistancesFromNet() {
+	public boolean isAtTurnForNetAimAssist() {
 		return isCloseToNet(
 			StateMachineConstants.TURN_TO_HEADING_DISTANCES_FROM_MIDDLE_OF_NET_METERS.getX(),
 			StateMachineConstants.TURN_TO_HEADING_DISTANCES_FROM_MIDDLE_OF_NET_METERS.getY()
@@ -238,7 +238,7 @@ public class RobotCommander extends GBSubsystem {
 			case ALGAE_OUTTAKE -> algaeOuttake();
 			case DRIVE_PRE_NET -> drivePreNet();
 			case PRE_NET -> preNet();
-			case NET -> completeNet();
+			case NET -> net();
 			case PROCESSOR_SCORE -> fullyProcessorScore();
 			case PRE_CLIMB_WITH_AIM_ASSIST -> preClimbWithAimAssist();
 			case PRE_CLIMB_WITHOUT_AIM_ASSIST -> preClimbWithoutAimAssist();
@@ -351,10 +351,10 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	private Command completeNet() {
+	private Command net() {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
-				drivePreNet().until(this::isAtTurnToHeadingDistancesFromNet),
+				drivePreNet().until(this::isAtTurnForNetAimAssist),
 				preNet().until(this::isReadyForNet),
 				scoreNet()
 			),

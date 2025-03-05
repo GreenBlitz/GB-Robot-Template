@@ -22,7 +22,6 @@ import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.pose.PoseUtil;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -87,10 +86,6 @@ public class RobotCommander extends GBSubsystem {
 		ChassisSpeeds reefRelativeSpeeds = SwerveMath
 			.robotToAllianceRelativeSpeeds(allianceRelativeSpeeds, Field.getAllianceRelative(reefAngle.unaryMinus()));
 
-		if (tolerances.getX() == 0.035) {
-			Logger.recordOutput("Test/targte", reefRelativeTargetPose.rotateBy(reefAngle));
-		}
-		
 		return switch (ScoringHelpers.targetScoreLevel) {
 			case L1 -> PoseUtil.isAtPose(reefRelativeRobotPose, reefRelativeTargetPose, reefRelativeSpeeds, l1Tolerances, l1Deadbands);
 			case L2, L3, L4 -> PoseUtil.isAtPose(reefRelativeRobotPose, reefRelativeTargetPose, reefRelativeSpeeds, tolerances, deadbands);
@@ -177,9 +172,8 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public boolean isReadyToScore() {
-		return //superstructure.isReadyToScore()
-			//&&
-				isAtReefScoringPose(
+		return superstructure.isReadyToScore()
+			&& isAtReefScoringPose(
 				StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS,
 				Tolerances.REEF_RELATIVE_L1_SCORING_POSITION,
 				Tolerances.REEF_RELATIVE_L1_SCORING_DEADBANDS,
@@ -248,7 +242,7 @@ public class RobotCommander extends GBSubsystem {
 	public Command autoScore() {
 		Supplier<Command> fullySuperstructureScore = () -> new SequentialCommandGroup(
 			superstructure.armPreScore().until(this::isReadyToOpenSuperstructure),
-			superstructure.preScore().until(superstructure::isPreScoreReady).withTimeout(0),
+			superstructure.preScore().until(superstructure::isPreScoreReady),
 			superstructure.scoreWithoutRelease().until(this::isReadyToScore),
 			superstructure.scoreWithRelease(),
 			new InstantCommand(ScoringHelpers::reset)
@@ -258,7 +252,7 @@ public class RobotCommander extends GBSubsystem {
 			.driveToPath(
 				() -> robot.getPoseEstimator().getEstimatedPose(),
 				ScoringPathsHelper.getPathByBranch(ScoringHelpers.getTargetBranch()),
-					ScoringHelpers
+				ScoringHelpers
 					.getRobotBranchScoringPose(ScoringHelpers.getTargetBranch(), StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
 			);
 

@@ -28,13 +28,6 @@ public class PoseUtil {
 		boolean isAtHeading = ToleranceMath.isNearWrapped(targetPose.getRotation(), currentPose.getRotation(), tolerances.getRotation());
 		boolean isStill = SwerveMath.isStill(currentSpeeds, deadbands);
 
-		if (tolerances.getY() == 1.5) {
-			Logger.recordOutput("Tets/x", isAtX);
-			Logger.recordOutput("Tets/y", isAtY);
-			Logger.recordOutput("Tets/rot", isAtHeading);
-			Logger.recordOutput("Tets/dead", isStill);
-		}
-
 		return isAtX && isAtY && isAtHeading && isStill;
 	}
 

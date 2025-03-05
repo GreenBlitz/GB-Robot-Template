@@ -22,7 +22,7 @@ public enum ElevatorState {
 	NET(1.18),
 	PROCESSOR_OUTTAKE(0.02),
 	OPENING_HEIGHT(0.4),
-	CLIMB(0);
+	CLIMB(0.02);
 
 	private final double heightMeters;
 	private final double maxVelocityMetersPerSecond;

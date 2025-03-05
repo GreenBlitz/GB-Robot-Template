@@ -353,11 +353,7 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command net() {
 		return asSubsystemCommand(
-			new SequentialCommandGroup(
-				drivePreNet().until(this::isAtTurnForNetAimAssist),
-				preNet().until(this::isReadyForNet),
-				scoreNet()
-			),
+			new SequentialCommandGroup(drivePreNet().until(this::isAtTurnForNetAimAssist), preNet().until(this::isReadyForNet), scoreNet()),
 			RobotState.NET
 		);
 	}

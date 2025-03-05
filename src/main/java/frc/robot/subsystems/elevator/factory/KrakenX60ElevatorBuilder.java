@@ -61,7 +61,7 @@ public class KrakenX60ElevatorBuilder {
 			CONFIG_RAMP_RATE,
 			CONFIG_STEP_VOLTAGE,
 			CONFIG_TIMEOUT,
-			state -> SignalLogger.writeString(name + "/state", state.toString())
+			state -> SignalLogger.writeString("Elevator/" + name + "/state", state.toString())
 		);
 	}
 
@@ -163,7 +163,7 @@ public class KrakenX60ElevatorBuilder {
 	}
 
 	public static Elevator createSimulationElevator(String logPath) {
-		TalonFXMotor rightMotor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_RIGHT, generateSysidConfig("elevator"), generateSimulation());
+		TalonFXMotor rightMotor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_RIGHT, generateSysidConfig(""), generateSimulation());
 		rightMotor.applyConfiguration(generateConfiguration(IS_FIRST_MOTOR_INVERTED));
 
 		return create(logPath, rightMotor, rightMotor);

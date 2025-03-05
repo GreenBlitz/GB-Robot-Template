@@ -21,9 +21,9 @@ public enum ArmState {
 	PRE_L4(Rotation2d.fromDegrees(55)),
 	L4(Rotation2d.fromDegrees(-25)),
 	LOW_ALGAE_REMOVE(Rotation2d.fromDegrees(-30)),
-	HIGH_ALGAE_REMOVE(Rotation2d.fromDegrees(-30)),
-	PRE_NET(Rotation2d.fromDegrees(60)),
-	NET(Rotation2d.fromDegrees(45)),
+	HIGH_ALGAE_REMOVE(Rotation2d.fromDegrees(9)),
+	PRE_NET(Rotation2d.fromDegrees(165)),
+	NET(Rotation2d.fromDegrees(10), Rotation2d.fromRotations(5), Rotation2d.fromRotations(5)),
 	PROCESSOR_OUTTAKE(Rotation2d.fromDegrees(180)),
 	CLIMB(Rotation2d.fromDegrees(-11));
 

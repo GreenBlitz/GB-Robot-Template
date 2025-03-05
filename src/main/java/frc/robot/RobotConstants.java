@@ -7,8 +7,8 @@ public class RobotConstants {
 
 	public static final String SUBSYSTEM_LOGPATH_PREFIX = "Subsystems";
 
-	public static final double MASS_KILOGRAM = 52;
+	public static final double MASS_KILOGRAM = 60;
 
-	public static final double MOMENT_OF_INERTIA_KILOGRAM_METERS_SQUARED = 4.6875;
+	public static final double MOMENT_OF_INERTIA_KILOGRAM_METERS_SQUARED = 30;
 
 }

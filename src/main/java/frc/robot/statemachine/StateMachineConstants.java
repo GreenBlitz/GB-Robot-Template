@@ -14,7 +14,7 @@ public class StateMachineConstants {
 
 	// Field relative
 	public static final Translation2d CLOSE_SUPERSTRUCTURE_LENGTH_AND_WIDTH = new Translation2d(0.6, 1.03);
-	public static final Translation2d TURN_TO_HEADING_DISTANCES_FROM_MIDDLE_OF_NET_METERS = new Translation2d(3, 1.5);
+	public static final Translation2d TURN_TO_HEADING_DISTANCES_FROM_MIDDLE_OF_NET_METERS = new Translation2d(5, 1.5);
 	public static final Translation2d SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES = new Translation2d(3, -0.7);
 
 	public static final double SCORE_OUTTAKE_TIME_AFTER_BEAM_BREAK_SECONDS = 0;

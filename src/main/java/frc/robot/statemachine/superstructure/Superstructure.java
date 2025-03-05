@@ -440,7 +440,7 @@ public class Superstructure extends GBSubsystem {
 						.until(() -> !robot.getArm().isPastPosition(StateMachineConstants.ARM_POSITION_TO_DEPLOY_LIFTER)),
 					new ParallelCommandGroup(climbStateHandler.setState(ClimbState.DEPLOY), armStateHandler.setState(ArmState.CLIMB))
 				),
-				elevatorStateHandler.setState(ElevatorState.CLOSED),
+				elevatorStateHandler.setState(ElevatorState.CLIMB),
 				endEffectorStateHandler.setState(EndEffectorState.STOP)
 			),
 			SuperstructureState.PRE_CLIMB
@@ -450,7 +450,7 @@ public class Superstructure extends GBSubsystem {
 	public Command climb() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.CLOSED),
+				elevatorStateHandler.setState(ElevatorState.CLIMB),
 				armStateHandler.setState(ArmState.CLIMB),
 				endEffectorStateHandler.setState(EndEffectorState.STOP),
 				climbStateHandler.setState(ClimbState.CLIMB)

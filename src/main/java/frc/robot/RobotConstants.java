@@ -8,8 +8,6 @@ public class RobotConstants {
 
 	public static final double MASS_KILOGRAM = 52;
 
-	public static final int NUMBER_OF_LEDS = 1000;
-
 
 	public static final double MOMENT_OF_INERTIA_KILOGRAM_METERS_SQUARED = 4.6875;
 

@@ -9,7 +9,7 @@ import frc.robot.subsystems.GBSubsystem;
 
 public class LEDStateHandler extends GBSubsystem {
 
-	public CANdle candle;
+	private final CANdle candle;
 
 	public LEDStateHandler(String logPath, CANdle candle) {
 		super(logPath);

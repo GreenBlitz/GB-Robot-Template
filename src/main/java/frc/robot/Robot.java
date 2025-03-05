@@ -14,6 +14,7 @@ import frc.RobotManager;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.AutosBuilder;
 import frc.robot.hardware.phoenix6.leds.CANdleWrapper;
+import frc.robot.led.LEDConstants;
 import frc.robot.led.LEDStateHandler;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
 import frc.robot.scoringhelpers.ButtonDriverHelper;
@@ -158,7 +159,7 @@ public class Robot {
 		this.simulationManager = new SimulationManager("SimulationManager", this);
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
 
-		this.caNdleWrapper = new CANdleWrapper(IDs.CANDleIDs.CANDLE, RobotConstants.NUMBER_OF_LEDS, "candle");
+		this.caNdleWrapper = new CANdleWrapper(IDs.CANDleIDs.CANDLE, LEDConstants.NUMBER_OF_LEDS, "candle");
 		this.ledStateHandler = new LEDStateHandler("CANdle", caNdleWrapper);
 		configureAuto();
 	}

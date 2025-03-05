@@ -25,8 +25,8 @@ public record SwerveConstants(
 		Rotation2d maxRotationalVelocityPerSecond,
 		PIDConstants translationMetersPIDConstants,
 		PIDConstants rotationDegreesPIDConstants,
-		PIDConstants PPtranslationMetersPIDConstants,
-		PIDConstants PProtationDegreesPIDConstants
+		PIDConstants PPTranslationMetersPIDConstants,
+		PIDConstants PPRotationDegreesPIDConstants
 	) {
 		this(
 			logPath,
@@ -37,7 +37,7 @@ public record SwerveConstants(
 			new PIDController(translationMetersPIDConstants.kP, translationMetersPIDConstants.kI, translationMetersPIDConstants.kD),
 			new PIDController(translationMetersPIDConstants.kP, translationMetersPIDConstants.kI, translationMetersPIDConstants.kD),
 			new PIDController(rotationDegreesPIDConstants.kP, rotationDegreesPIDConstants.kI, rotationDegreesPIDConstants.kD),
-			new PPHolonomicDriveController(PPtranslationMetersPIDConstants, PProtationDegreesPIDConstants)
+			new PPHolonomicDriveController(PPTranslationMetersPIDConstants, PPRotationDegreesPIDConstants)
 		);
 		this.xMetersPIDController.setIntegratorRange(-SwerveConstants.DEADBANDS.getX(), SwerveConstants.DEADBANDS.getX());
 		this.yMetersPIDController.setIntegratorRange(-SwerveConstants.DEADBANDS.getY(), SwerveConstants.DEADBANDS.getY());

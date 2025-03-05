@@ -16,7 +16,6 @@ import frc.robot.vision.data.VisionData;
 import frc.utils.alerts.Alert;
 import frc.utils.math.AngleUnit;
 import frc.utils.math.ToleranceMath;
-import org.littletonrobotics.junction.Logger;
 
 public class PoseUtil {
 
@@ -27,13 +26,6 @@ public class PoseUtil {
 		boolean isAtY = MathUtil.isNear(targetPose.getY(), currentPose.getY(), tolerances.getY());
 		boolean isAtHeading = ToleranceMath.isNearWrapped(targetPose.getRotation(), currentPose.getRotation(), tolerances.getRotation());
 		boolean isStill = SwerveMath.isStill(currentSpeeds, deadbands);
-
-		if (tolerances.getY() == 1.5) {
-			Logger.recordOutput("Tets/x", isAtX);
-			Logger.recordOutput("Tets/y", isAtY);
-			Logger.recordOutput("Tets/rot", isAtHeading);
-			Logger.recordOutput("Tets/dead", isStill);
-		}
 
 		return isAtX && isAtY && isAtHeading && isStill;
 	}

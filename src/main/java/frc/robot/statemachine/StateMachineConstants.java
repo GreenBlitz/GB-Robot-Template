@@ -6,8 +6,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 public class StateMachineConstants {
 
 	public static final double ROBOT_SCORING_DISTANCE_FROM_REEF_METERS = 0.52;
-	public static final double OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS = 1;
-	public static final double DISTANCE_TO_BRANCH_FOR_STARTING_PATH = 0.7;
+	public static final double OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS = 0.8;
+	public static final double DISTANCE_TO_BRANCH_FOR_STARTING_PATH = 0.75;
 	public static final double OPEN_SUPERSTRUCTURE_DISTANCE_FROM_NET_METERS = 2.4;
 	public static final double SCORE_DISTANCE_FROM_NET_METERS = 2.1;
 	public static final double POWER_FOR_MANUAL_CLIMB = -0.5;
@@ -29,8 +29,8 @@ public class StateMachineConstants {
 	public static final double ELEVATOR_POSITION_TO_CLOSE_ARM = 0.4;
 
 	public static final double MAX_VELOCITY_WHILE_ELEVATOR_L4_METERS_PER_SECOND = 0.75;
-	public static final double MAX_ACCELERATION_WHILE_ELEVATOR_L4_METERS_PER_SECOND_SQUARED = 0.5;
-	public static final Rotation2d MAX_VELOCITY_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND = Rotation2d.fromRadians(2);
-	public static final Rotation2d MAX_ACCELERATION_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND_SQUARED = Rotation2d.fromRadians(1);
+	public static final double MAX_ACCELERATION_WHILE_ELEVATOR_L4_METERS_PER_SECOND_SQUARED = 1.25;
+	public static final Rotation2d MAX_VELOCITY_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND = Rotation2d.fromRadians(4);
+	public static final Rotation2d MAX_ACCELERATION_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND_SQUARED = Rotation2d.fromRadians(3);
 
 }

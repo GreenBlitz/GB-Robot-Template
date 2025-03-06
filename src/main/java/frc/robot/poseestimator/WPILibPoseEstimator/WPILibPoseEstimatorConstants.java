@@ -33,7 +33,7 @@ public class WPILibPoseEstimatorConstants {
 
 	public static final double VISION_ROTATION_STANDARD_DEVIATION_FACTOR = 0.05;
 
-	public static final double MINIMUM_STANDARD_DEVIATION = 0.001;
+	public static final double MINIMUM_STANDARD_DEVIATION = 0.02;
 
 	public static final Function<AprilTagVisionData, StandardDeviations2D> VISION_STANDARD_DEVIATIONS_TRANSFORM = aprilTagVisionData ->
 		new StandardDeviations2D(

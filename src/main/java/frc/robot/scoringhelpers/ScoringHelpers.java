@@ -19,7 +19,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class ScoringHelpers {
 
-	public static final Translation2d END_EFFECTOR_OFFSET_FROM_MID_ROBOT = new Translation2d(0, 0.014);
+	public static final Translation2d END_EFFECTOR_OFFSET_FROM_MID_ROBOT = new Translation2d(0, -0.025);
 	public static final Rotation2d HEADING_FOR_NET = Rotation2d.fromDegrees(0);
 	public static final Rotation2d HEADING_FOR_CAGE = Rotation2d.fromDegrees(180);
 	private static final double TIME_FOR_POSE_MOVEMENT_SECONDS = 0.3;
@@ -197,12 +197,6 @@ public class ScoringHelpers {
 			}
 		}
 		return cages[closestSlotIndex];
-	}
-
-	public static void reset() {
-		isFarReefHalf = false;
-		isLeftBranch = false;
-		targetSideForReef = Side.MIDDLE;
 	}
 
 }

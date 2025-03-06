@@ -22,6 +22,7 @@ import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.pose.PoseUtil;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -156,6 +157,11 @@ public class RobotCommander extends GBSubsystem {
 			);
 	}
 
+	@Override
+	protected void subsystemPeriodic() {
+		Logger.recordOutput(getLogPath() + "/isReadyC", isReadyToCloseSuperstructure());
+	}
+
 	/**
 	 * Checks if the robot is out of the safe zone to close the superstructure
 	 */
@@ -244,8 +250,7 @@ public class RobotCommander extends GBSubsystem {
 			superstructure.armPreScore().until(this::isReadyToOpenSuperstructure),
 			superstructure.preScore().until(superstructure::isPreScoreReady),
 			superstructure.scoreWithoutRelease().until(this::isReadyToScore),
-			superstructure.scoreWithRelease(),
-			new InstantCommand(ScoringHelpers::reset)
+			superstructure.scoreWithRelease()
 		);
 
 		Supplier<Command> driveToPath = () -> swerve.getCommandsBuilder()

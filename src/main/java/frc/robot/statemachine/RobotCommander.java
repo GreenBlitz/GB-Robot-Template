@@ -244,8 +244,7 @@ public class RobotCommander extends GBSubsystem {
 			superstructure.armPreScore().until(this::isReadyToOpenSuperstructure),
 			superstructure.preScore().until(superstructure::isPreScoreReady),
 			superstructure.scoreWithoutRelease().until(this::isReadyToScore),
-			superstructure.scoreWithRelease(),
-			new InstantCommand(ScoringHelpers::reset)
+			superstructure.scoreWithRelease()
 		);
 
 		Supplier<Command> driveToPath = () -> swerve.getCommandsBuilder()

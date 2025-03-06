@@ -4,7 +4,7 @@ package frc.robot.subsystems.elevator;
 public enum ElevatorState {
 
 	STAY_IN_PLACE(Double.NaN),
-	CLOSED(0.02, 4, 4),
+	CLOSED(0.12, 4, 4),
 	INTAKE(0.12),
 	ALGAE_OUTTAKE(0.02),
 	PRE_L1(0),

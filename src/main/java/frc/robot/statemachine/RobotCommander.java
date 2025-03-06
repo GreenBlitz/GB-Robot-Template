@@ -57,6 +57,10 @@ public class RobotCommander extends GBSubsystem {
 		return superstructure;
 	}
 
+	public LEDStateHandler getLedStateHandler() {
+		return ledStateHandler;
+	}
+
 	public void initializeDefaultCommand() {
 		setDefaultCommand(
 			new DeferredCommand(
@@ -252,13 +256,13 @@ public class RobotCommander extends GBSubsystem {
 
 	public Command autoScore() {
 		Supplier<Command> fullySuperstructureScore = () -> new SequentialCommandGroup(
-			robot.getLedStateHandler().setState(LEDState.START_AIM_ASSIST),
+			getLedStateHandler().setState(LEDState.START_AIM_ASSIST),
 			superstructure.armPreScore().until(this::isReadyToOpenSuperstructure),
-			robot.getLedStateHandler().setState(LEDState.IS_IN_POSITION_TO_OPEN_ELEVATOR),
+			getLedStateHandler().setState(LEDState.IS_IN_POSITION_TO_OPEN_ELEVATOR),
 			superstructure.preScore().until(superstructure::isPreScoreReady),
-			robot.getLedStateHandler().setState(LEDState.SUPERSTRUCTURE_IN_POSITION),
+			getLedStateHandler().setState(LEDState.SUPERSTRUCTURE_IN_POSITION),
 			superstructure.scoreWithoutRelease().until(this::isReadyToScore),
-			robot.getLedStateHandler().setState(LEDState.IN_POSITION_TO_SCORE),
+			getLedStateHandler().setState(LEDState.IN_POSITION_TO_SCORE),
 			superstructure.scoreWithRelease(),
 			new InstantCommand(ScoringHelpers::reset)
 		);
@@ -598,11 +602,4 @@ public class RobotCommander extends GBSubsystem {
 		};
 	}
 
-	public CANdleWrapper getCaNdleWrapper() {
-		return caNdleWrapper;
-	}
-
-	public LEDStateHandler getLedStateHandler() {
-		return ledStateHandler;
-	}
 }

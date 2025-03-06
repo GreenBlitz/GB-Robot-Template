@@ -45,8 +45,6 @@ public class RobotManager extends LoggedRobot {
 		if (!DriverStationUtil.isMatch()) {
 			BrakeStateManager.coast();
 		}
-
-		robot.getLedStateHandler().setState(LEDState.DISABLE).schedule();
 	}
 
 	@Override
@@ -70,7 +68,6 @@ public class RobotManager extends LoggedRobot {
 			auto.cancel();
 		}
 		robot.getRobotCommander().initializeDefaultCommand();
-		robot.getLedStateHandler().setState(LEDState.IDLE).schedule();
 	}
 
 	@Override

@@ -124,6 +124,13 @@ public class Superstructure extends GBSubsystem {
 			&& armStateHandler.getCurrentState() == ArmState.ALGAE_OUTTAKE;
 	}
 
+	public boolean isReadyToProcessor() {
+		return robot.getElevator().isAtPosition(ElevatorState.PROCESSOR_OUTTAKE.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
+			&& elevatorStateHandler.getCurrentState() == ElevatorState.PROCESSOR_OUTTAKE
+			&& robot.getArm().isAtPosition(ArmState.PROCESSOR_OUTTAKE.getPosition(), Tolerances.ALGAE_RELEASE_ARM_POSITION)
+			&& armStateHandler.getCurrentState() == ArmState.PROCESSOR_OUTTAKE;
+	}
+
 	public boolean isReadyForNet() {
 		return robot.getElevator().isAtPosition(ElevatorState.NET.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
 			&& elevatorStateHandler.getCurrentState() == ElevatorState.NET
@@ -351,7 +358,7 @@ public class Superstructure extends GBSubsystem {
 					armStateHandler.setState(ArmState.PROCESSOR_OUTTAKE),
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 					climbStateHandler.setState(ClimbState.STOP)
-				).until(this::isReadyToOuttakeAlgae),
+				).until(this::isReadyToProcessor),
 				new ParallelCommandGroup(
 					elevatorStateHandler.setState(ElevatorState.PROCESSOR_OUTTAKE),
 					armStateHandler.setState(ArmState.PROCESSOR_OUTTAKE),

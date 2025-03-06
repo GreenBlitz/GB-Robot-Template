@@ -199,10 +199,4 @@ public class ScoringHelpers {
 		return cages[closestSlotIndex];
 	}
 
-	public static void reset() {
-		isFarReefHalf = false;
-		isLeftBranch = false;
-		targetSideForReef = Side.MIDDLE;
-	}
-
 }

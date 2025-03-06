@@ -157,11 +157,6 @@ public class RobotCommander extends GBSubsystem {
 			);
 	}
 
-	@Override
-	protected void subsystemPeriodic() {
-		Logger.recordOutput(getLogPath() + "/isReadyC", isReadyToCloseSuperstructure());
-	}
-
 	/**
 	 * Checks if the robot is out of the safe zone to close the superstructure
 	 */

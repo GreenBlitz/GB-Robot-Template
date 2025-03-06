@@ -189,12 +189,12 @@ public class SwerveStateHandler {
 	}
 
 	private ChassisSpeeds handleNetAimAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading) {
-		Rotation2d headingToNet = Field.getAllianceRelative(ScoringHelpers.HEADING_FOR_NET);
+		Rotation2d headingToNet = ScoringHelpers.getHeadingForNet();
 		return AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotHeading, headingToNet, swerveConstants);
 	}
 
 	private ChassisSpeeds handleAngleCageAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading) {
-		Rotation2d headingToCage = Field.getAllianceRelative(ScoringHelpers.HEADING_FOR_CAGE);
+		Rotation2d headingToCage = ScoringHelpers.getHeadingForCage();
 		return AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotHeading, headingToCage, swerveConstants);
 	}
 

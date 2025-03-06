@@ -208,18 +208,11 @@ public class RobotCommander extends GBSubsystem {
 		return isPastX && isPastY;
 	}
 
-	public boolean isAtTurnForNetAimAssist() {
-		return isCloseToNet(
-			StateMachineConstants.TURN_TO_HEADING_DISTANCES_FROM_MIDDLE_OF_NET_METERS.getX(),
-			StateMachineConstants.TURN_TO_HEADING_DISTANCES_FROM_MIDDLE_OF_NET_METERS.getY()
-		);
-	}
-
 	public boolean isReadyForNet() {
 		return isCloseToNet(
 			StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES.getX(),
 			StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES.getY()
-		) && swerve.isAtHeading(ScoringHelpers.HEADING_FOR_NET, Tolerances.HEADING_FOR_NET, Tolerances.HEADING_FOR_NET_DEADBAND);
+		) && swerve.isAtHeading(ScoringHelpers.getHeadingForNet(), Tolerances.HEADING_FOR_NET, Tolerances.HEADING_FOR_NET_DEADBAND);
 	}
 
 	public Command setState(RobotState state) {
@@ -236,7 +229,6 @@ public class RobotCommander extends GBSubsystem {
 			case SCORE -> score();
 			case ALGAE_REMOVE -> algaeRemove();
 			case ALGAE_OUTTAKE -> algaeOuttake();
-			case DRIVE_PRE_NET -> drivePreNet();
 			case PRE_NET -> preNet();
 			case NET -> net();
 			case PROCESSOR_SCORE -> fullyProcessorScore();
@@ -350,11 +342,8 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	private Command net() {
-		return asSubsystemCommand(
-			new SequentialCommandGroup(drivePreNet().until(this::isAtTurnForNetAimAssist), preNet().until(this::isReadyForNet), scoreNet()),
-			RobotState.NET
-		);
+	public Command fullyNet() {
+		return asSubsystemCommand(new SequentialCommandGroup(preNet().until(this::isReadyForNet), net()), RobotState.NET);
 	}
 
 	private Command drive() {
@@ -470,13 +459,6 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	private Command drivePreNet() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE), superstructure.idle()),
-			RobotState.DRIVE_PRE_NET
-		);
-	}
-
 	private Command preNet() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
@@ -487,7 +469,7 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	private Command scoreNet() {
+	private Command net() {
 		return asSubsystemCommand(
 			new ParallelDeadlineGroup(
 				superstructure.netWithRelease(),
@@ -575,7 +557,6 @@ public class RobotCommander extends GBSubsystem {
 				ALGAE_REMOVE,
 				ALGAE_OUTTAKE,
 				PROCESSOR_SCORE,
-				DRIVE_PRE_NET,
 				PRE_NET,
 				NET ->
 				drive();

@@ -14,7 +14,7 @@ public enum EndEffectorState {
 	PROCESSOR_OUTTAKE(0.5);
 
 	public static final double CORAL_KEEP_POWER = 0.02;
-	public static final double ALGAE_KEEP_POWER = -0.04;
+	public static final double ALGAE_KEEP_POWER = -0.02;
 
 	private final double power;
 

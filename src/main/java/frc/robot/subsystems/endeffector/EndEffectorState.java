@@ -10,7 +10,7 @@ public enum EndEffectorState {
 	CORAL_OUTTAKE(-0.1),
 	DEFAULT(Double.NaN),
 	ALGAE_OUTTAKE(0.7),
-	NET_OUTTAKE(0.5),
+	NET_OUTTAKE(0.9),
 	PROCESSOR_OUTTAKE(0.5);
 
 	public static final double CORAL_KEEP_POWER = 0.02;

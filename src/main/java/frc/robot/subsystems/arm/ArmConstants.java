@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public class ArmConstants {
 
-	public static final Rotation2d POSITION_OFFSET = Rotation2d.fromDegrees(8);
+	public static final Rotation2d POSITION_OFFSET = Rotation2d.fromDegrees(6 + 20);
 
 	public static final Rotation2d FORWARD_SOFTWARE_LIMIT = Rotation2d.fromDegrees(205 + POSITION_OFFSET.getDegrees());
 	public static final Rotation2d MAXIMUM_POSITION = Rotation2d.fromDegrees(220 + POSITION_OFFSET.getDegrees());

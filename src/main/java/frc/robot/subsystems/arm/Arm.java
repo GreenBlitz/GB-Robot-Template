@@ -150,6 +150,10 @@ public class Arm extends GBSubsystem {
 		return motorPositionSignal.isGreater(position);
 	}
 
+	public boolean isBehindPosition(Rotation2d position) {
+		return motorPositionSignal.isLess(position);
+	}
+
 	public void applyCalibrationBindings(SmartJoystick joystick) {
 		// Calibrate kG using phoenix tuner by setting the voltage
 

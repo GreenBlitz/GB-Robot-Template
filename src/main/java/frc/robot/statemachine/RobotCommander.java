@@ -200,17 +200,19 @@ public class RobotCommander extends GBSubsystem {
 			<= StateMachineConstants.DISTANCE_FROM_CORAL_STATION_SLOT_TO_START_AIM_ASSIST_METERS;
 	}
 
-	public boolean isCloseToNet(double distance) {
-		double distanceFromMidXAxis = Math.abs(robot.getPoseEstimator().getEstimatedPose().getTranslation().getX() - Field.LENGTH_METERS / 2);
-		return distanceFromMidXAxis < distance;
-	}
-
-	public boolean isAtOpenSuperstructureDistanceFromNet() {
-		return isCloseToNet(StateMachineConstants.OPEN_SUPERSTRUCTURE_DISTANCE_FROM_NET_METERS);
+	private boolean isCloseToNet(double distanceOnXAxis, double distanceOnYAxis) {
+		boolean isPastX = Field.getAllianceRelative(robot.getPoseEstimator().getEstimatedPose().getTranslation(), true, true).getX()
+			> Field.LENGTH_METERS / 2 - distanceOnXAxis;
+		boolean isPastY = Field.getAllianceRelative(robot.getPoseEstimator().getEstimatedPose().getTranslation(), true, true).getY()
+			> Field.WIDTH_METERS / 2 - distanceOnYAxis;
+		return isPastX && isPastY;
 	}
 
 	public boolean isReadyForNet() {
-		return isCloseToNet(StateMachineConstants.SCORE_DISTANCE_FROM_NET_METERS) && superstructure.isReadyForNet();
+		return isCloseToNet(
+			StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES.getX(),
+			StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES.getY()
+		) && swerve.isAtHeading(ScoringHelpers.getHeadingForNet(), Tolerances.HEADING_FOR_NET, Tolerances.HEADING_FOR_NET_DEADBAND);
 	}
 
 	public Command setState(RobotState state) {
@@ -228,8 +230,7 @@ public class RobotCommander extends GBSubsystem {
 			case ALGAE_REMOVE -> algaeRemove();
 			case ALGAE_OUTTAKE -> algaeOuttake();
 			case PRE_NET -> preNet();
-			case NET_WITHOUT_RELEASE -> netWithoutRelease();
-			case NET_WITH_RELEASE -> netWithRelease();
+			case NET -> net();
 			case PROCESSOR_SCORE -> fullyProcessorScore();
 			case PRE_CLIMB_WITH_AIM_ASSIST -> preClimbWithAimAssist();
 			case PRE_CLIMB_WITHOUT_AIM_ASSIST -> preClimbWithoutAimAssist();
@@ -341,12 +342,8 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	public Command fullyPreNet() {
-		return new SequentialCommandGroup(preNet().until(this::isAtOpenSuperstructureDistanceFromNet), netWithoutRelease());
-	}
-
 	public Command fullyNet() {
-		return new SequentialCommandGroup(fullyPreNet().until(this::isReadyForNet), netWithRelease());
+		return asSubsystemCommand(new SequentialCommandGroup(preNet().until(this::isReadyForNet), net()), RobotState.NET);
 	}
 
 	private Command drive() {
@@ -464,40 +461,21 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command preNet() {
 		return asSubsystemCommand(
-			new SequentialCommandGroup(
-				new ParallelCommandGroup(
-					superstructure.idle(),
-					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
-				).until(
-					() -> robot.getSwerve()
-						.isAtHeading(ScoringHelpers.HEADING_FOR_NET, Tolerances.HEADING_FOR_NET, Tolerances.HEADING_FOR_NET_DEADBAND)
-				),
-				new ParallelCommandGroup(
-					superstructure.preNet(),
-					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
-				)
+			new ParallelCommandGroup(
+				superstructure.idle(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
 			),
 			RobotState.PRE_NET
 		);
 	}
 
-	private Command netWithoutRelease() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				superstructure.netWithoutRelease(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
-			),
-			RobotState.NET_WITHOUT_RELEASE
-		);
-	}
-
-	private Command netWithRelease() {
+	private Command net() {
 		return asSubsystemCommand(
 			new ParallelDeadlineGroup(
 				superstructure.netWithRelease(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
 			),
-			RobotState.NET_WITH_RELEASE
+			RobotState.NET
 		);
 	}
 
@@ -568,11 +546,20 @@ public class RobotCommander extends GBSubsystem {
 	private Command endState(RobotState state) {
 		return switch (state) {
 			case STAY_IN_PLACE, CORAL_OUTTAKE -> stayInPlace();
-			case INTAKE_WITH_AIM_ASSIST, INTAKE_WITHOUT_AIM_ASSIST, DRIVE, ALIGN_REEF, ALGAE_REMOVE, ALGAE_OUTTAKE, PROCESSOR_SCORE -> drive();
+			case
+				INTAKE_WITH_AIM_ASSIST,
+				INTAKE_WITHOUT_AIM_ASSIST,
+				DRIVE,
+				ALIGN_REEF,
+				ALGAE_REMOVE,
+				ALGAE_OUTTAKE,
+				PROCESSOR_SCORE,
+				PRE_NET,
+				NET ->
+				drive();
 			case ARM_PRE_SCORE, CLOSE_CLIMB -> armPreScore();
 			case PRE_SCORE -> preScore();
 			case SCORE, SCORE_WITHOUT_RELEASE -> closeAfterScore();
-			case PRE_NET, NET_WITHOUT_RELEASE, NET_WITH_RELEASE -> preNet();
 			case PRE_CLIMB_WITH_AIM_ASSIST -> preClimbWithAimAssist();
 			case PRE_CLIMB_WITHOUT_AIM_ASSIST -> preClimbWithoutAimAssist();
 			case CLIMB, STOP_CLIMB -> stopClimb();

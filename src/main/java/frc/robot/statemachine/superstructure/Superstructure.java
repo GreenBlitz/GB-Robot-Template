@@ -179,8 +179,8 @@ public class Superstructure extends GBSubsystem {
 	public Command intake() {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
-				robot.getRobotCommander().getLedStateHandler().setState(LEDState.INTAKE),
 				new ParallelCommandGroup(
+					robot.getRobotCommander().getLedStateHandler().setState(LEDState.INTAKE),
 					elevatorStateHandler.setState(ElevatorState.INTAKE),
 					armStateHandler.setState(ArmState.INTAKE),
 					endEffectorStateHandler.setState(EndEffectorState.CORAL_INTAKE),

@@ -7,9 +7,6 @@ import frc.robot.statemachine.superstructure.Superstructure;
 
 public class EndEffectorStateHandler {
 
-	private static final double CORAL_KEEP_POWER = 0.1;
-	private static final double ALGAE_KEEP_POWER = -0.6;
-
 	private final EndEffector endEffector;
 	private final Superstructure superstructure;
 	private EndEffectorState currentState;
@@ -34,7 +31,7 @@ public class EndEffectorStateHandler {
 	}
 
 	private double defaultStatePower() {
-		return superstructure.isCoralIn() ? CORAL_KEEP_POWER : ALGAE_KEEP_POWER;
+		return superstructure.isCoralIn() ? EndEffectorState.CORAL_KEEP_POWER : EndEffectorState.ALGAE_KEEP_POWER;
 	}
 
 

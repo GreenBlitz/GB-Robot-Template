@@ -292,6 +292,7 @@ public class RobotCommander extends GBSubsystem {
 
 	public Command autoScoreForAutonomous() {
 		Supplier<Command> fullySuperstructureScore = () -> new SequentialCommandGroup(
+			superstructure.elevatorOpening(),
 			superstructure.closeClimb(),
 			superstructure.armPreScore().until(this::isReadyToOpenSuperstructure),
 			superstructure.preScore().until(superstructure::isPreScoreReady),

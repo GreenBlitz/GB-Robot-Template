@@ -185,7 +185,7 @@ public class Superstructure extends GBSubsystem {
 					endEffectorStateHandler.setState(EndEffectorState.CORAL_INTAKE),
 					climbStateHandler.setState(ClimbState.STOP)
 				).withTimeout(StateMachineConstants.INTAKE_TIME_AFTER_BEAM_BREAK_SECONDS)
-			).andThen(robot.getRobotCommander().getLedStateHandler().setState(LEDState.HAS_CORAL).asProxy().onlyIf(this::isCoralIn)),
+			),
 			SuperstructureState.INTAKE
 		);
 	}

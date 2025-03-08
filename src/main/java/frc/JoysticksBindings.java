@@ -43,6 +43,7 @@ public class JoysticksBindings {
 
 		Trigger noteIn = new Trigger(robot.getRobotCommander().getSuperstructure()::isCoralIn);
 		noteIn.onTrue(noteInRumble(MAIN_JOYSTICK).alongWith(noteInRumble(SECOND_JOYSTICK)));
+		noteIn.onTrue(robot.getRobotCommander().getLedStateHandler().setState(LEDState.HAS_CORAL).withTimeout(1).onlyIf(robot.getRobotCommander().getSuperstructure()::isCoralIn));
 
 		Trigger noteOut = new Trigger(() -> !robot.getRobotCommander().getSuperstructure().isCoralIn());
 		noteOut.onTrue(noteInRumble(MAIN_JOYSTICK).alongWith(noteInRumble(SECOND_JOYSTICK)));

@@ -16,7 +16,6 @@ import frc.robot.IDs;
 import frc.robot.Robot;
 import frc.robot.hardware.phoenix6.leds.CANdleWrapper;
 import frc.robot.led.LEDConstants;
-import frc.robot.led.LEDState;
 import frc.robot.led.LEDStateHandler;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.scoringhelpers.ScoringPathsHelper;
@@ -256,13 +255,9 @@ public class RobotCommander extends GBSubsystem {
 
 	public Command autoScore() {
 		Supplier<Command> fullySuperstructureScore = () -> new SequentialCommandGroup(
-			getLedStateHandler().setState(LEDState.START_AIM_ASSIST),
 			superstructure.armPreScore().until(this::isReadyToOpenSuperstructure),
-			getLedStateHandler().setState(LEDState.IS_IN_POSITION_TO_OPEN_ELEVATOR),
 			superstructure.preScore().until(superstructure::isPreScoreReady),
-			getLedStateHandler().setState(LEDState.SUPERSTRUCTURE_IN_POSITION),
 			superstructure.scoreWithoutRelease().until(this::isReadyToScore),
-			getLedStateHandler().setState(LEDState.IN_POSITION_TO_SCORE),
 			superstructure.scoreWithRelease(),
 			new InstantCommand(ScoringHelpers::reset)
 		);

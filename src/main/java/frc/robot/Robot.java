@@ -187,31 +187,31 @@ public class Robot {
 			"PreBuiltAutos",
 			AutosBuilder.getAllPreBuiltAutos(this, intakingCommand, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
 		);
-		this.firstObjectScoringLocationChooser = new AutonomousChooser("ScoreFirst", AutosBuilder.getAllAutoScoringAutos(this));
-		this.secondObjectIntakingLocationChooser = new AutonomousChooser(
-			"IntakeSecond",
-			AutosBuilder.getAllIntakingAutos(this, intakingCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
-		);
-		this.secondObjectScoringLocationChooser = new AutonomousChooser(
-			"ScoreSecond",
-			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
-		);
-		this.thirdObjectIntakingLocationChooser = new AutonomousChooser(
-			"IntakeThird",
-			AutosBuilder.getAllIntakingAutos(this, intakingCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
-		);
-		this.thirdObjectScoringLocationChooser = new AutonomousChooser(
-			"ScoreThird",
-			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
-		);
-		this.fourthObjectIntakingLocationChooser = new AutonomousChooser(
-			"IntakeFourth",
-			AutosBuilder.getAllIntakingAutos(this, intakingCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
-		);
-		this.fourthObjectScoringLocationChooser = new AutonomousChooser(
-			"ScoreFourth",
-			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
-		);
+//		this.firstObjectScoringLocationChooser = new AutonomousChooser("ScoreFirst", AutosBuilder.getAllAutoScoringAutos(this));
+//		this.secondObjectIntakingLocationChooser = new AutonomousChooser(
+//			"IntakeSecond",
+//			AutosBuilder.getAllIntakingAutos(this, intakingCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+//		);
+//		this.secondObjectScoringLocationChooser = new AutonomousChooser(
+//			"ScoreSecond",
+//			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+//		);
+//		this.thirdObjectIntakingLocationChooser = new AutonomousChooser(
+//			"IntakeThird",
+//			AutosBuilder.getAllIntakingAutos(this, intakingCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+//		);
+//		this.thirdObjectScoringLocationChooser = new AutonomousChooser(
+//			"ScoreThird",
+//			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+//		);
+//		this.fourthObjectIntakingLocationChooser = new AutonomousChooser(
+//			"IntakeFourth",
+//			AutosBuilder.getAllIntakingAutos(this, intakingCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+//		);
+//		this.fourthObjectScoringLocationChooser = new AutonomousChooser(
+//			"ScoreFourth",
+//			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+//		);
 	}
 
 	public void periodic() {
@@ -240,31 +240,31 @@ public class Robot {
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 
-	public PathPlannerAutoWrapper getAuto() {
+	public Command getAuto() {
 		if (preBuiltAutosChooser.isDefaultOptionChosen()) {
-			if (firstObjectScoringLocationChooser.isDefaultOptionChosen()) {
+//			if (firstObjectScoringLocationChooser.isDefaultOptionChosen()) {
 				return AutosBuilder.createDefaultAuto(this);
-			}
-			return getMultiChoosersAuto();
+//			}
+//			return getMultiChoosersAuto();
 		}
 		return preBuiltAutosChooser.getChosenValue();
 	}
 
-	private PathPlannerAutoWrapper getMultiChoosersAuto() {
-		return PathPlannerAutoWrapper.chainAutos(
-			firstObjectScoringLocationChooser.getChosenValue(),
-			PathPlannerAutoWrapper
-				.chainAutos(
-					secondObjectIntakingLocationChooser.getChosenValue(),
-					secondObjectScoringLocationChooser.getChosenValue(),
-					thirdObjectIntakingLocationChooser.getChosenValue(),
-					thirdObjectScoringLocationChooser.getChosenValue(),
-					fourthObjectIntakingLocationChooser.getChosenValue(),
-					fourthObjectScoringLocationChooser.getChosenValue()
-				)
-				.asProxyAuto()
-		);
-	}
+//	private PathPlannerAutoWrapper getMultiChoosersAuto() {
+//		return PathPlannerAutoWrapper.chainAutos(
+//			firstObjectScoringLocationChooser.getChosenValue(),
+//			PathPlannerAutoWrapper
+//				.chainAutos(
+//					secondObjectIntakingLocationChooser.getChosenValue(),
+//					secondObjectScoringLocationChooser.getChosenValue(),
+//					thirdObjectIntakingLocationChooser.getChosenValue(),
+//					thirdObjectScoringLocationChooser.getChosenValue(),
+//					fourthObjectIntakingLocationChooser.getChosenValue(),
+//					fourthObjectScoringLocationChooser.getChosenValue()
+//				)
+//				.asProxyAuto()
+//		);
+//	}
 
 	public IPoseEstimator getPoseEstimator() {
 		return poseEstimator;

@@ -50,13 +50,13 @@ public class AutosBuilder {
 		return autos;
 	}
 
-	public static List<Supplier<PathPlannerAutoWrapper>> getAllPreBuiltAutos(
+	public static List<Supplier<Command>> getAllPreBuiltAutos(
 		Robot robot,
 		Supplier<Command> intakingCommand,
 		Supplier<Command> scoringCommand,
 		Pose2d tolerance
 	) {
-		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
+		ArrayList<Supplier<Command>> autos = new ArrayList<>();
 		autos.add(() -> preBuiltLeftAuto(robot, intakingCommand, scoringCommand, tolerance));
 		autos.add(() -> preBuiltCenterAuto(robot));
 		autos.add(() -> preBuiltRightAuto(robot, intakingCommand, scoringCommand, tolerance));

@@ -50,6 +50,8 @@ public class RobotCommander extends GBSubsystem {
 
 		this.caNdleWrapper = new CANdleWrapper(IDs.CANDleIDs.CANDLE, LEDConstants.NUMBER_OF_LEDS, "candle");
 		this.ledStateHandler = new LEDStateHandler("CANdle", caNdleWrapper);
+
+		initializeDefaultCommand();
 	}
 
 	public Superstructure getSuperstructure() {

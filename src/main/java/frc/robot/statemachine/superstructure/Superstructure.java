@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Robot;
 import frc.robot.led.LEDState;
 import frc.robot.scoringhelpers.ScoringHelpers;
-import frc.robot.statemachine.RobotCommander;
 import frc.robot.statemachine.StateMachineConstants;
 import frc.robot.statemachine.Tolerances;
 import frc.robot.subsystems.GBSubsystem;
@@ -185,7 +184,7 @@ public class Superstructure extends GBSubsystem {
 					endEffectorStateHandler.setState(EndEffectorState.CORAL_INTAKE),
 					climbStateHandler.setState(ClimbState.STOP)
 				).withTimeout(StateMachineConstants.INTAKE_TIME_AFTER_BEAM_BREAK_SECONDS)
-			).andThen(robot.getRobotCommander().getLedStateHandler().setState(LEDState.HAS_CORAL).asProxy().onlyIf(this::isCoralIn)),
+			),
 			SuperstructureState.INTAKE
 		);
 	}

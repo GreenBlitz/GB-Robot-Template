@@ -6,7 +6,10 @@ package frc;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
+import frc.robot.led.LEDConstants;
+import frc.robot.led.LEDState;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.alerts.AlertManager;
@@ -37,6 +40,19 @@ public class RobotManager extends LoggedRobot {
 
 		createAutoReadyForConstructionChooser();
 		JoysticksBindings.configureBindings(robot);
+
+		initializeLEDTriggers();
+	}
+
+	private void initializeLEDTriggers() {
+		Trigger noteIn = new Trigger(() -> robot.getRobotCommander().getSuperstructure().isCoralIn());
+		noteIn.onTrue(
+			robot.getRobotCommander()
+				.getLedStateHandler()
+				.setState(LEDState.HAS_CORAL)
+				.withTimeout(LEDConstants.CORAL_IN_BLINK_TIME_SECONDS)
+				.onlyIf(robot.getRobotCommander().getSuperstructure()::isCoralIn)
+		);
 	}
 
 	@Override
@@ -44,11 +60,14 @@ public class RobotManager extends LoggedRobot {
 		if (!DriverStationUtil.isMatch()) {
 			BrakeStateManager.coast();
 		}
+
+		robot.getRobotCommander().getLedStateHandler().setState(LEDState.DISABLE).schedule();
 	}
 
 	@Override
 	public void disabledExit() {
 		BrakeStateManager.brake();
+		robot.getRobotCommander().getLedStateHandler().setState(LEDState.IDLE).schedule();
 	}
 
 	@Override

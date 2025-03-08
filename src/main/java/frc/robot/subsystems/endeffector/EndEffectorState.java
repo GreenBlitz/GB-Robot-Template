@@ -7,7 +7,7 @@ public enum EndEffectorState {
 	ALGAE_INTAKE(-0.9),
 	L1_OUTTAKE(-0.5),
 	BRANCH_OUTTAKE(-0.8),
-	CORAL_OUTTAKE(-0.1),
+	CORAL_OUTTAKE(-0.5),
 	DEFAULT(Double.NaN),
 	ALGAE_OUTTAKE(0.7),
 	NET_OUTTAKE(0.9),

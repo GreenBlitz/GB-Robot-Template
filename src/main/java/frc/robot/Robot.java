@@ -47,7 +47,6 @@ import frc.robot.vision.VisionFilters;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
 import frc.utils.TimedValue;
 import frc.utils.brakestate.BrakeStateManager;
-import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.time.TimeUtil;
 
@@ -243,7 +242,7 @@ public class Robot {
 	public Command getAuto() {
 		if (preBuiltAutosChooser.isDefaultOptionChosen()) {
 //			if (firstObjectScoringLocationChooser.isDefaultOptionChosen()) {
-				return AutosBuilder.createDefaultAuto(this);
+			return AutosBuilder.createDefaultAuto(this);
 //			}
 //			return getMultiChoosersAuto();
 		}

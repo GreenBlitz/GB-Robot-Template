@@ -1,5 +1,6 @@
 package frc.robot.statemachine;
 
+import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -13,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import frc.constants.field.Field;
 import frc.constants.field.enums.Branch;
 import frc.robot.Robot;
+import frc.robot.autonomous.PathFollowingCommandsBuilder;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.scoringhelpers.ScoringPathsHelper;
 import frc.robot.statemachine.superstructure.Superstructure;
@@ -274,8 +276,8 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	public Command autoScoreForAutonomous() {
-		Supplier<Command> fullySuperstructureScore = () -> new SequentialCommandGroup(
+	public Command autoScoreForAutonomous(PathPlannerPath path) {
+		Command fullySuperstructureScore = new SequentialCommandGroup(
 			superstructure.elevatorOpening(),
 			superstructure.armPreScore().until(this::isReadyToOpenSuperstructure),
 			superstructure.preScore().until(superstructure::isPreScoreReady),
@@ -283,30 +285,22 @@ public class RobotCommander extends GBSubsystem {
 			superstructure.scoreWithRelease()
 		);
 
-		Supplier<Command> driveToPath = () -> swerve.getCommandsBuilder()
-			.driveToPath(
-				() -> robot.getPoseEstimator().getEstimatedPose(),
-				ScoringPathsHelper.getPathByBranch(ScoringHelpers.getTargetBranch()),
-				ScoringHelpers
-					.getRobotBranchScoringPose(ScoringHelpers.getTargetBranch(), StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
-			);
-
-		return asSubsystemCommand(
-			new DeferredCommand(
-				() -> new ParallelDeadlineGroup(fullySuperstructureScore.get(), driveToPath.get()),
-				Set.of(
-					this,
-					superstructure,
-					swerve,
-					robot.getElevator(),
-					robot.getArm(),
-					robot.getEndEffector(),
-					robot.getLifter(),
-					robot.getSolenoid()
-				)
-			),
-			RobotState.SCORE
+		Command driveToPath = swerve.asSubsystemCommand(
+			PathFollowingCommandsBuilder.followPath(path)
+				.andThen(
+					swerve.getCommandsBuilder()
+						.moveToPoseByPID(
+							() -> robot.getPoseEstimator().getEstimatedPose(),
+							ScoringHelpers.getRobotBranchScoringPose(
+								ScoringHelpers.getTargetBranch(),
+								StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS
+							)
+						)
+				),
+			"Auto Score Autonomous"
 		);
+
+		return new ParallelDeadlineGroup(fullySuperstructureScore, driveToPath);
 	}
 
 	public Command fullyScore() {

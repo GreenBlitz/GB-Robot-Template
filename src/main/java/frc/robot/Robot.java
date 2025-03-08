@@ -184,7 +184,7 @@ public class Robot {
 
 		this.preBuiltAutosChooser = new AutonomousChooser(
 			"PreBuiltAutos",
-			AutosBuilder.getAllPreBuiltAutos(this, intakingCommand, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+			AutosBuilder.getAllNoDelayAutos(this, intakingCommand, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
 		);
 //		this.firstObjectScoringLocationChooser = new AutonomousChooser("ScoreFirst", AutosBuilder.getAllAutoScoringAutos(this));
 //		this.secondObjectIntakingLocationChooser = new AutonomousChooser(
@@ -242,7 +242,7 @@ public class Robot {
 	public Command getAuto() {
 		if (preBuiltAutosChooser.isDefaultOptionChosen()) {
 //			if (firstObjectScoringLocationChooser.isDefaultOptionChosen()) {
-			return AutosBuilder.createDefaultAuto(this);
+			return AutosBuilder.createDefaultNoDelayAuto(this);
 //			}
 //			return getMultiChoosersAuto();
 		}

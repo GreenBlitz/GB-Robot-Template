@@ -18,7 +18,7 @@ public class AutonomousConstants {
 
 	public static final double DEFAULT_AUTO_DRIVE_POWER = -0.5;
 
-	public static final double DEFAULT_AUTO_DRIVE_TIME_SECONDS = 0.6;
+	public static final double DEFAULT_AUTO_DRIVE_TIME_SECONDS = 1;
 
 	public static final double INTAKING_TIMEOUT_SECONDS = 6;
 

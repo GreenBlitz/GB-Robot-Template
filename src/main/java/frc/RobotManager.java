@@ -40,22 +40,27 @@ public class RobotManager extends LoggedRobot {
 
 		createAutoReadyForConstructionChooser();
 		JoysticksBindings.configureBindings(robot);
-		
+
 		initializeLEDTriggers();
 	}
-	
-	private void initializeLEDTriggers(){
+
+	private void initializeLEDTriggers() {
 		Trigger noteIn = new Trigger(() -> robot.getRobotCommander().getSuperstructure().isCoralIn());
-		noteIn.onTrue(robot.getRobotCommander().getLedStateHandler().setState(LEDState.HAS_CORAL).withTimeout(LEDConstants.CORAL_IN_BLINK_TIME_SECONDS)
-				.onlyIf(robot.getRobotCommander().getSuperstructure()::isCoralIn));
+		noteIn.onTrue(
+			robot.getRobotCommander()
+				.getLedStateHandler()
+				.setState(LEDState.HAS_CORAL)
+				.withTimeout(LEDConstants.CORAL_IN_BLINK_TIME_SECONDS)
+				.onlyIf(robot.getRobotCommander().getSuperstructure()::isCoralIn)
+		);
 	}
-	
+
 	@Override
 	public void disabledInit() {
 		if (!DriverStationUtil.isMatch()) {
 			BrakeStateManager.coast();
 		}
-		
+
 		robot.getRobotCommander().getLedStateHandler().setState(LEDState.DISABLE).schedule();
 	}
 

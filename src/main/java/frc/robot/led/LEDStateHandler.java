@@ -19,13 +19,13 @@ public class LEDStateHandler extends GBSubsystem {
 	}
 
 	public Command setState(LEDState state) {
-		Command command = new RunCommand(() -> candle.animate(state.getAnimation()), this).ignoringDisable(true);
+		Command setStateCommand = new RunCommand(() -> candle.animate(state.getAnimation()), this).ignoringDisable(true);
 
 		if (state == LEDState.HAS_CORAL) {
-			return command.withTimeout(LEDConstants.TIME_FOR_HAS_CORAL_STATE);
+			return setStateCommand.withTimeout(LEDConstants.TIME_FOR_HAS_CORAL_STATE);
 		}
 
-		return command;
+		return setStateCommand;
 	}
 
 }

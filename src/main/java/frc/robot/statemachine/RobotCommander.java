@@ -13,8 +13,12 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import frc.constants.field.Field;
 import frc.constants.field.enums.Branch;
+import frc.robot.IDs;
 import frc.robot.Robot;
 import frc.robot.autonomous.PathFollowingCommandsBuilder;
+import frc.robot.hardware.phoenix6.leds.CANdleWrapper;
+import frc.robot.led.LEDConstants;
+import frc.robot.led.LEDStateHandler;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.scoringhelpers.ScoringPathsHelper;
 import frc.robot.statemachine.superstructure.Superstructure;
@@ -36,16 +40,28 @@ public class RobotCommander extends GBSubsystem {
 
 	private RobotState currentState;
 
+	private CANdleWrapper caNdleWrapper;
+	private LEDStateHandler ledStateHandler;
+
 	public RobotCommander(String logPath, Robot robot) {
 		super(logPath);
 		this.robot = robot;
 		this.swerve = robot.getSwerve();
 		this.superstructure = new Superstructure("StateMachine/Superstructure", robot);
 		this.currentState = RobotState.STAY_IN_PLACE;
+
+		this.caNdleWrapper = new CANdleWrapper(IDs.CANDleIDs.CANDLE, LEDConstants.NUMBER_OF_LEDS, "candle");
+		this.ledStateHandler = new LEDStateHandler("CANdle", caNdleWrapper);
+
+		initializeDefaultCommand();
 	}
 
 	public Superstructure getSuperstructure() {
 		return superstructure;
+	}
+
+	public LEDStateHandler getLedStateHandler() {
+		return ledStateHandler;
 	}
 
 	public void initializeDefaultCommand() {

@@ -1,14 +1,11 @@
 package frc.robot.led;
 
-import com.ctre.phoenix.led.Animation;
-import com.ctre.phoenix.led.ColorFlowAnimation;
-import com.ctre.phoenix.led.SingleFadeAnimation;
-import com.ctre.phoenix.led.StrobeAnimation;
+import com.ctre.phoenix.led.*;
 
 public enum LEDState {
 
-	IDLE(new StrobeAnimation(0, 250, 0)),
-	DISABLE(new StrobeAnimation(255, 255, 0)),
+	DISABLE(new StrobeAnimation(250, 80, 0)),
+	IDLE(new LarsonAnimation(0, 250, 0,255, 0.5,LEDConstants.NUMBER_OF_LEDS, LarsonAnimation.BounceMode.Front,5)),
 	READY_TO_COLLECT(new StrobeAnimation(0, 200, 200)),
 	HAS_CORAL(new ColorFlowAnimation(200, 0, 200, 250, 2, 100, ColorFlowAnimation.Direction.Forward, 8)),
 	START_AIM_ASSIST(new SingleFadeAnimation(200, 0, 0)),

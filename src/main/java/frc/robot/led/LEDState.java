@@ -7,7 +7,7 @@ import com.ctre.phoenix.led.StrobeAnimation;
 
 public enum LEDState {
 
-	IDLE(new ColorFlowAnimation(0, 250, 0)),
+	IDLE(new StrobeAnimation(0, 250, 0)),
 	DISABLE(new StrobeAnimation(255, 255, 0)),
 	READY_TO_COLLECT(new StrobeAnimation(0, 200, 200)),
 	HAS_CORAL(new ColorFlowAnimation(200, 0, 200, 250, 2, 100, ColorFlowAnimation.Direction.Forward, 8)),

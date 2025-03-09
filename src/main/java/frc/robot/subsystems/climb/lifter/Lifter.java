@@ -50,14 +50,12 @@ public class Lifter extends GBSubsystem {
 
 	@Override
 	protected void subsystemPeriodic() {
-		if (LifterConstants.MINIMUM_ACHIEVABLE_POSITION.getRotations() > positionSignal.getLatestValue().getRotations()) {
-			motor.resetPosition(
-				Rotation2d.fromDegrees(LifterConstants.MINIMUM_ACHIEVABLE_POSITION.getDegrees() + LifterConstants.RESET_OFFSET.getDegrees())
-			);
-		}
-
 		motor.updateSimulation();
 		updateInputs();
+	}
+	
+	public void resetPosition(Rotation2d position){
+		motor.resetPosition(position);
 	}
 
 	private void updateInputs() {

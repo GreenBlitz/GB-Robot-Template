@@ -11,6 +11,7 @@ import frc.robot.Robot;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.led.LEDConstants;
 import frc.robot.led.LEDState;
+import frc.robot.subsystems.climb.lifter.LifterConstants;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtil;
@@ -68,6 +69,7 @@ public class RobotManager extends LoggedRobot {
 	public void disabledExit() {
 		BrakeStateManager.brake();
 		robot.getRobotCommander().getLedStateHandler().setState(LEDState.IDLE).schedule();
+		robot.getLifter().resetPosition(LifterConstants.MINIMUM_ACHIEVABLE_POSITION);
 	}
 
 	@Override

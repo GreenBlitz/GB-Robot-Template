@@ -397,8 +397,8 @@ public class Superstructure extends GBSubsystem {
 	public Command netWithRelease() {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.NET).until(() -> robot.getElevator().getElevatorPositionMeters() > 0.8),
 				new ParallelCommandGroup(
-					elevatorStateHandler.setState(ElevatorState.NET),
 					armStateHandler.setState(ArmState.NET),
 					climbStateHandler.setState(ClimbState.STOP),
 					new SequentialCommandGroup(

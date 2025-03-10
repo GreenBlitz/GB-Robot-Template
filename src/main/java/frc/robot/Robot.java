@@ -227,7 +227,7 @@ public class Robot {
 			);
 		}
 		poseEstimator.updateVision(multiAprilTagVisionSources.getFilteredVisionData());
-		// multiAprilTagVisionSources.log();
+//		 multiAprilTagVisionSources.log();
 		headingEstimator.log();
 
 		BatteryUtil.logStatus();

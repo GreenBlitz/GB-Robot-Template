@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.58,
-        "y": 6.17
+        "x": 6.84,
+        "y": 5.85
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.351500000000001,
-        "y": 5.6922500000000005
+        "x": 6.6651639344262295,
+        "y": 5.649334016393442
       },
       "isLocked": false,
       "linkedName": "AL2"
@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 5.02,
-        "y": 5.25
+        "y": 5.22
       },
       "prevControl": {
-        "x": 5.577000000000001,
-        "y": 6.45275
+        "x": 5.370491803278688,
+        "y": 5.73921106557377
       },
       "nextControl": null,
       "isLocked": false,
@@ -61,7 +61,7 @@
   "folder": "from auto line",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -145.0
+    "rotation": -140.59306366341792
   },
   "useDefaultConstraints": true
 }

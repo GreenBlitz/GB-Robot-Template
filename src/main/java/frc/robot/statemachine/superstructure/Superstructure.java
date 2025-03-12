@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Robot;
-import frc.robot.led.LEDState;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.StateMachineConstants;
 import frc.robot.statemachine.Tolerances;
@@ -397,7 +396,7 @@ public class Superstructure extends GBSubsystem {
 	public Command netWithRelease() {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
-					elevatorStateHandler.setState(ElevatorState.NET).until(() -> robot.getElevator().getElevatorPositionMeters() > 0.8),
+				elevatorStateHandler.setState(ElevatorState.NET).until(() -> robot.getElevator().getElevatorPositionMeters() > 0.8),
 				new ParallelCommandGroup(
 					armStateHandler.setState(ArmState.NET),
 					climbStateHandler.setState(ClimbState.STOP),

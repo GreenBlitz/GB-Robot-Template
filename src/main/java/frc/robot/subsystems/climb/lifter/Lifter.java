@@ -53,8 +53,8 @@ public class Lifter extends GBSubsystem {
 		motor.updateSimulation();
 		updateInputs();
 	}
-	
-	public void resetPosition(Rotation2d position){
+
+	public void resetPosition(Rotation2d position) {
 		motor.resetPosition(position);
 	}
 

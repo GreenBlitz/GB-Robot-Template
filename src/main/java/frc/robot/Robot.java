@@ -147,6 +147,7 @@ public class Robot {
 		BrakeStateManager.add(() -> arm.setBrake(true), () -> arm.setBrake(false));
 
 		this.endEffector = EndEffectorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/EndEffector");
+		BrakeStateManager.add(() -> endEffector.setBrake(true), () -> endEffector.setBrake(false));
 
 		this.solenoid = SolenoidFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Solenoid");
 

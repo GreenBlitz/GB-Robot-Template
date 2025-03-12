@@ -32,12 +32,12 @@ class KrakenX60SteerBuilder {
 	private static final double GEAR_RATIO = 12.8;
 	private static final double MOMENT_OF_INERTIA_METERS_SQUARED = 0.00001;
 
-	private static SysIdRoutine.Config buildSysidConfig() {
+	private static SysIdRoutine.Config buildSysidConfig(String logPath) {
 		return new SysIdRoutine.Config(
 			Units.Volts.of(0.5).per(Units.Second),
 			Units.Volts.of(1),
 			null,
-			state -> SignalLogger.writeString("state", state.toString())
+			state -> SignalLogger.writeString(logPath + "/state", state.toString())
 		);
 	}
 
@@ -86,7 +86,7 @@ class KrakenX60SteerBuilder {
 		TalonFXConfiguration configuration = buildMotorConfig(inverted);
 		configuration.Feedback.FeedbackRemoteSensorID = encoderID.id();
 
-		TalonFXMotor steer = new TalonFXMotor(logPath, deviceID, buildSysidConfig(), buildMechanismSimulation());
+		TalonFXMotor steer = new TalonFXMotor(logPath, deviceID, buildSysidConfig(logPath), buildMechanismSimulation());
 		steer.applyConfiguration(configuration);
 		return steer;
 	}

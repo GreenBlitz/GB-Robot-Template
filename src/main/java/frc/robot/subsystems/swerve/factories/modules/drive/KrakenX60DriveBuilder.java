@@ -32,12 +32,12 @@ public class KrakenX60DriveBuilder {
 	public static final double GEAR_RATIO = 7.13;
 	private static final double MOMENT_OF_INERTIA_METERS_SQUARED = 0.001;
 
-	private static SysIdRoutine.Config buildSysidConfig() {
+	private static SysIdRoutine.Config buildSysidConfig(String logPath) {
 		return new SysIdRoutine.Config(
 			Units.Volts.of(1).per(Units.Second),
 			Units.Volts.of(7),
 			null,
-			state -> SignalLogger.writeString("state", state.toString())
+			state -> SignalLogger.writeString(logPath + "/state", state.toString())
 		);
 	}
 
@@ -83,7 +83,7 @@ public class KrakenX60DriveBuilder {
 	}
 
 	static ControllableMotor buildDrive(String logPath, Phoenix6DeviceID deviceID, boolean inverted) {
-		TalonFXMotor drive = new TalonFXMotor(logPath, deviceID, buildSysidConfig(), buildMechanismSimulation());
+		TalonFXMotor drive = new TalonFXMotor(logPath, deviceID, buildSysidConfig(logPath), buildMechanismSimulation());
 		drive.applyConfiguration(buildMotorConfig(inverted));
 		return drive;
 	}

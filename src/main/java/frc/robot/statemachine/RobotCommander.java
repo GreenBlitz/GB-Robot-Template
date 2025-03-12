@@ -1,5 +1,6 @@
 package frc.robot.statemachine;
 
+import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -12,7 +13,12 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import frc.constants.field.Field;
 import frc.constants.field.enums.Branch;
+import frc.robot.IDs;
 import frc.robot.Robot;
+import frc.robot.autonomous.PathFollowingCommandsBuilder;
+import frc.robot.hardware.phoenix6.leds.CANdleWrapper;
+import frc.robot.led.LEDConstants;
+import frc.robot.led.LEDStateHandler;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.scoringhelpers.ScoringPathsHelper;
 import frc.robot.statemachine.superstructure.Superstructure;
@@ -34,16 +40,28 @@ public class RobotCommander extends GBSubsystem {
 
 	private RobotState currentState;
 
+	private CANdleWrapper caNdleWrapper;
+	private LEDStateHandler ledStateHandler;
+
 	public RobotCommander(String logPath, Robot robot) {
 		super(logPath);
 		this.robot = robot;
 		this.swerve = robot.getSwerve();
 		this.superstructure = new Superstructure("StateMachine/Superstructure", robot);
 		this.currentState = RobotState.STAY_IN_PLACE;
+
+		this.caNdleWrapper = new CANdleWrapper(IDs.CANDleIDs.CANDLE, LEDConstants.NUMBER_OF_LEDS, "candle");
+		this.ledStateHandler = new LEDStateHandler("CANdle", caNdleWrapper);
+
+		initializeDefaultCommand();
 	}
 
 	public Superstructure getSuperstructure() {
 		return superstructure;
+	}
+
+	public LEDStateHandler getLedStateHandler() {
+		return ledStateHandler;
 	}
 
 	public void initializeDefaultCommand() {
@@ -209,10 +227,11 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public boolean isReadyForNet() {
-		return isCloseToNet(
-			StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES.getX(),
-			StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES.getY()
-		) && swerve.isAtHeading(ScoringHelpers.getHeadingForNet(), Tolerances.HEADING_FOR_NET, Tolerances.HEADING_FOR_NET_DEADBAND);
+		return true
+			|| isCloseToNet(
+				StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES.getX(),
+				StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES.getY()
+			) && swerve.isAtHeading(ScoringHelpers.getHeadingForNet(), Tolerances.HEADING_FOR_NET, Tolerances.HEADING_FOR_NET_DEADBAND);
 	}
 
 	public Command setState(RobotState state) {
@@ -274,8 +293,8 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	public Command autoScoreForAutonomous() {
-		Supplier<Command> fullySuperstructureScore = () -> new SequentialCommandGroup(
+	public Command autoScoreForAutonomous(PathPlannerPath path) {
+		Command fullySuperstructureScore = new SequentialCommandGroup(
 			superstructure.elevatorOpening(),
 			superstructure.armPreScore().until(this::isReadyToOpenSuperstructure),
 			superstructure.preScore().until(superstructure::isPreScoreReady),
@@ -283,30 +302,22 @@ public class RobotCommander extends GBSubsystem {
 			superstructure.scoreWithRelease()
 		);
 
-		Supplier<Command> driveToPath = () -> swerve.getCommandsBuilder()
-			.driveToPath(
-				() -> robot.getPoseEstimator().getEstimatedPose(),
-				ScoringPathsHelper.getPathByBranch(ScoringHelpers.getTargetBranch()),
-				ScoringHelpers
-					.getRobotBranchScoringPose(ScoringHelpers.getTargetBranch(), StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
-			);
-
-		return asSubsystemCommand(
-			new DeferredCommand(
-				() -> new ParallelDeadlineGroup(fullySuperstructureScore.get(), driveToPath.get()),
-				Set.of(
-					this,
-					superstructure,
-					swerve,
-					robot.getElevator(),
-					robot.getArm(),
-					robot.getEndEffector(),
-					robot.getLifter(),
-					robot.getSolenoid()
-				)
-			),
-			RobotState.SCORE
+		Command driveToPath = swerve.asSubsystemCommand(
+			PathFollowingCommandsBuilder.followPath(path)
+				.andThen(
+					swerve.getCommandsBuilder()
+						.moveToPoseByPID(
+							() -> robot.getPoseEstimator().getEstimatedPose(),
+							ScoringHelpers.getRobotBranchScoringPose(
+								ScoringHelpers.getTargetBranch(),
+								StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS
+							)
+						)
+				),
+			"Auto Score Autonomous"
 		);
+
+		return new ParallelDeadlineGroup(fullySuperstructureScore, driveToPath);
 	}
 
 	public Command fullyScore() {
@@ -343,7 +354,13 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public Command fullyNet() {
-		return asSubsystemCommand(new SequentialCommandGroup(preNet().until(this::isReadyForNet), net()), RobotState.NET);
+		return asSubsystemCommand(
+			new SequentialCommandGroup(
+				// preNet().until(this::isReadyForNet),
+				net()
+			),
+			RobotState.NET
+		);
 	}
 
 	private Command drive() {
@@ -473,7 +490,7 @@ public class RobotCommander extends GBSubsystem {
 		return asSubsystemCommand(
 			new ParallelDeadlineGroup(
 				superstructure.netWithRelease(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
 			),
 			RobotState.NET
 		);

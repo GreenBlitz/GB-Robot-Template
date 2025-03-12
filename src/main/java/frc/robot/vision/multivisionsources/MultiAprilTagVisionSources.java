@@ -128,8 +128,8 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	}
 
 	private void logMegaTagMethod() {
-		Logger.recordOutput(logPath + "isMegaTag1InUse", !useRobotHeadingForPoseEstimating);
-		Logger.recordOutput(logPath + "isMegaTag2InUse", useRobotHeadingForPoseEstimating);
+//		Logger.recordOutput(logPath + "isMegaTag1InUse", !useRobotHeadingForPoseEstimating);
+//		Logger.recordOutput(logPath + "isMegaTag2InUse", useRobotHeadingForPoseEstimating);
 	}
 
 	private void logAprilTagPoseData() {

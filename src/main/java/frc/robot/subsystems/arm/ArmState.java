@@ -9,7 +9,7 @@ public enum ArmState {
 	FIRST_WAYPOINT_TO_CLOSE(Rotation2d.fromDegrees(40)),
 	SECOND_WAYPOINT_TO_CLOSE(Rotation2d.fromDegrees(110)),
 	START_GAME(Rotation2d.fromDegrees(207)),
-	MID_WAY_CLOSE(Rotation2d.fromDegrees(130), Rotation2d.fromRotations(2), Rotation2d.fromRotations(1)),
+	MID_WAY_CLOSE(Rotation2d.fromDegrees(130), Rotation2d.fromRotations(2), Rotation2d.fromRotations(1.5)),
 	INTAKE(Rotation2d.fromDegrees(195.5)),
 	ALGAE_OUTTAKE(Rotation2d.fromDegrees(185)),
 	PRE_L1(Rotation2d.fromDegrees(190)),
@@ -22,7 +22,7 @@ public enum ArmState {
 	L4(Rotation2d.fromDegrees(-25), Rotation2d.fromRotations(3), Rotation2d.fromRotations(1.5)),
 	LOW_ALGAE_REMOVE(Rotation2d.fromDegrees(-30)),
 	HIGH_ALGAE_REMOVE(Rotation2d.fromDegrees(9)),
-	NET(Rotation2d.fromDegrees(10), Rotation2d.fromRotations(5), Rotation2d.fromRotations(5)),
+	NET(Rotation2d.fromDegrees(10), Rotation2d.fromRotations(1.5), Rotation2d.fromRotations(1.5)),
 	PROCESSOR_OUTTAKE(Rotation2d.fromDegrees(180)),
 	CLIMB(Rotation2d.fromDegrees(-11));
 

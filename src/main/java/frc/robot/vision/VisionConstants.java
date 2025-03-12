@@ -79,7 +79,7 @@ public class VisionConstants {
 
 	public static final Pose3d LIMELIGHT_FEEDER_CAMERA_ROBOT_POSE = new Pose3d(
 		new Translation3d(-0.07575, 0.27, 0.93),
-		AngleUnit.DEGREES.toRotation3d(-2.7, 51.44, -177.6)
+		AngleUnit.DEGREES.toRotation3d(-2.8, 52.64, -176.7)
 	);
 
 	public static final VisionSource<AprilTagVisionData> LIMELIGHT_LEFT = new DynamicSwitchingLimelight(

@@ -39,6 +39,12 @@ public class IDs {
 
 	}
 
+	public static class CANDleIDs {
+
+		public static final Phoenix6DeviceID CANDLE = new Phoenix6DeviceID(0, BusChain.ROBORIO);
+
+	}
+
 	public static class SparkMAXIDs {
 
 		public static final SparkMaxDeviceID END_EFFECTOR = new SparkMaxDeviceID(5);

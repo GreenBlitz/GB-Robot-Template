@@ -16,11 +16,11 @@
     },
     {
       "anchor": {
-        "x": 3.95,
+        "x": 4.0,
         "y": 5.26
       },
       "prevControl": {
-        "x": 3.1887295081967215,
+        "x": 3.2387295081967213,
         "y": 6.620338114754098
       },
       "nextControl": null,
@@ -72,7 +72,7 @@
     "rotation": -59.99999999999999
   },
   "reversed": false,
-  "folder": null,
+  "folder": "from coral station",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -54.0

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.58,
-        "y": 3.0
+        "x": 6.8,
+        "y": 2.94
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.961500000000001,
-        "y": 3.2547499999999996
+        "x": 6.317520491803278,
+        "y": 3.024026639344262
       },
       "isLocked": false,
       "linkedName": "AL5"
@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 5.3,
-        "y": 2.9400000000000004
+        "y": 2.98
       },
       "prevControl": {
-        "x": 6.40575,
-        "y": 1.3242499999999997
+        "x": 5.598258196721312,
+        "y": 2.6564446721311477
       },
       "nextControl": null,
       "isLocked": false,
@@ -61,7 +61,7 @@
   "folder": "from auto line",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 157.0
+    "rotation": 127.65311171537923
   },
   "useDefaultConstraints": true
 }

@@ -32,6 +32,9 @@ public class Falcon500LifterBuilder {
 	private static final boolean INVERTED = false;
 	private static final double MOMENT_OF_INERTIA = 5;
 
+	public static final int REVERSE_LIMIT_SWITCH_CHANNEL = 2;
+	public static final double REVERSE_LIMIT_SWITCH_DEBOUNCE_TIME = 0.04;
+
 	private static final Rotation2d MAXIMUM_POSITION = Rotation2d.fromDegrees(200);
 
 	private static TalonFXConfiguration generateMotorConfiguration() {
@@ -49,11 +52,7 @@ public class Falcon500LifterBuilder {
 	private static IDigitalInput generateDigitalInput() {
 		return Robot.ROBOT_TYPE.isSimulation()
 			? new ChooserDigitalInput("LifterLimitSwitch")
-			: new ChanneledDigitalInput(
-				new DigitalInput(LifterConstants.REVERSE_LIMIT_SWITCH_CHANNEL),
-				new Debouncer(LifterConstants.REVERSE_LIMIT_SWITCH_DEBOUNCE_TIME),
-				true
-			);
+			: new ChanneledDigitalInput(new DigitalInput(REVERSE_LIMIT_SWITCH_CHANNEL), new Debouncer(REVERSE_LIMIT_SWITCH_DEBOUNCE_TIME), true);
 	}
 
 	protected static Lifter createLifter(String logPath) {

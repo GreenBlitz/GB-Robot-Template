@@ -54,7 +54,7 @@ public class Lifter extends GBSubsystem {
 		return !isHigher(position);
 	}
 
-	public boolean isAtBackwardsLimit() {
+	public boolean isTouchingLimitSwitch() {
 		return limitSwitchInputs.debouncedValue;
 	}
 

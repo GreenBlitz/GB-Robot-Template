@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.58,
+        "x": 6.98,
         "y": 4.02
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.16625,
-        "y": 3.9274999999999993
+        "x": 6.402377181926009,
+        "y": 3.9588329222310166
       },
       "isLocked": false,
       "linkedName": "AL4"
     },
     {
       "anchor": {
-        "x": 5.83,
-        "y": 3.86
+        "x": 5.79,
+        "y": 3.84
       },
       "prevControl": {
-        "x": 7.595250000000001,
-        "y": 3.8884999999999996
+        "x": 7.447031970723401,
+        "y": 4.039966911565617
       },
       "nextControl": null,
       "isLocked": false,

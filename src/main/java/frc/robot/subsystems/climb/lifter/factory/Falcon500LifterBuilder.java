@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.IDs;
 import frc.robot.RobotConstants;
+import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.mechanisms.wpilib.SingleJointedArmSimulation;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
@@ -35,8 +36,10 @@ public class Falcon500LifterBuilder {
 		configuration.MotorOutput.Inverted = INVERTED ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive;
 		configuration.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT;
 		configuration.CurrentLimits.StatorCurrentLimitEnable = true;
-		configuration.HardwareLimitSwitch.ReverseLimitEnable = true;
-		configuration.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
+		configuration.HardwareLimitSwitch.ReverseLimitEnable = LifterConstants.IS_REVERSE_LIMIT_SWITCH_ENABLED;
+		configuration.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = LifterConstants.IS_REVERSE_LIMIT_SWITCH_ENABLED;
+		configuration.HardwareLimitSwitch.ReverseLimitRemoteSensorID = LifterConstants.REVERSE_LIMIT_SWITCH_ID;
+
 
 		return configuration;
 	}
@@ -59,6 +62,8 @@ public class Falcon500LifterBuilder {
 		TalonFXMotor lifter = new TalonFXMotor(logPath, IDs.TalonFXIDs.LIFTER, new SysIdRoutine.Config(), simulation);
 		lifter.applyConfiguration(generateMotorConfiguration());
 		lifter.setBrake(SET_BRAKE);
+
+		IDigitalInput digitalInput = generateDigitalInput();
 
 		Phoenix6AngleSignal positionSignal = Phoenix6SignalBuilder
 			.build(lifter.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);

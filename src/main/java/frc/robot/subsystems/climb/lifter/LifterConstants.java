@@ -9,4 +9,8 @@ public class LifterConstants {
 	public static final double LIFTER_LENGTH_METERS = 0.3;
 	public static final double GEAR_RATIO = 70.0 / (4 / 7.0) * (4 * 5);
 
+	public static final int REVERSE_LIMIT_SWITCH_ID = 1;
+	public static final boolean IS_REVERSE_LIMIT_SWITCH_ENABLED = true;
+
+
 }

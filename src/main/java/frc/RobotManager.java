@@ -60,8 +60,7 @@ public class RobotManager extends LoggedRobot {
 	public void disabledInit() {
 		if (!DriverStationUtil.isMatch()) {
 			BrakeStateManager.coast();
-		}
-		else if (auto != null) {
+		} else if (auto != null) {
 			auto.cancel();
 		}
 

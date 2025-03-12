@@ -4,6 +4,8 @@
 
 package frc;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -54,6 +56,12 @@ public class RobotManager extends LoggedRobot {
 				.withTimeout(LEDConstants.CORAL_IN_BLINK_TIME_SECONDS)
 				.onlyIf(robot.getRobotCommander().getSuperstructure()::isCoralIn)
 		);
+	}
+
+	@Override
+	public void robotInit() {
+		super.robotInit();
+		LiveWindow.disableAllTelemetry();
 	}
 
 	@Override

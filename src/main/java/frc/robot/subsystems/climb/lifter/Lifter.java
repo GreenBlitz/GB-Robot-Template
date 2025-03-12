@@ -15,7 +15,6 @@ public class Lifter extends GBSubsystem {
 	private final LifterCommandsBuilder lifterCommandsBuilder;
 	private final InputSignal<Rotation2d> positionSignal;
 
-
 	private final IDigitalInput limitSwitch;
 	private final DigitalInputInputsAutoLogged limitSwitchInputs;
 
@@ -54,7 +53,7 @@ public class Lifter extends GBSubsystem {
 		return !isHigher(position);
 	}
 
-	public boolean isTouchingLimitSwitch() {
+	public boolean isAtLimitSwitch() {
 		return limitSwitchInputs.debouncedValue;
 	}
 
@@ -76,7 +75,7 @@ public class Lifter extends GBSubsystem {
 		motor.updateInputs(positionSignal);
 
 		limitSwitch.updateInputs(limitSwitchInputs);
-		Logger.processInputs(getLogPath() + "/LimitSwitch", limitSwitchInputs);
+		Logger.recordOutput(getLogPath() + "/LimitSwitch", limitSwitchInputs.debouncedValue);
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick) {

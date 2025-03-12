@@ -45,7 +45,6 @@ public class Falcon500LifterBuilder {
 		configuration.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT;
 		configuration.CurrentLimits.StatorCurrentLimitEnable = true;
 
-
 		return configuration;
 	}
 

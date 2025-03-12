@@ -9,5 +9,4 @@ public class LifterConstants {
 	public static final double LIFTER_LENGTH_METERS = 0.3;
 	public static final double GEAR_RATIO = 70.0 / (4 / 7.0) * (4 * 5);
 
-
 }

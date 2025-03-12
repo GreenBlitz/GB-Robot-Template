@@ -54,7 +54,11 @@ public class KrakenX60ArmBuilder {
 
 	protected static Arm build(String logPath) {
 		Phoenix6DynamicMotionMagicRequest positionRequest = Robot.ROBOT_TYPE.isReal()
-			? Phoenix6RequestBuilder.build(new DynamicMotionMagicVoltage(0, 0, 0, 0).withSlot(0).withUpdateFreqHz(1000), 0, ENABLE_FOC)
+			? Phoenix6RequestBuilder.build(
+				new DynamicMotionMagicVoltage(0, 0, 0, 0).withSlot(0).withUpdateFreqHz(RobotConstants.DEFAULT_CANIVORE_REQUEST_FREQUENCY_HERTZ),
+				0,
+				ENABLE_FOC
+			)
 			: Phoenix6RequestBuilder.build(new DynamicMotionMagicVoltage(0, 0, 0, 0).withSlot(1), 0, ENABLE_FOC);
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), ENABLE_FOC);
 

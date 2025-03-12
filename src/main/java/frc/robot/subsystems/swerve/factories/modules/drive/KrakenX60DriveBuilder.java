@@ -90,7 +90,8 @@ public class KrakenX60DriveBuilder {
 
 	static DriveRequests buildRequests() {
 		return new DriveRequests(
-			Phoenix6RequestBuilder.build(new VelocityVoltage(0).withUpdateFreqHz(1000), 0, true),
+			Phoenix6RequestBuilder
+				.build(new VelocityVoltage(0).withUpdateFreqHz(RobotConstants.DEFAULT_CANIVORE_REQUEST_FREQUENCY_HERTZ), 0, true),
 			Phoenix6RequestBuilder.build(new VoltageOut(0), true)
 		);
 	}
@@ -102,8 +103,12 @@ public class KrakenX60DriveBuilder {
 			.build(drive.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ);
 		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder
 			.build(drive.getDevice().getVelocity(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
-		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder
-			.build(drive.getDevice().getPosition(), velocitySignal, RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder.build(
+			drive.getDevice().getPosition(),
+			velocitySignal,
+			RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ,
+			AngleUnit.ROTATIONS
+		);
 
 		return new DriveSignals(positionSignal, velocitySignal, currentSignal, voltageSignal);
 	}

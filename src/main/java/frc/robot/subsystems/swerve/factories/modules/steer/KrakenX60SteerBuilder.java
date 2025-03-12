@@ -93,7 +93,8 @@ class KrakenX60SteerBuilder {
 
 	static SteerRequests buildRequests() {
 		return new SteerRequests(
-			Phoenix6RequestBuilder.build(new PositionVoltage(0).withUpdateFreqHz(1000), 0, true),
+			Phoenix6RequestBuilder
+				.build(new PositionVoltage(0).withUpdateFreqHz(RobotConstants.DEFAULT_CANIVORE_REQUEST_FREQUENCY_HERTZ), 0, true),
 			Phoenix6RequestBuilder.build(new VoltageOut(0), true)
 		);
 	}
@@ -105,8 +106,12 @@ class KrakenX60SteerBuilder {
 			.build(steer.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ);
 		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder
 			.build(steer.getDevice().getVelocity(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
-		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder
-			.build(steer.getDevice().getPosition(), velocitySignal, RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder.build(
+			steer.getDevice().getPosition(),
+			velocitySignal,
+			RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ,
+			AngleUnit.ROTATIONS
+		);
 
 		return new SteerSignals(positionSignal, velocitySignal, currentSignal, voltageSignal);
 	}

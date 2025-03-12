@@ -113,21 +113,9 @@ public class JoysticksBindings {
 
 	private static Command driveActionChooser(Robot robot) {
 		return new InstantCommand(
-			() -> new DeferredCommand(
-				() -> robot.getRobotCommander().isCollectingAlgae()
-					? robot.getRobotCommander().setState(RobotState.HOLD_ALGAE)
-					: robot.getRobotCommander().setState(RobotState.DRIVE),
-				Set.of(
-					robot.getRobotCommander(),
-					robot.getRobotCommander().getSuperstructure(),
-					robot.getSwerve(),
-					robot.getElevator(),
-					robot.getArm(),
-					robot.getEndEffector(),
-					robot.getLifter(),
-					robot.getSolenoid()
-				)
-			).schedule()
+			() -> (robot.getRobotCommander().isCollectingAlgae()
+				? robot.getRobotCommander().setState(RobotState.HOLD_ALGAE)
+				: robot.getRobotCommander().setState(RobotState.DRIVE)).schedule()
 		);
 	}
 

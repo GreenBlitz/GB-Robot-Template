@@ -126,7 +126,7 @@ public class JoysticksBindings {
 					robot.getLifter(),
 					robot.getSolenoid())
 			)
-		).withTimeout(0.1).repeatedly();
+		);
 	}
 
 	private static void mainJoystickButtons(Robot robot) {
@@ -146,7 +146,7 @@ public class JoysticksBindings {
 		usedJoystick.POV_LEFT.onTrue(robot.getRobotCommander().setState(RobotState.PRE_CLIMB_WITH_AIM_ASSIST));
 		usedJoystick.POV_UP.onTrue(robot.getRobotCommander().setState(RobotState.PRE_CLIMB_WITHOUT_AIM_ASSIST));
 		usedJoystick.POV_DOWN.onTrue(robot.getRobotCommander().setState(RobotState.CLIMB));
-		usedJoystick.A.onTrue(driveActionChooser(robot));
+		usedJoystick.A.onTrue(new InstantCommand(() -> driveActionChooser(robot).schedule()));
 
 		Command climbUp = robot.getLifter().getCommandsBuilder().setPower(StateMachineConstants.POWER_FOR_MANUAL_CLIMB);
 		climbUp.addRequirements(robot.getRobotCommander(), robot.getRobotCommander().getSuperstructure());

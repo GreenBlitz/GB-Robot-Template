@@ -49,7 +49,11 @@ public class Falcon500LifterBuilder {
 	private static IDigitalInput generateDigitalInput() {
 		return Robot.ROBOT_TYPE.isSimulation()
 			? new ChooserDigitalInput("LifterLimitSwitch")
-			: new ChanneledDigitalInput(new DigitalInput(LifterConstants.REVERSE_LIMIT_SWITCH_CHANNEL), new Debouncer(LifterConstants.REVERSE_LIMIT_SWITCH_DEBOUNCE_TIME), true);
+			: new ChanneledDigitalInput(
+				new DigitalInput(LifterConstants.REVERSE_LIMIT_SWITCH_CHANNEL),
+				new Debouncer(LifterConstants.REVERSE_LIMIT_SWITCH_DEBOUNCE_TIME),
+				true
+			);
 	}
 
 	protected static Lifter createLifter(String logPath) {
@@ -72,7 +76,6 @@ public class Falcon500LifterBuilder {
 		lifter.setBrake(SET_BRAKE);
 
 		IDigitalInput digitalInput = generateDigitalInput();
-
 
 		Phoenix6AngleSignal positionSignal = Phoenix6SignalBuilder
 			.build(lifter.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);

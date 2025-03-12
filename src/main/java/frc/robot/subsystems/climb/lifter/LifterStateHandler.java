@@ -14,7 +14,7 @@ public class LifterStateHandler {
 	public Command setState(LifterState state) {
 		return switch (state) {
 			case HOLD -> lifter.getCommandsBuilder().stop();
-			case FORWARD, BACKWARD, DEPLOY, CLIMB, CLOSE -> lifter.getCommandsBuilder().setPower(state.getPower());
+			case FORWARD, BACKWARD, DEPLOY, CLIMB, MANUAL_CLIMB, CLOSE -> lifter.getCommandsBuilder().setPower(state.getPower());
 		};
 	}
 

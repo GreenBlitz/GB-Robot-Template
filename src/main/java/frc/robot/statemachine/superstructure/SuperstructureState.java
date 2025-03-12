@@ -20,6 +20,7 @@ public enum SuperstructureState {
 	MANUAL_CLIMB,
 	STOP_CLIMB,
 	CLOSE_CLIMB,
+	HOLD_ALGAE,
 	ELEVATOR_OPENING;
 
 }

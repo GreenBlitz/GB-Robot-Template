@@ -477,6 +477,18 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
+	public Command holdAlgae() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.HOLD_ALGAE),
+				armStateHandler.setState(ArmState.HOLD_ALGAE),
+				endEffectorStateHandler.setState(EndEffectorState.STOP),
+				climbStateHandler.setState(ClimbState.STOP)
+			),
+			SuperstructureState.HOLD_ALGAE
+		);
+	}
+
 	public Command elevatorOpening() {
 		return asSubsystemCommand(elevatorStateHandler.setState(ElevatorState.OPENING_HEIGHT), SuperstructureState.ELEVATOR_OPENING)
 			.until(() -> robot.getElevator().isPastPosition(StateMachineConstants.ELEVATOR_POSITION_FOR_OPENING));
@@ -495,6 +507,7 @@ public class Superstructure extends GBSubsystem {
 			case PRE_CLIMB -> preClimb();
 			case CLIMB, MANUAL_CLIMB, STOP_CLIMB -> climbStop();
 			case ELEVATOR_OPENING -> elevatorOpening();
+			case HOLD_ALGAE -> holdAlgae();
 		};
 	}
 

@@ -117,14 +117,16 @@ public class JoysticksBindings {
 				() -> robot.getRobotCommander().isCollectingAlgae()
 					? robot.getRobotCommander().setState(RobotState.HOLD_ALGAE)
 					: robot.getRobotCommander().setState(RobotState.DRIVE),
-				Set.of(robot.getRobotCommander(),
+				Set.of(
+					robot.getRobotCommander(),
 					robot.getRobotCommander().getSuperstructure(),
 					robot.getSwerve(),
 					robot.getElevator(),
 					robot.getArm(),
 					robot.getEndEffector(),
 					robot.getLifter(),
-					robot.getSolenoid())
+					robot.getSolenoid()
+				)
 			).schedule()
 		);
 	}

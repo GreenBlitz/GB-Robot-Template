@@ -63,8 +63,6 @@ public class Falcon500LifterBuilder {
 		lifter.applyConfiguration(generateMotorConfiguration());
 		lifter.setBrake(SET_BRAKE);
 
-		IDigitalInput digitalInput = generateDigitalInput();
-
 		Phoenix6AngleSignal positionSignal = Phoenix6SignalBuilder
 			.build(lifter.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
 

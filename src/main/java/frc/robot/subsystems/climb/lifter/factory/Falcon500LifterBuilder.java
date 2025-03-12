@@ -35,6 +35,8 @@ public class Falcon500LifterBuilder {
 		configuration.MotorOutput.Inverted = INVERTED ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive;
 		configuration.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT;
 		configuration.CurrentLimits.StatorCurrentLimitEnable = true;
+		configuration.HardwareLimitSwitch.ReverseLimitEnable = true;
+		configuration.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
 
 		return configuration;
 	}

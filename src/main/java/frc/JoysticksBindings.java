@@ -1,11 +1,13 @@
 package frc;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.constants.field.enums.Branch;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
@@ -17,6 +19,7 @@ import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.utils.utilcommands.ExecuteEndCommand;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 
@@ -155,8 +158,14 @@ public class JoysticksBindings {
 	private static void thirdJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = THIRD_JOYSTICK;
 		// bindings...
-
-		robot.getSwerve().applyCalibrationBindings(usedJoystick, () -> robot.getPoseEstimator().getEstimatedPose());
+		usedJoystick.A.onTrue(new InstantCommand(() -> {
+			Pose2d[] toLog = new Pose2d[Branch.values().length];
+			for (int i = 0; i < Branch.values().length; i++) {
+				toLog[i] = ScoringHelpers.getRobotBranchScoringPose(Branch.values()[i], StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS, false);
+			}
+			Logger.recordOutput("aaa", toLog);
+		}));
+//		robot.getSwerve().applyCalibrationBindings(usedJoystick, () -> robot.getPoseEstimator().getEstimatedPose());
 	}
 
 	private static void fourthJoystickButtons(Robot robot) {

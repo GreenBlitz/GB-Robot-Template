@@ -47,7 +47,6 @@ import frc.robot.vision.VisionFilters;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
 import frc.utils.TimedValue;
 import frc.utils.brakestate.BrakeStateManager;
-import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.time.TimeUtil;
 
@@ -120,7 +119,11 @@ public class Robot {
 
 		multiAprilTagVisionSources.applyFunctionOnAllFilters(
 			filters -> filters.and(
-				data -> VisionFilters.isYawAtAngleForMegaTag2(headingEstimator::getEstimatedHeading, VisionConstants.YAW_FILTER_TOLERANCE)
+				data -> VisionFilters
+					.isYawAtAngleForMegaTag2(
+						() -> headingEstimator.getEstimatedHeadingAtTimestamp(data.getTimestamp()),
+						VisionConstants.YAW_FILTER_TOLERANCE
+					)
 					.and(VisionFilters.isYawAngleNotZeroForMegaTag2())
 					.apply(data)
 			)
@@ -181,33 +184,33 @@ public class Robot {
 
 		this.preBuiltAutosChooser = new AutonomousChooser(
 			"PreBuiltAutos",
-			AutosBuilder.getAllPreBuiltAutos(this, intakingCommand, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+			AutosBuilder.getAllNoDelayAutos(this, intakingCommand, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
 		);
-		this.firstObjectScoringLocationChooser = new AutonomousChooser("ScoreFirst", AutosBuilder.getAllAutoScoringAutos(this));
-		this.secondObjectIntakingLocationChooser = new AutonomousChooser(
-			"IntakeSecond",
-			AutosBuilder.getAllIntakingAutos(this, intakingCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
-		);
-		this.secondObjectScoringLocationChooser = new AutonomousChooser(
-			"ScoreSecond",
-			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
-		);
-		this.thirdObjectIntakingLocationChooser = new AutonomousChooser(
-			"IntakeThird",
-			AutosBuilder.getAllIntakingAutos(this, intakingCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
-		);
-		this.thirdObjectScoringLocationChooser = new AutonomousChooser(
-			"ScoreThird",
-			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
-		);
-		this.fourthObjectIntakingLocationChooser = new AutonomousChooser(
-			"IntakeFourth",
-			AutosBuilder.getAllIntakingAutos(this, intakingCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
-		);
-		this.fourthObjectScoringLocationChooser = new AutonomousChooser(
-			"ScoreFourth",
-			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
-		);
+//		this.firstObjectScoringLocationChooser = new AutonomousChooser("ScoreFirst", AutosBuilder.getAllAutoScoringAutos(this));
+//		this.secondObjectIntakingLocationChooser = new AutonomousChooser(
+//			"IntakeSecond",
+//			AutosBuilder.getAllIntakingAutos(this, intakingCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+//		);
+//		this.secondObjectScoringLocationChooser = new AutonomousChooser(
+//			"ScoreSecond",
+//			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+//		);
+//		this.thirdObjectIntakingLocationChooser = new AutonomousChooser(
+//			"IntakeThird",
+//			AutosBuilder.getAllIntakingAutos(this, intakingCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+//		);
+//		this.thirdObjectScoringLocationChooser = new AutonomousChooser(
+//			"ScoreThird",
+//			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+//		);
+//		this.fourthObjectIntakingLocationChooser = new AutonomousChooser(
+//			"IntakeFourth",
+//			AutosBuilder.getAllIntakingAutos(this, intakingCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+//		);
+//		this.fourthObjectScoringLocationChooser = new AutonomousChooser(
+//			"ScoreFourth",
+//			AutosBuilder.getAllScoringAutos(this, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+//		);
 	}
 
 	public void periodic() {
@@ -224,7 +227,7 @@ public class Robot {
 			);
 		}
 		poseEstimator.updateVision(multiAprilTagVisionSources.getFilteredVisionData());
-		// multiAprilTagVisionSources.log();
+//		 multiAprilTagVisionSources.log();
 		headingEstimator.log();
 
 		BatteryUtil.logStatus();
@@ -236,31 +239,31 @@ public class Robot {
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 
-	public PathPlannerAutoWrapper getAuto() {
+	public Command getAuto() {
 		if (preBuiltAutosChooser.isDefaultOptionChosen()) {
-			if (firstObjectScoringLocationChooser.isDefaultOptionChosen()) {
-				return AutosBuilder.createDefaultAuto(this);
-			}
-			return getMultiChoosersAuto();
+//			if (firstObjectScoringLocationChooser.isDefaultOptionChosen()) {
+			return AutosBuilder.createDefaultNoDelayAuto(this);
+//			}
+//			return getMultiChoosersAuto();
 		}
 		return preBuiltAutosChooser.getChosenValue();
 	}
 
-	private PathPlannerAutoWrapper getMultiChoosersAuto() {
-		return PathPlannerAutoWrapper.chainAutos(
-			firstObjectScoringLocationChooser.getChosenValue(),
-			PathPlannerAutoWrapper
-				.chainAutos(
-					secondObjectIntakingLocationChooser.getChosenValue(),
-					secondObjectScoringLocationChooser.getChosenValue(),
-					thirdObjectIntakingLocationChooser.getChosenValue(),
-					thirdObjectScoringLocationChooser.getChosenValue(),
-					fourthObjectIntakingLocationChooser.getChosenValue(),
-					fourthObjectScoringLocationChooser.getChosenValue()
-				)
-				.asProxyAuto()
-		);
-	}
+//	private PathPlannerAutoWrapper getMultiChoosersAuto() {
+//		return PathPlannerAutoWrapper.chainAutos(
+//			firstObjectScoringLocationChooser.getChosenValue(),
+//			PathPlannerAutoWrapper
+//				.chainAutos(
+//					secondObjectIntakingLocationChooser.getChosenValue(),
+//					secondObjectScoringLocationChooser.getChosenValue(),
+//					thirdObjectIntakingLocationChooser.getChosenValue(),
+//					thirdObjectScoringLocationChooser.getChosenValue(),
+//					fourthObjectIntakingLocationChooser.getChosenValue(),
+//					fourthObjectScoringLocationChooser.getChosenValue()
+//				)
+//				.asProxyAuto()
+//		);
+//	}
 
 	public IPoseEstimator getPoseEstimator() {
 		return poseEstimator;
@@ -310,6 +313,5 @@ public class Robot {
 			swerve.getModules().getModulePositionsFromCenterMeters()
 		);
 	}
-
 
 }

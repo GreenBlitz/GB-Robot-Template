@@ -47,7 +47,7 @@ public class KrakenX60ElevatorBuilder {
 	private static final boolean SOFT_LIMIT_ENABLE = true;
 	private static final boolean IS_FIRST_MOTOR_INVERTED = true;
 	private static final boolean IS_SECOND_MOTOR_INVERTED = true;
-	public static final double kG = 0.26146;
+	public static final double kG = 0.31;
 
 	private static final int NUMBER_OF_MOTORS = 2;
 	private static final double STARTING_HEIGHT_METERS = 0;
@@ -56,12 +56,12 @@ public class KrakenX60ElevatorBuilder {
 	private static final Voltage CONFIG_STEP_VOLTAGE = Volts.of(3);
 	private static final Time CONFIG_TIMEOUT = Seconds.of(10);
 
-	private static SysIdRoutine.Config generateSysidConfig() {
+	private static SysIdRoutine.Config generateSysidConfig(String name) {
 		return new SysIdRoutine.Config(
 			CONFIG_RAMP_RATE,
 			CONFIG_STEP_VOLTAGE,
 			CONFIG_TIMEOUT,
-			state -> SignalLogger.writeString("Elevator/state", state.toString())
+			state -> SignalLogger.writeString("Elevator/" + name + "/state", state.toString())
 		);
 	}
 
@@ -73,9 +73,9 @@ public class KrakenX60ElevatorBuilder {
 			configuration.Slot0.kI = 0;
 			configuration.Slot0.kD = 0;
 			configuration.Slot0.kG = kG;
-			configuration.Slot0.kS = 0.050413;
-			configuration.Slot0.kV = 0.5037;
-			configuration.Slot0.kA = 0.02775;
+			configuration.Slot0.kS = 0.01000327332;
+			configuration.Slot0.kV = 0.50307;
+			configuration.Slot0.kA = 0.014782;
 
 			// PID
 			configuration.Slot1.kP = 10;
@@ -127,8 +127,9 @@ public class KrakenX60ElevatorBuilder {
 
 	private static ElevatorMotorSignals createSignals(TalonFXMotor motor) {
 		return new ElevatorMotorSignals(
-			Phoenix6SignalBuilder.build(motor.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS),
-			Phoenix6SignalBuilder.build(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ)
+			Phoenix6SignalBuilder
+				.build(motor.getDevice().getPosition(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS),
+			Phoenix6SignalBuilder.build(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ)
 		);
 	}
 
@@ -153,17 +154,17 @@ public class KrakenX60ElevatorBuilder {
 	}
 
 	public static Elevator createRealElevator(String logPath) {
-		TalonFXMotor rightMotor = new TalonFXMotor(logPath + "/right", IDs.TalonFXIDs.ELEVATOR_RIGHT, generateSysidConfig());
+		TalonFXMotor rightMotor = new TalonFXMotor(logPath + "/right", IDs.TalonFXIDs.ELEVATOR_RIGHT, generateSysidConfig("right"));
 		rightMotor.applyConfiguration(generateConfiguration(IS_FIRST_MOTOR_INVERTED));
 
-		TalonFXMotor leftMotor = new TalonFXMotor(logPath + "/left", IDs.TalonFXIDs.ELEVATOR_LEFT, generateSysidConfig());
+		TalonFXMotor leftMotor = new TalonFXMotor(logPath + "/left", IDs.TalonFXIDs.ELEVATOR_LEFT, generateSysidConfig("left"));
 		leftMotor.applyConfiguration(generateConfiguration(IS_SECOND_MOTOR_INVERTED));
 
 		return create(logPath, rightMotor, leftMotor);
 	}
 
 	public static Elevator createSimulationElevator(String logPath) {
-		TalonFXMotor rightMotor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_RIGHT, generateSysidConfig(), generateSimulation());
+		TalonFXMotor rightMotor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_RIGHT, generateSysidConfig(""), generateSimulation());
 		rightMotor.applyConfiguration(generateConfiguration(IS_FIRST_MOTOR_INVERTED));
 
 		return create(logPath, rightMotor, rightMotor);

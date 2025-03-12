@@ -10,6 +10,7 @@ import frc.robot.vision.sources.limelights.LimelightPoseEstimationMethod;
 import frc.utils.Filter;
 import frc.utils.math.ToleranceMath;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class VisionFilters {
@@ -29,12 +30,16 @@ public class VisionFilters {
 			.isNearWrapped(wantedPitch, Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getY()), pitchTolerance);
 	}
 
-	public static Filter<VisionData> isYawAtAngle(Supplier<Rotation2d> wantedYawSupplier, Rotation2d yawTolerance) {
-		return (visionData) -> ToleranceMath
-			.isNearWrapped(wantedYawSupplier.get(), Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getZ()), yawTolerance);
+	public static Filter<VisionData> isYawAtAngle(Supplier<Optional<Rotation2d>> wantedYawSupplier, Rotation2d yawTolerance) {
+		return (visionData) -> wantedYawSupplier.get()
+			.map(
+				wantedAngle -> ToleranceMath
+					.isNearWrapped(wantedAngle, Rotation2d.fromRadians(visionData.getEstimatedPose().getRotation().getZ()), yawTolerance)
+			)
+			.orElse(false);
 	}
 
-	public static Filter<VisionData> isYawAtAngleForMegaTag2(Supplier<Rotation2d> wantedYawSupplier, Rotation2d yawTolerance) {
+	public static Filter<VisionData> isYawAtAngleForMegaTag2(Supplier<Optional<Rotation2d>> wantedYawSupplier, Rotation2d yawTolerance) {
 		return isDataFromMegaTag2().implies(isYawAtAngle(wantedYawSupplier, yawTolerance));
 	}
 

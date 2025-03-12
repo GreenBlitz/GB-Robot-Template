@@ -18,14 +18,23 @@ public class AutonomousConstants {
 
 	public static final double DEFAULT_AUTO_DRIVE_POWER = -0.5;
 
-	public static final double DEFAULT_AUTO_DRIVE_TIME_SECONDS = 0.6;
+	public static final double DEFAULT_AUTO_DRIVE_TIME_SECONDS = 1;
 
 	public static final double INTAKING_TIMEOUT_SECONDS = 6;
 
 	public static PathConstraints getRealTimeConstraints(Swerve swerve) {
 		return new PathConstraints(
 			swerve.getConstants().velocityAt12VoltsMetersPerSecond(),
-			RealSwerveConstants.ACCELERATION_AT_12_VOLTS_METERS_PER_SECOND_SQUARED / 1.3,
+			2.5, // RealSwerveConstants.ACCELERATION_AT_12_VOLTS_METERS_PER_SECOND_SQUARED,
+			swerve.getConstants().maxRotationalVelocityPerSecond().getRadians(),
+			RealSwerveConstants.MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND
+		);
+	}
+
+	public static PathConstraints getRealTimeConstraintsForAuto(Swerve swerve) {
+		return new PathConstraints(
+			swerve.getConstants().velocityAt12VoltsMetersPerSecond(),
+			2, // RealSwerveConstants.ACCELERATION_AT_12_VOLTS_METERS_PER_SECOND_SQUARED,
 			swerve.getConstants().maxRotationalVelocityPerSecond().getRadians(),
 			RealSwerveConstants.MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND
 		);

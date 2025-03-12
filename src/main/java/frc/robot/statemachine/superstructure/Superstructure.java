@@ -3,9 +3,9 @@ package frc.robot.statemachine.superstructure;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.StateMachineConstants;
@@ -124,10 +124,18 @@ public class Superstructure extends GBSubsystem {
 			&& armStateHandler.getCurrentState() == ArmState.ALGAE_OUTTAKE;
 	}
 
-	public boolean isReadyForNet() {
-		return robot.getElevator().isAtPosition(ElevatorState.NET.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
+
+	public boolean isReadyToProcessor() {
+		return robot.getElevator().isAtPosition(ElevatorState.PROCESSOR_OUTTAKE.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
+			&& elevatorStateHandler.getCurrentState() == ElevatorState.PROCESSOR_OUTTAKE
+			&& robot.getArm().isAtPosition(ArmState.PROCESSOR_OUTTAKE.getPosition(), Tolerances.ALGAE_RELEASE_ARM_POSITION)
+			&& armStateHandler.getCurrentState() == ArmState.PROCESSOR_OUTTAKE;
+	}
+
+	public boolean isReadyForNetRelease() {
+		return robot.getElevator().isPastPosition(StateMachineConstants.ELEVATOR_POSITION_TO_RELEASE_NET)
 			&& elevatorStateHandler.getCurrentState() == ElevatorState.NET
-			&& robot.getArm().isAtPosition(ArmState.NET.getPosition(), Tolerances.ARM_POSITION)
+			&& robot.getArm().isBehindPosition(StateMachineConstants.ARM_POSITION_TO_RELEASE_NET)
 			&& armStateHandler.getCurrentState() == ArmState.NET;
 	}
 
@@ -351,7 +359,7 @@ public class Superstructure extends GBSubsystem {
 					armStateHandler.setState(ArmState.PROCESSOR_OUTTAKE),
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 					climbStateHandler.setState(ClimbState.STOP)
-				).until(this::isReadyToOuttakeAlgae),
+				).until(this::isReadyToProcessor),
 				new ParallelCommandGroup(
 					elevatorStateHandler.setState(ElevatorState.PROCESSOR_OUTTAKE),
 					armStateHandler.setState(ArmState.PROCESSOR_OUTTAKE),
@@ -385,49 +393,20 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command preNet() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.WHILE_DRIVE_NET),
-				armStateHandler.setState(ArmState.PRE_NET),
-				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
-				climbStateHandler.setState(ClimbState.STOP)
-			),
-			SuperstructureState.PRE_NET
-		);
-	}
-
-
-	public Command netWithoutRelease() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.NET),
-				armStateHandler.setState(ArmState.NET),
-				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
-				climbStateHandler.setState(ClimbState.STOP)
-			),
-			SuperstructureState.NET_WITHOUT_RELEASE
-		);
-	}
-
-
 	public Command netWithRelease() {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.NET).until(() -> robot.getElevator().getElevatorPositionMeters() > 0.8),
 				new ParallelCommandGroup(
-					elevatorStateHandler.setState(ElevatorState.NET),
 					armStateHandler.setState(ArmState.NET),
-					endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE),
-					climbStateHandler.setState(ClimbState.STOP)
+					climbStateHandler.setState(ClimbState.STOP),
+					new SequentialCommandGroup(
+						endEffectorStateHandler.setState(EndEffectorState.DEFAULT).until(this::isReadyForNetRelease),
+						endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE)
+					)
 				)
-//						.until(() -> !isAlgaeIn()),
-//				new ParallelCommandGroup(
-//					elevatorStateHandler.setState(ElevatorState.NET),
-//					armStateHandler.setState(ArmState.NET),
-//					endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE)
-//				).withTimeout(StateMachineConstants.NET_OUTTAKE_TIME_AFTER_LIMIT_SWITCH_SECONDS)
 			),
-			SuperstructureState.NET_WITH_RELEASE
+			SuperstructureState.NET
 		);
 	}
 
@@ -498,10 +477,9 @@ public class Superstructure extends GBSubsystem {
 	private Command endState(SuperstructureState state) {
 		return switch (state) {
 			case STAY_IN_PLACE, OUTTAKE -> stayInPlace();
-			case INTAKE, IDLE, ALGAE_REMOVE, ALGAE_OUTTAKE, CLOSE_L4, PROCESSOR_OUTTAKE -> idle();
+			case INTAKE, IDLE, ALGAE_REMOVE, ALGAE_OUTTAKE, CLOSE_L4, PROCESSOR_OUTTAKE, NET -> idle();
 			case ARM_PRE_SCORE, CLOSE_CLIMB -> armPreScore();
 			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> afterScore();
-			case PRE_NET, NET_WITHOUT_RELEASE, NET_WITH_RELEASE -> preNet();
 			case PRE_CLIMB -> preClimb();
 			case CLIMB, STOP_CLIMB -> climbStop();
 			case ELEVATOR_OPENING -> elevatorOpening();

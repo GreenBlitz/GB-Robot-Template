@@ -14,6 +14,7 @@ public enum RobotState {
 	SCORE,
 	ALGAE_REMOVE,
 	ALGAE_OUTTAKE,
+	HOLD_ALGAE,
 	PRE_NET,
 	NET,
 	PROCESSOR_SCORE,

@@ -258,6 +258,7 @@ public class RobotCommander extends GBSubsystem {
 			case PRE_CLIMB_WITH_AIM_ASSIST -> preClimbWithAimAssist();
 			case PRE_CLIMB_WITHOUT_AIM_ASSIST -> preClimbWithoutAimAssist();
 			case CLIMB -> climb();
+			case MANUAL_CLIMB -> manualClimb();
 			case STOP_CLIMB -> stopClimb();
 			case CLOSE_CLIMB -> closeClimb();
 			case HOLD_ALGAE -> holdAlgae();
@@ -525,6 +526,13 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
+	private Command manualClimb() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(superstructure.manualClimb(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			RobotState.MANUAL_CLIMB
+		);
+	}
+
 	public Command stopClimb() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(superstructure.climbStop(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
@@ -582,7 +590,7 @@ public class RobotCommander extends GBSubsystem {
 			case SCORE, SCORE_WITHOUT_RELEASE -> closeAfterScore();
 			case PRE_CLIMB_WITH_AIM_ASSIST -> preClimbWithAimAssist();
 			case PRE_CLIMB_WITHOUT_AIM_ASSIST -> preClimbWithoutAimAssist();
-			case CLIMB, STOP_CLIMB -> stopClimb();
+			case CLIMB, MANUAL_CLIMB, STOP_CLIMB -> stopClimb();
 		};
 	}
 

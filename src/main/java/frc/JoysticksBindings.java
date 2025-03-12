@@ -12,7 +12,6 @@ import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.RobotState;
-import frc.robot.statemachine.StateMachineConstants;
 import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
@@ -138,10 +137,7 @@ public class JoysticksBindings {
 		usedJoystick.POV_DOWN.onTrue(robot.getRobotCommander().setState(RobotState.CLIMB));
 		usedJoystick.A.onTrue(driveActionChooser(robot));
 
-		Command climbUp = robot.getLifter().getCommandsBuilder().setPower(StateMachineConstants.POWER_FOR_MANUAL_CLIMB);
-		climbUp.addRequirements(robot.getRobotCommander(), robot.getRobotCommander().getSuperstructure());
-
-		usedJoystick.START.whileTrue(climbUp);
+		usedJoystick.START.whileTrue(robot.getRobotCommander().setState(RobotState.MANUAL_CLIMB));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

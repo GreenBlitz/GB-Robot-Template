@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusSignal;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.events.EventTrigger;
@@ -13,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.RobotManager;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.AutosBuilder;
+import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
 import frc.robot.scoringhelpers.ButtonDriverHelper;
 import frc.robot.subsystems.climb.lifter.Lifter;
@@ -22,7 +25,6 @@ import frc.robot.subsystems.swerve.module.ModuleConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.vision.VisionConstants;
 import frc.robot.hardware.interfaces.IGyro;
-import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
@@ -215,6 +217,9 @@ public class Robot {
 	}
 
 	public void periodic() {
+		BaseStatusSignal.refreshAll(Phoenix6SignalBuilder.rioSignals.toArray(new StatusSignal[0]));
+		BaseStatusSignal.refreshAll(Phoenix6SignalBuilder.chassisSignals.toArray(new StatusSignal[0]));
+		BaseStatusSignal.refreshAll(Phoenix6SignalBuilder.superstructureSignals.toArray(new StatusSignal[0]));
 		swerve.update();
 		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());
 
@@ -232,7 +237,7 @@ public class Robot {
 		headingEstimator.log();
 
 		BatteryUtil.logStatus();
-		BusChain.logChainsStatuses();
+//		BusChain.logChainsStatuses();
 		simulationManager.logPoses();
 		ScoringHelpers.log("Scoring");
 		ButtonDriverHelper.log("Scoring/ButtonDriverDisplay");

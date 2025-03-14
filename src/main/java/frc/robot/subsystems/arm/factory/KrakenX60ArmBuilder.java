@@ -23,6 +23,7 @@ import frc.robot.hardware.empties.EmptyAngleEncoder;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.mechanisms.wpilib.SingleJointedArmSimulation;
+import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6Util;
 import frc.robot.hardware.phoenix6.angleencoder.CANCoderEncoder;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
@@ -65,10 +66,17 @@ public class KrakenX60ArmBuilder {
 		TalonFXMotor motor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ARM, buildSysidConfig(), buildArmSimulation());
 		motor.applyConfiguration(buildTalonFXConfiguration());
 
-		Phoenix6AngleSignal motorPositionSignal = Phoenix6SignalBuilder
-			.build(motor.getDevice().getPosition(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
-		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
-			.build(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ);
+		Phoenix6AngleSignal motorPositionSignal = Phoenix6SignalBuilder.build(
+			motor.getDevice().getPosition(),
+			RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ,
+			AngleUnit.ROTATIONS,
+			BusChain.SUPERSTRUCTURE_CANIVORE
+		);
+		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder.build(
+			motor.getDevice().getMotorVoltage(),
+			RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ,
+			BusChain.SUPERSTRUCTURE_CANIVORE
+		);
 
 		IAngleEncoder encoder = getEncoder(logPath);
 		InputSignal<Rotation2d> encoderPositionSignal = generateEncoderPositionSignal(encoder);
@@ -202,7 +210,8 @@ public class KrakenX60ArmBuilder {
 				Phoenix6SignalBuilder.build(
 					((CANCoderEncoder) encoder).getDevice().getPosition(),
 					RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ,
-					AngleUnit.ROTATIONS
+					AngleUnit.ROTATIONS,
+					BusChain.SUPERSTRUCTURE_CANIVORE
 				);
 			case SIMULATION -> new SuppliedAngleSignal("position", () -> 0.0, AngleUnit.ROTATIONS);
 		};

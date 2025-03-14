@@ -18,6 +18,7 @@ public enum SuperstructureState {
 	PRE_CLIMB,
 	CLIMB,
 	MANUAL_CLIMB,
+	EXIT_CLIMB,
 	STOP_CLIMB,
 	CLOSE_CLIMB,
 	HOLD_ALGAE,

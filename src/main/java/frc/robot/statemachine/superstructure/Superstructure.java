@@ -450,6 +450,18 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
+	public Command exitClimb() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.CLIMB),
+				armStateHandler.setState(ArmState.CLIMB),
+				endEffectorStateHandler.setState(EndEffectorState.STOP),
+				climbStateHandler.setState(ClimbState.EXIT_CLIMB)
+			),
+			SuperstructureState.EXIT_CLIMB
+		);
+	}
+
 	public Command climbStop() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
@@ -505,7 +517,7 @@ public class Superstructure extends GBSubsystem {
 			case ARM_PRE_SCORE, CLOSE_CLIMB -> armPreScore();
 			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> afterScore();
 			case PRE_CLIMB -> preClimb();
-			case CLIMB, MANUAL_CLIMB, STOP_CLIMB -> climbStop();
+			case CLIMB, MANUAL_CLIMB, STOP_CLIMB, EXIT_CLIMB -> climbStop();
 			case ELEVATOR_OPENING -> elevatorOpening();
 			case HOLD_ALGAE -> holdAlgae();
 		};

@@ -21,7 +21,7 @@ public class DriveFactory {
 	}
 
 	public static DriveRequests createRequests() {
-		return KrakenX60DriveBuilder.buildRequests(true);
+		return KrakenX60DriveBuilder.buildRequests();
 	}
 
 	public static DriveSignals createSignals(ControllableMotor drive) {

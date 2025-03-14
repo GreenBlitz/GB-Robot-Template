@@ -2,6 +2,7 @@ package frc.robot.subsystems.swerve.factories.modules.drive;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -31,6 +32,7 @@ public class KrakenX60DriveBuilder {
 
 	public static final double SLIP_CURRENT = 60;
 	public static final double GEAR_RATIO = 7.13;
+	public static final boolean IS_CURRENT_CONTROL = true;
 	private static final double MOMENT_OF_INERTIA_METERS_SQUARED = 0.001;
 
 	private static SysIdRoutine.Config buildSysidConfig() {
@@ -107,12 +109,13 @@ public class KrakenX60DriveBuilder {
 		return drive;
 	}
 
-	static DriveRequests buildRequests(boolean isTorqueControl) {
+	static DriveRequests buildRequests() {
 		return new DriveRequests(
-			isTorqueControl
+			IS_CURRENT_CONTROL
 				? Phoenix6RequestBuilder.build(new VelocityTorqueCurrentFOC(0).withSlot(1), 0)
 				: Phoenix6RequestBuilder.build(new VelocityVoltage(0), 0, true),
-			Phoenix6RequestBuilder.build(new VoltageOut(0), true)
+			Phoenix6RequestBuilder.build(new VoltageOut(0), true),
+			Phoenix6RequestBuilder.build(new TorqueCurrentFOC(0))
 		);
 	}
 

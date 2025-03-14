@@ -32,12 +32,12 @@ public class KrakenX60DriveBuilder {
 	public static final double GEAR_RATIO = 7.13;
 	private static final double MOMENT_OF_INERTIA_METERS_SQUARED = 0.001;
 
-	private static SysIdRoutine.Config buildSysidConfig() {
+	private static SysIdRoutine.Config buildSysidConfig(String logPath) {
 		return new SysIdRoutine.Config(
 			Units.Volts.of(1).per(Units.Second),
 			Units.Volts.of(7),
 			null,
-			state -> SignalLogger.writeString("state", state.toString())
+			state -> SignalLogger.writeString(logPath + "/state", state.toString())
 		);
 	}
 
@@ -83,27 +83,32 @@ public class KrakenX60DriveBuilder {
 	}
 
 	static ControllableMotor buildDrive(String logPath, Phoenix6DeviceID deviceID, boolean inverted) {
-		TalonFXMotor drive = new TalonFXMotor(logPath, deviceID, buildSysidConfig(), buildMechanismSimulation());
+		TalonFXMotor drive = new TalonFXMotor(logPath, deviceID, buildSysidConfig(logPath), buildMechanismSimulation());
 		drive.applyConfiguration(buildMotorConfig(inverted));
 		return drive;
 	}
 
 	static DriveRequests buildRequests() {
 		return new DriveRequests(
-			Phoenix6RequestBuilder.build(new VelocityVoltage(0), 0, true),
+			Phoenix6RequestBuilder
+				.build(new VelocityVoltage(0).withUpdateFreqHz(RobotConstants.DEFAULT_CANIVORE_REQUEST_FREQUENCY_HERTZ), 0, true),
 			Phoenix6RequestBuilder.build(new VoltageOut(0), true)
 		);
 	}
 
 	static DriveSignals buildSignals(TalonFXMotor drive) {
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
-			.build(drive.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+			.build(drive.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ);
 		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder
-			.build(drive.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+			.build(drive.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ);
 		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder
-			.build(drive.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
-		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder
-			.build(drive.getDevice().getPosition(), velocitySignal, RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+			.build(drive.getDevice().getVelocity(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder.build(
+			drive.getDevice().getPosition(),
+			velocitySignal,
+			RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ,
+			AngleUnit.ROTATIONS
+		);
 
 		return new DriveSignals(positionSignal, velocitySignal, currentSignal, voltageSignal);
 	}

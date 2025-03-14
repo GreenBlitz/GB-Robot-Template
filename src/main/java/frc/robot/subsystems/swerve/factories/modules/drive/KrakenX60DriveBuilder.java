@@ -37,8 +37,8 @@ public class KrakenX60DriveBuilder {
 
 	private static SysIdRoutine.Config buildSysidConfig() {
 		return new SysIdRoutine.Config(
-			Units.Volts.of(1).per(Units.Second),
-			Units.Volts.of(7),
+			Units.Volts.of(IS_CURRENT_CONTROL ? 3.5 : 1).per(Units.Second),
+			Units.Volts.of(IS_CURRENT_CONTROL ? 22 : 7),
 			null,
 			state -> SignalLogger.writeString("state", state.toString())
 		);

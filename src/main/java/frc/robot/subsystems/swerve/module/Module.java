@@ -120,19 +120,9 @@ public class Module {
 		steer.updateSimulation();
 		drive.updateSimulation();
 
-//		encoder.updateInputs(encoderSignals.position());
-//		steer.updateInputs(steerSignals.position(), steerSignals.velocity(), steerSignals.current(), steerSignals.voltage());
-		drive.updateInputs(
-			driveSignals.position(),
-			driveSignals.velocity(),
-			driveSignals.current(),
-			driveSignals.voltage(),
-			steerSignals.position(),
-			steerSignals.velocity(),
-			steerSignals.current(),
-			steerSignals.voltage(),
-			encoderSignals.position()
-		);
+		encoder.updateInputs(encoderSignals.position());
+		steer.updateInputs(steerSignals.position(), steerSignals.velocity(), steerSignals.current(), steerSignals.voltage());
+		drive.updateInputs(driveSignals.position(), driveSignals.velocity(), driveSignals.current(), driveSignals.voltage());
 
 		fixDriveInputsCoupling();
 

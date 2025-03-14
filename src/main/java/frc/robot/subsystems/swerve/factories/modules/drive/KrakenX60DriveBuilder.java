@@ -37,8 +37,8 @@ public class KrakenX60DriveBuilder {
 
 	private static SysIdRoutine.Config buildSysidConfig(String logPath) {
 		return new SysIdRoutine.Config(
-			Units.Volts.of(IS_CURRENT_CONTROL ? 3.5 : 1).per(Units.Second),
-			Units.Volts.of(IS_CURRENT_CONTROL ? 22 : 7),
+			Units.Volts.of(IS_CURRENT_CONTROL ? 2 : 1).per(Units.Second),
+			Units.Volts.of(IS_CURRENT_CONTROL ? 15 : 7),
 			null,
 			state -> SignalLogger.writeString(logPath + "/state", state.toString())
 		);
@@ -76,10 +76,10 @@ public class KrakenX60DriveBuilder {
 			driveConfig.Slot0.kD = 0;
 
 			// Velocity Torque
-			driveConfig.Slot1.kS = 0;
+			driveConfig.Slot1.kS = 5.1;
 			driveConfig.Slot1.kV = 0;
-			driveConfig.Slot1.kA = 0;
-			driveConfig.Slot1.kP = 0;
+			driveConfig.Slot1.kA = GEAR_RATIO / (1 / DCMotor.getKrakenX60Foc(1).KtNMPerAmp);
+			driveConfig.Slot1.kP = 40;
 			driveConfig.Slot1.kI = 0;
 			driveConfig.Slot1.kD = 0;
 		} else {

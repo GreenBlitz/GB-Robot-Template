@@ -142,7 +142,8 @@ public class Swerve extends GBSubsystem {
 
 		double driveMagnitudeMetersPerSecond = SwerveMath.getDriveMagnitude(allianceRelativeSpeeds);
 		Logger.recordOutput(constants.velocityLogPath() + "/Magnitude", driveMagnitudeMetersPerSecond);
-		Logger.recordOutput(constants.velocityLogPath() + "/Acceleration",
+		Logger.recordOutput(
+			constants.velocityLogPath() + "/Acceleration",
 			(driveMagnitudeMetersPerSecond - lastMagnitudeMetersPerSecond) / TimeUtil.getLatestCycleTimeSeconds()
 		);
 		lastMagnitudeMetersPerSecond = driveMagnitudeMetersPerSecond;

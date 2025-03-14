@@ -33,7 +33,7 @@ public class KrakenX60DriveBuilder {
 
 	public static final double SLIP_CURRENT = 60;
 	public static final double GEAR_RATIO = 7.13;
-	public static final boolean IS_CURRENT_CONTROL = false;
+	public static final boolean IS_CURRENT_CONTROL = true;
 	private static final double MOMENT_OF_INERTIA_METERS_SQUARED = 0.001;
 
 	private static SysIdRoutine.Config buildSysidConfig(String logPath) {

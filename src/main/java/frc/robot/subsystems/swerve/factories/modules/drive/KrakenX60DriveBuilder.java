@@ -2,6 +2,7 @@ package frc.robot.subsystems.swerve.factories.modules.drive;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -64,19 +65,37 @@ public class KrakenX60DriveBuilder {
 		driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
 		if (Robot.ROBOT_TYPE.isReal()) {
+			// Velocity Voltage
 			driveConfig.Slot0.kS = 0.15916;
 			driveConfig.Slot0.kV = 0.90548;
 			driveConfig.Slot0.kA = 0.079923;
 			driveConfig.Slot0.kP = 3;
 			driveConfig.Slot0.kI = 0;
 			driveConfig.Slot0.kD = 0;
+
+			// Velocity Torque
+			driveConfig.Slot1.kS = 0;
+			driveConfig.Slot1.kV = 0;
+			driveConfig.Slot1.kA = 0;
+			driveConfig.Slot1.kP = 0;
+			driveConfig.Slot1.kI = 0;
+			driveConfig.Slot1.kD = 0;
 		} else {
+			// Velocity Voltage
 			driveConfig.Slot0.kS = 0;
 			driveConfig.Slot0.kV = 0;
 			driveConfig.Slot0.kA = 0;
 			driveConfig.Slot0.kP = 10;
 			driveConfig.Slot0.kI = 0;
 			driveConfig.Slot0.kD = 0;
+
+			// Velocity Torque
+			driveConfig.Slot1.kS = 0;
+			driveConfig.Slot1.kV = 0;
+			driveConfig.Slot1.kA = 0;
+			driveConfig.Slot1.kP = 0;
+			driveConfig.Slot1.kI = 0;
+			driveConfig.Slot1.kD = 0;
 		}
 
 		return driveConfig;
@@ -88,9 +107,11 @@ public class KrakenX60DriveBuilder {
 		return drive;
 	}
 
-	static DriveRequests buildRequests() {
+	static DriveRequests buildRequests(boolean isTorqueControl) {
 		return new DriveRequests(
-			Phoenix6RequestBuilder.build(new VelocityVoltage(0), 0, true),
+			isTorqueControl
+				? Phoenix6RequestBuilder.build(new VelocityTorqueCurrentFOC(0).withSlot(1), 0)
+				: Phoenix6RequestBuilder.build(new VelocityVoltage(0), 0, true),
 			Phoenix6RequestBuilder.build(new VoltageOut(0), true)
 		);
 	}
@@ -99,7 +120,7 @@ public class KrakenX60DriveBuilder {
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
 			.build(drive.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder
-			.build(drive.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+			.build(drive.getDevice().getTorqueCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder
 			.build(drive.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
 		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder

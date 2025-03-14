@@ -2,6 +2,8 @@ package frc.robot.subsystems.swerve.factories.modules.drive;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -30,12 +32,13 @@ public class KrakenX60DriveBuilder {
 
 	public static final double SLIP_CURRENT = 60;
 	public static final double GEAR_RATIO = 7.13;
+	public static final boolean IS_CURRENT_CONTROL = true;
 	private static final double MOMENT_OF_INERTIA_METERS_SQUARED = 0.001;
 
 	private static SysIdRoutine.Config buildSysidConfig(String logPath) {
 		return new SysIdRoutine.Config(
-			Units.Volts.of(1).per(Units.Second),
-			Units.Volts.of(7),
+			Units.Volts.of(IS_CURRENT_CONTROL ? 2 : 1).per(Units.Second),
+			Units.Volts.of(IS_CURRENT_CONTROL ? 15 : 7),
 			null,
 			state -> SignalLogger.writeString(logPath + "/state", state.toString())
 		);
@@ -64,19 +67,37 @@ public class KrakenX60DriveBuilder {
 		driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
 		if (Robot.ROBOT_TYPE.isReal()) {
+			// Velocity Voltage
 			driveConfig.Slot0.kS = 0.15916;
 			driveConfig.Slot0.kV = 0.90548;
 			driveConfig.Slot0.kA = 0.079923;
 			driveConfig.Slot0.kP = 3;
 			driveConfig.Slot0.kI = 0;
 			driveConfig.Slot0.kD = 0;
+
+			// Velocity Torque
+			driveConfig.Slot1.kS = 5.1;
+			driveConfig.Slot1.kV = 0;
+			driveConfig.Slot1.kA = GEAR_RATIO / (1 / DCMotor.getKrakenX60Foc(1).KtNMPerAmp);
+			driveConfig.Slot1.kP = 40;
+			driveConfig.Slot1.kI = 0;
+			driveConfig.Slot1.kD = 0;
 		} else {
+			// Velocity Voltage
 			driveConfig.Slot0.kS = 0;
 			driveConfig.Slot0.kV = 0;
 			driveConfig.Slot0.kA = 0;
 			driveConfig.Slot0.kP = 10;
 			driveConfig.Slot0.kI = 0;
 			driveConfig.Slot0.kD = 0;
+
+			// Velocity Torque
+			driveConfig.Slot1.kS = 0;
+			driveConfig.Slot1.kV = 0;
+			driveConfig.Slot1.kA = 0;
+			driveConfig.Slot1.kP = 0;
+			driveConfig.Slot1.kI = 0;
+			driveConfig.Slot1.kD = 0;
 		}
 
 		return driveConfig;
@@ -90,9 +111,15 @@ public class KrakenX60DriveBuilder {
 
 	static DriveRequests buildRequests() {
 		return new DriveRequests(
-			Phoenix6RequestBuilder
-				.build(new VelocityVoltage(0).withUpdateFreqHz(RobotConstants.DEFAULT_CANIVORE_REQUEST_FREQUENCY_HERTZ), 0, true),
-			Phoenix6RequestBuilder.build(new VoltageOut(0), true)
+			IS_CURRENT_CONTROL
+				? Phoenix6RequestBuilder.build(
+					new VelocityTorqueCurrentFOC(0).withSlot(1).withUpdateFreqHz(RobotConstants.DEFAULT_CANIVORE_REQUEST_FREQUENCY_HERTZ),
+					0
+				)
+				: Phoenix6RequestBuilder
+					.build(new VelocityVoltage(0).withUpdateFreqHz(RobotConstants.DEFAULT_CANIVORE_REQUEST_FREQUENCY_HERTZ), 0, true),
+			Phoenix6RequestBuilder.build(new VoltageOut(0), true),
+			Phoenix6RequestBuilder.build(new TorqueCurrentFOC(0))
 		);
 	}
 
@@ -100,7 +127,7 @@ public class KrakenX60DriveBuilder {
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
 			.build(drive.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ);
 		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder
-			.build(drive.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ);
+			.build(drive.getDevice().getTorqueCurrent(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ);
 		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder
 			.build(drive.getDevice().getVelocity(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
 		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder.build(

@@ -4,6 +4,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
+import frc.utils.InterpolationMap;
+
+import java.util.Map;
 
 public class ArmConstants {
 
@@ -21,24 +24,17 @@ public class ArmConstants {
 	public static final Rotation2d ACCELERATION_ANGLES_PER_SECOND_SQUARED = Rotation2d.fromRotations(3);
 
 	public static final double CALIBRATION_MAX_POWER = 0.2;
-
-	static class Rotation2dInterpolator implements Interpolator<Rotation2d> {
-
-		@Override
-		public Rotation2d interpolate(final Rotation2d startValue, final Rotation2d endValue, final double t) {
-			return Rotation2d.fromDegrees(Interpolator.forDouble().interpolate(startValue.getDegrees(), endValue.getDegrees(), t));
-		}
-
-	}
-
-	public static final InterpolatingTreeMap<Double, Rotation2d> L4_DISTANCE_ANGLE_MAP = new InterpolatingTreeMap<Double, Rotation2d>(
+	
+	public static final InterpolationMap<Double, Rotation2d> L4_DISTANCE_ANGLE_MAP = new InterpolationMap<>(
 		InverseInterpolator.forDouble(),
-		new Rotation2dInterpolator()
+		InterpolationMap.forRotation2d(),
+			Map.of(0.52, Rotation2d.fromDegrees(0),0.56, Rotation2d.fromDegrees(4.5),0.65, Rotation2d.fromDegrees(12))
 	);
-	static {
-		L4_DISTANCE_ANGLE_MAP.put(0.52, Rotation2d.fromDegrees(0));
-		L4_DISTANCE_ANGLE_MAP.put(0.56, Rotation2d.fromDegrees(4.5));
-		L4_DISTANCE_ANGLE_MAP.put(0.65, Rotation2d.fromDegrees(12));
-	}
+	
+	public static final InterpolationMap<Double, Rotation2d> L3_L2_DISTANCE_ANGLE_MAP = new InterpolationMap<>(
+			InverseInterpolator.forDouble(),
+			InterpolationMap.forRotation2d(),
+			Map.of(0.52, Rotation2d.fromDegrees(0),0.56, Rotation2d.fromDegrees(4.5),0.65, Rotation2d.fromDegrees(12))
+	);
 
 }

@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.statemachine.Tolerances;
+import frc.utils.math.AngleMath;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.function.Supplier;
@@ -27,17 +28,12 @@ public class ArmStateHandler {
 	public Command setState(ArmState state) {
 		if (state == ArmState.STAY_IN_PLACE) {
 			return new ParallelCommandGroup(new InstantCommand(() -> currentState = state), arm.getCommandsBuilder().stayInPlace());
-		} else if (state == ArmState.L4) {
-			return new ParallelCommandGroup(new InstantCommand(() -> currentState = state), arm.getCommandsBuilder().moveToPosition(() -> {
-				Logger.recordOutput("distance", distanceSupplier.get());
-				return state.getPosition().plus(ArmConstants.L4_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()));
-			}, state.getMaxVelocityRotation2dPerSecond(), state.getMaxAccelerationRotation2dPerSecondSquared()));
 		} else {
 			return new ParallelCommandGroup(
 				new InstantCommand(() -> currentState = state),
 				arm.getCommandsBuilder()
 					.moveToPosition(
-						state.getPosition(),
+						getStatePosition(state),
 						state.getMaxVelocityRotation2dPerSecond(),
 						state.getMaxAccelerationRotation2dPerSecondSquared()
 					)
@@ -46,22 +42,27 @@ public class ArmStateHandler {
 	}
 
 	public boolean isAtState(ArmState state) {
-		boolean isAt = false;
+		boolean isAt = arm.isAtPosition(getStatePosition(state),Tolerances.ARM_POSITION);
 		Rotation2d inter = ArmConstants.L4_DISTANCE_ANGLE_MAP.get(distanceSupplier.get());
 		Rotation2d target = Rotation2d.fromDegrees(state.getPosition().getDegrees() + inter.getDegrees());
-		if (state == ArmState.L4) {
-			isAt = arm.isAtPosition(
-				Rotation2d
-					.fromDegrees(state.getPosition().getDegrees() + ArmConstants.L4_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()).getDegrees()),
-				Tolerances.ARM_POSITION
-			);
-		} else {
-			isAt = arm.isAtPosition(state.getPosition(), Tolerances.ARM_POSITION);
-		}
+		
 		Logger.recordOutput("arm target", target);
 		Logger.recordOutput("inter", inter);
 		Logger.recordOutput("isAtAmPositon", isAt);
 		return isAt;
+	}
+	
+	private Rotation2d getStatePosition(ArmState state) {
+		if (state == ArmState.L4) {
+			return Rotation2d
+					.fromDegrees(state.getPosition().getDegrees() + ArmConstants.L4_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()).getDegrees());
+		}
+		else if (state == ArmState.L2 || state == ArmState.L3) {
+			return Rotation2d
+					.fromDegrees(state.getPosition().getDegrees() + ArmConstants.L3_L2_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()).getDegrees());
+			
+		}
+		return state.getPosition();
 	}
 
 }

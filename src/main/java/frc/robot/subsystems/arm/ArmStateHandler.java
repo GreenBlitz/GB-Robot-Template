@@ -11,9 +11,11 @@ public class ArmStateHandler {
 
 	private final Arm arm;
 	private ArmState currentState;
+	private final Supplier<Double> distanceSupplier;
 
-	public ArmStateHandler(Arm arm) {
+	public ArmStateHandler(Arm arm, Supplier<Double> distanceSupplier) {
 		this.arm = arm;
+		this.distanceSupplier = distanceSupplier;
 	}
 
 	public ArmState getCurrentState() {
@@ -22,10 +24,18 @@ public class ArmStateHandler {
 
 	public Command setState(ArmState state) {
 		if (state == ArmState.STAY_IN_PLACE) {
-			return new ParallelCommandGroup(new InstantCommand(() -> currentState = state),
-					arm.getCommandsBuilder().stayInPlace());
-		}
-		else {
+			return new ParallelCommandGroup(new InstantCommand(() -> currentState = state), arm.getCommandsBuilder().stayInPlace());
+		} else if (state == ArmState.L4) {
+			return new ParallelCommandGroup(
+				new InstantCommand(() -> currentState = state),
+				arm.getCommandsBuilder()
+					.moveToPosition(
+						state.getPosition().plus(ArmConstants.L4_DISTANCE_ANGLE_MAP.get(distanceSupplier.get())),
+						state.getMaxVelocityRotation2dPerSecond(),
+						state.getMaxAccelerationRotation2dPerSecondSquared()
+					)
+			);
+		} else {
 			return new ParallelCommandGroup(
 				new InstantCommand(() -> currentState = state),
 				arm.getCommandsBuilder()
@@ -38,24 +48,8 @@ public class ArmStateHandler {
 		}
 	}
 
-	public Command setInterpolatedState(ArmState state, Supplier<Double> distanceSupplier) {
-		return new ParallelCommandGroup(
-				new InstantCommand(() -> currentState = state),
-				arm.getCommandsBuilder()
-				   .moveToPosition(
-						   state.getPosition().plus(ArmConstants.L4_DISTANCE_ANGLE_MAP.get(distanceSupplier.get())),
-						   state.getMaxVelocityRotation2dPerSecond(),
-						   state.getMaxAccelerationRotation2dPerSecondSquared()
-				   )
-		);
-	}
-
 	public boolean isAtState() {
 		return arm.isAtPosition(currentState.getPosition(), Tolerances.ARM_POSITION);
-	}
-
-	public boolean isAtInterpolatedState() {
-
 	}
 
 }

@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.constants.field.Field;
 import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.StateMachineConstants;
@@ -43,7 +44,13 @@ public class Superstructure extends GBSubsystem {
 		super(logPath);
 		this.robot = robot;
 		this.elevatorStateHandler = new ElevatorStateHandler(robot.getElevator());
-		this.armStateHandler = new ArmStateHandler(robot.getArm());
+		this.armStateHandler = new ArmStateHandler(
+			robot.getArm(),
+			() -> robot.getPoseEstimator()
+				.getEstimatedPose()
+				.getTranslation()
+				.getDistance(Field.getReefSideMiddle(ScoringHelpers.getTargetBranch().getReefSide()).getTranslation())
+		);
 		this.endEffectorStateHandler = new EndEffectorStateHandler(robot.getEndEffector(), this);
 		this.climbStateHandler = new ClimbStateHandler(new SolenoidStateHandler(robot.getSolenoid()), new LifterStateHandler(robot.getLifter()));
 
@@ -244,7 +251,7 @@ public class Superstructure extends GBSubsystem {
 					new SequentialCommandGroup(
 						armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmPreScore())
 							.until(() -> robot.getElevator().isPastPosition(StateMachineConstants.ELEVATOR_POSITION_TO_MOVE_ARM_TO_SCORE_L4)),
-						armStateHandler.setInterpolatedState(ScoringHelpers.targetScoreLevel.getArmScore())
+						armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmScore())
 					),
 					elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorPreScore()),
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
@@ -268,7 +275,7 @@ public class Superstructure extends GBSubsystem {
 			new DeferredCommand(
 				() -> new ParallelCommandGroup(
 					elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorScore()),
-					armStateHandler.setInterpolatedState(ScoringHelpers.targetScoreLevel.getArmScore()),
+					armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmScore()),
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 					climbStateHandler.setState(ClimbState.STOP)
 				),
@@ -284,13 +291,13 @@ public class Superstructure extends GBSubsystem {
 				() -> new SequentialCommandGroup(
 					new ParallelCommandGroup(
 						elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorScore()),
-						armStateHandler.setInterpolatedState(ScoringHelpers.targetScoreLevel.getArmScore()),
+						armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmScore()),
 						endEffectorStateHandler.setState(ScoringHelpers.targetScoreLevel.getEndEffectorScore()),
 						climbStateHandler.setState(ClimbState.STOP)
 					).until(() -> !isCoralIn()),
 					new ParallelCommandGroup(
 						elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorScore()),
-						armStateHandler.setInterpolatedState(ScoringHelpers.targetScoreLevel.getArmScore()),
+						armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmScore()),
 						endEffectorStateHandler.setState(ScoringHelpers.targetScoreLevel.getEndEffectorScore()),
 						climbStateHandler.setState(ClimbState.STOP)
 					).withTimeout(StateMachineConstants.SCORE_OUTTAKE_TIME_AFTER_BEAM_BREAK_SECONDS)

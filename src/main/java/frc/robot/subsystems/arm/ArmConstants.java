@@ -23,17 +23,22 @@ public class ArmConstants {
 	public static final double CALIBRATION_MAX_POWER = 0.2;
 
 	static class Rotation2dInterpolator implements Interpolator<Rotation2d> {
+
 		@Override
 		public Rotation2d interpolate(final Rotation2d startValue, final Rotation2d endValue, final double t) {
-			return Rotation2d.fromDegrees(Interpolator.forDouble().interpolate(startValue.getDegrees(),endValue.getDegrees(),t));
+			return Rotation2d.fromDegrees(Interpolator.forDouble().interpolate(startValue.getDegrees(), endValue.getDegrees(), t));
 		}
+
 	}
 
-	public static final InterpolatingTreeMap<Double,Rotation2d> L4_DISTANCE_ANGLE_MAP =
-			new InterpolatingTreeMap<Double,Rotation2d>(InverseInterpolator.forDouble(), new Rotation2dInterpolator());
+	public static final InterpolatingTreeMap<Double, Rotation2d> L4_DISTANCE_ANGLE_MAP = new InterpolatingTreeMap<Double, Rotation2d>(
+		InverseInterpolator.forDouble(),
+		new Rotation2dInterpolator()
+	);
 	static {
-		L4_DISTANCE_ANGLE_MAP.put(0.2,Rotation2d.fromDegrees(5));
-		L4_DISTANCE_ANGLE_MAP.put(0.1,Rotation2d.fromDegrees(3));
-		L4_DISTANCE_ANGLE_MAP.put(0.4,Rotation2d.fromDegrees(10));
+		L4_DISTANCE_ANGLE_MAP.put(0.5, Rotation2d.fromDegrees(5));
+		L4_DISTANCE_ANGLE_MAP.put(0.7, Rotation2d.fromDegrees(3));
+		L4_DISTANCE_ANGLE_MAP.put(1.0, Rotation2d.fromDegrees(10));
 	}
+
 }

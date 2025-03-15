@@ -6,20 +6,26 @@ import frc.robot.hardware.phoenix6.BusChain;
 import frc.utils.math.AngleUnit;
 import frc.robot.hardware.phoenix6.Phoenix6Util;
 
-import java.util.ArrayList;
 
 public class Phoenix6SignalBuilder {
 
 	private static final int UPDATE_FREQUENCY_RETRIES = 5;
 
-	public static ArrayList<BaseStatusSignal> rioSignals = new ArrayList<>();
-	public static ArrayList<BaseStatusSignal> chassisSignals = new ArrayList<>();
-	public static ArrayList<BaseStatusSignal> superstructureSignals = new ArrayList<>();
+	public static BaseStatusSignal[] rioSignals = new BaseStatusSignal[0];
+	public static BaseStatusSignal[] chassisSignals = new BaseStatusSignal[0];
+	public static BaseStatusSignal[] superstructureSignals = new BaseStatusSignal[0];
 
 	public static void refreshAll() {
-		BaseStatusSignal.refreshAll(Phoenix6SignalBuilder.rioSignals.toArray(new BaseStatusSignal[0]));
-		BaseStatusSignal.refreshAll(Phoenix6SignalBuilder.chassisSignals.toArray(new BaseStatusSignal[0]));
-		BaseStatusSignal.refreshAll(Phoenix6SignalBuilder.superstructureSignals.toArray(new BaseStatusSignal[0]));
+		BaseStatusSignal.refreshAll(rioSignals);
+		BaseStatusSignal.refreshAll(chassisSignals);
+		BaseStatusSignal.refreshAll(superstructureSignals);
+	}
+
+	public static BaseStatusSignal[] addSignalToArray(BaseStatusSignal[] signals, BaseStatusSignal signal) {
+		BaseStatusSignal[] newSignals = new BaseStatusSignal[signals.length + 1];
+		System.arraycopy(signals, 0, newSignals, 0, signals.length);
+		newSignals[newSignals.length - 1] = signal;
+		return newSignals;
 	}
 
 	private static void setFrequencyWithRetry(StatusSignal<?> signal, double frequency) {
@@ -29,10 +35,11 @@ public class Phoenix6SignalBuilder {
 	private static StatusSignal<?> cloneWithFrequency(StatusSignal<?> signal, double frequency, BusChain busChain) {
 		StatusSignal<?> signalClone = signal.clone();
 		switch (busChain) {
-			case SWERVE_CANIVORE -> chassisSignals.add(signalClone);
-			case SUPERSTRUCTURE_CANIVORE -> superstructureSignals.add(signalClone);
-			case ROBORIO -> rioSignals.add(signalClone);
+			case ROBORIO -> rioSignals = addSignalToArray(rioSignals, signalClone);
+			case SWERVE_CANIVORE -> chassisSignals = addSignalToArray(chassisSignals, signalClone);
+			case SUPERSTRUCTURE_CANIVORE -> superstructureSignals = addSignalToArray(superstructureSignals, signalClone);
 		}
+
 		setFrequencyWithRetry(signalClone, frequency);
 		return signalClone;
 	}

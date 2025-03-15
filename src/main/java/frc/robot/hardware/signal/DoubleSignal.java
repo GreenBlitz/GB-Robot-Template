@@ -63,10 +63,10 @@ public abstract class DoubleSignal implements InputSignal<Double> {
 
 	@Override
 	public void toLog(LogTable table) {
-//		TimedValue<Double> timedValue = getNewValue();
-//		value = timedValue.value();
-//		timestamp = timedValue.timestamp();
-//		table.put(name, value);
+		TimedValue<Double> timedValue = getNewValue();
+		value = timedValue.value();
+		timestamp = timedValue.timestamp();
+		table.put(name, value);
 	}
 
 	@Override

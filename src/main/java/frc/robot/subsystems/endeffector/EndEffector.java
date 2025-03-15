@@ -8,6 +8,7 @@ import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.Logger;
 
 public class EndEffector extends GBSubsystem {
@@ -20,6 +21,7 @@ public class EndEffector extends GBSubsystem {
 	private final IDigitalInput coralBeamBreaker;
 	private final DigitalInputInputsAutoLogged coralBeamBreakerInputs;
 	private final EndEffectorCommandsBuilder commandsBuilder;
+	private final RollerIOInputsAutoLogged inputs;
 	private double calibrationPower = 0;
 
 	public EndEffector(
@@ -37,6 +39,8 @@ public class EndEffector extends GBSubsystem {
 
 		this.algaeLimitSwitch = algaeLimitSwitch;
 		this.algaeLimitSwitchInputs = new DigitalInputInputsAutoLogged();
+
+		this.inputs = new RollerIOInputsAutoLogged();
 
 		this.coralBeamBreaker = coralBeamBreaker;
 		this.coralBeamBreakerInputs = new DigitalInputInputsAutoLogged();
@@ -74,10 +78,21 @@ public class EndEffector extends GBSubsystem {
 		log();
 	}
 
+	@AutoLog
+	public static class RollerIOInputs {
+
+		public RollerIOData data = new RollerIOData(0, 0, false, false);
+
+	}
+
+	public record RollerIOData(double power, double current, boolean isAlgaeIn, boolean isCoralIn) {}
+
 	private void updateInputs() {
 		double time = TimeUtil.getCurrentTimeSeconds();
 		roller.updateSimulation();
-		roller.updateInputs(powerSignal, currentSignal);
+//		roller.updateInputs(powerSignal, currentSignal);
+		inputs.data = new RollerIOData(powerSignal.getValue(), currentSignal.getValue(), isCoralIn(), isAlgaeIn());
+		Logger.processInputs(getLogPath(), inputs);
 		Logger.recordOutput("timetime/effecinput", TimeUtil.getCurrentTimeSeconds() - time);
 
 //		algaeLimitSwitch.updateInputs(algaeLimitSwitchInputs);
@@ -88,8 +103,8 @@ public class EndEffector extends GBSubsystem {
 	}
 
 	private void log() {
-		Logger.recordOutput(getLogPath() + "/isAlgaeIn", isAlgaeIn());
-		Logger.recordOutput(getLogPath() + "/isCoralIn", isCoralIn());
+//		Logger.recordOutput(getLogPath() + "/isAlgaeIn", isAlgaeIn());
+//		Logger.recordOutput(getLogPath() + "/isCoralIn", isCoralIn());
 	}
 
 	public void setBrake(boolean brake) {

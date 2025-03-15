@@ -43,6 +43,7 @@ public class Module {
 
 	private final ModuleInputsAutoLogged moduleInputs;
 	private final DriveInputsAutoLogged driveInputs;
+	private final ModuleIOInputsAutoLogged inputs;
 	private final DriveCouplingInputsAutoLogged driveCouplingInputs;
 
 	private SwerveModuleState targetState;
@@ -68,6 +69,8 @@ public class Module {
 		this.steer = steer;
 		this.steerRequests = steerRequests;
 		this.steerSignals = steerSignals;
+
+		this.inputs = new ModuleIOInputsAutoLogged();
 
 		this.drive = drive;
 		this.driveRequests = driveRequests;
@@ -120,19 +123,25 @@ public class Module {
 
 	@AutoLog
 	public static class ModuleIOInputs {
+
 		public ModuleIOData data;
+
 	}
 
 	public record ModuleIOData(
-			double drivePositionRad,
-			double driveVelocityRadPerSec,
-			double driveAppliedVolts,
-			double driveTorqueCurrentAmps,
-			Rotation2d turnAbsolutePosition,
-			Rotation2d turnPosition,
-			double turnVelocityRadPerSec,
-			double turnAppliedVolts,
-			double turnTorqueCurrentAmps) {}
+		double drivePositionRad,
+		double driveVelocityRadPerSec,
+		double driveAppliedVolts,
+		double driveTorqueCurrentAmps,
+		Rotation2d turnAbsolutePosition,
+		Rotation2d turnPosition,
+		double turnVelocityRadPerSec,
+		double turnAppliedVolts,
+		double turnAppliedVoltsssss,
+		double turnAppliedVoltssss,
+		double turnAppliedVoltsss,
+		double turnTorqueCurrentAmps
+	) {}
 
 	public void updateInputs() {
 		steer.updateSimulation();
@@ -142,19 +151,21 @@ public class Module {
 //		encoder.updateInputs(encoderSignals.position().getLatestValue());
 //		steer.updateInputs(steerSignals.position(), steerSignals.velocity(), steerSignals.current(), steerSignals.voltage());
 //		drive.updateInputs(driveSignals.position(), driveSignals.velocity(), driveSignals.current(), driveSignals.voltage());
-		ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
 		inputs.data = new ModuleIOData(
-				driveSignals.position().getValue().getRadians(),
-				driveSignals.velocity().getValue().getRadians(),
-				driveSignals.voltage().getValue(),
-				driveSignals.current().getValue(),
-				encoderSignals.position().getValue(),
-				steerSignals.position().getValue(),
-				steerSignals.velocity().getValue().getRadians(),
-				steerSignals.voltage().getValue(),
-				steerSignals.current().getValue()
+			driveSignals.position().getValue().getRadians(),
+			driveSignals.velocity().getValue().getRadians(),
+			driveSignals.voltage().getValue(),
+			driveSignals.current().getValue(),
+			encoderSignals.position().getValue(),
+			steerSignals.position().getValue(),
+			steerSignals.velocity().getValue().getRadians(),
+			steerSignals.voltage().getValue(),
+			steerSignals.current().getValue(),
+			2,
+			3,
+			1
 		);
-		Logger.processInputs("codecode/ced", inputs);
+		Logger.processInputs(constants.logPath(), inputs);
 
 		Logger.recordOutput("testTime/modulesUnosd", (TimeUtil.getCurrentTimeSeconds() - time) * 4);
 
@@ -166,11 +177,11 @@ public class Module {
 		moduleInputs.isClosedLoop = isClosedLoop;
 		moduleInputs.targetState = targetState;
 
-		time = TimeUtil.getCurrentTimeSeconds();
+//		time = TimeUtil.getCurrentTimeSeconds();
 		Logger.processInputs(constants.logPath(), moduleInputs);
 		Logger.processInputs(constants.logPath() + "/Drive", driveInputs);
 		Logger.processInputs(constants.logPath() + "/Drive", driveCouplingInputs);
-		Logger.recordOutput("testTime/inpsususModules", (TimeUtil.getCurrentTimeSeconds() - time) * 4);
+//		Logger.recordOutput("testTime/inpsususModules", (TimeUtil.getCurrentTimeSeconds() - time) * 4);
 	}
 
 

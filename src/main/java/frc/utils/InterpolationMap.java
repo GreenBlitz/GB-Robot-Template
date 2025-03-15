@@ -5,8 +5,10 @@ import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class InterpolationMap<T,K> extends InterpolatingTreeMap<T,K> {
 	
@@ -28,6 +30,10 @@ public class InterpolationMap<T,K> extends InterpolatingTreeMap<T,K> {
 	
 	public void put(Map<T,K> dataPoints) {
 		dataPoints.forEach(super::put);
+	}
+	
+	public Stream<K> get(T[] keys) {
+		return Arrays.stream(keys).map(super::get);
 	}
 	
 	public static Interpolator<Rotation2d> interpolatorForRotation2d() {

@@ -37,8 +37,8 @@ public class ArmConstants {
 	);
 	static {
 		L4_DISTANCE_ANGLE_MAP.put(0.52, Rotation2d.fromDegrees(0));
-		L4_DISTANCE_ANGLE_MAP.put(0.6, Rotation2d.fromDegrees(6));
-		L4_DISTANCE_ANGLE_MAP.put(0.65, Rotation2d.fromDegrees(30));
+		L4_DISTANCE_ANGLE_MAP.put(0.56, Rotation2d.fromDegrees(4.5));
+		L4_DISTANCE_ANGLE_MAP.put(0.65, Rotation2d.fromDegrees(12));
 	}
 
 }

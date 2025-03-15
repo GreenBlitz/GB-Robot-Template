@@ -70,7 +70,7 @@ public abstract class AngleSignal implements InputSignal<Rotation2d> {
 		TimedValue<Double> timedValue = getNewValue();
 		value = angleUnit.toRotation2d(timedValue.value());
 		timestamp = timedValue.timestamp();
-//		table.put(name, value);
+		table.put(name, value);
 	}
 
 	@Override

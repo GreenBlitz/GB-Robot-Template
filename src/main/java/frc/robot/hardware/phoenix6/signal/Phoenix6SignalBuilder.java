@@ -1,5 +1,6 @@
 package frc.robot.hardware.phoenix6.signal;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.utils.math.AngleUnit;
@@ -11,9 +12,15 @@ public class Phoenix6SignalBuilder {
 
 	private static final int UPDATE_FREQUENCY_RETRIES = 5;
 
-	public static ArrayList<StatusSignal> rioSignals = new ArrayList<>();
-	public static ArrayList<StatusSignal> chassisSignals = new ArrayList<>();
-	public static ArrayList<StatusSignal> superstructureSignals = new ArrayList<>();
+	public static ArrayList<BaseStatusSignal> rioSignals = new ArrayList<>();
+	public static ArrayList<BaseStatusSignal> chassisSignals = new ArrayList<>();
+	public static ArrayList<BaseStatusSignal> superstructureSignals = new ArrayList<>();
+
+	public static void refreshAll() {
+		BaseStatusSignal.refreshAll(Phoenix6SignalBuilder.rioSignals.toArray(new BaseStatusSignal[0]));
+		BaseStatusSignal.refreshAll(Phoenix6SignalBuilder.chassisSignals.toArray(new BaseStatusSignal[0]));
+		BaseStatusSignal.refreshAll(Phoenix6SignalBuilder.superstructureSignals.toArray(new BaseStatusSignal[0]));
+	}
 
 	private static void setFrequencyWithRetry(StatusSignal<?> signal, double frequency) {
 		Phoenix6Util.checkStatusCodeWithRetry(() -> signal.setUpdateFrequency(frequency), UPDATE_FREQUENCY_RETRIES);

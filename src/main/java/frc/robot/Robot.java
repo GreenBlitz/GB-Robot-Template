@@ -217,9 +217,8 @@ public class Robot {
 	}
 
 	public void periodic() {
-		BaseStatusSignal.refreshAll(Phoenix6SignalBuilder.rioSignals.toArray(new StatusSignal[0]));
-		BaseStatusSignal.refreshAll(Phoenix6SignalBuilder.chassisSignals.toArray(new StatusSignal[0]));
-		BaseStatusSignal.refreshAll(Phoenix6SignalBuilder.superstructureSignals.toArray(new StatusSignal[0]));
+		Phoenix6SignalBuilder.refreshAll();
+
 		swerve.update();
 		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());
 

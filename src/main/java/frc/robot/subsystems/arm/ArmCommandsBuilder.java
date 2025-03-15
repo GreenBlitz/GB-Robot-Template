@@ -45,8 +45,8 @@ public class ArmCommandsBuilder {
 	) {
 		return arm.asSubsystemCommand(
 			new InitExecuteCommand(
-				() -> arm.setTargetPosition(position.get(), maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared),
-				() -> {}
+				() -> {},
+				() -> arm.setTargetPosition(position.get(), maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared)
 			),
 			"Set target position to: " + position
 		);
@@ -55,9 +55,15 @@ public class ArmCommandsBuilder {
 	public Command moveToPosition(
 		Rotation2d position,
 		Rotation2d maxVelocityRotation2dPerSecond,
-		Rotation2d maxAccelerationRotation2dPerSecondSquared) {
-		return moveToPosition(() -> position, maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared);
-	}
+		Rotation2d maxAccelerationRotation2dPerSecondSquared
+	) {
+		return arm.asSubsystemCommand(
+				new InitExecuteCommand(
+						() -> arm.setTargetPosition(position, maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared)
+								,() -> {}
+				),
+				"Set target position to: " + position
+		);	}
 
 	public Command stayInPlace() {
 		return arm.asSubsystemCommand(new InitExecuteCommand(arm::stayInPlace, () -> {}), "Stay in place");

@@ -112,7 +112,7 @@ public class Superstructure extends GBSubsystem {
 
 		return robot.getElevator().isAtPosition(targetScoreLevel.getElevatorPreScore().getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
 			&& elevatorStateHandler.getCurrentState() == targetScoreLevel.getElevatorPreScore()
-			&& robot.getArm().isAtPosition(targetArmState.getPosition(), Tolerances.ARM_POSITION)
+			&& armStateHandler.isAtState(targetArmState)
 			&& armStateHandler.getCurrentState() == targetArmState;
 	}
 
@@ -120,7 +120,7 @@ public class Superstructure extends GBSubsystem {
 		ScoreLevel targetScoreLevel = ScoringHelpers.targetScoreLevel;
 		return robot.getElevator().isAtPosition(targetScoreLevel.getElevatorScore().getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
 			&& elevatorStateHandler.getCurrentState() == targetScoreLevel.getElevatorScore()
-			&& robot.getArm().isAtPosition(targetScoreLevel.getArmScore().getPosition(), Tolerances.ARM_POSITION)
+			&& armStateHandler.isAtState(targetScoreLevel.getArmScore())
 			&& armStateHandler.getCurrentState() == targetScoreLevel.getArmScore();
 	}
 

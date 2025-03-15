@@ -28,6 +28,7 @@ import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.pose.PoseUtil;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -194,6 +195,7 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public boolean isReadyToScore() {
+		Logger.recordOutput("isrerere", superstructure.isReadyToScore());
 		return superstructure.isReadyToScore()
 			&& isAtReefScoringPose(
 				StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS,

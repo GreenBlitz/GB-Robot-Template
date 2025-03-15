@@ -1,5 +1,6 @@
 package frc.robot.subsystems.arm;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -31,6 +32,10 @@ public class ArmStateHandler {
 					)
 			);
 		}
+	}
+
+	public boolean isAtState(ArmState state, Rotation2d tolerance) {
+		return currentState == state && arm.isAtPosition(state.getPosition(), tolerance);
 	}
 
 }

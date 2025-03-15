@@ -20,7 +20,7 @@ public class ArmStateHandler {
 		this.distanceSupplier = distanceSupplier;
 	}
 
-	
+
 	public ArmState getCurrentState() {
 		return currentState;
 	}
@@ -33,7 +33,7 @@ public class ArmStateHandler {
 				new InstantCommand(() -> currentState = state),
 				arm.getCommandsBuilder()
 					.moveToPosition(
-							() -> getStatePosition(state),
+						() -> getStatePosition(state),
 						state.getMaxVelocityRotation2dPerSecond(),
 						state.getMaxAccelerationRotation2dPerSecondSquared()
 					)
@@ -47,7 +47,7 @@ public class ArmStateHandler {
 	}
 
 	private Rotation2d getStatePosition(ArmState state) {
-		Logger.recordOutput("distance",distanceSupplier.get());
+		Logger.recordOutput("distance", distanceSupplier.get());
 		Logger.recordOutput("offset", ArmConstants.L4_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()));
 		Logger.recordOutput("original", state.getPosition());
 		if (state == ArmState.L4) {

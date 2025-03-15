@@ -3,6 +3,9 @@ package frc.robot.subsystems.arm;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import frc.robot.statemachine.Tolerances;
+
+import java.util.function.Supplier;
 
 public class ArmStateHandler {
 
@@ -19,8 +22,10 @@ public class ArmStateHandler {
 
 	public Command setState(ArmState state) {
 		if (state == ArmState.STAY_IN_PLACE) {
-			return new ParallelCommandGroup(new InstantCommand(() -> currentState = state), arm.getCommandsBuilder().stayInPlace());
-		} else {
+			return new ParallelCommandGroup(new InstantCommand(() -> currentState = state),
+					arm.getCommandsBuilder().stayInPlace());
+		}
+		else {
 			return new ParallelCommandGroup(
 				new InstantCommand(() -> currentState = state),
 				arm.getCommandsBuilder()
@@ -31,6 +36,26 @@ public class ArmStateHandler {
 					)
 			);
 		}
+	}
+
+	public Command setInterpolatedState(ArmState state, Supplier<Double> distanceSupplier) {
+		return new ParallelCommandGroup(
+				new InstantCommand(() -> currentState = state),
+				arm.getCommandsBuilder()
+				   .moveToPosition(
+						   state.getPosition().plus(ArmConstants.L4_DISTANCE_ANGLE_MAP.get(distanceSupplier.get())),
+						   state.getMaxVelocityRotation2dPerSecond(),
+						   state.getMaxAccelerationRotation2dPerSecondSquared()
+				   )
+		);
+	}
+
+	public boolean isAtState() {
+		return arm.isAtPosition(currentState.getPosition(), Tolerances.ARM_POSITION);
+	}
+
+	public boolean isAtInterpolatedState() {
+
 	}
 
 }

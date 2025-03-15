@@ -24,6 +24,7 @@ import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.digitalinput.channeled.ChanneledDigitalInput;
 import frc.robot.hardware.digitalinput.chooser.ChooserDigitalInput;
 import frc.robot.hardware.mechanisms.wpilib.ElevatorSimulation;
+import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.request.Phoenix6DynamicMotionMagicRequest;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
@@ -127,9 +128,17 @@ public class KrakenX60ElevatorBuilder {
 
 	private static ElevatorMotorSignals createSignals(TalonFXMotor motor) {
 		return new ElevatorMotorSignals(
-			Phoenix6SignalBuilder
-				.build(motor.getDevice().getPosition(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS),
-			Phoenix6SignalBuilder.build(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ)
+			Phoenix6SignalBuilder.build(
+				motor.getDevice().getPosition(),
+				RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ,
+				AngleUnit.ROTATIONS,
+				BusChain.SUPERSTRUCTURE_CANIVORE
+			),
+			Phoenix6SignalBuilder.build(
+				motor.getDevice().getMotorVoltage(),
+				RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ,
+				BusChain.SUPERSTRUCTURE_CANIVORE
+			)
 		);
 	}
 

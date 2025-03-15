@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import frc.robot.IDs;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.interfaces.IGyro;
+import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.gyro.Pigeon2Gyro;
 import frc.robot.hardware.phoenix6.gyro.Pigeon2Wrapper;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
@@ -38,8 +39,12 @@ class Pigeon2GyroBuilder {
 
 	static GyroSignals buildSignals(Pigeon2Gyro pigeon2Gyro) {
 		return new GyroSignals(
-			Phoenix6SignalBuilder
-				.build(pigeon2Gyro.getDevice().getYaw(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ, AngleUnit.DEGREES)
+			Phoenix6SignalBuilder.build(
+				pigeon2Gyro.getDevice().getYaw(),
+				RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ,
+				AngleUnit.DEGREES,
+				BusChain.SWERVE_CANIVORE
+			)
 		);
 	}
 

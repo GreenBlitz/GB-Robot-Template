@@ -17,6 +17,7 @@ import frc.robot.Robot;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
+import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
@@ -125,16 +126,21 @@ public class KrakenX60DriveBuilder {
 
 	static DriveSignals buildSignals(TalonFXMotor drive) {
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
-			.build(drive.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ);
+			.build(drive.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ, BusChain.SWERVE_CANIVORE);
 		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder
-			.build(drive.getDevice().getTorqueCurrent(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ);
-		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder
-			.build(drive.getDevice().getVelocity(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+			.build(drive.getDevice().getTorqueCurrent(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ, BusChain.SWERVE_CANIVORE);
+		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder.build(
+			drive.getDevice().getVelocity(),
+			RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ,
+			AngleUnit.ROTATIONS,
+			BusChain.SWERVE_CANIVORE
+		);
 		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder.build(
 			drive.getDevice().getPosition(),
 			velocitySignal,
 			RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ,
-			AngleUnit.ROTATIONS
+			AngleUnit.ROTATIONS,
+			BusChain.SWERVE_CANIVORE
 		);
 
 		return new DriveSignals(positionSignal, velocitySignal, currentSignal, voltageSignal);

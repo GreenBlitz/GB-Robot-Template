@@ -22,17 +22,17 @@ public class ArmConstants {
 	public static final Rotation2d ACCELERATION_ANGLES_PER_SECOND_SQUARED = Rotation2d.fromRotations(3);
 
 	public static final double CALIBRATION_MAX_POWER = 0.2;
-	
+
 	public static final InterpolationMap<Double, Rotation2d> L4_DISTANCE_ANGLE_MAP = new InterpolationMap<>(
 		InverseInterpolator.forDouble(),
 		InterpolationMap.interpolatorForRotation2d(),
-			Map.of(0.52, Rotation2d.fromDegrees(0),0.56, Rotation2d.fromDegrees(4.5),0.65, Rotation2d.fromDegrees(12))
+		Map.of(0.52, Rotation2d.fromDegrees(0), 0.56, Rotation2d.fromDegrees(4.5), 0.65, Rotation2d.fromDegrees(12))
 	);
-	
+
 	public static final InterpolationMap<Double, Rotation2d> L3_L2_DISTANCE_ANGLE_MAP = new InterpolationMap<>(
-			InverseInterpolator.forDouble(),
-			InterpolationMap.interpolatorForRotation2d(),
-			Map.of(0.52, Rotation2d.fromDegrees(0),0.56, Rotation2d.fromDegrees(4.5),0.65, Rotation2d.fromDegrees(12))
+		InverseInterpolator.forDouble(),
+		InterpolationMap.interpolatorForRotation2d(),
+		Map.of(0.52, Rotation2d.fromDegrees(0), 0.56, Rotation2d.fromDegrees(3), 0.65, Rotation2d.fromDegrees(6))
 	);
 
 }

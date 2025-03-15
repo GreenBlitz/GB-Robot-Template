@@ -58,12 +58,13 @@ public class ArmCommandsBuilder {
 		Rotation2d maxAccelerationRotation2dPerSecondSquared
 	) {
 		return arm.asSubsystemCommand(
-				new InitExecuteCommand(
-						() -> arm.setTargetPosition(position, maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared)
-								,() -> {}
-				),
-				"Set target position to: " + position
-		);	}
+			new InitExecuteCommand(
+				() -> arm.setTargetPosition(position, maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared),
+				() -> {}
+			),
+			"Set target position to: " + position
+		);
+	}
 
 	public Command stayInPlace() {
 		return arm.asSubsystemCommand(new InitExecuteCommand(arm::stayInPlace, () -> {}), "Stay in place");

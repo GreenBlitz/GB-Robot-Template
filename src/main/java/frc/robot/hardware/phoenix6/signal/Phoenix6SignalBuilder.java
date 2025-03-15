@@ -6,7 +6,6 @@ import frc.robot.hardware.phoenix6.BusChain;
 import frc.utils.math.AngleUnit;
 import frc.robot.hardware.phoenix6.Phoenix6Util;
 
-
 public class Phoenix6SignalBuilder {
 
 	private static final int UPDATE_FREQUENCY_RETRIES = 5;

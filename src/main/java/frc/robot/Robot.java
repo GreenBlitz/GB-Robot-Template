@@ -49,6 +49,7 @@ import frc.utils.TimedValue;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -215,9 +216,13 @@ public class Robot {
 	}
 
 	public void periodic() {
+		double wholeTime = TimeUtil.getCurrentTimeSeconds();
+
 		Phoenix6SignalBuilder.refreshAll();
 
+		double swerveTime = TimeUtil.getCurrentTimeSeconds();
 		swerve.update();
+		Logger.recordOutput("timeTest/swerve", TimeUtil.getCurrentTimeSeconds() - swerveTime);
 		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());
 
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
@@ -239,7 +244,11 @@ public class Robot {
 		ScoringHelpers.log("Scoring");
 //		ButtonDriverHelper.log("Scoring/ButtonDriverDisplay");
 
+		double schedTime = TimeUtil.getCurrentTimeSeconds();
+
 		CommandScheduler.getInstance().run(); // Should be last
+		Logger.recordOutput("timeTest/wholeTime", TimeUtil.getCurrentTimeSeconds() - wholeTime);
+		Logger.recordOutput("timeTest/schedTime", TimeUtil.getCurrentTimeSeconds() - schedTime);
 	}
 
 	public Command getAuto() {

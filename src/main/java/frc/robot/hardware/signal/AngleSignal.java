@@ -67,10 +67,10 @@ public abstract class AngleSignal implements InputSignal<Rotation2d> {
 
 	@Override
 	public void toLog(LogTable table) {
-		TimedValue<Double> timedValue = getNewValue();
-		value = angleUnit.toRotation2d(timedValue.value());
-		timestamp = timedValue.timestamp();
-		table.put(name, value);
+//		TimedValue<Double> timedValue = getNewValue();
+//		value = angleUnit.toRotation2d(timedValue.value());
+//		timestamp = timedValue.timestamp();
+//		table.put(name, value);
 	}
 
 	@Override
@@ -79,5 +79,9 @@ public abstract class AngleSignal implements InputSignal<Rotation2d> {
 	}
 
 	protected abstract TimedValue<Double> getNewValue();
+	public Rotation2d getValue() {
+		value = angleUnit.toRotation2d(getNewValue().value());
+		return value;
+	}
 
 }

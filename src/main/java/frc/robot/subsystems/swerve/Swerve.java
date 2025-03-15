@@ -130,8 +130,10 @@ public class Swerve extends GBSubsystem {
 
 
 	public void update() {
+		double time = TimeUtil.getCurrentTimeSeconds();
 		gyro.updateInputs(gyroSignals.yawSignal());
 		modules.updateInputs();
+		Logger.recordOutput("timeTest/sweveSignasls", TimeUtil.getCurrentTimeSeconds() - time);
 
 		currentState.log(constants.stateLogPath());
 

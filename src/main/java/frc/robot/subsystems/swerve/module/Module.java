@@ -20,6 +20,8 @@ import frc.robot.subsystems.swerve.module.records.SteerSignals;
 import frc.utils.Conversions;
 import frc.utils.math.ToleranceMath;
 import frc.utils.calibration.sysid.SysIdCalibrator;
+import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
@@ -116,13 +118,45 @@ public class Module {
 		}
 	}
 
+	@AutoLog
+	public static class ModuleIOInputs {
+		public ModuleIOData data;
+	}
+
+	public record ModuleIOData(
+			double drivePositionRad,
+			double driveVelocityRadPerSec,
+			double driveAppliedVolts,
+			double driveTorqueCurrentAmps,
+			Rotation2d turnAbsolutePosition,
+			Rotation2d turnPosition,
+			double turnVelocityRadPerSec,
+			double turnAppliedVolts,
+			double turnTorqueCurrentAmps) {}
+
 	public void updateInputs() {
 		steer.updateSimulation();
 		drive.updateSimulation();
 
-		encoder.updateInputs(encoderSignals.position());
-		steer.updateInputs(steerSignals.position(), steerSignals.velocity(), steerSignals.current(), steerSignals.voltage());
-		drive.updateInputs(driveSignals.position(), driveSignals.velocity(), driveSignals.current(), driveSignals.voltage());
+		double time = TimeUtil.getCurrentTimeSeconds();
+//		encoder.updateInputs(encoderSignals.position().getLatestValue());
+//		steer.updateInputs(steerSignals.position(), steerSignals.velocity(), steerSignals.current(), steerSignals.voltage());
+//		drive.updateInputs(driveSignals.position(), driveSignals.velocity(), driveSignals.current(), driveSignals.voltage());
+		ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
+		inputs.data = new ModuleIOData(
+				driveSignals.position().getValue().getRadians(),
+				driveSignals.velocity().getValue().getRadians(),
+				driveSignals.voltage().getValue(),
+				driveSignals.current().getValue(),
+				encoderSignals.position().getValue(),
+				steerSignals.position().getValue(),
+				steerSignals.velocity().getValue().getRadians(),
+				steerSignals.voltage().getValue(),
+				steerSignals.current().getValue()
+		);
+		Logger.processInputs("codecode/ced", inputs);
+
+		Logger.recordOutput("testTime/modulesUnosd", (TimeUtil.getCurrentTimeSeconds() - time) * 4);
 
 		fixDriveInputsCoupling();
 
@@ -132,9 +166,11 @@ public class Module {
 		moduleInputs.isClosedLoop = isClosedLoop;
 		moduleInputs.targetState = targetState;
 
+		time = TimeUtil.getCurrentTimeSeconds();
 		Logger.processInputs(constants.logPath(), moduleInputs);
 		Logger.processInputs(constants.logPath() + "/Drive", driveInputs);
 		Logger.processInputs(constants.logPath() + "/Drive", driveCouplingInputs);
+		Logger.recordOutput("testTime/inpsususModules", (TimeUtil.getCurrentTimeSeconds() - time) * 4);
 	}
 
 

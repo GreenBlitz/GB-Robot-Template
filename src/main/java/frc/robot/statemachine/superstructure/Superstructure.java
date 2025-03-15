@@ -302,15 +302,19 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command closeL4AfterScore() {
+	public Command softCloseL4() {
+		return softClose("L4", ArmState.MID_WAY_CLOSE, ArmState.CLOSED, ElevatorState.L4, ElevatorState.CLOSED, 0.6, Rotation2d.fromDegrees(45));
+	}
+
+	public Command softCloseNet() {
 		return softClose(
-			"L4",
+			"Net",
 			ArmState.MID_WAY_CLOSE,
 			ArmState.CLOSED,
-			ElevatorState.L4,
+			ElevatorState.NET,
 			ElevatorState.CLOSED,
-			0.5,
-			Rotation2d.fromDegrees(100)
+			0.6,
+			Rotation2d.fromDegrees(45)
 		);
 	}
 
@@ -339,13 +343,6 @@ public class Superstructure extends GBSubsystem {
 				climbStateHandler.setState(ClimbState.STOP)
 			),
 			"Soft Close " + name
-		);
-	}
-
-	public Command afterScore() {
-		return new DeferredCommand(
-			() -> ScoringHelpers.targetScoreLevel == ScoreLevel.L4 ? closeL4AfterScore() : preScore(),
-			Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector(), robot.getLifter(), robot.getSolenoid())
 		);
 	}
 
@@ -471,7 +468,7 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command climbStop() {
+	public Command stopClimb() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.CLOSED),
@@ -522,11 +519,12 @@ public class Superstructure extends GBSubsystem {
 	private Command endState(SuperstructureState state) {
 		return switch (state) {
 			case STAY_IN_PLACE, OUTTAKE -> stayInPlace();
-			case INTAKE, IDLE, ALGAE_REMOVE, ALGAE_OUTTAKE, PROCESSOR_OUTTAKE, NET -> idle();
+			case INTAKE, IDLE, ALGAE_REMOVE, ALGAE_OUTTAKE, PROCESSOR_OUTTAKE -> idle();
+			case NET -> softCloseNet().andThen(idle());
 			case ARM_PRE_SCORE, CLOSE_CLIMB -> armPreScore();
-			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> afterScore();
+			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> preScore();
 			case PRE_CLIMB -> preClimb();
-			case CLIMB, MANUAL_CLIMB, STOP_CLIMB -> climbStop();
+			case CLIMB, MANUAL_CLIMB, STOP_CLIMB -> stopClimb();
 			case ELEVATOR_OPENING -> elevatorOpening();
 			case HOLD_ALGAE -> holdAlgae();
 		};

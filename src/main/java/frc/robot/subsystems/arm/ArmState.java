@@ -9,7 +9,7 @@ public enum ArmState {
 	FIRST_WAYPOINT_TO_CLOSE(Rotation2d.fromDegrees(40)),
 	SECOND_WAYPOINT_TO_CLOSE(Rotation2d.fromDegrees(110)),
 	START_GAME(Rotation2d.fromDegrees(207)),
-	MID_WAY_CLOSE(Rotation2d.fromDegrees(130), Rotation2d.fromRotations(2), Rotation2d.fromRotations(1.5)),
+	MID_WAY_CLOSE(Rotation2d.fromDegrees(50), Rotation2d.fromRotations(2), Rotation2d.fromRotations(1.5)),
 	INTAKE(Rotation2d.fromDegrees(195.5)),
 	ALGAE_OUTTAKE(Rotation2d.fromDegrees(185)),
 	PRE_L1(Rotation2d.fromDegrees(190)),

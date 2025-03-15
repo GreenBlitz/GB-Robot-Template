@@ -247,8 +247,9 @@ public class Robot {
 		double schedTime = TimeUtil.getCurrentTimeSeconds();
 
 		CommandScheduler.getInstance().run(); // Should be last
-		Logger.recordOutput("timeTest/wholeTime", TimeUtil.getCurrentTimeSeconds() - wholeTime);
 		Logger.recordOutput("timeTest/schedTime", TimeUtil.getCurrentTimeSeconds() - schedTime);
+
+		Logger.recordOutput("timeTest/wholeTime", TimeUtil.getCurrentTimeSeconds() - wholeTime);
 	}
 
 	public Command getAuto() {

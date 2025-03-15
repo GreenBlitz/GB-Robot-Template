@@ -119,15 +119,15 @@ public class Elevator extends GBSubsystem {
 		leftMotor.updateInputs(leftMotorSignals.positionSignal(), leftMotorSignals.voltageSignal());
 		leftMotor.updateInputs(leftMotorSignals.otherSignals());
 
-		limitSwitch.updateInputs(digitalInputInputs);
-		Logger.processInputs(getLogPath() + "/LimitSwitch", digitalInputInputs);
+//		limitSwitch.updateInputs(digitalInputInputs);
+//		Logger.processInputs(getLogPath() + "/LimitSwitch", digitalInputInputs);
 	}
 
 	private void log() {
 		Logger.recordOutput(getLogPath() + "/PositionMeters", getElevatorPositionMeters());
-		Logger.recordOutput(getLogPath() + "/IsAtBackwardsLimit", isAtBackwardsLimit());
-		Logger.recordOutput(getLogPath() + "/HasBeenResetBySwitch", hasBeenResetBySwitch);
-		Logger.recordOutput(getLogPath() + "/FFCalibrationVoltage", ffCalibrationVoltage);
+//		Logger.recordOutput(getLogPath() + "/IsAtBackwardsLimit", isAtBackwardsLimit());
+//		Logger.recordOutput(getLogPath() + "/HasBeenResetBySwitch", hasBeenResetBySwitch);
+//		Logger.recordOutput(getLogPath() + "/FFCalibrationVoltage", ffCalibrationVoltage);
 		Logger.recordOutput(getLogPath() + "/TargetPositionMeters", currentTargetPositionMeters);
 	}
 

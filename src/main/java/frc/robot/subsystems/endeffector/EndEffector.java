@@ -7,6 +7,7 @@ import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
+import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
 public class EndEffector extends GBSubsystem {
@@ -74,14 +75,16 @@ public class EndEffector extends GBSubsystem {
 	}
 
 	private void updateInputs() {
+		double time = TimeUtil.getCurrentTimeSeconds();
 		roller.updateSimulation();
 		roller.updateInputs(powerSignal, currentSignal);
+		Logger.recordOutput("timetime/effecinput", TimeUtil.getCurrentTimeSeconds() - time);
 
-		algaeLimitSwitch.updateInputs(algaeLimitSwitchInputs);
-		Logger.processInputs(getLogPath() + "/AlgaeBeamBreaker", algaeLimitSwitchInputs);
+//		algaeLimitSwitch.updateInputs(algaeLimitSwitchInputs);
+//		Logger.processInputs(getLogPath() + "/AlgaeBeamBreaker", algaeLimitSwitchInputs);
 
 		coralBeamBreaker.updateInputs(coralBeamBreakerInputs);
-		Logger.processInputs(getLogPath() + "/CoralBeamBreaker", coralBeamBreakerInputs);
+//		Logger.processInputs(getLogPath() + "/CoralBeamBreaker", coralBeamBreakerInputs);
 	}
 
 	private void log() {

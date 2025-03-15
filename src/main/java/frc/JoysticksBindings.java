@@ -26,10 +26,10 @@ public class JoysticksBindings {
 
 	private static final SmartJoystick MAIN_JOYSTICK = new SmartJoystick(JoystickPorts.MAIN);
 	private static final SmartJoystick SECOND_JOYSTICK = new SmartJoystick(JoystickPorts.SECOND);
-	private static final SmartJoystick THIRD_JOYSTICK = new SmartJoystick(JoystickPorts.THIRD);
-	private static final SmartJoystick FOURTH_JOYSTICK = new SmartJoystick(JoystickPorts.FOURTH);
-	private static final SmartJoystick FIFTH_JOYSTICK = new SmartJoystick(JoystickPorts.FIFTH);
-	private static final SmartJoystick SIXTH_JOYSTICK = new SmartJoystick(JoystickPorts.SIXTH);
+//	private static final SmartJoystick THIRD_JOYSTICK = new SmartJoystick(JoystickPorts.THIRD);
+//	private static final SmartJoystick FOURTH_JOYSTICK = new SmartJoystick(JoystickPorts.FOURTH);
+//	private static final SmartJoystick FIFTH_JOYSTICK = new SmartJoystick(JoystickPorts.FIFTH);
+//	private static final SmartJoystick SIXTH_JOYSTICK = new SmartJoystick(JoystickPorts.SIXTH);
 
 	public static void configureBindings(Robot robot) {
 		mainJoystickButtons(robot);
@@ -55,15 +55,17 @@ public class JoysticksBindings {
 					MAIN_JOYSTICK.getAxisValue(Axis.RIGHT_X)
 				)
 			);
-		} else if (THIRD_JOYSTICK.isConnected()) {
-			swerve.setDriversPowerInputs(
-				new ChassisPowers(
-					THIRD_JOYSTICK.getAxisValue(Axis.LEFT_Y),
-					THIRD_JOYSTICK.getAxisValue(Axis.LEFT_X),
-					THIRD_JOYSTICK.getAxisValue(Axis.RIGHT_X)
-				)
-			);
-		} else {
+		}
+//		else if (THIRD_JOYSTICK.isConnected()) {
+//			swerve.setDriversPowerInputs(
+//				new ChassisPowers(
+//					THIRD_JOYSTICK.getAxisValue(Axis.LEFT_Y),
+//					THIRD_JOYSTICK.getAxisValue(Axis.LEFT_X),
+//					THIRD_JOYSTICK.getAxisValue(Axis.RIGHT_X)
+//				)
+//			);
+//		}
+		else {
 			swerve.setDriversPowerInputs(new ChassisPowers(0, 0, 0));
 		}
 	}
@@ -157,28 +159,28 @@ public class JoysticksBindings {
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = THIRD_JOYSTICK;
+//		SmartJoystick usedJoystick = THIRD_JOYSTICK;
 		// bindings...
 
 //		robot.getSwerve().applyCalibrationBindings(usedJoystick, () -> robot.getPoseEstimator().getEstimatedPose());
 	}
 
 	private static void fourthJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = FOURTH_JOYSTICK;
+//		SmartJoystick usedJoystick = FOURTH_JOYSTICK;
 		// bindings...
 
 //		robot.getElevator().applyCalibrationBindings(usedJoystick);
 	}
 
 	private static void fifthJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = FIFTH_JOYSTICK;
+//		SmartJoystick usedJoystick = FIFTH_JOYSTICK;
 		// bindings...
 
 //		robot.getRobotCommander().getSuperstructure().getClimbStateHandler().applyCalibrationBindings(usedJoystick);
 	}
 
 	private static void sixthJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = SIXTH_JOYSTICK;
+//		SmartJoystick usedJoystick = SIXTH_JOYSTICK;
 
 //		robot.getArm().applyCalibrationBindings(usedJoystick);
 //		robot.getEndEffector().applyCalibrationsBindings(usedJoystick);

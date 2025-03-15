@@ -40,7 +40,7 @@ public abstract class SparkMaxMotor implements IMotor {
 		this.connectedInput = new ConnectedInputAutoLogged();
 		connectedInput.connected = true;
 
-		createAlerts();
+//		createAlerts();
 	}
 
 	public SparkMaxMotor(String logPath, SparkMaxWrapper motor) {
@@ -239,9 +239,9 @@ public abstract class SparkMaxMotor implements IMotor {
 			}
 		}
 
-		warnings = motor.getWarnings();
-		faults = motor.getFaults();
-		Logger.processInputs(logPath, connectedInput);
+//		warnings = motor.getWarnings();
+//		faults = motor.getFaults();
+//		Logger.processInputs(logPath, connectedInput);
 	}
 
 	@Override

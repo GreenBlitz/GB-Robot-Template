@@ -20,6 +20,7 @@ public class ArmStateHandler {
 		this.distanceSupplier = distanceSupplier;
 	}
 
+	
 	public ArmState getCurrentState() {
 		return currentState;
 	}
@@ -32,7 +33,7 @@ public class ArmStateHandler {
 				new InstantCommand(() -> currentState = state),
 				arm.getCommandsBuilder()
 					.moveToPosition(
-						getStatePosition(state),
+							() -> getStatePosition(state),
 						state.getMaxVelocityRotation2dPerSecond(),
 						state.getMaxAccelerationRotation2dPerSecondSquared()
 					)
@@ -41,17 +42,14 @@ public class ArmStateHandler {
 	}
 
 	public boolean isAtState(ArmState state) {
-		boolean isAt = arm.isAtPosition(getStatePosition(state), Tolerances.ARM_POSITION);
-		Rotation2d inter = ArmConstants.L4_DISTANCE_ANGLE_MAP.get(distanceSupplier.get());
-		Rotation2d target = Rotation2d.fromDegrees(state.getPosition().getDegrees() + inter.getDegrees());
-
-		Logger.recordOutput("arm target", target);
-		Logger.recordOutput("inter", inter);
-		Logger.recordOutput("isAtAmPositon", isAt);
-		return isAt;
+		Logger.recordOutput("isAt", arm.isAtPosition(getStatePosition(state), Tolerances.ARM_POSITION));
+		return arm.isAtPosition(getStatePosition(state), Tolerances.ARM_POSITION);
 	}
 
 	private Rotation2d getStatePosition(ArmState state) {
+		Logger.recordOutput("distance",distanceSupplier.get());
+		Logger.recordOutput("offset", ArmConstants.L4_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()));
+		Logger.recordOutput("original", state.getPosition());
 		if (state == ArmState.L4) {
 			return Rotation2d
 				.fromDegrees(state.getPosition().getDegrees() + ArmConstants.L4_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()).getDegrees());

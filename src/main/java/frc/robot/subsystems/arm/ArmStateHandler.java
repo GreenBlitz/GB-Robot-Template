@@ -30,7 +30,7 @@ public class ArmStateHandler {
 				new InstantCommand(() -> currentState = state),
 				arm.getCommandsBuilder()
 					.moveToPosition(
-						state.getPosition().plus(ArmConstants.L4_DISTANCE_ANGLE_MAP.get(distanceSupplier.get())),
+						() -> state.getPosition().plus(ArmConstants.L4_DISTANCE_ANGLE_MAP.get(distanceSupplier.get())),
 						state.getMaxVelocityRotation2dPerSecond(),
 						state.getMaxAccelerationRotation2dPerSecondSquared()
 					)

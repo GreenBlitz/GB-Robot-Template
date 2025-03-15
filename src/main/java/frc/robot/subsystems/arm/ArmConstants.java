@@ -36,8 +36,8 @@ public class ArmConstants {
 		new Rotation2dInterpolator()
 	);
 	static {
-		L4_DISTANCE_ANGLE_MAP.put(0.5, Rotation2d.fromDegrees(5));
-		L4_DISTANCE_ANGLE_MAP.put(0.7, Rotation2d.fromDegrees(3));
+		L4_DISTANCE_ANGLE_MAP.put(0.5, Rotation2d.fromDegrees(2));
+		L4_DISTANCE_ANGLE_MAP.put(0.7, Rotation2d.fromDegrees(5));
 		L4_DISTANCE_ANGLE_MAP.put(1.0, Rotation2d.fromDegrees(10));
 	}
 

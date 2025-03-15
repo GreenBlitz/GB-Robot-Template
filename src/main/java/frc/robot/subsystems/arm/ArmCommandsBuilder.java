@@ -7,6 +7,7 @@ import frc.utils.utilcommands.InitExecuteCommand;
 import frc.utils.utilcommands.LoggedDashboardCommand;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 public class ArmCommandsBuilder {
 
@@ -38,17 +39,24 @@ public class ArmCommandsBuilder {
 	}
 
 	public Command moveToPosition(
-		Rotation2d position,
+		Supplier<Rotation2d> position,
 		Rotation2d maxVelocityRotation2dPerSecond,
 		Rotation2d maxAccelerationRotation2dPerSecondSquared
 	) {
 		return arm.asSubsystemCommand(
 			new InitExecuteCommand(
-				() -> arm.setTargetPosition(position, maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared),
+				() -> arm.setTargetPosition(position.get(), maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared),
 				() -> {}
 			),
 			"Set target position to: " + position
 		);
+	}
+
+	public Command moveToPosition(
+		Rotation2d position,
+		Rotation2d maxVelocityRotation2dPerSecond,
+		Rotation2d maxAccelerationRotation2dPerSecondSquared) {
+		return moveToPosition(() -> position, maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared);
 	}
 
 	public Command stayInPlace() {

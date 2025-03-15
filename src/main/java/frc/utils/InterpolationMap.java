@@ -30,7 +30,11 @@ public class InterpolationMap<T,K> extends InterpolatingTreeMap<T,K> {
 		dataPoints.forEach(super::put);
 	}
 	
-	public static Interpolator<Rotation2d> forRotation2d() {
+	public static Interpolator<Rotation2d> interpolatorForRotation2d() {
 		return (startValue, endValue, t) -> Rotation2d.fromDegrees(Interpolator.forDouble().interpolate(startValue.getDegrees(), endValue.getDegrees(), t));
+	}
+	
+	public static InverseInterpolator<Rotation2d> inverseInterpolatorForRotation2d() {
+		return (startValue, endValue, t) -> InverseInterpolator.forDouble().inverseInterpolate(startValue.getDegrees(), endValue.getDegrees(), t.getDegrees());
 	}
 }

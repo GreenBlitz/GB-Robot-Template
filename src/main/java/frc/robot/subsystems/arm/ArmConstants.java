@@ -1,8 +1,6 @@
 package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
-import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import frc.utils.InterpolationMap;
 
@@ -27,13 +25,13 @@ public class ArmConstants {
 	
 	public static final InterpolationMap<Double, Rotation2d> L4_DISTANCE_ANGLE_MAP = new InterpolationMap<>(
 		InverseInterpolator.forDouble(),
-		InterpolationMap.forRotation2d(),
+		InterpolationMap.interpolatorForRotation2d(),
 			Map.of(0.52, Rotation2d.fromDegrees(0),0.56, Rotation2d.fromDegrees(4.5),0.65, Rotation2d.fromDegrees(12))
 	);
 	
 	public static final InterpolationMap<Double, Rotation2d> L3_L2_DISTANCE_ANGLE_MAP = new InterpolationMap<>(
 			InverseInterpolator.forDouble(),
-			InterpolationMap.forRotation2d(),
+			InterpolationMap.interpolatorForRotation2d(),
 			Map.of(0.52, Rotation2d.fromDegrees(0),0.56, Rotation2d.fromDegrees(4.5),0.65, Rotation2d.fromDegrees(12))
 	);
 

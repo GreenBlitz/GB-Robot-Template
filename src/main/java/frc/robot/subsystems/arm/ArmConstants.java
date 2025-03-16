@@ -26,13 +26,13 @@ public class ArmConstants {
 	public static final InterpolationMap<Double, Rotation2d> L4_DISTANCE_ANGLE_MAP = new InterpolationMap<>(
 		InverseInterpolator.forDouble(),
 		InterpolationMap.interpolatorForRotation2d(),
-		Map.of(0.52, Rotation2d.fromDegrees(0), 0.56, Rotation2d.fromDegrees(4.5), 0.65, Rotation2d.fromDegrees(15))
+		Map.of(0.52, Rotation2d.fromDegrees(0), 0.56, Rotation2d.fromDegrees(5.5), 0.65, Rotation2d.fromDegrees(15))
 	);
 
 	public static final InterpolationMap<Double, Rotation2d> L3_L2_DISTANCE_ANGLE_MAP = new InterpolationMap<>(
 		InverseInterpolator.forDouble(),
 		InterpolationMap.interpolatorForRotation2d(),
-		Map.of(0.52, Rotation2d.fromDegrees(0), 0.56, Rotation2d.fromDegrees(3), 0.65, Rotation2d.fromDegrees(6))
+		Map.of(0.52, Rotation2d.fromDegrees(0), 0.56, Rotation2d.fromDegrees(5.5), 0.65, Rotation2d.fromDegrees(12))
 	);
 
 }

@@ -7,6 +7,7 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import frc.robot.RobotConstants;
 import frc.constants.MathConstants;
 import frc.robot.hardware.interfaces.IAngleEncoder;
+import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.Phoenix6Util;
 import frc.robot.hardware.phoenix6.angleencoder.CANCoderEncoder;
@@ -43,7 +44,12 @@ class CANCoderEncoderBuilder {
 
 	static EncoderSignals buildSignals(CANCoderEncoder encoder) {
 		return new EncoderSignals(
-			Phoenix6SignalBuilder.build(encoder.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS)
+			Phoenix6SignalBuilder.build(
+				encoder.getDevice().getPosition(),
+				RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+				AngleUnit.ROTATIONS,
+				BusChain.SWERVE_CANIVORE
+			)
 		);
 	}
 

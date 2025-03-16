@@ -4,12 +4,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public class ArmConstants {
 
-	public static final Rotation2d POSITION_OFFSET = Rotation2d.fromDegrees(6 + 20);
+	public static final Rotation2d POSITION_OFFSET = Rotation2d.fromDegrees(0); // was 26
 
-	public static final Rotation2d FORWARD_SOFTWARE_LIMIT = Rotation2d.fromDegrees(205 + POSITION_OFFSET.getDegrees());
-	public static final Rotation2d MAXIMUM_POSITION = Rotation2d.fromDegrees(220 + POSITION_OFFSET.getDegrees());
-	public static final Rotation2d ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT = Rotation2d.fromDegrees(-30 + POSITION_OFFSET.getDegrees());
-	public static final Rotation2d ELEVATOR_OPEN_REVERSED_SOFTWARE_LIMIT = Rotation2d.fromDegrees(-50 + POSITION_OFFSET.getDegrees());
+	public static final Rotation2d FORWARD_SOFTWARE_LIMIT = Rotation2d.fromDegrees(231 + POSITION_OFFSET.getDegrees());
+	public static final Rotation2d MAXIMUM_POSITION = Rotation2d.fromDegrees(246 + POSITION_OFFSET.getDegrees());
+	public static final Rotation2d ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT = Rotation2d.fromDegrees(-4 + POSITION_OFFSET.getDegrees());
+	public static final Rotation2d ELEVATOR_OPEN_REVERSED_SOFTWARE_LIMIT = Rotation2d.fromDegrees(-24 + POSITION_OFFSET.getDegrees());
 	public static final double ELEVATOR_HEIGHT_METERS_TO_CHANGE_SOFT_LIMIT = 0.3;
 	public static final double LENGTH_METERS = 0.3;
 	public static final double MASS_KG = 5;

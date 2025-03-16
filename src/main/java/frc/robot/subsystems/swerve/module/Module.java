@@ -160,6 +160,9 @@ public class Module {
 		drive.stop();
 	}
 
+	public void setDriveCurrent(double current) {
+		drive.applyRequest(driveRequests.torqueCurrent().withSetPoint(current));
+	}
 
 	public void setDriveVoltage(double voltage) {
 		setDriveVoltage(voltage, false);

@@ -33,10 +33,8 @@ public class ArmCommandsBuilder {
 	}
 
 	public Command moveToPosition(Rotation2d position) {
-		return arm.asSubsystemCommand(
-			new InitExecuteCommand(() -> arm.setTargetPosition(position), () -> {}),
-			"Set target position to: " + position
-		);
+		return arm
+			.asSubsystemCommand(new InitExecuteCommand(() -> arm.setTargetPosition(position), () -> {}), "Set target position to: " + position);
 	}
 
 	public Command moveToPosition(

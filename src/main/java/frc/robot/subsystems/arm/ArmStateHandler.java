@@ -29,7 +29,7 @@ public class ArmStateHandler {
 		return switch (state) {
 			case STAY_IN_PLACE ->
 				new ParallelCommandGroup(new InstantCommand(() -> currentState = state), arm.getCommandsBuilder().stayInPlace());
-			case L2, L3, L4 ->
+			case L2, L3, L4,PRE_L3,PRE_L2 ->
 				new ParallelCommandGroup(
 					new InstantCommand(() -> currentState = state),
 					arm.getCommandsBuilder()
@@ -63,16 +63,20 @@ public class ArmStateHandler {
 	private Rotation2d getStatePosition(ArmState state) {
 		Logger.recordOutput("distance", distanceSupplier.get());
 		Logger.recordOutput("Output4", ArmConstants.L4_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()));
-		Logger.recordOutput("Output32", ArmConstants.L3_L2_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()));
+		Logger.recordOutput("Output32", ArmConstants.L3_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()));
 
 		return switch (state) {
 			case L4 ->
 				Rotation2d
 					.fromDegrees(state.getPosition().getDegrees() + ArmConstants.L4_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()).getDegrees());
-			case L3, L2 ->
+			case L3, PRE_L3 ->
 				Rotation2d.fromDegrees(
-					state.getPosition().getDegrees() + ArmConstants.L3_L2_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()).getDegrees()
+					state.getPosition().getDegrees() + ArmConstants.L3_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()).getDegrees()
 				);
+			
+			case L2,PRE_L2 -> Rotation2d.fromDegrees(
+					state.getPosition().getDegrees() + ArmConstants.L2_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()).getDegrees()
+			);
 			default -> state.getPosition();
 		};
 	}

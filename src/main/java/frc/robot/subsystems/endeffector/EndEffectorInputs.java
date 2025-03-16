@@ -10,4 +10,3 @@ public class EndEffectorInputs {
 	public record EndEffectorData(double power, double current, boolean isCoralIn, boolean isAlgaeIn) {}
 
 }
-

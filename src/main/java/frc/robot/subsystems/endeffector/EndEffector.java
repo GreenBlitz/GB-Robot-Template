@@ -94,7 +94,6 @@ public class EndEffector extends GBSubsystem {
 		Logger.processInputs(getLogPath(), inputs);
 	}
 
-
 	public void setBrake(boolean brake) {
 		roller.setBrake(brake);
 	}

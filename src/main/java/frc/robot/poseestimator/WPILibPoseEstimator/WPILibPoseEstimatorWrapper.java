@@ -80,7 +80,7 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 			updateOdometry(data);
 		}
 	}
-	
+
 	@Override
 	public void updateOdometry(OdometryData data) {
 		Twist2d changeInPose = kinematics.toTwist2d(lastOdometryData.wheelPositions, data.wheelPositions);

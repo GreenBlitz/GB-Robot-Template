@@ -207,7 +207,7 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command  armPreScore() {
+	public Command armPreScore() {
 		return asSubsystemCommand(
 			new DeferredCommand(
 				() -> new ParallelCommandGroup(

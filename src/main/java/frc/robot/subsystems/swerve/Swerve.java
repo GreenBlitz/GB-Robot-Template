@@ -173,7 +173,7 @@ public class Swerve extends GBSubsystem {
 
 		return odometryData;
 	}
-	
+
 	public OdometryData getLatestOdometryData() {
 		odometryData.wheelPositions = modules.getWheelPositions(0);
 		odometryData.gyroAngle = gyro instanceof EmptyGyro ? Optional.empty() : Optional.of(gyroSignals.yawSignal().getLatestValue());

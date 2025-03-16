@@ -238,7 +238,7 @@ public class Robot {
 //		 multiAprilTagVisionSources.lo g();
 		headingEstimator.log();
 		Logger.recordOutput("timeTest/pose", TimeUtil.getCurrentTimeSeconds() - swerveTime);
-		
+
 		BatteryUtil.logStatus();
 //		BusChain.logChainsStatuses();
 		simulationManager.logPoses();

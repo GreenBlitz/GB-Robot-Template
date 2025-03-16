@@ -28,7 +28,7 @@ public class Arm extends GBSubsystem {
 	private final InputSignal<Rotation2d> encoderPositionSignal;
 	private final ArmCommandsBuilder commandsBuilder;
 	private final SysIdCalibrator sysIdCalibrator;
-	private final ArmIOInputsAutoLogged inputs;
+	private final ArmInputsAutoLogged inputs;
 	private Rotation2d reversedSoftLimit;
 
 	public Arm(
@@ -48,7 +48,7 @@ public class Arm extends GBSubsystem {
 		this.motorPositionSignal = motorPositionSignal;
 		this.motorVoltageSignal = motorVoltageSignal;
 		this.encoder = encoder;
-		this.inputs = new ArmIOInputsAutoLogged();
+		this.inputs = new ArmInputsAutoLogged();
 		this.encoderPositionSignal = encoderPositionSignal;
 		this.commandsBuilder = new ArmCommandsBuilder(this);
 		this.sysIdCalibrator = new SysIdCalibrator(motor.getSysidConfigInfo(), this, (voltage) -> setVoltage(voltage + getKgVoltage()));
@@ -78,7 +78,7 @@ public class Arm extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		inputs.data = new ArmIOInputs.ArmIOData(
+		inputs.data = new ArmInputs.ArmIOData(
 			motorPositionSignal.getAndUpdateValue().getRadians(),
 			motorVoltageSignal.getAndUpdateValue(),
 			encoderPositionSignal.getAndUpdateValue().getRadians(),

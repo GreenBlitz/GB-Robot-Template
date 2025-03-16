@@ -38,7 +38,7 @@ public class Elevator extends GBSubsystem {
 
 	private final ElevatorCommandsBuilder commandsBuilder;
 	private final SysIdCalibrator sysIdCalibrator;
-	private final ElevatorIOInputsAutoLogged inputs;
+	private final ElevatorInputsAutoLogged inputs;
 
 	private boolean hasBeenResetBySwitch;
 	private double ffCalibrationVoltage;
@@ -58,7 +58,7 @@ public class Elevator extends GBSubsystem {
 
 		this.rightMotor = rightMotor;
 		this.rightMotorSignals = rightMotorSignals;
-		this.inputs = new ElevatorIOInputsAutoLogged();
+		this.inputs = new ElevatorInputsAutoLogged();
 		this.leftMotor = leftMotor;
 		this.leftMotorSignals = leftMotorSignals;
 
@@ -114,7 +114,7 @@ public class Elevator extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		inputs.data = new ElevatorIOInputs.ElevatorIOData(
+		inputs.data = new ElevatorInputs.ElevatorIOData(
 			leftMotorSignals.positionSignal().getAndUpdateValue().getRadians(),
 			leftMotorSignals.voltageSignal().getAndUpdateValue(),
 			rightMotorSignals.positionSignal().getAndUpdateValue().getRadians(),

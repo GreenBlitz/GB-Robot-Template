@@ -3,7 +3,7 @@ package frc.robot.subsystems.elevator;
 import org.littletonrobotics.junction.AutoLog;
 
 @AutoLog
-public class ElevatorIOInputs {
+public class ElevatorInputs {
 
 	public ElevatorIOData data = new ElevatorIOData(0, 0, 0, 0, 0, 0);
 

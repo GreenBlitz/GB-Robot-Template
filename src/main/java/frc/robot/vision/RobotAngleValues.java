@@ -4,10 +4,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 
 /**
- * A class that represents the robot's angles which is passed into the limelight's network tables, to the robot_orientation_set entry. Its
- * values were found in <a href=https://github.com/LimelightVision/limelightlib-wpijava/blob/main/LimelightHelpers.java>limelightlib
- * sourcecode</a>. The limelight is using it to calculate the MegaTag2 position.Rotation2d shall be used in degrees (and for rates, degrees per
- * second). Everything except the yaw is unnecessary.
+ * A class that represents the robot's angles which is passed into the limelight's network tables, to the robot_orientation_set entry. Its values
+ * were found in <a href=https://github.com/LimelightVision/limelightlib-wpijava/blob/main/LimelightHelpers.java>limelightlib sourcecode</a>. The
+ * limelight is using it to calculate the MegaTag2 position.Rotation2d shall be used in degrees (and for rates, degrees per second). Everything
+ * except the yaw is unnecessary.
  */
 public class RobotAngleValues {
 
@@ -115,8 +115,7 @@ public class RobotAngleValues {
 			this.pitch.getDegrees(),
 			this.pitchRate,
 			this.roll.getDegrees(),
-			this.rollRate
-		};
+			this.rollRate};
 	}
 
 }

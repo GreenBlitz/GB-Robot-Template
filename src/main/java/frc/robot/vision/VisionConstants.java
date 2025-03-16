@@ -48,6 +48,8 @@ public class VisionConstants {
 
 	public static final int LIMELIGHT_ENTRY_ARRAY_LENGTH = 6;
 
+	public static final double[] EMPTY_LIMELIGHT_ENTRY_ARRAY = new double[LIMELIGHT_ENTRY_ARRAY_LENGTH];
+
 	public static final int NO_APRILTAG_ID = -1;
 
 	public static Rotation2d ROLL_FILTER_TOLERANCE = Rotation2d.fromDegrees(5);

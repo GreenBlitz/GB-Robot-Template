@@ -53,6 +53,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	private BooleanSupplier shouldDataBeFiltered;
 	private Filter<? super AprilTagVisionData> filter;
 	private RobotAngleValues robotAngleValues;
+	private Optional<LimeLightAprilTagVisionData> lastVisionData;
 
 	protected LimeLightSource(
 		String cameraNetworkTablesName,
@@ -80,6 +81,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		this.captureLatencyEntry = getLimelightNetworkTableEntry("cl");
 
 		this.robotAngleValues = new RobotAngleValues();
+		this.lastVisionData = Optional.empty();
 		AlertManager.addAlert(
 			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1)
 		);
@@ -99,13 +101,13 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		lastSeenAprilTagId = getAprilTagID();
 		robotOrientationEntry.setDoubleArray(robotAngleValues.asArray());
 //		Logger.recordOutput(logPath + "gyroAngleValues", robotAngleValues.asArray());
-		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
+		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(VisionConstants.EMPTY_LIMELIGHT_ENTRY_ARRAY);
 		NetworkTableEntry entry = switch (poseEstimationMethod) {
 			case MEGATAG_1 -> robotPoseEntryMegaTag1;
 			case MEGATAG_2 -> robotPoseEntryMegaTag2;
 		};
-		robotPoseArray = entry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
-		standardDeviationsArray = standardDeviations.getDoubleArray(new double[Pose3dComponentsValue.POSE3D_COMPONENTS_AMOUNT]);
+		robotPoseArray = entry.getDoubleArray(VisionConstants.EMPTY_LIMELIGHT_ENTRY_ARRAY);
+		standardDeviationsArray = standardDeviations.getDoubleArray(VisionConstants.EMPTY_LIMELIGHT_ENTRY_ARRAY);
 		computingPipeLineLatency = computingPipelineLatencyEntry.getDouble(0D);
 		captureLatency = captureLatencyEntry.getDouble(0D);
 
@@ -156,26 +158,30 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	@Override
 	public Optional<AprilTagVisionData> getVisionData() {
 		Optional<Pair<Pose3d, Double>> poseEstimation = getUpdatedPose3DEstimation();
-		return poseEstimation.map(
-			pose3dDoublePair -> new LimeLightAprilTagVisionData(
-				getName(),
-				pose3dDoublePair.getFirst(),
-				pose3dDoublePair.getSecond(),
-				new StandardDeviations3D(
-					poseEstimationMethod.equals(LimelightPoseEstimationMethod.MEGATAG_1)
-						? Arrays.copyOfRange(standardDeviationsArray, 0, Pose3dComponentsValue.values().length)
-						: Arrays.copyOfRange(
-							standardDeviationsArray,
-							Pose3dComponentsValue.values().length,
-							2 * Pose3dComponentsValue.values().length
-						)
-				),
-				getAprilTagValueInRobotSpace(Pose3dComponentsValue.Z_VALUE),
-				getDistanceFromTag(),
-				lastSeenAprilTagId,
-				poseEstimationMethod
-			)
-		);
+		return poseEstimation.map(pose3dDoublePair -> {
+			lastVisionData = Optional.of(
+				LimeLightAprilTagVisionData.updateInstanceOf(
+					lastVisionData,
+					getName(),
+					pose3dDoublePair.getFirst(),
+					pose3dDoublePair.getSecond(),
+					new StandardDeviations3D(
+						poseEstimationMethod.equals(LimelightPoseEstimationMethod.MEGATAG_1)
+							? Arrays.copyOfRange(standardDeviationsArray, 0, Pose3dComponentsValue.values().length)
+							: Arrays.copyOfRange(
+								standardDeviationsArray,
+								Pose3dComponentsValue.values().length,
+								2 * Pose3dComponentsValue.values().length
+							)
+					),
+					getAprilTagValueInRobotSpace(Pose3dComponentsValue.Z_VALUE),
+					getDistanceFromTag(),
+					lastSeenAprilTagId,
+					poseEstimationMethod
+				)
+			);
+			return lastVisionData.get();
+		});
 	}
 
 	@Override

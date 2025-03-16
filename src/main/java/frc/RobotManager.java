@@ -65,6 +65,7 @@ public class RobotManager extends LoggedRobot {
 			auto.cancel();
 		}
 
+		robot.getSwerve().getCommandsBuilder().resetTargetSpeeds();
 		robot.getRobotCommander().getLedStateHandler().setState(LEDState.DISABLE).schedule();
 	}
 

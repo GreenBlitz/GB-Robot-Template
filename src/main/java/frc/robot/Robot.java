@@ -224,6 +224,7 @@ public class Robot {
 		Logger.recordOutput("timeTest/swerve", TimeUtil.getCurrentTimeSeconds() - swerveTime);
 		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());
 
+		swerveTime = TimeUtil.getCurrentTimeSeconds();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
 		for (TimedValue<Rotation2d> headingData : multiAprilTagVisionSources.getFilteredRobotHeading()) {
@@ -236,7 +237,8 @@ public class Robot {
 		poseEstimator.updateVision(multiAprilTagVisionSources.getFilteredVisionData());
 //		 multiAprilTagVisionSources.log();
 		headingEstimator.log();
-
+		Logger.recordOutput("timeTest/pose", TimeUtil.getCurrentTimeSeconds() - swerveTime);
+		
 		BatteryUtil.logStatus();
 //		BusChain.logChainsStatuses();
 		simulationManager.logPoses();

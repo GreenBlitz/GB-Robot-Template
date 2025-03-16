@@ -146,9 +146,9 @@ public class Module {
 		moduleInputs.isClosedLoop = isClosedLoop;
 		moduleInputs.targetState = targetState;
 
-		Logger.processInputs(constants.logPath(), moduleInputs);
-		Logger.processInputs(constants.logPath() + "/Drive", driveInputs);
-		Logger.processInputs(constants.logPath() + "/Drive", driveCouplingInputs);
+//		Logger.processInputs(constants.logPath(), moduleInputs);
+//		Logger.processInputs(constants.logPath() + "/Drive", driveInputs);
+//		Logger.processInputs(constants.logPath() + "/Drive", driveCouplingInputs);
 	}
 
 

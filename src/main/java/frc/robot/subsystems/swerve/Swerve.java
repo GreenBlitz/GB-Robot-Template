@@ -333,7 +333,7 @@ public class Swerve extends GBSubsystem {
 		joystick.POV_LEFT
 			.whileTrue(getCommandsBuilder().driveByState(() -> slowCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)));
 		ChassisPowers fastCalibrationPowers = new ChassisPowers();
-		slowCalibrationPowers.xPower = 0.5;
+		fastCalibrationPowers.xPower = 0.5;
 		joystick.POV_RIGHT
 			.whileTrue(getCommandsBuilder().driveByState(() -> fastCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)));
 

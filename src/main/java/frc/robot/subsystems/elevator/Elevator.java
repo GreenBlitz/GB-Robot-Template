@@ -262,7 +262,7 @@ public class Elevator extends GBSubsystem {
 				)
 			);
 
-		// The sysid outputs will be logged to the "CTRE Signal Logger". Use phoenix tuner x to extract the position, velocity, motorVoltage,
+		// The sysid outputs will be logged to the "CTRE Signal Logger". Use phoenix tuner x to extract the positionRads, velocity, motorVoltage,
 		// state signals into wpilog. Then enter the wpilog into wpilib sysid app and make sure you enter all info in the correct places. (see
 		// wpilib sysid in google)
 		sysIdCalibrator.setAllButtonsForCalibration(joystick);

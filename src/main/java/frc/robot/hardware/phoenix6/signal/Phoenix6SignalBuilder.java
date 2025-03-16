@@ -66,8 +66,8 @@ public class Phoenix6SignalBuilder {
 	}
 
 	/**
-	 * Use this function only if you are not fetching the slope signal. Ex: If you care only about position and not velocity do:
-	 * Phoenix6BothLatencySignal position = Phoenix6SignalBuilder.generatePhoenix6Signal(motor.getPosition(), motor.getVelocity(),...);
+	 * Use this function only if you are not fetching the slope signal. Ex: If you care only about positionRads and not velocity do:
+	 * Phoenix6BothLatencySignal positionRads = Phoenix6SignalBuilder.generatePhoenix6Signal(motor.getPosition(), motor.getVelocity(),...);
 	 */
 	public static Phoenix6LatencyAndSlopeSignal build(
 		StatusSignal<?> signal,

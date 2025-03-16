@@ -148,9 +148,9 @@ public class Module {
 		drive.updateSimulation();
 
 		double time = TimeUtil.getCurrentTimeSeconds();
-//		encoder.updateInputs(encoderSignals.position().getLatestValue());
-//		steer.updateInputs(steerSignals.position(), steerSignals.velocity(), steerSignals.current(), steerSignals.voltage());
-//		drive.updateInputs(driveSignals.position(), driveSignals.velocity(), driveSignals.current(), driveSignals.voltage());
+//		encoder.updateInputs(encoderSignals.positionRads().getLatestValue());
+//		steer.updateInputs(steerSignals.positionRads(), steerSignals.velocity(), steerSignals.current(), steerSignals.voltage());
+//		drive.updateInputs(driveSignals.positionRads(), driveSignals.velocity(), driveSignals.current(), driveSignals.voltage());
 		inputs.data = new ModuleIOData(
 			driveSignals.position().getAndUpdateValue().getRadians(),
 			driveSignals.velocity().getAndUpdateValue().getRadians(),
@@ -297,10 +297,10 @@ public class Module {
 
 	/**
 	 * The odometry thread can update itself faster than the main code loop (which is 50 hertz). Instead of using the latest odometry update, the
-	 * accumulated odometry positions since the last loop to get a more accurate position.
+	 * accumulated odometry positions since the last loop to get a more accurate positionRads.
 	 *
 	 * @param odometryUpdateIndex the index of the odometry update
-	 * @return the position of the module at the given odometry update index
+	 * @return the positionRads of the module at the given odometry update index
 	 */
 	public SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
 		return new SwerveModulePosition(

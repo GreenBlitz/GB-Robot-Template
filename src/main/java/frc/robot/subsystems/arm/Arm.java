@@ -15,7 +15,6 @@ import frc.robot.subsystems.arm.factory.KrakenX60ArmBuilder;
 import frc.utils.alerts.Alert;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.calibration.sysid.SysIdCalibrator;
-import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.Logger;
 
 public class Arm extends GBSubsystem {
@@ -72,38 +71,21 @@ public class Arm extends GBSubsystem {
 		return Robot.ROBOT_TYPE.isReal() ? KrakenX60ArmBuilder.kG * getPosition().getCos() : 0;
 	}
 
-	@AutoLog
-	public static class ArmIOInputs {
-
-		public ArmIOData data = new ArmIOData(0, 0, 0, 0);
-
-	}
-
-	public record ArmIOData(double position, double voltage, double positioEncode, double target) {}
-
-
 	@Override
 	protected void subsystemPeriodic() {
 		motor.updateSimulation();
 		updateInputs();
-//		log();
 	}
 
 	private void updateInputs() {
-		this.inputs.data = new ArmIOData(
+		inputs.data = new ArmIOInputs.ArmIOData(
 			motorPositionSignal.getAndUpdateValue().getRadians(),
 			motorVoltageSignal.getAndUpdateValue(),
 			encoderPositionSignal.getAndUpdateValue().getRadians(),
-			positionRequest.getSetPoint().getRadians()
+			positionRequest.getSetPoint().getRadians(),
+			reversedSoftLimit.getRadians()
 		);
 		Logger.processInputs(getLogPath(), inputs);
-//		motor.updateInputs(motorPositionSignal, motorVoltageSignal);
-//		encoder.updateInputs(encoderPositionSignal);
-	}
-
-	private void log() {
-		Logger.recordOutput(getLogPath() + "/ReversedSoftLimit", reversedSoftLimit);
-		Logger.recordOutput(getLogPath() + "/TargetPose", positionRequest.getSetPoint());
 	}
 
 	public void setReversedSoftLimit(Rotation2d reversedSoftLimit) {

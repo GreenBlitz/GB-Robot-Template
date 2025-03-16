@@ -83,7 +83,7 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	/**
-	 * Check if robot at pose but relative to targetPosition branch. Y-axis is vertical to the branch. X-axis is horizontal to the branch So when
+	 * Check if robot at pose but relative to target branch. Y-axis is vertical to the branch. X-axis is horizontal to the branch So when
 	 * you check if robot in place in y-axis its in parallel to the reef side.
 	 */
 	private boolean isAtReefScoringPose(

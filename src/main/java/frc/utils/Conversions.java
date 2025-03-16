@@ -34,7 +34,7 @@ public class Conversions {
 	}
 
 	/**
-	 * Converts motor data to system data. This can be velocity, positionRads, acceleration, etc.
+	 * Converts motor data to system data. This can be velocity, position, acceleration, etc.
 	 *
 	 * @param motorData the motor data
 	 * @param gearRatio the gear ratio between the motor and the system. 2 means that 2 motor rotations are 1 system rotation.
@@ -45,7 +45,7 @@ public class Conversions {
 	}
 
 	/**
-	 * Converts system data to motor data. This can be velocity, positionRads, acceleration, etc.
+	 * Converts system data to motor data. This can be velocity, position, acceleration, etc.
 	 *
 	 * @param systemData the system data
 	 * @param gearRatio  the gear ratio between the motor and the system. 2 means that 2 motor rotations are 1 system rotation.
@@ -159,26 +159,26 @@ public class Conversions {
 	}
 
 	/**
-	 * Converts a targetPosition output voltage to a percentage output when voltage compensation is enabled. The voltage compensation saturation
+	 * Converts a target output voltage to a percentage output when voltage compensation is enabled. The voltage compensation saturation
 	 * determines what voltage represents 100% output. The compensated power is the voltage represented by a percentage of the saturation
 	 * voltage.
 	 *
-	 * @param voltage    the targetPosition voltage output
+	 * @param voltage    the target voltage output
 	 * @param saturation the configured saturation which represents 100% output
-	 * @return the percentage output to achieve the targetPosition voltage
+	 * @return the percentage output to achieve the target voltage
 	 */
 	public static double voltageToCompensatedPower(double voltage, double saturation) {
 		return voltage / saturation;
 	}
 
 	/**
-	 * Converts a targetPosition output percentage output to voltage when voltage compensation is enabled. The voltage compensation saturation
+	 * Converts a target output percentage output to voltage when voltage compensation is enabled. The voltage compensation saturation
 	 * determines what voltage represents 100% output. The compensated power is the voltage represented by a percentage of the saturation
 	 * voltage.
 	 *
-	 * @param power      the targetPosition percentage output
+	 * @param power      the target percentage output
 	 * @param saturation the configured saturation which represents 100% output
-	 * @return the percentage output to achieve the targetPosition voltage
+	 * @return the percentage output to achieve the target voltage
 	 */
 	public static double compensatedPowerToVoltage(double power, double saturation) {
 		return power * saturation;

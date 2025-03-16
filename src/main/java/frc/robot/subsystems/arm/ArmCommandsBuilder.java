@@ -49,7 +49,7 @@ public class ArmCommandsBuilder {
 				() -> arm.setTargetPosition(position, maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared),
 				() -> {}
 			),
-			"Set target Position to: " + position
+			"Set target position to: " + position
 		);
 	}
 

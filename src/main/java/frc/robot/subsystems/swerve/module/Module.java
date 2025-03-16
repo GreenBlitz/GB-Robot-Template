@@ -297,10 +297,10 @@ public class Module {
 
 	/**
 	 * The odometry thread can update itself faster than the main code loop (which is 50 hertz). Instead of using the latest odometry update, the
-	 * accumulated odometry positions since the last loop to get a more accurate positionRads.
+	 * accumulated odometry positions since the last loop to get a more accurate position.
 	 *
 	 * @param odometryUpdateIndex the index of the odometry update
-	 * @return the positionRads of the module at the given odometry update index
+	 * @return the position of the module at the given odometry update index
 	 */
 	public SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
 		return new SwerveModulePosition(

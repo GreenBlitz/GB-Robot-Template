@@ -213,7 +213,7 @@ public class KrakenX60ArmBuilder {
 					AngleUnit.ROTATIONS,
 					BusChain.SUPERSTRUCTURE_CANIVORE
 				);
-			case SIMULATION -> new SuppliedAngleSignal("positionRads", () -> 0.0, AngleUnit.ROTATIONS);
+			case SIMULATION -> new SuppliedAngleSignal("position", () -> 0.0, AngleUnit.ROTATIONS);
 		};
 	}
 

@@ -64,8 +64,16 @@ public class ClimbStateHandler {
 
 	private Command exitClimb() {
 		return new SequentialCommandGroup(
-			lifterStateHandler.setState(LifterState.BACKWARD).withTimeout(ClimbConstants.SOLENOID_RELEASE_TIME_SECONDS),
-			solenoidStateHandler.setState(SolenoidState.HOLD_FREE).withTimeout(ClimbConstants.SOLENOID_RETRACTING_UNTIL_HOLDING_TIME_SECONDS)
+			new ParallelCommandGroup(
+				lifterStateHandler.setState(LifterState.BACKWARD).withTimeout(ClimbConstants.SOLENOID_RELEASE_TIME_SECONDS),
+				solenoidStateHandler.setState(SolenoidState.INITIAL_FREE)
+					.withTimeout(ClimbConstants.SOLENOID_RETRACTING_UNTIL_HOLDING_TIME_SECONDS)
+			),
+		new ParallelCommandGroup(
+				lifterStateHandler.setState(LifterState.HOLD).withTimeout(ClimbConstants.SOLENOID_RELEASE_TIME_SECONDS),
+				solenoidStateHandler.setState(SolenoidState.HOLD_FREE).withTimeout(ClimbConstants.SOLENOID_RETRACTING_UNTIL_HOLDING_TIME_SECONDS)
+			)
+
 		);
 	}
 

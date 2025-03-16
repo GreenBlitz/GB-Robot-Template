@@ -1,3 +1,9 @@
 package frc.robot.subsystems.swerve;
 
-public record ChassisPowers(double xPower, double yPower, double rotationalPower) {}
+public class ChassisPowers {
+
+	public double xPower = 0;
+	public double yPower = 0;
+	public double rotationalPower = 0;
+
+}

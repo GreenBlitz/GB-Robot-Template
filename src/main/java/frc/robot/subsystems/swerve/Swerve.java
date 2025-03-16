@@ -59,7 +59,7 @@ public class Swerve extends GBSubsystem {
 	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro, GyroSignals gyroSignals) {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
-		this.driversPowerInputs = new ChassisPowers(0, 0, 0);
+		this.driversPowerInputs = new ChassisPowers();
 
 		this.constants = constants;
 		this.driveRadiusMeters = SwerveMath.calculateDriveRadiusMeters(modules.getModulePositionsFromCenterMeters());
@@ -328,12 +328,14 @@ public class Swerve extends GBSubsystem {
 
 		// Test the swerve returns real velocities (measure distance and time in real life and compare to swerve velocity logs).
 		// REMEMBER after drive calibrations use these for pid testing - Remove OPEN LOOP for that
-		joystick.POV_LEFT.whileTrue(
-			getCommandsBuilder().driveByState(() -> new ChassisPowers(0.2, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
-		);
-		joystick.POV_RIGHT.whileTrue(
-			getCommandsBuilder().driveByState(() -> new ChassisPowers(0.5, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
-		);
+		ChassisPowers slowCalibrationPowers = new ChassisPowers();
+		slowCalibrationPowers.xPower = 0.2;
+		joystick.POV_LEFT
+			.whileTrue(getCommandsBuilder().driveByState(() -> slowCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)));
+		ChassisPowers fastCalibrationPowers = new ChassisPowers();
+		fastCalibrationPowers.xPower = 0.5;
+		joystick.POV_RIGHT
+			.whileTrue(getCommandsBuilder().driveByState(() -> fastCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)));
 
 		// Apply 12 volts on x-axis. Use it for max velocity calibrations.
 		// See what velocity the swerve log after it stops accelerating and use it as max.

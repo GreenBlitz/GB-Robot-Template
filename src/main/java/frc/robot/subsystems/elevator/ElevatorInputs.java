@@ -5,9 +5,9 @@ import org.littletonrobotics.junction.AutoLog;
 @AutoLog
 public class ElevatorInputs {
 
-	public ElevatorIOData data = new ElevatorIOData(0, 0, 0, 0, 0, 0);
+	public ElevatorData data = new ElevatorData(0, 0, 0, 0, 0, 0);
 
-	public record ElevatorIOData(
+	public record ElevatorData(
 		double leftPositionRads,
 		double leftVoltage,
 		double rightPositionRads,

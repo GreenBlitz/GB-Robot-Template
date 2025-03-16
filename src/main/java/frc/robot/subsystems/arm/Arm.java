@@ -78,7 +78,7 @@ public class Arm extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		inputs.data = new ArmInputs.ArmIOData(
+		inputs.data = new ArmInputs.ArmData(
 			motorPositionSignal.getAndUpdateValue().getRadians(),
 			motorVoltageSignal.getAndUpdateValue(),
 			encoderPositionSignal.getAndUpdateValue().getRadians(),

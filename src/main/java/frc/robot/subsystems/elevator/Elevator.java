@@ -114,7 +114,7 @@ public class Elevator extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		inputs.data = new ElevatorInputs.ElevatorIOData(
+		inputs.data = new ElevatorInputs.ElevatorData(
 			leftMotorSignals.positionSignal().getAndUpdateValue().getRadians(),
 			leftMotorSignals.voltageSignal().getAndUpdateValue(),
 			rightMotorSignals.positionSignal().getAndUpdateValue().getRadians(),

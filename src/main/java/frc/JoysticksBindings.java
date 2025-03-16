@@ -31,6 +31,8 @@ public class JoysticksBindings {
 //	private static final SmartJoystick FIFTH_JOYSTICK = new SmartJoystick(JoystickPorts.FIFTH);
 //	private static final SmartJoystick SIXTH_JOYSTICK = new SmartJoystick(JoystickPorts.SIXTH);
 
+	private static final ChassisPowers driversInputChassisPowers = new ChassisPowers();
+
 	public static void configureBindings(Robot robot) {
 		mainJoystickButtons(robot);
 		secondJoystickButtons(robot);
@@ -48,13 +50,9 @@ public class JoysticksBindings {
 
 	public static void setDriversInputsToSwerve(Swerve swerve) {
 		if (MAIN_JOYSTICK.isConnected()) {
-			swerve.setDriversPowerInputs(
-				new ChassisPowers(
-					MAIN_JOYSTICK.getAxisValue(Axis.LEFT_Y),
-					MAIN_JOYSTICK.getAxisValue(Axis.LEFT_X),
-					MAIN_JOYSTICK.getAxisValue(Axis.RIGHT_X)
-				)
-			);
+			driversInputChassisPowers.xPower = MAIN_JOYSTICK.getAxisValue(Axis.LEFT_Y);
+			driversInputChassisPowers.yPower = MAIN_JOYSTICK.getAxisValue(Axis.LEFT_X);
+			driversInputChassisPowers.rotationalPower = MAIN_JOYSTICK.getAxisValue(Axis.RIGHT_X);
 		}
 //		else if (THIRD_JOYSTICK.isConnected()) {
 //			swerve.setDriversPowerInputs(
@@ -66,8 +64,11 @@ public class JoysticksBindings {
 //			);
 //		}
 		else {
-			swerve.setDriversPowerInputs(new ChassisPowers(0, 0, 0));
+			driversInputChassisPowers.xPower = 0;
+			driversInputChassisPowers.yPower = 0;
+			driversInputChassisPowers.rotationalPower = 0;
 		}
+		swerve.setDriversPowerInputs(driversInputChassisPowers);
 	}
 
 	private static Command noteInRumble(SmartJoystick joystick) {

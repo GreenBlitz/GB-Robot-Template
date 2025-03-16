@@ -3,6 +3,8 @@ package frc.robot.subsystems.arm;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.robot.statemachine.Tolerances;
+import frc.utils.math.ToleranceMath;
 import frc.utils.utilcommands.InitExecuteCommand;
 import frc.utils.utilcommands.LoggedDashboardCommand;
 
@@ -46,9 +48,10 @@ public class ArmCommandsBuilder {
 		return arm
 			.asSubsystemCommand(
 				new RunCommand(
-					() -> arm
-						.setTargetPosition(positionSupplier.get(), maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared)
-				),
+					() -> {
+						if (!ToleranceMath.isNearWrapped(positionSupplier.get(),arm.getPosition(), Tolerances.ARM_POSITION)) {
+						arm.setTargetPosition(positionSupplier.get(), maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared);
+					}}),
 				"Set target position to supplier"
 			);
 	}

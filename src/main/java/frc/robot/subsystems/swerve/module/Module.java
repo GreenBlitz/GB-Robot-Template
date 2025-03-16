@@ -8,9 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.constants.MathConstants;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IAngleEncoder;
-import frc.robot.subsystems.swerve.module.extrainputs.DriveCouplingInputsAutoLogged;
-import frc.robot.subsystems.swerve.module.extrainputs.DriveInputsAutoLogged;
-import frc.robot.subsystems.swerve.module.extrainputs.ModuleInputsAutoLogged;
+import frc.robot.subsystems.swerve.module.extrainputs.*;
 import frc.robot.subsystems.swerve.module.records.DriveRequests;
 import frc.robot.subsystems.swerve.module.records.DriveSignals;
 import frc.robot.subsystems.swerve.module.records.EncoderSignals;
@@ -21,7 +19,6 @@ import frc.utils.Conversions;
 import frc.utils.math.ToleranceMath;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.time.TimeUtil;
-import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
@@ -121,49 +118,21 @@ public class Module {
 		}
 	}
 
-	@AutoLog
-	public static class ModuleIOInputs {
-
-		public ModuleIOData data;
-
-	}
-
-	public record ModuleIOData(
-		double drivePositionRad,
-		double driveVelocityRadPerSec,
-		double driveAppliedVolts,
-		double driveTorqueCurrentAmps,
-		Rotation2d turnAbsolutePosition,
-		Rotation2d turnPosition,
-		double turnVelocityRadPerSec,
-		double turnAppliedVolts,
-		double turnAppliedVoltsssss,
-		double turnAppliedVoltssss,
-		double turnAppliedVoltsss,
-		double turnTorqueCurrentAmps
-	) {}
-
 	public void updateInputs() {
 		steer.updateSimulation();
 		drive.updateSimulation();
 
 		double time = TimeUtil.getCurrentTimeSeconds();
-//		encoder.updateInputs(encoderSignals.positionRads().getLatestValue());
-//		steer.updateInputs(steerSignals.positionRads(), steerSignals.velocity(), steerSignals.current(), steerSignals.voltage());
-//		drive.updateInputs(driveSignals.positionRads(), driveSignals.velocity(), driveSignals.current(), driveSignals.voltage());
-		inputs.data = new ModuleIOData(
+		inputs.data = new ModuleIOInputs.ModuleIOData(
 			driveSignals.position().getAndUpdateValue().getRadians(),
 			driveSignals.velocity().getAndUpdateValue().getRadians(),
-			driveSignals.voltage().getAndUpdateValue(),
 			driveSignals.current().getAndUpdateValue(),
-			encoderSignals.position().getAndUpdateValue(),
-			steerSignals.position().getAndUpdateValue(),
+			driveSignals.voltage().getAndUpdateValue(),
+			encoderSignals.position().getAndUpdateValue().getRadians(),
+			steerSignals.position().getAndUpdateValue().getRadians(),
 			steerSignals.velocity().getAndUpdateValue().getRadians(),
-			steerSignals.voltage().getAndUpdateValue(),
 			steerSignals.current().getAndUpdateValue(),
-			2,
-			3,
-			1
+			steerSignals.voltage().getAndUpdateValue()
 		);
 		Logger.processInputs(constants.logPath(), inputs);
 
@@ -177,11 +146,9 @@ public class Module {
 		moduleInputs.isClosedLoop = isClosedLoop;
 		moduleInputs.targetState = targetState;
 
-//		time = TimeUtil.getCurrentTimeSeconds();
 		Logger.processInputs(constants.logPath(), moduleInputs);
 		Logger.processInputs(constants.logPath() + "/Drive", driveInputs);
 		Logger.processInputs(constants.logPath() + "/Drive", driveCouplingInputs);
-//		Logger.recordOutput("testTime/inpsususModules", (TimeUtil.getCurrentTimeSeconds() - time) * 4);
 	}
 
 

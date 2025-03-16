@@ -7,7 +7,6 @@ import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
-import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
 public class EndEffector extends GBSubsystem {

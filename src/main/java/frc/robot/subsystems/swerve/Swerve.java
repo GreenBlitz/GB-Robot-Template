@@ -54,6 +54,7 @@ public class Swerve extends GBSubsystem {
 	private Supplier<Rotation2d> headingSupplier;
 	private ChassisPowers driversPowerInputs;
 	private double lastMagnitudeMetersPerSecond;
+	private OdometryData odometryData;
 
 	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro, GyroSignals gyroSignals) {
 		super(constants.logPath());
@@ -71,6 +72,7 @@ public class Swerve extends GBSubsystem {
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
 		this.stateHandler = new SwerveStateHandler(this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
+		this.odometryData = new OdometryData();
 
 		update();
 		setDefaultCommand(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
@@ -169,6 +171,13 @@ public class Swerve extends GBSubsystem {
 			);
 		}
 
+		return odometryData;
+	}
+	
+	public OdometryData getLatestOdometryData() {
+		odometryData.wheelPositions = modules.getWheelPositions(0);
+		odometryData.gyroAngle = gyro instanceof EmptyGyro ? Optional.empty() : Optional.of(gyroSignals.yawSignal().getLatestValue());
+		odometryData.timestamp = gyroSignals.yawSignal().getTimestamp();
 		return odometryData;
 	}
 

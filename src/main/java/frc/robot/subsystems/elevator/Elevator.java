@@ -18,7 +18,6 @@ import frc.robot.subsystems.elevator.records.ElevatorMotorSignals;
 import frc.utils.Conversions;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.calibration.sysid.SysIdCalibrator;
-import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends GBSubsystem {
@@ -43,7 +42,7 @@ public class Elevator extends GBSubsystem {
 
 	private boolean hasBeenResetBySwitch;
 	private double ffCalibrationVoltage;
-	private double currentTargetPositionMeters;
+	private double targetPositionMeters;
 
 	public Elevator(
 		String logPath,
@@ -102,23 +101,6 @@ public class Elevator extends GBSubsystem {
 		return digitalInputInputs.debouncedValue;
 	}
 
-
-	@AutoLog
-	public static class ElevatorIOInputs {
-
-		public ElevatorIOData data = new ElevatorIOData(0, 0, 0, 0, 0, 0);
-
-	}
-
-	public record ElevatorIOData(
-		double positionLeft,
-		double voltageLeft,
-		double positionRight,
-		double voltageRight,
-		double positionMeters,
-		double targetPosition
-	) {}
-
 	@Override
 	protected void subsystemPeriodic() {
 		// Update Simulation checks if ROBOT_TYPE.isSimulation() inside the function and acts accordingly.
@@ -132,32 +114,24 @@ public class Elevator extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		this.inputs.data = new ElevatorIOData(
+		inputs.data = new ElevatorIOInputs.ElevatorIOData(
 			leftMotorSignals.positionSignal().getAndUpdateValue().getRadians(),
 			leftMotorSignals.voltageSignal().getAndUpdateValue(),
 			rightMotorSignals.positionSignal().getAndUpdateValue().getRadians(),
-			leftMotorSignals.voltageSignal().getAndUpdateValue(),
+			rightMotorSignals.voltageSignal().getAndUpdateValue(),
 			getElevatorPositionMeters(),
-			currentTargetPositionMeters
+			targetPositionMeters
 		);
 		Logger.processInputs(getLogPath(), inputs);
-
-//		rightMotor.updateInputs(rightMotorSignals.positionSignal(), rightMotorSignals.voltageSignal());
-//		rightMotor.updateInputs(rightMotorSignals.otherSignals());
-
-//		leftMotor.updateInputs(leftMotorSignals.positionSignal(), leftMotorSignals.voltageSignal());
-//		leftMotor.updateInputs(leftMotorSignals.otherSignals());
 
 //		limitSwitch.updateInputs(digitalInputInputs);
 //		Logger.processInputs(getLogPath() + "/LimitSwitch", digitalInputInputs);
 	}
 
 	private void log() {
-		Logger.recordOutput(getLogPath() + "/PositionMeters", getElevatorPositionMeters());
-//		Logger.recordOutput(getLogPath() + "/IsAtBackwardsLimit", isAtBackwardsLimit());
-//		Logger.recordOutput(getLogPath() + "/HasBeenResetBySwitch", hasBeenResetBySwitch);
-//		Logger.recordOutput(getLogPath() + "/FFCalibrationVoltage", ffCalibrationVoltage);
-		Logger.recordOutput(getLogPath() + "/TargetPositionMeters", currentTargetPositionMeters);
+		Logger.recordOutput(getLogPath() + "/IsAtBackwardsLimit", isAtBackwardsLimit());
+		Logger.recordOutput(getLogPath() + "/HasBeenResetBySwitch", hasBeenResetBySwitch);
+		Logger.recordOutput(getLogPath() + "/FFCalibrationVoltage", ffCalibrationVoltage);
 	}
 
 	public void resetMotors(double positionMeters) {
@@ -199,7 +173,7 @@ public class Elevator extends GBSubsystem {
 		double maxVelocityMetersPerSecond,
 		double maxAccelerationMetersPerSecondSquared
 	) {
-		currentTargetPositionMeters = targetPositionMeters;
+		this.targetPositionMeters = targetPositionMeters;
 		Rotation2d targetPosition = convertMetersToRotations(targetPositionMeters);
 		Rotation2d maxVelocityRotation2dPerSecond = convertMetersToRotations(maxVelocityMetersPerSecond);
 		Rotation2d maxAccelerationRotation2dPerSecond = convertMetersToRotations(maxAccelerationMetersPerSecondSquared);

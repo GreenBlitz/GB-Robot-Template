@@ -14,6 +14,7 @@ import frc.RobotManager;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.AutosBuilder;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
+import frc.robot.led.LEDState;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
 import frc.robot.subsystems.climb.lifter.Lifter;
 import frc.robot.subsystems.climb.lifter.factory.LifterFactory;
@@ -160,7 +161,7 @@ public class Robot {
 	}
 
 	private void configureAuto() {
-		Supplier<Command> scoringCommand = () -> robotCommander.getSuperstructure().scoreWithRelease().asProxy();
+		Supplier<Command> scoringCommand = () -> robotCommander.getSuperstructure().scoreWithRelease().alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.IN_POSITION_TO_SCORE)).asProxy();
 		Supplier<Command> intakingCommand = () -> robotCommander.getSuperstructure()
 			.closeL4AfterScore()
 			.andThen(robotCommander.getSuperstructure().intake().withTimeout(AutonomousConstants.INTAKING_TIMEOUT_SECONDS))
@@ -177,10 +178,11 @@ public class Robot {
 		new EventTrigger("PRE_SCORE").onTrue(
 			robotCommander.getSuperstructure()
 				.preScore()
+				.alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.IS_IN_POSITION_TO_OPEN_ELEVATOR))
 				.until(() -> robotCommander.getSuperstructure().isPreScoreReady())
-				.andThen(robotCommander.getSuperstructure().scoreWithoutRelease())
+				.andThen(robotCommander.getSuperstructure().scoreWithoutRelease().alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.SUPERSTRUCTURE_IN_POSITION)))
 		);
-		new EventTrigger("ARM_PRE_SCORE").onTrue(robotCommander.getSuperstructure().armPreScore());
+		new EventTrigger("ARM_PRE_SCORE").onTrue(robotCommander.getSuperstructure().armPreScore().alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.START_AIM_ASSIST)));
 
 		this.preBuiltAutosChooser = new AutonomousChooser(
 			"PreBuiltAutos",

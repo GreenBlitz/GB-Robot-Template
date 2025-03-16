@@ -256,7 +256,7 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command preScore() {
+	public Command  preScore() {
 		return new DeferredCommand(() -> switch (ScoringHelpers.targetScoreLevel) {
 			case L4 -> l4PreScore();
 			case L1, L2, L3 -> genericPreScore();

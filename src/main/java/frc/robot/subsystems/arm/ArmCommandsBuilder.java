@@ -35,7 +35,7 @@ public class ArmCommandsBuilder {
 	public Command moveToPosition(Rotation2d position) {
 		return arm.asSubsystemCommand(
 			new InitExecuteCommand(() -> arm.setTargetPosition(position), () -> {}),
-			"Set targetPosition positionRads to: " + position
+			"Set target position to: " + position
 		);
 	}
 
@@ -49,7 +49,7 @@ public class ArmCommandsBuilder {
 				() -> arm.setTargetPosition(position, maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared),
 				() -> {}
 			),
-			"Set targetPosition positionRads to: " + position
+			"Set target Position to: " + position
 		);
 	}
 

@@ -8,7 +8,6 @@ import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.time.TimeUtil;
-import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.Logger;
 
 public class EndEffector extends GBSubsystem {
@@ -21,7 +20,7 @@ public class EndEffector extends GBSubsystem {
 	private final IDigitalInput coralBeamBreaker;
 	private final DigitalInputInputsAutoLogged coralBeamBreakerInputs;
 	private final EndEffectorCommandsBuilder commandsBuilder;
-	private final RollerIOInputsAutoLogged inputs;
+	private final EndEffectorInputsAutoLogged inputs;
 	private double calibrationPower = 0;
 
 	public EndEffector(
@@ -40,7 +39,7 @@ public class EndEffector extends GBSubsystem {
 		this.algaeLimitSwitch = algaeLimitSwitch;
 		this.algaeLimitSwitchInputs = new DigitalInputInputsAutoLogged();
 
-		this.inputs = new RollerIOInputsAutoLogged();
+		this.inputs = new EndEffectorInputsAutoLogged();
 
 		this.coralBeamBreaker = coralBeamBreaker;
 		this.coralBeamBreakerInputs = new DigitalInputInputsAutoLogged();
@@ -75,37 +74,26 @@ public class EndEffector extends GBSubsystem {
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
-		log();
 	}
-
-	@AutoLog
-	public static class RollerIOInputs {
-
-		public RollerIOData data = new RollerIOData(0, 0, false, false);
-
-	}
-
-	public record RollerIOData(double power, double current, boolean isAlgaeIn, boolean isCoralIn) {}
 
 	private void updateInputs() {
-		double time = TimeUtil.getCurrentTimeSeconds();
-		roller.updateSimulation();
-//		roller.updateInputs(powerSignal, currentSignal);
-		inputs.data = new RollerIOData(powerSignal.getAndUpdateValue(), currentSignal.getAndUpdateValue(), isCoralIn(), isAlgaeIn());
-		Logger.processInputs(getLogPath(), inputs);
-		Logger.recordOutput("timetime/effecinput", TimeUtil.getCurrentTimeSeconds() - time);
-
-//		algaeLimitSwitch.updateInputs(algaeLimitSwitchInputs);
-//		Logger.processInputs(getLogPath() + "/AlgaeBeamBreaker", algaeLimitSwitchInputs);
+		// algaeLimitSwitch.updateInputs(algaeLimitSwitchInputs);
+		// Logger.processInputs(getLogPath() + "/AlgaeBeamBreaker", algaeLimitSwitchInputs);
 
 		coralBeamBreaker.updateInputs(coralBeamBreakerInputs);
-//		Logger.processInputs(getLogPath() + "/CoralBeamBreaker", coralBeamBreakerInputs);
+		// Logger.processInputs(getLogPath() + "/CoralBeamBreaker", coralBeamBreakerInputs);
+
+		roller.updateSimulation();
+		inputs.data = new EndEffectorInputs.EndEffectorData(
+			powerSignal.getAndUpdateValue(),
+			currentSignal.getAndUpdateValue(),
+			isCoralIn(),
+			isAlgaeIn()
+		);
+
+		Logger.processInputs(getLogPath(), inputs);
 	}
 
-	private void log() {
-//		Logger.recordOutput(getLogPath() + "/isAlgaeIn", isAlgaeIn());
-//		Logger.recordOutput(getLogPath() + "/isCoralIn", isCoralIn());
-	}
 
 	public void setBrake(boolean brake) {
 		roller.setBrake(brake);

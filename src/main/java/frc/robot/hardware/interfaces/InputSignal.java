@@ -8,7 +8,7 @@ public interface InputSignal<T> extends LoggableInputs {
 
 	T getLatestValue();
 
-	T getValue();
+	T getAndUpdateValue();
 
 	T[] asArray();
 

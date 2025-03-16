@@ -16,7 +16,7 @@ public class SuppliedDoubleSignal extends DoubleSignal {
 	}
 
 	@Override
-	protected void updateValues(TimedValue<Double> timedValue) {
+	protected void updateValue(TimedValue<Double> timedValue) {
 		timedValue.setValue(doubleSupplier.get());
 		timedValue.setTimestamp(TimeUtil.getCurrentTimeSeconds());
 	}

@@ -19,7 +19,7 @@ class SimulationGyroBuilder {
 		return new GyroSignals(new AngleSignal("yaw", AngleUnit.DEGREES) {
 
 			@Override
-			protected void updateValues(TimedValue<Rotation2d> timedValue) {
+			protected void updateValue(TimedValue<Rotation2d> timedValue) {
 				timedValue.setValue(new Rotation2d());
 				timedValue.setTimestamp(TimeUtil.getCurrentTimeSeconds());
 			}

@@ -152,15 +152,15 @@ public class Module {
 //		steer.updateInputs(steerSignals.position(), steerSignals.velocity(), steerSignals.current(), steerSignals.voltage());
 //		drive.updateInputs(driveSignals.position(), driveSignals.velocity(), driveSignals.current(), driveSignals.voltage());
 		inputs.data = new ModuleIOData(
-			driveSignals.position().getValue().getRadians(),
-			driveSignals.velocity().getValue().getRadians(),
-			driveSignals.voltage().getValue(),
-			driveSignals.current().getValue(),
-			encoderSignals.position().getValue(),
-			steerSignals.position().getValue(),
-			steerSignals.velocity().getValue().getRadians(),
-			steerSignals.voltage().getValue(),
-			steerSignals.current().getValue(),
+			driveSignals.position().getAndUpdateValue().getRadians(),
+			driveSignals.velocity().getAndUpdateValue().getRadians(),
+			driveSignals.voltage().getAndUpdateValue(),
+			driveSignals.current().getAndUpdateValue(),
+			encoderSignals.position().getAndUpdateValue(),
+			steerSignals.position().getAndUpdateValue(),
+			steerSignals.velocity().getAndUpdateValue().getRadians(),
+			steerSignals.voltage().getAndUpdateValue(),
+			steerSignals.current().getAndUpdateValue(),
 			2,
 			3,
 			1

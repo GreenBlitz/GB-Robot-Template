@@ -17,7 +17,7 @@ public class SuppliedAngleSignal extends AngleSignal {
 	}
 
 	@Override
-	protected void updateValues(TimedValue<Rotation2d> timedValue) {
+	protected void updateValue(TimedValue<Rotation2d> timedValue) {
 		timedValue.setValue(angleUnit.toRotation2d(angleSupplier.get()));
 		timedValue.setTimestamp(TimeUtil.getCurrentTimeSeconds());
 	}

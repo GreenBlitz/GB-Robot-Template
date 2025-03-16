@@ -91,7 +91,7 @@ public class EndEffector extends GBSubsystem {
 		double time = TimeUtil.getCurrentTimeSeconds();
 		roller.updateSimulation();
 //		roller.updateInputs(powerSignal, currentSignal);
-		inputs.data = new RollerIOData(powerSignal.getValue(), currentSignal.getValue(), isCoralIn(), isAlgaeIn());
+		inputs.data = new RollerIOData(powerSignal.getAndUpdateValue(), currentSignal.getAndUpdateValue(), isCoralIn(), isAlgaeIn());
 		Logger.processInputs(getLogPath(), inputs);
 		Logger.recordOutput("timetime/effecinput", TimeUtil.getCurrentTimeSeconds() - time);
 

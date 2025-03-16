@@ -62,7 +62,7 @@ public abstract class DoubleSignal implements InputSignal<Double> {
 
 	@Override
 	public void toLog(LogTable table) {
-		updateValues(timedValue);
+		updateValue(timedValue);
 		table.put(name, timedValue.getValue());
 	}
 
@@ -71,12 +71,12 @@ public abstract class DoubleSignal implements InputSignal<Double> {
 		timedValue.setValue(table.get(name, 0.0));
 	}
 
-	public Double getValue() {
-		updateValues(timedValue);
+	public Double getAndUpdateValue() {
+		updateValue(timedValue);
 		return timedValue.getValue();
 	}
 
-	protected abstract void updateValues(TimedValue<Double> timedValue);
+	protected abstract void updateValue(TimedValue<Double> timedValue);
 
 
 }

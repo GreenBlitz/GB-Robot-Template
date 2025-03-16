@@ -91,9 +91,9 @@ public class Arm extends GBSubsystem {
 
 	private void updateInputs() {
 		this.inputs.data = new ArmIOData(
-			motorPositionSignal.getValue().getRadians(),
-			motorVoltageSignal.getValue(),
-			encoderPositionSignal.getValue().getRadians(),
+			motorPositionSignal.getAndUpdateValue().getRadians(),
+			motorVoltageSignal.getAndUpdateValue(),
+			encoderPositionSignal.getAndUpdateValue().getRadians(),
 			positionRequest.getSetPoint().getRadians()
 		);
 		Logger.processInputs(getLogPath(), inputs);

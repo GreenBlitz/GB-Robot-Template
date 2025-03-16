@@ -25,23 +25,38 @@ public class ArmStateHandler {
 	}
 
 	public Command setState(ArmState state) {
-		if (state == ArmState.STAY_IN_PLACE) {
-			return new ParallelCommandGroup(new InstantCommand(() -> currentState = state), arm.getCommandsBuilder().stayInPlace());
-		} else {
-			return new ParallelCommandGroup(
-				new InstantCommand(() -> currentState = state),
-				arm.getCommandsBuilder()
-					.moveToPosition(
-						() -> getStatePosition(state),
-						state.getMaxVelocityRotation2dPerSecond(),
-						state.getMaxAccelerationRotation2dPerSecondSquared()
-					)
-			);
-		}
+		return switch (state) {
+			case STAY_IN_PLACE ->
+				new ParallelCommandGroup(new InstantCommand(() -> currentState = state), arm.getCommandsBuilder().stayInPlace());
+			case L2, L3, L4 ->
+				new ParallelCommandGroup(
+					new InstantCommand(() -> currentState = state),
+					arm.getCommandsBuilder()
+						.moveToPosition(
+							() -> getStatePosition(state),
+							state.getMaxVelocityRotation2dPerSecond(),
+							state.getMaxAccelerationRotation2dPerSecondSquared()
+						)
+				);
+			default ->
+				new ParallelCommandGroup(
+					new InstantCommand(() -> currentState = state),
+					arm.getCommandsBuilder()
+						.moveToPosition(
+							getStatePosition(state),
+							state.getMaxVelocityRotation2dPerSecond(),
+							state.getMaxAccelerationRotation2dPerSecondSquared()
+						)
+				);
+		};
 	}
 
 	public boolean isAtState(ArmState state) {
-		return arm.isAtPosition(getStatePosition(state), Tolerances.ARM_POSITION);
+		return isAtState(state, Tolerances.ARM_POSITION);
+	}
+
+	public boolean isAtState(ArmState state, Rotation2d tolerance) {
+		return arm.isAtPosition(getStatePosition(state), tolerance) && currentState == state;
 	}
 
 	private Rotation2d getStatePosition(ArmState state) {

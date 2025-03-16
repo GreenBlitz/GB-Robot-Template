@@ -44,13 +44,7 @@ public class Superstructure extends GBSubsystem {
 		super(logPath);
 		this.robot = robot;
 		this.elevatorStateHandler = new ElevatorStateHandler(robot.getElevator());
-		this.armStateHandler = new ArmStateHandler(
-			robot.getArm(),
-			() -> robot.getPoseEstimator()
-				.getEstimatedPose()
-				.getTranslation()
-				.getDistance(Field.getReefSideMiddle(ScoringHelpers.getTargetBranch().getReefSide()).getTranslation())
-		);
+		this.armStateHandler = new ArmStateHandler(robot.getArm(), this::getDistanceToReef);
 		this.endEffectorStateHandler = new EndEffectorStateHandler(robot.getEndEffector(), this);
 		this.climbStateHandler = new ClimbStateHandler(new SolenoidStateHandler(robot.getSolenoid()), new LifterStateHandler(robot.getLifter()));
 
@@ -91,6 +85,13 @@ public class Superstructure extends GBSubsystem {
 			: ArmConstants.ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT;
 	}
 
+	public double getDistanceToReef() {
+		return robot.getPoseEstimator()
+			.getEstimatedPose()
+			.getTranslation()
+			.getDistance(Field.getReefSideMiddle(ScoringHelpers.getTargetBranch().getReefSide()).getTranslation());
+	}
+
 	public boolean isCoralIn() {
 		return robot.getEndEffector().isCoralIn() || driverIsCoralInOverride;
 	}
@@ -102,7 +103,7 @@ public class Superstructure extends GBSubsystem {
 	public boolean isClosed() {
 		return robot.getElevator().isAtPosition(ElevatorState.CLOSED.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
 			&& elevatorStateHandler.getCurrentState() == ElevatorState.CLOSED
-			&& robot.getArm().isAtPosition(ArmState.CLOSED.getPosition(), Tolerances.ARM_POSITION)
+			&& armStateHandler.isAtState(ArmState.CLOSED)
 			&& armStateHandler.getCurrentState() == ArmState.CLOSED;
 	}
 
@@ -127,16 +128,14 @@ public class Superstructure extends GBSubsystem {
 	public boolean isReadyToOuttakeAlgae() {
 		return robot.getElevator().isAtPosition(ElevatorState.ALGAE_OUTTAKE.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
 			&& elevatorStateHandler.getCurrentState() == ElevatorState.ALGAE_OUTTAKE
-			&& robot.getArm().isAtPosition(ArmState.ALGAE_OUTTAKE.getPosition(), Tolerances.ALGAE_RELEASE_ARM_POSITION)
-			&& armStateHandler.getCurrentState() == ArmState.ALGAE_OUTTAKE;
+			&& armStateHandler.isAtState(ArmState.ALGAE_OUTTAKE, Tolerances.ALGAE_RELEASE_ARM_POSITION);
 	}
 
 
 	public boolean isReadyToProcessor() {
 		return robot.getElevator().isAtPosition(ElevatorState.PROCESSOR_OUTTAKE.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
 			&& elevatorStateHandler.getCurrentState() == ElevatorState.PROCESSOR_OUTTAKE
-			&& robot.getArm().isAtPosition(ArmState.PROCESSOR_OUTTAKE.getPosition(), Tolerances.ALGAE_RELEASE_ARM_POSITION)
-			&& armStateHandler.getCurrentState() == ArmState.PROCESSOR_OUTTAKE;
+			&& armStateHandler.isAtState(ArmState.PROCESSOR_OUTTAKE, Tolerances.ALGAE_RELEASE_ARM_POSITION);
 	}
 
 	public boolean isReadyForNetRelease() {

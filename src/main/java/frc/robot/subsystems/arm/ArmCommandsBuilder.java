@@ -39,17 +39,18 @@ public class ArmCommandsBuilder {
 	}
 
 	public Command moveToPosition(
-		Supplier<Rotation2d> position,
+		Supplier<Rotation2d> positionSupplier,
 		Rotation2d maxVelocityRotation2dPerSecond,
 		Rotation2d maxAccelerationRotation2dPerSecondSquared
 	) {
-		return arm.asSubsystemCommand(
-			new InitExecuteCommand(
-				() -> {},
-				() -> arm.setTargetPosition(position.get(), maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared)
-			),
-			"Set target position to: " + position
-		);
+		return arm
+			.asSubsystemCommand(
+				new RunCommand(
+					() -> arm
+						.setTargetPosition(positionSupplier.get(), maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared)
+				),
+				"Set target position to supplier"
+			);
 	}
 
 	public Command moveToPosition(

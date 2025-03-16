@@ -41,7 +41,7 @@ public enum ArmState {
 		this(position, ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND, ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED);
 	}
 
-	public Rotation2d getPosition() {
+	Rotation2d getPosition() {
 		return position;
 	}
 

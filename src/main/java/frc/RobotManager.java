@@ -52,7 +52,7 @@ public class RobotManager extends LoggedRobot {
 				.getLedStateHandler()
 				.setState(LEDState.HAS_CORAL)
 				.withTimeout(LEDConstants.CORAL_IN_BLINK_TIME_SECONDS)
-				.onlyIf(robot.getRobotCommander().getSuperstructure()::isCoralIn)
+				.onlyIf(robot.getRobotCommander().getSuperstructure()::isCoralIn).ignoringDisable(true)
 		);
 	}
 

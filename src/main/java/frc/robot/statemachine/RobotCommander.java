@@ -271,7 +271,7 @@ public class RobotCommander extends GBSubsystem {
 			superstructure.armPreScore().alongWith(ledStateHandler.setState(LEDState.START_AIM_ASSIST)).until(this::isReadyToOpenSuperstructure),
 			superstructure.preScore().alongWith(ledStateHandler.setState(LEDState.IS_IN_POSITION_TO_OPEN_ELEVATOR)).until(superstructure::isPreScoreReady),
 			superstructure.scoreWithoutRelease().alongWith(ledStateHandler.setState(LEDState.SUPERSTRUCTURE_IN_POSITION)).until(this::isReadyToScore),
-			superstructure.scoreWithRelease().alongWith(ledStateHandler.setState(LEDState.IN_POSITION_TO_SCORE))
+			superstructure.scoreWithRelease().deadlineFor(ledStateHandler.setState(LEDState.IN_POSITION_TO_SCORE))
 		);
 
 		Supplier<Command> driveToPath = () -> swerve.getCommandsBuilder()

@@ -9,7 +9,6 @@ import frc.robot.subsystems.elevator.ElevatorState;
 public class LEDStateHandler extends GBSubsystem {
 
 	private final CANdle candle;
-	private LEDState currentState;
 
 	public LEDStateHandler(String logPath, CANdle candle) {
 		super(logPath);
@@ -22,7 +21,7 @@ public class LEDStateHandler extends GBSubsystem {
 		Command setStateCommand = asSubsystemCommand(
 				new ParallelCommandGroup(
 						new RunCommand(() -> candle.animate(state.getAnimation()), this)
-								.ignoringDisable(true), new InstantCommand(() -> currentState = state)
+								.ignoringDisable(true)
 				), state.name());
 
 		if (state == LEDState.HAS_CORAL) {

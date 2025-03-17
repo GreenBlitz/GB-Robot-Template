@@ -40,6 +40,7 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
+import frc.robot.vision.data.AprilTagVisionData;
 import frc.utils.auto.AutonomousChooser;
 import frc.utils.auto.PathPlannerUtil;
 import frc.robot.vision.VisionFilters;
@@ -50,6 +51,7 @@ import frc.utils.battery.BatteryUtil;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -239,7 +241,11 @@ public class Robot {
 		}
 		Logger.recordOutput("poseTiming/headingEstimatorTime", TimeUtil.getCurrentTimeSeconds() - timeBeforeHeadingEstimator);
 		double timeBeforeUpdatingPoseWithVision = TimeUtil.getCurrentTimeSeconds();
-		poseEstimator.updateVision(multiAprilTagVisionSources.getFilteredVisionData());
+		List<AprilTagVisionData> visionData = multiAprilTagVisionSources.getFilteredVisionData();
+		Logger.recordOutput("poseTiming/multiVisionSourcesTime", TimeUtil.getCurrentTimeSeconds() - timeBeforeUpdatingPoseWithVision);
+		double timeBeforeVision = TimeUtil.getCurrentTimeSeconds();
+		poseEstimator.updateVision(visionData);
+		Logger.recordOutput("poseTiming/wpilibPoseEstimatorVisionUpdateTime", TimeUtil.getCurrentTimeSeconds() - timeBeforeVision);
 		Logger.recordOutput("poseTiming/visionToPoseTime", TimeUtil.getCurrentTimeSeconds() - timeBeforeUpdatingPoseWithVision);
 //		 multiAprilTagVisionSources.lo g();
 		headingEstimator.log();

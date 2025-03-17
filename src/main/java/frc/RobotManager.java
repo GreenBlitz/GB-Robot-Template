@@ -61,11 +61,8 @@ public class RobotManager extends LoggedRobot {
 		if (!DriverStationUtil.isMatch()) {
 			BrakeStateManager.coast();
 		}
-		if (auto != null) {
-			auto.cancel();
-		}
 
-		robot.getSwerve().getCommandsBuilder().resetTargetSpeeds();
+		robot.getSwerve().getCommandsBuilder().resetTargetSpeeds().ignoringDisable(true).schedule();
 		robot.getRobotCommander().getLedStateHandler().setState(LEDState.DISABLE).schedule();
 	}
 
@@ -84,6 +81,13 @@ public class RobotManager extends LoggedRobot {
 			this.auto = robot.getAuto();
 		}
 		auto.schedule();
+	}
+
+	@Override
+	public void autonomousExit() {
+		if (auto != null) {
+			auto.cancel();
+		}
 	}
 
 	@Override

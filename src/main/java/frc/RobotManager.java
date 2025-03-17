@@ -97,7 +97,7 @@ public class RobotManager extends LoggedRobot {
 		updateTimeRelatedData(); // Better to be first
 		JoysticksBindings.setDriversInputsToSwerve(robot.getSwerve());
 		robot.periodic();
-		AlertManager.reportAlerts();
+//		AlertManager.reportAlerts();
 	}
 
 	private void createAutoReadyForConstructionChooser() {

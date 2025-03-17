@@ -225,7 +225,10 @@ public class Robot {
 		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());
 
 		swerveTime = TimeUtil.getCurrentTimeSeconds();
+		double timeBeforeOdometry = TimeUtil.getCurrentTimeSeconds();
 		poseEstimator.updateOdometry(swerve.getLatestOdometryData());
+		Logger.recordOutput("poseTiming/odometryTime", TimeUtil.getCurrentTimeSeconds() - timeBeforeOdometry);
+		double timeBeforeHeadingEstimator = TimeUtil.getCurrentTimeSeconds();
 		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
 		for (TimedValue<Rotation2d> headingData : multiAprilTagVisionSources.getFilteredRobotHeading()) {
 			headingEstimator.updateVisionIfGyroOffsetIsNotCalibrated(
@@ -234,7 +237,10 @@ public class Robot {
 				RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE
 			);
 		}
+		Logger.recordOutput("poseTiming/headingEstimatorTime", TimeUtil.getCurrentTimeSeconds() - timeBeforeHeadingEstimator);
+		double timeBeforeUpdatingPoseWithVision = TimeUtil.getCurrentTimeSeconds();
 		poseEstimator.updateVision(multiAprilTagVisionSources.getFilteredVisionData());
+		Logger.recordOutput("poseTiming/visionToPoseTime", TimeUtil.getCurrentTimeSeconds() - timeBeforeUpdatingPoseWithVision);
 //		 multiAprilTagVisionSources.lo g();
 		headingEstimator.log();
 		Logger.recordOutput("timeTest/pose", TimeUtil.getCurrentTimeSeconds() - swerveTime);

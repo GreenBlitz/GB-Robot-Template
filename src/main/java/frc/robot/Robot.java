@@ -178,11 +178,11 @@ public class Robot {
 		new EventTrigger("PRE_SCORE").onTrue(
 			robotCommander.getSuperstructure()
 				.preScore()
-				.alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.IS_IN_POSITION_TO_OPEN_ELEVATOR))
+				.alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.IN_POSITION_TO_OPEN_ELEVATOR))
 				.until(() -> robotCommander.getSuperstructure().isPreScoreReady())
-				.andThen(robotCommander.getSuperstructure().scoreWithoutRelease().alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.SUPERSTRUCTURE_IN_POSITION)))
+				.andThen(robotCommander.getSuperstructure().scoreWithoutRelease().alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.OPENING_SUPERSTRUCTURE)))
 		);
-		new EventTrigger("ARM_PRE_SCORE").onTrue(robotCommander.getSuperstructure().armPreScore().alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.START_AIM_ASSIST)));
+		new EventTrigger("ARM_PRE_SCORE").onTrue(robotCommander.getSuperstructure().armPreScore().alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.MOVE_TO_POSE)));
 
 		this.preBuiltAutosChooser = new AutonomousChooser(
 			"PreBuiltAutos",

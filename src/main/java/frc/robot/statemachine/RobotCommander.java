@@ -268,12 +268,12 @@ public class RobotCommander extends GBSubsystem {
 
 	public Command autoScore() {
 		Supplier<Command> fullySuperstructureScore = () -> new SequentialCommandGroup(
-			superstructure.armPreScore().alongWith(ledStateHandler.setState(LEDState.START_AIM_ASSIST)).until(this::isReadyToOpenSuperstructure),
+			superstructure.armPreScore().alongWith(ledStateHandler.setState(LEDState.MOVE_TO_POSE)).until(this::isReadyToOpenSuperstructure),
 			superstructure.preScore()
-				.alongWith(ledStateHandler.setState(LEDState.IS_IN_POSITION_TO_OPEN_ELEVATOR))
+				.alongWith(ledStateHandler.setState(LEDState.IN_POSITION_TO_OPEN_ELEVATOR))
 				.until(superstructure::isPreScoreReady),
 			superstructure.scoreWithoutRelease()
-				.alongWith(ledStateHandler.setState(LEDState.SUPERSTRUCTURE_IN_POSITION))
+				.alongWith(ledStateHandler.setState(LEDState.OPENING_SUPERSTRUCTURE))
 				.until(this::isReadyToScore),
 			superstructure.scoreWithRelease().deadlineFor(ledStateHandler.setState(LEDState.IN_POSITION_TO_SCORE))
 		);
@@ -307,9 +307,9 @@ public class RobotCommander extends GBSubsystem {
 	public Command autoScoreForAutonomous(PathPlannerPath path) {
 		Command fullySuperstructureScore = new SequentialCommandGroup(
 			superstructure.elevatorOpening(),
-			superstructure.armPreScore().alongWith(ledStateHandler.setState(LEDState.START_AIM_ASSIST)).until(this::isReadyToOpenSuperstructure),
-			superstructure.preScore().alongWith(ledStateHandler.setState(LEDState.IS_IN_POSITION_TO_OPEN_ELEVATOR)).until(superstructure::isPreScoreReady),
-			superstructure.scoreWithoutRelease().alongWith(ledStateHandler.setState(LEDState.SUPERSTRUCTURE_IN_POSITION)).until(this::isReadyToScore),
+			superstructure.armPreScore().alongWith(ledStateHandler.setState(LEDState.MOVE_TO_POSE)).until(this::isReadyToOpenSuperstructure),
+			superstructure.preScore().alongWith(ledStateHandler.setState(LEDState.IN_POSITION_TO_OPEN_ELEVATOR)).until(superstructure::isPreScoreReady),
+			superstructure.scoreWithoutRelease().alongWith(ledStateHandler.setState(LEDState.OPENING_SUPERSTRUCTURE)).until(this::isReadyToScore),
 			superstructure.scoreWithRelease().deadlineFor(ledStateHandler.setState(LEDState.IN_POSITION_TO_SCORE))
 		);
 

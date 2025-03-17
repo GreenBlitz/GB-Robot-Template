@@ -329,7 +329,7 @@ public class RobotCommander extends GBSubsystem {
 	public Command autoScoreThenAlgaeRemove() {
 		return new DeferredCommand(
 			() -> new SequentialCommandGroup(
-				autoScore().until(() -> !superstructure.isCoralIn()),
+				autoScore(),
 				preScore().until(this::isReadyToCloseSuperstructure),
 				algaeRemove()
 			),

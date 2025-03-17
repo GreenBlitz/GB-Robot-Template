@@ -140,9 +140,7 @@ public class JoysticksBindings {
 		usedJoystick.A.onTrue(driveActionChooser(robot));
 
 		usedJoystick.START.whileTrue(robot.getRobotCommander().setState(RobotState.MANUAL_CLIMB));
-		usedJoystick.Y
-				.onTrue(new InstantCommand(() -> ScoringHelpers.isAutoAlgaeRemoveActivated = !ScoringHelpers.isAutoAlgaeRemoveActivated));
-
+		usedJoystick.Y.onTrue(new InstantCommand(() -> ScoringHelpers.isAutoAlgaeRemoveActivated = !ScoringHelpers.isAutoAlgaeRemoveActivated));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

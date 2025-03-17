@@ -25,7 +25,6 @@ import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.function.BooleanSupplier;
 
 public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHeadingRequiringVisionSource {
 
@@ -50,10 +49,10 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	private double computingPipeLineLatency;
 	private double captureLatency;
 	private int lastSeenAprilTagId;
-	private BooleanSupplier shouldDataBeFiltered;
 	private Filter<? super AprilTagVisionData> filter;
 	private RobotAngleValues robotAngleValues;
 	private Optional<LimeLightAprilTagVisionData> lastVisionData;
+	private boolean didLastDataPassTheFilters;
 
 	protected LimeLightSource(
 		String cameraNetworkTablesName,
@@ -66,7 +65,6 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		this.logPath = parentLogPath + cameraNetworkTablesName + "/" + sourceName + "/";
 		this.cameraNetworkTablesName = cameraNetworkTablesName;
 		this.sourceName = sourceName;
-		this.shouldDataBeFiltered = () -> getVisionData().map(filter::apply).orElse(true);
 		this.filter = filter;
 		this.poseEstimationMethod = poseEstimationMethod;
 
@@ -82,6 +80,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 
 		this.robotAngleValues = new RobotAngleValues();
 		this.lastVisionData = Optional.empty();
+		this.didLastDataPassTheFilters = false;
 		AlertManager.addAlert(
 			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1)
 		);
@@ -110,7 +109,6 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		standardDeviationsArray = standardDeviations.getDoubleArray(VisionConstants.EMPTY_LIMELIGHT_ENTRY_ARRAY);
 		computingPipeLineLatency = computingPipelineLatencyEntry.getDouble(0D);
 		captureLatency = captureLatencyEntry.getDouble(0D);
-
 		log();
 	}
 
@@ -158,7 +156,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	@Override
 	public Optional<AprilTagVisionData> getVisionData() {
 		Optional<Pair<Pose3d, Double>> poseEstimation = getUpdatedPose3DEstimation();
-		return poseEstimation.map(pose3dDoublePair -> {
+		Optional<AprilTagVisionData> visionData =  poseEstimation.map(pose3dDoublePair -> {
 			lastVisionData = Optional.of(
 				LimeLightAprilTagVisionData.updateInstanceOf(
 					lastVisionData,
@@ -182,21 +180,24 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 			);
 			return lastVisionData.get();
 		});
+		if(visionData.isPresent()) {
+			didLastDataPassTheFilters = filter.apply(visionData.get());
+		}
+		return visionData;
 	}
 
 	@Override
 	public Optional<AprilTagVisionData> getFilteredVisionData() {
-		if (shouldDataBeFiltered.getAsBoolean()) {
-			return getVisionData();
-		} else {
-			return Optional.empty();
+		Optional<AprilTagVisionData> visionData = getVisionData();
+		if (didLastDataPassTheFilters) {
+			return visionData;
 		}
+		return Optional.empty();
 	}
 
 	@Override
 	public void setFilter(Filter<? super AprilTagVisionData> newFilter) {
 		this.filter = newFilter;
-		this.shouldDataBeFiltered = () -> getVisionData().map(filter::apply).orElse(true);
 	}
 
 	@Override
@@ -230,9 +231,9 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	}
 
 	public void log() {
-		Logger.recordOutput(logPath + "filterResult", shouldDataBeFiltered.getAsBoolean());
+		Logger.recordOutput(logPath + "filterResult", didLastDataPassTheFilters);
 //		Logger.recordOutput(logPath + "megaTagDirectOutput", PoseUtil.toPose3D(robotPoseArray, AngleUnit.DEGREES));
-		getVisionData().ifPresent(visionData -> {
+		lastVisionData.ifPresent(visionData -> {
 			Logger.recordOutput(logPath + "unfiltered3DVision", visionData.getEstimatedPose());
 //			Logger.recordOutput(logPath + "unfiltered2DVision(Projected)", visionData.getEstimatedPose().toPose2d());
 //			Logger.recordOutput(logPath + "aprilTagHeightMeters", visionData.getAprilTagHeightMeters());

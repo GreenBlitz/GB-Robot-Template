@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.elevator.ElevatorState;
+import frc.utils.utilcommands.InitExecuteCommand;
 
 public class LEDStateHandler extends GBSubsystem {
 
@@ -18,11 +19,7 @@ public class LEDStateHandler extends GBSubsystem {
 	}
 
 	public Command setState(LEDState state) {
-		Command setStateCommand = asSubsystemCommand(
-				new ParallelCommandGroup(
-						new RunCommand(() -> candle.animate(state.getAnimation()), this)
-								.ignoringDisable(true)
-				), state.name());
+		Command setStateCommand = asSubsystemCommand(new InitExecuteCommand(() -> candle.animate(state.getAnimation()), () -> {}, this).ignoringDisable(true), state.name());
 
 		if (state == LEDState.HAS_CORAL) {
 			return setStateCommand.withTimeout(LEDConstants.TIME_FOR_HAS_CORAL_STATE).ignoringDisable(true);

@@ -161,7 +161,10 @@ public class Robot {
 	}
 
 	private void configureAuto() {
-		Supplier<Command> scoringCommand = () -> robotCommander.getSuperstructure().scoreWithRelease().alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.IN_POSITION_TO_SCORE)).asProxy();
+		Supplier<Command> scoringCommand = () -> robotCommander.getSuperstructure()
+			.scoreWithRelease()
+			.alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.IN_POSITION_TO_SCORE))
+			.asProxy();
 		Supplier<Command> intakingCommand = () -> robotCommander.getSuperstructure()
 			.closeL4AfterScore()
 			.andThen(robotCommander.getSuperstructure().intake().withTimeout(AutonomousConstants.INTAKING_TIMEOUT_SECONDS))
@@ -180,9 +183,15 @@ public class Robot {
 				.preScore()
 				.alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.IN_POSITION_TO_OPEN_ELEVATOR))
 				.until(() -> robotCommander.getSuperstructure().isPreScoreReady())
-				.andThen(robotCommander.getSuperstructure().scoreWithoutRelease().alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.OPENING_SUPERSTRUCTURE)))
+				.andThen(
+					robotCommander.getSuperstructure()
+						.scoreWithoutRelease()
+						.alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.OPENING_SUPERSTRUCTURE))
+				)
 		);
-		new EventTrigger("ARM_PRE_SCORE").onTrue(robotCommander.getSuperstructure().armPreScore().alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.MOVE_TO_POSE)));
+		new EventTrigger("ARM_PRE_SCORE").onTrue(
+			robotCommander.getSuperstructure().armPreScore().alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.MOVE_TO_POSE))
+		);
 
 		this.preBuiltAutosChooser = new AutonomousChooser(
 			"PreBuiltAutos",

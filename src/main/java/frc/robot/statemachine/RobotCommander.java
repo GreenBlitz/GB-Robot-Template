@@ -308,8 +308,12 @@ public class RobotCommander extends GBSubsystem {
 		Command fullySuperstructureScore = new SequentialCommandGroup(
 			superstructure.elevatorOpening(),
 			superstructure.armPreScore().alongWith(ledStateHandler.setState(LEDState.MOVE_TO_POSE)).until(this::isReadyToOpenSuperstructure),
-			superstructure.preScore().alongWith(ledStateHandler.setState(LEDState.IN_POSITION_TO_OPEN_ELEVATOR)).until(superstructure::isPreScoreReady),
-			superstructure.scoreWithoutRelease().alongWith(ledStateHandler.setState(LEDState.OPENING_SUPERSTRUCTURE)).until(this::isReadyToScore),
+			superstructure.preScore()
+				.alongWith(ledStateHandler.setState(LEDState.IN_POSITION_TO_OPEN_ELEVATOR))
+				.until(superstructure::isPreScoreReady),
+			superstructure.scoreWithoutRelease()
+				.alongWith(ledStateHandler.setState(LEDState.OPENING_SUPERSTRUCTURE))
+				.until(this::isReadyToScore),
 			superstructure.scoreWithRelease().deadlineFor(ledStateHandler.setState(LEDState.IN_POSITION_TO_SCORE))
 		);
 

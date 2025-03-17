@@ -80,7 +80,7 @@ public class Falcon500LifterBuilder {
 			.build(lifter.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
 
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
-			.build(lifter.getDevice().getMotorVoltage() , RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+			.build(lifter.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 		return new Lifter(logPath, lifter, positionSignal, voltageSignal, limitSwitch);
 	}
 

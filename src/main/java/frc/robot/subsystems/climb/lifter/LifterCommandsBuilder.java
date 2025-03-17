@@ -21,8 +21,9 @@ public class LifterCommandsBuilder {
 		return lifter.asSubsystemCommand(new RunCommand(() -> lifter.setPower(powerSupplier.getAsDouble())), "Set power by supplier");
 	}
 
-	public Command climbWithLimitSwitch(){
-		return setPower(LifterState.CLIMB_WITH_LIMIT_SWITCH.getPower()).until(lifter::isAtLimitSwitch).andThen(lifter.getCommandsBuilder().stop());
+	public Command climbWithLimitSwitch() {
+		return setPower(LifterState.CLIMB_WITH_LIMIT_SWITCH.getPower()).until(lifter::isAtLimitSwitch)
+			.andThen(lifter.getCommandsBuilder().stop());
 	}
 
 	public Command stop() {

@@ -253,7 +253,8 @@ public class RobotCommander extends GBSubsystem {
 			case PROCESSOR_SCORE -> fullyProcessorScore();
 			case PRE_CLIMB_WITH_AIM_ASSIST -> preClimbWithAimAssist();
 			case PRE_CLIMB_WITHOUT_AIM_ASSIST -> preClimbWithoutAimAssist();
-			case CLIMB -> climb();
+			case CLIMB_WITHOUT_LIMIT_SWITCH -> climbWithoutLimitSwitch();
+			case CLIMB_WITH_LIMIT_SWITCH -> climbWithLimitSwitch();
 			case STOP_CLIMB -> stopClimb();
 			case CLOSE_CLIMB -> closeClimb();
 		};
@@ -513,10 +514,23 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	private Command climb() {
+	private Command climbWithoutLimitSwitch() {
 		return asSubsystemCommand(
-			new ParallelCommandGroup(superstructure.climb(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
-			RobotState.CLIMB
+			new ParallelCommandGroup(
+				superstructure.climbWithoutLimitSwitch(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+			),
+			RobotState.CLIMB_WITHOUT_LIMIT_SWITCH
+		);
+	}
+
+	private Command climbWithLimitSwitch() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				superstructure.climbWithLimitSwitch(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+			),
+			RobotState.CLIMB_WITH_LIMIT_SWITCH
 		);
 	}
 
@@ -579,7 +593,7 @@ public class RobotCommander extends GBSubsystem {
 			case SCORE, SCORE_WITHOUT_RELEASE -> closeAfterScore();
 			case PRE_CLIMB_WITH_AIM_ASSIST -> preClimbWithAimAssist();
 			case PRE_CLIMB_WITHOUT_AIM_ASSIST -> preClimbWithoutAimAssist();
-			case CLIMB, STOP_CLIMB -> stopClimb();
+			case CLIMB_WITHOUT_LIMIT_SWITCH, CLIMB_WITH_LIMIT_SWITCH, STOP_CLIMB -> stopClimb();
 		};
 	}
 

@@ -14,16 +14,24 @@ public class Lifter extends GBSubsystem {
 	private final ControllableMotor motor;
 	private final LifterCommandsBuilder lifterCommandsBuilder;
 	private final InputSignal<Rotation2d> positionSignal;
+	private final InputSignal<Double> voltageSignal;
 
 	private final IDigitalInput limitSwitch;
 	private final DigitalInputInputsAutoLogged limitSwitchInputs;
 
-	public Lifter(String logPath, ControllableMotor motor, InputSignal<Rotation2d> positionSignal, IDigitalInput limitSwitch) {
+	public Lifter(
+		String logPath,
+		ControllableMotor motor,
+		InputSignal<Rotation2d> positionSignal,
+		InputSignal<Double> voltageSignal,
+		IDigitalInput limitSwitch
+	) {
 		super(logPath);
 
 		this.motor = motor;
 		this.lifterCommandsBuilder = new LifterCommandsBuilder(this);
 		this.positionSignal = positionSignal;
+		this.voltageSignal = voltageSignal;
 
 		this.limitSwitch = limitSwitch;
 		this.limitSwitchInputs = new DigitalInputInputsAutoLogged();
@@ -72,7 +80,7 @@ public class Lifter extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		motor.updateInputs(positionSignal);
+		motor.updateInputs(positionSignal, voltageSignal);
 
 		limitSwitch.updateInputs(limitSwitchInputs);
 		Logger.recordOutput(getLogPath() + "/LimitSwitch", limitSwitchInputs.debouncedValue);
@@ -83,7 +91,7 @@ public class Lifter extends GBSubsystem {
 
 		joystick.Y.onTrue(stateHandler.setState(LifterState.BACKWARD));
 		joystick.X.onTrue(stateHandler.setState(LifterState.FORWARD));
-		joystick.B.onTrue(stateHandler.setState(LifterState.CLIMB));
+		joystick.B.onTrue(stateHandler.setState(LifterState.CLIMB_WITHOUT_LIMIT_SWITCH));
 		joystick.A.onTrue(stateHandler.setState(LifterState.DEPLOY));
 		joystick.R1.onTrue(stateHandler.setState(LifterState.HOLD));
 	}

@@ -26,7 +26,8 @@ public class ClimbStateHandler {
 		return new ParallelCommandGroup(new InstantCommand(() -> currentState = state), switch (state) {
 			case STOP -> stop();
 			case DEPLOY -> deploy();
-			case CLIMB -> climb();
+			case CLIMB_WITHOUT_LIMIT_SWITCH -> climbWithoutLimitSwitch();
+			case CLIMB_WITH_LIMIT_SWITCH -> climbWithLimitSwitch();
 			case CLOSE -> close();
 		});
 	}
@@ -45,10 +46,22 @@ public class ClimbStateHandler {
 		);
 	}
 
-	private Command climb() {
+	private Command climbWithoutLimitSwitch() {
 		return new SequentialCommandGroup(
-			new ParallelCommandGroup(lifterStateHandler.setState(LifterState.CLIMB), solenoidStateHandler.setState(SolenoidState.LOCKED))
-				.until(() -> lifterStateHandler.isLower(LifterState.CLIMB.getTargetPosition())),
+			new ParallelCommandGroup(
+				lifterStateHandler.setState(LifterState.CLIMB_WITHOUT_LIMIT_SWITCH),
+				solenoidStateHandler.setState(SolenoidState.LOCKED)
+			).until(() -> lifterStateHandler.isLower(LifterState.CLIMB_WITHOUT_LIMIT_SWITCH.getTargetPosition())),
+			new ParallelCommandGroup(lifterStateHandler.setState(LifterState.HOLD), solenoidStateHandler.setState(SolenoidState.LOCKED))
+		);
+	}
+
+	private Command climbWithLimitSwitch() {
+		return new SequentialCommandGroup(
+			new ParallelDeadlineGroup(
+				lifterStateHandler.setState(LifterState.CLIMB_WITHOUT_LIMIT_SWITCH),
+				solenoidStateHandler.setState(SolenoidState.LOCKED)
+			),
 			new ParallelCommandGroup(lifterStateHandler.setState(LifterState.HOLD), solenoidStateHandler.setState(SolenoidState.LOCKED))
 		);
 	}
@@ -62,7 +75,7 @@ public class ClimbStateHandler {
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick) {
-		joystick.X.onTrue(setState(ClimbState.CLIMB));
+		joystick.X.onTrue(setState(ClimbState.CLIMB_WITHOUT_LIMIT_SWITCH));
 		joystick.B.onTrue(setState(ClimbState.DEPLOY));
 		joystick.A.onTrue(setState(ClimbState.STOP));
 	}

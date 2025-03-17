@@ -148,7 +148,7 @@ public class KrakenX60ArmBuilder {
 
 //		config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
 //		config.Feedback.FeedbackRemoteSensorID = IDs.CANCodersIDs.ARM.id();
-
+	
 		return config;
 	}
 

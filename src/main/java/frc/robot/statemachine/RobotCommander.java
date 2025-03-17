@@ -326,6 +326,26 @@ public class RobotCommander extends GBSubsystem {
 		return new ParallelDeadlineGroup(fullySuperstructureScore, driveToPath);
 	}
 
+	public Command autoScoreThenAlgaeRemove() {
+		return new DeferredCommand(
+			() -> new SequentialCommandGroup(
+				autoScore().until(() -> !superstructure.isCoralIn()),
+				preScore().until(this::isReadyToCloseSuperstructure),
+				algaeRemove()
+			),
+			Set.of(
+				this,
+				superstructure,
+				swerve,
+				robot.getElevator(),
+				robot.getArm(),
+				robot.getEndEffector(),
+				robot.getLifter(),
+				robot.getSolenoid()
+			)
+		);
+	}
+
 	public Command fullyScore() {
 		return new SequentialCommandGroup(
 			armPreScore().until(this::isReadyToOpenSuperstructure),

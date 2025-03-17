@@ -28,11 +28,13 @@ public class ScoringHelpers {
 	public static ScoreLevel targetScoreLevel = ScoreLevel.L4;
 	public static boolean isFarReefHalf = false;
 	public static boolean isLeftBranch = false;
+	public static boolean isAutoAlgaeRemoveActivated = false;
 
 	private static Side targetSideForReef = Side.MIDDLE;
 	private static CoralStation latestWantedCoralStation = CoralStation.LEFT;
 	private static CoralStationSlot latestWantedCoralStationSlot = CoralStationSlot.L1;
 	private static Cage latestWantedCage = Cage.FIELD_WALL;
+
 
 	public static Rotation2d getHeadingForNet() {
 		return Field.getAllianceRelative(HEADING_FOR_NET);

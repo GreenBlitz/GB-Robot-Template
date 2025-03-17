@@ -330,7 +330,7 @@ public class RobotCommander extends GBSubsystem {
 		return new DeferredCommand(
 			() -> new SequentialCommandGroup(
 				autoScore(),
-				preScore().until(this::isReadyToCloseSuperstructure),
+				holdAlgae().until(this::isReadyToCloseSuperstructure),
 				algaeRemove()
 			),
 			Set.of(

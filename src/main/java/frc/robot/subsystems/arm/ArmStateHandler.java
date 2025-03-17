@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.statemachine.Tolerances;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.function.Supplier;
 
@@ -26,30 +25,23 @@ public class ArmStateHandler {
 	}
 
 	public Command setState(ArmState state) {
-		return switch (state) {
-			case STAY_IN_PLACE ->
-				new ParallelCommandGroup(new InstantCommand(() -> currentState = state), arm.getCommandsBuilder().stayInPlace());
-			case L2, L3, L4,PRE_L3,PRE_L2 ->
-				new ParallelCommandGroup(
-					new InstantCommand(() -> currentState = state),
-					arm.getCommandsBuilder()
-						.moveToPosition(
-							() -> getStatePosition(state),
-							state.getMaxVelocityRotation2dPerSecond(),
-							state.getMaxAccelerationRotation2dPerSecondSquared()
-						)
-				);
+		return new ParallelCommandGroup(new InstantCommand(() -> currentState = state), switch (state) {
+			case STAY_IN_PLACE -> arm.getCommandsBuilder().stayInPlace();
+			case L2, L3, L4, PRE_L3, PRE_L2 ->
+				arm.getCommandsBuilder()
+					.moveToPosition(
+						() -> getStatePosition(state),
+						state.getMaxVelocityRotation2dPerSecond(),
+						state.getMaxAccelerationRotation2dPerSecondSquared()
+					);
 			default ->
-				new ParallelCommandGroup(
-					new InstantCommand(() -> currentState = state),
-					arm.getCommandsBuilder()
-						.moveToPosition(
-							getStatePosition(state),
-							state.getMaxVelocityRotation2dPerSecond(),
-							state.getMaxAccelerationRotation2dPerSecondSquared()
-						)
-				);
-		};
+				arm.getCommandsBuilder()
+					.moveToPosition(
+						state.getPosition(),
+						state.getMaxVelocityRotation2dPerSecond(),
+						state.getMaxAccelerationRotation2dPerSecondSquared()
+					);
+		});
 	}
 
 	public boolean isAtState(ArmState state) {
@@ -61,24 +53,12 @@ public class ArmStateHandler {
 	}
 
 	private Rotation2d getStatePosition(ArmState state) {
-		Logger.recordOutput("distance", distanceSupplier.get());
-		Logger.recordOutput("Output4", ArmConstants.L4_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()));
-		Logger.recordOutput("Output32", ArmConstants.L3_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()));
-
-		return switch (state) {
-			case L4 ->
-				Rotation2d
-					.fromDegrees(state.getPosition().getDegrees() + ArmConstants.L4_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()).getDegrees());
-			case L3, PRE_L3 ->
-				Rotation2d.fromDegrees(
-					state.getPosition().getDegrees() + ArmConstants.L3_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()).getDegrees()
-				);
-			
-			case L2,PRE_L2 -> Rotation2d.fromDegrees(
-					state.getPosition().getDegrees() + ArmConstants.L2_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()).getDegrees()
-			);
-			default -> state.getPosition();
-		};
+		return Rotation2d.fromDegrees(state.getPosition().getDegrees() + switch (state) {
+			case L4 -> ArmConstants.L4_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()).getDegrees();
+			case L3, PRE_L3 -> ArmConstants.L3_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()).getDegrees();
+			case L2, PRE_L2 -> ArmConstants.L2_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()).getDegrees();
+			default -> 0;
+		});
 	}
 
 }

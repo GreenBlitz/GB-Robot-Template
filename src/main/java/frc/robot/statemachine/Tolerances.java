@@ -8,6 +8,7 @@ public class Tolerances {
 
 	public static final double ELEVATOR_HEIGHT_METERS = 0.05;
 
+	public static final Rotation2d ARM_INTERPOLATION_POSITION = Rotation2d.fromDegrees(2);
 	public static final Rotation2d ARM_POSITION = Rotation2d.fromDegrees(3);
 	public static final Rotation2d ALGAE_RELEASE_ARM_POSITION = Rotation2d.fromDegrees(10);
 
@@ -39,5 +40,6 @@ public class Tolerances {
 
 	public static final Pose2d PROCESSOR_RELATIVE_SCORING_POSITION = new Pose2d(0.2, 0.2, Rotation2d.fromDegrees(3));
 	public static final Pose2d PROCESSOR_RELATIVE_SCORING_DEADBANDS = new Pose2d(0.5, 0.5, Rotation2d.fromRadians(2));
+
 
 }

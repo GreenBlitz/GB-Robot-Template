@@ -10,26 +10,26 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class InterpolationMap<T, K> extends InterpolatingTreeMap<T, K> {
+public class InterpolationMap<K, V> extends InterpolatingTreeMap<K, V> {
 
-	public InterpolationMap(InverseInterpolator<T> inverseInterpolator, Interpolator<K> interpolator, Map<T, K> dataPoints) {
+	public InterpolationMap(InverseInterpolator<K> inverseInterpolator, Interpolator<V> interpolator, Map<K, V> dataPoints) {
 		super(inverseInterpolator, interpolator);
 		put(dataPoints);
 	}
 
-	public InterpolationMap(InverseInterpolator<T> inverseInterpolator, Interpolator<K> interpolator) {
+	public InterpolationMap(InverseInterpolator<K> inverseInterpolator, Interpolator<V> interpolator) {
 		super(inverseInterpolator, interpolator);
 	}
 
-	public InterpolationMap(InverseInterpolator<T> inverseInterpolator, Interpolator<K> interpolator, Comparator<T> comparator) {
+	public InterpolationMap(InverseInterpolator<K> inverseInterpolator, Interpolator<V> interpolator, Comparator<K> comparator) {
 		super(inverseInterpolator, interpolator, comparator);
 	}
 
-	public void put(Map<T, K> dataPoints) {
+	public void put(Map<K, V> dataPoints) {
 		dataPoints.forEach(super::put);
 	}
 
-	public Stream<K> get(T[] keys) {
+	public Stream<V> get(K[] keys) {
 		return Arrays.stream(keys).map(super::get);
 	}
 

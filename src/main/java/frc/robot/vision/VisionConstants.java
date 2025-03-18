@@ -68,13 +68,13 @@ public class VisionConstants {
 		.and(VisionFilters.isOnGround(ROBOT_DISTANCE_TO_GROUND_TOLERANCE_METERS));
 
 	public static final Pose3d LIMELIGHT_LEFT_CAMERA_ROBOT_POSE = new Pose3d(
-		new Translation3d(0.19989, -0.11998, 0.50927),
-		AngleUnit.DEGREES.toRotation3d(-8.9, -24.37, -22.92)
+		new Translation3d(0.215, -0.11, 0.508),
+		AngleUnit.DEGREES.toRotation3d(-8.06180374425555, -27.07784559039065, -22.52372569716833)
 	);
 
 	public static final Pose3d LIMELIGHT_RIGHT_CAMERA_ROBOT_POSE = new Pose3d(
-		new Translation3d(0.185, 0.13, 0.505),
-		AngleUnit.DEGREES.toRotation3d(8.81, -25.55, 19.96)
+		new Translation3d(0.2022, 0.13, 0.508),
+		AngleUnit.DEGREES.toRotation3d(10.612258493096334, -27.18966371065684, 20.10328620400214)
 	);
 
 	public static final Pose3d LIMELIGHT_FEEDER_CAMERA_ROBOT_POSE = new Pose3d(

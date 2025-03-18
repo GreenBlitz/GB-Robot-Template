@@ -31,7 +31,6 @@ import java.util.function.Supplier;
 public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisionData> {
 
 	private final Supplier<Rotation2d> robotHeadingSupplier;
-	private RobotAngleValues robotAngleValues;
 	private boolean useRobotHeadingForPoseEstimating;
 
 	public MultiAprilTagVisionSources(
@@ -42,7 +41,6 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	) {
 		super(logPath, visionSources);
 		this.robotHeadingSupplier = robotHeadingSupplier;
-		this.robotAngleValues = new RobotAngleValues();
 		setUseRobotHeadingForPoseEstimating(useRobotHeadingForPoseEstimating);
 	}
 
@@ -119,15 +117,13 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 
 	@Override
 	public ArrayList<AprilTagVisionData> getFilteredVisionData() {
-		robotAngleValues.setYaw(robotHeadingSupplier.get());
-		updateAngleInHeadingRequiringSources(robotAngleValues);
+		updateAngleInHeadingRequiringSources(robotHeadingSupplier.get());
 		return super.getFilteredVisionData();
 	}
 
 	@Override
 	public ArrayList<AprilTagVisionData> getUnfilteredVisionData() {
-		robotAngleValues.setYaw(robotHeadingSupplier.get());
-		updateAngleInHeadingRequiringSources(robotAngleValues);
+		updateAngleInHeadingRequiringSources(robotHeadingSupplier.get());
 		return super.getUnfilteredVisionData();
 	}
 

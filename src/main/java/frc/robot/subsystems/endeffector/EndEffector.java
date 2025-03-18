@@ -19,6 +19,7 @@ public class EndEffector extends GBSubsystem {
 	private final IDigitalInput coralBeamBreaker;
 	private final DigitalInputInputsAutoLogged coralBeamBreakerInputs;
 	private final EndEffectorCommandsBuilder commandsBuilder;
+	private final EndEffectorInputsAutoLogged inputs;
 	private double calibrationPower = 0;
 
 	public EndEffector(
@@ -36,6 +37,8 @@ public class EndEffector extends GBSubsystem {
 
 		this.algaeLimitSwitch = algaeLimitSwitch;
 		this.algaeLimitSwitchInputs = new DigitalInputInputsAutoLogged();
+
+		this.inputs = new EndEffectorInputsAutoLogged();
 
 		this.coralBeamBreaker = coralBeamBreaker;
 		this.coralBeamBreakerInputs = new DigitalInputInputsAutoLogged();
@@ -70,23 +73,21 @@ public class EndEffector extends GBSubsystem {
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
-		log();
 	}
 
 	private void updateInputs() {
-		roller.updateSimulation();
-		roller.updateInputs(powerSignal, currentSignal);
-
-		algaeLimitSwitch.updateInputs(algaeLimitSwitchInputs);
-		Logger.processInputs(getLogPath() + "/AlgaeBeamBreaker", algaeLimitSwitchInputs);
-
+		// algaeLimitSwitch.updateInputs(algaeLimitSwitchInputs);
 		coralBeamBreaker.updateInputs(coralBeamBreakerInputs);
-		Logger.processInputs(getLogPath() + "/CoralBeamBreaker", coralBeamBreakerInputs);
-	}
 
-	private void log() {
-		Logger.recordOutput(getLogPath() + "/isAlgaeIn", isAlgaeIn());
-		Logger.recordOutput(getLogPath() + "/isCoralIn", isCoralIn());
+		roller.updateSimulation();
+		inputs.data = new EndEffectorInputs.EndEffectorData(
+			powerSignal.getAndUpdateValue(),
+			currentSignal.getAndUpdateValue(),
+			isCoralIn(),
+			isAlgaeIn()
+		);
+
+		Logger.processInputs(getLogPath(), inputs);
 	}
 
 	public void setBrake(boolean brake) {

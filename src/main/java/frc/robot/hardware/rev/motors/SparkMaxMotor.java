@@ -5,7 +5,6 @@ import com.revrobotics.REVLibError;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import frc.robot.Robot;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import frc.robot.hardware.ConnectedInputAutoLogged;
 import frc.robot.hardware.interfaces.IMotor;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.mechanisms.MechanismSimulation;
@@ -26,7 +25,6 @@ public abstract class SparkMaxMotor implements IMotor {
 	protected final SparkMaxWrapper motor;
 	private final Optional<SparkMaxSimulation> sparkMaxSimulationOptional;
 	private final String logPath;
-	private final ConnectedInputAutoLogged connectedInput;
 	private SparkBase.Warnings warnings;
 	private SparkBase.Faults faults;
 
@@ -37,10 +35,7 @@ public abstract class SparkMaxMotor implements IMotor {
 		this.warnings = motor.getWarnings();
 		this.faults = motor.getFaults();
 
-		this.connectedInput = new ConnectedInputAutoLogged();
-		connectedInput.connected = true;
-
-		createAlerts();
+//		createAlerts();
 	}
 
 	public SparkMaxMotor(String logPath, SparkMaxWrapper motor) {
@@ -54,7 +49,6 @@ public abstract class SparkMaxMotor implements IMotor {
 	}
 
 	public void createAlerts() {
-		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "disconnectedAt", () -> !isConnected()));
 		createFaultAlerts();
 		createWarningAlerts();
 	}
@@ -212,7 +206,7 @@ public abstract class SparkMaxMotor implements IMotor {
 
 	@Override
 	public boolean isConnected() {
-		return connectedInput.connected;
+		return true;
 	}
 
 	private boolean isValid(InputSignal<?> signal) {
@@ -239,9 +233,8 @@ public abstract class SparkMaxMotor implements IMotor {
 			}
 		}
 
-		warnings = motor.getWarnings();
-		faults = motor.getFaults();
-		Logger.processInputs(logPath, connectedInput);
+//		warnings = motor.getWarnings();
+//		faults = motor.getFaults();
 	}
 
 	@Override

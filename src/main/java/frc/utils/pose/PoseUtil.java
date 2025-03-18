@@ -16,7 +16,6 @@ import frc.robot.vision.data.VisionData;
 import frc.utils.alerts.Alert;
 import frc.utils.math.AngleUnit;
 import frc.utils.math.ToleranceMath;
-import org.littletonrobotics.junction.Logger;
 
 public class PoseUtil {
 

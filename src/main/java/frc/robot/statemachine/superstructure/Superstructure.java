@@ -1,7 +1,6 @@
 package frc.robot.statemachine.superstructure;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -90,7 +89,7 @@ public class Superstructure extends GBSubsystem {
 		return robot.getPoseEstimator()
 			.getEstimatedPose()
 			.getTranslation()
-			.getDistance(Field.getCoralPlacement(ScoringHelpers.getTargetBranch(),true));
+			.getDistance(Field.getCoralPlacement(ScoringHelpers.getTargetBranch(), true));
 	}
 
 	public boolean isCoralIn() {

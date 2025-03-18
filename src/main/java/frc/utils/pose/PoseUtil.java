@@ -16,16 +16,29 @@ import frc.robot.vision.data.VisionData;
 import frc.utils.alerts.Alert;
 import frc.utils.math.AngleUnit;
 import frc.utils.math.ToleranceMath;
+import org.littletonrobotics.junction.Logger;
 
 public class PoseUtil {
 
 	public static Pose2d EMPTY_POSE2D = new Pose2d(Double.NaN, Double.NaN, Rotation2d.fromDegrees(Double.NaN));
 
-	public static boolean isAtPose(Pose2d currentPose, Pose2d targetPose, ChassisSpeeds currentSpeeds, Pose2d tolerances, Pose2d deadbands) {
+	public static boolean isAtPose(
+		Pose2d currentPose,
+		Pose2d targetPose,
+		ChassisSpeeds currentSpeeds,
+		Pose2d tolerances,
+		Pose2d deadbands,
+		String logPath
+	) {
 		boolean isAtX = MathUtil.isNear(targetPose.getX(), currentPose.getX(), tolerances.getX());
 		boolean isAtY = MathUtil.isNear(targetPose.getY(), currentPose.getY(), tolerances.getY());
 		boolean isAtHeading = ToleranceMath.isNearWrapped(targetPose.getRotation(), currentPose.getRotation(), tolerances.getRotation());
 		boolean isStill = SwerveMath.isStill(currentSpeeds, deadbands);
+
+		Logger.recordOutput(logPath + "/isAtX", isAtX);
+		Logger.recordOutput(logPath + "/isAtY", isAtY);
+		Logger.recordOutput(logPath + "/isAtHeading", isAtHeading);
+		Logger.recordOutput(logPath + "/isStill", isStill);
 
 		return isAtX && isAtY && isAtHeading && isStill;
 	}

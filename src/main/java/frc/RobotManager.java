@@ -15,7 +15,6 @@ import frc.robot.led.LEDConstants;
 import frc.robot.led.LEDState;
 import frc.robot.subsystems.climb.lifter.LifterConstants;
 import frc.utils.auto.PathPlannerUtil;
-import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtil;
 import frc.utils.time.TimeUtil;
 import frc.utils.logger.LoggerFactory;
@@ -46,7 +45,7 @@ public class RobotManager extends LoggedRobot {
 		JoysticksBindings.configureBindings(robot);
 
 		initializeLEDTriggers();
-		
+
 		Threads.setCurrentThreadPriority(true, 10);
 	}
 

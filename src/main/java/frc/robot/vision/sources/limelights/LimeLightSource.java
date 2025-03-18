@@ -156,7 +156,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	@Override
 	public Optional<AprilTagVisionData> getVisionData() {
 		Optional<Pair<Pose3d, Double>> poseEstimation = getUpdatedPose3DEstimation();
-		Optional<AprilTagVisionData> visionData =  poseEstimation.map(pose3dDoublePair -> {
+		Optional<AprilTagVisionData> visionData = poseEstimation.map(pose3dDoublePair -> {
 			lastVisionData = Optional.of(
 				LimeLightAprilTagVisionData.updateInstanceOf(
 					lastVisionData,
@@ -180,7 +180,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 			);
 			return lastVisionData.get();
 		});
-		if(visionData.isPresent()) {
+		if (visionData.isPresent()) {
 			didLastDataPassTheFilters = filter.apply(visionData.get());
 		}
 		return visionData;

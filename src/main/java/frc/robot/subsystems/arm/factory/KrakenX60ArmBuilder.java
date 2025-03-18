@@ -7,7 +7,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -143,12 +142,12 @@ public class KrakenX60ArmBuilder {
 		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = ArmConstants.ELEVATOR_OPEN_REVERSED_SOFTWARE_LIMIT.getRotations();
 		config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
 
-		config.Feedback.RotorToSensorRatio = 1;//GEAR_RATIO;
+		config.Feedback.RotorToSensorRatio = 1;// GEAR_RATIO;
 		config.Feedback.SensorToMechanismRatio = 1 * GEAR_RATIO;
 
 //		config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
 //		config.Feedback.FeedbackRemoteSensorID = IDs.CANCodersIDs.ARM.id();
-	
+
 		return config;
 	}
 

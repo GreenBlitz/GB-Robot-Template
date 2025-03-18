@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Robot;
@@ -301,30 +302,47 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command closeL4AfterScore() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				new SequentialCommandGroup(
-					armStateHandler.setState(ArmState.MID_WAY_CLOSE)
-						.until(() -> !robot.getElevator().isPastPosition(StateMachineConstants.ELEVATOR_POSITION_TO_CLOSE_ARM)),
-					armStateHandler.setState(ArmState.CLOSED)
-				),
-				new SequentialCommandGroup(
-					elevatorStateHandler.setState(ElevatorState.PRE_L4)
-						.until(() -> robot.getArm().isPastPosition(StateMachineConstants.ARM_POSITION_TO_CLOSE_ELEVATOR_L4)),
-					elevatorStateHandler.setState(ElevatorState.CLOSED)
-				),
-				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
-				climbStateHandler.setState(ClimbState.STOP)
-			).until(this::isClosed),
-			SuperstructureState.CLOSE_L4
+	public Command softCloseL4() {
+		return softClose("L4", ArmState.MID_WAY_CLOSE, ArmState.CLOSED, ElevatorState.L4, ElevatorState.CLOSED, 0.6, Rotation2d.fromDegrees(45));
+	}
+
+	public Command softCloseNet() {
+		return softClose(
+			"Net",
+			ArmState.MID_WAY_CLOSE,
+			ArmState.CLOSED,
+			ElevatorState.NET,
+			ElevatorState.CLOSED,
+			0.6,
+			Rotation2d.fromDegrees(45)
 		);
 	}
 
-	public Command afterScore() {
-		return new DeferredCommand(
-			() -> ScoringHelpers.targetScoreLevel == ScoreLevel.L4 ? closeL4AfterScore() : preScore(),
-			Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector(), robot.getLifter(), robot.getSolenoid())
+	private Command softClose(
+		String name,
+		ArmState notTouchingField,
+		ArmState closed,
+		ElevatorState starting,
+		ElevatorState ending,
+		double elevatorHeightToCloseArm,
+		Rotation2d armPositionToCloseElevator
+	) {
+		return asSubsystemCommand(
+			new ParallelDeadlineGroup(
+				new SequentialCommandGroup(
+					new ParallelCommandGroup(armStateHandler.setState(notTouchingField), elevatorStateHandler.setState(starting))
+						.until(() -> robot.getArm().isPastPosition(armPositionToCloseElevator)),
+					new ParallelCommandGroup(armStateHandler.setState(notTouchingField), elevatorStateHandler.setState(ending))
+						.until(() -> !robot.getElevator().isPastPosition(elevatorHeightToCloseArm)),
+					new ParallelDeadlineGroup(armStateHandler.setState(closed), elevatorStateHandler.setState(ending)).until(
+						() -> armStateHandler.isAtState(closed, Tolerances.ARM_POSITION)
+							&& elevatorStateHandler.isAtState(ending, Tolerances.ELEVATOR_HEIGHT_METERS)
+					)
+				),
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
+				climbStateHandler.setState(ClimbState.STOP)
+			),
+			"Soft Close " + name
 		);
 	}
 
@@ -450,7 +468,7 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command climbStop() {
+	public Command stopClimb() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.CLOSED),
@@ -501,11 +519,12 @@ public class Superstructure extends GBSubsystem {
 	private Command endState(SuperstructureState state) {
 		return switch (state) {
 			case STAY_IN_PLACE, OUTTAKE -> stayInPlace();
-			case INTAKE, IDLE, ALGAE_REMOVE, ALGAE_OUTTAKE, CLOSE_L4, PROCESSOR_OUTTAKE, NET -> idle();
+			case INTAKE, IDLE, ALGAE_REMOVE, ALGAE_OUTTAKE, PROCESSOR_OUTTAKE -> idle();
+			case NET -> softCloseNet().andThen(idle());
 			case ARM_PRE_SCORE, CLOSE_CLIMB -> armPreScore();
-			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> afterScore();
+			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> preScore();
 			case PRE_CLIMB -> preClimb();
-			case CLIMB, MANUAL_CLIMB, STOP_CLIMB -> climbStop();
+			case CLIMB, MANUAL_CLIMB, STOP_CLIMB -> stopClimb();
 			case ELEVATOR_OPENING -> elevatorOpening();
 			case HOLD_ALGAE -> holdAlgae();
 		};

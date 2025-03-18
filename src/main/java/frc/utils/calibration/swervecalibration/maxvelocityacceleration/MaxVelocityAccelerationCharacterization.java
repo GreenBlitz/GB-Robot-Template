@@ -20,6 +20,7 @@ public class MaxVelocityAccelerationCharacterization extends Command {
 	private final Consumer<ChassisPowers> openLoopDriveByPower;
 	private final VelocityType velocityType;
 	private final double velocityTolerance;
+	private final ChassisPowers chassisPowers;
 
 	private double maxVelocity;
 	private double characterizationStartingTimeSeconds;
@@ -32,6 +33,7 @@ public class MaxVelocityAccelerationCharacterization extends Command {
 		this.velocityTolerance = velocityType == VelocityType.TRANSLATIONAL
 			? MAX_VELOCITY_TOLERANCE_METERS_PER_SECOND
 			: MAX_VELOCITY_TOLERANCE_RADIANS_PER_SECOND;
+		this.chassisPowers = new ChassisPowers();
 
 		addRequirements(swerve);
 	}
@@ -45,10 +47,18 @@ public class MaxVelocityAccelerationCharacterization extends Command {
 
 	@Override
 	public void execute() {
-		ChassisPowers chassisPowers = switch (velocityType) {
-			case TRANSLATIONAL -> new ChassisPowers(MAX_POWER, 0, 0);
-			case ROTATIONAL -> new ChassisPowers(0, 0, MAX_POWER);
-		};
+		switch (velocityType) {
+			case TRANSLATIONAL -> {
+				chassisPowers.xPower = MAX_POWER;
+				chassisPowers.yPower = 0;
+				chassisPowers.rotationalPower = 0;
+			}
+			case ROTATIONAL -> {
+				chassisPowers.xPower = 0;
+				chassisPowers.yPower = 0;
+				chassisPowers.rotationalPower = MAX_POWER;
+			}
+		}
 		openLoopDriveByPower.accept(chassisPowers);
 
 		double currentVelocity = switch (velocityType) {

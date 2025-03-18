@@ -34,7 +34,6 @@ public abstract class SparkMaxMotor implements IMotor {
 		this.sparkMaxSimulationOptional = createSimulation(mechanismSimulation);
 		this.warnings = motor.getWarnings();
 		this.faults = motor.getFaults();
-		;
 
 //		createAlerts();
 	}

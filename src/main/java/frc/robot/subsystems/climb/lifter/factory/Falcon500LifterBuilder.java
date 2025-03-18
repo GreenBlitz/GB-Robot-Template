@@ -15,6 +15,7 @@ import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.digitalinput.channeled.ChanneledDigitalInput;
 import frc.robot.hardware.digitalinput.chooser.ChooserDigitalInput;
 import frc.robot.hardware.mechanisms.wpilib.SingleJointedArmSimulation;
+import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6DoubleSignal;
@@ -77,10 +78,10 @@ public class Falcon500LifterBuilder {
 		IDigitalInput limitSwitch = generateDigitalInput();
 
 		Phoenix6AngleSignal positionSignal = Phoenix6SignalBuilder
-			.build(lifter.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS);
+			.build(lifter.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
-			.build(lifter.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
+			.build(lifter.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
 		return new Lifter(logPath, lifter, positionSignal, voltageSignal, limitSwitch);
 	}
 

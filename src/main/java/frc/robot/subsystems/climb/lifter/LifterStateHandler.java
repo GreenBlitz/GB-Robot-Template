@@ -3,6 +3,7 @@ package frc.robot.subsystems.climb.lifter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 
+
 public class LifterStateHandler {
 
 	private final Lifter lifter;
@@ -14,7 +15,8 @@ public class LifterStateHandler {
 	public Command setState(LifterState state) {
 		return switch (state) {
 			case HOLD -> lifter.getCommandsBuilder().stop();
-			case FORWARD, BACKWARD, DEPLOY, CLIMB_WITHOUT_LIMIT_SWITCH, CLOSE -> lifter.getCommandsBuilder().setPower(state.getPower());
+			case FORWARD, BACKWARD, DEPLOY, CLIMB_WITHOUT_LIMIT_SWITCH, MANUAL_CLIMB, CLOSE ->
+				lifter.getCommandsBuilder().setPower(state.getPower());
 			case CLIMB_WITH_LIMIT_SWITCH -> lifter.getCommandsBuilder().climbWithLimitSwitch();
 		};
 	}

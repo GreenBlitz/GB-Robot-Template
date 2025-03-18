@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.RobotManager;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.AutosBuilder;
+import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
-import frc.robot.scoringhelpers.ButtonDriverHelper;
 import frc.robot.subsystems.climb.lifter.Lifter;
 import frc.robot.subsystems.climb.lifter.factory.LifterFactory;
 import frc.robot.subsystems.swerve.factories.modules.drive.KrakenX60DriveBuilder;
@@ -22,7 +22,6 @@ import frc.robot.subsystems.swerve.module.ModuleConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.vision.VisionConstants;
 import frc.robot.hardware.interfaces.IGyro;
-import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
@@ -147,6 +146,7 @@ public class Robot {
 		BrakeStateManager.add(() -> arm.setBrake(true), () -> arm.setBrake(false));
 
 		this.endEffector = EndEffectorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/EndEffector");
+		BrakeStateManager.add(() -> endEffector.setBrake(true), () -> endEffector.setBrake(false));
 
 		this.solenoid = SolenoidFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Solenoid");
 
@@ -162,7 +162,7 @@ public class Robot {
 	private void configureAuto() {
 		Supplier<Command> scoringCommand = () -> robotCommander.getSuperstructure().scoreWithRelease().asProxy();
 		Supplier<Command> intakingCommand = () -> robotCommander.getSuperstructure()
-			.closeL4AfterScore()
+			.softCloseL4()
 			.andThen(robotCommander.getSuperstructure().intake().withTimeout(AutonomousConstants.INTAKING_TIMEOUT_SECONDS))
 			.asProxy();
 
@@ -214,6 +214,8 @@ public class Robot {
 	}
 
 	public void periodic() {
+		Phoenix6SignalBuilder.refreshAll();
+
 		swerve.update();
 		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());
 
@@ -231,10 +233,10 @@ public class Robot {
 		headingEstimator.log();
 
 		BatteryUtil.logStatus();
-		BusChain.logChainsStatuses();
+//		BusChain.logChainsStatuses();
 		simulationManager.logPoses();
 		ScoringHelpers.log("Scoring");
-		ButtonDriverHelper.log("Scoring/ButtonDriverDisplay");
+//		ButtonDriverHelper.log("Scoring/ButtonDriverDisplay");
 
 		CommandScheduler.getInstance().run(); // Should be last
 	}

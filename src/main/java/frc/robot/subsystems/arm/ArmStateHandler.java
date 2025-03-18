@@ -61,8 +61,4 @@ public class ArmStateHandler {
 		});
 	}
 
-	public boolean isAtState(ArmState state, Rotation2d tolerance) {
-		return currentState == state && arm.isAtPosition(state.getPosition(), tolerance);
-	}
-
 }

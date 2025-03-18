@@ -6,10 +6,8 @@ public enum ArmState {
 
 	STAY_IN_PLACE(Rotation2d.fromDegrees(Double.NaN)),
 	CLOSED(Rotation2d.fromDegrees(221.5)),
-	FIRST_WAYPOINT_TO_CLOSE(Rotation2d.fromDegrees(66)),
-	SECOND_WAYPOINT_TO_CLOSE(Rotation2d.fromDegrees(136)),
 	START_GAME(Rotation2d.fromDegrees(233)),
-	MID_WAY_CLOSE(Rotation2d.fromDegrees(156), Rotation2d.fromRotations(2), Rotation2d.fromRotations(1.5)),
+	MID_WAY_CLOSE(Rotation2d.fromDegrees(76), Rotation2d.fromRotations(2), Rotation2d.fromRotations(1.5)),
 	INTAKE(Rotation2d.fromDegrees(221.5)),
 	ALGAE_OUTTAKE(Rotation2d.fromDegrees(211)),
 	PRE_L1(Rotation2d.fromDegrees(216)),

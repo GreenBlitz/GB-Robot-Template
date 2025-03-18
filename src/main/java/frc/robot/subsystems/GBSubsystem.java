@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.*;
+import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
 public abstract class GBSubsystem extends SubsystemBase {
@@ -24,8 +25,12 @@ public abstract class GBSubsystem extends SubsystemBase {
 
 	@Override
 	public final void periodic() {
+		double startingTime = TimeUtil.getCurrentTimeSeconds();
+
 		Logger.recordOutput(getLogPath() + "/CurrentCommand", getCurrentCommand().getName());
 		subsystemPeriodic();
+
+		Logger.recordOutput("TimeTest/" + getLogPath(), TimeUtil.getCurrentTimeSeconds() - startingTime);
 	}
 
 	protected void subsystemPeriodic() {}

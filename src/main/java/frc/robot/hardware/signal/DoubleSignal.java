@@ -8,12 +8,11 @@ import org.littletonrobotics.junction.LogTable;
 public abstract class DoubleSignal implements InputSignal<Double> {
 
 	private final String name;
-	private double value;
-	private double timestamp;
+	private final TimedValue<Double> timedValue;
 
 	public DoubleSignal(String name) {
 		this.name = name;
-		this.value = 0;
+		this.timedValue = new TimedValue<>(0.0, 0);
 	}
 
 	@Override
@@ -23,22 +22,22 @@ public abstract class DoubleSignal implements InputSignal<Double> {
 
 	@Override
 	public Double getLatestValue() {
-		return value;
+		return timedValue.getValue();
 	}
 
 	@Override
 	public Double[] asArray() {
-		return new Double[] {value};
+		return new Double[] {timedValue.getValue()};
 	}
 
 	@Override
 	public double getTimestamp() {
-		return timestamp;
+		return timedValue.getTimestamp();
 	}
 
 	@Override
 	public double[] getTimestamps() {
-		return new double[] {timestamp};
+		return new double[] {timedValue.getTimestamp()};
 	}
 
 	@Override
@@ -63,17 +62,21 @@ public abstract class DoubleSignal implements InputSignal<Double> {
 
 	@Override
 	public void toLog(LogTable table) {
-		TimedValue<Double> timedValue = getNewValue();
-		value = timedValue.value();
-		timestamp = timedValue.timestamp();
-		table.put(name, value);
+		updateValue(timedValue);
+		table.put(name, timedValue.getValue());
 	}
 
 	@Override
 	public void fromLog(LogTable table) {
-		value = table.get(name, 0);
+		timedValue.setValue(table.get(name, 0.0));
 	}
 
-	protected abstract TimedValue<Double> getNewValue();
+	public Double getAndUpdateValue() {
+		updateValue(timedValue);
+		return timedValue.getValue();
+	}
+
+	protected abstract void updateValue(TimedValue<Double> timedValue);
+
 
 }

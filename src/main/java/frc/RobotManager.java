@@ -4,6 +4,8 @@
 
 package frc;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -13,7 +15,6 @@ import frc.robot.led.LEDConstants;
 import frc.robot.led.LEDState;
 import frc.robot.subsystems.climb.lifter.LifterConstants;
 import frc.utils.auto.PathPlannerUtil;
-import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtil;
 import frc.utils.time.TimeUtil;
 import frc.utils.logger.LoggerFactory;
@@ -34,6 +35,7 @@ public class RobotManager extends LoggedRobot {
 
 	public RobotManager() {
 		LoggerFactory.initializeLogger();
+		DriverStation.silenceJoystickConnectionWarning(true);
 		PathPlannerUtil.startPathfinder();
 
 		this.roborioCycles = 0;
@@ -43,6 +45,8 @@ public class RobotManager extends LoggedRobot {
 		JoysticksBindings.configureBindings(robot);
 
 		initializeLEDTriggers();
+
+		Threads.setCurrentThreadPriority(true, 10);
 	}
 
 	private void initializeLEDTriggers() {
@@ -95,7 +99,7 @@ public class RobotManager extends LoggedRobot {
 		updateTimeRelatedData(); // Better to be first
 		JoysticksBindings.setDriversInputsToSwerve(robot.getSwerve());
 		robot.periodic();
-		AlertManager.reportAlerts();
+//		AlertManager.reportAlerts();
 	}
 
 	private void createAutoReadyForConstructionChooser() {

@@ -9,8 +9,6 @@ public class IDs {
 
 	public static final Phoenix6DeviceID SWERVE_PIGEON_2 = new Phoenix6DeviceID(0, BusChain.SWERVE_CANIVORE);
 
-	public static final Phoenix6DeviceID CANDLE = new Phoenix6DeviceID(0, BusChain.ROBORIO);
-
 	public static class TalonFXIDs {
 
 		public static final Phoenix6DeviceID SWERVE_FRONT_LEFT_STEER = new Phoenix6DeviceID(0, BusChain.SWERVE_CANIVORE);

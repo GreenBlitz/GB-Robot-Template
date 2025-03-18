@@ -2,6 +2,7 @@ package frc;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -11,6 +12,7 @@ import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
+import frc.robot.statemachine.RobotCommander;
 import frc.robot.statemachine.RobotState;
 import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.subsystems.swerve.ChassisPowers;
@@ -111,11 +113,44 @@ public class JoysticksBindings {
 	}
 
 	private static Command driveActionChooser(Robot robot) {
-		return new InstantCommand(
-			() -> (robot.getRobotCommander().isCollectingAlgae()
-				? robot.getRobotCommander().setState(RobotState.HOLD_ALGAE)
-				: robot.getRobotCommander().setState(RobotState.DRIVE)).schedule()
-		);
+		return new InstantCommand(() -> {
+			RobotCommander robotCommander = robot.getRobotCommander();
+			RobotState state = robotCommander.getCurrentState();
+			Command command;
+			if (state == RobotState.ALGAE_REMOVE) {
+				robotCommander.setState(RobotState.HOLD_ALGAE).schedule();
+				return;
+			} else if (state == RobotState.NET) {
+				command = robotCommander.driveWith("Soft close net", robotCommander.getSuperstructure().softCloseNet(), true);
+			} else if (
+				(state == RobotState.SCORE || state == RobotState.SCORE_WITHOUT_RELEASE || state == RobotState.PRE_SCORE)
+					&& ScoringHelpers.targetScoreLevel == ScoreLevel.L4
+			) {
+				command = robotCommander.driveWith("Soft close l4", robotCommander.getSuperstructure().softCloseL4(), true);
+			} else {
+				command = Commands.none();
+			}
+			command.andThen(robotCommander.setState(RobotState.DRIVE)).schedule();
+		});
+	}
+
+	private static Command intakeActionChooser(Robot robot) {
+		return new InstantCommand(() -> {
+			RobotCommander robotCommander = robot.getRobotCommander();
+			RobotState state = robotCommander.getCurrentState();
+			Command command;
+			if (state == RobotState.NET) {
+				command = robotCommander.driveWith("Soft close net", robotCommander.getSuperstructure().softCloseNet(), true);
+			} else if (
+				(state == RobotState.SCORE || state == RobotState.SCORE_WITHOUT_RELEASE || state == RobotState.PRE_SCORE)
+					&& ScoringHelpers.targetScoreLevel == ScoreLevel.L4
+			) {
+				command = robotCommander.driveWith("Soft close l4", robotCommander.getSuperstructure().softCloseL4(), true);
+			} else {
+				command = Commands.none();
+			}
+			command.andThen(robot.getRobotCommander().setState(RobotState.INTAKE_WITHOUT_AIM_ASSIST)).schedule();
+		});
 	}
 
 	private static void mainJoystickButtons(Robot robot) {
@@ -124,7 +159,7 @@ public class JoysticksBindings {
 		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(closeReefActionChooser(robot));
 
 		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE_WITH_AIM_ASSIST));
-		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getRobotCommander().setState(RobotState.INTAKE_WITHOUT_AIM_ASSIST));
+		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(intakeActionChooser(robot));
 
 		usedJoystick.R1.onTrue(robot.getRobotCommander().fullyNet());
 

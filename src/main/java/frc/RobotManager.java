@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.led.LEDConstants;
 import frc.robot.led.LEDState;
 import frc.robot.subsystems.climb.lifter.LifterConstants;
@@ -71,7 +72,6 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void disabledExit() {
-		BrakeStateManager.brake();
 		robot.getRobotCommander().getLedStateHandler().setState(LEDState.IDLE).schedule();
 		robot.getLifter().resetPosition(LifterConstants.MINIMUM_ACHIEVABLE_POSITION);
 	}
@@ -109,7 +109,11 @@ public class RobotManager extends LoggedRobot {
 		autoReadyForConstructionSendableChooser.onChange(isReady -> {
 			if (isReady) {
 				auto = robot.getAuto();
+				BrakeStateManager.brake();
+			} else {
+				BrakeStateManager.coast();
 			}
+			Logger.recordOutput(AutonomousConstants.LOG_PATH_PREFIX + "/ReadyToConstruct", isReady);
 		});
 		SmartDashboard.putData("AutoReadyForConstruction", autoReadyForConstructionSendableChooser);
 	}

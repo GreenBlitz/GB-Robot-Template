@@ -20,6 +20,8 @@ import org.littletonrobotics.junction.Logger;
 
 public class PoseUtil {
 
+	private static final String IS_AT_POSE_LOG_PATH_PREFIX = "isAtPoses";
+
 	public static Pose2d EMPTY_POSE2D = new Pose2d(Double.NaN, Double.NaN, Rotation2d.fromDegrees(Double.NaN));
 
 	public static boolean isAtPose(
@@ -35,10 +37,10 @@ public class PoseUtil {
 		boolean isAtHeading = ToleranceMath.isNearWrapped(targetPose.getRotation(), currentPose.getRotation(), tolerances.getRotation());
 		boolean isStill = SwerveMath.isStill(currentSpeeds, deadbands);
 
-		Logger.recordOutput(logPath + "/isAtX", isAtX);
-		Logger.recordOutput(logPath + "/isAtY", isAtY);
-		Logger.recordOutput(logPath + "/isAtHeading", isAtHeading);
-		Logger.recordOutput(logPath + "/isStill", isStill);
+		Logger.recordOutput(IS_AT_POSE_LOG_PATH_PREFIX + logPath + "/isAtX", isAtX);
+		Logger.recordOutput(IS_AT_POSE_LOG_PATH_PREFIX + logPath + "/isAtY", isAtY);
+		Logger.recordOutput(IS_AT_POSE_LOG_PATH_PREFIX + logPath + "/isAtHeading", isAtHeading);
+		Logger.recordOutput(IS_AT_POSE_LOG_PATH_PREFIX + logPath + "/isStill", isStill);
 
 		return isAtX && isAtY && isAtHeading && isStill;
 	}

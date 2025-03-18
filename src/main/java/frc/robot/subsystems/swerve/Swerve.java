@@ -54,11 +54,12 @@ public class Swerve extends GBSubsystem {
 	private Supplier<Rotation2d> headingSupplier;
 	private ChassisPowers driversPowerInputs;
 	private double lastMagnitudeMetersPerSecond;
+	private OdometryData odometryData;
 
 	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro, GyroSignals gyroSignals) {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
-		this.driversPowerInputs = new ChassisPowers(0, 0, 0);
+		this.driversPowerInputs = new ChassisPowers();
 
 		this.constants = constants;
 		this.driveRadiusMeters = SwerveMath.calculateDriveRadiusMeters(modules.getModulePositionsFromCenterMeters());
@@ -71,6 +72,7 @@ public class Swerve extends GBSubsystem {
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
 		this.stateHandler = new SwerveStateHandler(this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
+		this.odometryData = new OdometryData();
 
 		update();
 		setDefaultCommand(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
@@ -130,6 +132,8 @@ public class Swerve extends GBSubsystem {
 
 
 	public void update() {
+		double startingTime = TimeUtil.getCurrentTimeSeconds();
+
 		gyro.updateInputs(gyroSignals.yawSignal());
 		modules.updateInputs();
 
@@ -149,6 +153,8 @@ public class Swerve extends GBSubsystem {
 		lastMagnitudeMetersPerSecond = driveMagnitudeMetersPerSecond;
 
 		Logger.recordOutput(getLogPath() + "/OdometrySamples", getNumberOfOdometrySamples());
+
+		Logger.recordOutput("TimeTest/SwerveUpdate", TimeUtil.getCurrentTimeSeconds() - startingTime);
 	}
 
 
@@ -167,6 +173,13 @@ public class Swerve extends GBSubsystem {
 			);
 		}
 
+		return odometryData;
+	}
+
+	public OdometryData getLatestOdometryData() {
+		odometryData.wheelPositions = modules.getWheelPositions(0);
+		odometryData.gyroAngle = gyro instanceof EmptyGyro ? Optional.empty() : Optional.of(gyroSignals.yawSignal().getLatestValue());
+		odometryData.timestamp = gyroSignals.yawSignal().getTimestamp();
 		return odometryData;
 	}
 
@@ -317,12 +330,14 @@ public class Swerve extends GBSubsystem {
 
 		// Test the swerve returns real velocities (measure distance and time in real life and compare to swerve velocity logs).
 		// REMEMBER after drive calibrations use these for pid testing - Remove OPEN LOOP for that
-		joystick.POV_LEFT.whileTrue(
-			getCommandsBuilder().driveByState(() -> new ChassisPowers(0.2, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
-		);
-		joystick.POV_RIGHT.whileTrue(
-			getCommandsBuilder().driveByState(() -> new ChassisPowers(0.5, 0, 0), SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
-		);
+		ChassisPowers slowCalibrationPowers = new ChassisPowers();
+		slowCalibrationPowers.xPower = 0.2;
+		joystick.POV_LEFT
+			.whileTrue(getCommandsBuilder().driveByState(() -> slowCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)));
+		ChassisPowers fastCalibrationPowers = new ChassisPowers();
+		fastCalibrationPowers.xPower = 0.5;
+		joystick.POV_RIGHT
+			.whileTrue(getCommandsBuilder().driveByState(() -> fastCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)));
 
 		// Apply 12 volts on x-axis. Use it for max velocity calibrations.
 		// See what velocity the swerve log after it stops accelerating and use it as max.

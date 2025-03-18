@@ -40,6 +40,7 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
+import frc.robot.vision.data.AprilTagVisionData;
 import frc.utils.auto.AutonomousChooser;
 import frc.utils.auto.PathPlannerUtil;
 import frc.robot.vision.VisionFilters;
@@ -48,7 +49,9 @@ import frc.utils.TimedValue;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.Logger;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -214,12 +217,15 @@ public class Robot {
 	}
 
 	public void periodic() {
+		double startingTime = TimeUtil.getCurrentTimeSeconds();
+
 		Phoenix6SignalBuilder.refreshAll();
 
 		swerve.update();
 		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());
 
-		poseEstimator.updateOdometry(swerve.getAllOdometryData());
+		double poseTime = TimeUtil.getCurrentTimeSeconds();
+		poseEstimator.updateOdometry(swerve.getLatestOdometryData());
 		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
 		for (TimedValue<Rotation2d> headingData : multiAprilTagVisionSources.getFilteredRobotHeading()) {
 			headingEstimator.updateVisionIfGyroOffsetIsNotCalibrated(
@@ -228,9 +234,11 @@ public class Robot {
 				RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE
 			);
 		}
-		poseEstimator.updateVision(multiAprilTagVisionSources.getFilteredVisionData());
+		List<AprilTagVisionData> visionData = multiAprilTagVisionSources.getFilteredVisionData();
+		poseEstimator.updateVision(visionData);
 //		 multiAprilTagVisionSources.log();
 		headingEstimator.log();
+		Logger.recordOutput("TimeTest/Pose", TimeUtil.getCurrentTimeSeconds() - poseTime);
 
 		BatteryUtil.logStatus();
 //		BusChain.logChainsStatuses();
@@ -238,7 +246,11 @@ public class Robot {
 		ScoringHelpers.log("Scoring");
 //		ButtonDriverHelper.log("Scoring/ButtonDriverDisplay");
 
+		double startingSchedularTime = TimeUtil.getCurrentTimeSeconds();
 		CommandScheduler.getInstance().run(); // Should be last
+		Logger.recordOutput("TimeTest/CommandSchedular", TimeUtil.getCurrentTimeSeconds() - startingSchedularTime);
+
+		Logger.recordOutput("TimeTest/RobotPeriodic", TimeUtil.getCurrentTimeSeconds() - startingTime);
 	}
 
 	public Command getAuto() {

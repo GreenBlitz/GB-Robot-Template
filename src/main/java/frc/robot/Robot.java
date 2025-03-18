@@ -217,16 +217,14 @@ public class Robot {
 	}
 
 	public void periodic() {
-		double wholeTime = TimeUtil.getCurrentTimeSeconds();
+		double startingTime = TimeUtil.getCurrentTimeSeconds();
 
 		Phoenix6SignalBuilder.refreshAll();
 
-		double swerveTime = TimeUtil.getCurrentTimeSeconds();
 		swerve.update();
-		Logger.recordOutput("timeTest/swerve", TimeUtil.getCurrentTimeSeconds() - swerveTime);
 		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());
 
-		swerveTime = TimeUtil.getCurrentTimeSeconds();
+		double poseTime = TimeUtil.getCurrentTimeSeconds();
 		poseEstimator.updateOdometry(swerve.getLatestOdometryData());
 		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
 		for (TimedValue<Rotation2d> headingData : multiAprilTagVisionSources.getFilteredRobotHeading()) {
@@ -240,7 +238,7 @@ public class Robot {
 		poseEstimator.updateVision(visionData);
 //		 multiAprilTagVisionSources.log();
 		headingEstimator.log();
-		Logger.recordOutput("timeTest/pose", TimeUtil.getCurrentTimeSeconds() - swerveTime);
+		Logger.recordOutput("TimeTest/Pose", TimeUtil.getCurrentTimeSeconds() - poseTime);
 
 		BatteryUtil.logStatus();
 //		BusChain.logChainsStatuses();
@@ -248,12 +246,11 @@ public class Robot {
 		ScoringHelpers.log("Scoring");
 //		ButtonDriverHelper.log("Scoring/ButtonDriverDisplay");
 
-		double schedTime = TimeUtil.getCurrentTimeSeconds();
-
+		double startingSchedularTime = TimeUtil.getCurrentTimeSeconds();
 		CommandScheduler.getInstance().run(); // Should be last
-		Logger.recordOutput("timeTest/schedTime", TimeUtil.getCurrentTimeSeconds() - schedTime);
+		Logger.recordOutput("TimeTest/CommandSchedular", TimeUtil.getCurrentTimeSeconds() - startingSchedularTime);
 
-		Logger.recordOutput("timeTest/wholeTime", TimeUtil.getCurrentTimeSeconds() - wholeTime);
+		Logger.recordOutput("TimeTest/RobotPeriodic", TimeUtil.getCurrentTimeSeconds() - startingTime);
 	}
 
 	public Command getAuto() {

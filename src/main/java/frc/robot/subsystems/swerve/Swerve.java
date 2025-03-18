@@ -132,10 +132,10 @@ public class Swerve extends GBSubsystem {
 
 
 	public void update() {
-		double time = TimeUtil.getCurrentTimeSeconds();
+		double startingTime = TimeUtil.getCurrentTimeSeconds();
+
 		gyro.updateInputs(gyroSignals.yawSignal());
 		modules.updateInputs();
-		Logger.recordOutput("timeTest/sweveSignasls", TimeUtil.getCurrentTimeSeconds() - time);
 
 		currentState.log(constants.stateLogPath());
 
@@ -153,6 +153,8 @@ public class Swerve extends GBSubsystem {
 		lastMagnitudeMetersPerSecond = driveMagnitudeMetersPerSecond;
 
 		Logger.recordOutput(getLogPath() + "/OdometrySamples", getNumberOfOdometrySamples());
+
+		Logger.recordOutput("TimeTest/SwerveUpdate", TimeUtil.getCurrentTimeSeconds() - startingTime);
 	}
 
 

@@ -30,7 +30,7 @@ public abstract class GBSubsystem extends SubsystemBase {
 		Logger.recordOutput(getLogPath() + "/CurrentCommand", getCurrentCommand().getName());
 		subsystemPeriodic();
 
-		Logger.recordOutput("TestTime/" + getLogPath(), TimeUtil.getCurrentTimeSeconds() - startingTime);
+		Logger.recordOutput("TimeTest/" + getLogPath(), TimeUtil.getCurrentTimeSeconds() - startingTime);
 	}
 
 	protected void subsystemPeriodic() {}

@@ -171,7 +171,7 @@ public class Arm extends GBSubsystem {
 		// Calibrate feed forward using sys id:
 		sysIdCalibrator.setAllButtonsForCalibration(joystick);
 
-		ArmStateHandler armStateHandler = new ArmStateHandler(this);
+		ArmStateHandler armStateHandler = new ArmStateHandler(this, () -> 0.0);
 
 		// Calibrate PID using phoenix tuner and these bindings:
 		joystick.POV_UP.onTrue(armStateHandler.setState(ArmState.CLOSED));

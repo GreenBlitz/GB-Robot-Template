@@ -12,6 +12,7 @@ import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -23,6 +24,7 @@ import frc.robot.subsystems.GBSubsystem;
 import frc.utils.alerts.Alert;
 import frc.utils.math.ToleranceMath;
 import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -56,6 +58,14 @@ public class PathPlannerUtil {
 			shouldFlipPath,
 			driveRequirements
 		);
+	}
+
+	public static void setupPathPlannerLogging() {
+		PathPlannerLogging.setLogActivePathCallback(
+			activePath -> Logger.recordOutput(AutonomousConstants.LOG_PATH_PREFIX + "/ActivePath", activePath.toArray(Pose2d[]::new))
+		);
+		PathPlannerLogging
+			.setLogTargetPoseCallback(targetPose -> Logger.recordOutput(AutonomousConstants.LOG_PATH_PREFIX + "/TargetPose", targetPose));
 	}
 
 	public static void startPathfinder() {

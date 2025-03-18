@@ -27,6 +27,7 @@ public class ClimbStateHandler {
 			case STOP -> stop();
 			case DEPLOY -> deploy();
 			case CLIMB -> climb();
+			case MANUAL_CLIMB -> manualClimb();
 			case CLOSE -> close();
 		});
 	}
@@ -53,6 +54,13 @@ public class ClimbStateHandler {
 		);
 	}
 
+	private Command manualClimb() {
+		return new ParallelCommandGroup(
+			lifterStateHandler.setState(LifterState.MANUAL_CLIMB),
+			solenoidStateHandler.setState(SolenoidState.LOCKED)
+		);
+	}
+
 	private Command close() {
 		return new SequentialCommandGroup(
 			new ParallelCommandGroup(lifterStateHandler.setState(LifterState.CLOSE), solenoidStateHandler.setState(SolenoidState.LOCKED))
@@ -62,6 +70,7 @@ public class ClimbStateHandler {
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick) {
+		joystick.Y.whileTrue(setState(ClimbState.MANUAL_CLIMB));
 		joystick.X.onTrue(setState(ClimbState.CLIMB));
 		joystick.B.onTrue(setState(ClimbState.DEPLOY));
 		joystick.A.onTrue(setState(ClimbState.STOP));

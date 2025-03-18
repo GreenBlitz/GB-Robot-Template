@@ -60,29 +60,29 @@ public class AutonomousConstants {
 
 		public static final Pair<String, Pose2d> LOWER_CORAL_STATION_2 = Pair.of("LS2", new Pose2d(1.61, 0.7, Rotation2d.fromDegrees(54)));
 
-		public static final Pair<String, Pose2d> A = Pair.of("A", new Pose2d(3.16, 4.19, Rotation2d.fromDegrees(0)));
+		public static final Pair<String, Pose2d> A = Pair.of("A", new Pose2d(3.19, 4.22, Rotation2d.fromDegrees(0)));
 
-		public static final Pair<String, Pose2d> B = Pair.of("B", new Pose2d(3.16, 3.86, Rotation2d.fromDegrees(0)));
+		public static final Pair<String, Pose2d> B = Pair.of("B", new Pose2d(3.19, 3.89, Rotation2d.fromDegrees(0)));
 
-		public static final Pair<String, Pose2d> C = Pair.of("C", new Pose2d(3.65, 2.96, Rotation2d.fromDegrees(60)));
+		public static final Pair<String, Pose2d> C = Pair.of("C", new Pose2d(3.67, 3, Rotation2d.fromDegrees(60)));
 
-		public static final Pair<String, Pose2d> D = Pair.of("D", new Pose2d(3.97, 2.8, Rotation2d.fromDegrees(60)));
+		public static final Pair<String, Pose2d> D = Pair.of("D", new Pose2d(3.96, 2.84, Rotation2d.fromDegrees(60)));
 
-		public static final Pair<String, Pose2d> E = Pair.of("E", new Pose2d(5.01, 2.79, Rotation2d.fromDegrees(120)));
+		public static final Pair<String, Pose2d> E = Pair.of("E", new Pose2d(4.97, 2.81, Rotation2d.fromDegrees(120)));
 
-		public static final Pair<String, Pose2d> F = Pair.of("F", new Pose2d(5.3, 2.94, Rotation2d.fromDegrees(120)));
+		public static final Pair<String, Pose2d> F = Pair.of("F", new Pose2d(5.26, 2.98, Rotation2d.fromDegrees(120)));
 
-		public static final Pair<String, Pose2d> G = Pair.of("G", new Pose2d(5.83, 3.86, Rotation2d.fromDegrees(180)));
+		public static final Pair<String, Pose2d> G = Pair.of("G", new Pose2d(5.79, 3.84, Rotation2d.fromDegrees(180)));
 
-		public static final Pair<String, Pose2d> H = Pair.of("H", new Pose2d(5.83, 4.19, Rotation2d.fromDegrees(180)));
+		public static final Pair<String, Pose2d> H = Pair.of("H", new Pose2d(5.79, 4.17, Rotation2d.fromDegrees(180)));
 
-		public static final Pair<String, Pose2d> I = Pair.of("I", new Pose2d(5.3, 5.08, Rotation2d.fromDegrees(-120)));
+		public static final Pair<String, Pose2d> I = Pair.of("I", new Pose2d(5.3, 5.06, Rotation2d.fromDegrees(-120)));
 
-		public static final Pair<String, Pose2d> J = Pair.of("J", new Pose2d(5.02, 5.25, Rotation2d.fromDegrees(-120)));
+		public static final Pair<String, Pose2d> J = Pair.of("J", new Pose2d(5.02, 5.22, Rotation2d.fromDegrees(-120)));
 
-		public static final Pair<String, Pose2d> K = Pair.of("K", new Pose2d(3.95, 5.26, Rotation2d.fromDegrees(-60)));
+		public static final Pair<String, Pose2d> K = Pair.of("K", new Pose2d(4, 5.25, Rotation2d.fromDegrees(-60)));
 
-		public static final Pair<String, Pose2d> L = Pair.of("L", new Pose2d(3.68, 5.1, Rotation2d.fromDegrees(-60)));
+		public static final Pair<String, Pose2d> L = Pair.of("L", new Pose2d(3.69, 5.1, Rotation2d.fromDegrees(-60)));
 
 	}
 

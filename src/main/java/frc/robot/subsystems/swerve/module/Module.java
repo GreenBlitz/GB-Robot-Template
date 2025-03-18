@@ -122,7 +122,6 @@ public class Module {
 		steer.updateSimulation();
 		drive.updateSimulation();
 
-		double time = TimeUtil.getCurrentTimeSeconds();
 		inputs.data = new ModuleIOInputs.ModuleIOData(
 			driveSignals.position().getAndUpdateValue().getRadians(),
 			driveSignals.velocity().getAndUpdateValue().getRadians(),
@@ -135,8 +134,6 @@ public class Module {
 			steerSignals.voltage().getAndUpdateValue()
 		);
 		Logger.processInputs(constants.logPath(), inputs);
-
-		Logger.recordOutput("testTime/modulesUnosd", (TimeUtil.getCurrentTimeSeconds() - time) * 4);
 
 		fixDriveInputsCoupling();
 

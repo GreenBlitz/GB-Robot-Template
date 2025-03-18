@@ -171,7 +171,6 @@ public class Robot {
 			poseEstimator::resetPose,
 			PathPlannerUtil.getGuiRobotConfig().orElse(getRobotConfig())
 		);
-		PathPlannerUtil.setupPathPlannerLogging();
 
 		new EventTrigger("PULL_OUT_ARM")
 			.onTrue(robotCommander.getSuperstructure().closeClimb().andThen(robotCommander.getSuperstructure().armPreScore()));

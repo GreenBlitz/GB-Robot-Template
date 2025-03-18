@@ -106,8 +106,7 @@ public class RobotManager extends LoggedRobot {
 			if (isReady) {
 				auto = robot.getAuto();
 				BrakeStateManager.brake();
-			}
-			else {
+			} else {
 				BrakeStateManager.coast();
 			}
 			Logger.recordOutput(AutonomousConstants.LOG_PATH_PREFIX + "/ReadyToConstruct", isReady);

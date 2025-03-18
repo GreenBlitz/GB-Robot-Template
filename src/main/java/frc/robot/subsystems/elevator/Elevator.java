@@ -38,10 +38,11 @@ public class Elevator extends GBSubsystem {
 
 	private final ElevatorCommandsBuilder commandsBuilder;
 	private final SysIdCalibrator sysIdCalibrator;
+	private final ElevatorInputsAutoLogged inputs;
 
 	private boolean hasBeenResetBySwitch;
 	private double ffCalibrationVoltage;
-	private double currentTargetPositionMeters;
+	private double targetPositionMeters;
 
 	public Elevator(
 		String logPath,
@@ -57,7 +58,7 @@ public class Elevator extends GBSubsystem {
 
 		this.rightMotor = rightMotor;
 		this.rightMotorSignals = rightMotorSignals;
-
+		this.inputs = new ElevatorInputsAutoLogged();
 		this.leftMotor = leftMotor;
 		this.leftMotorSignals = leftMotorSignals;
 
@@ -109,26 +110,28 @@ public class Elevator extends GBSubsystem {
 		if (handleReset()) {
 			updateInputs();
 		}
-		log();
+//		log();
 	}
 
 	private void updateInputs() {
-		rightMotor.updateInputs(rightMotorSignals.positionSignal(), rightMotorSignals.voltageSignal());
-		rightMotor.updateInputs(rightMotorSignals.otherSignals());
+		inputs.data = new ElevatorInputs.ElevatorData(
+			leftMotorSignals.positionSignal().getAndUpdateValue().getRadians(),
+			leftMotorSignals.voltageSignal().getAndUpdateValue(),
+			rightMotorSignals.positionSignal().getAndUpdateValue().getRadians(),
+			rightMotorSignals.voltageSignal().getAndUpdateValue(),
+			getElevatorPositionMeters(),
+			targetPositionMeters
+		);
+		Logger.processInputs(getLogPath(), inputs);
 
-		leftMotor.updateInputs(leftMotorSignals.positionSignal(), leftMotorSignals.voltageSignal());
-		leftMotor.updateInputs(leftMotorSignals.otherSignals());
-
-		limitSwitch.updateInputs(digitalInputInputs);
-		Logger.processInputs(getLogPath() + "/LimitSwitch", digitalInputInputs);
+//		limitSwitch.updateInputs(digitalInputInputs);
+//		Logger.processInputs(getLogPath() + "/LimitSwitch", digitalInputInputs);
 	}
 
 	private void log() {
-		Logger.recordOutput(getLogPath() + "/PositionMeters", getElevatorPositionMeters());
 		Logger.recordOutput(getLogPath() + "/IsAtBackwardsLimit", isAtBackwardsLimit());
 		Logger.recordOutput(getLogPath() + "/HasBeenResetBySwitch", hasBeenResetBySwitch);
 		Logger.recordOutput(getLogPath() + "/FFCalibrationVoltage", ffCalibrationVoltage);
-		Logger.recordOutput(getLogPath() + "/TargetPositionMeters", currentTargetPositionMeters);
 	}
 
 	public void resetMotors(double positionMeters) {
@@ -170,7 +173,7 @@ public class Elevator extends GBSubsystem {
 		double maxVelocityMetersPerSecond,
 		double maxAccelerationMetersPerSecondSquared
 	) {
-		currentTargetPositionMeters = targetPositionMeters;
+		this.targetPositionMeters = targetPositionMeters;
 		Rotation2d targetPosition = convertMetersToRotations(targetPositionMeters);
 		Rotation2d maxVelocityRotation2dPerSecond = convertMetersToRotations(maxVelocityMetersPerSecond);
 		Rotation2d maxAccelerationRotation2dPerSecond = convertMetersToRotations(maxAccelerationMetersPerSecondSquared);

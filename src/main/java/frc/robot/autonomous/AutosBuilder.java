@@ -335,10 +335,13 @@ public class AutosBuilder {
 
 
 	public static Command createDefaultNoDelayAuto(Robot robot) {
+		ChassisPowers chassisPowers = new ChassisPowers();
+		chassisPowers.xPower = AutonomousConstants.DEFAULT_AUTO_DRIVE_POWER;
+
 		Command auto = new ParallelCommandGroup(
 			robot.getSwerve()
 				.getCommandsBuilder()
-				.drive(() -> new ChassisPowers(AutonomousConstants.DEFAULT_AUTO_DRIVE_POWER, 0, 0))
+				.drive(() -> chassisPowers)
 				.withTimeout(AutonomousConstants.DEFAULT_AUTO_DRIVE_TIME_SECONDS)
 				.andThen(robot.getSwerve().getCommandsBuilder().resetTargetSpeeds()),
 			robot.getRobotCommander().getSuperstructure().elevatorOpening()

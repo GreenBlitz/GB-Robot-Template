@@ -59,6 +59,7 @@ public class RobotManager extends LoggedRobot {
 				.setState(LEDState.HAS_CORAL)
 				.withTimeout(LEDConstants.CORAL_IN_BLINK_TIME_SECONDS)
 				.onlyIf(robot.getRobotCommander().getSuperstructure()::isCoralIn)
+				.ignoringDisable(true)
 		);
 	}
 
@@ -69,12 +70,12 @@ public class RobotManager extends LoggedRobot {
 		}
 
 		robot.getSwerve().getCommandsBuilder().resetTargetSpeeds().ignoringDisable(true).schedule();
-		robot.getRobotCommander().getLedStateHandler().setState(LEDState.DISABLE).schedule();
+		robot.getRobotCommander().getLedStateHandler().setState(LEDState.DISABLE).ignoringDisable(true).schedule();
 	}
 
 	@Override
 	public void disabledExit() {
-		robot.getRobotCommander().getLedStateHandler().setState(LEDState.IDLE).schedule();
+		robot.getRobotCommander().getLedStateHandler().setState(LEDState.IDLE).ignoringDisable(true).schedule();
 		robot.getLifter().resetPosition(LifterConstants.MINIMUM_ACHIEVABLE_POSITION);
 	}
 

@@ -97,7 +97,8 @@ public class JoysticksBindings {
 				robot.getArm(),
 				robot.getEndEffector(),
 				robot.getLifter(),
-				robot.getSolenoid()
+				robot.getSolenoid(),
+				robot.getRobotCommander().getLedStateHandler()
 			)
 		);
 	}
@@ -113,7 +114,8 @@ public class JoysticksBindings {
 				robot.getArm(),
 				robot.getEndEffector(),
 				robot.getLifter(),
-				robot.getSolenoid()
+				robot.getSolenoid(),
+				robot.getRobotCommander().getLedStateHandler()
 			)
 		);
 	}

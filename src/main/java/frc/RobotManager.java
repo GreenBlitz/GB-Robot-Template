@@ -68,6 +68,7 @@ public class RobotManager extends LoggedRobot {
 			BrakeStateManager.coast();
 		}
 
+		robot.getSwerve().getCommandsBuilder().resetTargetSpeeds().ignoringDisable(true).schedule();
 		robot.getRobotCommander().getLedStateHandler().setState(LEDState.DISABLE).schedule();
 	}
 
@@ -88,10 +89,14 @@ public class RobotManager extends LoggedRobot {
 	}
 
 	@Override
-	public void teleopInit() {
+	public void autonomousExit() {
 		if (auto != null) {
 			auto.cancel();
 		}
+	}
+
+	@Override
+	public void teleopInit() {
 		robot.getRobotCommander().initializeDefaultCommand();
 	}
 

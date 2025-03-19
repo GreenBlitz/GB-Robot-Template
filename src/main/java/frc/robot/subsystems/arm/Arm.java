@@ -28,6 +28,7 @@ public class Arm extends GBSubsystem {
 	private final InputSignal<Rotation2d> encoderPositionSignal;
 	private final ArmCommandsBuilder commandsBuilder;
 	private final SysIdCalibrator sysIdCalibrator;
+	private final ArmInputsAutoLogged inputs;
 	private Rotation2d reversedSoftLimit;
 
 	public Arm(
@@ -47,6 +48,7 @@ public class Arm extends GBSubsystem {
 		this.motorPositionSignal = motorPositionSignal;
 		this.motorVoltageSignal = motorVoltageSignal;
 		this.encoder = encoder;
+		this.inputs = new ArmInputsAutoLogged();
 		this.encoderPositionSignal = encoderPositionSignal;
 		this.commandsBuilder = new ArmCommandsBuilder(this);
 		this.sysIdCalibrator = new SysIdCalibrator(motor.getSysidConfigInfo(), this, (voltage) -> setVoltage(voltage + getKgVoltage()));
@@ -73,17 +75,17 @@ public class Arm extends GBSubsystem {
 	protected void subsystemPeriodic() {
 		motor.updateSimulation();
 		updateInputs();
-		log();
 	}
 
 	private void updateInputs() {
-		motor.updateInputs(motorPositionSignal, motorVoltageSignal);
-		encoder.updateInputs(encoderPositionSignal);
-	}
-
-	private void log() {
-		Logger.recordOutput(getLogPath() + "/ReversedSoftLimit", reversedSoftLimit);
-		Logger.recordOutput(getLogPath() + "/TargetPose", positionRequest.getSetPoint());
+		inputs.data = new ArmInputs.ArmData(
+			motorPositionSignal.getAndUpdateValue().getRadians(),
+			motorVoltageSignal.getAndUpdateValue(),
+			encoderPositionSignal.getAndUpdateValue().getRadians(),
+			positionRequest.getSetPoint().getRadians(),
+			reversedSoftLimit.getRadians()
+		);
+		Logger.processInputs(getLogPath(), inputs);
 	}
 
 	public void setReversedSoftLimit(Rotation2d reversedSoftLimit) {
@@ -92,6 +94,7 @@ public class Arm extends GBSubsystem {
 
 	protected void resetByEncoderPosition() {
 		motor.resetPosition(encoderPositionSignal.getLatestValue());
+		motor.resetPosition(Rotation2d.fromDegrees(-13));
 	}
 
 	public void setBrake(boolean brake) {
@@ -168,7 +171,7 @@ public class Arm extends GBSubsystem {
 		// Calibrate feed forward using sys id:
 		sysIdCalibrator.setAllButtonsForCalibration(joystick);
 
-		ArmStateHandler armStateHandler = new ArmStateHandler(this);
+		ArmStateHandler armStateHandler = new ArmStateHandler(this, () -> 0.0);
 
 		// Calibrate PID using phoenix tuner and these bindings:
 		joystick.POV_UP.onTrue(armStateHandler.setState(ArmState.CLOSED));

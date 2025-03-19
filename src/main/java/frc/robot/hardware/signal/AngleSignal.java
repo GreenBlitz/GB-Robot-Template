@@ -10,14 +10,13 @@ import org.littletonrobotics.junction.LogTable;
 public abstract class AngleSignal implements InputSignal<Rotation2d> {
 
 	private final String name;
-	private final AngleUnit angleUnit;
-	private Rotation2d value;
-	private double timestamp;
+	protected final AngleUnit angleUnit;
+	private final TimedValue<Rotation2d> timedValue;
 
 	public AngleSignal(String name, AngleUnit angleUnit) {
 		this.name = name;
 		this.angleUnit = angleUnit;
-		this.value = new Rotation2d();
+		this.timedValue = new TimedValue<>(new Rotation2d(), 0);
 	}
 
 	@Override
@@ -27,22 +26,22 @@ public abstract class AngleSignal implements InputSignal<Rotation2d> {
 
 	@Override
 	public Rotation2d getLatestValue() {
-		return value;
+		return timedValue.getValue();
 	}
 
 	@Override
 	public Rotation2d[] asArray() {
-		return new Rotation2d[] {value};
+		return new Rotation2d[] {timedValue.getValue()};
 	}
 
 	@Override
 	public double getTimestamp() {
-		return timestamp;
+		return timedValue.getTimestamp();
 	}
 
 	@Override
 	public double[] getTimestamps() {
-		return new double[] {timestamp};
+		return new double[] {timedValue.getTimestamp()};
 	}
 
 	@Override
@@ -67,17 +66,20 @@ public abstract class AngleSignal implements InputSignal<Rotation2d> {
 
 	@Override
 	public void toLog(LogTable table) {
-		TimedValue<Double> timedValue = getNewValue();
-		value = angleUnit.toRotation2d(timedValue.value());
-		timestamp = timedValue.timestamp();
-		table.put(name, value);
+		updateValue(timedValue);
+		table.put(name, timedValue.getValue());
 	}
 
 	@Override
 	public void fromLog(LogTable table) {
-		value = table.get(name, new Rotation2d());
+		timedValue.setValue(table.get(name, new Rotation2d()));
 	}
 
-	protected abstract TimedValue<Double> getNewValue();
+	public Rotation2d getAndUpdateValue() {
+		updateValue(timedValue);
+		return timedValue.getValue();
+	}
+
+	protected abstract void updateValue(TimedValue<Rotation2d> timedValue);
 
 }

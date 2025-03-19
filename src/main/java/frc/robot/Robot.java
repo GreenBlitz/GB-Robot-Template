@@ -166,7 +166,7 @@ public class Robot {
 	private void configureAuto() {
 		Supplier<Command> scoringCommand = () -> robotCommander.getSuperstructure()
 			.scoreWithRelease()
-			.alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.IN_POSITION_TO_SCORE))
+			.deadlineFor(getRobotCommander().getLedStateHandler().setState(LEDState.IN_POSITION_TO_SCORE))
 			.asProxy();
 		Supplier<Command> intakingCommand = () -> robotCommander.getSuperstructure()
 			.softCloseL4()

@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.constants.field.enums.Branch;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
@@ -14,10 +15,12 @@ import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.RobotCommander;
 import frc.robot.statemachine.RobotState;
+import frc.robot.statemachine.StateMachineConstants;
 import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.utils.utilcommands.ExecuteEndCommand;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 
@@ -186,6 +189,12 @@ public class JoysticksBindings {
 		usedJoystick.B.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L2));
 		usedJoystick.X.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L3));
 		usedJoystick.Y.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4));
+
+		usedJoystick.A.onTrue(new InstantCommand(() -> {
+			for (int i = 0; i < Branch.values().length; i++){
+				Logger.recordOutput("aaa/" + i, ScoringHelpers.getRobotBranchScoringPose(Branch.values()[i], StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS, false));
+			}
+		}));
 
 		usedJoystick.R1.onTrue(new InstantCommand(() -> ScoringHelpers.isLeftBranch = false));
 		usedJoystick.L1.onTrue(new InstantCommand(() -> ScoringHelpers.isLeftBranch = true));

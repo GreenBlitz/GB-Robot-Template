@@ -6,7 +6,7 @@ import frc.robot.subsystems.arm.ArmConstants;
 
 public class StateMachineConstants {
 
-	public static final double ROBOT_SCORING_DISTANCE_FROM_REEF_METERS = 0.52;
+	public static final double ROBOT_SCORING_DISTANCE_FROM_REEF_METERS = 0.59;
 	public static final double OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS = 0.8;
 	public static final double DISTANCE_TO_BRANCH_FOR_STARTING_PATH = 1;
 	public static final double OPEN_SUPERSTRUCTURE_DISTANCE_FROM_NET_METERS = 2.4;

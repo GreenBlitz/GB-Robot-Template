@@ -14,6 +14,7 @@ import frc.RobotManager;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.AutosBuilder;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
+import frc.robot.led.LEDState;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
 import frc.robot.subsystems.climb.lifter.Lifter;
 import frc.robot.subsystems.climb.lifter.factory.LifterFactory;
@@ -40,6 +41,7 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
+import frc.robot.vision.data.AprilTagVisionData;
 import frc.utils.auto.AutonomousChooser;
 import frc.utils.auto.PathPlannerUtil;
 import frc.robot.vision.VisionFilters;
@@ -48,7 +50,9 @@ import frc.utils.TimedValue;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.Logger;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -160,7 +164,10 @@ public class Robot {
 	}
 
 	private void configureAuto() {
-		Supplier<Command> scoringCommand = () -> robotCommander.getSuperstructure().scoreWithRelease().asProxy();
+		Supplier<Command> scoringCommand = () -> robotCommander.getSuperstructure()
+			.scoreWithRelease()
+			.deadlineFor(getRobotCommander().getLedStateHandler().setState(LEDState.IN_POSITION_TO_SCORE))
+			.asProxy();
 		Supplier<Command> intakingCommand = () -> robotCommander.getSuperstructure()
 			.softCloseL4()
 			.andThen(robotCommander.getSuperstructure().intake().withTimeout(AutonomousConstants.INTAKING_TIMEOUT_SECONDS))
@@ -177,10 +184,17 @@ public class Robot {
 		new EventTrigger("PRE_SCORE").onTrue(
 			robotCommander.getSuperstructure()
 				.preScore()
+				.alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.IN_POSITION_TO_OPEN_ELEVATOR))
 				.until(() -> robotCommander.getSuperstructure().isPreScoreReady())
-				.andThen(robotCommander.getSuperstructure().scoreWithoutRelease())
+				.andThen(
+					robotCommander.getSuperstructure()
+						.scoreWithoutRelease()
+						.alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.OPENING_SUPERSTRUCTURE))
+				)
 		);
-		new EventTrigger("ARM_PRE_SCORE").onTrue(robotCommander.getSuperstructure().armPreScore());
+		new EventTrigger("ARM_PRE_SCORE").onTrue(
+			robotCommander.getSuperstructure().armPreScore().alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.MOVE_TO_POSE))
+		);
 
 		this.preBuiltAutosChooser = new AutonomousChooser(
 			"PreBuiltAutos",
@@ -214,12 +228,15 @@ public class Robot {
 	}
 
 	public void periodic() {
+		double startingTime = TimeUtil.getCurrentTimeSeconds();
+
 		Phoenix6SignalBuilder.refreshAll();
 
 		swerve.update();
 		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());
 
-		poseEstimator.updateOdometry(swerve.getAllOdometryData());
+		double poseTime = TimeUtil.getCurrentTimeSeconds();
+		poseEstimator.updateOdometry(swerve.getLatestOdometryData());
 		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
 		for (TimedValue<Rotation2d> headingData : multiAprilTagVisionSources.getFilteredRobotHeading()) {
 			headingEstimator.updateVisionIfGyroOffsetIsNotCalibrated(
@@ -228,9 +245,11 @@ public class Robot {
 				RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE
 			);
 		}
-		poseEstimator.updateVision(multiAprilTagVisionSources.getFilteredVisionData());
+		List<AprilTagVisionData> visionData = multiAprilTagVisionSources.getFilteredVisionData();
+		poseEstimator.updateVision(visionData);
 //		 multiAprilTagVisionSources.log();
 		headingEstimator.log();
+		Logger.recordOutput("TimeTest/Pose", TimeUtil.getCurrentTimeSeconds() - poseTime);
 
 		BatteryUtil.logStatus();
 //		BusChain.logChainsStatuses();
@@ -238,7 +257,11 @@ public class Robot {
 		ScoringHelpers.log("Scoring");
 //		ButtonDriverHelper.log("Scoring/ButtonDriverDisplay");
 
+		double startingSchedularTime = TimeUtil.getCurrentTimeSeconds();
 		CommandScheduler.getInstance().run(); // Should be last
+		Logger.recordOutput("TimeTest/CommandSchedular", TimeUtil.getCurrentTimeSeconds() - startingSchedularTime);
+
+		Logger.recordOutput("TimeTest/RobotPeriodic", TimeUtil.getCurrentTimeSeconds() - startingTime);
 	}
 
 	public Command getAuto() {

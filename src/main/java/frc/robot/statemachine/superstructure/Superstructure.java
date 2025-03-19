@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.constants.field.Field;
 import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.StateMachineConstants;
@@ -44,7 +45,7 @@ public class Superstructure extends GBSubsystem {
 		super(logPath);
 		this.robot = robot;
 		this.elevatorStateHandler = new ElevatorStateHandler(robot.getElevator());
-		this.armStateHandler = new ArmStateHandler(robot.getArm());
+		this.armStateHandler = new ArmStateHandler(robot.getArm(), this::getDistanceToReef);
 		this.endEffectorStateHandler = new EndEffectorStateHandler(robot.getEndEffector(), this);
 		this.climbStateHandler = new ClimbStateHandler(new SolenoidStateHandler(robot.getSolenoid()), new LifterStateHandler(robot.getLifter()));
 
@@ -85,6 +86,13 @@ public class Superstructure extends GBSubsystem {
 			: ArmConstants.ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT;
 	}
 
+	public double getDistanceToReef() {
+		return robot.getPoseEstimator()
+			.getEstimatedPose()
+			.getTranslation()
+			.getDistance(Field.getCoralPlacement(ScoringHelpers.getTargetBranch(), true));
+	}
+
 	public boolean isCoralIn() {
 		return robot.getEndEffector().isCoralIn() || driverIsCoralInOverride;
 	}
@@ -96,7 +104,7 @@ public class Superstructure extends GBSubsystem {
 	public boolean isClosed() {
 		return robot.getElevator().isAtPosition(ElevatorState.CLOSED.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
 			&& elevatorStateHandler.getCurrentState() == ElevatorState.CLOSED
-			&& robot.getArm().isAtPosition(ArmState.CLOSED.getPosition(), Tolerances.ARM_POSITION)
+			&& armStateHandler.isAtState(ArmState.CLOSED)
 			&& armStateHandler.getCurrentState() == ArmState.CLOSED;
 	}
 
@@ -106,7 +114,7 @@ public class Superstructure extends GBSubsystem {
 
 		return robot.getElevator().isAtPosition(targetScoreLevel.getElevatorPreScore().getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
 			&& elevatorStateHandler.getCurrentState() == targetScoreLevel.getElevatorPreScore()
-			&& robot.getArm().isAtPosition(targetArmState.getPosition(), Tolerances.ARM_POSITION)
+			&& armStateHandler.isAtState(targetArmState)
 			&& armStateHandler.getCurrentState() == targetArmState;
 	}
 
@@ -114,23 +122,21 @@ public class Superstructure extends GBSubsystem {
 		ScoreLevel targetScoreLevel = ScoringHelpers.targetScoreLevel;
 		return robot.getElevator().isAtPosition(targetScoreLevel.getElevatorScore().getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
 			&& elevatorStateHandler.getCurrentState() == targetScoreLevel.getElevatorScore()
-			&& robot.getArm().isAtPosition(targetScoreLevel.getArmScore().getPosition(), Tolerances.ARM_POSITION)
+			&& armStateHandler.isAtState(targetScoreLevel.getArmScore())
 			&& armStateHandler.getCurrentState() == targetScoreLevel.getArmScore();
 	}
 
 	public boolean isReadyToOuttakeAlgae() {
 		return robot.getElevator().isAtPosition(ElevatorState.ALGAE_OUTTAKE.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
 			&& elevatorStateHandler.getCurrentState() == ElevatorState.ALGAE_OUTTAKE
-			&& robot.getArm().isAtPosition(ArmState.ALGAE_OUTTAKE.getPosition(), Tolerances.ALGAE_RELEASE_ARM_POSITION)
-			&& armStateHandler.getCurrentState() == ArmState.ALGAE_OUTTAKE;
+			&& armStateHandler.isAtState(ArmState.ALGAE_OUTTAKE, Tolerances.ALGAE_RELEASE_ARM_POSITION);
 	}
 
 
 	public boolean isReadyToProcessor() {
 		return robot.getElevator().isAtPosition(ElevatorState.PROCESSOR_OUTTAKE.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
 			&& elevatorStateHandler.getCurrentState() == ElevatorState.PROCESSOR_OUTTAKE
-			&& robot.getArm().isAtPosition(ArmState.PROCESSOR_OUTTAKE.getPosition(), Tolerances.ALGAE_RELEASE_ARM_POSITION)
-			&& armStateHandler.getCurrentState() == ArmState.PROCESSOR_OUTTAKE;
+			&& armStateHandler.isAtState(ArmState.PROCESSOR_OUTTAKE, Tolerances.ALGAE_RELEASE_ARM_POSITION);
 	}
 
 	public boolean isReadyForNetRelease() {

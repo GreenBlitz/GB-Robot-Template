@@ -88,13 +88,13 @@ public class RobotHeadingEstimator {
 	public void updateVisionHeading(TimedValue<Rotation2d> visionHeadingData, double visionStandardDeviation) {
 		if (!hasFirstVisionUpdateArrived) {
 			hasFirstVisionUpdateArrived = true;
-			estimatedHeading = visionHeadingData.value();
+			estimatedHeading = visionHeadingData.getValue();
 		}
-		Logger.recordOutput(logPath + RobotHeadingEstimatorConstants.VISION_HEADING_INPUT_LOGPATH_ADDITION, visionHeadingData.value());
-		Optional<Rotation2d> gyroAtTimestamp = unOffsetedGyroAngleInterpolator.getSample(visionHeadingData.timestamp());
+		Logger.recordOutput(logPath + RobotHeadingEstimatorConstants.VISION_HEADING_INPUT_LOGPATH_ADDITION, visionHeadingData.getValue());
+		Optional<Rotation2d> gyroAtTimestamp = unOffsetedGyroAngleInterpolator.getSample(visionHeadingData.getTimestamp());
 		gyroAtTimestamp.ifPresent(
 			gyroSampleAtTimestamp -> estimatedHeading = PoseEstimationMath.combineVisionHeadingAndGyro(
-				visionHeadingData.value(),
+				visionHeadingData.getValue(),
 				gyroSampleAtTimestamp,
 				lastGyroAngle,
 				estimatedHeading,
@@ -105,9 +105,9 @@ public class RobotHeadingEstimator {
 	}
 
 	public void updateGyroAngle(TimedValue<Rotation2d> gyroHeadingData) {
-		unOffsetedGyroAngleInterpolator.addSample(gyroHeadingData.timestamp(), gyroHeadingData.value());
-		estimatedHeading = estimatedHeading.plus(AngleMath.getAngleDifference(gyroHeadingData.value(), lastGyroAngle));
-		lastGyroAngle = gyroHeadingData.value();
+		unOffsetedGyroAngleInterpolator.addSample(gyroHeadingData.getTimestamp(), gyroHeadingData.getValue());
+		estimatedHeading = estimatedHeading.plus(AngleMath.getAngleDifference(gyroHeadingData.getValue(), lastGyroAngle));
+		lastGyroAngle = gyroHeadingData.getValue();
 	}
 
 	public void updateGyroAndVision(

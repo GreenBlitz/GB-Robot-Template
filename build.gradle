@@ -17,8 +17,6 @@ def COMPUTER_MAIN_CLASS = "frc.ComputerMain"
 def ROUTER_IP = "10.45.90.2"
 def USB_B_IP = "172.22.11.2"
 
-final MAX_JAVA_HEAP_SIZE_MB=100;
-
 def IPS = [ROUTER_IP, USB_B_IP]
 def reachableIP
 
@@ -40,18 +38,25 @@ deploy {
 				// getTargetTypeClass is a shortcut to get the class type using a string
 
 				frcJava(getArtifactTypeClass('FRCJavaArtifact')) {
-					jvmArgs.add('-Dcom.sun.management.jmxremote=true')
-					jvmArgs.add('-Dcom.sun.management.jmxremote.port=1198')
-					jvmArgs.add('-Dcom.sun.management.jmxremote.local.only=false')
-					jvmArgs.add('-Dcom.sun.management.jmxremote.ssl=false')
-					jvmArgs.add('-Dcom.sun.management.jmxremote.authenticate=false')
-					jvmArgs.add("-Djava.rmi.server.hostname=${IPS[0]}")
+					// visual vm
+					//					jvmArgs.add('-Dcom.sun.management.jmxremote=true')
+					//					jvmArgs.add('-Dcom.sun.management.jmxremote.port=1198')
+					//					jvmArgs.add('-Dcom.sun.management.jmxremote.local.only=false')
+					//					jvmArgs.add('-Dcom.sun.management.jmxremote.ssl=false')
+					//					jvmArgs.add('-Dcom.sun.management.jmxremote.authenticate=false')
+					//					jvmArgs.add("-Djava.rmi.server.hostname=${IPS[0]}")
+
 					jvmArgs.add("-XX:+UnlockExperimentalVMOptions")
-					jvmArgs.add("-XX:MaxGCPauseMillis=50")
 					jvmArgs.add("-XX:GCTimeRatio=5")
+					jvmArgs.add("-XX:+UseSerialGC")
+					jvmArgs.add("-XX:MaxGCPauseMillis=50")
+
+					final MAX_JAVA_HEAP_SIZE_MB = 100;
 					jvmArgs.add("-Xmx" + MAX_JAVA_HEAP_SIZE_MB + "M")
 					jvmArgs.add("-Xms" + MAX_JAVA_HEAP_SIZE_MB + "M")
 					jvmArgs.add("-XX:+AlwaysPreTouch")
+
+					// jvmArgs.add("-Xlog:gc") log garbage collector events in console
 				}
 
 				// Static files artifact

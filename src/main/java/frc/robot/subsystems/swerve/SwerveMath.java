@@ -32,9 +32,9 @@ public class SwerveMath {
 
 	public static ChassisSpeeds powersToSpeeds(ChassisPowers powers, SwerveConstants constants) {
 		return new ChassisSpeeds(
-			powers.xPower() * constants.velocityAt12VoltsMetersPerSecond(),
-			powers.yPower() * constants.velocityAt12VoltsMetersPerSecond(),
-			powers.rotationalPower() * constants.maxRotationalVelocityPerSecond().getRadians()
+			powers.xPower * constants.velocityAt12VoltsMetersPerSecond(),
+			powers.yPower * constants.velocityAt12VoltsMetersPerSecond(),
+			powers.rotationalPower * constants.maxRotationalVelocityPerSecond().getRadians()
 		);
 	}
 

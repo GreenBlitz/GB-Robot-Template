@@ -191,8 +191,12 @@ public class JoysticksBindings {
 		usedJoystick.Y.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4));
 
 		usedJoystick.A.onTrue(new InstantCommand(() -> {
-			for (int i = 0; i < Branch.values().length; i++){
-				Logger.recordOutput("aaa/" + i, ScoringHelpers.getRobotBranchScoringPose(Branch.values()[i], StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS, false));
+			for (int i = 0; i < Branch.values().length; i++) {
+				Logger.recordOutput(
+					"aaa/" + i,
+					ScoringHelpers
+						.getRobotBranchScoringPose(Branch.values()[i], StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS, false)
+				);
 			}
 		}));
 

@@ -8,7 +8,7 @@ public class Tolerances {
 
 	public static final double ELEVATOR_HEIGHT_METERS = 0.05;
 
-	public static final Rotation2d ARM_INTERPOLATION_POSITION = Rotation2d.fromDegrees(1);
+	public static final Rotation2d ARM_INTERPOLATION_POSITION = Rotation2d.fromDegrees(0.25);
 	public static final Rotation2d ARM_POSITION = Rotation2d.fromDegrees(3);
 	public static final Rotation2d ALGAE_RELEASE_ARM_POSITION = Rotation2d.fromDegrees(10);
 

@@ -208,7 +208,7 @@ public class KrakenX60ArmBuilder {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL ->
 				Phoenix6SignalBuilder.build(
-					((CANCoderEncoder) encoder).getDevice().getPosition(),
+					((CANCoderEncoder) encoder).getDevice().getAbsolutePosition(),
 					RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ,
 					AngleUnit.ROTATIONS,
 					BusChain.SUPERSTRUCTURE_CANIVORE

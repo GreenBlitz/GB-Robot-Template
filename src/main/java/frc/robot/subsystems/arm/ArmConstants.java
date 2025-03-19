@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class ArmConstants {
 
-	public static final Rotation2d POSITION_OFFSET = Rotation2d.fromDegrees(0); // was 26
+	public static final Rotation2d POSITION_OFFSET = Rotation2d.fromDegrees(-16); // was 26
 
 	public static final Rotation2d FORWARD_SOFTWARE_LIMIT = Rotation2d.fromDegrees(231 + POSITION_OFFSET.getDegrees());
 	public static final Rotation2d MAXIMUM_POSITION = Rotation2d.fromDegrees(246 + POSITION_OFFSET.getDegrees());

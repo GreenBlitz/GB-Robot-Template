@@ -30,7 +30,7 @@ public class StateMachineConstants {
 	public static final double ELEVATOR_POSITION_FOR_OPENING = 0.39;
 	public static final double ELEVATOR_POSITION_TO_MOVE_ARM_TO_SCORE_L4 = 0.5;
 	public static final double ELEVATOR_POSITION_TO_CLOSE_ARM = 0.4;
-	public static final double ELEVATOR_POSITION_TO_RELEASE_NET = 0.4;
+	public static final double ELEVATOR_POSITION_TO_RELEASE_NET = 0.37;
 
 	public static final double MAX_VELOCITY_WHILE_ELEVATOR_L4_METERS_PER_SECOND = 0.75;
 	public static final double MAX_ACCELERATION_WHILE_ELEVATOR_L4_METERS_PER_SECOND_SQUARED = 1.25;

@@ -83,7 +83,9 @@ public class JoysticksBindings {
 	private static Command reefActionChooser(Robot robot) {
 		return new DeferredCommand(
 			() -> robot.getRobotCommander().getSuperstructure().isCoralIn()
-				? robot.getRobotCommander().autoScore()
+				? (ScoringHelpers.isAutoAlgaeRemoveActivated
+					? robot.getRobotCommander().autoScoreThenAlgaeRemove()
+					: robot.getRobotCommander().autoScore())
 				: new InstantCommand(() -> ScoringHelpers.setClosetReefSideTarget(robot))
 					.andThen(robot.getRobotCommander().setState(RobotState.ALGAE_REMOVE)),
 			Set.of(
@@ -192,7 +194,9 @@ public class JoysticksBindings {
 		usedJoystick.R1.onTrue(new InstantCommand(() -> ScoringHelpers.isLeftBranch = false));
 		usedJoystick.L1.onTrue(new InstantCommand(() -> ScoringHelpers.isLeftBranch = true));
 
-			usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getRobotCommander().setState(RobotState.INTAKE_WITHOUT_AIM_ASSIST));
+		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getRobotCommander().setState(RobotState.INTAKE_WITHOUT_AIM_ASSIST));
+		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(new InstantCommand(() -> ScoringHelpers.isAutoAlgaeRemoveActivated = true));
+
 		usedJoystick.L3.onTrue(robot.getRobotCommander().setState(RobotState.PRE_CLIMB_WITHOUT_AIM_ASSIST));
 	}
 

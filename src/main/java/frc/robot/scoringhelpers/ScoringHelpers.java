@@ -195,7 +195,7 @@ public class ScoringHelpers {
 		Pose2d middleOfReefSide = Field.getReefSideMiddle(getTargetReefSide());
 		Translation2d rotatedEndEffectorOffset = ScoringHelpers.END_EFFECTOR_OFFSET_FROM_MID_ROBOT.rotateBy(middleOfReefSide.getRotation());
 		
-		return new Pose2d(middleOfReefSide.getTranslation().plus(rotatedEndEffectorOffset), middleOfReefSide.getRotation());
+		return new Pose2d(middleOfReefSide.getTranslation().minus(rotatedEndEffectorOffset), middleOfReefSide.getRotation());
 	}
 	
 	private static Cage getClosestCage(Translation2d robotTranslation, Cage... cages) {

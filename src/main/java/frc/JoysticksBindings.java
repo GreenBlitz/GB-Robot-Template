@@ -171,7 +171,7 @@ public class JoysticksBindings {
 
 		usedJoystick.R1.onTrue(robot.getRobotCommander().fullyNet());
 
-//		usedJoystick.Y.onTrue(robot.getRobotCommander().setState(RobotState.CORAL_OUTTAKE));
+		usedJoystick.Y.onTrue(robot.getRobotCommander().setState(RobotState.CORAL_OUTTAKE));
 		usedJoystick.X.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_OUTTAKE));
 		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.PROCESSOR_SCORE));
 
@@ -181,7 +181,6 @@ public class JoysticksBindings {
 		usedJoystick.A.onTrue(driveActionChooser(robot));
 
 		usedJoystick.START.whileTrue(robot.getRobotCommander().setState(RobotState.MANUAL_CLIMB));
-		usedJoystick.Y.onTrue(new InstantCommand(() -> ScoringHelpers.isAutoAlgaeRemoveActivated = !ScoringHelpers.isAutoAlgaeRemoveActivated));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

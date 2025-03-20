@@ -15,6 +15,7 @@ import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.led.LEDConstants;
 import frc.robot.led.LEDState;
 import frc.robot.subsystems.climb.lifter.LifterConstants;
+import frc.utils.alerts.AlertManager;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.DriverStationUtil;
 import frc.utils.time.TimeUtil;
@@ -106,7 +107,7 @@ public class RobotManager extends LoggedRobot {
 		updateTimeRelatedData(); // Better to be first
 		JoysticksBindings.setDriversInputsToSwerve(robot.getSwerve());
 		robot.periodic();
-//		AlertManager.reportAlerts();
+		AlertManager.reportAlerts();
 	}
 
 	private void createAutoReadyForConstructionChooser() {

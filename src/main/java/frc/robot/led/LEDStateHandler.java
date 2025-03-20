@@ -14,12 +14,16 @@ public class LEDStateHandler extends GBSubsystem {
 		super(logPath);
 		this.candle = candle;
 
-		setDefaultCommand(new ConditionalCommand(setState(LEDState.IDLE), setState(LEDState.DISABLE), DriverStation::isEnabled));
+		setDefaultCommand(
+			new ConditionalCommand(setState(LEDState.IDLE), setState(LEDState.DISABLE), DriverStation::isEnabled).ignoringDisable(true)
+		);
 	}
 
 	public Command setState(LEDState state) {
 		Command setStateCommand = asSubsystemCommand(
-			new InitExecuteCommand(() -> candle.animate(state.getAnimation()), () -> {}, this).ignoringDisable(true),
+			new InitExecuteCommand(() -> candle.animate(state.getAnimation()), () -> {}, this)
+				.withTimeout(LEDConstants.CORAL_IN_BLINK_TIME_SECONDS)
+				.ignoringDisable(true),
 			state.name()
 		);
 

@@ -111,8 +111,8 @@ public class Superstructure extends GBSubsystem {
 	public boolean isPreNetReady() {
 		return robot.getElevator().isPastPosition(ElevatorState.PRE_NET.getHeightMeters())
 			&& elevatorStateHandler.getCurrentState() == ElevatorState.NET
-			&& armStateHandler.isAtState(ArmState.HOLD_ALGAE)
-			&& armStateHandler.getCurrentState() == ArmState.HOLD_ALGAE;
+			&& armStateHandler.isAtState(ArmState.HOLD_ALGAE, Tolerances.ALGAE_RELEASE_ARM_POSITION);
+
 	}
 
 	public boolean isPreScoreReady() {
@@ -429,8 +429,8 @@ public class Superstructure extends GBSubsystem {
 				new ParallelDeadlineGroup(
 					new SequentialCommandGroup(
 						endEffectorStateHandler.setState(EndEffectorState.DEFAULT).until(this::isReadyForNetRelease),
-						endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE)
-					).withTimeout(StateMachineConstants.NET_OUTTAKE_TIME_SECONDS),
+						endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE).withTimeout(StateMachineConstants.NET_OUTTAKE_TIME_SECONDS)
+					),
 					elevatorStateHandler.setState(ElevatorState.NET),
 					new SequentialCommandGroup(
 						armStateHandler.setState(ArmState.HOLD_ALGAE).until(this::isPreNetReady),

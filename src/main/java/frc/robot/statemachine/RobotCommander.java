@@ -5,12 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.DeferredCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.constants.field.Field;
 import frc.constants.field.enums.Branch;
 import frc.robot.IDs;
@@ -363,6 +358,22 @@ public class RobotCommander extends GBSubsystem {
 		return new ParallelDeadlineGroup(fullySuperstructureScore, driveToPath);
 	}
 
+	public Command autoScoreThenAlgaeRemove() {
+		return new DeferredCommand(
+			() -> new SequentialCommandGroup(autoScore(), holdAlgae().until(this::isReadyToCloseSuperstructure), algaeRemove()),
+			Set.of(
+				this,
+				superstructure,
+				swerve,
+				robot.getElevator(),
+				robot.getArm(),
+				robot.getEndEffector(),
+				robot.getLifter(),
+				robot.getSolenoid()
+			)
+		);
+	}
+
 	public Command fullyScore() {
 		return new SequentialCommandGroup(
 			armPreScore().until(this::isReadyToOpenSuperstructure),
@@ -503,7 +514,8 @@ public class RobotCommander extends GBSubsystem {
 		return asSubsystemCommand(
 			new ParallelDeadlineGroup(
 				superstructure.algaeRemove(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE))
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE)),
+				new StartEndCommand(() -> {}, () -> ScoringHelpers.isAutoAlgaeRemoveActivated = false)
 			),
 			RobotState.ALGAE_REMOVE
 		);

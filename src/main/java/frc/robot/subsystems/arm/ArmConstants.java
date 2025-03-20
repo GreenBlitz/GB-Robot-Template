@@ -43,33 +43,35 @@ public class ArmConstants {
 	public static final InterpolationMap<Double, Rotation2d> L3_DISTANCE_ANGLE_MAP = new InterpolationMap<>(
 		InverseInterpolator.forDouble(),
 		InterpolationMap.interpolatorForRotation2d(),
-			Map.of(
-					0.0,
-					Rotation2d.fromDegrees(0),
-					0.48,
-					Rotation2d.fromDegrees(0),
-					0.59,
-					Rotation2d.fromDegrees(2.25),
-					0.65,
-					Rotation2d.fromDegrees(5),
-					0.70,
-					Rotation2d.fromDegrees(7.5)
-			));
+		Map.of(
+			0.0,
+			Rotation2d.fromDegrees(0),
+			0.48,
+			Rotation2d.fromDegrees(0),
+			0.59,
+			Rotation2d.fromDegrees(2.25),
+			0.65,
+			Rotation2d.fromDegrees(5),
+			0.70,
+			Rotation2d.fromDegrees(7.5)
+		)
+	);
 
 	public static final InterpolationMap<Double, Rotation2d> L2_DISTANCE_ANGLE_MAP = new InterpolationMap<>(
 		InverseInterpolator.forDouble(),
 		InterpolationMap.interpolatorForRotation2d(),
-			Map.of(
-					0.0,
-					Rotation2d.fromDegrees(0),
-					0.48,
-					Rotation2d.fromDegrees(0),
-					0.59,
-					Rotation2d.fromDegrees(2.25),
-					0.65,
-					Rotation2d.fromDegrees(5.5),
-					0.70,
-					Rotation2d.fromDegrees(8.5)
-			));
+		Map.of(
+			0.0,
+			Rotation2d.fromDegrees(0),
+			0.48,
+			Rotation2d.fromDegrees(0),
+			0.59,
+			Rotation2d.fromDegrees(2.25),
+			0.65,
+			Rotation2d.fromDegrees(5.5),
+			0.70,
+			Rotation2d.fromDegrees(8.5)
+		)
+	);
 
 }

@@ -183,14 +183,21 @@ public class ScoringHelpers {
 		}
 		return slots[closestSlotIndex];
 	}
-
+	
 	public static Pose2d getIntakePose(CoralStationSlot coralStationSlot) {
 		Pose2d coralStationSlotPose = Field.getCoralStationSlot(coralStationSlot);
 		Translation2d rotatedEndEffectorOffset = ScoringHelpers.END_EFFECTOR_OFFSET_FROM_MID_ROBOT.rotateBy(coralStationSlotPose.getRotation());
-
+		
 		return new Pose2d(coralStationSlotPose.getTranslation().plus(rotatedEndEffectorOffset), coralStationSlotPose.getRotation());
 	}
-
+	
+	public static Pose2d getAlgaeRemovePose() {
+		Pose2d middleOfReefSide = Field.getReefSideMiddle(getTargetReefSide());
+		Translation2d rotatedEndEffectorOffset = ScoringHelpers.END_EFFECTOR_OFFSET_FROM_MID_ROBOT.rotateBy(middleOfReefSide.getRotation());
+		
+		return new Pose2d(middleOfReefSide.getTranslation().plus(rotatedEndEffectorOffset), middleOfReefSide.getRotation());
+	}
+	
 	private static Cage getClosestCage(Translation2d robotTranslation, Cage... cages) {
 		double[] distances = new double[cages.length];
 		int closestSlotIndex = 0;

@@ -184,14 +184,14 @@ public class ScoringHelpers {
 		}
 		return slots[closestSlotIndex];
 	}
-	
+
 	public static Pose2d getIntakePose(CoralStationSlot coralStationSlot) {
 		Pose2d coralStationSlotPose = Field.getCoralStationSlot(coralStationSlot);
 		Translation2d rotatedEndEffectorOffset = ScoringHelpers.END_EFFECTOR_OFFSET_FROM_MID_ROBOT.rotateBy(coralStationSlotPose.getRotation());
-		
+
 		return new Pose2d(coralStationSlotPose.getTranslation().plus(rotatedEndEffectorOffset), coralStationSlotPose.getRotation());
 	}
-	
+
 	public static Pose2d getAlgaeRemovePose() {
 		Pose2d middleOfReefSide = Field.getReefSideMiddle(getTargetReefSide());
 		Translation2d rotatedEndEffectorOffset = ScoringHelpers.END_EFFECTOR_TUSKS_OFFSET_FROM_MID_ROBOT.rotateBy(middleOfReefSide.getRotation());

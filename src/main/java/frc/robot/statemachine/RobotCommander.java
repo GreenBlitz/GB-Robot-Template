@@ -25,7 +25,6 @@ import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.pose.PoseUtil;
-import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -516,7 +515,7 @@ public class RobotCommander extends GBSubsystem {
 			new ParallelDeadlineGroup(
 				superstructure.algaeRemove(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE)),
-				new StartEndCommand(() ->{}, () -> ScoringHelpers.isAutoAlgaeRemoveActivated = false)
+				new StartEndCommand(() -> {}, () -> ScoringHelpers.isAutoAlgaeRemoveActivated = false)
 			),
 			RobotState.ALGAE_REMOVE
 		);

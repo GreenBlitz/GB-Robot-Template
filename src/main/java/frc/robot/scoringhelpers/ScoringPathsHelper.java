@@ -42,7 +42,7 @@ public class ScoringPathsHelper {
 				StateMachineConstants.MAX_ACCELERATION_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND_SQUARED.getRadians()
 			),
 			new IdealStartingState(
-				1,
+				StateMachineConstants.MAX_VELOCITY_WHILE_ELEVATOR_L4_METERS_PER_SECOND,
 				Field.getReefSideMiddle(branch.getReefSide(), false).getRotation()
 			),
 			new GoalEndState(0, Field.getReefSideMiddle(branch.getReefSide(), false).getRotation())

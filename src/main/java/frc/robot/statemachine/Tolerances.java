@@ -12,7 +12,7 @@ public class Tolerances {
 	public static final Rotation2d ARM_POSITION = Rotation2d.fromDegrees(3);
 	public static final Rotation2d ALGAE_RELEASE_ARM_POSITION = Rotation2d.fromDegrees(10);
 
-	public static final Pose2d REEF_RELATIVE_SCORING_POSITION = new Pose2d(0.01, 0.025, Rotation2d.fromDegrees(1));
+	public static final Pose2d REEF_RELATIVE_SCORING_POSITION = new Pose2d(0.11, 0.025, Rotation2d.fromDegrees(1));
 	public static final Pose2d REEF_RELATIVE_SCORING_DEADBANDS = new Pose2d(0.1, 1, Rotation2d.fromRadians(2));
 	public static final Rotation2d HEADING_FOR_NET = Rotation2d.fromDegrees(10);
 	public static final Rotation2d HEADING_FOR_NET_DEADBAND = Rotation2d.fromRadians(1);

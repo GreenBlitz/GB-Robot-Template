@@ -260,6 +260,25 @@ public class RobotCommander extends GBSubsystem {
 				StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES.getY()
 			) && swerve.isAtHeading(ScoringHelpers.getHeadingForNet(), Tolerances.HEADING_FOR_NET, Tolerances.HEADING_FOR_NET_DEADBAND);
 	}
+	
+	private boolean isAtAlgaeRemovePose(double distanceFromReefMeters, Pose2d tolerances, Pose2d deadbands) {
+		Rotation2d reefAngle = Field.getReefSideMiddle(ScoringHelpers.getTargetBranch().getReefSide()).getRotation();
+		
+		Pose2d reefRelativeTargetPose = ScoringHelpers.getReefRelativeAlgaeRemovePose(distanceFromReefMeters);
+		
+		Translation2d endeffectorOffsetDifference = ScoringHelpers.END_EFFECTOR_OFFSET_FROM_MID_ROBOT.rotateBy(reefAngle);
+		Pose2d reefRelativeRobotPose = new Pose2d(
+				robot.getPoseEstimator().getEstimatedPose().getTranslation().minus(endeffectorOffsetDifference),
+				robot.getPoseEstimator().getEstimatedPose().getRotation()
+		);
+		
+		ChassisSpeeds allianceRelativeSpeeds = swerve.getAllianceRelativeVelocity();
+		ChassisSpeeds reefRelativeSpeeds = SwerveMath
+				.robotToAllianceRelativeSpeeds(allianceRelativeSpeeds, Field.getAllianceRelative(reefAngle.unaryMinus()));
+		
+		return PoseUtil
+				.isAtPose(reefRelativeRobotPose, reefRelativeTargetPose, reefRelativeSpeeds, tolerances, deadbands, "/isAtAlgaeRemovePose");
+	}
 
 	public Command driveWith(String name, Command command, boolean asDeadline) {
 		Command swerveDriveCommand = swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE);

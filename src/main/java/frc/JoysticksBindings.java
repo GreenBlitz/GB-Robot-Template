@@ -126,7 +126,7 @@ public class JoysticksBindings {
 			Command command;
 			if (state == RobotState.ALGAE_REMOVE) {
 				robotCommander.setState(RobotState.HOLD_ALGAE).schedule();
-				ScoringHelpers.isAutoAlgaeRemoveActivated = !ScoringHelpers.isAutoAlgaeRemoveActivated;
+				ScoringHelpers.isAutoAlgaeRemoveActivated = false;
 				return;
 			} else if (state == RobotState.NET) {
 				command = robotCommander.driveWith("Soft close net", robotCommander.getSuperstructure().softCloseNet(), true);

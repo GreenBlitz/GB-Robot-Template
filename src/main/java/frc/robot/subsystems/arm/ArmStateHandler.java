@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.statemachine.Tolerances;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.function.Supplier;
 
@@ -54,10 +53,6 @@ public class ArmStateHandler {
 	}
 
 	private Rotation2d getStatePosition(ArmState state) {
-		Logger.recordOutput("distance", distanceSupplier.get());
-		Logger.recordOutput("offset4", ArmConstants.L4_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()));
-		Logger.recordOutput("offset3", ArmConstants.L3_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()));
-		Logger.recordOutput("offset2", ArmConstants.L2_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()));
 		return Rotation2d.fromDegrees(state.getPosition().getDegrees() + switch (state) {
 			case L4 -> ArmConstants.L4_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()).getDegrees();
 			case L3, PRE_L3 -> ArmConstants.L3_DISTANCE_ANGLE_MAP.get(distanceSupplier.get()).getDegrees();

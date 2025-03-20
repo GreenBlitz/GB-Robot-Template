@@ -20,6 +20,7 @@ import org.littletonrobotics.junction.Logger;
 public class ScoringHelpers {
 
 	public static final Translation2d END_EFFECTOR_OFFSET_FROM_MID_ROBOT = new Translation2d(0, -0.025);
+	public static final Translation2d END_EFFECTOR_TUSKS_OFFSET_FROM_MID_ROBOT = new Translation2d(0, -0.017);
 	private static final double TIME_FOR_POSE_MOVEMENT_SECONDS = 0.3;
 	private static final Pose2d PROCESSOR_SCORING_POSE = new Pose2d(6, 0.7, Field.getProcessor().getRotation());
 	private static final Rotation2d HEADING_FOR_NET = Rotation2d.fromDegrees(0);
@@ -193,7 +194,7 @@ public class ScoringHelpers {
 	
 	public static Pose2d getAlgaeRemovePose() {
 		Pose2d middleOfReefSide = Field.getReefSideMiddle(getTargetReefSide());
-		Translation2d rotatedEndEffectorOffset = ScoringHelpers.END_EFFECTOR_OFFSET_FROM_MID_ROBOT.rotateBy(middleOfReefSide.getRotation());
+		Translation2d rotatedEndEffectorOffset = ScoringHelpers.END_EFFECTOR_TUSKS_OFFSET_FROM_MID_ROBOT.rotateBy(middleOfReefSide.getRotation());
 		
 		return new Pose2d(middleOfReefSide.getTranslation().minus(rotatedEndEffectorOffset), middleOfReefSide.getRotation());
 	}

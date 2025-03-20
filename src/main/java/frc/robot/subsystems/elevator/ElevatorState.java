@@ -19,7 +19,7 @@ public enum ElevatorState {
 	L4(1.18, 4, 4),
 	LOW_ALGAE_REMOVE(0.02),
 	HIGH_ALGAE_REMOVE(0.05),
-	PRE_NET(0.8, 5, 3.5),
+	PRE_NET(1, 5, 3.5),
 	NET(1.18, 5, 3.5),
 	PROCESSOR_OUTTAKE(0.02),
 	OPENING_HEIGHT(0.4),

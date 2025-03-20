@@ -111,7 +111,7 @@ public class Superstructure extends GBSubsystem {
 	public boolean isPreNetReady() {
 		return robot.getElevator().isPastPosition(ElevatorState.PRE_NET.getHeightMeters())
 			&& elevatorStateHandler.getCurrentState() == ElevatorState.NET
-			&& armStateHandler.isAtState(ArmState.HOLD_ALGAE, Tolerances.ALGAE_RELEASE_ARM_POSITION);
+			&& armStateHandler.isAtState(ArmState.PRE_NET, Tolerances.ALGAE_RELEASE_ARM_POSITION);
 
 	}
 
@@ -433,7 +433,7 @@ public class Superstructure extends GBSubsystem {
 					),
 					elevatorStateHandler.setState(ElevatorState.NET),
 					new SequentialCommandGroup(
-						armStateHandler.setState(ArmState.HOLD_ALGAE).until(this::isPreNetReady),
+						armStateHandler.setState(ArmState.PRE_NET).until(this::isPreNetReady),
 						armStateHandler.setState(ArmState.NET)
 					),
 					climbStateHandler.setState(ClimbState.STOP)

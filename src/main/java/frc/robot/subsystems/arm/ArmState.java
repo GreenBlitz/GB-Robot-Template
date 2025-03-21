@@ -5,10 +5,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public enum ArmState {
 
 	STAY_IN_PLACE(Rotation2d.fromDegrees(Double.NaN)),
-	CLOSED(Rotation2d.fromDegrees(221.5)),
+	CLOSED(Rotation2d.fromDegrees(219.5)),
 	START_GAME(Rotation2d.fromDegrees(233)),
 	MID_WAY_CLOSE(Rotation2d.fromDegrees(76), Rotation2d.fromRotations(2), Rotation2d.fromRotations(1.5)),
-	INTAKE(Rotation2d.fromDegrees(221.5)),
+	INTAKE(Rotation2d.fromDegrees(219.5)),
 	ALGAE_OUTTAKE(Rotation2d.fromDegrees(211)),
 	PRE_L1(Rotation2d.fromDegrees(216)),
 	L1(Rotation2d.fromDegrees(216)),

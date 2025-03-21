@@ -248,7 +248,6 @@ public class RobotCommander extends GBSubsystem {
 		return isPastX && isPastY;
 	}
 
-
 	public boolean isReadyForNet() {
 		Rotation2d targetHeading = swerve.getAllianceRelativeHeading().getRotations() < 0
 			? StateMachineConstants.SWERVE_HEADING_FOR_NET

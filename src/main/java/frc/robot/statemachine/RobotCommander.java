@@ -537,7 +537,7 @@ public class RobotCommander extends GBSubsystem {
 				superstructure.preNet(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
 			),
-			RobotState.NET
+			RobotState.PRE_NET
 		);
 	}
 

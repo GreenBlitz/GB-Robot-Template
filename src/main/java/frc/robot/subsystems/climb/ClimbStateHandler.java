@@ -49,21 +49,19 @@ public class ClimbStateHandler {
 
 	private Command climbWithoutLimitSwitch() {
 		return new SequentialCommandGroup(
-			new ParallelCommandGroup(
-				lifterStateHandler.setState(LifterState.CLIMB_WITHOUT_LIMIT_SWITCH),
-				solenoidStateHandler.setState(SolenoidState.LOCKED)
-			).until(() -> lifterStateHandler.isLower(LifterState.CLIMB_WITHOUT_LIMIT_SWITCH.getTargetPosition())),
+			new ParallelCommandGroup(lifterStateHandler.setState(LifterState.CLIMB), solenoidStateHandler.setState(SolenoidState.LOCKED))
+				.until(() -> lifterStateHandler.isLower(LifterState.CLIMB.getTargetPosition())),
 			new ParallelCommandGroup(lifterStateHandler.setState(LifterState.HOLD), solenoidStateHandler.setState(SolenoidState.LOCKED))
 		);
 	}
 
 	private Command climbWithLimitSwitch() {
-		return new SequentialCommandGroup(
-			new ParallelDeadlineGroup(
-				lifterStateHandler.setState(LifterState.CLIMB_WITHOUT_LIMIT_SWITCH),
-				solenoidStateHandler.setState(SolenoidState.LOCKED)
+		return new ParallelCommandGroup(
+			new SequentialCommandGroup(
+				lifterStateHandler.setState(LifterState.CLIMB).until(solenoidStateHandler::isAtLimitSwitch),
+				lifterStateHandler.setState(LifterState.HOLD)
 			),
-			new ParallelCommandGroup(lifterStateHandler.setState(LifterState.HOLD), solenoidStateHandler.setState(SolenoidState.LOCKED))
+			solenoidStateHandler.setState(SolenoidState.LOCKED)
 		);
 	}
 

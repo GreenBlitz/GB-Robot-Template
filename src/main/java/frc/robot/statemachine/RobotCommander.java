@@ -249,14 +249,10 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public boolean isReadyForNet() {
-		Rotation2d targetHeading = Field.getAllianceRelative(swerve.getAllianceRelativeHeading().getRotations() > 0
-			? StateMachineConstants.SWERVE_HEADING_FOR_NET
-			: StateMachineConstants.SWERVE_HEADING_FOR_NET.unaryMinus());
-
 		return isCloseToNet(
 			StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES.getX(),
 			StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES.getY()
-		) && swerve.isAtHeading(targetHeading, Tolerances.HEADING_FOR_NET, Tolerances.HEADING_FOR_NET_DEADBAND);
+		) && swerve.isAtHeading(ScoringHelpers.getHeadingForNet(swerve), Tolerances.HEADING_FOR_NET, Tolerances.HEADING_FOR_NET_DEADBAND);
 	}
 
 	public Command driveWith(String name, Command command, boolean asDeadline) {
@@ -411,10 +407,7 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public Command completeNet() {
-		return asSubsystemCommand(
-			new SequentialCommandGroup(preNet().until(this::isReadyForNet), net()),
-			RobotState.NET
-		);
+		return asSubsystemCommand(new SequentialCommandGroup(preNet().until(this::isReadyForNet), net()), RobotState.NET);
 	}
 
 	private Command drive() {

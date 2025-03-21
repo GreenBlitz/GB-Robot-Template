@@ -12,7 +12,6 @@ import frc.constants.field.enums.CoralStation;
 import frc.constants.field.enums.CoralStationSlot;
 import frc.constants.field.enums.ReefSide;
 import frc.robot.scoringhelpers.ScoringHelpers;
-import frc.robot.statemachine.StateMachineConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
@@ -190,10 +189,7 @@ public class SwerveStateHandler {
 	}
 
 	private ChassisSpeeds handleNetAimAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading) {
-		Rotation2d headingToNet = Field.getAllianceRelative(swerve.getAllianceRelativeHeading().getRotations() > 0
-			? StateMachineConstants.SWERVE_HEADING_FOR_NET
-			: StateMachineConstants.SWERVE_HEADING_FOR_NET.unaryMinus());
-		return AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotHeading, headingToNet, swerveConstants);
+		return AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotHeading, ScoringHelpers.getHeadingForNet(swerve), swerveConstants);
 	}
 
 	private ChassisSpeeds handleAngleCageAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading) {

@@ -533,7 +533,7 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command preNet() {
 		return asSubsystemCommand(
-			new ParallelDeadlineGroup(
+			new ParallelCommandGroup(
 				superstructure.preNet(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
 			),

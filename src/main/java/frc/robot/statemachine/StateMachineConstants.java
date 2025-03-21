@@ -20,7 +20,7 @@ public class StateMachineConstants {
 	public static final Translation2d SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES = new Translation2d(1.6, 0.1);
 
 	public static final double SCORE_OUTTAKE_TIME_AFTER_BEAM_BREAK_SECONDS = 0;
-	public static final double NET_OUTTAKE_TIME_SECONDS = 2;
+	public static final double NET_OUTTAKE_TIME_SECONDS = 1;
 	public static final double ALGAE_REMOVE_TIME_AFTER_LIMIT_SWITCH_SECONDS = 0;
 	public static final double INTAKE_TIME_AFTER_BEAM_BREAK_SECONDS = 0;
 	public static final Rotation2d ARM_POSITION_TO_CLOSE_ELEVATOR_L4 = Rotation2d.fromDegrees(63 + ArmConstants.POSITION_OFFSET.getDegrees());

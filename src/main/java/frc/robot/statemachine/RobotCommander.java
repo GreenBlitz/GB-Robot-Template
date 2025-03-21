@@ -252,7 +252,9 @@ public class RobotCommander extends GBSubsystem {
 		return isCloseToNet(
 			StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES.getX(),
 			StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES.getY()
-		) && swerve.isAtHeading(ScoringHelpers.getHeadingForNet(swerve), Tolerances.HEADING_FOR_NET, Tolerances.HEADING_FOR_NET_DEADBAND);
+		)
+			&& swerve.isAtHeading(ScoringHelpers.getHeadingForNet(swerve), Tolerances.HEADING_FOR_NET, Tolerances.NET_DEADBANDS.getRotation())
+			&& SwerveMath.isStill(swerve.getAllianceRelativeVelocity(), Tolerances.NET_DEADBANDS);
 	}
 
 	public Command driveWith(String name, Command command, boolean asDeadline) {

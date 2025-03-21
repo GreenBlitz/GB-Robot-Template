@@ -4,6 +4,9 @@ import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.constants.field.enums.Branch;
+import frc.robot.scoringhelpers.ScoringHelpers;
+import frc.robot.statemachine.StateMachineConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.RealSwerveConstants;
 
@@ -34,7 +37,7 @@ public class AutonomousConstants {
 	public static PathConstraints getRealTimeConstraintsForAuto(Swerve swerve) {
 		return new PathConstraints(
 			swerve.getConstants().velocityAt12VoltsMetersPerSecond(),
-			2, // RealSwerveConstants.ACCELERATION_AT_12_VOLTS_METERS_PER_SECOND_SQUARED,
+			2.5, // RealSwerveConstants.ACCELERATION_AT_12_VOLTS_METERS_PER_SECOND_SQUARED,
 			swerve.getConstants().maxRotationalVelocityPerSecond().getRadians(),
 			RealSwerveConstants.MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND
 		);
@@ -60,29 +63,34 @@ public class AutonomousConstants {
 
 		public static final Pair<String, Pose2d> LOWER_CORAL_STATION_2 = Pair.of("LS2", new Pose2d(1.61, 0.7, Rotation2d.fromDegrees(54)));
 
-		public static final Pair<String, Pose2d> A = Pair.of("A", new Pose2d(3.12, 4.22, Rotation2d.fromDegrees(0)));
+		public static final Pair<String, Pose2d> A = Pair.of("A", getRobotBranchScoringBluePose(Branch.A));
 
-		public static final Pair<String, Pose2d> B = Pair.of("B", new Pose2d(3.12, 3.89, Rotation2d.fromDegrees(0)));
+		public static final Pair<String, Pose2d> B = Pair.of("B", getRobotBranchScoringBluePose(Branch.B));
 
-		public static final Pair<String, Pose2d> C = Pair.of("C", new Pose2d(3.64, 2.94, Rotation2d.fromDegrees(60)));
+		public static final Pair<String, Pose2d> C = Pair.of("C", getRobotBranchScoringBluePose(Branch.C));
 
-		public static final Pair<String, Pose2d> D = Pair.of("D", new Pose2d(3.92, 2.77, Rotation2d.fromDegrees(60)));
+		public static final Pair<String, Pose2d> D = Pair.of("D", getRobotBranchScoringBluePose(Branch.D));
 
-		public static final Pair<String, Pose2d> E = Pair.of("E", new Pose2d(5.01, 2.75, Rotation2d.fromDegrees(120)));
+		public static final Pair<String, Pose2d> E = Pair.of("E", getRobotBranchScoringBluePose(Branch.E));
 
-		public static final Pair<String, Pose2d> F = Pair.of("F", new Pose2d(5.29, 2.91, Rotation2d.fromDegrees(120)));
+		public static final Pair<String, Pose2d> F = Pair.of("F", getRobotBranchScoringBluePose(Branch.F));
 
-		public static final Pair<String, Pose2d> G = Pair.of("G", new Pose2d(5.86, 3.84, Rotation2d.fromDegrees(180)));
+		public static final Pair<String, Pose2d> G = Pair.of("G", getRobotBranchScoringBluePose(Branch.G));
 
-		public static final Pair<String, Pose2d> H = Pair.of("H", new Pose2d(5.86, 4.17, Rotation2d.fromDegrees(180)));
+		public static final Pair<String, Pose2d> H = Pair.of("H", getRobotBranchScoringBluePose(Branch.H));
 
-		public static final Pair<String, Pose2d> I = Pair.of("I", new Pose2d(5.34, 5.12, Rotation2d.fromDegrees(-120)));
+		public static final Pair<String, Pose2d> I = Pair.of("I", getRobotBranchScoringBluePose(Branch.I));
 
-		public static final Pair<String, Pose2d> J = Pair.of("J", new Pose2d(5.05, 5.28, Rotation2d.fromDegrees(-120)));
+		public static final Pair<String, Pose2d> J = Pair.of("J", getRobotBranchScoringBluePose(Branch.J));
 
-		public static final Pair<String, Pose2d> K = Pair.of("K", new Pose2d(3.97, 5.31, Rotation2d.fromDegrees(-60)));
+		public static final Pair<String, Pose2d> K = Pair.of("K", getRobotBranchScoringBluePose(Branch.K));
 
-		public static final Pair<String, Pose2d> L = Pair.of("L", new Pose2d(3.66, 5.15, Rotation2d.fromDegrees(-60)));
+		public static final Pair<String, Pose2d> L = Pair.of("L", getRobotBranchScoringBluePose(Branch.L));
+
+		private static Pose2d getRobotBranchScoringBluePose(Branch branch) {
+			return ScoringHelpers.getRobotBranchScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS,
+				false);
+		}
 
 	}
 

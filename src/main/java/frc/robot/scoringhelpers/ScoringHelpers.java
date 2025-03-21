@@ -118,6 +118,12 @@ public class ScoringHelpers {
 		targetSideForReef = side;
 	}
 
+	public static void setTargetBranch(Branch branch) {
+		isLeftBranch = branch.isLeft();
+		isFarReefHalf = branch.getReefSide().isFar();
+		targetSideForReef = branch.getReefSide().getSide();
+	}
+
 
 	public static Pose2d getRobotBranchScoringPose(Branch branch, double distanceFromBranchMeters, boolean isAllianceRelative) {
 		Translation2d branchTranslation = Field.getCoralPlacement(branch, isAllianceRelative);

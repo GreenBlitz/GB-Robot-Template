@@ -256,8 +256,8 @@ public class RobotCommander extends GBSubsystem {
 
 	public boolean isReadyForNet() {
 		Rotation2d targetHeading = swerve.getAllianceRelativeHeading().getRotations() < 0
-				? StateMachineConstants.SWERVE_HEADING_FOR_NET
-				: StateMachineConstants.SWERVE_HEADING_FOR_NET.unaryMinus();
+			? StateMachineConstants.SWERVE_HEADING_FOR_NET
+			: StateMachineConstants.SWERVE_HEADING_FOR_NET.unaryMinus();
 
 		return isCloseToNet(
 			StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES.getX(),

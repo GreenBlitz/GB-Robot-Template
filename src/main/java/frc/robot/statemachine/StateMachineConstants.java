@@ -39,6 +39,6 @@ public class StateMachineConstants {
 	public static final Rotation2d MAX_VELOCITY_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND = Rotation2d.fromRadians(4);
 	public static final Rotation2d MAX_ACCELERATION_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND_SQUARED = Rotation2d.fromRadians(4);
 
-	public static final Rotation2d SWERVE_HEADING_FOR_NET = Rotation2d.fromDegrees(160);
+	public static final Rotation2d SWERVE_HEADING_FOR_NET = Rotation2d.fromDegrees(30);
 
 }

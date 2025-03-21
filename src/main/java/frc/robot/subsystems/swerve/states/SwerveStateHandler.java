@@ -190,9 +190,9 @@ public class SwerveStateHandler {
 	}
 
 	private ChassisSpeeds handleNetAimAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading) {
-		Rotation2d headingToNet = swerve.getAllianceRelativeHeading().getRotations() < 0
+		Rotation2d headingToNet = Field.getAllianceRelative(swerve.getAllianceRelativeHeading().getRotations() > 0
 			? StateMachineConstants.SWERVE_HEADING_FOR_NET
-			: StateMachineConstants.SWERVE_HEADING_FOR_NET.unaryMinus();
+			: StateMachineConstants.SWERVE_HEADING_FOR_NET.unaryMinus());
 		return AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotHeading, headingToNet, swerveConstants);
 	}
 

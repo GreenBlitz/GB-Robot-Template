@@ -25,7 +25,6 @@ import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.pose.PoseUtil;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -246,10 +245,6 @@ public class RobotCommander extends GBSubsystem {
 			> Field.LENGTH_METERS / 2 - distanceOnXAxis;
 		boolean isPastY = Field.getAllianceRelative(robot.getPoseEstimator().getEstimatedPose().getTranslation(), true, true).getY()
 			> Field.WIDTH_METERS / 2 - distanceOnYAxis;
-		Logger.recordOutput("isPastX", isPastX);
-		Logger.recordOutput("isPastY", isPastY);
-		Logger.recordOutput("isReady", isPastY && isPastX);
-
 		return isPastX && isPastY;
 	}
 

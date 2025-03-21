@@ -24,7 +24,7 @@ public class ScoringHelpers {
 	public static final Translation2d END_EFFECTOR_TUSKS_OFFSET_FROM_MID_ROBOT = new Translation2d(0, -0.017);
 	private static final double TIME_FOR_POSE_MOVEMENT_SECONDS = 0.3;
 	private static final Pose2d PROCESSOR_SCORING_POSE = new Pose2d(6, 0.7, Field.getProcessor().getRotation());
-	private static final Rotation2d SWERVE_HEADING_FOR_NET = Rotation2d.fromDegrees(30);
+	private static final Rotation2d HEADING_FOR_NET = Rotation2d.fromDegrees(30);
 	private static final Rotation2d HEADING_FOR_CAGE = Rotation2d.fromDegrees(180);
 
 	public static ScoreLevel targetScoreLevel = ScoreLevel.L4;

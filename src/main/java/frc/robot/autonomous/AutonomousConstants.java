@@ -88,8 +88,7 @@ public class AutonomousConstants {
 		public static final Pair<String, Pose2d> L = Pair.of("L", getRobotBranchScoringBluePose(Branch.L));
 
 		private static Pose2d getRobotBranchScoringBluePose(Branch branch) {
-			return ScoringHelpers.getRobotBranchScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS,
-				false);
+			return ScoringHelpers.getRobotBranchScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS, false);
 		}
 
 	}

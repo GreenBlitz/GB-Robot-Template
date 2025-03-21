@@ -93,7 +93,7 @@ public class VisionConstants {
 
 	public static final VisionSource<AprilTagVisionData> LIMELIGHT_RIGHT = new DynamicSwitchingLimelight(
 		true,
-		"limelight-right",
+		"limelight",
 		VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
 		"limelight3gb-front",
 		VisionConstants.DEFAULT_VISION_FILTER,

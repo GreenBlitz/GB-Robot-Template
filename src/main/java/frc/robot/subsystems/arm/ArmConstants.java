@@ -66,7 +66,7 @@ public class ArmConstants {
 			0.48,
 			Rotation2d.fromDegrees(0),
 			0.59,
-			Rotation2d.fromDegrees(3.25),
+			Rotation2d.fromDegrees(3.75),
 			0.65,
 			Rotation2d.fromDegrees(6.5),
 			0.70,

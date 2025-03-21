@@ -25,6 +25,7 @@ import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.pose.PoseUtil;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -245,7 +246,23 @@ public class RobotCommander extends GBSubsystem {
 			> Field.LENGTH_METERS / 2 - distanceOnXAxis;
 		boolean isPastY = Field.getAllianceRelative(robot.getPoseEstimator().getEstimatedPose().getTranslation(), true, true).getY()
 			> Field.WIDTH_METERS / 2 - distanceOnYAxis;
+		Logger.recordOutput("isPastX", isPastX);
+		Logger.recordOutput("isPastY", isPastY);
+		Logger.recordOutput("isReady", isPastY && isPastX);
+
 		return isPastX && isPastY;
+	}
+
+
+	public boolean isReadyForNet() {
+		Rotation2d targetHeading = swerve.getAllianceRelativeHeading().getRotations() < 0
+				? StateMachineConstants.SWERVE_HEADING_FOR_NET
+				: StateMachineConstants.SWERVE_HEADING_FOR_NET.unaryMinus();
+
+		return isCloseToNet(
+			StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES.getX(),
+			StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES.getY()
+		) && swerve.isAtHeading(targetHeading, Tolerances.HEADING_FOR_NET, Tolerances.HEADING_FOR_NET_DEADBAND);
 	}
 
 	public Command driveWith(String name, Command command, boolean asDeadline) {
@@ -268,6 +285,7 @@ public class RobotCommander extends GBSubsystem {
 			case SCORE -> score();
 			case ALGAE_REMOVE -> algaeRemove();
 			case ALGAE_OUTTAKE -> algaeOuttake();
+			case PRE_NET -> preNet();
 			case NET -> net();
 			case PROCESSOR_SCORE -> fullyProcessorScore();
 			case PRE_CLIMB_WITH_AIM_ASSIST -> preClimbWithAimAssist();
@@ -398,6 +416,13 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
+	public Command completeNet() {
+		return asSubsystemCommand(
+			new SequentialCommandGroup(preNet().until(this::isReadyForNet), new InstantCommand(() -> System.out.println("aaa")), net()),
+			RobotState.NET
+		);
+	}
+
 	private Command drive() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(superstructure.idle(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
@@ -512,6 +537,16 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
+	private Command preNet() {
+		return asSubsystemCommand(
+			new ParallelDeadlineGroup(
+				superstructure.preNet(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
+			),
+			RobotState.NET
+		);
+	}
+
 	private Command net() {
 		return asSubsystemCommand(
 			new ParallelDeadlineGroup(
@@ -602,7 +637,7 @@ public class RobotCommander extends GBSubsystem {
 	private Command endState(RobotState state) {
 		return switch (state) {
 			case STAY_IN_PLACE, CORAL_OUTTAKE -> stayInPlace();
-			case INTAKE_WITH_AIM_ASSIST, INTAKE_WITHOUT_AIM_ASSIST, DRIVE, ALIGN_REEF, ALGAE_OUTTAKE, PROCESSOR_SCORE, NET -> drive();
+			case INTAKE_WITH_AIM_ASSIST, INTAKE_WITHOUT_AIM_ASSIST, DRIVE, ALIGN_REEF, ALGAE_OUTTAKE, PROCESSOR_SCORE, PRE_NET, NET -> drive();
 			case ALGAE_REMOVE, HOLD_ALGAE -> holdAlgae();
 			case ARM_PRE_SCORE, CLOSE_CLIMB -> armPreScore();
 			case PRE_SCORE -> preScore();

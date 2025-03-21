@@ -37,11 +37,9 @@ public class ScoringHelpers {
 	private static CoralStationSlot latestWantedCoralStationSlot = CoralStationSlot.L1;
 	private static Cage latestWantedCage = Cage.FIELD_WALL;
 
-
 	public static Rotation2d getHeadingForNet(Swerve swerve) {
-		return Field.getAllianceRelative(
-			swerve.getAllianceRelativeHeading().getRotations() > 0 ? SWERVE_HEADING_FOR_NET : SWERVE_HEADING_FOR_NET.unaryMinus()
-		);
+		return Field
+			.getAllianceRelative(swerve.getAllianceRelativeHeading().getRotations() > 0 ? HEADING_FOR_NET : HEADING_FOR_NET.unaryMinus());
 	}
 
 	public static Rotation2d getHeadingForCage() {

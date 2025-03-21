@@ -412,7 +412,7 @@ public class RobotCommander extends GBSubsystem {
 
 	public Command completeNet() {
 		return asSubsystemCommand(
-			new SequentialCommandGroup(preNet().until(this::isReadyForNet), new InstantCommand(() -> System.out.println("aaa")), net()),
+			new SequentialCommandGroup(preNet().until(this::isReadyForNet), net()),
 			RobotState.NET
 		);
 	}

@@ -165,7 +165,8 @@ public class Robot {
 
 	private void configureAuto() {
 		Supplier<Command> scoringCommand = () -> robotCommander.getSuperstructure()
-			.scoreWithoutRelease().until(robotCommander.getSuperstructure()::isReadyToScore)
+			.scoreWithoutRelease()
+			.until(robotCommander.getSuperstructure()::isReadyToScore)
 			.andThen(robotCommander.getSuperstructure().scoreWithRelease())
 			.deadlineFor(getRobotCommander().getLedStateHandler().setState(LEDState.IN_POSITION_TO_SCORE))
 			.asProxy();

@@ -70,8 +70,8 @@ public class ClimbStateHandler {
 					.withTimeout(ClimbConstants.SOLENOID_RETRACTING_UNTIL_HOLDING_TIME_SECONDS)
 			),
 			new ParallelCommandGroup(
-				lifterStateHandler.setState(LifterState.HOLD).withTimeout(ClimbConstants.SOLENOID_RELEASE_TIME_SECONDS),
-				solenoidStateHandler.setState(SolenoidState.HOLD_FREE).withTimeout(ClimbConstants.SOLENOID_RETRACTING_UNTIL_HOLDING_TIME_SECONDS)
+				lifterStateHandler.setState(LifterState.HOLD),
+				solenoidStateHandler.setState(SolenoidState.HOLD_FREE)
 			)
 
 		);

@@ -3,7 +3,6 @@ package frc.robot.subsystems.climb.lifter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 
-
 public class LifterStateHandler {
 
 	private final Lifter lifter;

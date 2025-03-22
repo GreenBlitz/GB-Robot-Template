@@ -195,6 +195,7 @@ public class JoysticksBindings {
 		usedJoystick.A.onTrue(driveActionChooser(robot));
 
 		usedJoystick.START.whileTrue(robot.getRobotCommander().setState(RobotState.MANUAL_CLIMB));
+		usedJoystick.BACK.whileTrue(robot.getRobotCommander().setState(RobotState.EXIT_CLIMB));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

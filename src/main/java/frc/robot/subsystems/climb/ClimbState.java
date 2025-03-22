@@ -7,6 +7,7 @@ public enum ClimbState {
 	MANUAL_CLIMB,
 	DEPLOY,
 	STOP,
-	CLOSE
+	CLOSE,
+	EXIT_CLIMB
 
 }

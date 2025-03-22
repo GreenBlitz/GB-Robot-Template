@@ -124,7 +124,7 @@ public class JoysticksBindings {
 			RobotCommander robotCommander = robot.getRobotCommander();
 			RobotState state = robotCommander.getCurrentState();
 			Command command;
-			if (state == RobotState.ALGAE_REMOVE) {
+			if (state == RobotState.ALGAE_REMOVE || state == RobotState.PRE_NET) {
 				robotCommander.setState(RobotState.HOLD_ALGAE).schedule();
 				return;
 			} else if (state == RobotState.NET) {
@@ -160,6 +160,21 @@ public class JoysticksBindings {
 		});
 	}
 
+	private static Command netActionChooser(Robot robot) {
+		return new InstantCommand(() -> {
+			RobotCommander robotCommander = robot.getRobotCommander();
+			RobotState state = robotCommander.getCurrentState();
+			Command command;
+
+			if (state == RobotState.NET || state == RobotState.PRE_NET) {
+				command = robotCommander.setState(RobotState.NET);
+			} else {
+				command = robotCommander.completeNet();
+			}
+			command.schedule();
+		});
+	}
+
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
@@ -168,7 +183,7 @@ public class JoysticksBindings {
 		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE_WITH_AIM_ASSIST));
 		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(intakeActionChooser(robot));
 
-		usedJoystick.R1.onTrue(robot.getRobotCommander().fullyNet());
+		usedJoystick.R1.onTrue(netActionChooser(robot));
 
 		usedJoystick.Y.onTrue(robot.getRobotCommander().setState(RobotState.CORAL_OUTTAKE));
 		usedJoystick.X.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_OUTTAKE));

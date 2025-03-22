@@ -12,6 +12,7 @@ public enum SuperstructureState {
 	SCORE,
 	ALGAE_REMOVE,
 	ALGAE_OUTTAKE,
+	PRE_NET,
 	NET,
 	PROCESSOR_OUTTAKE,
 	PRE_CLIMB,

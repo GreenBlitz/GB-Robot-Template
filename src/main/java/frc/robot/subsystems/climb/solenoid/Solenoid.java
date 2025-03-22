@@ -46,7 +46,7 @@ public class Solenoid extends GBSubsystem {
 		motor.updateInputs(voltageSignal, powerSignal);
 
 		limitSwitch.updateInputs(limitSwitchInputs);
-		Logger.recordOutput(getLogPath() + "/LimitSwitch", limitSwitchInputs.debouncedValue);
+		Logger.recordOutput(getLogPath() + "/isAtLimitSwitch", isAtLimitSwitch());
 	}
 
 	@Override

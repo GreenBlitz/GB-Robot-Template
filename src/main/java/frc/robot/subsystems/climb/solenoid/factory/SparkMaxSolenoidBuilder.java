@@ -35,6 +35,9 @@ public class SparkMaxSolenoidBuilder {
 
 		config.encoder.positionConversionFactor(GEAR_RATIO);
 		config.encoder.velocityConversionFactor(GEAR_RATIO);
+		
+		config.limitSwitch.forwardLimitSwitchEnabled(false);
+		config.limitSwitch.reverseLimitSwitchEnabled(false);
 
 		sparkMaxMotor.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig(config));
 		sparkMaxMotor.setBrake(SET_BRAKE);
@@ -57,7 +60,7 @@ public class SparkMaxSolenoidBuilder {
 	private static IDigitalInput generateDigitalInput(SparkMaxWrapper motor) {
 		return Robot.ROBOT_TYPE.isSimulation()
 			? new ChooserDigitalInput("LifterLimitSwitch")
-			: new SuppliedDigitalInput(() -> motor.getReverseLimitSwitch().isPressed(), new Debouncer(LIMIT_SWITCH_DEBOUNCE_TIME), true);
+			: new SuppliedDigitalInput(() -> motor.getForwardLimitSwitch().isPressed(), new Debouncer(LIMIT_SWITCH_DEBOUNCE_TIME), false);
 	}
 
 	public static Solenoid createSolenoid(String logPath) {
@@ -67,6 +70,7 @@ public class SparkMaxSolenoidBuilder {
 		SuppliedDoubleSignal powerSignal = new SuppliedDoubleSignal("power", sparkMaxWrapper::get);
 
 		BrushedSparkMAXMotor motor = generateMotor(logPath, sparkMaxWrapper);
+		
 
 		return new Solenoid(logPath, motor, voltageSignal, powerSignal, generateDigitalInput(sparkMaxWrapper));
 	}

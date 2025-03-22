@@ -1,9 +1,12 @@
 package frc.robot.subsystems.climb.solenoid;
 
 import frc.joysticks.SmartJoystick;
+import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
+import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.IMotor;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
+import org.littletonrobotics.junction.Logger;
 
 public class Solenoid extends GBSubsystem {
 
@@ -12,12 +15,24 @@ public class Solenoid extends GBSubsystem {
 	private final InputSignal<Double> powerSignal;
 	private final SolenoidCommandsBuilder commandsBuilder;
 
-	public Solenoid(String logPath, IMotor motor, InputSignal<Double> voltageSignal, InputSignal<Double> powerSignal) {
+	private final IDigitalInput limitSwitch;
+	private final DigitalInputInputsAutoLogged limitSwitchInputs;
+
+	public Solenoid(
+		String logPath,
+		IMotor motor,
+		InputSignal<Double> voltageSignal,
+		InputSignal<Double> powerSignal,
+		IDigitalInput limitSwitch
+	) {
 		super(logPath);
 		this.motor = motor;
 		this.voltageSignal = voltageSignal;
 		this.powerSignal = powerSignal;
 		this.commandsBuilder = new SolenoidCommandsBuilder(this);
+
+		this.limitSwitch = limitSwitch;
+		this.limitSwitchInputs = new DigitalInputInputsAutoLogged();
 
 		updateInputs();
 	}
@@ -29,6 +44,9 @@ public class Solenoid extends GBSubsystem {
 	public void updateInputs() {
 		motor.updateSimulation();
 		motor.updateInputs(voltageSignal, powerSignal);
+
+		limitSwitch.updateInputs(limitSwitchInputs);
+		Logger.recordOutput(getLogPath() + "/isAtLimitSwitch", isAtLimitSwitch());
 	}
 
 	@Override
@@ -42,6 +60,10 @@ public class Solenoid extends GBSubsystem {
 
 	protected void setPower(double power) {
 		motor.setPower(power);
+	}
+
+	public boolean isAtLimitSwitch() {
+		return limitSwitchInputs.debouncedValue;
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick) {

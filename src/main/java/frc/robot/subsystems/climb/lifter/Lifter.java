@@ -11,13 +11,15 @@ public class Lifter extends GBSubsystem {
 	private final ControllableMotor motor;
 	private final LifterCommandsBuilder lifterCommandsBuilder;
 	private final InputSignal<Rotation2d> positionSignal;
+	private final InputSignal<Double> voltageSignal;
 
-	public Lifter(String logPath, ControllableMotor motor, InputSignal<Rotation2d> positionSignal) {
+	public Lifter(String logPath, ControllableMotor motor, InputSignal<Rotation2d> positionSignal, InputSignal<Double> voltageSignal) {
 		super(logPath);
 
 		this.motor = motor;
 		this.lifterCommandsBuilder = new LifterCommandsBuilder(this);
 		this.positionSignal = positionSignal;
+		this.voltageSignal = voltageSignal;
 
 		motor.resetPosition(LifterConstants.MINIMUM_ACHIEVABLE_POSITION);
 		updateInputs();
@@ -59,7 +61,7 @@ public class Lifter extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		motor.updateInputs(positionSignal);
+		motor.updateInputs(positionSignal, voltageSignal);
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick) {

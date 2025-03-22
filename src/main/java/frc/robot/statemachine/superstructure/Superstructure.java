@@ -471,15 +471,27 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command climb() {
+	public Command climbWithoutLimitSwitch() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.CLIMB),
 				armStateHandler.setState(ArmState.CLIMB),
 				endEffectorStateHandler.setState(EndEffectorState.STOP),
-				climbStateHandler.setState(ClimbState.CLIMB)
+				climbStateHandler.setState(ClimbState.CLIMB_WITHOUT_LIMIT_SWITCH)
 			),
-			SuperstructureState.CLIMB
+			SuperstructureState.CLIMB_WITHOUT_LIMIT_SWITCH
+		);
+	}
+
+	public Command climbWithLimitSwitch() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				elevatorStateHandler.setState(ElevatorState.CLIMB),
+				armStateHandler.setState(ArmState.CLIMB),
+				endEffectorStateHandler.setState(EndEffectorState.STOP),
+				climbStateHandler.setState(ClimbState.CLIMB_WITH_LIMIT_SWITCH)
+			),
+			SuperstructureState.CLIMB_WITH_LIMIT_SWITCH
 		);
 	}
 
@@ -563,8 +575,7 @@ public class Superstructure extends GBSubsystem {
 			case ARM_PRE_SCORE, CLOSE_CLIMB -> armPreScore();
 			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> preScore();
 			case PRE_CLIMB -> preClimb();
-			case CLIMB, MANUAL_CLIMB, STOP_CLIMB, EXIT_CLIMB -> stopClimb();
-
+			case CLIMB_WITHOUT_LIMIT_SWITCH, CLIMB_WITH_LIMIT_SWITCH, MANUAL_CLIMB, EXIT_CLIMB, STOP_CLIMB -> stopClimb();
 			case ELEVATOR_OPENING -> elevatorOpening();
 			case HOLD_ALGAE -> holdAlgae();
 		};

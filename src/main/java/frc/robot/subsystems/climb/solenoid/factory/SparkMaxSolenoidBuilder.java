@@ -35,7 +35,7 @@ public class SparkMaxSolenoidBuilder {
 
 		config.encoder.positionConversionFactor(GEAR_RATIO);
 		config.encoder.velocityConversionFactor(GEAR_RATIO);
-		
+
 		config.limitSwitch.forwardLimitSwitchEnabled(false);
 		config.limitSwitch.reverseLimitSwitchEnabled(false);
 
@@ -70,7 +70,7 @@ public class SparkMaxSolenoidBuilder {
 		SuppliedDoubleSignal powerSignal = new SuppliedDoubleSignal("power", sparkMaxWrapper::get);
 
 		BrushedSparkMAXMotor motor = generateMotor(logPath, sparkMaxWrapper);
-		
+
 
 		return new Solenoid(logPath, motor, voltageSignal, powerSignal, generateDigitalInput(sparkMaxWrapper));
 	}

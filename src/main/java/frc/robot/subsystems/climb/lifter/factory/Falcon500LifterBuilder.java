@@ -12,6 +12,7 @@ import frc.robot.hardware.mechanisms.wpilib.SingleJointedArmSimulation;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
+import frc.robot.hardware.phoenix6.signal.Phoenix6DoubleSignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.subsystems.climb.lifter.Lifter;
 import frc.robot.subsystems.climb.lifter.LifterConstants;
@@ -62,7 +63,9 @@ public class Falcon500LifterBuilder {
 		Phoenix6AngleSignal positionSignal = Phoenix6SignalBuilder
 			.build(lifter.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 
-		return new Lifter(logPath, lifter, positionSignal);
+		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
+			.build(lifter.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
+		return new Lifter(logPath, lifter, positionSignal, voltageSignal);
 	}
 
 }

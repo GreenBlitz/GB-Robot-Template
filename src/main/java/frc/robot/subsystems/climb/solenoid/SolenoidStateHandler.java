@@ -14,4 +14,8 @@ public class SolenoidStateHandler {
 		return solenoid.getCommandsBuilder().setPower(state.getPower());
 	}
 
+	public boolean isAtLimitSwitch() {
+		return solenoid.isAtLimitSwitch();
+	}
+
 }

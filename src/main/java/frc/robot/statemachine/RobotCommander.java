@@ -249,11 +249,12 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public boolean isReadyForNet() {
-		return true
-			|| isCloseToNet(
-				StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES.getX(),
-				StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES.getY()
-			) && swerve.isAtHeading(ScoringHelpers.getHeadingForNet(), Tolerances.HEADING_FOR_NET, Tolerances.HEADING_FOR_NET_DEADBAND);
+		return isCloseToNet(
+			StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES.getX(),
+			StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES.getY()
+		)
+			&& swerve.isAtHeading(ScoringHelpers.getHeadingForNet(swerve), Tolerances.HEADING_FOR_NET, Tolerances.NET_DEADBANDS.getRotation())
+			&& SwerveMath.isStill(swerve.getAllianceRelativeVelocity(), Tolerances.NET_DEADBANDS);
 	}
 
 	public Command driveWith(String name, Command command, boolean asDeadline) {
@@ -407,14 +408,8 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	public Command fullyNet() {
-		return asSubsystemCommand(
-			new SequentialCommandGroup(
-				// preNet().until(this::isReadyForNet),
-				net()
-			),
-			RobotState.NET
-		);
+	public Command completeNet() {
+		return new SequentialCommandGroup(preNet().until(this::isReadyForNet), net());
 	}
 
 	private Command drive() {
@@ -534,7 +529,7 @@ public class RobotCommander extends GBSubsystem {
 	private Command preNet() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
-				superstructure.idle(),
+				superstructure.preNet(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
 			),
 			RobotState.PRE_NET
@@ -548,6 +543,13 @@ public class RobotCommander extends GBSubsystem {
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
 			),
 			RobotState.NET
+		);
+	}
+
+	private Command holdAlgae() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(superstructure.holdAlgae(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			RobotState.HOLD_ALGAE
 		);
 	}
 
@@ -617,10 +619,19 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	private Command holdAlgae() {
-		return asSubsystemCommand(
-			new ParallelCommandGroup(superstructure.holdAlgae(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
-			RobotState.HOLD_ALGAE
+	private Command afterNet() {
+		return new DeferredCommand(
+			() -> new SequentialCommandGroup(driveWith("Soft close net", getSuperstructure().softCloseNet(), true), drive()),
+			Set.of(
+				this,
+				superstructure,
+				swerve,
+				robot.getElevator(),
+				robot.getArm(),
+				robot.getEndEffector(),
+				robot.getLifter(),
+				robot.getSolenoid()
+			)
 		);
 	}
 
@@ -631,7 +642,8 @@ public class RobotCommander extends GBSubsystem {
 	private Command endState(RobotState state) {
 		return switch (state) {
 			case STAY_IN_PLACE, CORAL_OUTTAKE -> stayInPlace();
-			case INTAKE_WITH_AIM_ASSIST, INTAKE_WITHOUT_AIM_ASSIST, DRIVE, ALIGN_REEF, ALGAE_OUTTAKE, PROCESSOR_SCORE, PRE_NET, NET -> drive();
+			case INTAKE_WITH_AIM_ASSIST, INTAKE_WITHOUT_AIM_ASSIST, DRIVE, ALIGN_REEF, ALGAE_OUTTAKE, PROCESSOR_SCORE -> drive();
+			case PRE_NET, NET -> afterNet();
 			case ALGAE_REMOVE, HOLD_ALGAE -> holdAlgae();
 			case ARM_PRE_SCORE, CLOSE_CLIMB -> armPreScore();
 			case PRE_SCORE -> preScore();

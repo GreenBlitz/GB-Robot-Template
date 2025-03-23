@@ -20,6 +20,7 @@ import frc.robot.scoringhelpers.ScoringPathsHelper;
 import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.statemachine.superstructure.Superstructure;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
@@ -401,11 +402,19 @@ public class RobotCommander extends GBSubsystem {
 
 	public Command fullyProcessorScore() {
 		return asSubsystemCommand(
-			new ParallelDeadlineGroup(
-				new SequentialCommandGroup(superstructure.idle().until(this::isAtProcessorScoringPose), superstructure.processorScore()),
-				swerve.getCommandsBuilder()
-					.driveToPose(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers::getAllianceRelativeProcessorScoringPose)
-			),
+				new SequentialCommandGroup(
+						new ParallelCommandGroup(superstructure.idle(),
+								swerve.getCommandsBuilder()
+										.driveToPose(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers::getAllianceRelativeProcessorScoringPose)
+						).until(this::isAtProcessorScoringPose),
+						new ParallelCommandGroup(superstructure.processorScore(), swerve.getCommandsBuilder().drive(
+								() -> {
+									ChassisPowers powers = new ChassisPowers();
+									powers.yPower = -0.1;
+									return powers;
+								}
+						)).withTimeout(1)
+				),
 			RobotState.PROCESSOR_SCORE
 		);
 	}

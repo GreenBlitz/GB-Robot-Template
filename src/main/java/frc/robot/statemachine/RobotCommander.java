@@ -402,19 +402,18 @@ public class RobotCommander extends GBSubsystem {
 
 	public Command fullyProcessorScore() {
 		return asSubsystemCommand(
-				new SequentialCommandGroup(
-						new ParallelCommandGroup(superstructure.processorWithoutRelease(),
-								swerve.getCommandsBuilder()
-										.driveToPose(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers::getAllianceRelativeProcessorScoringPose)
-						).until(this::isAtProcessorScoringPose),
-						new ParallelCommandGroup(superstructure.processorScore(), swerve.getCommandsBuilder().drive(
-								() -> {
-									ChassisPowers powers = new ChassisPowers();
-									powers.yPower = -0.1;
-									return powers;
-								}
-						)).withTimeout(1)
-				),
+			new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					superstructure.processorWithoutRelease(),
+					swerve.getCommandsBuilder()
+						.driveToPose(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers::getAllianceRelativeProcessorScoringPose)
+				).until(this::isAtProcessorScoringPose),
+				new ParallelCommandGroup(superstructure.processorScore(), swerve.getCommandsBuilder().drive(() -> {
+					ChassisPowers powers = new ChassisPowers();
+					powers.yPower = -0.1;
+					return powers;
+				})).withTimeout(1)
+			),
 			RobotState.PROCESSOR_SCORE
 		);
 	}

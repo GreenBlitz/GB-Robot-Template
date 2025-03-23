@@ -7,37 +7,37 @@
         {
           "type": "path",
           "data": {
-            "pathName": "I-US2"
+            "pathName": "F-LS2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "US2-L"
+            "pathName": "LS2-C"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "L-US2"
+            "pathName": "C-LS2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "US2-K"
+            "pathName": "LS2-D"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "K-US2"
+            "pathName": "D-LS2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "US2-A"
+            "pathName": "LS2-B"
           }
         }
       ]

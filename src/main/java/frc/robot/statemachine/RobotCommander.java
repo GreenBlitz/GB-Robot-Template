@@ -20,7 +20,6 @@ import frc.robot.scoringhelpers.ScoringPathsHelper;
 import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.statemachine.superstructure.Superstructure;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
@@ -408,11 +407,10 @@ public class RobotCommander extends GBSubsystem {
 					swerve.getCommandsBuilder()
 						.driveToPose(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers::getAllianceRelativeProcessorScoringPose)
 				).until(this::isAtProcessorScoringPose),
-				new ParallelCommandGroup(superstructure.processorScore(), swerve.getCommandsBuilder().drive(() -> {
-					ChassisPowers powers = new ChassisPowers();
-					powers.yPower = -0.1;
-					return powers;
-				})).withTimeout(1)
+				new ParallelCommandGroup(
+					superstructure.processorScore(),
+					swerve.getCommandsBuilder().drive(() -> StateMachineConstants.SWERVE_POWERS_TO_PROCESSOR)
+				).withTimeout(StateMachineConstants.TIME_TO_RELEASE_ALGAE_TO_PROCESSOR)
 			),
 			RobotState.PROCESSOR_SCORE
 		);

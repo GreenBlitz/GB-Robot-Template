@@ -3,6 +3,7 @@ package frc.robot.statemachine;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.subsystems.arm.ArmConstants;
+import frc.robot.subsystems.swerve.ChassisPowers;
 
 public class StateMachineConstants {
 
@@ -19,6 +20,11 @@ public class StateMachineConstants {
 	public static final Translation2d CLOSE_SUPERSTRUCTURE_LENGTH_AND_WIDTH = new Translation2d(0.6, 1.03);
 	public static final Translation2d SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES = new Translation2d(1.6, 0.1);
 
+	public static final ChassisPowers SWERVE_POWERS_TO_PROCESSOR = new ChassisPowers();
+	static {
+		SWERVE_POWERS_TO_PROCESSOR.yPower = -0.1;
+	}
+	public static final double TIME_TO_RELEASE_ALGAE_TO_PROCESSOR = 1;
 	public static final double SCORE_OUTTAKE_TIME_AFTER_BEAM_BREAK_SECONDS = 0;
 	public static final double NET_OUTTAKE_TIME_SECONDS = 1;
 	public static final double ALGAE_REMOVE_TIME_AFTER_LIMIT_SWITCH_SECONDS = 0;

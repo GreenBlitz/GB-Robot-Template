@@ -49,6 +49,13 @@ public class PathFollowingCommandsBuilder {
 		return new SequentialCommandGroup(followAdjustedPath(robot, path, targetBranch, tolerance), commandSupplier.get());
 	}
 
+	public static Command scoreToBranch(Robot robot, PathPlannerPath path, Supplier<Command> commandSupplier, Optional<Branch> targetBranch) {
+		return new ParallelDeadlineGroup(
+			new SequentialCommandGroup(new WaitUntilCommand(() -> robot.getRobotCommander().isReadyToScore()), commandSupplier.get()),
+			followAdjustedPathWithoutStop(robot, path, targetBranch)
+		);
+	}
+
 
 	public static Command followPath(PathPlannerPath path) {
 		return AutoBuilder.followPath(path);
@@ -118,6 +125,24 @@ public class PathFollowingCommandsBuilder {
 					)
 					.andThen(robot.getSwerve().getCommandsBuilder().resetTargetSpeeds()),
 				"Follow Adjusted " + path.name
+			);
+	}
+
+	public static Command followAdjustedPathWithoutStop(Robot robot, PathPlannerPath path, Optional<Branch> targetBranch) {
+		return robot.getSwerve()
+			.asSubsystemCommand(
+				followPathOrPathfindAndFollowPath(robot, path).andThen(
+					moveToPoseByPID(
+						robot,
+						targetBranch
+							.map(
+								branch -> ScoringHelpers
+									.getRobotBranchScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
+							)
+							.orElse(Field.getAllianceRelative(PathPlannerUtil.getLastPathPose(path), true, true, AngleTransform.INVERT))
+					)
+				),
+				"Follow Adjusted " + path + " without stop"
 			);
 	}
 

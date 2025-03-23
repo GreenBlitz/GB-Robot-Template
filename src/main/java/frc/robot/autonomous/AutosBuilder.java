@@ -237,14 +237,14 @@ public class AutosBuilder {
 						tolerance
 					)
 				),
-				new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.J)),
+				new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.A)),
 				createAutoFromAutoPath(
-					AutoPath.UPPER_CORAL_STATION_2_TO_J,
+					AutoPath.UPPER_CORAL_STATION_2_TO_A,
 					pathPlannerPath -> PathFollowingCommandsBuilder.commandAfterPath(
 						robot,
 						pathPlannerPath,
 						scoringCommand,
-						AutoPath.UPPER_CORAL_STATION_2_TO_J.getTargetBranch(),
+						AutoPath.UPPER_CORAL_STATION_2_TO_A.getTargetBranch(),
 						tolerance
 					)
 				)

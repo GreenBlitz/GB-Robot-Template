@@ -37,7 +37,7 @@ public class AutonomousConstants {
 	public static PathConstraints getRealTimeConstraintsForAuto(Swerve swerve) {
 		return new PathConstraints(
 			swerve.getConstants().velocityAt12VoltsMetersPerSecond(),
-			2.5, // RealSwerveConstants.ACCELERATION_AT_12_VOLTS_METERS_PER_SECOND_SQUARED,
+			3, // RealSwerveConstants.ACCELERATION_AT_12_VOLTS_METERS_PER_SECOND_SQUARED,
 			swerve.getConstants().maxRotationalVelocityPerSecond().getRadians(),
 			RealSwerveConstants.MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND
 		);

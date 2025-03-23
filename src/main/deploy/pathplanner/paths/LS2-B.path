@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7378317675252946,
-        "y": 1.136340207277861
+        "x": 1.998416095890411,
+        "y": 2.1392765410958905
       },
       "isLocked": false,
       "linkedName": "LS2"
     },
     {
       "anchor": {
-        "x": 3.19,
+        "x": 3.12,
         "y": 3.89
       },
       "prevControl": {
-        "x": 2.6715,
-        "y": 3.7909999999999995
+        "x": 1.5677996575342465,
+        "y": 3.852204623287671
       },
       "nextControl": null,
       "isLocked": false,
@@ -61,7 +61,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 2.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

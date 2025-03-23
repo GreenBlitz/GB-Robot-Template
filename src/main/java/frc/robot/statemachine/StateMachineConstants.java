@@ -27,7 +27,7 @@ public class StateMachineConstants {
 	public static final Rotation2d ARM_POSITION_TO_DEPLOY_LIFTER = Rotation2d.fromDegrees(26 + ArmConstants.POSITION_OFFSET.getDegrees());
 	public static final Rotation2d ARM_POSITION_TO_RELEASE_NET = Rotation2d.fromDegrees(175 + ArmConstants.POSITION_OFFSET.getDegrees());
 	public static final double ELEVATOR_POSITION_TO_CLOSE_CLIMB = 0.39;
-	public static final double ELEVATOR_POSITION_FOR_OPENING = 0.39;
+	public static final double ELEVATOR_POSITION_FOR_OPENING = 0.3;
 	public static final double ELEVATOR_POSITION_TO_MOVE_ARM_TO_SCORE_L4 = 0.5;
 	public static final double ELEVATOR_POSITION_TO_CLOSE_ARM = 0.4;
 	public static final double ELEVATOR_POSITION_TO_RELEASE_NET = 0.37;

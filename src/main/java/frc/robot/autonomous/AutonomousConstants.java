@@ -19,7 +19,7 @@ public class AutonomousConstants {
 
 	public static final Pose2d TARGET_POSE_TOLERANCES = new Pose2d(0.035, 0.035, Rotation2d.fromDegrees(2));
 
-	public static final double DEFAULT_AUTO_DRIVE_POWER = -0.5;
+	public static final double DEFAULT_AUTO_DRIVE_POWER = -0.3;
 
 	public static final double DEFAULT_AUTO_DRIVE_TIME_SECONDS = 1;
 
@@ -37,7 +37,7 @@ public class AutonomousConstants {
 	public static PathConstraints getRealTimeConstraintsForAuto(Swerve swerve) {
 		return new PathConstraints(
 			swerve.getConstants().velocityAt12VoltsMetersPerSecond(),
-			2.5, // RealSwerveConstants.ACCELERATION_AT_12_VOLTS_METERS_PER_SECOND_SQUARED,
+			3, // RealSwerveConstants.ACCELERATION_AT_12_VOLTS_METERS_PER_SECOND_SQUARED,
 			swerve.getConstants().maxRotationalVelocityPerSecond().getRadians(),
 			RealSwerveConstants.MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND
 		);

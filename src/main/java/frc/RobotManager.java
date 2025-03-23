@@ -50,6 +50,19 @@ public class RobotManager extends LoggedRobot {
 		initializeLEDTriggers();
 
 		Threads.setCurrentThreadPriority(true, 10);
+
+		System.out.println("A" + AutonomousConstants.LinkedWaypoints.A.getSecond());
+		System.out.println("B" + AutonomousConstants.LinkedWaypoints.B.getSecond());
+		System.out.println("C" + AutonomousConstants.LinkedWaypoints.C.getSecond());
+		System.out.println("D" + AutonomousConstants.LinkedWaypoints.D.getSecond());
+		System.out.println("E" + AutonomousConstants.LinkedWaypoints.E.getSecond());
+		System.out.println("F" + AutonomousConstants.LinkedWaypoints.F.getSecond());
+		System.out.println("G" + AutonomousConstants.LinkedWaypoints.G.getSecond());
+		System.out.println("H" + AutonomousConstants.LinkedWaypoints.H.getSecond());
+		System.out.println("I" + AutonomousConstants.LinkedWaypoints.I.getSecond());
+		System.out.println("J" + AutonomousConstants.LinkedWaypoints.J.getSecond());
+		System.out.println("K" + AutonomousConstants.LinkedWaypoints.K.getSecond());
+		System.out.println("L" + AutonomousConstants.LinkedWaypoints.L.getSecond());
 	}
 
 	private void initializeLEDTriggers() {

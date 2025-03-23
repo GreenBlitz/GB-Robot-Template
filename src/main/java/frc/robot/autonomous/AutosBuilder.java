@@ -270,6 +270,7 @@ public class AutosBuilder {
 						tolerance
 					)
 				),
+				new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.C)),
 				createAutoFromAutoPath(
 					AutoPath.LOWER_CORAL_STATION_2_TO_C,
 					pathPlannerPath -> PathFollowingCommandsBuilder.commandAfterPath(
@@ -290,6 +291,7 @@ public class AutosBuilder {
 						tolerance
 					)
 				),
+				new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.D)),
 				createAutoFromAutoPath(
 					AutoPath.LOWER_CORAL_STATION_2_TO_D,
 					pathPlannerPath -> PathFollowingCommandsBuilder.commandAfterPath(
@@ -310,13 +312,14 @@ public class AutosBuilder {
 						tolerance
 					)
 				),
+				new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.B)),
 				createAutoFromAutoPath(
-					AutoPath.LOWER_CORAL_STATION_2_TO_E,
+					AutoPath.LOWER_CORAL_STATION_2_TO_B,
 					pathPlannerPath -> PathFollowingCommandsBuilder.commandAfterPath(
 						robot,
 						pathPlannerPath,
 						scoringCommand,
-						AutoPath.LOWER_CORAL_STATION_2_TO_E.getTargetBranch(),
+						AutoPath.LOWER_CORAL_STATION_2_TO_B.getTargetBranch(),
 						tolerance
 					)
 				)

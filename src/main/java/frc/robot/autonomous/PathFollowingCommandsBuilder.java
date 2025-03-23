@@ -51,7 +51,7 @@ public class PathFollowingCommandsBuilder {
 
 	public static Command scoreToBranch(Robot robot, PathPlannerPath path, Supplier<Command> commandSupplier, Optional<Branch> targetBranch) {
 		return new ParallelDeadlineGroup(
-			new SequentialCommandGroup(new RunCommand(() -> {}).until(() -> robot.getRobotCommander().isReadyToScore()), commandSupplier.get()),
+			new SequentialCommandGroup(new WaitUntilCommand(() -> robot.getRobotCommander().isReadyToScore()), commandSupplier.get()),
 			followAdjustedPathWithoutStop(robot, path, targetBranch)
 		);
 	}

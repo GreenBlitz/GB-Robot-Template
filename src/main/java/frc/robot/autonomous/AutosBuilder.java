@@ -198,13 +198,8 @@ public class AutosBuilder {
 				new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.L)),
 				createAutoFromAutoPath(
 					AutoPath.UPPER_CORAL_STATION_2_TO_L,
-					pathPlannerPath -> PathFollowingCommandsBuilder.commandAfterPath(
-						robot,
-						pathPlannerPath,
-						scoringCommand,
-						AutoPath.UPPER_CORAL_STATION_2_TO_L.getTargetBranch(),
-						tolerance
-					)
+					pathPlannerPath -> PathFollowingCommandsBuilder
+						.scoreToBranch(robot, pathPlannerPath, scoringCommand, AutoPath.UPPER_CORAL_STATION_2_TO_L.getTargetBranch())
 				),
 				createAutoFromAutoPath(
 					AutoPath.L_TO_UPPER_CORAL_STATION_2,
@@ -219,13 +214,8 @@ public class AutosBuilder {
 				new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.K)),
 				createAutoFromAutoPath(
 					AutoPath.UPPER_CORAL_STATION_2_TO_K,
-					pathPlannerPath -> PathFollowingCommandsBuilder.commandAfterPath(
-						robot,
-						pathPlannerPath,
-						scoringCommand,
-						AutoPath.UPPER_CORAL_STATION_2_TO_K.getTargetBranch(),
-						tolerance
-					)
+					pathPlannerPath -> PathFollowingCommandsBuilder
+						.scoreToBranch(robot, pathPlannerPath, scoringCommand, AutoPath.UPPER_CORAL_STATION_2_TO_K.getTargetBranch())
 				),
 				createAutoFromAutoPath(
 					AutoPath.K_TO_UPPER_CORAL_STATION_2,
@@ -240,13 +230,8 @@ public class AutosBuilder {
 				new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.A)),
 				createAutoFromAutoPath(
 					AutoPath.UPPER_CORAL_STATION_2_TO_A,
-					pathPlannerPath -> PathFollowingCommandsBuilder.commandAfterPath(
-						robot,
-						pathPlannerPath,
-						scoringCommand,
-						AutoPath.UPPER_CORAL_STATION_2_TO_A.getTargetBranch(),
-						tolerance
-					)
+					pathPlannerPath -> PathFollowingCommandsBuilder
+						.scoreToBranch(robot, pathPlannerPath, scoringCommand, AutoPath.UPPER_CORAL_STATION_2_TO_A.getTargetBranch())
 				)
 			).asProxy()
 		);
@@ -273,13 +258,8 @@ public class AutosBuilder {
 				new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.C)),
 				createAutoFromAutoPath(
 					AutoPath.LOWER_CORAL_STATION_2_TO_C,
-					pathPlannerPath -> PathFollowingCommandsBuilder.commandAfterPath(
-						robot,
-						pathPlannerPath,
-						scoringCommand,
-						AutoPath.LOWER_CORAL_STATION_2_TO_C.getTargetBranch(),
-						tolerance
-					)
+					pathPlannerPath -> PathFollowingCommandsBuilder
+						.scoreToBranch(robot, pathPlannerPath, scoringCommand, AutoPath.LOWER_CORAL_STATION_2_TO_C.getTargetBranch())
 				),
 				createAutoFromAutoPath(
 					AutoPath.C_TO_LOWER_CORAL_STATION_2,
@@ -294,13 +274,8 @@ public class AutosBuilder {
 				new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.D)),
 				createAutoFromAutoPath(
 					AutoPath.LOWER_CORAL_STATION_2_TO_D,
-					pathPlannerPath -> PathFollowingCommandsBuilder.commandAfterPath(
-						robot,
-						pathPlannerPath,
-						scoringCommand,
-						AutoPath.LOWER_CORAL_STATION_2_TO_D.getTargetBranch(),
-						tolerance
-					)
+					pathPlannerPath -> PathFollowingCommandsBuilder
+						.scoreToBranch(robot, pathPlannerPath, scoringCommand, AutoPath.LOWER_CORAL_STATION_2_TO_D.getTargetBranch())
 				),
 				createAutoFromAutoPath(
 					AutoPath.D_TO_LOWER_CORAL_STATION_2,
@@ -315,13 +290,8 @@ public class AutosBuilder {
 				new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.B)),
 				createAutoFromAutoPath(
 					AutoPath.LOWER_CORAL_STATION_2_TO_B,
-					pathPlannerPath -> PathFollowingCommandsBuilder.commandAfterPath(
-						robot,
-						pathPlannerPath,
-						scoringCommand,
-						AutoPath.LOWER_CORAL_STATION_2_TO_B.getTargetBranch(),
-						tolerance
-					)
+					pathPlannerPath -> PathFollowingCommandsBuilder
+						.scoreToBranch(robot, pathPlannerPath, scoringCommand, AutoPath.LOWER_CORAL_STATION_2_TO_B.getTargetBranch())
 				)
 			).asProxy()
 		);

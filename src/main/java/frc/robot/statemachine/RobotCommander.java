@@ -403,7 +403,7 @@ public class RobotCommander extends GBSubsystem {
 	public Command fullyProcessorScore() {
 		return asSubsystemCommand(
 				new SequentialCommandGroup(
-						new ParallelCommandGroup(superstructure.idle(),
+						new ParallelCommandGroup(superstructure.processorWithoutRelease(),
 								swerve.getCommandsBuilder()
 										.driveToPose(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers::getAllianceRelativeProcessorScoringPose)
 						).until(this::isAtProcessorScoringPose),

@@ -401,6 +401,20 @@ public class Superstructure extends GBSubsystem {
 			SuperstructureState.PROCESSOR_OUTTAKE
 		);
 	}
+	
+	public Command processorWithoutRelease() {
+		return asSubsystemCommand(
+				new SequentialCommandGroup(
+						new ParallelCommandGroup(
+								elevatorStateHandler.setState(ElevatorState.PROCESSOR_OUTTAKE),
+								armStateHandler.setState(ArmState.PROCESSOR_OUTTAKE),
+								endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
+								climbStateHandler.setState(ClimbState.STOP)
+						)
+				),
+				SuperstructureState.PROCESSOR_OUTTAKE
+		);
+	}
 
 	public Command algaeOuttake() {
 		return asSubsystemCommand(

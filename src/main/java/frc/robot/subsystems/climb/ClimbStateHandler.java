@@ -1,5 +1,6 @@
 package frc.robot.subsystems.climb;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.joysticks.SmartJoystick;
 import frc.robot.subsystems.climb.lifter.LifterState;
@@ -59,7 +60,13 @@ public class ClimbStateHandler {
 	private Command climbWithLimitSwitch() {
 		return new ParallelCommandGroup(
 			new SequentialCommandGroup(
-				lifterStateHandler.setState(LifterState.CLIMB).until(solenoidStateHandler::isAtLimitSwitch),
+				new InstantCommand(() -> lifterStateHandler.getLifter().setBrake(true)),
+				lifterStateHandler.setState(LifterState.CLIMB).until(solenoidStateHandler::isAtLimitSwitch).until(() -> lifterStateHandler.isLower(Rotation2d.fromDegrees(-5))),
+				new InstantCommand(
+						() -> lifterStateHandler.getLifter().position = lifterStateHandler.getLifter().getPosition())
+						.alongWith(lifterStateHandler.setState(LifterState.CLIMB))
+						.until(() -> lifterStateHandler.isLower(Rotation2d.fromDegrees(lifterStateHandler.getLifter().position.getDegrees() - 1.5))).until(() -> lifterStateHandler.isLower(Rotation2d.fromDegrees(-5)))
+					,
 				lifterStateHandler.setState(LifterState.HOLD)
 			),
 			solenoidStateHandler.setState(SolenoidState.LOCKED)

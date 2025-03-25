@@ -67,8 +67,8 @@ public class RobotManager extends LoggedRobot {
 		climbSwitchPressed.onTrue(
 			robot.getRobotCommander()
 				.getLedStateHandler()
-				.setState(LEDState.HAS_CORAL)
-				.withTimeout(LEDConstants.CORAL_IN_BLINK_TIME_SECONDS)
+				.setState(LEDState.TOUCHING_LIMIT_SWITCH)
+				.withTimeout(LEDConstants.LIMIT_SWITCH_BLINK_TIME_SECONDS)
 				.onlyIf(() -> robot.getSolenoid().isAtLimitSwitch())
 				.ignoringDisable(true)
 		);

@@ -12,8 +12,6 @@ public class Lifter extends GBSubsystem {
 	private final LifterCommandsBuilder lifterCommandsBuilder;
 	private final InputSignal<Rotation2d> positionSignal;
 	private final InputSignal<Double> voltageSignal;
-	
-	public Rotation2d position = new Rotation2d();
 
 	public Lifter(String logPath, ControllableMotor motor, InputSignal<Rotation2d> positionSignal, InputSignal<Double> voltageSignal) {
 		super(logPath);
@@ -31,7 +29,7 @@ public class Lifter extends GBSubsystem {
 	protected void setPower(double power) {
 		motor.setPower(power);
 	}
-	
+
 	public Rotation2d getPosition() {
 		return positionSignal.getLatestValue();
 	}

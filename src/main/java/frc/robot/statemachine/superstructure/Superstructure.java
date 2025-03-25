@@ -315,7 +315,7 @@ public class Superstructure extends GBSubsystem {
 	}
 
 	public Command softCloseL4() {
-		return softClose("L4", ArmState.MID_WAY_CLOSE, ArmState.CLOSED, ElevatorState.L4, ElevatorState.CLOSED, 0.6, Rotation2d.fromDegrees(45));
+		return softClose("L4", ArmState.MID_WAY_CLOSE, ArmState.CLOSED, ElevatorState.L4, ElevatorState.CLOSED, 0.8, Rotation2d.fromDegrees(45));
 	}
 
 	public Command softCloseNet() {

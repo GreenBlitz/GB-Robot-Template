@@ -16,7 +16,9 @@ public class Phoenix6SignalBuilder {
 
 	public static void refreshAll() {
 		BaseStatusSignal.refreshAll(rioSignals);
-		BaseStatusSignal.refreshAll(chassisSignals);
+		if (chassisSignals.length > 0) {
+			BaseStatusSignal.refreshAll(chassisSignals);
+		}
 		BaseStatusSignal.refreshAll(superstructureSignals);
 	}
 
@@ -37,9 +39,9 @@ public class Phoenix6SignalBuilder {
 			case ROBORIO -> rioSignals = addSignalToArray(rioSignals, signalClone);
 			case SWERVE_CANIVORE -> {
 				if (busChain.getChainName().equals("rio")) {
-					addSignalToArray(rioSignals, signalClone);
+					rioSignals = addSignalToArray(rioSignals, signalClone);
 				} else {
-					addSignalToArray(chassisSignals, signalClone);
+					chassisSignals = addSignalToArray(chassisSignals, signalClone);
 				}
 			}
 			case SUPERSTRUCTURE_CANIVORE -> superstructureSignals = addSignalToArray(superstructureSignals, signalClone);

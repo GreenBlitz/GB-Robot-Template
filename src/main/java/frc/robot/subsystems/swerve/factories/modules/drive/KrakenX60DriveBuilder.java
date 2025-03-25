@@ -113,12 +113,9 @@ public class KrakenX60DriveBuilder {
 	static DriveRequests buildRequests() {
 		return new DriveRequests(
 			IS_CURRENT_CONTROL
-				? Phoenix6RequestBuilder.build(
-					new VelocityTorqueCurrentFOC(0).withSlot(1).withUpdateFreqHz(RobotConstants.DEFAULT_REQUEST_FREQUENCY_HERTZ),
-					0
-				)
-				: Phoenix6RequestBuilder
-					.build(new VelocityVoltage(0).withUpdateFreqHz(RobotConstants.DEFAULT_REQUEST_FREQUENCY_HERTZ), 0, true),
+				? Phoenix6RequestBuilder
+					.build(new VelocityTorqueCurrentFOC(0).withSlot(1).withUpdateFreqHz(RobotConstants.DEFAULT_REQUEST_FREQUENCY_HERTZ), 0)
+				: Phoenix6RequestBuilder.build(new VelocityVoltage(0).withUpdateFreqHz(RobotConstants.DEFAULT_REQUEST_FREQUENCY_HERTZ), 0, true),
 			Phoenix6RequestBuilder.build(new VoltageOut(0), true),
 			Phoenix6RequestBuilder.build(new TorqueCurrentFOC(0))
 		);

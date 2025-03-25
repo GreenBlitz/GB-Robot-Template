@@ -95,26 +95,26 @@ class KrakenX60SteerBuilder {
 	static SteerRequests buildRequests() {
 		return new SteerRequests(
 			Phoenix6RequestBuilder
-				.build(new PositionVoltage(0).withUpdateFreqHz(RobotConstants.DEFAULT_CANIVORE_REQUEST_FREQUENCY_HERTZ), 0, true),
+				.build(new PositionVoltage(0).withUpdateFreqHz(RobotConstants.DEFAULT_REQUEST_FREQUENCY_HERTZ), 0, true),
 			Phoenix6RequestBuilder.build(new VoltageOut(0), true)
 		);
 	}
 
 	static SteerSignals buildSignals(TalonFXMotor steer) {
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
-			.build(steer.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ, BusChain.SWERVE_CANIVORE);
+			.build(steer.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.SWERVE_CANIVORE);
 		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder
-			.build(steer.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ, BusChain.SWERVE_CANIVORE);
+			.build(steer.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.SWERVE_CANIVORE);
 		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder.build(
 			steer.getDevice().getVelocity(),
-			RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ,
+			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			AngleUnit.ROTATIONS,
 			BusChain.SWERVE_CANIVORE
 		);
 		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder.build(
 			steer.getDevice().getPosition(),
 			velocitySignal,
-			RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ,
+			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			AngleUnit.ROTATIONS,
 			BusChain.SWERVE_CANIVORE
 		);

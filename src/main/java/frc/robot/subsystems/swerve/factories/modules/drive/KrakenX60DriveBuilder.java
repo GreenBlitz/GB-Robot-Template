@@ -114,11 +114,11 @@ public class KrakenX60DriveBuilder {
 		return new DriveRequests(
 			IS_CURRENT_CONTROL
 				? Phoenix6RequestBuilder.build(
-					new VelocityTorqueCurrentFOC(0).withSlot(1).withUpdateFreqHz(RobotConstants.DEFAULT_CANIVORE_REQUEST_FREQUENCY_HERTZ),
+					new VelocityTorqueCurrentFOC(0).withSlot(1).withUpdateFreqHz(RobotConstants.DEFAULT_REQUEST_FREQUENCY_HERTZ),
 					0
 				)
 				: Phoenix6RequestBuilder
-					.build(new VelocityVoltage(0).withUpdateFreqHz(RobotConstants.DEFAULT_CANIVORE_REQUEST_FREQUENCY_HERTZ), 0, true),
+					.build(new VelocityVoltage(0).withUpdateFreqHz(RobotConstants.DEFAULT_REQUEST_FREQUENCY_HERTZ), 0, true),
 			Phoenix6RequestBuilder.build(new VoltageOut(0), true),
 			Phoenix6RequestBuilder.build(new TorqueCurrentFOC(0))
 		);
@@ -126,19 +126,19 @@ public class KrakenX60DriveBuilder {
 
 	static DriveSignals buildSignals(TalonFXMotor drive) {
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
-			.build(drive.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ, BusChain.SWERVE_CANIVORE);
+			.build(drive.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.SWERVE_CANIVORE);
 		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder
-			.build(drive.getDevice().getTorqueCurrent(), RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ, BusChain.SWERVE_CANIVORE);
+			.build(drive.getDevice().getTorqueCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.SWERVE_CANIVORE);
 		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder.build(
 			drive.getDevice().getVelocity(),
-			RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ,
+			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			AngleUnit.ROTATIONS,
 			BusChain.SWERVE_CANIVORE
 		);
 		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder.build(
 			drive.getDevice().getPosition(),
 			velocitySignal,
-			RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ,
+			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			AngleUnit.ROTATIONS,
 			BusChain.SWERVE_CANIVORE
 		);

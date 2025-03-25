@@ -62,6 +62,16 @@ public class RobotManager extends LoggedRobot {
 				.onlyIf(robot.getRobotCommander().getSuperstructure()::isCoralIn)
 				.ignoringDisable(true)
 		);
+
+		Trigger climbSwitchPressed = new Trigger(() -> robot.getSolenoid().isAtLimitSwitch());
+		climbSwitchPressed.onTrue(
+			robot.getRobotCommander()
+				.getLedStateHandler()
+				.setState(LEDState.TOUCHING_LIMIT_SWITCH)
+				.withTimeout(LEDConstants.LIMIT_SWITCH_BLINK_TIME_SECONDS)
+				.onlyIf(() -> robot.getSolenoid().isAtLimitSwitch())
+				.ignoringDisable(true)
+		);
 	}
 
 	@Override
@@ -77,7 +87,9 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void disabledExit() {
 		robot.getRobotCommander().getLedStateHandler().setState(LEDState.IDLE).ignoringDisable(true).schedule();
-		robot.getLifter().resetPosition(LifterConstants.MINIMUM_ACHIEVABLE_POSITION);
+		if (robot.getLifter().getPosition().getDegrees() < LifterConstants.MINIMUM_ACHIEVABLE_POSITION.getDegrees()) {
+			robot.getLifter().resetPosition(LifterConstants.MINIMUM_ACHIEVABLE_POSITION);
+		}
 	}
 
 	@Override

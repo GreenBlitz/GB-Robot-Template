@@ -30,6 +30,10 @@ public class Lifter extends GBSubsystem {
 		motor.setPower(power);
 	}
 
+	public Rotation2d getPosition() {
+		return positionSignal.getLatestValue();
+	}
+
 	protected void stop() {
 		motor.stop();
 	}

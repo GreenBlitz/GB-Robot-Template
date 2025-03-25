@@ -1,7 +1,9 @@
 package frc.robot.subsystems.climb;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.joysticks.SmartJoystick;
+import frc.robot.subsystems.climb.lifter.LifterConstants;
 import frc.robot.subsystems.climb.lifter.LifterState;
 import frc.robot.subsystems.climb.lifter.LifterStateHandler;
 import frc.robot.subsystems.climb.solenoid.SolenoidState;
@@ -12,6 +14,7 @@ public class ClimbStateHandler {
 	private final SolenoidStateHandler solenoidStateHandler;
 	private final LifterStateHandler lifterStateHandler;
 	private ClimbState currentState;
+	private Rotation2d climbPositionWithLimitSwitch;
 
 	public ClimbStateHandler(SolenoidStateHandler solenoidStateHandler, LifterStateHandler lifterStateHandler) {
 		this.solenoidStateHandler = solenoidStateHandler;
@@ -59,7 +62,20 @@ public class ClimbStateHandler {
 	private Command climbWithLimitSwitch() {
 		return new ParallelCommandGroup(
 			new SequentialCommandGroup(
-				lifterStateHandler.setState(LifterState.CLIMB).until(solenoidStateHandler::isAtLimitSwitch),
+				new InstantCommand(() -> lifterStateHandler.getLifter().setBrake(true)),
+				lifterStateHandler.setState(LifterState.CLIMB)
+					.until(solenoidStateHandler::isAtLimitSwitch)
+					.until(() -> lifterStateHandler.isLower(LifterConstants.MINIMUM_CLIMB_POSITION)),
+				new InstantCommand(() -> climbPositionWithLimitSwitch = lifterStateHandler.getLifter().getPosition()),
+				lifterStateHandler.setState(LifterState.CLIMB)
+					.until(
+						() -> lifterStateHandler.isLower(
+							Rotation2d.fromDegrees(
+								climbPositionWithLimitSwitch.getDegrees() - LifterConstants.CLIMB_OFFSET_AFTER_LIMIT_SWITCH.getDegrees()
+							)
+						)
+					)
+					.until(() -> lifterStateHandler.isLower(LifterConstants.MINIMUM_CLIMB_POSITION)),
 				lifterStateHandler.setState(LifterState.HOLD)
 			),
 			solenoidStateHandler.setState(SolenoidState.LOCKED)

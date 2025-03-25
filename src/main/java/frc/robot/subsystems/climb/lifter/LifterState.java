@@ -10,7 +10,7 @@ public enum LifterState {
 	CLIMB(Rotation2d.fromDegrees(15), -0.7),
 	MANUAL_CLIMB(null, -0.5),
 	DEPLOY(Rotation2d.fromDegrees(60), 1),
-	CLOSE(Rotation2d.fromDegrees(-6.5), -0.8);
+	CLOSE(Rotation2d.fromDegrees(-6.5), -0.65);
 
 	private final Rotation2d targetPosition;
 	private final double power;

@@ -11,6 +11,10 @@ public class LifterStateHandler {
 		this.lifter = lifter;
 	}
 
+	public Lifter getLifter() {
+		return lifter;
+	}
+
 	public Command setState(LifterState state) {
 		return switch (state) {
 			case HOLD -> lifter.getCommandsBuilder().stop();

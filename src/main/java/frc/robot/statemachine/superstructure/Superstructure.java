@@ -536,7 +536,7 @@ public class Superstructure extends GBSubsystem {
 	public Command stopClimb() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.CLOSED),
+				elevatorStateHandler.setState(ElevatorState.CLIMB),
 				armStateHandler.setState(ArmState.CLIMB),
 				endEffectorStateHandler.setState(EndEffectorState.STOP),
 				climbStateHandler.setState(ClimbState.STOP)

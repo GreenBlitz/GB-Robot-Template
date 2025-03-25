@@ -10,6 +10,7 @@ import frc.constants.field.enums.Branch;
 import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.StateMachineConstants;
+import frc.robot.subsystems.swerve.Swerve;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.math.AngleTransform;
 import frc.utils.math.ToleranceMath;
@@ -83,12 +84,12 @@ public class PathFollowingCommandsBuilder {
 			.andThen(followPath(path));
 	}
 
-	public static Command followPathOrPathfindAndFollowPath(Robot robot, PathPlannerPath path) {
+	public static Command followPathOrPathfindAndFollowPath(Swerve swerve, PathPlannerPath path, Supplier<Pose2d> currentPose) {
 		return new ConditionalCommand(
 			followPath(path),
-			pathfindThenFollowPath(path, AutonomousConstants.getRealTimeConstraints(robot.getSwerve())),
+			pathfindThenFollowPath(path, AutonomousConstants.getRealTimeConstraints(swerve)),
 			() -> PathPlannerUtil.isRobotInPathfindingDeadband(
-				robot.getPoseEstimator().getEstimatedPose(),
+				currentPose.get(),
 				Field.getAllianceRelative(PathPlannerUtil.getPathStartingPose(path), true, true, AngleTransform.INVERT)
 			)
 		);
@@ -101,7 +102,7 @@ public class PathFollowingCommandsBuilder {
 	public static Command followAdjustedPath(Robot robot, PathPlannerPath path, Optional<Branch> targetBranch, Pose2d tolerance) {
 		return robot.getSwerve()
 			.asSubsystemCommand(
-				followPathOrPathfindAndFollowPath(robot, path)
+				followPathOrPathfindAndFollowPath(robot.getSwerve(), path, () -> robot.getPoseEstimator().getEstimatedPose())
 					.andThen(
 						moveToPoseByPID(
 							robot,
@@ -131,7 +132,7 @@ public class PathFollowingCommandsBuilder {
 	public static Command followAdjustedPathWithoutStop(Robot robot, PathPlannerPath path, Optional<Branch> targetBranch) {
 		return robot.getSwerve()
 			.asSubsystemCommand(
-				followPathOrPathfindAndFollowPath(robot, path).andThen(
+				followPathOrPathfindAndFollowPath(robot.getSwerve(), path, () -> robot.getPoseEstimator().getEstimatedPose()).andThen(
 					moveToPoseByPID(
 						robot,
 						targetBranch

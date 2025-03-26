@@ -43,6 +43,7 @@ public class ClimbStateHandler {
 
 	private Command deploy() {
 		return new SequentialCommandGroup(
+			new InstantCommand(() -> lifterStateHandler.getLifter().setBrake(true)),
 			lifterStateHandler.setState(LifterState.BACKWARD).withTimeout(ClimbConstants.SOLENOID_RELEASE_TIME_SECONDS),
 			solenoidStateHandler.setState(SolenoidState.INITIAL_FREE).withTimeout(ClimbConstants.SOLENOID_RETRACTING_UNTIL_HOLDING_TIME_SECONDS),
 			new ParallelCommandGroup(lifterStateHandler.setState(LifterState.DEPLOY), solenoidStateHandler.setState(SolenoidState.HOLD_FREE))
@@ -66,7 +67,7 @@ public class ClimbStateHandler {
 					lifterStateHandler.setState(LifterState.CLIMB).until(
 							() -> lifterStateHandler.isLower(
 									Rotation2d.fromDegrees(
-											20
+											40
 									)
 							)),
 				lifterStateHandler.setState(LifterState.BACKWARD)

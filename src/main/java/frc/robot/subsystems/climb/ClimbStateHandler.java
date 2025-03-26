@@ -66,7 +66,7 @@ public class ClimbStateHandler {
 					lifterStateHandler.setState(LifterState.CLIMB).until(
 							() -> lifterStateHandler.isLower(
 									Rotation2d.fromDegrees(
-											25
+											20
 									)
 							)),
 				lifterStateHandler.setState(LifterState.BACKWARD)

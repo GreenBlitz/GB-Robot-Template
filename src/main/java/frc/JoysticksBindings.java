@@ -118,7 +118,8 @@ public class JoysticksBindings {
 					robot.getSolenoid(),
 					robot.getRobotCommander().getLedStateHandler()
 				)
-		));
+			)
+		);
 	}
 
 	private static Command driveActionChooser(Robot robot) {

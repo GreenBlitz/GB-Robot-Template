@@ -64,12 +64,7 @@ public class ClimbStateHandler {
 		return new ParallelCommandGroup(
 			new SequentialCommandGroup(
 				new InstantCommand(() -> lifterStateHandler.getLifter().setBrake(true)),
-					lifterStateHandler.setState(LifterState.CLIMB).until(
-							() -> lifterStateHandler.isLower(
-									Rotation2d.fromDegrees(
-											40
-									)
-							)),
+				lifterStateHandler.setState(LifterState.CLIMB).until(() -> lifterStateHandler.isLower(Rotation2d.fromDegrees(40))),
 				lifterStateHandler.setState(LifterState.BACKWARD)
 					.until(solenoidStateHandler::isAtLimitSwitch)
 					.until(() -> lifterStateHandler.isLower(LifterConstants.MINIMUM_CLIMB_POSITION)),

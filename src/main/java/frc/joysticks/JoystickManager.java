@@ -3,7 +3,7 @@ package frc.joysticks;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
-import frc.JoystickBindings;
+import frc.JoysticksBindings;
 import frc.utils.alerts.Alert;
 
 public class JoystickManager {
@@ -23,7 +23,7 @@ public class JoystickManager {
 
 	private static void createJoystick(int port, Robot robot) {
 		joysticks[port] = new SmartJoystick(port, BindSet.NO_BINDINGS);
-		JoystickBindings.configureBindings(joysticks[port], robot);
+		JoysticksBindings.configureBindings(joysticks[port], robot);
 	}
 
 	private static void addOptions(SendableChooser<BindSet> chooser, int port, Robot robot) {

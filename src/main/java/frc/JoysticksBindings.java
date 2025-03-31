@@ -1,55 +1,20 @@
 package frc;
 
-import frc.joysticks.JoystickPorts;
-import frc.joysticks.SmartJoystick;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.joysticks.BindSet;
 import frc.robot.Robot;
+import frc.joysticks.SmartJoystick;
 
-public class JoysticksBindings {
+public class JoystickBindings {
 
-	private static final SmartJoystick MAIN_JOYSTICK = new SmartJoystick(JoystickPorts.MAIN);
-	private static final SmartJoystick SECOND_JOYSTICK = new SmartJoystick(JoystickPorts.SECOND);
-	private static final SmartJoystick THIRD_JOYSTICK = new SmartJoystick(JoystickPorts.THIRD);
-	private static final SmartJoystick FOURTH_JOYSTICK = new SmartJoystick(JoystickPorts.FOURTH);
-	private static final SmartJoystick FIFTH_JOYSTICK = new SmartJoystick(JoystickPorts.FIFTH);
-	private static final SmartJoystick SIXTH_JOYSTICK = new SmartJoystick(JoystickPorts.SIXTH);
+	public static void configureBindings(SmartJoystick joystick, Robot robot) {}
 
-	public static void configureBindings(Robot robot) {
-		mainJoystickButtons(robot);
-		secondJoystickButtons(robot);
-		thirdJoystickButtons(robot);
-		fourthJoystickButtons(robot);
-		fifthJoystickButtons(robot);
-		sixthJoystickButtons(robot);
+	private static Trigger bindSetTrigger(SmartJoystick joystick, Trigger bind, BindSet bindSetRequirement) {
+		return bind.and(bindSetTrigger(joystick, bindSetRequirement));
 	}
 
-	private static void mainJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		// bindings...
-	}
-
-	private static void secondJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = SECOND_JOYSTICK;
-		// bindings...
-	}
-
-	private static void thirdJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = THIRD_JOYSTICK;
-		// bindings...
-	}
-
-	private static void fourthJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = FOURTH_JOYSTICK;
-		// bindings...
-	}
-
-	private static void fifthJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = FIFTH_JOYSTICK;
-		// bindings...
-	}
-
-	private static void sixthJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = SIXTH_JOYSTICK;
-		// bindings...
+	private static Trigger bindSetTrigger(SmartJoystick joystick, BindSet bindSetRequirement) {
+		return new Trigger(() -> bindSetRequirement == joystick.getBindSet());
 	}
 
 }

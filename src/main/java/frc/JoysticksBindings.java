@@ -103,18 +103,21 @@ public class JoysticksBindings {
 	}
 
 	private static Command closeReefActionChooser(Robot robot) {
-		return new DeferredCommand(
-			() -> new SequentialCommandGroup(new InstantCommand(() -> ScoringHelpers.setClosetReefSideTarget(robot)), reefActionChooser(robot)),
-			Set.of(
-				robot.getRobotCommander(),
-				robot.getRobotCommander().getSuperstructure(),
-				robot.getSwerve(),
-				robot.getElevator(),
-				robot.getArm(),
-				robot.getEndEffector(),
-				robot.getLifter(),
-				robot.getSolenoid(),
-				robot.getRobotCommander().getLedStateHandler()
+		return new SequentialCommandGroup(
+			new InstantCommand(() -> ScoringHelpers.setClosetReefSideTarget(robot)),
+			new DeferredCommand(
+				() -> reefActionChooser(robot),
+				Set.of(
+					robot.getRobotCommander(),
+					robot.getRobotCommander().getSuperstructure(),
+					robot.getSwerve(),
+					robot.getElevator(),
+					robot.getArm(),
+					robot.getEndEffector(),
+					robot.getLifter(),
+					robot.getSolenoid(),
+					robot.getRobotCommander().getLedStateHandler()
+				)
 			)
 		);
 	}

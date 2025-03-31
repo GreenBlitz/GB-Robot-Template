@@ -9,7 +9,7 @@ public class Tolerances {
 	public static final double ELEVATOR_HEIGHT_METERS = 0.05;
 
 	public static final Rotation2d ARM_INTERPOLATION_POSITION = Rotation2d.fromDegrees(0.5);
-	public static final Rotation2d ARM_POSITION = Rotation2d.fromDegrees(3);
+	public static final Rotation2d ARM_POSITION = Rotation2d.fromDegrees(1.5);
 	public static final Rotation2d ALGAE_RELEASE_ARM_POSITION = Rotation2d.fromDegrees(10);
 
 	public static final Pose2d REEF_RELATIVE_SCORING_POSITION = new Pose2d(0.15, 0.025, Rotation2d.fromDegrees(3.5));
@@ -39,7 +39,7 @@ public class Tolerances {
 	);
 	public static final Pose2d REEF_RELATIVE_L1_OPEN_SUPERSTRUCTURE_DEADBANDS = new Pose2d(4, 1, Rotation2d.fromRadians(0.1));
 
-	public static final Pose2d PROCESSOR_RELATIVE_SCORING_POSITION = new Pose2d(0.1, 0.1, Rotation2d.fromDegrees(10));
+	public static final Pose2d PROCESSOR_RELATIVE_SCORING_POSITION = new Pose2d(0.05, 0.05, Rotation2d.fromDegrees(6));
 	public static final Pose2d PROCESSOR_RELATIVE_SCORING_DEADBANDS = new Pose2d(3.8, 0.5, Rotation2d.fromRadians(2));
 
 }

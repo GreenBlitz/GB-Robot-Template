@@ -7,6 +7,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import frc.constants.field.Field;
 import frc.constants.field.enums.Branch;
 import frc.robot.statemachine.StateMachineConstants;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.HashMap;
 
@@ -26,6 +27,7 @@ public class ScoringPathsHelper {
 
 
 	public static PathPlannerPath getPathByBranch(Branch branch) {
+		Logger.recordOutput("Test/branch", branch);
 		return BRANCH_PATH_PLANNER_PATH_HASH_MAP.get(branch);
 	}
 

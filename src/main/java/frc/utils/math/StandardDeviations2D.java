@@ -23,7 +23,7 @@ public record StandardDeviations2D(double xStandardDeviations, double yStandardD
 		return VecBuilder.fill(xStandardDeviations, yStandardDeviations, angleStandardDeviations);
 	}
 
-	public double[] getAsPoseArray() {
+	public double[] asPoseArray() {
 		return new double[] {xStandardDeviations, yStandardDeviations, angleStandardDeviations};
 	}
 

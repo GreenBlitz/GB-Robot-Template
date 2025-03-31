@@ -1,0 +1,49 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "F-LS2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LS2-C"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "C-LS2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LS2-D"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "D-LS2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LS2-B"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

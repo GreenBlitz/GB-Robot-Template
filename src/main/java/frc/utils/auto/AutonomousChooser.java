@@ -1,23 +1,27 @@
 package frc.utils.auto;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
+import java.util.List;
+import java.util.function.Supplier;
+
 public class AutonomousChooser {
 
-	private final LoggedDashboardChooser<Command> chooser;
+	private final LoggedDashboardChooser<Supplier<Command>> chooser;
 
-	public AutonomousChooser(String name, String defaultOption) {
-		this.chooser = new LoggedDashboardChooser<Command>(name, AutoBuilder.buildAutoChooser(defaultOption));
-	}
-
-	public AutonomousChooser(String name) {
-		this(name, "");
+	public AutonomousChooser(String name, List<Supplier<Command>> autoList) {
+		this.chooser = new LoggedDashboardChooser<>(name);
+		autoList.forEach(auto -> chooser.addOption(auto.get().getName(), auto));
+		chooser.addDefaultOption("None", PathPlannerAutoWrapper::new);
 	}
 
 	public Command getChosenValue() {
-		return chooser.get();
+		return chooser.get().get();
+	}
+
+	public boolean isDefaultOptionChosen() {
+		return chooser.getSendableChooser().getSelected().equals("None");
 	}
 
 }

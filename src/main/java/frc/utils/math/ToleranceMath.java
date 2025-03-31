@@ -2,10 +2,26 @@ package frc.utils.math;
 
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import frc.constants.MathConstants;
 
 public class ToleranceMath {
+
+	public static boolean isNear(Pose2d wantedPose, Pose2d pose, Pose2d tolerance) {
+		return isNear(wantedPose.getTranslation(), pose.getTranslation(), tolerance.getTranslation())
+			&& isNearWrapped(wantedPose.getRotation(), pose.getRotation(), tolerance.getRotation());
+	}
+
+	public static boolean isNear(Translation2d wantedTranslation, Translation2d translation, double toleranceMeters) {
+		return translation.getDistance(wantedTranslation) <= toleranceMeters;
+	}
+
+	public static boolean isNear(Translation2d wantedTranslation, Translation2d translation, Translation2d tolerance) {
+		return MathUtil.isNear(wantedTranslation.getX(), translation.getX(), tolerance.getX())
+			&& MathUtil.isNear(wantedTranslation.getY(), translation.getY(), tolerance.getY());
+	}
 
 	public static boolean isNearWrapped(Rotation2d wantedAngle, Rotation2d angle, Rotation2d tolerance) {
 		return MathUtil.isNear(

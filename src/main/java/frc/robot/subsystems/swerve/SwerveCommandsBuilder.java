@@ -1,6 +1,6 @@
 package frc.robot.subsystems.swerve;
 
-import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -13,17 +13,21 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autonomous.AutonomousConstants;
+import frc.robot.autonomous.PathFollowingCommandsBuilder;
+import frc.robot.subsystems.swerve.factories.modules.drive.KrakenX60DriveBuilder;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.Modules;
+import frc.robot.subsystems.swerve.states.LoopMode;
 import frc.robot.subsystems.swerve.states.RotateAxis;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.auto.PathPlannerUtil;
-import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
+import frc.utils.calibration.swervecalibration.maxvelocityacceleration.MaxVelocityAccelerationCharacterization;
+import frc.utils.calibration.swervecalibration.maxvelocityacceleration.VelocityType;
+import frc.utils.calibration.swervecalibration.wheelradius.WheelRadiusCharacterization;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.Set;
-import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class SwerveCommandsBuilder {
@@ -44,7 +48,7 @@ public class SwerveCommandsBuilder {
 		this.driveCalibrator = new SysIdCalibrator(
 			modules.getModule(ModuleUtil.ModulePosition.FRONT_LEFT).getDriveSysIdConfigInfo(),
 			swerve,
-			modules::setDrivesVoltage
+			KrakenX60DriveBuilder.IS_CURRENT_CONTROL ? modules::setDrivesCurrent : modules::setDrivesVoltage
 		);
 	}
 
@@ -120,6 +124,17 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
+	public Command maxVelocityAccelerationCalibration(VelocityType velocityType) {
+		return swerve.asSubsystemCommand(
+			new MaxVelocityAccelerationCharacterization(
+				swerve,
+				powers -> swerve.driveByState(powers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)),
+				velocityType
+			),
+			"Max " + velocityType + " Velocity Acceleration Calibration"
+		);
+	}
+
 
 	public Command turnToHeading(Rotation2d targetHeading) {
 		return turnToHeading(targetHeading, RotateAxis.MIDDLE_OF_CHASSIS);
@@ -136,50 +151,56 @@ public class SwerveCommandsBuilder {
 	}
 
 
-	public Command drive(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier rotationSupplier) {
-		return driveByState(xSupplier, ySupplier, rotationSupplier, SwerveState.DEFAULT_DRIVE);
+	public Command drive(Supplier<ChassisPowers> powersSupplier) {
+		return driveByState(powersSupplier, SwerveState.DEFAULT_DRIVE);
 	}
 
-	public Command driveByState(
-		DoubleSupplier xSupplier,
-		DoubleSupplier ySupplier,
-		DoubleSupplier rotationSupplier,
-		Supplier<SwerveState> state
-	) {
+	public Command driveByState(Supplier<ChassisPowers> powersSupplier, Supplier<SwerveState> state) {
 		return swerve.asSubsystemCommand(
-			new DeferredCommand(() -> driveByState(xSupplier, ySupplier, rotationSupplier, state.get()), Set.of(swerve)),
+			new DeferredCommand(() -> driveByState(powersSupplier, state.get()), Set.of(swerve)),
 			"Drive with supplier state"
 		);
 	}
 
-	public Command driveByState(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier rotationSupplier, SwerveState state) {
+	public Command driveByState(Supplier<ChassisPowers> powersSupplier, SwerveState state) {
 		return swerve.asSubsystemCommand(
-			new InitExecuteCommand(
-				swerve::resetPIDControllers,
-				() -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), rotationSupplier.getAsDouble(), state)
-			),
+			new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.driveByState(powersSupplier.get(), state)),
 			"Drive with state"
 		);
 	}
 
+	public Command driveByDriversInputs(Supplier<SwerveState> state) {
+		return new DeferredCommand(() -> driveByDriversInputs(state.get()), Set.of(swerve));
+	}
+
+	public Command driveByDriversInputs(SwerveState state) {
+		return swerve.asSubsystemCommand(
+			new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.driveByDriversTargetsPowers(state)),
+			"Drive by drivers inputs with state"
+		);
+	}
+
+	public Command resetTargetSpeeds() {
+		return swerve.asSubsystemCommand(
+			new InstantCommand(() -> swerve.driveByState(new ChassisSpeeds(), SwerveState.DEFAULT_DRIVE)),
+			"ResetTargetSpeeds"
+		);
+	}
 
 	public Command driveToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose) {
-		return swerve.asSubsystemCommand(
-			new DeferredCommand(
-				() -> new SequentialCommandGroup(pathToPose(currentPose.get(), targetPose.get()), pidToPose(currentPose, targetPose.get())),
-				Set.of(swerve)
-			),
-			"Drive to pose"
+		return new DeferredCommand(
+			() -> new SequentialCommandGroup(pathToPose(currentPose.get(), targetPose.get()), moveToPoseByPID(currentPose, targetPose.get())),
+			Set.of(swerve)
 		);
 	}
 
 	private Command pathToPose(Pose2d currentPose, Pose2d targetPose) {
 		Command pathFollowingCommand;
-		double distanceFromTarget = currentPose.getTranslation().getDistance(targetPose.getTranslation());
-		if (distanceFromTarget < AutonomousConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
-			pathFollowingCommand = PathPlannerUtil.createPathOnTheFly(currentPose, targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
+		if (PathPlannerUtil.isRobotInPathfindingDeadband(currentPose, targetPose)) {
+			pathFollowingCommand = PathPlannerUtil
+				.createPathDuringRuntime(currentPose, targetPose, AutonomousConstants.getRealTimeConstraints(swerve));
 		} else {
-			pathFollowingCommand = AutoBuilder.pathfindToPose(targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
+			pathFollowingCommand = PathFollowingCommandsBuilder.pathfindToPose(targetPose, AutonomousConstants.getRealTimeConstraints(swerve));
 		}
 
 		return swerve.asSubsystemCommand(
@@ -188,7 +209,17 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-	private Command pidToPose(Supplier<Pose2d> currentPose, Pose2d targetPose) {
+	public Command driveToPath(Supplier<Pose2d> currentPose, PathPlannerPath path, Pose2d targetPose) {
+		return new DeferredCommand(
+			() -> new SequentialCommandGroup(
+				PathFollowingCommandsBuilder.followPathOrPathfindAndFollowPath(swerve, path, currentPose),
+				moveToPoseByPID(currentPose, targetPose)
+			),
+			Set.of(swerve)
+		);
+	}
+
+	public Command moveToPoseByPID(Supplier<Pose2d> currentPose, Pose2d targetPose) {
 		return swerve.asSubsystemCommand(
 			new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.moveToPoseByPID(currentPose.get(), targetPose)),
 			"PID to pose: " + targetPose

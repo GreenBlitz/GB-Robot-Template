@@ -30,15 +30,15 @@ public class AprilTagVisionData extends VisionData {
 		return standardDeviations;
 	}
 
-	public double getAprilTagHeightMeters() {
+	public final double getAprilTagHeightMeters() {
 		return aprilTagHeightMeters;
 	}
 
-	public double getDistanceFromAprilTagMeters() {
+	public final double getDistanceFromAprilTagMeters() {
 		return distanceFromAprilTagMeters;
 	}
 
-	public int getTrackedAprilTagId() {
+	public final int getTrackedAprilTagId() {
 		return aprilTagId;
 	}
 

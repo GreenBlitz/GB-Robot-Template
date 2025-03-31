@@ -6,7 +6,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class SwerveState {
 
-	private static final DriveRelative DEFAULT_DRIVE_RELATIVE = DriveRelative.FIELD_RELATIVE;
+	private static final DriveRelative DEFAULT_DRIVE_RELATIVE = DriveRelative.ALLIANCE_RELATIVE;
 	private static final DriveSpeed DEFAULT_DRIVE_SPEED = DriveSpeed.NORMAL;
 	private static final LoopMode DEFAULT_LOOP_MODE = LoopMode.CLOSED;
 	private static final RotateAxis DEFAULT_ROTATE_AXIS = RotateAxis.MIDDLE_OF_CHASSIS;
@@ -56,12 +56,12 @@ public class SwerveState {
 	}
 
 	public void log(String logPath) {
-		Logger.recordOutput(logPath + "DriveMode", driveRelative);
-		Logger.recordOutput(logPath + "DriveSpeed", driveSpeed);
-		Logger.recordOutput(logPath + "LoopMode", loopMode);
-		Logger.recordOutput(logPath + "RotateAxis", rotateAxis);
-		Logger.recordOutput(logPath + "AimAssist", aimAssist);
-		Logger.recordOutput(logPath + "HeadingControl", headingControl);
+		Logger.recordOutput(logPath + "/DriveMode", driveRelative);
+		Logger.recordOutput(logPath + "/DriveSpeed", driveSpeed);
+		Logger.recordOutput(logPath + "/LoopMode", loopMode);
+		Logger.recordOutput(logPath + "/RotateAxis", rotateAxis);
+		Logger.recordOutput(logPath + "/AimAssist", aimAssist);
+		Logger.recordOutput(logPath + "/HeadingControl", headingControl);
 	}
 
 	public SwerveState withDriveRelative(DriveRelative driveRelative) {

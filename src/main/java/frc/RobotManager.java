@@ -5,10 +5,12 @@
 package frc;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.joysticks.BindSet;
+import frc.joysticks.JoystickManager;
 import frc.robot.Robot;
+import frc.utils.DriverStationUtil;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.alerts.AlertManager;
-import frc.utils.DriverStationUtil;
 import frc.utils.time.TimeUtil;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -32,8 +34,8 @@ public class RobotManager extends LoggedRobot {
 
 		this.roborioCycles = 0;
 		this.robot = new Robot();
-
-		JoystickBindings.configureBindings(robot);
+		JoystickManager.createDashboardChoosers(robot);
+		BindSet.addBindSetsToHashMap();
 	}
 
 	@Override

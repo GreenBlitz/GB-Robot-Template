@@ -26,16 +26,6 @@ public class Phoenix6RequestBuilder {
 		);
 	}
 
-	public static Phoenix6FeedForwardRequest build(VelocityTorqueCurrentFOC velocityTorqueCurrentFOC, double defaultArbitraryFeedForward) {
-		return new Phoenix6FeedForwardRequest(
-			Rotation2d.fromRotations(velocityTorqueCurrentFOC.Velocity),
-			velocityTorqueCurrentFOC,
-			setPoint -> velocityTorqueCurrentFOC.withVelocity(setPoint.getRotations()),
-			velocityTorqueCurrentFOC::withFeedForward,
-			defaultArbitraryFeedForward
-		);
-	}
-
 	public static Phoenix6MotionMagicRequest build(
 		MotionMagicVoltage motionMagicVoltage,
 		double defaultArbitraryFeedForward,

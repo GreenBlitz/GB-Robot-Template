@@ -23,7 +23,7 @@ public class JoystickManager {
 
 	private static void createJoystick(int port, Robot robot) {
 		joysticks[port] = new SmartJoystick(port, BindSet.NO_BINDINGS);
-		JoysticksBindings.configureBindings(joysticks[port], robot);
+		JoysticksBindings.configureBindings(joysticks[port]);
 	}
 
 	private static void addOptions(SendableChooser<BindSet> chooser, int port, Robot robot) {

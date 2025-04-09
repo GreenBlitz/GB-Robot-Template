@@ -18,7 +18,6 @@ public enum BusChain {
 	private static final int PERMITTED_TRANSMIT_ERRORS = 0;
 	private static final String LOG_PATH_PREFIX = "Bus";
 
-
 	private final CANBus canBus;
 	private final String logPath;
 	private CANBusStatus currentBusStatus;

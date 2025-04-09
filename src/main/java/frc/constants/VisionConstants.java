@@ -10,10 +10,6 @@ import java.io.IOException;
 
 public class VisionConstants {
 
-	public static final String FILTERED_DATA_LOGPATH_ADDITION = "FilteredData/";
-
-	public static final String NON_FILTERED_DATA_LOGPATH_ADDITION = "NonFilteredData/";
-
 	public static final String VISION_SOURCE_LOGPATH_ADDITION = "VisionSource/";
 
 	public static final String MULTI_VISION_SOURCES_LOGPATH = "MultiVisionSources/";

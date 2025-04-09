@@ -97,7 +97,6 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	public void update() {
 		lastSeenAprilTagId = getAprilTagID();
 		robotOrientationEntry.setDoubleArray(robotAngleValues.asArray());
-//		Logger.recordOutput(logPath + "gyroAngleValues", robotAngleValues.asArray());
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		NetworkTableEntry entry = switch (poseEstimationMethod) {
 			case MEGATAG_1 -> robotPoseEntryMegaTag1;
@@ -228,6 +227,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 			Logger.recordOutput(logPath + "lastUpdate", visionData.getTimestamp());
 			Logger.recordOutput(logPath + "stdDevs", standardDeviationsArray);
 		});
+		Logger.recordOutput(logPath + "gyroAngleValues", robotAngleValues.asArray());
 	}
 
 }

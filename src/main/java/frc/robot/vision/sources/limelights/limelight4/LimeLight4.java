@@ -10,6 +10,9 @@ import frc.robot.vision.sources.limelights.LimeLightSource;
 import frc.robot.vision.sources.limelights.LimelightPoseEstimationMethod;
 import frc.utils.Filter;
 import frc.utils.TimedValue;
+import frc.utils.alerts.Alert;
+import frc.utils.alerts.AlertManager;
+import frc.utils.alerts.PeriodicAlert;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -56,6 +59,9 @@ public class LimeLight4 extends LimeLightSource implements IndpendentHeadingVisi
 
 	public void setInternalIMUReliance(double ratioBetweenIMUAndSource) {
 		mutableInternalIMURelianceEntry.setDouble(ratioBetweenIMUAndSource);
+		if (!limelightImuMode.isHeadingRequiring()) {
+			AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.WARNING, "GotInteralIMURelianceButDoesntRequireHeading", () -> true));
+		}
 	}
 
 	public double getInternalIMUReliance() {

@@ -10,7 +10,7 @@ public enum LimelightIMUMode {
 
 	private final int apiValue;
 
-	private LimelightIMUMode(int apiValue) {
+	LimelightIMUMode(int apiValue) {
 		this.apiValue = apiValue;
 	}
 
@@ -19,7 +19,7 @@ public enum LimelightIMUMode {
 	}
 
 	public boolean isIndependent() {
-		return this == USE_INTERNAL || this == USE_INTERNAL_ASSIST_MEGATAG_1 || this == USE_INTERNAL_ASSIST_EXTERNAL;
+		return this == USE_INTERNAL || this == USE_INTERNAL_ASSIST_MEGATAG_1;
 	}
 
 	public boolean isHeadingRequiring() {

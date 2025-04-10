@@ -30,16 +30,19 @@ import java.util.function.Supplier;
 public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisionData> {
 
 	private final Supplier<Rotation2d> robotHeadingSupplier;
+	private final boolean logAprilTagPoseData;
 	private boolean useRobotHeadingForPoseEstimating;
 
 	public MultiAprilTagVisionSources(
 		String logPath,
 		Supplier<Rotation2d> robotHeadingSupplier,
 		boolean useRobotHeadingForPoseEstimating,
+		boolean logAprilTagPoseData,
 		List<VisionSource<AprilTagVisionData>> visionSources
 	) {
 		super(logPath, visionSources);
 		this.robotHeadingSupplier = robotHeadingSupplier;
+		this.logAprilTagPoseData = logAprilTagPoseData;
 		setUseRobotHeadingForPoseEstimating(useRobotHeadingForPoseEstimating);
 	}
 
@@ -48,9 +51,10 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		String logPath,
 		Supplier<Rotation2d> robotHeadingSupplier,
 		boolean useRobotHeadingForPoseEstimating,
+		boolean logAprilTagPoseData,
 		VisionSource<AprilTagVisionData>... visionSources
 	) {
-		this(logPath, robotHeadingSupplier, useRobotHeadingForPoseEstimating, List.of(visionSources));
+		this(logPath, robotHeadingSupplier, useRobotHeadingForPoseEstimating, logAprilTagPoseData, List.of(visionSources));
 	}
 
 	private void updateAngleInHeadingRequiringSources(RobotAngleValues robotAngleValues) {
@@ -143,7 +147,9 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	public void log() {
 		super.log();
 		logAprilTagPoseData();
-		Logger.recordOutput(logPath + "inputtedRobotHeading", robotHeadingSupplier.get());
+		if (logAprilTagPoseData) {
+			logMegaTagMethod();
+		}
 	}
 
 }

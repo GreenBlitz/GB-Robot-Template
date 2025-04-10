@@ -1,10 +1,8 @@
 package frc.robot.vision.multivisionsources;
 
-import frc.constants.VisionConstants;
 import frc.robot.vision.data.VisionData;
 import frc.robot.vision.sources.VisionSource;
 import frc.utils.Filter;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,8 +46,9 @@ public class MultiVisionSources<T extends VisionData> {
 	}
 
 	public void log() {
-		logPoses(logPath + VisionConstants.FILTERED_DATA_LOGPATH_ADDITION, getFilteredVisionData());
-		logPoses(logPath + VisionConstants.NON_FILTERED_DATA_LOGPATH_ADDITION, getUnfilteredVisionData());
+		for (VisionSource<T> visionSource : visionSources) {
+			visionSource.log();
+		}
 	}
 
 	protected static <T extends VisionData> ArrayList<T> createMappedCopyOfSources(
@@ -63,12 +62,6 @@ public class MultiVisionSources<T extends VisionData> {
 			observation.ifPresent(output::add);
 		}
 		return output;
-	}
-
-	protected static <T extends VisionData> void logPoses(String logPath, List<T> observations) {
-		for (T observation : observations) {
-			Logger.recordOutput(logPath + observation.getSourceName(), observation.getEstimatedPose());
-		}
 	}
 
 }

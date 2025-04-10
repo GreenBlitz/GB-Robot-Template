@@ -60,20 +60,6 @@ public abstract class Phoenix6Device implements IDevice {
 		return validSignals.toArray(InputSignal<?>[]::new);
 	}
 
-	private StatusCode refreshSignals(InputSignal<?>... signals) {
-		LinkedList<StatusSignal<?>> signalsSet = new LinkedList<>();
-		for (InputSignal<?> signal : signals) {
-			if (signal instanceof SignalGetter signalGetter) {
-				signalsSet.add(signalGetter.getSignal());
-				if (signal instanceof Phoenix6LatencyAndSlopeSignal bothLatencySignal) {
-					signalsSet.add(bothLatencySignal.getSlopeSignal());
-				}
-			}
-		}
-
-		return BaseStatusSignal.refreshAll(signalsSet.toArray(StatusSignal[]::new));
-	}
-
 	private void logSignals(InputSignal<?>... signals) {
 		for (InputSignal<?> signal : signals) {
 			Logger.processInputs(logPath, signal);
@@ -86,7 +72,6 @@ public abstract class Phoenix6Device implements IDevice {
 			return;
 		}
 		InputSignal<?>[] validSignals = getValidSignals(inputSignals);
-		refreshSignals(validSignals);
 		connectedInput.connected = isConnected();
 		Logger.processInputs(logPath, connectedInput);
 		logSignals(validSignals);

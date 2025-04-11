@@ -8,7 +8,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
+import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
+import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
+import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.utils.battery.BatteryUtil;
 
 /**
@@ -20,11 +25,23 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
+	private final Swerve swerve;
+
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
+
+		IGyro gyro = GyroFactory.createGyro(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
+		this.swerve = new Swerve(
+			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
+			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
+			gyro,
+			GyroFactory.createSignals(gyro)
+		);
 	}
 
 	public void periodic() {
+		swerve.update();
+
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		CommandScheduler.getInstance().run(); // Should be last
@@ -32,6 +49,10 @@ public class Robot {
 
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
+	}
+
+	public Swerve getSwerve() {
+		return swerve;
 	}
 
 }

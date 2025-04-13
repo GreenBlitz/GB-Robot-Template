@@ -57,7 +57,7 @@ jobs:
               continue
             fi
 
-            if [ "$mergeable" != "MERGEABLE" ]; then
+            if [ "$mergeable" == "CONFLICTING" ]; then
               echo "❌ Skipped: PR is not mergeable (status: $mergeable)"
               continue
             fi

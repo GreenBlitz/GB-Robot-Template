@@ -3,7 +3,7 @@ name: Auto-update PRs from main
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   update-prs:

@@ -2,7 +2,6 @@ package frc.robot.vision;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.constants.VisionConstants;
 import frc.constants.field.Field;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.data.LimeLightAprilTagVisionData;
@@ -11,6 +10,7 @@ import frc.robot.vision.sources.limelights.LimelightPoseEstimationMethod;
 import frc.utils.Filter;
 import frc.utils.math.ToleranceMath;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -84,13 +84,7 @@ public class VisionFilters {
 	}
 
 	public static Filter<AprilTagVisionData> isNotSeeingTags(int... tags) {
-		Filter<AprilTagVisionData> filter = isSeeingTag(VisionConstants.NO_APRILTAG_ID);
-
-		for (int id : tags) {
-			filter = filter.or(isSeeingTag(id));
-		}
-
-		return filter.not();
+		return Filter.orAll(Arrays.stream(tags).mapToObj(VisionFilters::isSeeingTag).toList()).not();
 	}
 
 }

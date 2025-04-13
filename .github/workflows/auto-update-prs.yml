@@ -29,6 +29,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          DEFAULT_BRANCH="master"
+          
           echo "Fetching PRs labeled 'autoupdate'..."
           PRS=$(gh pr list --state open --json number,headRefName,labels --jq \
             '.[] | select(.labels | any(.name == "autoupdate")) | "\(.number) \(.headRefName)"')
@@ -44,11 +46,11 @@ jobs:
           echo "$PRS" | while read pr_number branch; do
             echo "Updating PR #$pr_number (branch: $branch)..."
 
-            git fetch origin main
+            git fetch origin "$DEFAULT_BRANCH"
             git fetch origin "$branch"
 
             git checkout "$branch"
-            git merge origin/main --no-edit || {
+            git merge origin/"$DEFAULT_BRANCH" --no-edit || {
               echo "Merge conflict in PR #$pr_number (branch: $branch). Skipping."
               continue
             }

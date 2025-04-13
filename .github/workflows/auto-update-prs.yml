@@ -3,7 +3,7 @@ name: Auto-update PR branches
 on:
   push:
     branches:
-      - master  # or your default branch
+      - master
 
 permissions:
   contents: write
@@ -37,30 +37,40 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Looking for PRs labeled 'autoupdate'..."
+          echo "Checking 'autoupdate'-labeled PRs..."
 
-          PRS=$(gh pr list --state open --json number,labels,isCrossRepository,mergeable,headRefName --jq \
-            '.[] | select(.labels | any(.name == "autoupdate")) | select(.isCrossRepository | not) | select(.mergeable == "MERGEABLE") | .number')
+          gh pr list --state open --json number,title,labels,isCrossRepository,mergeable,headRefName \
+          --jq '.[] | select(.labels | any(.name == "autoupdate")) | {number, title, labels: [.labels[].name], isCrossRepository, mergeable, headRefName}' > prs.json
 
-          if [ -z "$PRS" ]; then
-            echo "No eligible PRs found."
-            exit 0
-          fi
+          cat prs.json | jq -c '.' | while read -r pr; do
+            number=$(echo "$pr" | jq -r '.number')
+            title=$(echo "$pr" | jq -r '.title')
+            isFork=$(echo "$pr" | jq -r '.isCrossRepository')
+            mergeable=$(echo "$pr" | jq -r '.mergeable')
+            branch=$(echo "$pr" | jq -r '.headRefName')
 
-          for pr in $PRS; do
-            echo "Updating PR #$pr..."
+            echo ""
+            echo "🔍 PR #$number: $title"
 
-            # Checkout the PR branch
-            gh pr checkout "$pr"
+            if [ "$isFork" = "true" ]; then
+              echo "❌ Skipped: PR is from a fork"
+              continue
+            fi
 
-            # Fetch the latest `master` branch
+            if [ "$mergeable" != "MERGEABLE" ]; then
+              echo "❌ Skipped: PR is not mergeable (status: $mergeable)"
+              continue
+            fi
+
+            echo "✅ PR #$number is eligible. Updating..."
+
+            gh pr checkout "$number"
             git fetch origin master
+            git merge origin/master --no-edit || {
+              echo "❌ Merge conflict in PR #$number. Skipping."
+              continue
+            }
 
-            # Merge `master` into the PR branch
-            git merge origin/master --no-edit
-
-            # Push the changes to the PR branch
             git push origin HEAD
-
-            echo "Successfully updated PR #$pr with the latest `master` changes."
+            echo "✅ Successfully updated PR #$number"
           done

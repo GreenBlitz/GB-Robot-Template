@@ -13,11 +13,17 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v4
 
-      - name: Set up GitHub CLI
-        uses: cli/cli-action@v2
+      - name: Install GitHub CLI
+        run: |
+          sudo apt update
+          sudo apt install gh -y
 
       - name: Authenticate GitHub CLI
-        run: gh auth setup-git
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh auth setup-git
+          gh auth status
 
       - name: Auto-merge main into PRs with 'autoupdate' label
         env:
@@ -31,6 +37,9 @@ jobs:
             echo "No PRs found with label 'autoupdate'."
             exit 0
           fi
+
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
           echo "$PRS" | while read pr_number branch; do
             echo "Updating PR #$pr_number (branch: $branch)..."

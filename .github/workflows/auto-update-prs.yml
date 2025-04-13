@@ -35,7 +35,7 @@ jobs:
           echo "Looking for PRs labeled 'autoupdate'..."
 
           PRS=$(gh pr list --state open --json number,labels,isCrossRepository,mergeable,headRefName --jq \
-            '.[] | select(.labels | any(.name == "autoupdate")) | select(.isCrossRepository | not) | select(.mergeable == "MERGEABLE") | .number')
+            '.[] | select(.labels | any(.name == "autoupdate")) | select(.isCrossRepository | not) | .number')
 
           if [ -z "$PRS" ]; then
             echo "No eligible PRs found."

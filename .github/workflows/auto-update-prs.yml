@@ -46,11 +46,10 @@ jobs:
           echo "$PRS" | while read pr_number branch; do
             echo "Updating PR #$pr_number (branch: $branch)..."
 
-            git fetch origin "$DEFAULT_BRANCH"
-            git fetch origin "$branch"
+            git fetch --all --prune
 
             git checkout "$branch"
-            git merge origin/"$DEFAULT_BRANCH" --no-edit || {
+            git merge origin/"$DEFAULT_BRANCH" --no-edit --allow-unrelated-histories || {
               echo "Merge conflict in PR #$pr_number (branch: $branch). Skipping."
               continue
             }

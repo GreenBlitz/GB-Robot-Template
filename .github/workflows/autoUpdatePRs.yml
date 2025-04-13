@@ -1,0 +1,73 @@
+name: Auto-update PR branches
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-prs:
+    runs-on: ubuntu-latest
+    env:
+      UPDATE_LABEL: autoupdate
+      MASTER_BRANCH: master
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up GitHub CLI
+        run: |
+          sudo apt update
+          sudo apt install -y gh
+
+      - name: Authenticate GitHub CLI
+        run: gh auth setup-git
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Git user
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Actions"
+
+      - name: Auto-update PRs with label "$UPDATE_LABEL"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Checking "$UPDATE_LABEL"-labeled PRs..."
+
+          gh pr list --state open --json number,title,labels,isCrossRepository,headRefName \
+          --jq '.[] | select(.labels | any(.name == "$UPDATE_LABEL")) | {number, title, labels: [.labels[].name], isCrossRepository, headRefName}' > prs.json
+
+          cat prs.json | jq -c '.' | while read -r pr; do
+            number=$(echo "$pr" | jq -r '.number')
+            title=$(echo "$pr" | jq -r '.title')
+            isFork=$(echo "$pr" | jq -r '.isCrossRepository')
+            branch=$(echo "$pr" | jq -r '.headRefName')
+
+            echo ""
+            echo "🔍 PR #$number: $title"
+
+            if [ "$isFork" = "true" ]; then
+              echo "❌ Skipped: PR is from a fork"
+              continue
+            fi
+
+            echo "✅ PR #$number is eligible. Updating..."
+
+            gh pr checkout "$number"
+            git fetch origin "$MASTER_BRANCH"
+            git merge origin/"$MASTER_BRANCH" --no-edit || {
+              echo "❌ Merge conflict in PR #$number. Skipping."
+              continue
+            }
+
+            git push origin HEAD
+            echo "✅ Successfully updated PR #$number"
+          done

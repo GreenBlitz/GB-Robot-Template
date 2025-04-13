@@ -19,10 +19,14 @@ jobs:
           fetch-depth: 0
 
       - name: Set up GitHub CLI
-        uses: cli/cli@v2
+        run: |
+          sudo apt update
+          sudo apt install -y gh
 
       - name: Authenticate GitHub CLI
         run: gh auth setup-git
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Auto-update PRs with label 'autoupdate'
         env:
@@ -40,5 +44,5 @@ jobs:
 
           for pr in $PRS; do
             echo "Attempting to update PR #$pr..."
-            gh pr merge "$pr" --merge --admin || echo "Failed to merge PR #$pr"
+            gh pr merge "$pr" --merge || echo "Failed to merge PR #$pr"
           done

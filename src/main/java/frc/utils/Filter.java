@@ -47,13 +47,17 @@ public interface Filter<T> {
 
 	static <T> Filter<T> orAll(Iterable<Filter<T>> otherFilers) {
 		Filter<T> output = alwaysFilteringFilter();
-		otherFilers.forEach(output::or);
+		for (Filter<T> filter : otherFilers) {
+			output = output.or(filter);
+		}
 		return output;
 	}
 
 	static <T> Filter<T> andALl(Iterable<Filter<T>> otherFilers) {
 		Filter<T> output = nonFilteringFilter();
-		otherFilers.forEach(output::and);
+		for (Filter<T> filter : otherFilers) {
+			output = output.and(filter);
+		}
 		return output;
 	}
 

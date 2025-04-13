@@ -3,7 +3,7 @@ name: Auto-update PR branches
 on:
   push:
     branches:
-      - main  # or your default branch
+      - master  # or your default branch
 
 permissions:
   contents: write
@@ -53,14 +53,14 @@ jobs:
             # Checkout the PR branch
             gh pr checkout "$pr"
 
-            # Fetch the latest `main` branch
-            git fetch origin main
+            # Fetch the latest `master` branch
+            git fetch origin master
 
-            # Merge `main` into the PR branch
-            git merge origin/main --no-edit
+            # Merge `master` into the PR branch
+            git merge origin/master --no-edit
 
             # Push the changes to the PR branch
             git push origin HEAD
 
-            echo "Successfully updated PR #$pr with the latest `main` changes."
+            echo "Successfully updated PR #$pr with the latest `master` changes."
           done

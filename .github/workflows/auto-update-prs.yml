@@ -1,0 +1,49 @@
+name: Auto-update PRs from main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-prs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
+      - name: Set up GitHub CLI
+        uses: cli/cli-action@v2
+
+      - name: Authenticate GitHub CLI
+        run: gh auth setup-git
+
+      - name: Auto-merge main into PRs with 'autoupdate' label
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Fetching PRs labeled 'autoupdate'..."
+          PRS=$(gh pr list --state open --json number,headRefName,labels --jq \
+            '.[] | select(.labels | any(.name == "autoupdate")) | "\(.number) \(.headRefName)"')
+
+          if [ -z "$PRS" ]; then
+            echo "No PRs found with label 'autoupdate'."
+            exit 0
+          fi
+
+          echo "$PRS" | while read pr_number branch; do
+            echo "Updating PR #$pr_number (branch: $branch)..."
+
+            git fetch origin main
+            git fetch origin "$branch"
+
+            git checkout "$branch"
+            git merge origin/main --no-edit || {
+              echo "Merge conflict in PR #$pr_number (branch: $branch). Skipping."
+              continue
+            }
+
+            git push origin "$branch"
+            echo "Successfully updated PR #$pr_number (branch: $branch)"
+          done

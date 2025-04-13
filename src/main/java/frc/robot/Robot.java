@@ -22,7 +22,6 @@ public class Robot {
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
-
 	}
 
 	public void periodic() {

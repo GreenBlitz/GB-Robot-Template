@@ -43,7 +43,8 @@ jobs:
           echo "Checking "$UPDATE_LABEL"-labeled PRs..."
 
           gh pr list --state open --json number,title,labels,isCrossRepository,headRefName \
-          --jq '.[] | select(.labels | any(.name == "$UPDATE_LABEL")) | {number, title, labels: [.labels[].name], isCrossRepository, headRefName}' > prs.json
+          --jq ".[] | select(.labels | any(.name == \"$UPDATE_LABEL\")) | {number, title, labels: [.labels[].name], 
+          isCrossRepository, headRefName}" > prs.json
 
           cat prs.json | jq -c '.' | while read -r pr; do
             number=$(echo "$pr" | jq -r '.number')

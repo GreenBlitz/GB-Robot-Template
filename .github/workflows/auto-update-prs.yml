@@ -39,14 +39,13 @@ jobs:
         run: |
           echo "Checking 'autoupdate'-labeled PRs..."
 
-          gh pr list --state open --json number,title,labels,isCrossRepository,mergeable,headRefName \
-          --jq '.[] | select(.labels | any(.name == "autoupdate")) | {number, title, labels: [.labels[].name], isCrossRepository, mergeable, headRefName}' > prs.json
+          gh pr list --state open --json number,title,labels,isCrossRepository,headRefName \
+          --jq '.[] | select(.labels | any(.name == "autoupdate")) | {number, title, labels: [.labels[].name], isCrossRepository, headRefName}' > prs.json
 
           cat prs.json | jq -c '.' | while read -r pr; do
             number=$(echo "$pr" | jq -r '.number')
             title=$(echo "$pr" | jq -r '.title')
             isFork=$(echo "$pr" | jq -r '.isCrossRepository')
-            mergeable=$(echo "$pr" | jq -r '.mergeable')
             branch=$(echo "$pr" | jq -r '.headRefName')
 
             echo ""
@@ -54,11 +53,6 @@ jobs:
 
             if [ "$isFork" = "true" ]; then
               echo "❌ Skipped: PR is from a fork"
-              continue
-            fi
-
-            if [ "$mergeable" == "CONFLICTING" ]; then
-              echo "❌ Skipped: PR is not mergeable (status: $mergeable)"
               continue
             fi
 

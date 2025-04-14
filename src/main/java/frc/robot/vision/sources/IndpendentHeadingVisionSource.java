@@ -10,11 +10,11 @@ import java.util.Optional;
 public interface IndpendentHeadingVisionSource extends VisionSource<AprilTagVisionData> {
 
 	default Optional<TimedValue<Rotation2d>> getRawHeadingData() {
-		return getVisionData().map(PoseUtil::visionDataToHeadingData);
-	};
+		return getVisionData().map(PoseUtil::toHeadingData);
+	}
 
 	default Optional<TimedValue<Rotation2d>> getFilteredHeadingData() {
-		return getFilteredVisionData().map(PoseUtil::visionDataToHeadingData);
-	};
+		return getFilteredVisionData().map(PoseUtil::toHeadingData);
+	}
 
 }

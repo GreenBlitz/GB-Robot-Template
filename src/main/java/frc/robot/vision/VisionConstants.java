@@ -1,8 +1,9 @@
-package frc.constants;
+package frc.robot.vision;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import frc.robot.vision.data.AprilTagVisionData;
+import frc.constants.DirectoryPaths;
+import frc.robot.vision.data.VisionData;
 import frc.utils.Filter;
 import frc.utils.alerts.Alert;
 
@@ -41,6 +42,6 @@ public class VisionConstants {
 
 	public static final int NO_APRILTAG_ID = -1;
 
-	public static final Filter<AprilTagVisionData> DEFAULT_VISION_FILTER = Filter.nonFilteringFilter();
+	public static final Filter<VisionData> DEFAULT_VISION_FILTER = Filter.nonFilteringFilter();
 
 }

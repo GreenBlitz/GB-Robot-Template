@@ -1,9 +1,8 @@
-package frc.robot.poseestimator.helpers;
+package frc.robot.poseestimator.helpers.robotheadingestimator;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
-import frc.constants.RobotHeadingEstimatorConstants;
 import frc.utils.math.StatisticsMath;
 import frc.utils.math.PoseEstimationMath;
 import frc.utils.buffers.RingBuffer.RingBuffer;

@@ -3,7 +3,7 @@ package frc.robot.vision.multivisionsources;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import frc.constants.VisionConstants;
+import frc.robot.vision.VisionConstants;
 import frc.utils.TimedValue;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.IndpendentHeadingVisionSource;

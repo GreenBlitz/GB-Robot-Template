@@ -7,7 +7,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.poseestimator.Pose3dComponentsValue;
 import frc.utils.math.StandardDeviations3D;
-import frc.constants.VisionConstants;
+import frc.robot.vision.VisionConstants;
 import frc.robot.vision.RobotAngleValues;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.IndpendentHeadingVisionSource;

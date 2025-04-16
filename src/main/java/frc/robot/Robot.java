@@ -21,8 +21,11 @@ import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.vision.VisionConstants;
+import frc.robot.vision.VisionFilters;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
+import frc.utils.TimedValue;
 import frc.utils.battery.BatteryUtil;
+import frc.utils.time.TimeUtil;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -69,6 +72,7 @@ public class Robot {
 			true,
 			VisionConstants.VISION_SOURCES
 		);
+
 	}
 
 	public void periodic() {
@@ -77,6 +81,15 @@ public class Robot {
 		swerve.update();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 		poseEstimator.updateVision(visionSources.getFilteredVisionData());
+		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
+		for (TimedValue<Rotation2d> headingData : visionSources.getFilteredRobotHeading()) {
+			headingEstimator.updateVisionIfNotCalibrated(
+					headingData,
+					RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION,
+					RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE
+			);
+		}
+		headingEstimator.log();
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();

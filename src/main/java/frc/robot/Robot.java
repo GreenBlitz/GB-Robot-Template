@@ -21,6 +21,7 @@ import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.vision.VisionConstants;
+import frc.robot.vision.VisionFilters;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
 import frc.utils.TimedValue;
 import frc.utils.battery.BatteryUtil;
@@ -70,6 +71,18 @@ public class Robot {
 			headingEstimator::getEstimatedHeading,
 			true,
 			VisionConstants.VISION_SOURCES
+		);
+
+		visionSources.applyFunctionOnAllFilters(
+			filter -> filter.and(
+				data -> VisionFilters
+					.isYawAtAngleForMegaTag2(
+						() -> headingEstimator.getEstimatedHeadingAtTimestamp(data.getTimestamp()),
+						VisionConstants.YAW_FILTER_TOLERANCE
+					)
+					.and(VisionFilters.isYawAngleNotZero())
+					.apply(data)
+			)
 		);
 	}
 

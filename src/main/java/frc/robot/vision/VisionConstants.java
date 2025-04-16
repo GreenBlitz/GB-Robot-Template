@@ -3,6 +3,7 @@ package frc.robot.vision;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import frc.constants.DirectoryPaths;
 import frc.robot.vision.data.AprilTagVisionData;
@@ -64,7 +65,18 @@ public class VisionConstants {
 		AngleUnit.DEGREES.toRotation3d(-2.8, 52.64, -176.7)
 	);
 
-	public static final Filter<VisionData> DEFAULT_VISION_FILTER = Filter.nonFilteringFilter();
+	public final static double ROBOT_POSITION_IN_FIELD_TOLERANCE_METERS = 0.1;
+
+	public final static double ROBOT_DISTANCE_TO_GROUND_TOLERANCE_METERS = 0.5;
+
+	public final static Rotation2d ROLL_FILTER_TOLERANCE = Rotation2d.fromDegrees(5);
+
+	public final static Rotation2d PITCH_FILTER_TOLERANCE = Rotation2d.fromDegrees(5);
+
+	public static final Filter<VisionData> DEFAULT_VISION_FILTER = VisionFilters.isInField(ROBOT_POSITION_IN_FIELD_TOLERANCE_METERS)
+		.and(VisionFilters.isRollAtAngle(Rotation2d.kZero, ROLL_FILTER_TOLERANCE))
+		.and(VisionFilters.isPitchAtAngle(Rotation2d.kZero, PITCH_FILTER_TOLERANCE))
+		.and(VisionFilters.isOnGround(ROBOT_DISTANCE_TO_GROUND_TOLERANCE_METERS));
 
 	public static final VisionSource<AprilTagVisionData> LIMELIGHT_LEFT = new DynamicSwitchingLimelight(
 		true,
@@ -85,5 +97,7 @@ public class VisionConstants {
 	);
 
 	public static final List<VisionSource<AprilTagVisionData>> VISION_SOURCES = List.of(LIMELIGHT_LEFT, LIMELIGHT_RIGHT);
+
+	public static final Rotation2d YAW_FILTER_TOLERANCE = Rotation2d.fromDegrees(2);
 
 }

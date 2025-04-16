@@ -64,6 +64,8 @@ public class VisionConstants {
 		AngleUnit.DEGREES.toRotation3d(-2.8, 52.64, -176.7)
 	);
 
+	public static final Filter<VisionData> DEFAULT_VISION_FILTER = Filter.nonFilteringFilter();
+
 	public static final VisionSource<AprilTagVisionData> LIMELIGHT_LEFT = new DynamicSwitchingLimelight(
 		true,
 		"limelight-left",
@@ -93,8 +95,5 @@ public class VisionConstants {
 	);
 
 	public static final List<VisionSource<AprilTagVisionData>> VISION_SOURCES = List.of(LIMELIGHT_LEFT, LIMELIGHT_RIGHT);
-
-
-	public static final Filter<VisionData> DEFAULT_VISION_FILTER = Filter.nonFilteringFilter();
 
 }

@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import frc.robot.IDs;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.interfaces.IGyro;
+import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.gyro.Pigeon2Gyro;
 import frc.robot.hardware.phoenix6.gyro.Pigeon2Wrapper;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
@@ -22,7 +23,7 @@ class Pigeon2GyroBuilder {
 	}
 
 	static IGyro buildGyro(String logPath) {
-		Pigeon2Wrapper pigeon2Wrapper = new Pigeon2Wrapper(IDs.SWERVE_PIGEON_2);
+		Pigeon2Wrapper pigeon2Wrapper = new Pigeon2Wrapper(IDs.Pigeon2IDs.SWERVE_PIGEON_2);
 
 		MountPoseConfigs mountPoseConfigs = new MountPoseConfigs();
 		pigeon2Wrapper.getConfigurator().refresh(mountPoseConfigs);
@@ -38,7 +39,8 @@ class Pigeon2GyroBuilder {
 
 	static GyroSignals buildSignals(Pigeon2Gyro pigeon2Gyro) {
 		return new GyroSignals(
-			Phoenix6SignalBuilder.build(pigeon2Gyro.getDevice().getYaw(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.DEGREES)
+			Phoenix6SignalBuilder
+				.build(pigeon2Gyro.getDevice().getYaw(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.DEGREES, BusChain.ROBORIO)
 		);
 	}
 

@@ -8,7 +8,6 @@ import frc.utils.battery.PowerDistributionDeviceID;
 public class IDs {
 
 	public static final PowerDistributionDeviceID POWER_DISTRIBUTION = new PowerDistributionDeviceID(1, PowerDistribution.ModuleType.kRev);
-	public static final Phoenix6DeviceID SWERVE_PIGEON_2 = new Phoenix6DeviceID(0, BusChain.ROBORIO);
 
 	public static class TalonFXIDs {
 
@@ -30,7 +29,7 @@ public class IDs {
 
 	}
 
-	public static class CANCodersIDs {
+	public static class CANCoderIDs {
 
 		public static final Phoenix6DeviceID SWERVE_FRONT_LEFT = new Phoenix6DeviceID(0, BusChain.ROBORIO);
 
@@ -40,16 +39,12 @@ public class IDs {
 
 		public static final Phoenix6DeviceID SWERVE_BACK_RIGHT = new Phoenix6DeviceID(3, BusChain.ROBORIO);
 
-
-	}
-
-	public static class TalonFXIDs {
-	}
-
-	public static class CANCoderIDs {
 	}
 
 	public static class Pigeon2IDs {
+
+		public static final Phoenix6DeviceID SWERVE_PIGEON_2 = new Phoenix6DeviceID(0, BusChain.ROBORIO);
+
 	}
 
 	public static class CANdleIDs {

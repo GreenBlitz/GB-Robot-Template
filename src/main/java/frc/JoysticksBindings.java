@@ -1,7 +1,8 @@
 package frc;
 
-import frc.joysticks.JoystickPorts;
-import frc.joysticks.SmartJoystick;
+import frc.controllers.joysticks.JoystickPorts;
+import frc.controllers.joysticks.SmartJoystick;
+import frc.controllers.keyboard.KeyboardController;
 import frc.robot.Robot;
 
 public class JoysticksBindings {
@@ -12,6 +13,7 @@ public class JoysticksBindings {
 	private static final SmartJoystick FOURTH_JOYSTICK = new SmartJoystick(JoystickPorts.FOURTH);
 	private static final SmartJoystick FIFTH_JOYSTICK = new SmartJoystick(JoystickPorts.FIFTH);
 	private static final SmartJoystick SIXTH_JOYSTICK = new SmartJoystick(JoystickPorts.SIXTH);
+	private static final KeyboardController KEYBOARD_CONTROLLER = new KeyboardController();
 
 	public static void configureBindings(Robot robot) {
 		mainJoystickButtons(robot);
@@ -20,6 +22,7 @@ public class JoysticksBindings {
 		fourthJoystickButtons(robot);
 		fifthJoystickButtons(robot);
 		sixthJoystickButtons(robot);
+		keyboardButtons(robot);
 	}
 
 	private static void mainJoystickButtons(Robot robot) {
@@ -49,6 +52,11 @@ public class JoysticksBindings {
 
 	private static void sixthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SIXTH_JOYSTICK;
+		// bindings...
+	}
+
+	private static void keyboardButtons(Robot robot) {
+		KeyboardController usedKeyboard = KEYBOARD_CONTROLLER;
 		// bindings...
 	}
 

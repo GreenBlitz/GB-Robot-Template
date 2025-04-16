@@ -1,4 +1,4 @@
-package frc.joysticks;
+package frc.controllers.joysticks;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.button.Trigger;

@@ -1,13 +1,9 @@
 package frc.robot.hardware.phoenix6;
 
-import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.StatusCode;
-import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import frc.robot.hardware.ConnectedInputAutoLogged;
 import frc.robot.hardware.interfaces.IDevice;
 import frc.robot.hardware.interfaces.InputSignal;
-import frc.robot.hardware.phoenix6.signal.Phoenix6LatencyAndSlopeSignal;
 import frc.robot.hardware.phoenix6.signal.SignalGetter;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
@@ -33,7 +29,7 @@ public abstract class Phoenix6Device implements IDevice {
 	}
 
 	public boolean isConnected() {
-		return getDevice().isConnected();
+		return connectedInput.connected;
 	}
 
 
@@ -72,7 +68,7 @@ public abstract class Phoenix6Device implements IDevice {
 			return;
 		}
 		InputSignal<?>[] validSignals = getValidSignals(inputSignals);
-		connectedInput.connected = isConnected();
+		connectedInput.connected = getDevice().isConnected();
 		Logger.processInputs(logPath, connectedInput);
 		logSignals(validSignals);
 	}

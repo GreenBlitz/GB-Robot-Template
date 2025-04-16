@@ -77,21 +77,11 @@ public class VisionConstants {
 
 	public static final VisionSource<AprilTagVisionData> LIMELIGHT_RIGHT = new DynamicSwitchingLimelight(
 		true,
-		"limelight-right",
+		"limelight",
 		VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
 		"limelight3gb-front",
 		VisionConstants.DEFAULT_VISION_FILTER,
 		LIMELIGHT_RIGHT_CAMERA_ROBOT_POSE
-	);
-
-	// ! not in use
-	public static final VisionSource<AprilTagVisionData> LIMELIGHT_FEEDER = new DynamicSwitchingLimelight(
-		true,
-		"limelight-feeder",
-		VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
-		"limelight3-feeder",
-		VisionConstants.DEFAULT_VISION_FILTER,
-		LIMELIGHT_FEEDER_CAMERA_ROBOT_POSE
 	);
 
 	public static final List<VisionSource<AprilTagVisionData>> VISION_SOURCES = List.of(LIMELIGHT_LEFT, LIMELIGHT_RIGHT);

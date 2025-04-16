@@ -81,7 +81,7 @@ public class Robot {
 		poseEstimator.updateVision(visionSources.getFilteredVisionData());
 		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
 		for (TimedValue<Rotation2d> headingData : visionSources.getFilteredRobotHeading()) {
-			headingEstimator.updateVisionIfNotCalibrated(
+			headingEstimator.updateVisionIfGyroOffsetIsNotCalibrated(
 				headingData,
 				RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION,
 				RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE

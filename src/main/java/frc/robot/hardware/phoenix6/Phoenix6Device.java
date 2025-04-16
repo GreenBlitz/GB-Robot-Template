@@ -33,7 +33,7 @@ public abstract class Phoenix6Device implements IDevice {
 	}
 
 	public boolean isConnected() {
-		return getDevice().isConnected();
+		return connectedInput.connected;
 	}
 
 
@@ -87,7 +87,7 @@ public abstract class Phoenix6Device implements IDevice {
 		}
 		InputSignal<?>[] validSignals = getValidSignals(inputSignals);
 		refreshSignals(validSignals);
-		connectedInput.connected = isConnected();
+		connectedInput.connected = getDevice().isConnected();
 		Logger.processInputs(logPath, connectedInput);
 		logSignals(validSignals);
 	}

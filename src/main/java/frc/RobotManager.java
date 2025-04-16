@@ -4,6 +4,7 @@
 
 package frc;
 
+import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.utils.auto.PathPlannerUtil;
@@ -34,6 +35,8 @@ public class RobotManager extends LoggedRobot {
 		this.robot = new Robot();
 
 		JoysticksBindings.configureBindings(robot);
+
+		Threads.setCurrentThreadPriority(true, 10);
 	}
 
 	@Override

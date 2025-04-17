@@ -63,10 +63,10 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	}
 
 	public Rotation2d getOdometryAngle(OdometryData odometryData, Twist2d changeInPose) {
-		if (odometryData.getGyroAngle().isEmpty()) {
+		if (odometryData.getGyroYaw().isEmpty()) {
 			return lastOdometryAngle.plus(Rotation2d.fromRadians(changeInPose.dtheta));
 		}
-		return odometryData.getGyroAngle().get();
+		return odometryData.getGyroYaw().get();
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 
 		lastOdometryAngle = odometryAngle;
 		lastOdometryData.setWheelPositions(data.getWheelPositions());
-		lastOdometryData.setGyroAngle(data.getGyroAngle());
+		lastOdometryData.setGyrYaw(data.getGyroYaw());
 		lastOdometryData.setTimestamp(data.getTimestamp());
 	}
 

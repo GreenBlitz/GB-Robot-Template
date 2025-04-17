@@ -8,14 +8,14 @@ import java.util.Optional;
 public class OdometryData {
 
 	private SwerveModulePosition[] wheelPositions = new SwerveModulePosition[4];
-	private Optional<Rotation2d> gyroAngle = Optional.empty();
+	private Optional<Rotation2d> gyroYaw = Optional.empty();
 	private double timestamp = 0;
 
 	public OdometryData() {}
 
-	public OdometryData(SwerveModulePosition[] swerveModulePositions, Optional<Rotation2d> gyroAngle, double timestamp) {
+	public OdometryData(SwerveModulePosition[] swerveModulePositions, Optional<Rotation2d> gyroYaw, double timestamp) {
 		this.wheelPositions = swerveModulePositions;
-		this.gyroAngle = gyroAngle;
+		this.gyroYaw = gyroYaw;
 		this.timestamp = timestamp;
 	}
 
@@ -27,16 +27,16 @@ public class OdometryData {
 		return timestamp;
 	}
 
-	public Optional<Rotation2d> getGyroAngle() {
-		return gyroAngle;
+	public Optional<Rotation2d> getGyroYaw() {
+		return gyroYaw;
 	}
 
 	public void setWheelPositions(SwerveModulePosition[] wheelPositions) {
 		this.wheelPositions = wheelPositions;
 	}
 
-	public void setGyroAngle(Optional<Rotation2d> gyroAngle) {
-		this.gyroAngle = gyroAngle;
+	public void setGyrYaw(Optional<Rotation2d> gyroYaw) {
+		this.gyroYaw = gyroYaw;
 	}
 
 	public void setTimestamp(double timestamp) {

@@ -6,7 +6,6 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public class Phoenix6RequestBuilder {
@@ -31,12 +30,12 @@ public class Phoenix6RequestBuilder {
 		);
 	}
 
-	public static Phoenix6FeedForwardRequest build(
+	public static Phoenix6MotionMagicRequest build(
 		MotionMagicVoltage motionMagicVoltage,
 		double defaultArbitraryFeedForward,
 		boolean enableFOC
 	) {
-		return new Phoenix6FeedForwardRequest(
+		return new Phoenix6MotionMagicRequest(
 			Rotation2d.fromRotations(motionMagicVoltage.Position),
 			motionMagicVoltage.withEnableFOC(enableFOC),
 			setPoint -> motionMagicVoltage.withPosition(setPoint.getRotations()),
@@ -50,11 +49,13 @@ public class Phoenix6RequestBuilder {
 		double defaultArbitraryFeedForward,
 		boolean enableFOC
 	) {
-		return new Phoenix6FeedForwardRequest(
+		return new Phoenix6DynamicMotionMagicRequest(
 			Rotation2d.fromRotations(dynamicMotionMagicVoltage.Position),
 			dynamicMotionMagicVoltage.withEnableFOC(enableFOC),
 			setPoint -> dynamicMotionMagicVoltage.withPosition(setPoint.getRotations()),
 			dynamicMotionMagicVoltage::withFeedForward,
+			maxVelocity -> dynamicMotionMagicVoltage.withVelocity(maxVelocity.getRotations()),
+			maxAcceleration -> dynamicMotionMagicVoltage.withAcceleration(maxAcceleration.getRotations()),
 			defaultArbitraryFeedForward
 		);
 	}

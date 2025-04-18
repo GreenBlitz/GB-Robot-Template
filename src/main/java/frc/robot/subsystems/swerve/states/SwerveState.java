@@ -1,6 +1,5 @@
 package frc.robot.subsystems.swerve.states;
 
-import frc.robot.Robot;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.robot.subsystems.swerve.states.heading.HeadingControl;
 import org.littletonrobotics.junction.Logger;

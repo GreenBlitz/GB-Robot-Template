@@ -84,6 +84,10 @@ public class Robot {
 					.apply(data)
 			)
 		);
+
+		swerve.setHeadingSupplier(
+			ROBOT_TYPE.isSimulation() ? () -> poseEstimator.getEstimatedPose().getRotation() : () -> headingEstimator.getEstimatedHeading()
+		);
 	}
 
 	public void periodic() {

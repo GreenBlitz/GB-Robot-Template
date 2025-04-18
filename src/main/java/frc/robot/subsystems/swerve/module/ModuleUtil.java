@@ -28,6 +28,7 @@ public class ModuleUtil {
 
 		NONE("NONE (Target states are not being used)"),
 		CUSTOM("CUSTOM (Target states are not being used)"),
+
 		TARGET_STATE("TARGET_STATE");
 
 

@@ -2,6 +2,8 @@ package frc.robot.subsystems.swerve.factories.modules.drive;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -90,10 +92,10 @@ public class KrakenX60DriveBuilder {
 			driveConfig.Slot0.kD = 0;
 
 			// Velocity Torque
-			driveConfig.Slot1.kS = 0;
+			driveConfig.Slot1.kS = 5.1;
 			driveConfig.Slot1.kV = 0;
-			driveConfig.Slot1.kA = 0;
-			driveConfig.Slot1.kP = 0;
+			driveConfig.Slot1.kA = GEAR_RATIO / (1 / DCMotor.getKrakenX60Foc(1).KtNMPerAmp);
+			driveConfig.Slot1.kP = 40;
 			driveConfig.Slot1.kI = 0;
 			driveConfig.Slot1.kD = 0;
 		}
@@ -109,8 +111,9 @@ public class KrakenX60DriveBuilder {
 
 	static DriveRequests buildRequests() {
 		return new DriveRequests(
-			Phoenix6RequestBuilder.build(new VelocityVoltage(0).withUpdateFreqHz(RobotConstants.DEFAULT_REQUEST_FREQUENCY_HERTZ), 0, true),
-			Phoenix6RequestBuilder.build(new VoltageOut(0), true)
+			Phoenix6RequestBuilder.build(new VelocityTorqueCurrentFOC(0).withUpdateFreqHz(RobotConstants.DEFAULT_REQUEST_FREQUENCY_HERTZ).withSlot(1), 0),
+			Phoenix6RequestBuilder.build(new VoltageOut(0), true),
+			Phoenix6RequestBuilder.build(new TorqueCurrentFOC(0))
 		);
 	}
 

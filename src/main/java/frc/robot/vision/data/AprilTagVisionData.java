@@ -26,19 +26,19 @@ public class AprilTagVisionData extends VisionData {
 		this.aprilTagId = aprilTagId;
 	}
 
-	public StandardDeviations3D getStandardDeviations() {
+	public final StandardDeviations3D getStandardDeviations() {
 		return standardDeviations;
 	}
 
-	public double getAprilTagHeightMeters() {
+	public final double getAprilTagHeightMeters() {
 		return aprilTagHeightMeters;
 	}
 
-	public double getDistanceFromAprilTagMeters() {
+	public final double getDistanceFromAprilTagMeters() {
 		return distanceFromAprilTagMeters;
 	}
 
-	public int getTrackedAprilTagId() {
+	public final int getTrackedAprilTagId() {
 		return aprilTagId;
 	}
 

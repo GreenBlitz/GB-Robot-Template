@@ -20,15 +20,15 @@ public interface VisionSource<T extends VisionData> {
 		return Optional.empty();
 	}
 
-	void setFilter(Filter<T> newFilter);
+	void setFilter(Filter<? super T> newFilter);
 
-	Filter<T> getFilter();
+	Filter<? super T> getFilter();
 
 	default void clearFilter() {
 		setFilter(Filter.nonFilteringFilter());
 	}
 
-	default void applyFunctionOnFilter(Function<Filter<T>, Filter<T>> filterChangingFunction) {
+	default void applyFunctionOnFilter(Function<Filter<? super T>, Filter<? super T>> filterChangingFunction) {
 		setFilter(filterChangingFunction.apply(getFilter()));
 	}
 

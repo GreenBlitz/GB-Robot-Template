@@ -1,9 +1,10 @@
 package frc.robot.vision.multivisionsources;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import frc.constants.VisionConstants;
+import frc.robot.vision.VisionConstants;
 import frc.utils.TimedValue;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.IndpendentHeadingVisionSource;
@@ -132,13 +133,23 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	}
 
 	private void logAprilTagPoseData() {
+		List<Integer> seenAprilTagsIDs = new ArrayList<>();
 		for (AprilTagVisionData visionData : getUnfilteredVisionData()) {
 			int aprilTagID = visionData.getTrackedAprilTagId();
 			Optional<Pose3d> aprilTag = VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(aprilTagID);
-			aprilTag.ifPresent((pose) -> Logger.recordOutput(logPath + "targets/" + aprilTagID, pose));
+			aprilTag.ifPresent((pose) -> {
+				Logger.recordOutput(logPath + "targets/" + aprilTagID, pose);
+				seenAprilTagsIDs.add(aprilTagID);
+			});
+		}
+		for (int aprilTagID = 1; aprilTagID <= VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTags().size(); aprilTagID++) {
+			if (!seenAprilTagsIDs.contains(aprilTagID)) {
+				Logger.recordOutput(logPath + "targets/" + aprilTagID, Pose2d.kZero);
+			}
 		}
 	}
 
+	/* Costly on runtime: don't use until gets fixed */
 	@Override
 	public void log() {
 		super.log();

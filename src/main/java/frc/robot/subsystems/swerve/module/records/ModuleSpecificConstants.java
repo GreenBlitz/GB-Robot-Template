@@ -23,7 +23,7 @@ public record ModuleSpecificConstants(
 		Translation2d positionFromCenterMeters
 	) {
 		this(
-			logPathPrefix + ModuleConstants.MODULES_LOG_PATH_ADDITION + modulePosition + "/",
+			logPathPrefix + ModuleConstants.MODULES_LOG_PATH_ADDITION + "/" + modulePosition,
 			wheelDiameterMeters,
 			couplingRatio,
 			Conversions.distanceToAngle(velocityAt12VoltsMetersPerSecond, wheelDiameterMeters),

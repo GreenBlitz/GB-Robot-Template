@@ -6,13 +6,14 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.poseestimator.Pose3dComponentsValue;
+import frc.robot.vision.data.LimeLightAprilTagVisionData;
+import frc.utils.AngleUnit;
 import frc.utils.math.StandardDeviations3D;
 import frc.robot.vision.VisionConstants;
 import frc.robot.vision.RobotAngleValues;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.IndpendentHeadingVisionSource;
 import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
-import frc.utils.AngleUnit;
 import frc.utils.Conversions;
 import frc.utils.Filter;
 import frc.utils.pose.PoseUtil;
@@ -22,6 +23,7 @@ import frc.utils.alerts.PeriodicAlert;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 
@@ -91,7 +93,6 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	public void update() {
 		lastSeenAprilTagId = getAprilTagID();
 		robotOrientationEntry.setDoubleArray(robotAngleValues.asArray());
-		Logger.recordOutput(logPath + "gyroAngleValues", robotAngleValues.asArray());
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		NetworkTableEntry entry = switch (poseEstimationMethod) {
 			case MEGATAG_1 -> robotPoseEntryMegaTag1;
@@ -150,14 +151,23 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	public Optional<AprilTagVisionData> getVisionData() {
 		Optional<Pair<Pose3d, Double>> poseEstimation = getUpdatedPose3DEstimation();
 		return poseEstimation.map(
-			pose3dDoublePair -> new AprilTagVisionData(
+			pose3dDoublePair -> new LimeLightAprilTagVisionData(
 				sourceName,
 				pose3dDoublePair.getFirst(),
 				pose3dDoublePair.getSecond(),
-				new StandardDeviations3D(standardDeviationsArray),
+				new StandardDeviations3D(
+					poseEstimationMethod.equals(LimelightPoseEstimationMethod.MEGATAG_1)
+						? Arrays.copyOfRange(standardDeviationsArray, 0, Pose3dComponentsValue.values().length)
+						: Arrays.copyOfRange(
+							standardDeviationsArray,
+							Pose3dComponentsValue.values().length,
+							2 * Pose3dComponentsValue.values().length
+						)
+				),
 				getAprilTagValueInRobotSpace(Pose3dComponentsValue.Z_VALUE),
 				getDistanceFromTag(),
-				lastSeenAprilTagId
+				lastSeenAprilTagId,
+				getPoseEstimationMethod()
 			)
 		);
 	}
@@ -189,6 +199,10 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	@Override
 	public void updateRobotAngleValues(RobotAngleValues robotAngleValues) {
 		this.robotAngleValues = robotAngleValues;
+	}
+
+	public LimelightPoseEstimationMethod getPoseEstimationMethod() {
+		return poseEstimationMethod;
 	}
 
 	private void updateCameraPoseOffset(Pose3d cameraPoseOffset) {

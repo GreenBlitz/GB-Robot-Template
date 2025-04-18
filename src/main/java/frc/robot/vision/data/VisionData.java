@@ -14,15 +14,15 @@ public class VisionData {
 		this.timestamp = timestamp;
 	}
 
-	public String getSourceName() {
+	public final String getSourceName() {
 		return sourceName;
 	}
 
-	public Pose3d getEstimatedPose() {
+	public final Pose3d getEstimatedPose() {
 		return estimatedPose;
 	}
 
-	public double getTimestamp() {
+	public final double getTimestamp() {
 		return timestamp;
 	}
 

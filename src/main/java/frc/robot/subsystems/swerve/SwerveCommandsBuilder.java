@@ -1,5 +1,6 @@
 package frc.robot.subsystems.swerve;
 
+import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -171,11 +172,11 @@ public class SwerveCommandsBuilder {
 	}
 
 
-	public Command driveToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose) {
+	public Command driveToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose, PathConstraints pathfindingConstraints) {
 		return swerve.asSubsystemCommand(
 			new DeferredCommand(
 				() -> new SequentialCommandGroup(
-					pathToPose(currentPose.get(), targetPose.get()),
+					pathToPose(currentPose.get(), targetPose.get(), pathfindingConstraints),
 					moveToPoseByPID(currentPose, targetPose.get())
 				),
 				Set.of(swerve)
@@ -184,13 +185,13 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-	private Command pathToPose(Pose2d currentPose, Pose2d targetPose) {
+	private Command pathToPose(Pose2d currentPose, Pose2d targetPose, PathConstraints pathfindingConstraints) {
 		Command pathFollowingCommand;
 		if (PathPlannerUtil.isRobotInPathfindingDeadband(currentPose, targetPose)) {
 			pathFollowingCommand = PathPlannerUtil
 				.createPathDuringRuntime(currentPose, targetPose, AutonomousConstants.getRealTimeConstraints(swerve));
 		} else {
-			pathFollowingCommand = PathFollowingCommandsBuilder.pathfindToPose(targetPose, AutonomousConstants.getRealTimeConstraints(swerve));
+			pathFollowingCommand = PathFollowingCommandsBuilder.pathfindToPose(targetPose, pathfindingConstraints);
 		}
 
 		return swerve.asSubsystemCommand(

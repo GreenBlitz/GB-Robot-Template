@@ -10,10 +10,6 @@ public class AutonomousConstants {
 
 	public static final double PATHFINDING_DEADBAND_METERS = 0.5;
 
-	public static final double DEFAULT_AUTO_DRIVE_POWER = 0;
-
-	public static final double DEFAULT_AUTO_DRIVE_TIME_SECONDS = 0;
-
 	public static PathConstraints getRealTimeConstraints(Swerve swerve) {
 		return new PathConstraints(
 			swerve.getConstants().velocityAt12VoltsMetersPerSecond(),

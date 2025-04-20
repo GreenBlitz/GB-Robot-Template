@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.constants.field.Field;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.utils.auto.PathPlannerUtil;
-import frc.utils.math.AngleTransform;
 import frc.utils.math.ToleranceMath;
 
 import java.util.function.Supplier;
@@ -68,7 +67,7 @@ public class PathFollowingCommandsBuilder {
 	) {
 		return AutoBuilder
 			.pathfindToPose(
-				Field.getAllianceRelative(PathPlannerUtil.getPathStartingPose(path), true, true, AngleTransform.INVERT),
+				Field.getAllianceRelative(PathPlannerUtil.getPathStartingPose(path)),
 				pathfindingConstraints,
 				velocityBetweenPathfindingToPathFollowingMetersPerSecond
 			)
@@ -79,43 +78,24 @@ public class PathFollowingCommandsBuilder {
 		return new ConditionalCommand(
 			followPath(path),
 			pathfindThenFollowPath(path, AutonomousConstants.getRealTimeConstraints(swerve)),
-			() -> PathPlannerUtil.isRobotInPathfindingDeadband(
-				currentPose.get(),
-				Field.getAllianceRelative(PathPlannerUtil.getPathStartingPose(path), true, true, AngleTransform.INVERT)
-			)
+			() -> PathPlannerUtil
+				.isRobotInPathfindingDeadband(currentPose.get(), Field.getAllianceRelative(PathPlannerUtil.getPathStartingPose(path)))
 		);
-	}
-
-	public static Command moveToPoseByPID(Swerve swerve, Supplier<Pose2d> currentPose, Pose2d targetPose) {
-		return swerve.getCommandsBuilder().moveToPoseByPID(currentPose, targetPose);
 	}
 
 	public static Command followAdjustedPath(Swerve swerve, Supplier<Pose2d> currentPose, PathPlannerPath path) {
 		return swerve.asSubsystemCommand(
 			followPathOrPathfindAndFollowPath(swerve, path, currentPose).andThen(
-				moveToPoseByPID(
-					swerve,
-					currentPose,
-					Field.getAllianceRelative(PathPlannerUtil.getLastPathPose(path), true, true, AngleTransform.INVERT)
-				)
+				swerve.getCommandsBuilder().moveToPoseByPID(currentPose, Field.getAllianceRelative(PathPlannerUtil.getLastPathPose(path)))
 			),
 			"Follow Adjusted " + path.name
 		);
 	}
 
 	public static Command followAdjustedPathThenStop(Swerve swerve, Supplier<Pose2d> currentPose, PathPlannerPath path, Pose2d tolerance) {
-		return swerve.asSubsystemCommand(
-			followAdjustedPath(swerve, currentPose, path)
-				.until(
-					() -> ToleranceMath.isNear(
-						Field.getAllianceRelative(PathPlannerUtil.getLastPathPose(path), true, true, AngleTransform.INVERT),
-						currentPose.get(),
-						tolerance
-					)
-				)
-				.andThen(swerve.getCommandsBuilder().resetTargetSpeeds()),
-			"Follow Adjusted " + path.name + " Then Stop"
-		);
+		return followAdjustedPath(swerve, currentPose, path)
+			.until(() -> ToleranceMath.isNear(Field.getAllianceRelative(PathPlannerUtil.getLastPathPose(path)), currentPose.get(), tolerance))
+			.andThen(swerve.getCommandsBuilder().resetTargetSpeeds());
 	}
 
 }

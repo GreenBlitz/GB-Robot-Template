@@ -24,7 +24,6 @@ import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.Set;
-import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class SwerveCommandsBuilder {
@@ -141,10 +140,7 @@ public class SwerveCommandsBuilder {
 		return driveByState(powersSupplier, SwerveState.DEFAULT_DRIVE);
 	}
 
-	public Command driveByState(
-		Supplier<ChassisPowers> powersSupplier,
-		Supplier<SwerveState> state
-	) {
+	public Command driveByState(Supplier<ChassisPowers> powersSupplier, Supplier<SwerveState> state) {
 		return swerve.asSubsystemCommand(
 			new DeferredCommand(() -> driveByState(powersSupplier, state.get()), Set.of(swerve)),
 			"Drive with supplier state"
@@ -153,10 +149,7 @@ public class SwerveCommandsBuilder {
 
 	public Command driveByState(Supplier<ChassisPowers> chassisPowersSupplier, SwerveState state) {
 		return swerve.asSubsystemCommand(
-			new InitExecuteCommand(
-				swerve::resetPIDControllers,
-				() -> swerve.driveByState(chassisPowersSupplier.get(), state)
-			),
+			new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.driveByState(chassisPowersSupplier.get(), state)),
 			"Drive with state"
 		);
 	}

@@ -189,7 +189,7 @@ public class SwerveCommandsBuilder {
 		Command pathFollowingCommand;
 		if (PathPlannerUtil.isRobotInPathfindingDeadband(currentPose, targetPose)) {
 			pathFollowingCommand = PathPlannerUtil
-				.createPathDuringRuntime(currentPose, targetPose, AutonomousConstants.getRealTimeConstraints(swerve));
+				.createPathDuringRuntime(currentPose, targetPose, pathfindingConstraints);
 		} else {
 			pathFollowingCommand = PathFollowingCommandsBuilder.pathfindToPose(targetPose, pathfindingConstraints);
 		}

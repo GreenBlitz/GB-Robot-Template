@@ -23,7 +23,7 @@ class Pigeon2GyroBuilder {
 	}
 
 	static IGyro buildGyro(String logPath) {
-		Pigeon2Wrapper pigeon2Wrapper = new Pigeon2Wrapper(IDs.SWERVE_PIGEON_2);
+		Pigeon2Wrapper pigeon2Wrapper = new Pigeon2Wrapper(IDs.Pigeon2IDs.SWERVE_GYRO);
 
 		MountPoseConfigs mountPoseConfigs = new MountPoseConfigs();
 		pigeon2Wrapper.getConfigurator().refresh(mountPoseConfigs);

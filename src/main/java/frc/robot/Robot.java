@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.RobotManager;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.AutosBuilder;
-import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
+import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.led.LEDState;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
 import frc.robot.subsystems.climb.lifter.Lifter;
@@ -232,7 +232,7 @@ public class Robot {
 	public void periodic() {
 		double startingTime = TimeUtil.getCurrentTimeSeconds();
 
-		Phoenix6SignalBuilder.refreshAll();
+		BusChain.refreshAll();
 
 		swerve.update();
 		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());

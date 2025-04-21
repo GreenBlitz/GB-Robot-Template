@@ -5,14 +5,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.DeferredCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.PathFollowingCommandsBuilder;
 import frc.robot.subsystems.swerve.module.ModuleConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
@@ -190,8 +184,7 @@ public class SwerveCommandsBuilder {
 	private Command pathToPose(Pose2d currentPose, Pose2d targetPose, PathConstraints pathfindingConstraints) {
 		Command pathFollowingCommand;
 		if (PathPlannerUtil.isRobotInPathfindingDeadband(currentPose, targetPose)) {
-			pathFollowingCommand = PathPlannerUtil
-				.createPathDuringRuntime(currentPose, targetPose, pathfindingConstraints);
+			pathFollowingCommand = PathPlannerUtil.createPathDuringRuntime(currentPose, targetPose, pathfindingConstraints);
 		} else {
 			pathFollowingCommand = PathFollowingCommandsBuilder.pathfindToPose(targetPose, pathfindingConstraints);
 		}

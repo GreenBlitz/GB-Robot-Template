@@ -51,7 +51,6 @@ public class JoysticksBindings {
 		noteOut.onTrue(noteInRumble(MAIN_JOYSTICK).alongWith(noteInRumble(SECOND_JOYSTICK)));
 	}
 
-
 	public static void updateChassisDriverInputs() {
 		if (MAIN_JOYSTICK.isConnected()) {
 			chassisDriverInputs.xPower = MAIN_JOYSTICK.getAxisValue(Axis.LEFT_Y);

@@ -124,12 +124,6 @@ public class Swerve extends GBSubsystem {
 		this.driversPowerInputs = powers;
 	}
 
-	public void setHeading(Rotation2d heading) {
-		gyro.setYaw(heading);
-		gyro.updateInputs(gyroSignals.yawSignal());
-		headingStabilizer.unlockTarget();
-		headingStabilizer.setTargetHeading(heading);
-	}
 
 	protected void resetPIDControllers() {
 		constants.xMetersPIDController().reset();

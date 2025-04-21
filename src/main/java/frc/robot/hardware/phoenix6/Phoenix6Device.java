@@ -68,10 +68,9 @@ public abstract class Phoenix6Device implements IDevice {
 			return;
 		}
 
-		InputSignal<?>[] validSignals = getValidSignals(inputSignals);
+		logSignals(inputSignals);
 		connectedInput.connected = getDevice().isConnected();
 		Logger.processInputs(logPath, connectedInput);
-		logSignals(inputSignals);
 	}
 
 	public abstract ParentDevice getDevice();

@@ -124,7 +124,6 @@ public class Swerve extends GBSubsystem {
 		this.driversPowerInputs = powers;
 	}
 
-
 	protected void resetPIDControllers() {
 		constants.xMetersPIDController().reset();
 		constants.yMetersPIDController().reset();

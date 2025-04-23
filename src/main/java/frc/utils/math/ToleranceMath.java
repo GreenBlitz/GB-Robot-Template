@@ -23,7 +23,7 @@ public class ToleranceMath {
 	}
 
 	public static boolean isNearWrapped(Rotation2d wantedAngle, Rotation2d angle, Rotation2d tolerance) {
-		return Math.abs(MathUtil.angleModulus(wantedAngle.getRadians() - angle.getRadians())) <= tolerance.getRadians();
+		return Math.abs(MathUtil.angleModulus(wantedAngle.minus(angle).getRadians())) <= tolerance.getRadians();
 	}
 
 	public static boolean isNear(double wanted, double actual, double tolerance) {

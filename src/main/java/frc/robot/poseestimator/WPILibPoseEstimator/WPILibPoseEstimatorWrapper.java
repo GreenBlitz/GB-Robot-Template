@@ -89,7 +89,7 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 
 		lastOdometryAngle = odometryAngle;
 		lastOdometryData.setWheelPositions(data.getWheelPositions());
-		lastOdometryData.setGyrYaw(data.getGyroYaw());
+		lastOdometryData.setGyroYaw(data.getGyroYaw());
 		lastOdometryData.setTimestamp(data.getTimestamp());
 	}
 

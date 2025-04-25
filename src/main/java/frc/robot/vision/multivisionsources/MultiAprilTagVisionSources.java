@@ -8,7 +8,7 @@ import frc.robot.vision.VisionConstants;
 import frc.utils.TimedValue;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.IndpendentHeadingVisionSource;
-import frc.robot.vision.RobotAngleValues;
+import frc.robot.vision.OrientationState3D;
 import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
 import frc.robot.vision.sources.VisionSource;
 import frc.robot.vision.sources.limelights.DynamicSwitchingLimelight;
@@ -54,20 +54,20 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		this(logPath, robotHeadingSupplier, useRobotHeadingForPoseEstimating, List.of(visionSources));
 	}
 
-	private void updateAngleInHeadingRequiringSources(RobotAngleValues robotAngleValues) {
+	private void updateAngleInHeadingRequiringSources(OrientationState3D robotOrientationState) {
 		for (VisionSource<AprilTagVisionData> visionSource : visionSources) {
 			if (visionSource instanceof RobotHeadingRequiringVisionSource robotHeadingRequiringVisionSource) {
-				robotHeadingRequiringVisionSource.updateRobotAngleValues(robotAngleValues);
+				robotHeadingRequiringVisionSource.updateRobotAngleValues(robotOrientationState);
 			}
 		}
 	}
 
-	private void updateAngleInHeadingRequiringSources(Rotation3d angle, double yawRate, double pitchRate, double rollRate) {
-		updateAngleInHeadingRequiringSources(new RobotAngleValues(angle, yawRate, pitchRate, rollRate));
+	private void updateAngleInHeadingRequiringSources(Rotation3d angle, Rotation3d angularVelocity) {
+		updateAngleInHeadingRequiringSources(new OrientationState3D(angle, angularVelocity));
 	}
 
 	private void updateAngleInHeadingRequiringSources(Rotation3d angle) {
-		updateAngleInHeadingRequiringSources(new RobotAngleValues(angle));
+		updateAngleInHeadingRequiringSources(new OrientationState3D(angle));
 	}
 
 	private void updateAngleInHeadingRequiringSources(Rotation2d yaw) {

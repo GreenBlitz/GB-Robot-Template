@@ -10,7 +10,7 @@ import frc.robot.vision.data.LimeLightAprilTagVisionData;
 import frc.utils.AngleUnit;
 import frc.utils.math.StandardDeviations3D;
 import frc.robot.vision.VisionConstants;
-import frc.robot.vision.RobotOrientationState;
+import frc.robot.vision.OrientationState3D;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.IndpendentHeadingVisionSource;
 import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
@@ -52,7 +52,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	private int lastSeenAprilTagId;
 	private BooleanSupplier shouldDataBeFiltered;
 	private Filter<? super AprilTagVisionData> filter;
-	private RobotOrientationState robotOrientationState;
+	private OrientationState3D robotOrientationState;
 
 	protected LimeLightSource(
 		String cameraNetworkTablesName,
@@ -79,7 +79,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		this.computingPipelineLatencyEntry = getLimelightNetworkTableEntry("tl");
 		this.captureLatencyEntry = getLimelightNetworkTableEntry("cl");
 
-		this.robotOrientationState = new RobotOrientationState();
+		this.robotOrientationState = new OrientationState3D();
 		AlertManager.addAlert(
 			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1)
 		);
@@ -197,7 +197,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	}
 
 	@Override
-	public void updateRobotAngleValues(RobotOrientationState robotOrientationState) {
+	public void updateRobotAngleValues(OrientationState3D robotOrientationState) {
 		this.robotOrientationState = robotOrientationState;
 	}
 

@@ -35,7 +35,7 @@ public class OdometryData {
 		this.wheelPositions = wheelPositions;
 	}
 
-	public void setGyrYaw(Optional<Rotation2d> gyroYaw) {
+	public void setGyroYaw(Optional<Rotation2d> gyroYaw) {
 		this.gyroYaw = gyroYaw;
 	}
 

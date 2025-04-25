@@ -1,10 +1,10 @@
 package frc.robot.hardware.signal;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.utils.AngleUnit;
 import frc.utils.TimedValue;
+import frc.utils.math.ToleranceMath;
 import org.littletonrobotics.junction.LogTable;
 
 public abstract class AngleSignal implements InputSignal<Rotation2d> {
@@ -47,7 +47,7 @@ public abstract class AngleSignal implements InputSignal<Rotation2d> {
 
 	@Override
 	public boolean isNear(Rotation2d value, Rotation2d tolerance) {
-		return MathUtil.isNear(value.getRotations(), getLatestValue().getRotations(), tolerance.getRotations());
+		return ToleranceMath.isNear(value.getRotations(), getLatestValue().getRotations(), tolerance.getRotations());
 	}
 
 	@Override

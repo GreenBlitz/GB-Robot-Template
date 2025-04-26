@@ -6,7 +6,7 @@ Things To Do When Getting Template
 
 Field:
 -----------------------
-[See field calibrations file](constants/field/calibrations)
+[See field calibrations file](constants/field/calibrations.md)
 
 Swerve:
 -----------------------

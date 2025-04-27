@@ -11,42 +11,33 @@ import java.util.stream.StreamSupport;
 
 public final class GBBasisVector<S extends Num> implements Cloneable, Iterable<Double>, Vector<S> {
 
-	private final int[] minorOf;
-
 	private GBBasisVector<?> cloneOf;
 	private boolean clone;
 	private double[] data;
 	private double factorOf;
 	private Function<Double, Double> appliedFunction;
 
-	private GBBasisVector(GBBasisVector<?> anotherVector, boolean clone, int[] minorOf) {
-		this.minorOf = minorOf;
-		this.appliedFunction = anotherVector.appliedFunction;
-
+	private GBBasisVector(GBBasisVector<?> anotherVector) {
 		this.cloneOf = anotherVector;
-		this.clone = clone;
+		this.clone = true;
 		this.data = null;
 		this.factorOf = 1;
+		this.appliedFunction = anotherVector.appliedFunction;
 	}
 
-	private GBBasisVector(GBBasisVector<?> anotherVector, boolean clone) {
-		this(anotherVector, clone, new int[anotherVector.getSize()]);
-	}
-
-	protected GBBasisVector(double[] data) {
+	public GBBasisVector(double[] data) {
 		this.data = data;
 		this.clone = false;
 		this.factorOf = 1;
 		this.cloneOf = null;
-		this.minorOf = null;
 		this.appliedFunction = x -> x;
 	}
 
-	protected <E extends Num> GBBasisVector(edu.wpi.first.math.Vector<E> vector) {
+	public <E extends Num> GBBasisVector(edu.wpi.first.math.Vector<E> vector) {
 		this(vector.getData());
 	}
 
-	protected GBBasisVector(Collection<Double> data) {
+	public GBBasisVector(Collection<Double> data) {
 		this(data.stream().mapToDouble(x -> x).toArray());
 	}
 
@@ -74,7 +65,7 @@ public final class GBBasisVector<S extends Num> implements Cloneable, Iterable<D
 		if (!clone) {
 			output = data[index];
 		} else {
-			output = cloneOf.get(minorOf[index]);
+			output = cloneOf.get(index);
 		}
 		return appliedFunction.apply(output * factorOf);
 	}
@@ -90,7 +81,7 @@ public final class GBBasisVector<S extends Num> implements Cloneable, Iterable<D
 
 	public void set(int index, double value) {
 		if (clone) {
-			this.data = cloneOf.data;
+			this.data = cloneOf.data.clone();
 			this.clone = false;
 			this.factorOf *= cloneOf.factorOf;
 			this.cloneOf = null; // frees up the garbage collector
@@ -101,14 +92,14 @@ public final class GBBasisVector<S extends Num> implements Cloneable, Iterable<D
 	@Override
 	public void plus(Vector<S> anotherVector) {
 		for (int i = 0; i < assertSizeGetMinimum(anotherVector); i++) {
-			data[i] = this.get(i) + anotherVector.get(i);
+			this.set(i, this.get(i) + anotherVector.get(i));
 		}
 	}
 
 	@Override
 	public void minus(Vector<S> anotherVector) {
 		for (int i = 0; i < assertSizeGetMinimum(anotherVector); i++) {
-			data[i] = this.get(i) - anotherVector.get(i);
+			this.set(i, this.get(i) - anotherVector.get(i));
 		}
 	}
 
@@ -142,10 +133,6 @@ public final class GBBasisVector<S extends Num> implements Cloneable, Iterable<D
 			.sqrt(StreamSupport.stream(this.spliterator(), false).map(x -> Math.pow(x, 2)).reduce(Double::sum).orElseGet(() -> Double.NaN));
 	}
 
-	public GBBasisVector<S> getMinor(int[] minorOf) {
-		return new GBBasisVector<S>(this, true, minorOf);
-	}
-
 	public double assertSizeGetMinimum(Vector<?> anotherVector) {
 		int theirSize = anotherVector.getSize();
 		int mySize = this.getSize();
@@ -160,6 +147,28 @@ public final class GBBasisVector<S extends Num> implements Cloneable, Iterable<D
 	}
 
 	@Override
+	public String toString() {
+		StringBuilder output = new StringBuilder();
+		for (double x : this) {
+			output.append(String.format("%.4f", x));
+		}
+		return output.toString();
+	}
+
+	public String debugString() {
+		return "GBBasisVector{"
+			+ ", cloneOf="
+			+ cloneOf
+			+ ", clone="
+			+ clone
+			+ ", data="
+			+ Arrays.toString(data)
+			+ ", factorOf="
+			+ factorOf
+			+ '}';
+	}
+
+	@Override
 	public GBBasisVector<S> clone() {
 		GBBasisVector<S> cloned;
 		try {
@@ -168,11 +177,11 @@ public final class GBBasisVector<S extends Num> implements Cloneable, Iterable<D
 			throw new RuntimeException(e);
 		}
 		cloned.appliedFunction = this.appliedFunction;
-		this.cloneOf = this;
+		this.cloneOf = clone ? this.cloneOf.clone() : null;
 		this.clone = true;
 		this.data = null;
 		this.factorOf = 1;
-		return new GBBasisVector<>(this, true);
+		return new GBBasisVector<>(this);
 	}
 
 }

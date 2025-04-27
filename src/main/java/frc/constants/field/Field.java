@@ -29,17 +29,29 @@ public class Field {
 		return isFieldConventionAlliance() ? translation : FieldMath.mirror(translation, mirrorX, mirrorY);
 	}
 
-	public static Rotation3d getAllianceRelative(Rotation3d rotation) {
-		return isFieldConventionAlliance() ? rotation : FieldMath.mirrorAngle(rotation);
+	public static Rotation3d getAllianceRelative(
+		Rotation3d rotation,
+		AngleTransform rollTransform,
+		AngleTransform pitchTransform,
+		AngleTransform yawTransform
+	) {
+		return isFieldConventionAlliance() ? rotation : FieldMath.transformAngle(rotation, rollTransform, pitchTransform, yawTransform);
 	}
 
 	public static Rotation2d getAllianceRelative(Rotation2d rotation) {
 		return isFieldConventionAlliance() ? rotation : FieldMath.transformAngle(rotation, AngleTransform.INVERT);
 	}
 
-	public static Pose3d getAllianceRelative(Pose3d pose, boolean mirrorX, boolean mirrorY, boolean mirrorAngle) {
+	public static Pose3d getAllianceRelative(
+		Pose3d pose,
+		boolean mirrorX,
+		boolean mirrorY,
+		AngleTransform rollTransform,
+		AngleTransform pitchTransform,
+		AngleTransform yawTransform
+	) {
 		Translation3d translation3d = getAllianceRelative(pose.getTranslation(), mirrorX, mirrorY);
-		return mirrorAngle ? new Pose3d(translation3d, getAllianceRelative(pose.getRotation())) : new Pose3d(translation3d, pose.getRotation());
+		return new Pose3d(translation3d, getAllianceRelative(pose.getRotation(), rollTransform, pitchTransform, yawTransform));
 	}
 
 }

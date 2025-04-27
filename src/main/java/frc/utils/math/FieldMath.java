@@ -29,8 +29,16 @@ public class FieldMath {
 		};
 	}
 
-	public static Rotation3d mirrorAngle(Rotation3d rotation) {
-		return new Rotation3d(rotation.getX(), -rotation.getY(), rotation.getZ());
+	public static Rotation3d transformAngle(
+		Rotation3d rotation,
+		AngleTransform rollTransform,
+		AngleTransform pitchTransform,
+		AngleTransform yawTransform
+	) {
+		double roll = transformAngle(Rotation2d.fromRadians(rotation.getX()), rollTransform).getRadians();
+		double pitch = transformAngle(Rotation2d.fromRadians(rotation.getY()), pitchTransform).getRadians();
+		double yaw = transformAngle(Rotation2d.fromRadians(rotation.getZ()), yawTransform).getRadians();
+		return new Rotation3d(roll, pitch, yaw);
 	}
 
 	public static double mirrorX(double x) {

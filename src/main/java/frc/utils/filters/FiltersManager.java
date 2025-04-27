@@ -27,13 +27,6 @@ public class FiltersManager {
 	}
 
 	/**
-	 * for filters that uses past measurements for filtering, reset the past data.
-	 */
-	public static void resetAllFilters() {
-		periodicLinearFilters.forEach(IPeriodicFilter::hardReset);
-	}
-
-	/**
 	 * disable all of the linear filter updates. Should be called if and only if there is a severe impact on the cycle time, or for debugging the
 	 * cycle time.
 	 */

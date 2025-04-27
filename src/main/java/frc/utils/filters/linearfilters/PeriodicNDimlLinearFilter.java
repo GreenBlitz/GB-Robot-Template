@@ -4,7 +4,6 @@ import edu.wpi.first.math.Num;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.filter.LinearFilter;
 import frc.utils.filters.IPeriodicFilter;
-import frc.utils.time.TimeUtils;
 import org.ejml.simple.SimpleMatrix;
 import org.littletonrobotics.junction.Logger;
 
@@ -43,14 +42,8 @@ public class PeriodicNDimlLinearFilter<T extends Num> implements IPeriodicFilter
 	@Override
 	public void log(String parentLogPath) {
 		String logPath = parentLogPath + name + "/";
-		for (int i = 0; i < updateValues.get().size(); i++) {
-			for (int j = 0; j < size.getNum(); j++) {
-				Logger.recordOutput(logPath + "lastUpdate" + i + "/" + j, TimeUtils.getCurrentTimeSeconds());
-				Logger.recordOutput(logPath + "input" + i + "/" + j, updateValues.get().get(i).get(0, j));
-			}
-		}
 		for (int i = 0; i < size.getNum(); i++) {
-			Logger.recordOutput(logPath + "output/" + i, get().get(0, i));
+			Logger.recordOutput(logPath + "/" + i, get().get(0, i));
 		}
 	}
 

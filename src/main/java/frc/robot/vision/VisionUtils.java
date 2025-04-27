@@ -1,7 +1,5 @@
 package frc.robot.vision;
 
-import frc.constants.VisionConstants;
-
 public class VisionUtils {
 
 	public static double getAprilTagHeightByID(int id) {

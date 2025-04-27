@@ -1,8 +1,8 @@
 package frc.robot.hardware.signal;
 
-import edu.wpi.first.math.MathUtil;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.utils.TimedValue;
+import frc.utils.math.ToleranceMath;
 import org.littletonrobotics.junction.LogTable;
 
 public abstract class DoubleSignal implements InputSignal<Double> {
@@ -43,7 +43,7 @@ public abstract class DoubleSignal implements InputSignal<Double> {
 
 	@Override
 	public boolean isNear(Double value, Double tolerance) {
-		return MathUtil.isNear(value, getLatestValue(), tolerance);
+		return ToleranceMath.isNear(value, getLatestValue(), tolerance);
 	}
 
 	@Override

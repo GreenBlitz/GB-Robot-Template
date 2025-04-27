@@ -1,7 +1,8 @@
-package frc.constants;
+package frc.robot.vision;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import frc.constants.DirectoryPaths;
 import frc.robot.vision.data.VisionData;
 import frc.utils.Filter;
 import frc.utils.alerts.Alert;

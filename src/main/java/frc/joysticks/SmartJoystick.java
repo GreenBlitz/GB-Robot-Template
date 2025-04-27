@@ -1,6 +1,5 @@
 package frc.joysticks;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -8,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
+import frc.utils.math.ToleranceMath;
 
 public class SmartJoystick {
 
@@ -91,7 +91,7 @@ public class SmartJoystick {
 	}
 
 	private static double applyDeadzone(double power, double deadzone) {
-		return MathUtil.applyDeadband(power, deadzone);
+		return ToleranceMath.applyDeadband(power, deadzone);
 	}
 
 	public AxisButton getAxisAsButton(Axis axis) {

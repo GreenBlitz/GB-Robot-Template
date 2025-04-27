@@ -20,7 +20,7 @@ public class FieldMath {
 	}
 
 
-	public static Rotation2d mirrorAngle(Rotation2d angle, AngleTransform angleTransform) {
+	public static Rotation2d transformAngle(Rotation2d angle, AngleTransform angleTransform) {
 		return switch (angleTransform) {
 			case KEEP -> angle;
 			case MIRROR_X -> MathConstants.HALF_CIRCLE.minus(angle);
@@ -43,7 +43,7 @@ public class FieldMath {
 
 	public static Pose2d mirror(Pose2d pose2d, boolean mirrorX, boolean mirrorY, AngleTransform angleTransform) {
 		pose2d = new Pose2d(mirror(pose2d.getTranslation(), mirrorX, mirrorY), pose2d.getRotation());
-		return new Pose2d(pose2d.getX(), pose2d.getY(), mirrorAngle(pose2d.getRotation(), angleTransform));
+		return new Pose2d(pose2d.getX(), pose2d.getY(), transformAngle(pose2d.getRotation(), angleTransform));
 	}
 
 	public static Translation3d mirror(Translation3d translation3d, boolean mirrorX, boolean mirrorY) {

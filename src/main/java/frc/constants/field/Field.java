@@ -14,8 +14,8 @@ public class Field {
 		return DriverStationUtil.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE;
 	}
 
-	public static final double LENGTH_METERS = 16.54175;
-	public static final double WIDTH_METERS = 8.0137;
+	public static final double LENGTH_METERS = 17.548225;
+	public static final double WIDTH_METERS = 8.0518;
 
 	public static Pose2d getAllianceRelative(Pose2d pose, boolean mirrorX, boolean mirrorY, AngleTransform angleTransform) {
 		return isFieldConventionAlliance() ? pose : FieldMath.mirror(pose, mirrorX, mirrorY, angleTransform);
@@ -34,7 +34,7 @@ public class Field {
 	}
 
 	public static Rotation2d getAllianceRelative(Rotation2d rotation) {
-		return isFieldConventionAlliance() ? rotation : FieldMath.mirrorAngle(rotation, AngleTransform.INVERT);
+		return isFieldConventionAlliance() ? rotation : FieldMath.transformAngle(rotation, AngleTransform.INVERT);
 	}
 
 	public static Pose3d getAllianceRelative(Pose3d pose, boolean mirrorX, boolean mirrorY, boolean mirrorAngle) {

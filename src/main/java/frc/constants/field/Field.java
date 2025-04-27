@@ -44,9 +44,9 @@ public class Field {
 
 	public static Pose2d getPointFromCertainDistance(Pose2d point, double distantInMeters) {
 		return new Pose2d(
-				point.getX() - point.getRotation().getCos() * distantInMeters,
-				point.getY() - point.getRotation().getSin() * distantInMeters,
-				point.getRotation()
+			point.getX() - point.getRotation().getCos() * distantInMeters,
+			point.getY() - point.getRotation().getSin() * distantInMeters,
+			point.getRotation()
 		);
 	}
 

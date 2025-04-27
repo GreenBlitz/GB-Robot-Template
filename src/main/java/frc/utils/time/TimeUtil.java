@@ -7,7 +7,7 @@ import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
 import org.littletonrobotics.junction.Logger;
 
-public class TimeUtils {
+public class TimeUtil {
 
 	public static final double DEFAULT_CYCLE_TIME_SECONDS = 0.02;
 

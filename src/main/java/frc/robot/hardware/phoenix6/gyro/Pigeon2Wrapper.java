@@ -6,7 +6,7 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
-import frc.robot.hardware.phoenix6.Phoenix6Utils;
+import frc.robot.hardware.phoenix6.Phoenix6Util;
 
 import static edu.wpi.first.units.Units.Degrees;
 
@@ -111,7 +111,7 @@ public class Pigeon2Wrapper extends Pigeon2 {
 	}
 
 	public StatusCode applyConfiguration(Pigeon2Configuration configuration, int numberOfTries) {
-		return Phoenix6Utils.checkWithRetry(() -> getConfigurator().apply(configuration), numberOfTries);
+		return Phoenix6Util.checkWithRetry(() -> getConfigurator().apply(configuration), numberOfTries);
 	}
 
 	public StatusCode applyConfiguration(Pigeon2Configuration configuration) {

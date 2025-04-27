@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
-import frc.utils.battery.BatteryUtils;
+import frc.utils.battery.BatteryUtil;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -21,11 +21,13 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	public Robot() {
-		BatteryUtils.scheduleLimiter();
+		BatteryUtil.scheduleLimiter();
 	}
 
 	public void periodic() {
-		BatteryUtils.logStatus();
+		BusChain.refreshAll();
+
+		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		CommandScheduler.getInstance().run(); // Should be last
 	}

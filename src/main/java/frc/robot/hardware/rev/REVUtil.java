@@ -4,7 +4,7 @@ import com.revrobotics.REVLibError;
 
 import java.util.function.Supplier;
 
-public class REVUtils {
+public class REVUtil {
 
 	public static REVLibError checkWithRetry(Supplier<REVLibError> revLibErrorSupplier, int numberOfTries) {
 		for (int i = 0; i < numberOfTries - 1; i++) {

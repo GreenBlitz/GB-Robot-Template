@@ -13,17 +13,17 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autonomous.AutonomousConstants;
-import frc.robot.subsystems.swerve.module.ModuleUtils;
+import frc.robot.subsystems.swerve.module.ModuleConstants;
+import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.states.RotateAxis;
 import frc.robot.subsystems.swerve.states.SwerveState;
-import frc.utils.auto.PathPlannerUtils;
+import frc.utils.auto.PathPlannerUtil;
 import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.Set;
-import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class SwerveCommandsBuilder {
@@ -37,14 +37,14 @@ public class SwerveCommandsBuilder {
 		this.swerve = swerve;
 		this.modules = swerve.getModules();
 		this.steerCalibrator = new SysIdCalibrator(
-			modules.getModule(ModuleUtils.ModulePosition.FRONT_LEFT).getSteerSysIdConfigInfo(),
+			modules.getModule(ModuleUtil.ModulePosition.FRONT_LEFT).getSteerSysIdConfigInfo(),
 			swerve,
-			modules.getModule(ModuleUtils.ModulePosition.FRONT_LEFT)::setSteerVoltage
+			modules.getModule(ModuleUtil.ModulePosition.FRONT_LEFT)::setSteerVoltage
 		);
 		this.driveCalibrator = new SysIdCalibrator(
-			modules.getModule(ModuleUtils.ModulePosition.FRONT_LEFT).getDriveSysIdConfigInfo(),
+			modules.getModule(ModuleUtil.ModulePosition.FRONT_LEFT).getDriveSysIdConfigInfo(),
 			swerve,
-			modules::setDrivesVoltage
+			ModuleConstants.IS_CURRENT_CONTROL ? modules::setDrivesCurrent : modules::setDrivesVoltage
 		);
 	}
 
@@ -136,29 +136,32 @@ public class SwerveCommandsBuilder {
 	}
 
 
-	public Command drive(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier rotationSupplier) {
-		return driveByState(xSupplier, ySupplier, rotationSupplier, SwerveState.DEFAULT_DRIVE);
+	public Command drive(Supplier<ChassisPowers> powersSupplier) {
+		return driveByState(powersSupplier, SwerveState.DEFAULT_DRIVE);
 	}
 
-	public Command driveByState(
-		DoubleSupplier xSupplier,
-		DoubleSupplier ySupplier,
-		DoubleSupplier rotationSupplier,
-		Supplier<SwerveState> state
-	) {
+	public Command driveByState(Supplier<ChassisPowers> powersSupplier, Supplier<SwerveState> state) {
 		return swerve.asSubsystemCommand(
-			new DeferredCommand(() -> driveByState(xSupplier, ySupplier, rotationSupplier, state.get()), Set.of(swerve)),
+			new DeferredCommand(() -> driveByState(powersSupplier, state.get()), Set.of(swerve)),
 			"Drive with supplier state"
 		);
 	}
 
-	public Command driveByState(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier rotationSupplier, SwerveState state) {
+	public Command driveByState(Supplier<ChassisPowers> chassisPowersSupplier, SwerveState state) {
 		return swerve.asSubsystemCommand(
-			new InitExecuteCommand(
-				swerve::resetPIDControllers,
-				() -> swerve.driveByState(xSupplier.getAsDouble(), ySupplier.getAsDouble(), rotationSupplier.getAsDouble(), state)
-			),
+			new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.driveByState(chassisPowersSupplier.get(), state)),
 			"Drive with state"
+		);
+	}
+
+	public Command driveByDriversInputs(Supplier<SwerveState> state) {
+		return new DeferredCommand(() -> driveByDriversInputs(state.get()), Set.of(swerve));
+	}
+
+	public Command driveByDriversInputs(SwerveState state) {
+		return swerve.asSubsystemCommand(
+			new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.driveByDriversTargetsPowers(state)),
+			"Drive by drivers inputs with state"
 		);
 	}
 
@@ -177,7 +180,7 @@ public class SwerveCommandsBuilder {
 		Command pathFollowingCommand;
 		double distanceFromTarget = currentPose.getTranslation().getDistance(targetPose.getTranslation());
 		if (distanceFromTarget < AutonomousConstants.CLOSE_TO_TARGET_POSITION_DEADBAND_METERS) {
-			pathFollowingCommand = PathPlannerUtils.createPathOnTheFly(currentPose, targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
+			pathFollowingCommand = PathPlannerUtil.createPathOnTheFly(currentPose, targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
 		} else {
 			pathFollowingCommand = AutoBuilder.pathfindToPose(targetPose, AutonomousConstants.REAL_TIME_CONSTRAINTS);
 		}

@@ -5,8 +5,8 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.hardware.mechanisms.MechanismSimulation;
 import frc.robot.hardware.rev.motors.SparkMaxWrapper;
 import frc.utils.Conversions;
-import frc.utils.battery.BatteryUtils;
-import frc.utils.time.TimeUtils;
+import frc.utils.battery.BatteryUtil;
+import frc.utils.time.TimeUtil;
 
 public class SparkMaxSimulation {
 
@@ -33,8 +33,8 @@ public class SparkMaxSimulation {
 		mechanismSimulation.updateMotor();
 		simulation.iterate(
 			Conversions.perSecondToPerMinute(mechanismSimulation.getRotorVelocityAnglesPerSecond().getRotations()),
-			BatteryUtils.getCurrentVoltage(),
-			TimeUtils.getLatestCycleTimeSeconds()
+			BatteryUtil.getCurrentVoltage(),
+			TimeUtil.getLatestCycleTimeSeconds()
 		);
 	}
 

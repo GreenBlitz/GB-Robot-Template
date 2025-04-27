@@ -1,11 +1,12 @@
 package frc.robot.subsystems.swerve;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.swerve.states.DriveSpeed;
 import frc.utils.math.ToleranceMath;
-import frc.utils.time.TimeUtils;
+import frc.utils.time.TimeUtil;
 
 public class SwerveMath {
 
@@ -17,23 +18,23 @@ public class SwerveMath {
 		return sum / modulePositionsFromCenterMeters.length;
 	}
 
-	public static ChassisSpeeds fieldToRobotRelativeSpeeds(ChassisSpeeds fieldRelativeSpeeds, Rotation2d allianceRelativeHeading) {
-		return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, allianceRelativeHeading);
+	public static ChassisSpeeds allianceToRobotRelativeSpeeds(ChassisSpeeds allianceRelativeSpeeds, Rotation2d allianceRelativeHeading) {
+		return ChassisSpeeds.fromFieldRelativeSpeeds(allianceRelativeSpeeds, allianceRelativeHeading);
 	}
 
-	public static ChassisSpeeds robotToFieldRelativeSpeeds(ChassisSpeeds robotRelativeSpeeds, Rotation2d allianceRelativeHeading) {
+	public static ChassisSpeeds robotToAllianceRelativeSpeeds(ChassisSpeeds robotRelativeSpeeds, Rotation2d allianceRelativeHeading) {
 		return ChassisSpeeds.fromRobotRelativeSpeeds(robotRelativeSpeeds, allianceRelativeHeading);
 	}
 
 	public static ChassisSpeeds discretize(ChassisSpeeds chassisSpeeds) {
-		return ChassisSpeeds.discretize(chassisSpeeds, TimeUtils.getLatestCycleTimeSeconds());
+		return ChassisSpeeds.discretize(chassisSpeeds, TimeUtil.getLatestCycleTimeSeconds());
 	}
 
-	public static ChassisSpeeds powersToSpeeds(double xPower, double yPower, double rotationPower, SwerveConstants constants) {
+	public static ChassisSpeeds powersToSpeeds(ChassisPowers powers, SwerveConstants constants) {
 		return new ChassisSpeeds(
-			xPower * constants.velocityAt12VoltsMetersPerSecond(),
-			yPower * constants.velocityAt12VoltsMetersPerSecond(),
-			rotationPower * constants.maxRotationalVelocityPerSecond().getRadians()
+			powers.xPower * constants.velocityAt12VoltsMetersPerSecond(),
+			powers.yPower * constants.velocityAt12VoltsMetersPerSecond(),
+			powers.rotationalPower * constants.maxRotationalVelocityPerSecond().getRadians()
 		);
 	}
 
@@ -45,21 +46,19 @@ public class SwerveMath {
 		);
 	}
 
-	public static ChassisSpeeds applyDeadband(ChassisSpeeds chassisSpeeds) {
-		double xVelocityMetersPerSecond = ToleranceMath
-			.applyDeadband(chassisSpeeds.vxMetersPerSecond, SwerveConstants.DRIVE_VELOCITY_METERS_PER_SECOND_DEADBAND);
-		double yVelocityMetersPerSecond = ToleranceMath
-			.applyDeadband(chassisSpeeds.vyMetersPerSecond, SwerveConstants.DRIVE_VELOCITY_METERS_PER_SECOND_DEADBAND);
+	public static ChassisSpeeds applyDeadband(ChassisSpeeds chassisSpeeds, Pose2d deadbands) {
+		double xVelocityMetersPerSecond = ToleranceMath.applyDeadband(chassisSpeeds.vxMetersPerSecond, deadbands.getX());
+		double yVelocityMetersPerSecond = ToleranceMath.applyDeadband(chassisSpeeds.vyMetersPerSecond, deadbands.getY());
 		double rotationalVelocityRadiansPerSecond = ToleranceMath
-			.applyDeadband(chassisSpeeds.omegaRadiansPerSecond, SwerveConstants.ROTATIONAL_VELOCITY_PER_SECOND_DEADBAND.getRadians());
+			.applyDeadband(chassisSpeeds.omegaRadiansPerSecond, deadbands.getRotation().getRadians());
 
 		return new ChassisSpeeds(xVelocityMetersPerSecond, yVelocityMetersPerSecond, rotationalVelocityRadiansPerSecond);
 	}
 
-	public static boolean isStill(ChassisSpeeds chassisSpeeds) {
-		return Math.abs(chassisSpeeds.vxMetersPerSecond) <= SwerveConstants.DRIVE_VELOCITY_METERS_PER_SECOND_DEADBAND
-			&& Math.abs(chassisSpeeds.vyMetersPerSecond) <= SwerveConstants.DRIVE_VELOCITY_METERS_PER_SECOND_DEADBAND
-			&& Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= SwerveConstants.ROTATIONAL_VELOCITY_PER_SECOND_DEADBAND.getRadians();
+	public static boolean isStill(ChassisSpeeds chassisSpeeds, Pose2d deadbands) {
+		return Math.abs(chassisSpeeds.vxMetersPerSecond) <= deadbands.getX()
+			&& Math.abs(chassisSpeeds.vyMetersPerSecond) <= deadbands.getY()
+			&& Math.abs(chassisSpeeds.omegaRadiansPerSecond) <= deadbands.getRotation().getRadians();
 	}
 
 	public static double getDriveMagnitude(ChassisSpeeds chassisSpeeds) {

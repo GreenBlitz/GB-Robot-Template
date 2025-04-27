@@ -6,15 +6,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.IDs;
 import org.littletonrobotics.junction.Logger;
 
-public class BatteryUtils {
+public class BatteryUtil {
 
 	public static final double DEFAULT_VOLTAGE = 12;
 	public static final double MIN_VOLTAGE = 10.5;
 
-	private static final PowerDistribution powerDistribution = new PowerDistribution(
-		IDs.POWER_DISTRIBUTION_DEVICE_ID.ID(),
-		IDs.POWER_DISTRIBUTION_DEVICE_ID.type()
-	);
+	private static final PowerDistribution powerDistribution = new PowerDistribution(IDs.POWER_DISTRIBUTION.id(), IDs.POWER_DISTRIBUTION.type());
 	private static final Command limiter = new BatteryLimiter().ignoringDisable(true);
 
 

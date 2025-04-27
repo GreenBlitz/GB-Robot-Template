@@ -1,6 +1,6 @@
 package frc.robot.vision.multivisionsources;
 
-import frc.constants.VisionConstants;
+import frc.robot.vision.VisionConstants;
 import frc.robot.vision.data.VisionData;
 import frc.robot.vision.sources.VisionSource;
 import frc.utils.Filter;

@@ -18,7 +18,7 @@ public class Modules {
 		this.modules = modules;
 	}
 
-	public Module getModule(ModuleUtils.ModulePosition modulePosition) {
+	public Module getModule(ModuleUtil.ModulePosition modulePosition) {
 		return modules[modulePosition.getIndex()];
 	}
 
@@ -69,6 +69,12 @@ public class Modules {
 	public void setSteersVoltage(double voltage) {
 		for (Module module : modules) {
 			module.setSteerVoltage(voltage);
+		}
+	}
+
+	public void setDrivesCurrent(double current) {
+		for (Module module : modules) {
+			module.setDriveCurrent(current);
 		}
 	}
 

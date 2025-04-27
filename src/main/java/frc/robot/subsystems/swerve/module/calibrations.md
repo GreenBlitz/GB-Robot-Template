@@ -2,11 +2,12 @@ Modules:
 -----------------------
 - [ ] Enter modules in the order specified in ModuleUtils.ModulePosition
 
-ModuleConstants:
+ModuleConstants: (real and simulation)
 -----------------------
 - [ ] Wheel Diameter
 - [ ] Coupling Ratio
 - [ ] Velocity At 12 Volts
+- [ ] Modules locations (in meters)
 
 Encoder:
 ----------------------

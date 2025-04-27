@@ -6,7 +6,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class SwerveState {
 
-	private static final DriveRelative DEFAULT_DRIVE_RELATIVE = DriveRelative.FIELD_RELATIVE;
+	private static final DriveRelative DEFAULT_DRIVE_RELATIVE = DriveRelative.ALLIANCE_RELATIVE;
 	private static final DriveSpeed DEFAULT_DRIVE_SPEED = DriveSpeed.NORMAL;
 	private static final LoopMode DEFAULT_LOOP_MODE = LoopMode.CLOSED;
 	private static final RotateAxis DEFAULT_ROTATE_AXIS = RotateAxis.MIDDLE_OF_CHASSIS;
@@ -101,7 +101,7 @@ public class SwerveState {
 	}
 
 
-	public DriveRelative getDriveMode() {
+	public DriveRelative getDriveRelative() {
 		return driveRelative;
 	}
 

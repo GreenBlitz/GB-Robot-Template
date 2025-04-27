@@ -1,10 +1,9 @@
-package frc.robot.poseestimator;
+package frc.utils.math;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.constants.RobotHeadingEstimatorConstants;
-import frc.utils.math.AngleMath;
+import frc.robot.poseestimator.helpers.robotheadingestimator.RobotHeadingEstimatorConstants;
 
-public class PoseEstimatorMath {
+public class PoseEstimationMath {
 
 	public static double getKalmanRatio(double odometryStandardDeviation, double visionStandardDeviation) {
 		double ratio = odometryStandardDeviation / (odometryStandardDeviation + visionStandardDeviation);
@@ -19,11 +18,11 @@ public class PoseEstimatorMath {
 		double gyroStandardDeviation,
 		double visionStandardDeviation
 	) {
-		Rotation2d changeInAngleSinceVisionDataWasObserved = AngleMath.getAngleDifference(gyroAngleAtTimeStamp, lastGyroAngle);
+		Rotation2d changeInAngleSinceVisionDataWasObserved = AngleMath.getAngleDifferenceWrapped(gyroAngleAtTimeStamp, lastGyroAngle);
 		double visionAndGyroRatio = getKalmanRatio(gyroStandardDeviation, visionStandardDeviation);
 		Rotation2d estimatedHeadingAtSampleTime = currentEstimatedHeading.minus(changeInAngleSinceVisionDataWasObserved);
 		Rotation2d differenceFromVisionAndEstimatedHeading = AngleMath
-			.getAngleDifference(visionEstimatedHeadingAtTimeStamp, estimatedHeadingAtSampleTime);
+			.getAngleDifferenceWrapped(visionEstimatedHeadingAtTimeStamp, estimatedHeadingAtSampleTime);
 		Rotation2d scaledDifferenceToAddToEstimatedHeading = differenceFromVisionAndEstimatedHeading.times(visionAndGyroRatio);
 		return currentEstimatedHeading.plus(scaledDifferenceToAddToEstimatedHeading);
 	}

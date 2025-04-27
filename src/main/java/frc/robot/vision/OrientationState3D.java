@@ -9,35 +9,42 @@ import edu.wpi.first.math.geometry.Rotation3d;
  * sourcecode</a>. The limelight is using it to calculate the MegaTag2 position.Rotation2d shall be used in degrees (and for rates, degrees per
  * second). Everything except the yaw is unnecessary.
  */
-public record RobotAngleValues(Rotation2d yaw, double yawRate, Rotation2d pitch, double pitchRate, Rotation2d roll, double rollRate) {
+public record OrientationState3D(
+	Rotation2d yaw,
+	Rotation2d yawVelocity,
+	Rotation2d pitch,
+	Rotation2d pitchVelocity,
+	Rotation2d roll,
+	Rotation2d rollVelocity
+) {
 
-	public RobotAngleValues() {
+	public OrientationState3D() {
 		this(Rotation3d.kZero);
 	}
 
-	public RobotAngleValues(Rotation3d angle) {
-		this(angle, 0, 0, 0);
+	public OrientationState3D(Rotation3d angle) {
+		this(angle, Rotation3d.kZero);
 	}
 
-	public RobotAngleValues(Rotation3d angle, double yawRate, double pitchRate, double rollRate) {
+	public OrientationState3D(Rotation3d angle, Rotation3d angularVelocity) {
 		this(
 			Rotation2d.fromRadians(angle.getZ()),
-			yawRate,
+			Rotation2d.fromRadians(angularVelocity.getZ()),
+			Rotation2d.fromRadians(angle.getY()),
+			Rotation2d.fromRadians(angularVelocity.getY()),
 			Rotation2d.fromRadians(angle.getX()),
-			pitchRate,
-			Rotation2d.fromRadians(angle.getZ()),
-			rollRate
+			Rotation2d.fromRadians(angularVelocity.getX())
 		);
 	}
 
 	public double[] asArray() {
 		return new double[] {
 			this.yaw().getDegrees(),
-			this.yawRate(),
+			this.yawVelocity().getDegrees(),
 			this.pitch().getDegrees(),
-			this.pitchRate(),
+			this.pitchVelocity().getDegrees(),
 			this.roll().getDegrees(),
-			this.rollRate()};
+			this.rollVelocity().getDegrees()};
 	}
 
 }

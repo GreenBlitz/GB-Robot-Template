@@ -42,12 +42,4 @@ public class Field {
 		return mirrorAngle ? new Pose3d(translation3d, getAllianceRelative(pose.getRotation())) : new Pose3d(translation3d, pose.getRotation());
 	}
 
-	public static Pose2d getPointFromCertainDistance(Pose2d point, double distantInMeters) {
-		return new Pose2d(
-			point.getX() - point.getRotation().getCos() * distantInMeters,
-			point.getY() - point.getRotation().getSin() * distantInMeters,
-			point.getRotation()
-		);
-	}
-
 }

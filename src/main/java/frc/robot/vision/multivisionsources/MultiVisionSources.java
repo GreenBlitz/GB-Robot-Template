@@ -1,6 +1,6 @@
 package frc.robot.vision.multivisionsources;
 
-import frc.constants.VisionConstants;
+import frc.robot.vision.VisionConstants;
 import frc.robot.vision.data.VisionData;
 import frc.robot.vision.sources.VisionSource;
 import frc.utils.Filter;
@@ -35,7 +35,7 @@ public class MultiVisionSources<T extends VisionData> {
 		return createMappedCopyOfSources(visionSources, VisionSource::getFilteredVisionData);
 	}
 
-	public void applyFunctionOnAllFilters(Function<Filter<T>, Filter<T>> filterChangingFunction) {
+	public void applyFunctionOnAllFilters(Function<Filter<? super T>, Filter<? super T>> filterChangingFunction) {
 		for (VisionSource<T> visionSource : visionSources) {
 			visionSource.applyFunctionOnFilter(filterChangingFunction);
 		}

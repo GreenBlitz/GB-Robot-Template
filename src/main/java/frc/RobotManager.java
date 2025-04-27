@@ -6,6 +6,7 @@ package frc;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Threads;
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.utils.auto.PathPlannerAutoWrapper;
@@ -30,6 +31,8 @@ public class RobotManager extends LoggedRobot {
 	private int roborioCycles;
 
 	public RobotManager() {
+		Threads.setCurrentThreadPriority(true, 10);
+
 		LoggerFactory.initializeLogger();
 		PathPlannerUtil.startPathfinder();
 		PathPlannerUtil.setupPathPlannerLogging();

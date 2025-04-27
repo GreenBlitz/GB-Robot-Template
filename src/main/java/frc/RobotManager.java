@@ -4,6 +4,7 @@
 
 package frc;
 
+import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.utils.auto.PathPlannerUtil;
@@ -27,6 +28,8 @@ public class RobotManager extends LoggedRobot {
 	private int roborioCycles;
 
 	public RobotManager() {
+		Threads.setCurrentThreadPriority(true, 10);
+
 		LoggerFactory.initializeLogger();
 		PathPlannerUtil.startPathfinder();
 

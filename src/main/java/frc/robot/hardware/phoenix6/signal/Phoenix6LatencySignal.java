@@ -18,7 +18,7 @@ public class Phoenix6LatencySignal extends AngleSignal implements SignalGetter {
 		this.signal = signal;
 		this.slopeSignal = slopeSignal;
 	}
-	
+
 	@Override
 	protected void updateValue(TimedValue<Rotation2d> timedValue) {
 		timedValue.setValue(angleUnit.toRotation2d(BaseStatusSignal.getLatencyCompensatedValueAsDouble(signal, slopeSignal)));

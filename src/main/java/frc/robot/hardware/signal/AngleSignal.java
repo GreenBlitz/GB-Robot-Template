@@ -75,12 +75,12 @@ public abstract class AngleSignal implements InputSignal<Rotation2d> {
 	public void fromLog(LogTable table) {
 		timedValue.setValue(table.get(name, new Rotation2d()));
 	}
-	
+
 	public Rotation2d getAndUpdateValue() {
 		updateValue(timedValue);
 		return timedValue.getValue();
 	}
-	
+
 	protected abstract void updateValue(TimedValue<Rotation2d> timedValue);
 
 }

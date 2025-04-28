@@ -53,7 +53,7 @@ public interface Filter<T> {
 		return output;
 	}
 
-	static <T> Filter<T> andALl(Iterable<Filter<T>> otherFilers) {
+	static <T> Filter<T> andAll(Iterable<Filter<T>> otherFilers) {
 		Filter<T> output = nonFilteringFilter();
 		for (Filter<T> filter : otherFilers) {
 			output = output.and(filter);

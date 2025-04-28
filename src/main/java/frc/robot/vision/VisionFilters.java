@@ -1,6 +1,5 @@
 package frc.robot.vision;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.constants.field.Field;
 import frc.robot.vision.data.AprilTagVisionData;
@@ -44,9 +43,7 @@ public class VisionFilters {
 		return isDataFromMegaTag2().implies(isYawAtAngle(wantedYawSupplier, yawTolerance));
 	}
 
-	/**
-	 * A Filter that filters the random noise in MegaTag2 that causes the yaw angle to be exactly 0.
-	 */
+
 	public static Filter<VisionData> isYawAngleNotZero() {
 		return (visionData) -> visionData.getEstimatedPose().getRotation().getZ() != 0.0;
 	}
@@ -56,11 +53,11 @@ public class VisionFilters {
 	}
 
 	public static Filter<VisionData> isOnGround(double distanceFromGroundToleranceMeters) {
-		return (visionData) -> MathUtil.isNear(0, visionData.getEstimatedPose().getZ(), distanceFromGroundToleranceMeters);
+		return (visionData) -> ToleranceMath.isNear(0, visionData.getEstimatedPose().getZ(), distanceFromGroundToleranceMeters);
 	}
 
 	public static Filter<AprilTagVisionData> isAprilTagHeightValid(double aprilTagHeightToleranceMeters) {
-		return aprilTagVisionData -> MathUtil.isNear(
+		return aprilTagVisionData -> ToleranceMath.isNear(
 			VisionUtils.getAprilTagHeightByID(aprilTagVisionData.getTrackedAprilTagId()),
 			aprilTagVisionData.getAprilTagHeightMeters(),
 			aprilTagHeightToleranceMeters

@@ -43,7 +43,7 @@ public class RobotHeadingEstimator {
 	}
 
 	public void updateByGyroReset(Rotation2d newGyroHeading) {
-		Rotation2d differenceInGyroAngle = AngleMath.getAngleDifference(newGyroHeading, lastGyroAngle);
+		Rotation2d differenceInGyroAngle = AngleMath.getAngleDifferenceWrapped(newGyroHeading, lastGyroAngle);
 		lastGyroAngle = newGyroHeading;
 		reset(estimatedHeading.plus(differenceInGyroAngle));
 	}
@@ -61,7 +61,7 @@ public class RobotHeadingEstimator {
 		double calculatedVisionNoiseStandardDeviation = StatisticsMath.calculateStandardDeviations(
 			estimationAndGyroBuffer,
 			estimationVisionPair -> Math
-				.abs(AngleMath.getAngleDifference(estimationVisionPair.getFirst(), estimationVisionPair.getSecond()).getRadians())
+				.abs(AngleMath.getAngleDifferenceWrapped(estimationVisionPair.getFirst(), estimationVisionPair.getSecond()).getRadians())
 		);
 		boolean isGyroOffsetCalibrated = calculatedVisionNoiseStandardDeviation < maximumStandardDeviationTolerance
 			&& estimationAndGyroBuffer.isFull();
@@ -106,7 +106,7 @@ public class RobotHeadingEstimator {
 
 	public void updateGyroAngle(TimedValue<Rotation2d> gyroHeadingData) {
 		unOffsetedGyroAngleInterpolator.addSample(gyroHeadingData.timestamp(), gyroHeadingData.value());
-		estimatedHeading = estimatedHeading.plus(AngleMath.getAngleDifference(gyroHeadingData.value(), lastGyroAngle));
+		estimatedHeading = estimatedHeading.plus(AngleMath.getAngleDifferenceWrapped(gyroHeadingData.value(), lastGyroAngle));
 		lastGyroAngle = gyroHeadingData.value();
 	}
 
@@ -123,7 +123,7 @@ public class RobotHeadingEstimator {
 		Logger.recordOutput(logPath + RobotHeadingEstimatorConstants.ESTIMATED_HEADING_LOGPATH_ADDITION, estimatedHeading);
 		Logger.recordOutput(
 			logPath + RobotHeadingEstimatorConstants.ESTIMATED_HEADING_DIFFERENCE_FROM_GYRO_YAW_LOGPATH_ADDITION,
-			AngleMath.getAngleDifference(estimatedHeading, lastGyroAngle)
+			AngleMath.getAngleDifferenceWrapped(estimatedHeading, lastGyroAngle)
 		);
 	}
 

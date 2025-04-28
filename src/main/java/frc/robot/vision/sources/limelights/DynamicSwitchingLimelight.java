@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.vision.VisionConstants;
 import frc.utils.TimedValue;
-import frc.robot.vision.RobotAngleValues;
+import frc.robot.vision.OrientationState3D;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.IndpendentHeadingVisionSource;
 import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
@@ -92,8 +92,8 @@ public class DynamicSwitchingLimelight implements IndpendentHeadingVisionSource,
 	}
 
 	@Override
-	public void updateRobotAngleValues(RobotAngleValues robotAngleValues) {
-		headingRequiringLimelight.updateRobotAngleValues(robotAngleValues);
+	public void updateRobotAngleValues(OrientationState3D robotOrientationState) {
+		headingRequiringLimelight.updateRobotAngleValues(robotOrientationState);
 	}
 
 }

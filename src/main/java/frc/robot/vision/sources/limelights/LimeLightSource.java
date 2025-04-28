@@ -10,7 +10,7 @@ import frc.robot.vision.data.LimeLightAprilTagVisionData;
 import frc.utils.AngleUnit;
 import frc.utils.math.StandardDeviations3D;
 import frc.robot.vision.VisionConstants;
-import frc.robot.vision.RobotAngleValues;
+import frc.robot.vision.OrientationState3D;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.IndpendentHeadingVisionSource;
 import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
@@ -52,7 +52,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	private int lastSeenAprilTagId;
 	private BooleanSupplier shouldDataBeFiltered;
 	private Filter<? super AprilTagVisionData> filter;
-	private RobotAngleValues robotAngleValues;
+	private OrientationState3D robotOrientationState;
 
 	protected LimeLightSource(
 		String cameraNetworkTablesName,
@@ -79,7 +79,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		this.computingPipelineLatencyEntry = getLimelightNetworkTableEntry("tl");
 		this.captureLatencyEntry = getLimelightNetworkTableEntry("cl");
 
-		this.robotAngleValues = new RobotAngleValues();
+		this.robotOrientationState = new OrientationState3D();
 		AlertManager.addAlert(
 			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1)
 		);
@@ -92,7 +92,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	@Override
 	public void update() {
 		lastSeenAprilTagId = getAprilTagID();
-		robotOrientationEntry.setDoubleArray(robotAngleValues.asArray());
+		robotOrientationEntry.setDoubleArray(robotOrientationState.asArray());
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		NetworkTableEntry entry = switch (poseEstimationMethod) {
 			case MEGATAG_1 -> robotPoseEntryMegaTag1;
@@ -197,8 +197,8 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	}
 
 	@Override
-	public void updateRobotAngleValues(RobotAngleValues robotAngleValues) {
-		this.robotAngleValues = robotAngleValues;
+	public void updateRobotAngleValues(OrientationState3D robotOrientationState) {
+		this.robotOrientationState = robotOrientationState;
 	}
 
 	public LimelightPoseEstimationMethod getPoseEstimationMethod() {

@@ -9,15 +9,15 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.StreamSupport;
 
-public final class GBBasisVector<S extends Num> implements Cloneable, Iterable<Double>, Vector<S> {
+public class GBVector<S extends Num> implements Cloneable, Iterable<Double>, Vector<S> {
 
-	private GBBasisVector<?> cloneOf;
+	private GBVector<?> cloneOf;
 	private boolean clone;
 	private double[] data;
 	private double factorOf;
 	private Function<Double, Double> appliedFunction;
 
-	private GBBasisVector(GBBasisVector<?> anotherVector) {
+	private GBVector(GBVector<?> anotherVector) {
 		this.cloneOf = anotherVector;
 		this.clone = true;
 		this.data = null;
@@ -25,7 +25,7 @@ public final class GBBasisVector<S extends Num> implements Cloneable, Iterable<D
 		this.appliedFunction = anotherVector.appliedFunction;
 	}
 
-	public GBBasisVector(double[] data) {
+	public GBVector(double[] data) {
 		this.data = data;
 		this.clone = false;
 		this.factorOf = 1;
@@ -33,16 +33,16 @@ public final class GBBasisVector<S extends Num> implements Cloneable, Iterable<D
 		this.appliedFunction = x -> x;
 	}
 
-	public <E extends Num> GBBasisVector(edu.wpi.first.math.Vector<E> vector) {
+	public <E extends Num> GBVector(edu.wpi.first.math.Vector<E> vector) {
 		this(vector.getData());
 	}
 
-	public GBBasisVector(Collection<Double> data) {
+	public GBVector(Collection<Double> data) {
 		this(data.stream().mapToDouble(x -> x).toArray());
 	}
 
 	@Override
-	public Iterator<Double> iterator() {
+	public final Iterator<Double> iterator() {
 		return new Iterator<>() {
 
 			private int pointer = 0;
@@ -60,7 +60,7 @@ public final class GBBasisVector<S extends Num> implements Cloneable, Iterable<D
 		};
 	}
 
-	public double get(int index) {
+	public final double get(int index) {
 		double output;
 		if (!clone) {
 			output = data[index];
@@ -71,7 +71,7 @@ public final class GBBasisVector<S extends Num> implements Cloneable, Iterable<D
 	}
 
 	@Override
-	public double dot(Vector<S> anotherVector) {
+	public final double dot(Vector<S> anotherVector) {
 		double output = 0;
 		for (int i = 0; i < assertSizeGetMinimum(anotherVector); i++) {
 			output += anotherVector.get(i) * this.get(i);
@@ -79,7 +79,7 @@ public final class GBBasisVector<S extends Num> implements Cloneable, Iterable<D
 		return output;
 	}
 
-	public void set(int index, double value) {
+	public final void set(int index, double value) {
 		if (clone) {
 			this.data = cloneOf.data.clone();
 			this.clone = false;
@@ -104,36 +104,36 @@ public final class GBBasisVector<S extends Num> implements Cloneable, Iterable<D
 	}
 
 	@Override
-	public void divide(double factor) {
+	public final void divide(double factor) {
 		this.factorOf /= factor;
 	}
 
 	@Override
-	public void multiple(double factor) {
+	public final void multiple(double factor) {
 		this.factorOf *= factor;
 	}
 
 	@Override
-	public void invert() {
-		this.factorOf *= -1;
+	public final void invert() {
+		this.multiple(-1);
 	}
 
-	public int getSize() {
+	public final int getSize() {
 		return data.length;
 	}
 
-	public Vector<S> unit() {
-		GBBasisVector<S> clonedVector = this.clone();
+	public final Vector<S> unit() {
+		GBVector<S> clonedVector = this.clone();
 		clonedVector.divide(norm());
 		return clonedVector;
 	}
 
-	public double norm() {
+	public final double norm() {
 		return Math
 			.sqrt(StreamSupport.stream(this.spliterator(), false).map(x -> Math.pow(x, 2)).reduce(Double::sum).orElseGet(() -> Double.NaN));
 	}
 
-	public double assertSizeGetMinimum(Vector<?> anotherVector) {
+	private double assertSizeGetMinimum(Vector<?> anotherVector) {
 		int theirSize = anotherVector.getSize();
 		int mySize = this.getSize();
 		if (mySize != theirSize) {
@@ -142,12 +142,12 @@ public final class GBBasisVector<S extends Num> implements Cloneable, Iterable<D
 		return Math.min(theirSize, mySize);
 	}
 
-	public void injectFunctionOnOutput(Function<Double, Double> injectedFunction) {
+	public final void injectFunctionOnOutput(Function<Double, Double> injectedFunction) {
 		this.appliedFunction = injectedFunction;
 	}
 
 	@Override
-	public String toString() {
+	public final String toString() {
 		StringBuilder output = new StringBuilder();
 		for (double x : this) {
 			output.append(String.format("%.4f", x));
@@ -155,7 +155,7 @@ public final class GBBasisVector<S extends Num> implements Cloneable, Iterable<D
 		return output.toString();
 	}
 
-	public String debugString() {
+	public final String debugString() {
 		return "GBBasisVector{"
 			+ ", cloneOf="
 			+ cloneOf
@@ -169,10 +169,10 @@ public final class GBBasisVector<S extends Num> implements Cloneable, Iterable<D
 	}
 
 	@Override
-	public GBBasisVector<S> clone() {
-		GBBasisVector<S> cloned;
+	public final GBVector<S> clone() {
+		GBVector<S> cloned;
 		try {
-			cloned = (GBBasisVector<S>) super.clone();
+			cloned = (GBVector<S>) super.clone();
 		} catch (CloneNotSupportedException e) {
 			throw new RuntimeException(e);
 		}
@@ -181,7 +181,13 @@ public final class GBBasisVector<S extends Num> implements Cloneable, Iterable<D
 		this.clone = true;
 		this.data = null;
 		this.factorOf = 1;
-		return new GBBasisVector<>(this);
+		return new GBVector<>(this);
+	}
+
+	public static <E extends Num> GBVector<E> deepClone(GBVector<E> vector) {
+		GBVector<E> cloned = vector.clone();
+		cloned.data = vector.data.clone();
+		return cloned;
 	}
 
 }

@@ -11,7 +11,7 @@ import frc.constants.MathConstants;
 import frc.constants.field.Field;
 import frc.robot.hardware.empties.EmptyGyro;
 import frc.robot.hardware.interfaces.IGyro;
-import frc.robot.poseestimator.observations.OdometryObservation;
+import frc.robot.poseestimator.OdometryData;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.states.DriveRelative;
@@ -41,6 +41,7 @@ public class Swerve extends GBSubsystem {
 
 	private SwerveState currentState;
 	private Supplier<Rotation2d> headingSupplier;
+	private ChassisPowers driversPowerInputs;
 
 	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro, GyroSignals gyroSignals) {
 		super(constants.logPath());
@@ -59,6 +60,7 @@ public class Swerve extends GBSubsystem {
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 
 		update();
+		setDefaultCommand(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
 	}
 
 	public String getLogPath() {
@@ -103,6 +105,10 @@ public class Swerve extends GBSubsystem {
 		this.headingSupplier = headingSupplier;
 	}
 
+	public void setDriversPowerInputs(ChassisPowers powers) {
+		this.driversPowerInputs = powers;
+	}
+
 	public void setHeading(Rotation2d heading) {
 		gyro.setYaw(heading);
 		gyro.updateInputs(gyroSignals.yawSignal());
@@ -137,18 +143,18 @@ public class Swerve extends GBSubsystem {
 		return Math.min(gyroSignals.yawSignal().asArray().length, modules.getNumberOfOdometrySamples());
 	}
 
-	public OdometryObservation[] getAllOdometryObservations() {
-		OdometryObservation[] odometryObservations = new OdometryObservation[getNumberOfOdometrySamples()];
+	public OdometryData[] getAllOdometryData() {
+		OdometryData[] odometryData = new OdometryData[getNumberOfOdometrySamples()];
 
-		for (int i = 0; i < odometryObservations.length; i++) {
-			odometryObservations[i] = new OdometryObservation(
+		for (int i = 0; i < odometryData.length; i++) {
+			odometryData[i] = new OdometryData(
 				modules.getWheelPositions(i),
 				gyro instanceof EmptyGyro ? Optional.empty() : Optional.of(gyroSignals.yawSignal().asArray()[i]),
 				gyroSignals.yawSignal().getTimestamps()[i]
 			);
 		}
 
-		return odometryObservations;
+		return odometryData;
 	}
 
 	public double getDriveRadiusMeters() {
@@ -213,9 +219,12 @@ public class Swerve extends GBSubsystem {
 		driveByState(targetSpeeds, swerveState);
 	}
 
+	protected void driveByDriversTargetsPowers(SwerveState swerveState) {
+		driveByState(driversPowerInputs, swerveState);
+	}
 
-	protected void driveByState(double xPower, double yPower, double rotationPower, SwerveState swerveState) {
-		ChassisSpeeds speedsFromPowers = SwerveMath.powersToSpeeds(xPower, yPower, rotationPower, constants);
+	protected void driveByState(ChassisPowers powers, SwerveState swerveState) {
+		ChassisSpeeds speedsFromPowers = SwerveMath.powersToSpeeds(powers, constants);
 		driveByState(speedsFromPowers, swerveState);
 	}
 

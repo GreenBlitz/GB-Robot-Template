@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Robot;
 import frc.robot.hardware.interfaces.ControllableMotor;
+import frc.robot.hardware.interfaces.IMotionMagicRequest;
 import frc.robot.hardware.phoenix6.Phoenix6Device;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
@@ -89,6 +90,9 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 	@Override
 	public void applyRequest(IRequest<?> request) {
 		if (request instanceof Phoenix6Request<?> phoenix6Request) {
+			if (phoenix6Request instanceof IMotionMagicRequest) {
+				motor.stopMotor();
+			}
 			motor.setControl(phoenix6Request.getControlRequest());
 		} else {
 			new Alert(Alert.AlertType.WARNING, getLogPath() + "Got invalid type of request " + request.getClass().getSimpleName()).report();

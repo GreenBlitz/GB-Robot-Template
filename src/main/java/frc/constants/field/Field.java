@@ -20,8 +20,8 @@ public class Field {
 		return DriverStationUtil.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE;
 	}
 
-	public static final double LENGTH_METERS = 16.54175;
-	public static final double WIDTH_METERS = 8.0137;
+	public static final double LENGTH_METERS = 17.548225;
+	public static final double WIDTH_METERS = 8.0518;
 
 	public static Pose2d getAllianceRelative(Pose2d pose2d) {
 		return new Pose2d(getAllianceRelative(pose2d.getTranslation()), getAllianceRelative(pose2d.getRotation()));

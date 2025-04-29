@@ -18,7 +18,7 @@ public interface Vector<Num> extends Cloneable {
 
 	void invert();
 
-	int getSize();
+	int size();
 
 	Vector<Num> clone();
 

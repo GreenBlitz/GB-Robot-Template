@@ -4,6 +4,7 @@ import edu.wpi.first.math.Num;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
+import org.ejml.simple.SimpleMatrix;
 
 import java.util.*;
 import java.util.function.Function;
@@ -118,7 +119,7 @@ public class GBVector<S extends Num> implements Cloneable, Iterable<Double>, Vec
 		this.multiple(-1);
 	}
 
-	public final int getSize() {
+	public final int size() {
 		return data.length;
 	}
 
@@ -134,8 +135,8 @@ public class GBVector<S extends Num> implements Cloneable, Iterable<Double>, Vec
 	}
 
 	private double assertSizeGetMinimum(Vector<?> anotherVector) {
-		int theirSize = anotherVector.getSize();
-		int mySize = this.getSize();
+		int theirSize = anotherVector.size();
+		int mySize = this.size();
 		if (mySize != theirSize) {
 			AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, "GotBadVectorSizeExpected" + mySize + "Got" + theirSize, () -> true));
 		}
@@ -153,6 +154,14 @@ public class GBVector<S extends Num> implements Cloneable, Iterable<Double>, Vec
 			output.append(String.format("%.4f", x));
 		}
 		return output.toString();
+	}
+
+	public final double[] toArray() {
+		return this.data.clone();
+	}
+
+	public final edu.wpi.first.math.Vector<S> toWPILibVector() {
+		return new edu.wpi.first.math.Vector<>(new SimpleMatrix(this.data));
 	}
 
 	public final String debugString() {

@@ -2,9 +2,7 @@ package frc.utils.gbmeth;
 
 import edu.wpi.first.math.Num;
 import edu.wpi.first.math.Vector;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.numbers.N3;
 import frc.robot.poseestimator.Pose2dComponentsValue;
 import frc.robot.poseestimator.Pose3dComponentsValue;
@@ -53,6 +51,15 @@ public class GBVector3D extends GBVector<N3> {
 			this.get(Pose3dComponentsValue.Y_VALUE.getIndex()),
 			this.get(Pose3dComponentsValue.Z_VALUE.getIndex())
 		);
+	}
+
+	public final Twist2d toTwist2d() {
+		Pose2d asPose = this.toPose2d(AngleUnit.RADIANS);
+		return new Twist2d(asPose.getX(), asPose.getY(), asPose.getRotation().getRadians());
+	}
+
+	public final Rotation3d toRotation3d() {
+		return new Rotation3d(this.get(0), this.get(1), this.get(2));
 	}
 
 }

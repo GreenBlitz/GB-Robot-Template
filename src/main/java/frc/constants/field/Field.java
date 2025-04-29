@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.utils.DriverStationUtil;
 import frc.utils.math.AngleTransform;
@@ -22,41 +23,30 @@ public class Field {
 	public static final double LENGTH_METERS = 16.54175;
 	public static final double WIDTH_METERS = 8.0137;
 
-	public static Pose2d getAllianceRelative(Pose2d pose, boolean mirrorX, boolean mirrorY, AngleTransform angleTransform) {
-		return isFieldConventionAlliance() ? pose : FieldMath.mirror(pose, mirrorX, mirrorY, angleTransform);
+	public static Pose2d getAllianceRelative(Pose2d pose2d) {
+		return new Pose2d(getAllianceRelative(pose2d.getTranslation()), getAllianceRelative(pose2d.getRotation()));
 	}
 
-	public static Translation2d getAllianceRelative(Translation2d translation, boolean mirrorX, boolean mirrorY) {
-		return isFieldConventionAlliance() ? translation : FieldMath.mirror(translation, mirrorX, mirrorY);
-	}
-
-	public static Translation3d getAllianceRelative(Translation3d translation, boolean mirrorX, boolean mirrorY) {
-		return isFieldConventionAlliance() ? translation : FieldMath.mirror(translation, mirrorX, mirrorY);
-	}
-
-	public static Rotation3d getAllianceRelative(
-		Rotation3d rotation,
-		AngleTransform rollTransform,
-		AngleTransform pitchTransform,
-		AngleTransform yawTransform
-	) {
-		return isFieldConventionAlliance() ? rotation : FieldMath.transformAngle(rotation, rollTransform, pitchTransform, yawTransform);
+	public static Translation2d getAllianceRelative(Translation2d translation) {
+		return isFieldConventionAlliance() ? translation : FieldMath.mirror(translation, true, true);
 	}
 
 	public static Rotation2d getAllianceRelative(Rotation2d rotation) {
 		return isFieldConventionAlliance() ? rotation : FieldMath.transformAngle(rotation, AngleTransform.INVERT);
 	}
 
-	public static Pose3d getAllianceRelative(
-		Pose3d pose,
-		boolean mirrorX,
-		boolean mirrorY,
-		AngleTransform rollTransform,
-		AngleTransform pitchTransform,
-		AngleTransform yawTransform
-	) {
-		Translation3d translation3d = getAllianceRelative(pose.getTranslation(), mirrorX, mirrorY);
-		return new Pose3d(translation3d, getAllianceRelative(pose.getRotation(), rollTransform, pitchTransform, yawTransform));
+	public static Pose3d getAllianceRelative(Pose3d pose) {
+		return new Pose3d(getAllianceRelative(pose.getTranslation()), getAllianceRelative(pose.getRotation()));
+	}
+
+	public static Translation3d getAllianceRelative(Translation3d translation) {
+		return isFieldConventionAlliance() ? translation : FieldMath.mirror(translation, true, true);
+	}
+
+	public static Rotation3d getAllianceRelative(Rotation3d rotation) {
+		return isFieldConventionAlliance()
+			? rotation
+			: FieldMath.transformAngle(rotation, AngleTransform.KEEP, AngleTransform.KEEP, AngleTransform.INVERT);
 	}
 
 }

@@ -1,12 +1,22 @@
 package frc.utils.math;
 
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import frc.robot.subsystems.swerve.SwerveMath;
 
 public class ToleranceMath {
+
+	public static boolean isAtPose(Pose2d currentPose, Pose2d targetPose, ChassisSpeeds currentSpeeds, Pose2d tolerances, Pose2d deadbands) {
+		boolean isAtX = isNear(targetPose.getX(), currentPose.getX(), tolerances.getX());
+		boolean isAtY = isNear(targetPose.getY(), currentPose.getY(), tolerances.getY());
+		boolean isAtHeading = isNearWrapped(targetPose.getRotation(), currentPose.getRotation(), tolerances.getRotation());
+		boolean isStill = SwerveMath.isStill(currentSpeeds, deadbands);
+
+		return isAtX && isAtY && isAtHeading && isStill;
+	}
 
 	public static boolean isNear(Pose2d wantedPose, Pose2d pose, Pose2d tolerance) {
 		return isNear(wantedPose.getTranslation(), pose.getTranslation(), tolerance.getTranslation())

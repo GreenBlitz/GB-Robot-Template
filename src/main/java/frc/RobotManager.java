@@ -4,8 +4,12 @@
 
 package frc;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Threads;
 import frc.robot.Robot;
+import frc.robot.autonomous.AutonomousConstants;
+import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtil;
@@ -23,16 +27,20 @@ import org.littletonrobotics.junction.Logger;
 public class RobotManager extends LoggedRobot {
 
 	private final Robot robot;
-	private Command autonomousCommand;
+	private PathPlannerAutoWrapper autonomousCommand;
 	private int roborioCycles;
 
 	public RobotManager() {
+		Threads.setCurrentThreadPriority(true, 10);
+
 		LoggerFactory.initializeLogger();
 		PathPlannerUtil.startPathfinder();
+		PathPlannerUtil.setupPathPlannerLogging();
 
 		this.roborioCycles = 0;
 		this.robot = new Robot();
 
+		createAutoReadyForConstructionChooser();
 		JoysticksBindings.configureBindings(robot);
 	}
 
@@ -52,15 +60,14 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void autonomousInit() {
-		this.autonomousCommand = robot.getAutonomousCommand();
-
-		if (autonomousCommand != null) {
-			autonomousCommand.schedule();
+		if (autonomousCommand == null) {
+			this.autonomousCommand = robot.getAutonomousCommand();
 		}
+		autonomousCommand.schedule();
 	}
 
 	@Override
-	public void teleopInit() {
+	public void autonomousExit() {
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 		}
@@ -72,6 +79,19 @@ public class RobotManager extends LoggedRobot {
 		JoysticksBindings.updateChassisDriverInputs();
 		robot.periodic();
 		AlertManager.reportAlerts();
+	}
+
+	private void createAutoReadyForConstructionChooser() {
+		SendableChooser<Boolean> autoReadyForConstructionSendableChooser = new SendableChooser<>();
+		autoReadyForConstructionSendableChooser.setDefaultOption("false", false);
+		autoReadyForConstructionSendableChooser.addOption("true", true);
+		autoReadyForConstructionSendableChooser.onChange(isReady -> {
+			if (isReady) {
+				this.autonomousCommand = robot.getAutonomousCommand();
+			}
+			Logger.recordOutput(AutonomousConstants.LOG_PATH_PREFIX + "/ReadyToConstruct", isReady);
+		});
+		SmartDashboard.putData("AutoReadyForConstruction", autoReadyForConstructionSendableChooser);
 	}
 
 	private void updateTimeRelatedData() {

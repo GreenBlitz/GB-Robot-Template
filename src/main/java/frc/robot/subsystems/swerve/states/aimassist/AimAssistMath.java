@@ -67,7 +67,7 @@ public class AimAssistMath {
 		return SwerveMath.robotToAllianceRelativeSpeeds(assistedSpeeds, targetHeadingHingeSystemAngle);
 	}
 
-	public static Rotation2d applyMagnitudeCompensation(Rotation2d velocityPerSecond, double magnitude) {
+	private static Rotation2d applyMagnitudeCompensation(Rotation2d velocityPerSecond, double magnitude) {
 		return velocityPerSecond.times(SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR).div(magnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
 	}
 

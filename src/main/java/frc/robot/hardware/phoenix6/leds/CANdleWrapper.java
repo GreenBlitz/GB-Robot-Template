@@ -11,7 +11,7 @@ import frc.utils.alerts.Alert;
 public class CANdleWrapper extends CANdle {
 
 	private final int DEFAULT_NUMBER_OF_CONFIG_RETRIES = 5;
-	private final int FLOAT_TO_RGB_RATIO = 255;
+	private final int FLOAT_TO_RGB_UNIT_INTERVAL = 255;
 	private final int WHITE_VALUE = 100;
 
 	private final String logPath;
@@ -40,9 +40,9 @@ public class CANdleWrapper extends CANdle {
 
 	public ErrorCode setColor(Color color, int startIndex, int amountOfLedsToAffect) {
 		return super.setLEDs(
-			(int) (color.red * FLOAT_TO_RGB_RATIO),
-			(int) (color.green * FLOAT_TO_RGB_RATIO),
-			(int) (color.blue * FLOAT_TO_RGB_RATIO),
+			(int) (color.red * FLOAT_TO_RGB_UNIT_INTERVAL),
+			(int) (color.green * FLOAT_TO_RGB_UNIT_INTERVAL),
+			(int) (color.blue * FLOAT_TO_RGB_UNIT_INTERVAL),
 			WHITE_VALUE,
 			startIndex,
 			amountOfLedsToAffect

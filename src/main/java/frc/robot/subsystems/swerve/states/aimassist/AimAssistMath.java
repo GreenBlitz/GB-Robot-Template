@@ -51,7 +51,7 @@ public class AimAssistMath {
 		double pidHorizontalToObjectOutputVelocityMetersPerSecond = swerveConstants.yMetersPIDController()
 			.calculate(0, objectRelativeToRobot.getY());
 
-		return switch (swerveState.getDriveMode()) {
+		return switch (swerveState.getDriveRelative()) {
 			case ROBOT_RELATIVE:
 				new ChassisSpeeds(speeds.vxMetersPerSecond, pidHorizontalToObjectOutputVelocityMetersPerSecond, speeds.omegaRadiansPerSecond);
 

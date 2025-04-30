@@ -1,6 +1,5 @@
 package frc.robot.vision;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.constants.field.Field;
 import frc.robot.vision.data.AprilTagVisionData;
@@ -25,12 +24,12 @@ public class VisionFilters {
 	}
 
 	public static Filter<VisionData> isOnGround(double distanceFromGroundToleranceMeters) {
-		return new Filter<>(visionData -> MathUtil.isNear(0, visionData.getEstimatedPose().getZ(), distanceFromGroundToleranceMeters));
+		return new Filter<>(visionData -> ToleranceMath.isNear(0, visionData.getEstimatedPose().getZ(), distanceFromGroundToleranceMeters));
 	}
 
 	public static Filter<AprilTagVisionData> isAprilTagHeightValid(double aprilTagRealHeightMeters, double aprilTagHeightToleranceMeters) {
 		return new Filter<>(
-			aprilTagVisionData -> MathUtil
+			aprilTagVisionData -> ToleranceMath
 				.isNear(aprilTagRealHeightMeters, aprilTagVisionData.getAprilTagHeightMeters(), aprilTagHeightToleranceMeters)
 		);
 	}

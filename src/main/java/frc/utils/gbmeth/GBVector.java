@@ -13,11 +13,11 @@ import java.util.stream.StreamSupport;
 
 public class GBVector<S extends Num> implements Cloneable, Iterable<Double>, Vector<S> {
 
-	private GBVector<?> cloneOfOptional;
-	private boolean isClone;
-	private double[] data;
-	private double factorOf;
-	private Function<Double, Double> appliedFunction;
+	GBVector<?> cloneOfOptional;
+	boolean isClone;
+	double[] data;
+	double factorOf;
+	Function<Double, Double> appliedFunction;
 
 	private GBVector(GBVector<?> anotherVector) {
 		this.cloneOfOptional = anotherVector;
@@ -27,7 +27,7 @@ public class GBVector<S extends Num> implements Cloneable, Iterable<Double>, Vec
 		this.appliedFunction = anotherVector.appliedFunction;
 	}
 
-	public GBVector(double[] data) {
+	public GBVector(double... data) {
 		this.data = data;
 		this.isClone = false;
 		this.factorOf = 1;
@@ -92,32 +92,32 @@ public class GBVector<S extends Num> implements Cloneable, Iterable<Double>, Vec
 	}
 
 	@Override
-	public void plus(Vector<S> anotherVector) {
+	public void plusBy(Vector<S> anotherVector) {
 		for (int i = 0; i < assertSizeGetMinimum(anotherVector); i++) {
 			this.set(i, this.get(i) + (anotherVector.get(i) / factorOf));
 		}
 	}
 
 	@Override
-	public void minus(Vector<S> anotherVector) {
+	public void minusBy(Vector<S> anotherVector) {
 		for (int i = 0; i < assertSizeGetMinimum(anotherVector); i++) {
 			this.set(i, this.get(i) - (anotherVector.get(i) / factorOf));
 		}
 	}
 
 	@Override
-	public final void divide(double factor) {
+	public final void divideBy(double factor) {
 		this.factorOf /= factor;
 	}
 
 	@Override
-	public final void multiple(double factor) {
+	public final void multipleBy(double factor) {
 		this.factorOf *= factor;
 	}
 
 	@Override
 	public final void invert() {
-		this.multiple(-1);
+		this.multipleBy(-1);
 	}
 
 	public final int size() {
@@ -126,13 +126,25 @@ public class GBVector<S extends Num> implements Cloneable, Iterable<Double>, Vec
 
 	public final Vector<S> unit() {
 		GBVector<S> clonedVector = this.clone();
-		clonedVector.divide(norm());
+		clonedVector.divideBy(norm());
 		return clonedVector;
 	}
 
 	public final double norm() {
 		return Math
 			.sqrt(StreamSupport.stream(this.spliterator(), false).map(x -> Math.pow(x, 2)).reduce(Double::sum).orElseGet(() -> Double.NaN));
+	}
+
+	public final double angleBetween(Vector<S> anotherVector) {
+		return Math.acos(cosineBetween(anotherVector));
+	}
+
+	public final double cosineBetween(Vector<S> anotherVector) {
+		return this.dot(anotherVector) / (this.norm() * anotherVector.norm());
+	}
+
+	public final double sineBetween(Vector<S> anotherVector) {
+		return Math.sqrt(1 - Math.pow(cosineBetween(anotherVector), 2));
 	}
 
 	private double assertSizeGetMinimum(Vector<?> anotherVector) {
@@ -151,9 +163,12 @@ public class GBVector<S extends Num> implements Cloneable, Iterable<Double>, Vec
 	@Override
 	public final String toString() {
 		StringBuilder output = new StringBuilder();
+		output.append("(");
 		for (double x : this) {
 			output.append(String.format("%.4f", x));
+			output.append(", ");
 		}
+		output.append("\b\b)");
 		return output.toString();
 	}
 

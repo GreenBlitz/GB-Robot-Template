@@ -8,13 +8,13 @@ public interface Vector<Num> extends Cloneable {
 
 	double get(int index);
 
-	void plus(Vector<Num> anotherVector);
+	void plusBy(Vector<Num> anotherVector);
 
-	void minus(Vector<Num> anotherVector);
+	void minusBy(Vector<Num> anotherVector);
 
-	void divide(double factor);
+	void divideBy(double factor);
 
-	void multiple(double factor);
+	void multipleBy(double factor);
 
 	void invert();
 
@@ -25,5 +25,9 @@ public interface Vector<Num> extends Cloneable {
 	Vector<Num> unit();
 
 	double norm();
+
+	default void timesBy(double factorOf) {
+		multipleBy(factorOf);
+	}
 
 }

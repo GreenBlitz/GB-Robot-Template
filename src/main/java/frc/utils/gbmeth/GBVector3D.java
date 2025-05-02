@@ -24,6 +24,22 @@ public class GBVector3D extends GBVector<N3> {
 		super(data);
 	}
 
+	public final GBVector3D cross(GBVector3D other) {
+		return new GBVector3D(
+			new double[] {
+				this.get(1) * other.get(2) - this.get(2) * other.get(1),
+				this.get(0) * other.get(2) - this.get(2) * other.get(0),
+				this.get(0) * other.get(1) - this.get(1) * other.get(0)}
+		);
+	}
+
+	public final void crossBy(GBVector3D other) {
+		GBVector3D crossOutput = this.cross(other);
+		this.factorOf = 0;
+		this.data = crossOutput.data;
+		this.isClone = false;
+	}
+
 	public final Pose2d toPose2d(AngleUnit angleUnit) {
 		return new Pose2d(
 			this.get(Pose2dComponentsValue.X_VALUE.getIndex()),

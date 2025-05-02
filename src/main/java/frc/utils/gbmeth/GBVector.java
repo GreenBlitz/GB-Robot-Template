@@ -8,19 +8,20 @@ import org.ejml.simple.SimpleMatrix;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
 public class GBVector<S extends Num> implements Cloneable, Iterable<Double>, Vector<S> {
 
-	private GBVector<?> cloneOf;
-	private boolean clone;
+	private GBVector<?> cloneOfOptional;
+	private boolean isClone;
 	private double[] data;
 	private double factorOf;
 	private Function<Double, Double> appliedFunction;
 
 	private GBVector(GBVector<?> anotherVector) {
-		this.cloneOf = anotherVector;
-		this.clone = true;
+		this.cloneOfOptional = anotherVector;
+		this.isClone = true;
 		this.data = null;
 		this.factorOf = 1;
 		this.appliedFunction = anotherVector.appliedFunction;
@@ -28,9 +29,9 @@ public class GBVector<S extends Num> implements Cloneable, Iterable<Double>, Vec
 
 	public GBVector(double[] data) {
 		this.data = data;
-		this.clone = false;
+		this.isClone = false;
 		this.factorOf = 1;
-		this.cloneOf = null;
+		this.cloneOfOptional = null;
 		this.appliedFunction = x -> x;
 	}
 
@@ -63,10 +64,10 @@ public class GBVector<S extends Num> implements Cloneable, Iterable<Double>, Vec
 
 	public final double get(int index) {
 		double output;
-		if (!clone) {
+		if (!isClone) {
 			output = data[index];
 		} else {
-			output = cloneOf.get(index);
+			output = cloneOfOptional.get(index);
 		}
 		return appliedFunction.apply(output * factorOf);
 	}
@@ -81,11 +82,11 @@ public class GBVector<S extends Num> implements Cloneable, Iterable<Double>, Vec
 	}
 
 	public final void set(int index, double value) {
-		if (clone) {
-			this.data = cloneOf.data.clone();
-			this.clone = false;
-			this.factorOf *= cloneOf.factorOf;
-			this.cloneOf = null; // frees up the garbage collector
+		if (isClone) {
+			this.data = cloneOfOptional.data.clone();
+			this.isClone = false;
+			this.factorOf *= cloneOfOptional.factorOf;
+			this.cloneOfOptional = null; // frees up the garbage collector
 		}
 		data[index] = value;
 	}
@@ -93,14 +94,14 @@ public class GBVector<S extends Num> implements Cloneable, Iterable<Double>, Vec
 	@Override
 	public void plus(Vector<S> anotherVector) {
 		for (int i = 0; i < assertSizeGetMinimum(anotherVector); i++) {
-			this.set(i, this.get(i) + anotherVector.get(i));
+			this.set(i, this.get(i) + (anotherVector.get(i) / factorOf));
 		}
 	}
 
 	@Override
 	public void minus(Vector<S> anotherVector) {
 		for (int i = 0; i < assertSizeGetMinimum(anotherVector); i++) {
-			this.set(i, this.get(i) - anotherVector.get(i));
+			this.set(i, this.get(i) - (anotherVector.get(i) / factorOf));
 		}
 	}
 
@@ -167,9 +168,9 @@ public class GBVector<S extends Num> implements Cloneable, Iterable<Double>, Vec
 	public final String debugString() {
 		return "GBBasisVector{"
 			+ ", cloneOf="
-			+ cloneOf
+			+ cloneOfOptional
 			+ ", clone="
-			+ clone
+			+ isClone
 			+ ", data="
 			+ Arrays.toString(data)
 			+ ", factorOf="
@@ -186,8 +187,8 @@ public class GBVector<S extends Num> implements Cloneable, Iterable<Double>, Vec
 			throw new RuntimeException(e);
 		}
 		cloned.appliedFunction = this.appliedFunction;
-		this.cloneOf = clone ? this.cloneOf.clone() : null;
-		this.clone = true;
+		this.cloneOfOptional = isClone ? this.cloneOfOptional.clone() : null;
+		this.isClone = true;
 		this.data = null;
 		this.factorOf = 1;
 		return new GBVector<>(this);
@@ -197,6 +198,28 @@ public class GBVector<S extends Num> implements Cloneable, Iterable<Double>, Vec
 		GBVector<E> cloned = vector.clone();
 		cloned.data = vector.data.clone();
 		return cloned;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof GBVector<?> gbVector))
+			return false;
+		if (gbVector.isClone || this.isClone) {
+			if (this.size() != gbVector.size())
+				return false;
+			return IntStream.range(0, gbVector.size()).allMatch(index -> Double.compare(gbVector.get(index), gbVector.get(index)) == 0);
+		} else {
+			return Double.compare(factorOf, gbVector.factorOf) == 0 && Objects.deepEquals(data, gbVector.data);
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		if (this.isClone) {
+			return Objects.hash(Arrays.hashCode(data), factorOf);
+		} else {
+			return this.cloneOfOptional.hashCode(); // this recursion will end
+		}
 	}
 
 }

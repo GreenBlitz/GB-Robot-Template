@@ -236,3 +236,10 @@ spotless {
 		trimTrailingWhitespace()
 	}
 }
+
+tasks.register('cameraposecalib', JavaExec) {
+	group = "Custom Tools"
+	description = "Runs the CameraPoseCalculator class"
+	classpath = sourceSets.main.runtimeClasspath
+	mainClass = 'frc.utils.CameraPoseCalculator'
+}

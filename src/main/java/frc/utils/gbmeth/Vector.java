@@ -61,7 +61,7 @@ public interface Vector<Num> extends Cloneable {
 	Vector<Num> unit();
 
 	double norm();
-	
+
 	Vector<Num> deepClone();
 
 	default void timesBy(double factorOf) {

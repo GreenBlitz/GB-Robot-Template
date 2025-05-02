@@ -1,5 +1,14 @@
 package frc.utils;
 
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.robot.vision.VisionConstants;
+import frc.utils.pose.PoseUtil;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -7,7 +16,10 @@ import java.awt.*;
 
 public class CameraPoseCalculator {
 
+	private static NetworkTableEntry targetPoseInCameraSpace;
+
 	public static void main(String[] args) {
+		targetPoseInCameraSpace = NetworkTableInstance.getDefault().getTable(args[0]).getEntry("targetpose_cameraspace");
 		SwingUtilities.invokeLater(CameraPoseCalculator::createAndShowGUI);
 	}
 
@@ -61,19 +73,38 @@ public class CameraPoseCalculator {
 
 			void updateOutput() {
 				try {
+					Pose3d tagInCamera = PoseUtil.toPose3D(
+						targetPoseInCameraSpace.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]),
+						AngleUnit.DEGREES
+					);
 					double x = Double.parseDouble(fields[0].getText());
 					double y = Double.parseDouble(fields[1].getText());
 					double z = Double.parseDouble(fields[2].getText());
-					double roll = Double.parseDouble(fields[3].getText());
-					double pitch = Double.parseDouble(fields[4].getText());
-					double yaw = Double.parseDouble(fields[5].getText());
+					double roll = Math.toRadians(Double.parseDouble(fields[3].getText()));
+					double pitch = Math.toRadians(Double.parseDouble(fields[4].getText()));
+					double yaw = Math.toRadians(Double.parseDouble(fields[5].getText()));
+
+					Pose3d tagInRobot = new Pose3d(new Translation3d(x, y, z), new Rotation3d(roll, pitch, yaw));
+
+					Transform3d cameraToTag = new Transform3d(
+						tagInCamera.getTranslation(),
+						tagInCamera.getRotation()
+					);
+					Transform3d tagToCamera = cameraToTag.inverse();
+
+					Pose3d cameraInRobot = tagInRobot.transformBy(tagToCamera);
 
 					String output = String.format(
 						"Translation: [%.2f, %.2f, %.2f]\nRotation (RPY): [%.2f°, %.2f°, %.2f°]",
-						x, y, z, roll, pitch, yaw
+						cameraInRobot.getX(),
+						cameraInRobot.getY(),
+						cameraInRobot.getZ(),
+						Math.toDegrees(cameraInRobot.getRotation().getX()),
+						Math.toDegrees(cameraInRobot.getRotation().getY()),
+						Math.toDegrees(cameraInRobot.getRotation().getZ())
 					);
 					outputArea.setText(output);
-				} catch (NumberFormatException ex) {
+				} catch (NumberFormatException | NullPointerException ex) {
 					outputArea.setText("Please enter valid numeric values.");
 				}
 			}

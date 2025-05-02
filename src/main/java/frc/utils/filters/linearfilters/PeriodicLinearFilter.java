@@ -4,7 +4,7 @@ import edu.wpi.first.math.filter.LinearFilter;
 import frc.utils.filters.IPeriodicFilter;
 import org.littletonrobotics.junction.Logger;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 /**
@@ -14,9 +14,9 @@ public class PeriodicLinearFilter implements IPeriodicFilter<Double> {
 
 	private final LinearFilter filter;
 	private final String name;
-	private final Supplier<ArrayList<Double>> updateValues;
+	private final Supplier<? extends List<Double>> updateValues;
 
-	public PeriodicLinearFilter(LinearFilter filter, String name, Supplier<ArrayList<Double>> updateValues) {
+	public PeriodicLinearFilter(LinearFilter filter, String name, Supplier<? extends List<Double>> updateValues) {
 		this.filter = filter;
 		this.name = name;
 		this.updateValues = updateValues;
@@ -32,9 +32,6 @@ public class PeriodicLinearFilter implements IPeriodicFilter<Double> {
 
 	public void log(String parentLogPath) {
 		String logPath = parentLogPath + name + "/";
-		for (int i = 0; i < updateValues.get().size(); i++) {
-			Logger.recordOutput(logPath + "input" + i, updateValues.get().get(i));
-		}
 		Logger.recordOutput(logPath + "output", get());
 	}
 

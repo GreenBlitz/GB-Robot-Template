@@ -11,10 +11,10 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
-public class PeriodicNDimlLinearFilter<T extends Num> implements IPeriodicFilter<Vector<T>> {
+public class PeriodicNDimLinearFilter<T extends Num> implements IPeriodicFilter<Vector<T>> {
 
-	private final Supplier<? extends List<Vector<T>>> updateValues;
-	private final List<LinearFilter> linearFilters;
+	private final Supplier<? extends Iterable<Vector<T>>> updateValues;
+	private final List<? extends LinearFilter> linearFilters;
 	private final String name;
 	private final T size;
 
@@ -26,12 +26,16 @@ public class PeriodicNDimlLinearFilter<T extends Num> implements IPeriodicFilter
 	 * @param name:         the name of the periodic filter
 	 * @param sizeInstance: an instance of wpilib's Num (represent the size of the vectors)
 	 */
-	public PeriodicNDimlLinearFilter(Supplier<List<Vector<T>>> updateValues, List<LinearFilter> filters, String name, T sizeInstance) {
+	public PeriodicNDimLinearFilter(
+		Supplier<? extends Iterable<Vector<T>>> updateValues,
+		List<? extends LinearFilter> filters,
+		String name,
+		T sizeInstance
+	) {
 		this.updateValues = updateValues;
 		this.linearFilters = filters;
 		this.name = name;
 		this.size = sizeInstance;
-		Logger.recordOutput("actualSize", updateValues.get().get(0).unit());
 	}
 
 	@Override

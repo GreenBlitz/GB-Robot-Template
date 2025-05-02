@@ -10,7 +10,7 @@ package frc.utils.filters;
 public interface IPeriodicFilter<T> {
 
 	/**
-	 * reset the previous history of the filter.
+	 * Reset the previous history of the filter.
 	 */
 	void hardReset();
 

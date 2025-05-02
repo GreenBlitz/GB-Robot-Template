@@ -131,8 +131,7 @@ public class GBVector<S extends Num> implements Iterable<Double>, Vector<S> {
 	}
 
 	public final double norm() {
-		return Math
-			.sqrt(StreamSupport.stream(this.spliterator(), false).map(x -> Math.pow(x, 2)).reduce(Double::sum).orElseGet(() -> Double.NaN));
+		return Math.sqrt(StreamSupport.stream(this.spliterator(), false).map(x -> Math.pow(x, 2)).reduce(Double::sum).orElse(Double.NaN));
 	}
 
 	public final double angleBetween(Vector<S> anotherVector) {

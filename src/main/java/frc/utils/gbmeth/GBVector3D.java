@@ -1,7 +1,6 @@
 package frc.utils.gbmeth;
 
 import edu.wpi.first.math.Num;
-import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.numbers.N3;
 import frc.robot.poseestimator.Pose2dComponentsValue;
@@ -16,7 +15,7 @@ public class GBVector3D extends GBVector<N3> {
 		super(data);
 	}
 
-	public <E extends Num> GBVector3D(Vector<E> vector) {
+	public <E extends Num> GBVector3D(edu.wpi.first.math.Vector<E> vector) {
 		super(vector);
 	}
 
@@ -24,7 +23,7 @@ public class GBVector3D extends GBVector<N3> {
 		super(data);
 	}
 
-	public final GBVector3D cross(GBVector3D other) {
+	public final GBVector3D cross(Vector<N3> other) {
 		return new GBVector3D(
 			new double[] {
 				this.get(1) * other.get(2) - this.get(2) * other.get(1),
@@ -33,7 +32,7 @@ public class GBVector3D extends GBVector<N3> {
 		);
 	}
 
-	public final void crossBy(GBVector3D other) {
+	public final void crossBy(Vector<N3> other) {
 		GBVector3D crossOutput = this.cross(other);
 		this.factorOf = 1;
 		this.data = crossOutput.data.clone();

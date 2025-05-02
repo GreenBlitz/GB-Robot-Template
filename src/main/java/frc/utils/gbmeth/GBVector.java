@@ -11,7 +11,7 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
-public class GBVector<S extends Num> implements Cloneable, Iterable<Double>, Vector<S> {
+public class GBVector<S extends Num> implements Iterable<Double>, Vector<S> {
 
 	GBVector<?> cloneOfOptional;
 	boolean isClone;
@@ -163,12 +163,12 @@ public class GBVector<S extends Num> implements Cloneable, Iterable<Double>, Vec
 	@Override
 	public final String toString() {
 		StringBuilder output = new StringBuilder();
-		output.append("(");
+		output.append("⟨");
 		for (double x : this) {
 			output.append(String.format("%.4f", x));
 			output.append(", ");
 		}
-		output.append("\b\b)");
+		output.append("\b\b⟩");
 		return output.toString();
 	}
 
@@ -209,9 +209,12 @@ public class GBVector<S extends Num> implements Cloneable, Iterable<Double>, Vec
 		return new GBVector<>(this);
 	}
 
-	public static <E extends Num> GBVector<E> deepClone(GBVector<E> vector) {
-		GBVector<E> cloned = vector.clone();
-		cloned.data = vector.data.clone();
+	@Override
+	public GBVector<S> deepClone() {
+		GBVector<S> cloned = new GBVector<>(data.clone());
+		cloned.isClone = false;
+		cloned.factorOf *= this.factorOf;
+		cloned.cloneOfOptional = null; // frees up the garbage collector
 		return cloned;
 	}
 

@@ -35,8 +35,8 @@ public class GBVector3D extends GBVector<N3> {
 
 	public final void crossBy(GBVector3D other) {
 		GBVector3D crossOutput = this.cross(other);
-		this.factorOf = 0;
-		this.data = crossOutput.data;
+		this.factorOf = 1;
+		this.data = crossOutput.data.clone();
 		this.isClone = false;
 	}
 

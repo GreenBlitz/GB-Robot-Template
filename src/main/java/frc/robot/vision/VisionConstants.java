@@ -9,7 +9,7 @@ import frc.utils.alerts.Alert;
 
 import java.io.IOException;
 
-public class VisionConstants {
+public final class VisionConstants {
 
 	public static final String FILTERED_DATA_LOGPATH_ADDITION = "FilteredData/";
 
@@ -23,15 +23,13 @@ public class VisionConstants {
 
 	public static final String DYNAMIC_LIMELIGHT_MEGATAG2_SOURCE_NAME = "headingRequiringLimelight";
 
-	public static double DEFAULT_RATIO_BETWEEN_IMU_AND_SOURCE_LIMELIGHT_4 = 0.001;
+	public static final double MAXIMUM_LIMELIGHT_TEMPERATURE_CELSIUS = 80;
 
-	public static double LIMELIGHT_4_MAXIMUM_LIMELIGHT_TEMPERATURE_CELSIUS = 80;
+	public static final double MAXIMUM_CPU_TEMPERATURE_CELSIUS = 80;
 
-	public static double LIMELIGHT_4_MAXIMUM_CPU_TEMPERATURE_CELSIUS = 80;
+	public static final int FALLBACK_SKIPPED_FRAMES = 100;
 
-	public static int FALLBACK_SKIPPED_FRAMES = 100;
-
-	public static boolean DEFAULT_REGULATE_TEMPERATURE = false;
+	public static final boolean DEFAULT_REGULATE_TEMPERATURE = false;
 
 
 	public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = getAprilTagFieldLayout();

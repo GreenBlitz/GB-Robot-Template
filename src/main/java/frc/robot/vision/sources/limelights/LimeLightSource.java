@@ -171,7 +171,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 				pose3dDoublePair.getFirst(),
 				pose3dDoublePair.getSecond(),
 				new StandardDeviations3D(
-					poseEstimationMethod.equals(LimelightPoseEstimationMethod.MEGATAG_1)
+					poseEstimationMethod == LimelightPoseEstimationMethod.MEGATAG_1
 						? Arrays.copyOfRange(standardDeviationsArray, 0, Pose3dComponentsValue.values().length)
 						: Arrays.copyOfRange(
 							standardDeviationsArray,
@@ -259,8 +259,8 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 
 	public void regulateTemperature() {
 		if (
-			getLimeLightTemperature() > VisionConstants.LIMELIGHT_4_MAXIMUM_LIMELIGHT_TEMPERATURE_CELSIUS
-				|| getCPUTemperature() > VisionConstants.LIMELIGHT_4_MAXIMUM_CPU_TEMPERATURE_CELSIUS
+			VisionConstants.MAXIMUM_LIMELIGHT_TEMPERATURE_CELSIUS < getLimeLightTemperature()
+				|| VisionConstants.MAXIMUM_CPU_TEMPERATURE_CELSIUS < getCPUTemperature()
 		) {
 			setSkippedFramesProcessing(VisionConstants.FALLBACK_SKIPPED_FRAMES);
 			Logger.recordOutput(logPath + "temperatureRegulation", "high");

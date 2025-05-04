@@ -7,6 +7,7 @@ package frc;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Threads;
+import frc.robot.Detection;
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.utils.auto.PathPlannerAutoWrapper;
@@ -29,6 +30,7 @@ public class RobotManager extends LoggedRobot {
 	private final Robot robot;
 	private PathPlannerAutoWrapper autonomousCommand;
 	private int roborioCycles;
+	private static Detection detection = new Detection();
 
 	public RobotManager() {
 		Threads.setCurrentThreadPriority(true, 10);
@@ -79,6 +81,7 @@ public class RobotManager extends LoggedRobot {
 		JoysticksBindings.updateChassisDriverInputs();
 		robot.periodic();
 		AlertManager.reportAlerts();
+		detection.log();
 	}
 
 	private void createAutoReadyForConstructionChooser() {

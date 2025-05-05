@@ -11,6 +11,7 @@ import com.ctre.phoenix6.CANBus.CANBusStatus;
 public enum BusChain {
 
 	ROBORIO("rio"),
+	SUPERSTRUCTURE_CANIVORE("superstructure"),
 	CANIVORE("CANivore");
 
 	private static final double PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE = 0.6;

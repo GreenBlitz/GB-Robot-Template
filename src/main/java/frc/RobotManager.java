@@ -7,8 +7,15 @@ package frc;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonomousConstants;
+import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
+import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
+import frc.robot.hardware.rev.motors.BrushlessSparkMAXMotor;
+import frc.robot.hardware.rev.motors.SparkMaxDeviceID;
+import frc.robot.hardware.rev.motors.SparkMaxWrapper;
 import frc.utils.DriverStationUtil;
 import frc.utils.alerts.AlertManager;
 import frc.utils.auto.PathPlannerAutoWrapper;
@@ -39,6 +46,18 @@ public class RobotManager extends LoggedRobot {
 
 		this.roborioCycles = 0;
 		this.robot = new Robot();
+
+		TalonFXMotor arm = new TalonFXMotor("arm", new Phoenix6DeviceID(20, BusChain.SUPERSTRUCTURE_CANIVORE), new SysIdRoutine.Config());
+		BrakeStateManager.add(() -> arm.setBrake(true), () -> arm.setBrake(false));
+
+		TalonFXMotor elevatorRight = new TalonFXMotor("elevator/right", new Phoenix6DeviceID(10, BusChain.SUPERSTRUCTURE_CANIVORE), new SysIdRoutine.Config());
+		BrakeStateManager.add(() -> elevatorRight.setBrake(true), () -> elevatorRight.setBrake(false));
+
+		TalonFXMotor elevatorLeft = new TalonFXMotor("elevator/left", new Phoenix6DeviceID(11, BusChain.SUPERSTRUCTURE_CANIVORE), new SysIdRoutine.Config());
+		BrakeStateManager.add(() -> elevatorLeft.setBrake(true), () -> elevatorLeft.setBrake(false));
+
+		BrushlessSparkMAXMotor endEffector = new BrushlessSparkMAXMotor("endEffector", new SparkMaxWrapper(new SparkMaxDeviceID(5)), new SysIdRoutine.Config());
+		BrakeStateManager.add(() -> endEffector.setBrake(true), () -> endEffector.setBrake(false));
 
 		createAutoReadyForConstructionChooser();
 		JoysticksBindings.configureBindings(robot);

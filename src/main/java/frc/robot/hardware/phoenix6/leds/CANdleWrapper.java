@@ -61,22 +61,6 @@ public class CANdleWrapper extends CANdle {
 		return setColorFromIndex(color, 0);
 	}
 
-	public ErrorCode setColor(java.awt.Color color, int startIndex, int amountOfLedsToAffect) {
-		return super.setLEDs(color.getRed(), color.getGreen(), color.getBlue(), WHITE_VALUE, startIndex, amountOfLedsToAffect);
-	}
-
-	public ErrorCode setColorFromIndex(java.awt.Color color, int startIndex) {
-		return setColor(color, startIndex, numberOfLeds - startIndex);
-	}
-
-	public ErrorCode setAmountOfLedsToColor(java.awt.Color color, int amountOfLedsToAffect) {
-		return setColor(color, 0, amountOfLedsToAffect);
-	}
-
-	public ErrorCode setColor(java.awt.Color color) {
-		return setColorFromIndex(color, 0);
-	}
-
 	public ErrorCode clear(int startIndex, int amountOfLedsToAffect) {
 		return setColor(Color.kBlack, startIndex, amountOfLedsToAffect);
 	}

@@ -12,7 +12,6 @@ public class CANdleWrapper extends CANdle {
 
 	private final int DEFAULT_NUMBER_OF_CONFIG_RETRIES = 5;
 	private final int FLOAT_TO_RGB_UNIT_INTERVAL = 255;
-	private final int WHITE_VALUE = 100;
 
 	private final String logPath;
 	private final int numberOfLeds;
@@ -38,31 +37,31 @@ public class CANdleWrapper extends CANdle {
 		applyConfiguration(configuration, DEFAULT_NUMBER_OF_CONFIG_RETRIES);
 	}
 
-	public ErrorCode setColor(Color color, int startIndex, int amountOfLedsToAffect) {
+	public ErrorCode setColor(Color color, int white, int startIndex, int amountOfLedsToAffect) {
 		return super.setLEDs(
 			(int) (color.red * FLOAT_TO_RGB_UNIT_INTERVAL),
 			(int) (color.green * FLOAT_TO_RGB_UNIT_INTERVAL),
 			(int) (color.blue * FLOAT_TO_RGB_UNIT_INTERVAL),
-			WHITE_VALUE,
+			w,
 			startIndex,
 			amountOfLedsToAffect
 		);
 	}
 
-	public ErrorCode setColorFromIndex(Color color, int startIndex) {
-		return setColor(color, startIndex, numberOfLeds - startIndex);
+	public ErrorCode setColorFromIndex(Color color, int white, int startIndex) {
+		return setColor(color, white, startIndex, numberOfLeds - startIndex);
 	}
 
-	public ErrorCode setAmountOfLedsToColor(Color color, int amountOfLedsToAffect) {
-		return setColor(color, 0, amountOfLedsToAffect);
+	public ErrorCode setAmountOfLedsToColor(Color color, int white, int amountOfLedsToAffect) {
+		return setColor(color, white, 0, amountOfLedsToAffect);
 	}
 
-	public ErrorCode setColor(Color color) {
-		return setColorFromIndex(color, 0);
+	public ErrorCode setColor(Color color, int white) {
+		return setColorFromIndex(color, white, 0);
 	}
 
 	public ErrorCode clear(int startIndex, int amountOfLedsToAffect) {
-		return setColor(Color.kBlack, startIndex, amountOfLedsToAffect);
+		return setColor(Color.kBlack, 0, startIndex, amountOfLedsToAffect);
 	}
 
 	public ErrorCode clearFromIndex(int startIndex) {

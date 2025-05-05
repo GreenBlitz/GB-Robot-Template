@@ -13,7 +13,6 @@ public abstract class AngleSignal implements InputSignal<Rotation2d> {
 	protected final AngleUnit angleUnit;
 	private final TimedValue<Rotation2d> timedValue;
 
-
 	public AngleSignal(String name, AngleUnit angleUnit) {
 		this.name = name;
 		this.angleUnit = angleUnit;

@@ -37,27 +37,27 @@ public class CANdleWrapper extends CANdle {
 		applyConfiguration(configuration, DEFAULT_NUMBER_OF_CONFIG_RETRIES);
 	}
 
-	public ErrorCode setColor(Color color, int white, int startIndex, int amountOfLedsToAffect) {
+	public ErrorCode setColor(Color color, int brightness, int startIndex, int amountOfLedsToAffect) {
 		return super.setLEDs(
 			(int) (color.red * FLOAT_TO_RGB_UNIT_INTERVAL),
 			(int) (color.green * FLOAT_TO_RGB_UNIT_INTERVAL),
 			(int) (color.blue * FLOAT_TO_RGB_UNIT_INTERVAL),
-			white,
+			brightness,
 			startIndex,
 			amountOfLedsToAffect
 		);
 	}
 
-	public ErrorCode setColorFromIndex(Color color, int white, int startIndex) {
-		return setColor(color, white, startIndex, numberOfLeds - startIndex);
+	public ErrorCode setColorFromIndex(Color color, int brightness, int startIndex) {
+		return setColor(color, brightness, startIndex, numberOfLeds - startIndex);
 	}
 
-	public ErrorCode setAmountOfLedsToColor(Color color, int white, int amountOfLedsToAffect) {
-		return setColor(color, white, 0, amountOfLedsToAffect);
+	public ErrorCode setAmountOfLedsToColor(Color color, int brightness, int amountOfLedsToAffect) {
+		return setColor(color, brightness, 0, amountOfLedsToAffect);
 	}
 
-	public ErrorCode setColor(Color color, int white) {
-		return setColorFromIndex(color, white, 0);
+	public ErrorCode setColor(Color color, int brightness) {
+		return setColorFromIndex(color, brightness, 0);
 	}
 
 	public ErrorCode clear(int startIndex, int amountOfLedsToAffect) {

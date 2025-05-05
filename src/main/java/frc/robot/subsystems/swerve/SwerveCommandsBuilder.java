@@ -1,12 +1,14 @@
 package frc.robot.subsystems.swerve;
 
 import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.PathFollowingCommandsBuilder;
 import frc.robot.subsystems.swerve.module.ModuleConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
@@ -192,6 +194,17 @@ public class SwerveCommandsBuilder {
 		return swerve.asSubsystemCommand(
 			new SequentialCommandGroup(new InstantCommand(swerve::resetPIDControllers), pathFollowingCommand),
 			"Path to pose: " + targetPose
+		);
+	}
+
+
+	public Command driveToPath(Supplier<Pose2d> currentPose, PathPlannerPath path, Pose2d targetPose, PathConstraints constraints) {
+		return new DeferredCommand(
+				() -> new SequentialCommandGroup(
+						PathFollowingCommandsBuilder.pathfindThenFollowPath(path, constraints),
+						moveToPoseByPID(currentPose, targetPose)
+				),
+				Set.of(swerve)
 		);
 	}
 

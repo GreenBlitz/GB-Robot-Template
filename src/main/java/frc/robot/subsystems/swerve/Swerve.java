@@ -306,18 +306,18 @@ public class Swerve extends GBSubsystem {
 
 		// ROBOT RELATIVE DRIVE - FOR GYRO TEST
 		joystick.POV_UP
-				.whileTrue(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE)));
+			.whileTrue(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE)));
 
 		// Test the swerve returns real velocities (measure distance and time in real life and compare to swerve velocity logs).
 		// REMEMBER after drive calibrations use these for pid testing - Remove OPEN LOOP for that
 		ChassisPowers slowCalibrationPowers = new ChassisPowers();
 		slowCalibrationPowers.xPower = 0.2;
 		joystick.POV_LEFT
-				.whileTrue(getCommandsBuilder().driveByState(() -> slowCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)));
+			.whileTrue(getCommandsBuilder().driveByState(() -> slowCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)));
 		ChassisPowers fastCalibrationPowers = new ChassisPowers();
 		fastCalibrationPowers.xPower = 0.5;
 		joystick.POV_RIGHT
-				.whileTrue(getCommandsBuilder().driveByState(() -> fastCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)));
+			.whileTrue(getCommandsBuilder().driveByState(() -> fastCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)));
 
 		// The sysid outputs will be logged to the "CTRE Signal Logger".
 		// Use phoenix tuner x to extract the position, velocity, motorVoltage, state signals into wpilog.
@@ -338,21 +338,21 @@ public class Swerve extends GBSubsystem {
 
 		// Translation pid tests
 		joystick.getAxisAsButton(Axis.LEFT_TRIGGER)
-				.onTrue(
-						new DeferredCommand(
-								() -> getCommandsBuilder()
-										.moveToPoseByPID(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(1, 1, new Rotation2d()))),
-								Set.of(this)
-						)
-				);
+			.onTrue(
+				new DeferredCommand(
+					() -> getCommandsBuilder()
+						.moveToPoseByPID(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(1, 1, new Rotation2d()))),
+					Set.of(this)
+				)
+			);
 		joystick.getAxisAsButton(Axis.RIGHT_TRIGGER)
-				.onTrue(
-						new DeferredCommand(
-								() -> getCommandsBuilder()
-										.moveToPoseByPID(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(-1, -1, new Rotation2d()))),
-								Set.of(this)
-						)
-				);
+			.onTrue(
+				new DeferredCommand(
+					() -> getCommandsBuilder()
+						.moveToPoseByPID(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(-1, -1, new Rotation2d()))),
+					Set.of(this)
+				)
+			);
 	}
 
 }

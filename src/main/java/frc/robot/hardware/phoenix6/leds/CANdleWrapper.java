@@ -42,7 +42,7 @@ public class CANdleWrapper extends CANdle {
 			(int) (color.red * FLOAT_TO_RGB_UNIT_INTERVAL),
 			(int) (color.green * FLOAT_TO_RGB_UNIT_INTERVAL),
 			(int) (color.blue * FLOAT_TO_RGB_UNIT_INTERVAL),
-			w,
+			white,
 			startIndex,
 			amountOfLedsToAffect
 		);

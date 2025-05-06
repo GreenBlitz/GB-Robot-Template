@@ -19,7 +19,7 @@ public class GBVector<S extends Num> implements Iterable<Double>, Vector<S> {
 	double factorOf;
 	Function<Double, Double> appliedFunction;
 
-	private GBVector(GBVector<?> anotherVector) {
+	public GBVector(GBVector<?> anotherVector) {
 		this.cloneOfOptional = anotherVector;
 		this.isClone = true;
 		this.data = null;

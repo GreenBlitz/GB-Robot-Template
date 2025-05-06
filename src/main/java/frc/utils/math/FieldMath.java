@@ -23,7 +23,6 @@ public class FieldMath {
 		return toRelative.rotateBy(relativeTo.getRotation().unaryMinus());
 	}
 
-
 	public static Rotation2d transformAngle(Rotation2d angle, AngleTransform angleTransform) {
 		return switch (angleTransform) {
 			case KEEP -> angle;

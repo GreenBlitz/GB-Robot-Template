@@ -19,8 +19,8 @@ public class FieldMath {
 		return getRelativeTranslation(relativeTo.getTranslation(), toRelative).rotateBy(relativeTo.getRotation().unaryMinus());
 	}
 
-	public static Pose2d rotatePose(Pose2d relativeTo, Pose2d toRelative) {
-		return toRelative.rotateBy(relativeTo.getRotation().unaryMinus());
+	public static Pose2d rotatePose(Rotation2d relativeTo, Pose2d toRelative) {
+		return toRelative.rotateBy(relativeTo.unaryMinus());
 	}
 
 	public static Rotation2d transformAngle(Rotation2d angle, AngleTransform angleTransform) {

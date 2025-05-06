@@ -9,7 +9,7 @@ import frc.utils.alerts.Alert;
 
 import java.io.IOException;
 
-public final class VisionConstants {
+public class VisionConstants {
 
 	public static final String FILTERED_DATA_LOGPATH_ADDITION = "FilteredData/";
 

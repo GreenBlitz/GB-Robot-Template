@@ -8,7 +8,6 @@ public enum LimeLightHardwareMetrics {
 	LIMELIGHT_TEMPERATURE(3);
 
 	private final int index;
-	public final static int length = values().length;
 
 	LimeLightHardwareMetrics(int index) {
 		this.index = index;

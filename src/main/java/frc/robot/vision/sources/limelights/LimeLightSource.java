@@ -29,13 +29,12 @@ import java.util.function.BooleanSupplier;
 
 public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHeadingRequiringVisionSource {
 
-	protected final String logPath;
+	private final String logPath;
 	private final String cameraNetworkTablesName;
 	private final String sourceName;
 	private final LimelightPoseEstimationMethod poseEstimationMethod;
 	private final boolean regulateTemperature;
 
-	private final NetworkTableEntry mutableFramesToSkipEntry;
 	private int lastManuallySetSkippedFrames;
 
 	private final NetworkTableEntry cameraPoseOffsetEntry;
@@ -44,10 +43,11 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	private final NetworkTableEntry aprilTagIdEntry;
 	private final NetworkTableEntry aprilTagPoseEntry;
 	private final NetworkTableEntry standardDeviations;
+	private final NetworkTableEntry hardwareMetricsEntry;
 	private final NetworkTableEntry robotOrientationEntry;
 	private final NetworkTableEntry computingPipelineLatencyEntry;
 	private final NetworkTableEntry captureLatencyEntry;
-	private final NetworkTableEntry hardwareMetricsEntry;
+	private final NetworkTableEntry mutableFramesToSkipEntry;
 
 	private double[] aprilTagPoseArray;
 	private double[] robotPoseArray;
@@ -78,18 +78,17 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		this.poseEstimationMethod = poseEstimationMethod;
 		this.regulateTemperature = regulateTemperature;
 
-		this.mutableFramesToSkipEntry = getLimelightNetworkTableEntry("throttle_set");
-
 		this.cameraPoseOffsetEntry = getLimelightNetworkTableEntry("camerapose_robotspace_set");
 		this.robotPoseEntryMegaTag2 = getLimelightNetworkTableEntry("botpose_orb_wpiblue");
 		this.robotPoseEntryMegaTag1 = getLimelightNetworkTableEntry("botpose_wpiblue");
 		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_robotspace");
 		this.aprilTagIdEntry = getLimelightNetworkTableEntry("tid");
 		this.standardDeviations = getLimelightNetworkTableEntry("stddevs");
+		this.hardwareMetricsEntry = getLimelightNetworkTableEntry("hw");
 		this.robotOrientationEntry = getLimelightNetworkTableEntry("robot_orientation_set");
 		this.computingPipelineLatencyEntry = getLimelightNetworkTableEntry("tl");
 		this.captureLatencyEntry = getLimelightNetworkTableEntry("cl");
-		this.hardwareMetricsEntry = getLimelightNetworkTableEntry("hw");
+		this.mutableFramesToSkipEntry = getLimelightNetworkTableEntry("throttle_set");
 		this.robotOrientationState = new OrientationState3D();
 		this.hasTemperatureBeenRegulated = false;
 
@@ -113,9 +112,9 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		};
 		robotPoseArray = entry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		standardDeviationsArray = standardDeviations.getDoubleArray(new double[Pose3dComponentsValue.POSE3D_COMPONENTS_AMOUNT]);
+		hardwareMetricsArray = hardwareMetricsEntry.getDoubleArray(new double[LimeLightHardwareMetrics.values().length]);
 		computingPipeLineLatency = computingPipelineLatencyEntry.getDouble(0D);
 		captureLatency = captureLatencyEntry.getDouble(0D);
-		hardwareMetricsArray = hardwareMetricsEntry.getDoubleArray(new double[LimeLightHardwareMetrics.length]);
 		if (regulateTemperature) {
 			regulateTemperature();
 		}

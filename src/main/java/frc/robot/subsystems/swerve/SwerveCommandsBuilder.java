@@ -8,6 +8,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.constants.field.Field;
 import frc.robot.autonomous.PathFollowingCommandsBuilder;
 import frc.robot.subsystems.swerve.module.ModuleConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
@@ -17,8 +18,6 @@ import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
 import frc.utils.calibration.sysid.SysIdCalibrator;
-import frc.utils.math.AngleTransform;
-import frc.utils.math.FieldMath;
 import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.Set;
@@ -203,7 +202,7 @@ public class SwerveCommandsBuilder {
 		return new DeferredCommand(
 			() -> new SequentialCommandGroup(
 				PathFollowingCommandsBuilder.pathfindThenFollowPath(path, constraints),
-				moveToPoseByPID(currentPose, FieldMath.getAllianceRelative(targetPose, true, true, AngleTransform.INVERT))
+				moveToPoseByPID(currentPose, Field.getAllianceRelative(targetPose))
 			),
 			Set.of(swerve)
 		);

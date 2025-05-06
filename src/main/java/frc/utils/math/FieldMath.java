@@ -6,10 +6,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.constants.MathConstants;
 import frc.constants.field.Field;
-import frc.utils.DriverStationUtil;
 
 public class FieldMath {
 
@@ -19,10 +17,6 @@ public class FieldMath {
 
 	public static Translation2d getRelativeTranslation(Pose2d relativeTo, Translation2d toRelative) {
 		return getRelativeTranslation(relativeTo.getTranslation(), toRelative).rotateBy(relativeTo.getRotation().unaryMinus());
-	}
-
-	public static Pose2d getAllianceRelative(Pose2d pose2d, boolean mirrorX, boolean mirrorY, AngleTransform angleTransform) {
-		return DriverStationUtil.getAlliance() == DriverStation.Alliance.Blue ? pose2d : mirror(pose2d, mirrorX, mirrorY, angleTransform);
 	}
 
 	public static Rotation2d transformAngle(Rotation2d angle, AngleTransform angleTransform) {

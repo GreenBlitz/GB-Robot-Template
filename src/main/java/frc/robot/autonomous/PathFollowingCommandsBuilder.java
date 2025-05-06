@@ -4,16 +4,13 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.constants.field.Field;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.math.ToleranceMath;
 
+import java.util.Set;
 import java.util.function.Supplier;
 
 public class PathFollowingCommandsBuilder {
@@ -81,6 +78,22 @@ public class PathFollowingCommandsBuilder {
 				velocityBetweenPathfindingToPathFollowingMetersPerSecond
 			)
 			.andThen(followPath(path));
+	}
+
+	public Command driveToPath(
+		Swerve swerve,
+		Supplier<Pose2d> currentPose,
+		PathPlannerPath path,
+		Pose2d targetPose,
+		PathConstraints pathfindingConstraints
+	) {
+		return new DeferredCommand(
+			() -> new SequentialCommandGroup(
+				PathFollowingCommandsBuilder.pathfindThenFollowPath(path, pathfindingConstraints),
+				swerve.getCommandsBuilder().moveToPoseByPID(currentPose, Field.getAllianceRelative(targetPose))
+			),
+			Set.of(swerve)
+		);
 	}
 
 	public static Command followPathOrPathfindAndFollowPath(

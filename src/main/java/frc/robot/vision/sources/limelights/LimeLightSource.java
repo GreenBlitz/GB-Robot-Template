@@ -59,7 +59,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	private BooleanSupplier shouldDataBeFiltered;
 	private Filter<? super AprilTagVisionData> filter;
 	private OrientationState3D robotOrientationState;
-	private boolean hasTemperatureBeenRegulated;
+	private boolean isTemperatureBeingRegulated;
 
 	protected LimeLightSource(
 		String cameraNetworkTablesName,
@@ -90,7 +90,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		this.captureLatencyEntry = getLimelightNetworkTableEntry("cl");
 		this.mutableFramesToSkipEntry = getLimelightNetworkTableEntry("throttle_set");
 		this.robotOrientationState = new OrientationState3D();
-		this.hasTemperatureBeenRegulated = false;
+		this.isTemperatureBeingRegulated = false;
 
 		AlertManager.addAlert(
 			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1)
@@ -263,19 +263,19 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 			VisionConstants.MAXIMUM_LIMELIGHT_TEMPERATURE_CELSIUS < getLimeLightTemperature()
 				|| VisionConstants.MAXIMUM_CPU_TEMPERATURE_CELSIUS < getCPUTemperature()
 		) {
-			if (hasTemperatureBeenRegulated) {
+			if (isTemperatureBeingRegulated) {
 				return;
 			}
 			setSkippedFramesProcessing(VisionConstants.FALLBACK_SKIPPED_FRAMES);
 			Logger.recordOutput(logPath + "temperatureRegulation", "high");
-			this.hasTemperatureBeenRegulated = true;
+			this.isTemperatureBeingRegulated = true;
 		} else {
-			if (!hasTemperatureBeenRegulated) {
+			if (!isTemperatureBeingRegulated) {
 				return;
 			}
 			setSkippedFramesProcessing(lastManuallySetSkippedFrames);
 			Logger.recordOutput(logPath + "temperatureRegulation", "fine");
-			this.hasTemperatureBeenRegulated = false;
+			this.isTemperatureBeingRegulated = false;
 		}
 	}
 

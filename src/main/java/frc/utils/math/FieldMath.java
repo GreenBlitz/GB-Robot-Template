@@ -6,10 +6,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.constants.MathConstants;
 import frc.constants.field.Field;
-import frc.robot.subsystems.swerve.SwerveMath;
 
 public class FieldMath {
 
@@ -21,7 +19,7 @@ public class FieldMath {
 		return getRelativeTranslation(relativeTo.getTranslation(), toRelative).rotateBy(relativeTo.getRotation().unaryMinus());
 	}
 
-	public static Pose2d getRelativePose(Pose2d relativeTo, Pose2d toRelative){
+	public static Pose2d getRelativePose(Pose2d relativeTo, Pose2d toRelative) {
 		return toRelative.rotateBy(relativeTo.getRotation().unaryMinus());
 	}
 

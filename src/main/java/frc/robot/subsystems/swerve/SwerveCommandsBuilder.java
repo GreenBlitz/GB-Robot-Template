@@ -4,6 +4,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.*;
@@ -18,8 +19,10 @@ import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
 import frc.utils.calibration.sysid.SysIdCalibrator;
+import frc.utils.math.FieldMath;
 import frc.utils.utilcommands.InitExecuteCommand;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -81,6 +84,15 @@ public class SwerveCommandsBuilder {
 
 	public Command pointWheelsInX() {
 		return swerve.asSubsystemCommand(new RunCommand(modules::pointWheelsInX), "Point wheels in X");
+	}
+
+	public Command spin() {
+		return new InstantCommand(
+			() -> swerve.driveByState(
+				new ChassisSpeeds(0, 0, swerve.getConstants().omegaSpinVelocityPerSecond().getRadians()),
+				SwerveState.DEFAULT_DRIVE
+			)
+		);
 	}
 
 
@@ -213,5 +225,38 @@ public class SwerveCommandsBuilder {
 			"PID to pose: " + targetPose
 		);
 	}
+
+
+	public Command findObject(Supplier<Optional<Translation2d>> objectTranslation) {
+		return swerve.asSubsystemCommand(spin().until(objectTranslation.get()::isPresent), "Find object");
+	}
+
+	public Command driveToObject(Supplier<Pose2d> currentPose, Supplier<Optional<Translation2d>> objectTranslation, double distance) {
+		return swerve.asSubsystemCommand(
+			new SequentialCommandGroup(
+				findObject(objectTranslation),
+				new SequentialCommandGroup(
+					turnToHeading(
+						currentPose.get()
+							.getRotation()
+							.plus(FieldMath.getRelativeTranslation(currentPose.get(), objectTranslation.get().get()).getAngle())
+					),
+					new RunCommand(
+						() -> moveToPoseByPID(
+							currentPose,
+							new Pose2d(
+								objectTranslation.get().get(),
+								currentPose.get()
+									.getRotation()
+									.plus(FieldMath.getRelativeTranslation(currentPose.get(), objectTranslation.get().get()).getAngle())
+							)
+						)
+					)
+				).until(objectTranslation.get()::isEmpty)
+			),
+			"Drive to object"
+		);
+	}
+
 
 }

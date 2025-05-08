@@ -16,7 +16,8 @@ public record SwerveConstants(
 	PIDController xMetersPIDController,
 	PIDController yMetersPIDController,
 	PIDController rotationDegreesPIDController,
-	PPHolonomicDriveController pathPlannerHolonomicDriveController
+	PPHolonomicDriveController pathPlannerHolonomicDriveController,
+	Rotation2d omegaSpinVelocityPerSecond
 ) {
 
 	public SwerveConstants(
@@ -24,7 +25,8 @@ public record SwerveConstants(
 		double velocityAt12VoltsMetersPerSecond,
 		Rotation2d maxRotationalVelocityPerSecond,
 		PIDConstants translationMetersPIDConstants,
-		PIDConstants rotationDegreesPIDConstants
+		PIDConstants rotationDegreesPIDConstants,
+		Rotation2d omegaSpinVelocityPerSecond
 	) {
 		this(
 			logPath,
@@ -35,7 +37,8 @@ public record SwerveConstants(
 			new PIDController(translationMetersPIDConstants.kP, translationMetersPIDConstants.kI, translationMetersPIDConstants.kD),
 			new PIDController(translationMetersPIDConstants.kP, translationMetersPIDConstants.kI, translationMetersPIDConstants.kD),
 			new PIDController(rotationDegreesPIDConstants.kP, rotationDegreesPIDConstants.kI, rotationDegreesPIDConstants.kD),
-			new PPHolonomicDriveController(translationMetersPIDConstants, rotationDegreesPIDConstants)
+			new PPHolonomicDriveController(translationMetersPIDConstants, rotationDegreesPIDConstants),
+			omegaSpinVelocityPerSecond
 		);
 
 		this.rotationDegreesPIDController

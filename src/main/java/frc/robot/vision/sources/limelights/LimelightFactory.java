@@ -13,7 +13,8 @@ public class LimelightFactory {
 		String parentLogPath,
 		String sourceName,
 		Filter<? super AprilTagVisionData> filter,
-		Pose3d cameraPoseOffset
+		Pose3d cameraPoseOffset,
+		boolean regulateTemperature
 	) {
 		return new LimeLightSource(
 			cameraNetworkTablesName,
@@ -21,7 +22,8 @@ public class LimelightFactory {
 			sourceName,
 			filter,
 			cameraPoseOffset,
-			LimelightPoseEstimationMethod.MEGATAG_2
+			LimelightPoseEstimationMethod.MEGATAG_2,
+			regulateTemperature
 		);
 	}
 
@@ -30,7 +32,8 @@ public class LimelightFactory {
 		String parentLogPath,
 		String sourceName,
 		Filter<? super AprilTagVisionData> filter,
-		Pose3d cameraPoseOffset
+		Pose3d cameraPoseOffset,
+		boolean regulateTemperature
 	) {
 		return new LimeLightSource(
 			cameraNetworkTablesName,
@@ -38,7 +41,8 @@ public class LimelightFactory {
 			sourceName,
 			filter,
 			cameraPoseOffset,
-			LimelightPoseEstimationMethod.MEGATAG_1
+			LimelightPoseEstimationMethod.MEGATAG_1,
+			regulateTemperature
 		);
 	}
 

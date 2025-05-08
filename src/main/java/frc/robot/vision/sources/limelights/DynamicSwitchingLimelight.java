@@ -29,7 +29,8 @@ public class DynamicSwitchingLimelight implements IndpendentHeadingVisionSource,
 		String parentLogPath,
 		String sourceName,
 		Filter<? super AprilTagVisionData> filter,
-		Pose3d cameraPoseOffset
+		Pose3d cameraPoseOffset,
+		boolean regulateTemperature
 	) {
 		this.useGyroForPoseEstimating = defaultUseGyroForPoseEstimating;
 		this.independentPoseEstimatingLimelight = LimelightFactory.createRobotHeadingEstimatingLimelight(
@@ -37,14 +38,16 @@ public class DynamicSwitchingLimelight implements IndpendentHeadingVisionSource,
 			parentLogPath,
 			sourceName + "/" + VisionConstants.DYNAMIC_LIMELIGHT_MEGATAG1_SOURCE_NAME,
 			filter,
-			cameraPoseOffset
+			cameraPoseOffset,
+			regulateTemperature
 		);
 		this.headingRequiringLimelight = LimelightFactory.createRobotHeadingRequiringLimelight(
 			cameraNetworkTablesName,
 			parentLogPath,
 			sourceName + "/" + VisionConstants.DYNAMIC_LIMELIGHT_MEGATAG2_SOURCE_NAME,
 			filter,
-			cameraPoseOffset
+			cameraPoseOffset,
+			regulateTemperature
 		);
 	}
 

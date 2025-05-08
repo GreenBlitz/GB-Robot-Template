@@ -35,7 +35,7 @@ class CANCoderEncoderBuilder {
 		cancoder.getConfigurator().refresh(magnetSensorConfigs);
 		CANcoderConfiguration caNcoderConfiguration = buildEncoderConfig();
 		caNcoderConfiguration.MagnetSensor.MagnetOffset = magnetSensorConfigs.MagnetOffset;
-		if (!Phoenix6Util.checkWithRetry(() -> cancoder.getConfigurator().apply(caNcoderConfiguration), APPLY_CONFIG_RETRIES).isOK()) {
+		if (!Phoenix6Util.checkStatusCodeWithRetry(() -> cancoder.getConfigurator().apply(caNcoderConfiguration), APPLY_CONFIG_RETRIES).isOK()) {
 			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
 		}
 

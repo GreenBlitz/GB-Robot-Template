@@ -27,4 +27,10 @@ public class Phoenix6DoubleSignal extends DoubleSignal implements SignalGetter {
 		return statusSignal;
 	}
 
+	@Override
+	protected void updateValue(TimedValue<Double> timedValue) {
+		timedValue.setValue(statusSignal.getValueAsDouble());
+		timedValue.setTimestamp(TimeUtil.getCurrentTimeSeconds() - statusSignal.getTimestamp().getLatency());
+	}
+
 }

@@ -20,4 +20,10 @@ public class SuppliedDoubleSignal extends DoubleSignal {
 		return new TimedValue<>(doubleSupplier.get(), TimeUtil.getCurrentTimeSeconds());
 	}
 
+	@Override
+	protected void updateValue(TimedValue<Double> timedValue) {
+		timedValue.setValue(doubleSupplier.get());
+		timedValue.setTimestamp(TimeUtil.getCurrentTimeSeconds());
+	}
+
 }

@@ -71,8 +71,6 @@ public abstract class DoubleSignal implements InputSignal<Double> {
 		timedValue.setValue(table.get(name, 0.0));
 	}
 
-	protected abstract TimedValue<Double> getNewValue();
-
 	protected abstract void updateValue(TimedValue<Double> timedValue);
 
 }

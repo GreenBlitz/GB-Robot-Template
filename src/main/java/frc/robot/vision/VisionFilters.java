@@ -43,6 +43,7 @@ public class VisionFilters {
 		return isDataFromMegaTag2().implies(isYawAtAngle(wantedYawSupplier, yawTolerance));
 	}
 
+
 	public static Filter<VisionData> isYawAngleNotZero() {
 		return (visionData) -> visionData.getEstimatedPose().getRotation().getZ() != 0.0;
 	}

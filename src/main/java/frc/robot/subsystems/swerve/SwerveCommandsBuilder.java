@@ -235,24 +235,17 @@ public class SwerveCommandsBuilder {
 		return swerve.asSubsystemCommand(
 			new SequentialCommandGroup(
 				findObject(objectTranslation),
-				new SequentialCommandGroup(
-					turnToHeading(
-						currentPose.get()
-							.getRotation()
-							.plus(FieldMath.getRelativeTranslation(currentPose.get(), objectTranslation.get().get()).getAngle())
-					),
-					new RunCommand(
-						() -> moveToPoseByPID(
-							currentPose,
-							new Pose2d(
-								new Translation2d(
-									objectTranslation.get().get().getDistance(new Translation2d(0, 0)) - distance,
-									objectTranslation.get().get().getAngle()
-								),
-								currentPose.get()
-									.getRotation()
-									.plus(FieldMath.getRelativeTranslation(currentPose.get(), objectTranslation.get().get()).getAngle())
-							)
+				new RunCommand(
+					() -> moveToPoseByPID(
+						currentPose,
+						new Pose2d(
+							new Translation2d(
+								objectTranslation.get().get().getDistance(new Translation2d(0, 0)) - distance,
+								objectTranslation.get().get().getAngle()
+							),
+							currentPose.get()
+								.getRotation()
+								.plus(FieldMath.getRelativeTranslation(currentPose.get(), objectTranslation.get().get()).getAngle())
 						)
 					)
 				).until(objectTranslation.get()::isEmpty)

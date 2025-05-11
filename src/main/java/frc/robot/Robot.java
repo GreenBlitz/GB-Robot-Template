@@ -4,7 +4,11 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.interfaces.IGyro;
@@ -18,13 +22,18 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
+import frc.robot.subsystems.swerve.factories.modules.drive.KrakenX60DriveBuilder;
 import frc.robot.vision.VisionConstants;
 import frc.robot.vision.VisionFilters;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
 import frc.utils.TimedValue;
 import frc.utils.auto.PathPlannerAutoWrapper;
+import frc.utils.auto.PathPlannerUtil;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.Logger;
+
+import java.util.Optional;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -39,6 +48,8 @@ public class Robot {
 	private final IPoseEstimator poseEstimator;
 	private final MultiAprilTagVisionSources visionSources;
 	private final RobotHeadingEstimator headingEstimator;
+
+	public Optional<Translation2d> object;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -87,6 +98,34 @@ public class Robot {
 		swerve.setHeadingSupplier(
 			ROBOT_TYPE.isSimulation() ? () -> poseEstimator.getEstimatedPose().getRotation() : () -> headingEstimator.getEstimatedHeading()
 		);
+
+		object = Optional.empty();
+
+		configureAuto();
+	}
+
+	private void configureAuto() {
+		swerve.configPathPlanner(
+			poseEstimator::getEstimatedPose,
+			poseEstimator::resetPose,
+			PathPlannerUtil.getGuiRobotConfig()
+				.orElse(
+					new RobotConfig(
+						60,
+						0.002,
+						new ModuleConfig(
+							0.0474588,
+							swerve.getConstants().velocityAt12VoltsMetersPerSecond(),
+							0.96,
+							DCMotor.getKrakenX60Foc(1),
+							KrakenX60DriveBuilder.GEAR_RATIO,
+							KrakenX60DriveBuilder.SLIP_CURRENT,
+							1
+						),
+						swerve.getModules().getModulePositionsFromCenterMeters()
+					)
+				)
+		);
 	}
 
 	public void periodic() {
@@ -105,6 +144,14 @@ public class Robot {
 		}
 		headingEstimator.log();
 
+		Logger.recordOutput("object exist", object.isPresent());
+		if (object.isPresent()) {
+			Logger.recordOutput("object", object.get());
+		} else {
+			Logger.recordOutput("object", new Translation2d(-1, -1));
+		}
+
+
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		CommandScheduler.getInstance().run(); // Should be last
@@ -116,6 +163,14 @@ public class Robot {
 
 	public Swerve getSwerve() {
 		return swerve;
+	}
+
+	public Optional<Translation2d> getObject() {
+		return object;
+	}
+
+	public IPoseEstimator getPoseEstimator() {
+		return poseEstimator;
 	}
 
 }

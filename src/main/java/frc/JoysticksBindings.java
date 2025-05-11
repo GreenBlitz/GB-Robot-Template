@@ -1,10 +1,14 @@
 package frc;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
+
+import java.util.Optional;
 
 public class JoysticksBindings {
 
@@ -47,11 +51,19 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+
+		usedJoystick.A
+			.onTrue(robot.getSwerve().getCommandsBuilder().driveToObject(robot.getPoseEstimator()::getEstimatedPose, robot::getObject, 1));
+		usedJoystick.B.onTrue(new InstantCommand(() -> robot.object = Optional.of(new Translation2d(1, 1))));
+		usedJoystick.X.onTrue(new InstantCommand(() -> robot.object = Optional.of(new Translation2d(2, 2))));
+		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.object = Optional.empty()));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
+
+		robot.getSwerve().applyCalibrationBindings(usedJoystick, robot.getPoseEstimator()::getEstimatedPose);
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {

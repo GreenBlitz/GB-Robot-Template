@@ -87,7 +87,7 @@ public class SwerveCommandsBuilder {
 	}
 
 	public Command spin() {
-		return new InstantCommand(
+		return new RunCommand(
 			() -> swerve.driveByState(
 				new ChassisSpeeds(0, 0, swerve.getConstants().omegaSpinVelocityPerSecond().getRadians()),
 				SwerveState.DEFAULT_DRIVE
@@ -226,6 +226,13 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
+	public Command moveToPoseByPID(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose) {
+		return swerve.asSubsystemCommand(
+				new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.moveToPoseByPID(currentPose.get(), targetPose.get())),
+				"PID to pose: " + targetPose
+		);
+	}
+
 
 	public Command findObject(Supplier<Optional<Translation2d>> objectTranslation) {
 		return swerve.asSubsystemCommand(spin().until(objectTranslation.get()::isPresent), "Find object");
@@ -234,21 +241,17 @@ public class SwerveCommandsBuilder {
 	public Command driveToObject(Supplier<Pose2d> currentPose, Supplier<Optional<Translation2d>> objectTranslation, double distance) {
 		return swerve.asSubsystemCommand(
 			new SequentialCommandGroup(
-				findObject(objectTranslation),
-				new RunCommand(
-					() -> moveToPoseByPID(
-						currentPose,
-						new Pose2d(
-							new Translation2d(
-								objectTranslation.get().get().getDistance(new Translation2d(0, 0)) - distance,
-								objectTranslation.get().get().getAngle()
-							),
-							currentPose.get()
-								.getRotation()
-								.plus(FieldMath.getRelativeTranslation(currentPose.get(), objectTranslation.get().get()).getAngle())
+				findObject(objectTranslation).until(() -> objectTranslation.get().isPresent()),
+				moveToPoseByPID(
+					currentPose,
+					() -> objectTranslation.get().isPresent()
+						? FieldMath.findPointByDistanceFromAnotherPointAndAngleFromASecondPoint(
+							objectTranslation.get().get(),
+							currentPose.get(),
+							distance
 						)
-					)
-				).until(objectTranslation.get()::isEmpty)
+						: currentPose.get()
+				).until(() -> objectTranslation.get().isEmpty())
 			),
 			"Drive to object"
 		);

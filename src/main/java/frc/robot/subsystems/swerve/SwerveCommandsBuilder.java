@@ -233,7 +233,6 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-
 	public Command findObject(Supplier<Optional<Translation2d>> objectTranslation) {
 		return swerve.asSubsystemCommand(spin().until(objectTranslation.get()::isPresent), "Find object");
 	}

@@ -33,6 +33,9 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	private final String cameraNetworkTablesName;
 	private final String sourceName;
 	private final LimelightPoseEstimationMethod poseEstimationMethod;
+	private final boolean regulateTemperature;
+
+	private int lastManuallySetSkippedFrames;
 
 	private final NetworkTableEntry cameraPoseOffsetEntry;
 	private final NetworkTableEntry robotPoseEntryMegaTag2;
@@ -40,19 +43,23 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	private final NetworkTableEntry aprilTagIdEntry;
 	private final NetworkTableEntry aprilTagPoseEntry;
 	private final NetworkTableEntry standardDeviations;
+	private final NetworkTableEntry hardwareMetricsEntry;
 	private final NetworkTableEntry robotOrientationEntry;
 	private final NetworkTableEntry computingPipelineLatencyEntry;
 	private final NetworkTableEntry captureLatencyEntry;
+	private final NetworkTableEntry mutableFramesToSkipEntry;
 
 	private double[] aprilTagPoseArray;
 	private double[] robotPoseArray;
 	private double[] standardDeviationsArray;
+	private double[] hardwareMetricsArray;
 	private double computingPipeLineLatency;
 	private double captureLatency;
 	private int lastSeenAprilTagId;
 	private BooleanSupplier shouldDataBeFiltered;
 	private Filter<? super AprilTagVisionData> filter;
 	private OrientationState3D robotOrientationState;
+	private boolean isTemperatureBeingRegulated;
 
 	protected LimeLightSource(
 		String cameraNetworkTablesName,
@@ -60,7 +67,8 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		String sourceName,
 		Filter<? super AprilTagVisionData> filter,
 		Pose3d cameraPoseOffset,
-		LimelightPoseEstimationMethod poseEstimationMethod
+		LimelightPoseEstimationMethod poseEstimationMethod,
+		boolean regulateTemperature
 	) {
 		this.logPath = parentLogPath + cameraNetworkTablesName + "/" + sourceName + "/";
 		this.cameraNetworkTablesName = cameraNetworkTablesName;
@@ -68,6 +76,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		this.shouldDataBeFiltered = () -> getVisionData().map(filter::apply).orElse(true);
 		this.filter = filter;
 		this.poseEstimationMethod = poseEstimationMethod;
+		this.regulateTemperature = regulateTemperature;
 
 		this.cameraPoseOffsetEntry = getLimelightNetworkTableEntry("camerapose_robotspace_set");
 		this.robotPoseEntryMegaTag2 = getLimelightNetworkTableEntry("botpose_orb_wpiblue");
@@ -75,11 +84,14 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		this.aprilTagPoseEntry = getLimelightNetworkTableEntry("targetpose_robotspace");
 		this.aprilTagIdEntry = getLimelightNetworkTableEntry("tid");
 		this.standardDeviations = getLimelightNetworkTableEntry("stddevs");
+		this.hardwareMetricsEntry = getLimelightNetworkTableEntry("hw");
 		this.robotOrientationEntry = getLimelightNetworkTableEntry("robot_orientation_set");
 		this.computingPipelineLatencyEntry = getLimelightNetworkTableEntry("tl");
 		this.captureLatencyEntry = getLimelightNetworkTableEntry("cl");
-
+		this.mutableFramesToSkipEntry = getLimelightNetworkTableEntry("throttle_set");
 		this.robotOrientationState = new OrientationState3D();
+		this.isTemperatureBeingRegulated = false;
+
 		AlertManager.addAlert(
 			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1)
 		);
@@ -100,8 +112,12 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		};
 		robotPoseArray = entry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		standardDeviationsArray = standardDeviations.getDoubleArray(new double[Pose3dComponentsValue.POSE3D_COMPONENTS_AMOUNT]);
+		hardwareMetricsArray = hardwareMetricsEntry.getDoubleArray(new double[LimeLightHardwareMetrics.values().length]);
 		computingPipeLineLatency = computingPipelineLatencyEntry.getDouble(0D);
 		captureLatency = captureLatencyEntry.getDouble(0D);
+		if (regulateTemperature) {
+			regulateTemperature();
+		}
 
 		log();
 	}
@@ -156,7 +172,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 				pose3dDoublePair.getFirst(),
 				pose3dDoublePair.getSecond(),
 				new StandardDeviations3D(
-					poseEstimationMethod.equals(LimelightPoseEstimationMethod.MEGATAG_1)
+					poseEstimationMethod == LimelightPoseEstimationMethod.MEGATAG_1
 						? Arrays.copyOfRange(standardDeviationsArray, 0, Pose3dComponentsValue.values().length)
 						: Arrays.copyOfRange(
 							standardDeviationsArray,
@@ -217,18 +233,57 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		);
 	}
 
+	public int getFPSCount() {
+		return (int) hardwareMetricsArray[LimeLightHardwareMetrics.FPS.getIndex()];
+	}
+
+	public int getCPUTemperature() {
+		return (int) hardwareMetricsArray[LimeLightHardwareMetrics.CPU_TEMPERATURE.getIndex()];
+	}
+
+	public int getRAMUsage() {
+		return (int) hardwareMetricsArray[LimeLightHardwareMetrics.RAM_USAGE.getIndex()];
+	}
+
+	public int getLimeLightTemperature() {
+		return (int) hardwareMetricsArray[LimeLightHardwareMetrics.LIMELIGHT_TEMPERATURE.getIndex()];
+	}
+
+	public void setSkippedFramesProcessing(int framesCount) {
+		mutableFramesToSkipEntry.setInteger(framesCount);
+		this.lastManuallySetSkippedFrames = framesCount;
+	}
+
+	public int getSkippedFramesProcessing() {
+		return (int) mutableFramesToSkipEntry.getInteger(-1); // fallback value -1 never accessed
+	}
+
+	public void regulateTemperature() {
+		if (
+			VisionConstants.MAXIMUM_LIMELIGHT_TEMPERATURE_CELSIUS < getLimeLightTemperature()
+				|| VisionConstants.MAXIMUM_CPU_TEMPERATURE_CELSIUS < getCPUTemperature()
+		) {
+			if (isTemperatureBeingRegulated) {
+				return;
+			}
+			setSkippedFramesProcessing(VisionConstants.FALLBACK_SKIPPED_FRAMES);
+			Logger.recordOutput(logPath + "temperatureRegulation", "high");
+			this.isTemperatureBeingRegulated = true;
+		} else {
+			if (!isTemperatureBeingRegulated) {
+				return;
+			}
+			setSkippedFramesProcessing(lastManuallySetSkippedFrames);
+			Logger.recordOutput(logPath + "temperatureRegulation", "fine");
+			this.isTemperatureBeingRegulated = false;
+		}
+	}
+
 	public void log() {
 		Logger.recordOutput(logPath + "filterResult", shouldDataBeFiltered.getAsBoolean());
-		Logger.recordOutput(logPath + "megaTagDirectOutput", PoseUtil.toPose3D(robotPoseArray, AngleUnit.DEGREES));
 		getVisionData().ifPresent(visionData -> {
 			Logger.recordOutput(logPath + "unfiltered3DVision", visionData.getEstimatedPose());
-			Logger.recordOutput(logPath + "unfiltered2DVision(Projected)", visionData.getEstimatedPose().toPose2d());
-			Logger.recordOutput(logPath + "aprilTagHeightMeters", visionData.getAprilTagHeightMeters());
-			Logger.recordOutput(logPath + "lastUpdate", visionData.getTimestamp());
 			Logger.recordOutput(logPath + "stdDevs", standardDeviationsArray);
-			if (poseEstimationMethod == LimelightPoseEstimationMethod.MEGATAG_1) {
-				Logger.recordOutput(logPath + "robotMegaTag1Heading", visionData.getEstimatedPose().getRotation().toRotation2d());
-			}
 		});
 	}
 

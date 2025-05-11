@@ -13,6 +13,7 @@ import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.alerts.AlertManager;
 import frc.utils.DriverStationUtil;
+import frc.utils.filters.FiltersManager;
 import frc.utils.time.TimeUtil;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -76,6 +77,7 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void robotPeriodic() {
 		updateTimeRelatedData(); // Better to be first
+		FiltersManager.periodic("LinearFiltersManager"); // Better to be second
 		JoysticksBindings.updateChassisDriverInputs();
 		robot.periodic();
 		AlertManager.reportAlerts();

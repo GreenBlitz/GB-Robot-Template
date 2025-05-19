@@ -36,6 +36,8 @@ public class RobotManager extends LoggedRobot {
 	private final Robot robot;
 	private PathPlannerAutoWrapper autonomousCommand;
 	private int roborioCycles;
+	
+	private boolean enable;
 
 	public RobotManager() {
 		Threads.setCurrentThreadPriority(true, 10);
@@ -59,14 +61,22 @@ public class RobotManager extends LoggedRobot {
 		BrushlessSparkMAXMotor endEffector = new BrushlessSparkMAXMotor("endEffector", new SparkMaxWrapper(new SparkMaxDeviceID(5)), new SysIdRoutine.Config());
 		BrakeStateManager.add(() -> endEffector.setBrake(true), () -> endEffector.setBrake(false));
 
+		enable = false;
+		
 		createAutoReadyForConstructionChooser();
 		JoysticksBindings.configureBindings(robot);
 	}
-
+	
+	@Override
+	public void disabledExit() {
+		enable = true;
+	}
+	
 	@Override
 	public void disabledInit() {
 		if (!DriverStationUtil.isMatch()) {
 			BrakeStateManager.coast();
+			enable = false;
 		}
 	}
 
@@ -91,6 +101,7 @@ public class RobotManager extends LoggedRobot {
 		JoysticksBindings.updateChassisDriverInputs();
 		robot.periodic();
 		AlertManager.reportAlerts();
+		Logger.recordOutput("enable", enable);
 	}
 
 	private void createAutoReadyForConstructionChooser() {

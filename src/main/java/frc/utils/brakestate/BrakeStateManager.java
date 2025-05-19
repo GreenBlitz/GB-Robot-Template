@@ -1,6 +1,8 @@
 package frc.utils.brakestate;
 
 
+import org.littletonrobotics.junction.Logger;
+
 import java.util.ArrayList;
 
 public class BrakeStateManager {
@@ -14,6 +16,7 @@ public class BrakeStateManager {
 	}
 
 	public static void brake() {
+		Logger.recordOutput("start", true);
 		for (Runnable brake : brakeRunnables) {
 			brake.run();
 		}

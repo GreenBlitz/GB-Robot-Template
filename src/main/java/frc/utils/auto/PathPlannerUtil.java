@@ -5,10 +5,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.path.GoalEndState;
-import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
@@ -19,7 +16,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.autonomous.AutonomousConstants;
-import frc.robot.autonomous.PathFollowingCommandsBuilder;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.alerts.Alert;
 import frc.utils.math.ToleranceMath;
@@ -105,12 +101,12 @@ public class PathPlannerUtil {
 		return new Pose2d(path.getPathPoses().get(path.getPathPoses().size() - 1).getTranslation(), path.getGoalEndState().rotation());
 	}
 
-	public static Command createPathDuringRuntime(Pose2d currentPose, Pose2d targetPose, PathConstraints constraints) {
-		List<Waypoint> bezierPoints = PathPlannerPath.waypointsFromPoses(currentPose, targetPose);
-		PathPlannerPath path = new PathPlannerPath(bezierPoints, constraints, null, new GoalEndState(0, targetPose.getRotation()));
-		path.preventFlipping = true;
-		return PathFollowingCommandsBuilder.followPath(path);
-	}
+//	public static Command createPathDuringRuntime(Pose2d currentPose, Pose2d targetPose, PathConstraints constraints) {
+//		List<Waypoint> bezierPoints = PathPlannerPath.waypointsFromPoses(currentPose, targetPose);
+//		PathPlannerPath path = new PathPlannerPath(bezierPoints, constraints, null, new GoalEndState(0, targetPose.getRotation()));
+//		path.preventFlipping = true;
+//		return PathFollowingCommandsBuilder.followPath(path);
+//	}
 
 	public static void setDynamicObstacles(List<Pair<Translation2d, Translation2d>> obstacles, Pose2d currentPose) {
 		dynamicObstacles = obstacles;

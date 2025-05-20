@@ -4,14 +4,14 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import frc.robot.subsystems.swerve.SwerveMath;
+//import edu.wpi.first.math.kinematics.ChassisSpeeds;
+//import frc.robot.subsystems.swerve.SwerveMath;
 
 public class ToleranceMath {
-
-	public static boolean isAtPose(Pose2d targetPose, Pose2d currentPose, ChassisSpeeds currentSpeeds, Pose2d tolerances, Pose2d deadbands) {
-		return isNear(targetPose, currentPose, tolerances) && SwerveMath.isStill(currentSpeeds, deadbands);
-	}
+//
+//	public static boolean isAtPose(Pose2d targetPose, Pose2d currentPose, ChassisSpeeds currentSpeeds, Pose2d tolerances, Pose2d deadbands) {
+//		return isNear(targetPose, currentPose, tolerances) && SwerveMath.isStill(currentSpeeds, deadbands);
+//	}
 
 	public static boolean isNear(Pose2d wantedPose, Pose2d pose, Pose2d tolerance) {
 		return isNear(wantedPose.getTranslation(), pose.getTranslation(), tolerance.getTranslation())

@@ -9,9 +9,9 @@ public enum ModuleState {
 	private final Rotation2d driveVelocityRotation2dPerSecond;
 	private final Rotation2d angle;
 
-	ModuleState(Rotation2d angle, Rotation2d driveVelocityRotation2dPerSecond) {
-		this.angle = angle;
+	ModuleState(Rotation2d driveVelocityRotation2dPerSecond, Rotation2d angle) {
 		this.driveVelocityRotation2dPerSecond = driveVelocityRotation2dPerSecond;
+		this.angle = angle;
 	}
 
 	public Rotation2d getDriveVelocityRotation2dPerSecond() {

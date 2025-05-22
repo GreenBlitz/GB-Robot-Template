@@ -6,6 +6,8 @@ import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.signal.AngleSignal;
 import frc.robot.subsystems.GBSubsystem;
+import frc.utils.battery.BatteryUtil;
+import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public class Module extends GBSubsystem {
 
@@ -19,6 +21,10 @@ public class Module extends GBSubsystem {
 	private final AngleSignal driveVelocitySignal;
 	private final AngleSignal steerAngleSignal;
 
+	private final SysIdCalibrator sysIdCalibrator;
+
+	private final Rotation2d maxDriveVelocityRotation2dPerSecond;
+
 	public Module(
 		String logPath,
 		ControllableMotor driveMotor,
@@ -27,7 +33,9 @@ public class Module extends GBSubsystem {
 		IRequest<Double> driveVoltageRequest,
 		IRequest<Rotation2d> steerAngleRequest,
 		AngleSignal driveVelocitySignal,
-		AngleSignal steerAngleSignal
+		AngleSignal steerAngleSignal,
+		SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo,
+		Rotation2d maxDriveVelocityRotation2dPerSecond
 	) {
 		super(logPath);
 
@@ -40,6 +48,10 @@ public class Module extends GBSubsystem {
 
 		this.driveVelocitySignal = driveVelocitySignal;
 		this.steerAngleSignal = steerAngleSignal;
+
+		this.sysIdCalibrator = new SysIdCalibrator(sysIdConfigInfo, this, this::setTargetDriveVoltage);
+
+		this.maxDriveVelocityRotation2dPerSecond= maxDriveVelocityRotation2dPerSecond;
 	}
 
 	@Override
@@ -55,8 +67,17 @@ public class Module extends GBSubsystem {
 		steerMotor.updateInputs(steerAngleSignal);
 	}
 
-	public void setTargetDriveVelocityRotation2dPerSecond(Rotation2d targetVelocity) {
+	public void setState(ModuleState state){
+		setTargetDriveVelocityRotation2dPerSecondWithPID(state.getDriveVelocityRotation2dPerSecond());
+		pointToAngle(state.getAngle());
+	}
+
+	public void setTargetDriveVelocityRotation2dPerSecondWithPID(Rotation2d targetVelocity) {
 		driveMotor.applyRequest(driveVelocityRequest.withSetPoint(targetVelocity));
+	}
+
+	public void setTargetDriveVelocityRotation2dPerSecondWithoutPID(Rotation2d targetVelocity) {
+		setTargetDriveVoltage(BatteryUtil.getCurrentVoltage() / (maxDriveVelocityRotation2dPerSecond.getRotations()/targetVelocity.getRotations()));
 	}
 
 	public void setTargetDriveVoltage(double voltage) {
@@ -76,4 +97,7 @@ public class Module extends GBSubsystem {
 		return steerAngleSignal.getLatestValue();
 	}
 
+	public SysIdCalibrator getSysIdCalibrator() {
+		return sysIdCalibrator;
+	}
 }

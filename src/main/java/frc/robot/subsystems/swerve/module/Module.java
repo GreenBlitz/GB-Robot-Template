@@ -117,15 +117,15 @@ public class Module {
 		drive.updateSimulation();
 
 		inputs.data = new ModuleIOInputs.ModuleIOData(
-				driveSignals.position().getAndUpdateValue().getRadians(),
-				driveSignals.velocity().getAndUpdateValue().getRadians(),
-				driveSignals.current().getAndUpdateValue(),
-				driveSignals.voltage().getAndUpdateValue(),
-				encoderSignals.position().getAndUpdateValue().getRadians(),
-				steerSignals.position().getAndUpdateValue().getRadians(),
-				steerSignals.velocity().getAndUpdateValue().getRadians(),
-				steerSignals.current().getAndUpdateValue(),
-				steerSignals.voltage().getAndUpdateValue()
+			driveSignals.position().getAndUpdateValue().getRadians(),
+			driveSignals.velocity().getAndUpdateValue().getRadians(),
+			driveSignals.current().getAndUpdateValue(),
+			driveSignals.voltage().getAndUpdateValue(),
+			encoderSignals.position().getAndUpdateValue().getRadians(),
+			steerSignals.position().getAndUpdateValue().getRadians(),
+			steerSignals.velocity().getAndUpdateValue().getRadians(),
+			steerSignals.current().getAndUpdateValue(),
+			steerSignals.voltage().getAndUpdateValue()
 		);
 		Logger.processInputs(constants.logPath(), inputs);
 

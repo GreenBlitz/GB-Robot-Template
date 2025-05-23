@@ -7,9 +7,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.constants.MathConstants;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IAngleEncoder;
-import frc.robot.subsystems.swerve.module.extrainputs.DriveCouplingInputsAutoLogged;
-import frc.robot.subsystems.swerve.module.extrainputs.DriveInputsAutoLogged;
-import frc.robot.subsystems.swerve.module.extrainputs.ModuleInputsAutoLogged;
+import frc.robot.subsystems.swerve.module.extrainputs.*;
 import frc.robot.subsystems.swerve.module.records.DriveRequests;
 import frc.robot.subsystems.swerve.module.records.DriveSignals;
 import frc.robot.subsystems.swerve.module.records.EncoderSignals;
@@ -40,6 +38,7 @@ public class Module {
 
 	private final ModuleInputsAutoLogged moduleInputs;
 	private final DriveInputsAutoLogged driveInputs;
+	private final ModuleIOInputsAutoLogged inputs;
 	private final DriveCouplingInputsAutoLogged driveCouplingInputs;
 
 	private SwerveModuleState targetState;
@@ -65,6 +64,8 @@ public class Module {
 		this.steer = steer;
 		this.steerRequests = steerRequests;
 		this.steerSignals = steerSignals;
+
+		this.inputs = new ModuleIOInputsAutoLogged();
 
 		this.drive = drive;
 		this.driveRequests = driveRequests;
@@ -115,9 +116,18 @@ public class Module {
 		steer.updateSimulation();
 		drive.updateSimulation();
 
-		encoder.updateInputs(encoderSignals.position());
-		steer.updateInputs(steerSignals.position(), steerSignals.velocity(), steerSignals.current(), steerSignals.voltage());
-		drive.updateInputs(driveSignals.position(), driveSignals.velocity(), driveSignals.current(), driveSignals.voltage());
+		inputs.data = new ModuleIOInputs.ModuleIOData(
+				driveSignals.position().getAndUpdateValue().getRadians(),
+				driveSignals.velocity().getAndUpdateValue().getRadians(),
+				driveSignals.current().getAndUpdateValue(),
+				driveSignals.voltage().getAndUpdateValue(),
+				encoderSignals.position().getAndUpdateValue().getRadians(),
+				steerSignals.position().getAndUpdateValue().getRadians(),
+				steerSignals.velocity().getAndUpdateValue().getRadians(),
+				steerSignals.current().getAndUpdateValue(),
+				steerSignals.voltage().getAndUpdateValue()
+		);
+		Logger.processInputs(constants.logPath(), inputs);
 
 		fixDriveInputsCoupling();
 

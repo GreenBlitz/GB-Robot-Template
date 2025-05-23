@@ -26,16 +26,16 @@ public class Module extends GBSubsystem {
 	private final Rotation2d maxDriveVelocityRotation2dPerSecond;
 
 	public Module(
-			String logPath,
-			ControllableMotor driveMotor,
-			ControllableMotor steerMotor,
-			IRequest<Rotation2d> driveVelocityRequest,
-			IRequest<Double> driveVoltageRequest,
-			IRequest<Rotation2d> steerAngleRequest,
-			AngleSignal driveVelocitySignal,
-			AngleSignal steerAngleSignal,
-			SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo,
-			Rotation2d maxDriveVelocityRotation2dPerSecond
+		String logPath,
+		ControllableMotor driveMotor,
+		ControllableMotor steerMotor,
+		IRequest<Rotation2d> driveVelocityRequest,
+		IRequest<Double> driveVoltageRequest,
+		IRequest<Rotation2d> steerAngleRequest,
+		AngleSignal driveVelocitySignal,
+		AngleSignal steerAngleSignal,
+		SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo,
+		Rotation2d maxDriveVelocityRotation2dPerSecond
 	) {
 		super(logPath);
 
@@ -51,7 +51,7 @@ public class Module extends GBSubsystem {
 
 		this.sysIdCalibrator = new SysIdCalibrator(sysIdConfigInfo, this, this::setTargetDriveVoltage);
 
-		this.maxDriveVelocityRotation2dPerSecond= maxDriveVelocityRotation2dPerSecond;
+		this.maxDriveVelocityRotation2dPerSecond = maxDriveVelocityRotation2dPerSecond;
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class Module extends GBSubsystem {
 		steerMotor.updateInputs(steerAngleSignal);
 	}
 
-	public void setState(ModuleState state){
+	public void setState(ModuleState state) {
 		setTargetDriveVelocityRotation2dPerSecondWithPID(state.getDriveVelocityRotation2dPerSecond());
 		pointToAngle(state.getAngle());
 	}
@@ -77,7 +77,9 @@ public class Module extends GBSubsystem {
 	}
 
 	public void setTargetDriveVelocityRotation2dPerSecondWithoutPID(Rotation2d targetVelocity) {
-		setTargetDriveVoltage(BatteryUtil.getCurrentVoltage() / (maxDriveVelocityRotation2dPerSecond.getRotations()/targetVelocity.getRotations()));
+		setTargetDriveVoltage(
+			BatteryUtil.getCurrentVoltage() / (maxDriveVelocityRotation2dPerSecond.getRotations() / targetVelocity.getRotations())
+		);
 	}
 
 	public void setTargetDriveVoltage(double voltage) {
@@ -100,4 +102,5 @@ public class Module extends GBSubsystem {
 	public SysIdCalibrator getSysIdCalibrator() {
 		return sysIdCalibrator;
 	}
+
 }

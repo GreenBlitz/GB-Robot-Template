@@ -1,5 +1,6 @@
 package frc.robot.hardware.signal;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.utils.TimedValue;
 import frc.utils.math.ToleranceMath;
@@ -69,6 +70,11 @@ public abstract class DoubleSignal implements InputSignal<Double> {
 	@Override
 	public void fromLog(LogTable table) {
 		timedValue.setValue(table.get(name, 0.0));
+	}
+
+	public Double getAndUpdateValue() {
+		updateValue(timedValue);
+		return timedValue.getValue();
 	}
 
 	protected abstract void updateValue(TimedValue<Double> timedValue);

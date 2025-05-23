@@ -7,7 +7,11 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.constants.MathConstants;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IAngleEncoder;
-import frc.robot.subsystems.swerve.module.extrainputs.*;
+import frc.robot.subsystems.swerve.module.extrainputs.DriveCouplingInputsAutoLogged;
+import frc.robot.subsystems.swerve.module.extrainputs.DriveInputsAutoLogged;
+import frc.robot.subsystems.swerve.module.extrainputs.ModuleInputsAutoLogged;
+import frc.robot.subsystems.swerve.module.extrainputs.ModuleIOInputs;
+import frc.robot.subsystems.swerve.module.extrainputs.ModuleIOInputsAutoLogged;
 import frc.robot.subsystems.swerve.module.records.DriveRequests;
 import frc.robot.subsystems.swerve.module.records.DriveSignals;
 import frc.robot.subsystems.swerve.module.records.EncoderSignals;
@@ -117,15 +121,15 @@ public class Module {
 		drive.updateSimulation();
 
 		inputs.data = new ModuleIOInputs.ModuleIOData(
-				driveSignals.position().getAndUpdateValue().getRadians(),
-				driveSignals.velocity().getAndUpdateValue().getRadians(),
-				driveSignals.current().getAndUpdateValue(),
-				driveSignals.voltage().getAndUpdateValue(),
-				encoderSignals.position().getAndUpdateValue().getRadians(),
-				steerSignals.position().getAndUpdateValue().getRadians(),
-				steerSignals.velocity().getAndUpdateValue().getRadians(),
-				steerSignals.current().getAndUpdateValue(),
-				steerSignals.voltage().getAndUpdateValue()
+			driveSignals.position().getAndUpdateValue().getRadians(),
+			driveSignals.velocity().getAndUpdateValue().getRadians(),
+			driveSignals.current().getAndUpdateValue(),
+			driveSignals.voltage().getAndUpdateValue(),
+			encoderSignals.position().getAndUpdateValue().getRadians(),
+			steerSignals.position().getAndUpdateValue().getRadians(),
+			steerSignals.velocity().getAndUpdateValue().getRadians(),
+			steerSignals.current().getAndUpdateValue(),
+			steerSignals.voltage().getAndUpdateValue()
 		);
 		Logger.processInputs(constants.logPath(), inputs);
 

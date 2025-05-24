@@ -35,33 +35,33 @@ public class PathPlannerUtil {
 	private static List<Pair<Translation2d, Translation2d>> dynamicObstacles = List.of();
 
 	public static void configPathPlanner(
-			Supplier<Pose2d> poseSupplier,
-			Consumer<Pose2d> resetPose,
-			Supplier<ChassisSpeeds> robotRelativeSpeedsSupplier,
-			Consumer<ChassisSpeeds> robotRelativeSpeedsSetter,
-			PPHolonomicDriveController holonomicDriveController,
-			RobotConfig robotConfig,
-			BooleanSupplier shouldFlipPath,
-			GBSubsystem... driveRequirements
+		Supplier<Pose2d> poseSupplier,
+		Consumer<Pose2d> resetPose,
+		Supplier<ChassisSpeeds> robotRelativeSpeedsSupplier,
+		Consumer<ChassisSpeeds> robotRelativeSpeedsSetter,
+		PPHolonomicDriveController holonomicDriveController,
+		RobotConfig robotConfig,
+		BooleanSupplier shouldFlipPath,
+		GBSubsystem... driveRequirements
 	) {
 		AutoBuilder.configure(
-				poseSupplier,
-				resetPose,
-				robotRelativeSpeedsSupplier,
-				robotRelativeSpeedsSetter,
-				holonomicDriveController,
-				robotConfig,
-				shouldFlipPath,
-				driveRequirements
+			poseSupplier,
+			resetPose,
+			robotRelativeSpeedsSupplier,
+			robotRelativeSpeedsSetter,
+			holonomicDriveController,
+			robotConfig,
+			shouldFlipPath,
+			driveRequirements
 		);
 	}
 
 	public static void setupPathPlannerLogging() {
 		PathPlannerLogging.setLogActivePathCallback(
-				activePath -> Logger.recordOutput(AutonomousConstants.LOG_PATH_PREFIX + "/ActivePath", activePath.toArray(Pose2d[]::new))
+			activePath -> Logger.recordOutput(AutonomousConstants.LOG_PATH_PREFIX + "/ActivePath", activePath.toArray(Pose2d[]::new))
 		);
 		PathPlannerLogging
-				.setLogTargetPoseCallback(targetPose -> Logger.recordOutput(AutonomousConstants.LOG_PATH_PREFIX + "/TargetPose", targetPose));
+			.setLogTargetPoseCallback(targetPose -> Logger.recordOutput(AutonomousConstants.LOG_PATH_PREFIX + "/TargetPose", targetPose));
 	}
 
 	public static void startPathfinder() {

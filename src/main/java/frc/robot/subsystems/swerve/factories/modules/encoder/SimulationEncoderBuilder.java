@@ -1,5 +1,6 @@
 package frc.robot.subsystems.swerve.factories.modules.encoder;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.empties.EmptyAngleEncoder;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.signal.AngleSignal;
@@ -18,8 +19,9 @@ class SimulationEncoderBuilder {
 		return new EncoderSignals(new AngleSignal("yaw", AngleUnit.DEGREES) {
 
 			@Override
-			protected TimedValue<Double> getNewValue() {
-				return new TimedValue<>(0.0, TimeUtil.getCurrentTimeSeconds());
+			protected void updateValue(TimedValue<Rotation2d> timedValue) {
+				timedValue.setValue(new Rotation2d());
+				timedValue.setTimestamp(TimeUtil.getCurrentTimeSeconds());
 			}
 
 		});

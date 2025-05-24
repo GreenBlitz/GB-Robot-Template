@@ -2,10 +2,10 @@ package frc.robot.subsystems.swerve.module;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.hardware.interfaces.ControllableMotor;
-import frc.robot.hardware.interfaces.IRequest;
-import frc.robot.hardware.signal.AngleSignal;
 import frc.robot.subsystems.GBSubsystem;
+import frc.utils.Conversions;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 
@@ -14,44 +14,41 @@ public class Module extends GBSubsystem {
 	private final ControllableMotor driveMotor;
 	private final ControllableMotor steerMotor;
 
-	private final IRequest<Rotation2d> driveVelocityRequest;
-	private final IRequest<Double> driveVoltageRequest;
-	private final IRequest<Rotation2d> steerAngleRequest;
-
-	private final AngleSignal driveVelocitySignal;
-	private final AngleSignal steerAngleSignal;
+	private final ModuleRequests requests;
+	private final ModuleSignals signals;
 
 	private final SysIdCalibrator sysIdCalibrator;
 
-	private final Rotation2d maxDriveVelocityRotation2dPerSecond;
+	private final double maxDriveVelocityMPS;
+	private final double wheelDiameterMeters;
+
+	private SwerveModuleState targetState;
 
 	public Module(
 		String logPath,
 		ControllableMotor driveMotor,
 		ControllableMotor steerMotor,
-		IRequest<Rotation2d> driveVelocityRequest,
-		IRequest<Double> driveVoltageRequest,
-		IRequest<Rotation2d> steerAngleRequest,
-		AngleSignal driveVelocitySignal,
-		AngleSignal steerAngleSignal,
+		ModuleRequests requests,
+		ModuleSignals signals,
 		SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo,
-		Rotation2d maxDriveVelocityRotation2dPerSecond
+		double maxDriveVelocityMPS,
+		double wheelDiameterMeters
 	) {
 		super(logPath);
 
 		this.driveMotor = driveMotor;
 		this.steerMotor = steerMotor;
 
-		this.driveVelocityRequest = driveVelocityRequest;
-		this.driveVoltageRequest = driveVoltageRequest;
-		this.steerAngleRequest = steerAngleRequest;
-
-		this.driveVelocitySignal = driveVelocitySignal;
-		this.steerAngleSignal = steerAngleSignal;
+		this.requests = requests;
+		this.signals = signals;
 
 		this.sysIdCalibrator = new SysIdCalibrator(sysIdConfigInfo, this, this::setTargetDriveVoltage);
 
-		this.maxDriveVelocityRotation2dPerSecond = maxDriveVelocityRotation2dPerSecond;
+		this.maxDriveVelocityMPS = maxDriveVelocityMPS;
+		this.wheelDiameterMeters = wheelDiameterMeters;
+
+		this.targetState = new SwerveModuleState();
+		setStateCloseLoop(targetState);
 	}
 
 	@Override
@@ -63,44 +60,101 @@ public class Module extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		driveMotor.updateInputs(driveVelocitySignal);
-		steerMotor.updateInputs(steerAngleSignal);
+		driveMotor.updateInputs(signals.driveVelocitySignal());
+		driveMotor.updateInputs(signals.driveVoltageSignal());
+		driveMotor.updateInputs(signals.driveCurrentSignal());
+
+		steerMotor.updateInputs(signals.steerAngleSignal());
+		steerMotor.updateInputs(signals.steerVoltageSignal());
 	}
 
-	public void setState(ModuleState state) {
-		setTargetDriveVelocityRotation2dPerSecondWithPID(state.getDriveVelocityRotation2dPerSecond());
-		pointToAngle(state.getAngle());
+	public void setStateCloseLoop(SwerveModuleState state) {
+		this.targetState = state;
+		setTargetDriveVelocityMPSCloseLoop(state.speedMetersPerSecond);
+		pointToAngle(state.angle);
 	}
 
-	public void setTargetDriveVelocityRotation2dPerSecondWithPID(Rotation2d targetVelocity) {
-		driveMotor.applyRequest(driveVelocityRequest.withSetPoint(targetVelocity));
+	public void setStateOpenLoop(SwerveModuleState state) {
+		this.targetState = state;
+		setTargetDriveVelocityMPSOpenLoop(state.speedMetersPerSecond);
+		pointToAngle(state.angle);
 	}
 
-	public void setTargetDriveVelocityRotation2dPerSecondWithoutPID(Rotation2d targetVelocity) {
-		setTargetDriveVoltage(
-			BatteryUtil.getCurrentVoltage() / (maxDriveVelocityRotation2dPerSecond.getRotations() / targetVelocity.getRotations())
-		);
+	public void setTargetDriveVelocityMPSCloseLoop(double targetVelocity) {
+		targetState.speedMetersPerSecond = targetVelocity;
+		driveMotor.applyRequest(requests.driveVelocityRequest().withSetPoint(metersToAngle(targetVelocity)));
+	}
+
+	public void setTargetDriveVelocityMPSOpenLoop(double targetVelocity) {
+		targetState.speedMetersPerSecond = targetVelocity;
+		setTargetDriveVoltage((BatteryUtil.getCurrentVoltage() / maxDriveVelocityMPS) / targetVelocity);
 	}
 
 	public void setTargetDriveVoltage(double voltage) {
-		driveMotor.applyRequest(driveVoltageRequest.withSetPoint(voltage));
+		targetState.speedMetersPerSecond = (voltage / BatteryUtil.getCurrentVoltage()) * maxDriveVelocityMPS;
+		driveMotor.applyRequest(requests.driveVoltageRequest().withSetPoint(voltage));
 	}
 
 	public void pointToAngle(Rotation2d angle) {
-		steerMotor.applyRequest(steerAngleRequest.withSetPoint(Rotation2d.fromRadians(MathUtil.angleModulus(angle.getRadians()))));
+		targetState.angle = angle;
+		steerMotor.applyRequest(requests.steerAngleRequest().withSetPoint(Rotation2d.fromRadians(MathUtil.angleModulus(angle.getRadians()))));
 	}
 
 
-	public Rotation2d getDriveVelocityRotation2dPerSecond() {
-		return driveVelocitySignal.getLatestValue();
+	public double getDriveVelocityMPS() {
+		return angleToMeters(signals.driveVelocitySignal().getLatestValue());
+	}
+
+	public double getDriveVoltage() {
+		return signals.driveVoltageSignal().getLatestValue();
+	}
+
+	public double getDriveCurrent() {
+		return signals.driveCurrentSignal().getLatestValue();
 	}
 
 	public Rotation2d getSteerAngle() {
-		return steerAngleSignal.getLatestValue();
+		return signals.steerAngleSignal().getLatestValue();
+	}
+
+	public double getSteerVoltage() {
+		return signals.steerVoltageSignal().getLatestValue();
+	}
+
+	public SwerveModuleState getTargetState() {
+		return targetState;
+	}
+
+	public ModuleSignals getSignals() {
+		return signals;
+	}
+
+	public ModuleRequests getRequests() {
+		return requests;
 	}
 
 	public SysIdCalibrator getSysIdCalibrator() {
 		return sysIdCalibrator;
+	}
+
+	public boolean isAtVelocityMPS(double targetVelocity, double tolerance) {
+		return signals.driveVelocitySignal().isNear(metersToAngle(targetVelocity), metersToAngle(tolerance));
+	}
+
+	public boolean isAtAngle(Rotation2d targetAngle, Rotation2d tolerance) {
+		return signals.steerAngleSignal().isNear(targetAngle, tolerance);
+	}
+
+	public boolean isAtState(SwerveModuleState targetState, double velocityTolerance, Rotation2d angleTolerance) {
+		return isAtVelocityMPS(targetState.speedMetersPerSecond, velocityTolerance) && isAtAngle(targetState.angle, angleTolerance);
+	}
+
+	private Rotation2d metersToAngle(double meters) {
+		return Conversions.distanceToAngle(meters, wheelDiameterMeters);
+	}
+
+	private double angleToMeters(Rotation2d angle) {
+		return Conversions.angleToDistance(angle, wheelDiameterMeters);
 	}
 
 }

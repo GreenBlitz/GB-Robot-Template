@@ -4,6 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.hardware.interfaces.ControllableMotor;
+import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.Conversions;
 import frc.utils.battery.BatteryUtil;
@@ -13,6 +14,7 @@ public class Module extends GBSubsystem {
 
 	private final ControllableMotor driveMotor;
 	private final ControllableMotor steerMotor;
+	private final IAngleEncoder encoder;
 
 	private final ModuleRequests requests;
 	private final ModuleSignals signals;
@@ -28,6 +30,7 @@ public class Module extends GBSubsystem {
 		String logPath,
 		ControllableMotor driveMotor,
 		ControllableMotor steerMotor,
+		IAngleEncoder encoder,
 		ModuleRequests requests,
 		ModuleSignals signals,
 		SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo,
@@ -38,6 +41,7 @@ public class Module extends GBSubsystem {
 
 		this.driveMotor = driveMotor;
 		this.steerMotor = steerMotor;
+		this.encoder = encoder;
 
 		this.requests = requests;
 		this.signals = signals;
@@ -66,6 +70,8 @@ public class Module extends GBSubsystem {
 
 		steerMotor.updateInputs(signals.steerAngleSignal());
 		steerMotor.updateInputs(signals.steerVoltageSignal());
+
+		encoder.updateInputs(signals.encoderAngleSignal());
 	}
 
 	public void setStateCloseLoop(SwerveModuleState state) {
@@ -115,6 +121,10 @@ public class Module extends GBSubsystem {
 
 	public Rotation2d getSteerAngle() {
 		return signals.steerAngleSignal().getLatestValue();
+	}
+
+	public Rotation2d getAbsolutAngle() {
+		return signals.encoderAngleSignal().getLatestValue();
 	}
 
 	public double getSteerVoltage() {

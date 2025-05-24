@@ -8,5 +8,6 @@ public record ModuleSignals(
 	InputSignal<Double> driveVoltageSignal,
 	InputSignal<Double> driveCurrentSignal,
 	InputSignal<Rotation2d> steerAngleSignal,
-	InputSignal<Double> steerVoltageSignal
+	InputSignal<Double> steerVoltageSignal,
+	InputSignal<Rotation2d> encoderAngleSignal
 ) {}

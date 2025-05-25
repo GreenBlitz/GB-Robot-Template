@@ -96,4 +96,10 @@ public class DynamicSwitchingLimelight implements IndpendentHeadingVisionSource,
 		headingRequiringLimelight.updateRobotAngleValues(robotOrientationState);
 	}
 
+	@Override
+	public void log() {
+		headingRequiringLimelight.log();
+		independentPoseEstimatingLimelight.log();
+	}
+
 }

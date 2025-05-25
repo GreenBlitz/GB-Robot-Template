@@ -257,6 +257,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		return (int) mutableFramesToSkipEntry.getInteger(-1); // fallback value -1 is never accessed unless older Limelight firmware is used
 	}
 
+	@Override
 	public void log() {
 		Logger.recordOutput(logPath + "filterResult", shouldDataBeFiltered.getAsBoolean());
 		Logger.recordOutput(logPath + "temperature", getLimeLightTemperature());

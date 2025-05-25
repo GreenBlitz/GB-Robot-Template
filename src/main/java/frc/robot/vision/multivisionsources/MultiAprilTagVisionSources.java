@@ -149,11 +149,12 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		}
 	}
 
-	/* Costly on runtime: don't use until gets fixed */
 	@Override
 	public void log() {
 		super.log();
-		logAprilTagPoseData();
+		for (VisionSource<AprilTagVisionData> visionSource : visionSources) {
+			visionSource.log();
+		}
 		Logger.recordOutput(logPath + "inputtedRobotHeading", robotHeadingSupplier.get());
 	}
 

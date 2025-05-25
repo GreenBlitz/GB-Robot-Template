@@ -450,20 +450,17 @@ public class Superstructure extends GBSubsystem {
 
 	public Command netWithRelease() {
 		return asSubsystemCommand(
-			new SequentialCommandGroup(
-				new ParallelDeadlineGroup(
-					new SequentialCommandGroup(
-						endEffectorStateHandler.setState(EndEffectorState.DEFAULT).until(this::isReadyForNetRelease),
-						endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE)
-							.withTimeout(StateMachineConstants.NET_OUTTAKE_TIME_SECONDS)
-					),
-					elevatorStateHandler.setState(ElevatorState.NET),
-					new SequentialCommandGroup(
-						armStateHandler.setState(ArmState.PRE_NET).until(this::isPreNetReady),
-						armStateHandler.setState(ArmState.NET)
-					),
-					climbStateHandler.setState(ClimbState.STOP)
-				)
+			new ParallelDeadlineGroup(
+				new SequentialCommandGroup(
+					endEffectorStateHandler.setState(EndEffectorState.DEFAULT).until(this::isReadyForNetRelease),
+					endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE).withTimeout(StateMachineConstants.NET_OUTTAKE_TIME_SECONDS)
+				),
+				elevatorStateHandler.setState(ElevatorState.NET),
+				new SequentialCommandGroup(
+					armStateHandler.setState(ArmState.PRE_NET).until(this::isPreNetReady),
+					armStateHandler.setState(ArmState.NET)
+				),
+				climbStateHandler.setState(ClimbState.STOP)
 			),
 			SuperstructureState.NET
 		);

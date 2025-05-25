@@ -1,6 +1,7 @@
 package frc.robot.statemachine;
 
 import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -549,6 +550,35 @@ public class RobotCommander extends GBSubsystem {
 			new ParallelDeadlineGroup(
 				superstructure.netWithRelease(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+			),
+			RobotState.NET
+		);
+	}
+
+	private Command autoNet() {
+		double y1 = 0, x2 = 0, x3 = 0, tolerance = 0;
+		return asSubsystemCommand(
+			new SequentialCommandGroup(
+				swerve.getCommandsBuilder()
+					.driveToPose(robot.getPoseEstimator()::getEstimatedPose, () -> new Pose2d(x2, y1, new Rotation2d()))
+					.until(() -> robot.getPoseEstimator().getEstimatedPose().getY() > y1),
+				swerve.getCommandsBuilder()
+					.driveToPose(
+						robot.getPoseEstimator()::getEstimatedPose,
+						() -> new Pose2d(x2, robot.getPoseEstimator().getEstimatedPose().getY(), new Rotation2d())
+					)
+					.until(() -> robot.getPoseEstimator().getEstimatedPose().getX() >= x2),
+				new ParallelCommandGroup(
+					superstructure.preNet().onlyIf(() -> robot.getPoseEstimator().getEstimatedPose().getX() <= x3),
+					swerve.getCommandsBuilder()
+						.driveToPose(
+							robot.getPoseEstimator()::getEstimatedPose,
+							() -> new Pose2d(x3, robot.getPoseEstimator().getEstimatedPose().getY(), new Rotation2d())
+						)
+						.until(() -> MathUtil.isNear(x3, robot.getPoseEstimator().getEstimatedPose().getX(), tolerance))
+				),
+				superstructure.preNet().until(this::isReadyForNet),
+				superstructure.netWithRelease()
 			),
 			RobotState.NET
 		);

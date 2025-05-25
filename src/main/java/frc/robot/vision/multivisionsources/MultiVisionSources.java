@@ -50,8 +50,13 @@ public class MultiVisionSources<T extends VisionData> {
 
 	public void log() {
 		for (VisionSource<T> visionSource : visionSources) {
-			visionSource.update();
 			visionSource.log();
+		}
+	}
+	
+	public void update() {
+		for (VisionSource<T> visionSource : visionSources) {
+			visionSource.update();
 		}
 	}
 	
@@ -61,7 +66,6 @@ public class MultiVisionSources<T extends VisionData> {
 	) {
 		ArrayList<T> output = new ArrayList<>();
 		for (VisionSource<T> visionSource : list) {
-			visionSource.update();
 			Optional<T> observation = mapping.apply(visionSource);
 			observation.ifPresent(output::add);
 		}

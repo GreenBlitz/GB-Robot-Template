@@ -39,6 +39,7 @@ public class Robot {
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		CommandScheduler.getInstance().run(); // Should be last
+		multiVisionSources.update();
 		multiVisionSources.log();
 		multiVisionSources.getFilteredVisionData();
 	}

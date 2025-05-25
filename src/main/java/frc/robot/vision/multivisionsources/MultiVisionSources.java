@@ -50,6 +50,7 @@ public class MultiVisionSources<T extends VisionData> {
 
 	public void log() {
 		for (VisionSource<T> visionSource : visionSources) {
+			visionSource.update();
 			visionSource.log();
 		}
 	}

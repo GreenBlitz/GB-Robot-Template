@@ -39,12 +39,12 @@ deploy {
 
 				frcJava(getArtifactTypeClass('FRCJavaArtifact')) {
 					// visual vm
-					// jvmArgs.add('-Dcom.sun.management.jmxremote=true')
-					// jvmArgs.add('-Dcom.sun.management.jmxremote.port=1198')
-					// jvmArgs.add('-Dcom.sun.management.jmxremote.local.only=false')
-					// jvmArgs.add('-Dcom.sun.management.jmxremote.ssl=false')
-					// jvmArgs.add('-Dcom.sun.management.jmxremote.authenticate=false')
-					// jvmArgs.add("-Djava.rmi.server.hostname=${IPS[0]}")
+					 jvmArgs.add('-Dcom.sun.management.jmxremote=true')
+					 jvmArgs.add('-Dcom.sun.management.jmxremote.port=1198')
+					 jvmArgs.add('-Dcom.sun.management.jmxremote.local.only=false')
+					 jvmArgs.add('-Dcom.sun.management.jmxremote.ssl=false')
+					 jvmArgs.add('-Dcom.sun.management.jmxremote.authenticate=false')
+					 jvmArgs.add("-Djava.rmi.server.hostname=${IPS[0]}")
 
 					jvmArgs.add("-XX:+UnlockExperimentalVMOptions")
 					jvmArgs.add("-XX:GCTimeRatio=5")

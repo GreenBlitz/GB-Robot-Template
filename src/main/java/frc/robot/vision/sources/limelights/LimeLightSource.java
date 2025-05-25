@@ -33,9 +33,6 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	private final String cameraNetworkTablesName;
 	private final String sourceName;
 	private final LimelightPoseEstimationMethod poseEstimationMethod;
-	private final boolean regulateTemperature;
-
-	private int lastManuallySetSkippedFrames;
 
 	private final NetworkTableEntry cameraPoseOffsetEntry;
 	private final NetworkTableEntry robotPoseEntryMegaTag2;
@@ -67,8 +64,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		String sourceName,
 		Filter<? super AprilTagVisionData> filter,
 		Pose3d cameraPoseOffset,
-		LimelightPoseEstimationMethod poseEstimationMethod,
-		boolean regulateTemperature
+		LimelightPoseEstimationMethod poseEstimationMethod
 	) {
 		this.logPath = parentLogPath + cameraNetworkTablesName + "/" + sourceName + "/";
 		this.cameraNetworkTablesName = cameraNetworkTablesName;
@@ -76,7 +72,6 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		this.shouldDataBeFiltered = () -> getVisionData().map(filter::apply).orElse(true);
 		this.filter = filter;
 		this.poseEstimationMethod = poseEstimationMethod;
-		this.regulateTemperature = regulateTemperature;
 
 		this.cameraPoseOffsetEntry = getLimelightNetworkTableEntry("camerapose_robotspace_set");
 		this.robotPoseEntryMegaTag2 = getLimelightNetworkTableEntry("botpose_orb_wpiblue");
@@ -90,10 +85,16 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		this.captureLatencyEntry = getLimelightNetworkTableEntry("cl");
 		this.mutableFramesToSkipEntry = getLimelightNetworkTableEntry("throttle_set");
 		this.robotOrientationState = new OrientationState3D();
-		this.isTemperatureBeingRegulated = false;
 
 		AlertManager.addAlert(
 			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1)
+		);
+		AlertManager.addAlert(
+			new PeriodicAlert(
+				Alert.AlertType.WARNING,
+				logPath + "LimelightTemperature",
+				() -> VisionConstants.MAXIMUM_LIMELIGHT_TEMPERATURE_CELSIUS <= getLimeLightTemperature()
+			)
 		);
 
 		updateCameraPoseOffset(cameraPoseOffset);
@@ -115,9 +116,6 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		hardwareMetricsArray = hardwareMetricsEntry.getDoubleArray(new double[LimeLightHardwareMetrics.values().length]);
 		computingPipeLineLatency = computingPipelineLatencyEntry.getDouble(0D);
 		captureLatency = captureLatencyEntry.getDouble(0D);
-		if (regulateTemperature) {
-			regulateTemperature();
-		}
 
 		log();
 	}
@@ -251,32 +249,10 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 
 	public void setSkippedFramesProcessing(int framesCount) {
 		mutableFramesToSkipEntry.setInteger(framesCount);
-		this.lastManuallySetSkippedFrames = framesCount;
 	}
 
 	public int getSkippedFramesProcessing() {
-		return (int) mutableFramesToSkipEntry.getInteger(-1); // fallback value -1 never accessed
-	}
-
-	public void regulateTemperature() {
-		if (
-			VisionConstants.MAXIMUM_LIMELIGHT_TEMPERATURE_CELSIUS < getLimeLightTemperature()
-				|| VisionConstants.MAXIMUM_CPU_TEMPERATURE_CELSIUS < getCPUTemperature()
-		) {
-			if (isTemperatureBeingRegulated) {
-				return;
-			}
-			setSkippedFramesProcessing(VisionConstants.FALLBACK_SKIPPED_FRAMES);
-			Logger.recordOutput(logPath + "temperatureRegulation", "high");
-			this.isTemperatureBeingRegulated = true;
-		} else {
-			if (!isTemperatureBeingRegulated) {
-				return;
-			}
-			setSkippedFramesProcessing(lastManuallySetSkippedFrames);
-			Logger.recordOutput(logPath + "temperatureRegulation", "fine");
-			this.isTemperatureBeingRegulated = false;
-		}
+		return (int) mutableFramesToSkipEntry.getInteger(-1); // fallback value -1 is never accessed unless older Limelight firmware is used
 	}
 
 	public void log() {

@@ -25,12 +25,6 @@ public class VisionConstants {
 
 	public static final double MAXIMUM_LIMELIGHT_TEMPERATURE_CELSIUS = 80;
 
-	public static final double MAXIMUM_CPU_TEMPERATURE_CELSIUS = 80;
-
-	public static final int FALLBACK_SKIPPED_FRAMES = 100;
-
-	public static final boolean DEFAULT_REGULATE_TEMPERATURE = false;
-
 
 	public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = getAprilTagFieldLayout();
 

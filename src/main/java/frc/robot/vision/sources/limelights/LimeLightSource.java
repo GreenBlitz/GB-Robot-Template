@@ -50,6 +50,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	private double[] robotPoseArray;
 	private double[] standardDeviationsArray;
 	private double[] hardwareMetricsArray;
+
 	private double computingPipeLineLatency;
 	private double captureLatency;
 	private int lastSeenAprilTagId;
@@ -84,6 +85,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		this.computingPipelineLatencyEntry = getLimelightNetworkTableEntry("tl");
 		this.captureLatencyEntry = getLimelightNetworkTableEntry("cl");
 		this.mutableFramesToSkipEntry = getLimelightNetworkTableEntry("throttle_set");
+
 		this.robotOrientationState = new OrientationState3D();
 
 		AlertManager.addAlert(
@@ -92,7 +94,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
-				logPath + "LimelightTemperature",
+				logPath + "LimelightTemperatureTooHigh",
 				() -> VisionConstants.MAXIMUM_LIMELIGHT_TEMPERATURE_CELSIUS <= getLimeLightTemperature()
 			)
 		);
@@ -170,7 +172,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 				pose3dDoublePair.getFirst(),
 				pose3dDoublePair.getSecond(),
 				new StandardDeviations3D(
-					poseEstimationMethod == LimelightPoseEstimationMethod.MEGATAG_1
+                        poseEstimationMethod == LimelightPoseEstimationMethod.MEGATAG_1
 						? Arrays.copyOfRange(standardDeviationsArray, 0, Pose3dComponentsValue.values().length)
 						: Arrays.copyOfRange(
 							standardDeviationsArray,
@@ -257,6 +259,10 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 
 	public void log() {
 		Logger.recordOutput(logPath + "filterResult", shouldDataBeFiltered.getAsBoolean());
+		Logger.recordOutput(logPath + "temperature", getLimeLightTemperature());
+		Logger.recordOutput(logPath + "RAMUsage", getRAMUsage());
+		Logger.recordOutput(logPath + "CPUTemperature", getCPUTemperature());
+		Logger.recordOutput(logPath + "FPS", getFPSCount());
 		getVisionData().ifPresent(visionData -> {
 			Logger.recordOutput(logPath + "unfiltered3DVision", visionData.getEstimatedPose());
 			Logger.recordOutput(logPath + "stdDevs", standardDeviationsArray);

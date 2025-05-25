@@ -6,6 +6,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.subsystems.swerve.module.factory.RealModuleConstants;
 import frc.utils.Conversions;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.calibration.sysid.SysIdCalibrator;
@@ -21,8 +22,7 @@ public class Module extends GBSubsystem {
 
 	private final SysIdCalibrator sysIdCalibrator;
 
-	private final double maxDriveVelocityMPS;
-	private final double wheelDiameterMeters;
+	private final RealModuleConstants constants;
 
 	private SwerveModuleState targetState;
 
@@ -34,8 +34,7 @@ public class Module extends GBSubsystem {
 		ModuleRequests requests,
 		ModuleSignals signals,
 		SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo,
-		double maxDriveVelocityMPS,
-		double wheelDiameterMeters
+		RealModuleConstants constants
 	) {
 		super(logPath);
 
@@ -48,8 +47,7 @@ public class Module extends GBSubsystem {
 
 		this.sysIdCalibrator = new SysIdCalibrator(sysIdConfigInfo, this, this::setTargetDriveVoltage);
 
-		this.maxDriveVelocityMPS = maxDriveVelocityMPS;
-		this.wheelDiameterMeters = wheelDiameterMeters;
+		this.constants = constants;
 
 		this.targetState = new SwerveModuleState();
 		setStateCloseLoop(targetState);
@@ -93,11 +91,11 @@ public class Module extends GBSubsystem {
 
 	public void setTargetDriveVelocityMPSOpenLoop(double targetVelocity) {
 		targetState.speedMetersPerSecond = targetVelocity;
-		setTargetDriveVoltage(BatteryUtil.DEFAULT_VOLTAGE * (targetVelocity / maxDriveVelocityMPS));
+		setTargetDriveVoltage(BatteryUtil.DEFAULT_VOLTAGE * (targetVelocity / constants.maxDriveVelocityMPS()));
 	}
 
 	public void setTargetDriveVoltage(double voltage) {
-		targetState.speedMetersPerSecond = (voltage / BatteryUtil.getCurrentVoltage()) * maxDriveVelocityMPS;
+		targetState.speedMetersPerSecond = (voltage / BatteryUtil.getCurrentVoltage()) * constants.maxDriveVelocityMPS();
 		driveMotor.applyRequest(requests.driveVoltageRequest().withSetPoint(voltage));
 	}
 
@@ -160,11 +158,11 @@ public class Module extends GBSubsystem {
 	}
 
 	private Rotation2d metersToAngle(double meters) {
-		return Conversions.distanceToAngle(meters, wheelDiameterMeters);
+		return Conversions.distanceToAngle(meters, constants.wheelDiameterMeters());
 	}
 
 	private double angleToMeters(Rotation2d angle) {
-		return Conversions.angleToDistance(angle, wheelDiameterMeters);
+		return Conversions.angleToDistance(angle, constants.wheelDiameterMeters());
 	}
 
 }

@@ -4,9 +4,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.vision.VisionConstants;
+import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 
@@ -18,9 +21,16 @@ import frc.utils.battery.BatteryUtil;
 public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
+	public final MultiAprilTagVisionSources multiVisionSources;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
+		this.multiVisionSources = new MultiAprilTagVisionSources(
+				VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
+				() -> Rotation2d.kZero,
+				true,
+				VisionConstants.VISION_SOURCES
+		);
 	}
 
 	public void periodic() {
@@ -29,6 +39,7 @@ public class Robot {
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		CommandScheduler.getInstance().run(); // Should be last
+		multiVisionSources.getFilteredVisionData();
 	}
 
 	public PathPlannerAutoWrapper getAutonomousCommand() {

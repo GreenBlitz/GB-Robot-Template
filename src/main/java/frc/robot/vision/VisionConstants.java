@@ -2,12 +2,20 @@ package frc.robot.vision;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import frc.constants.DirectoryPaths;
+import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.data.VisionData;
+import frc.robot.vision.sources.VisionSource;
+import frc.robot.vision.sources.limelights.DynamicSwitchingLimelight;
+import frc.utils.AngleUnit;
 import frc.utils.Filter;
 import frc.utils.alerts.Alert;
 
 import java.io.IOException;
+import java.util.List;
 
 public class VisionConstants {
 
@@ -39,11 +47,58 @@ public class VisionConstants {
 			return AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 		}
 	}
-
+	
 	public static final int LIMELIGHT_ENTRY_ARRAY_LENGTH = 6;
-
+	
 	public static final int NO_APRILTAG_ID = -1;
-
+	
+	public static Rotation2d ROLL_FILTER_TOLERANCE = Rotation2d.fromDegrees(5);
+	
+	public static Rotation2d PITCH_FILTER_TOLERANCE = Rotation2d.fromDegrees(5);
+	
+	public static Rotation2d YAW_FILTER_TOLERANCE = Rotation2d.fromDegrees(2);
+	
+	public static double ROBOT_POSITION_IN_FIELD_TOLERANCE_METERS = 0.1;
+	
+	public static double ROBOT_DISTANCE_TO_GROUND_TOLERANCE_METERS = 0.5;
+	
+	public static int[] TAGS_TO_IGNORE_FOR_LIMELIGHT_FEEDER = {4, 5, 14, 15};
+	
 	public static final Filter<VisionData> DEFAULT_VISION_FILTER = Filter.nonFilteringFilter();
-
+	
+	public static final Pose3d LIMELIGHT_LEFT_CAMERA_ROBOT_POSE = new Pose3d(
+			new Translation3d(0.215, -0.11, 0.508),
+			AngleUnit.DEGREES.toRotation3d(-8.06180374425555, -27.07784559039065, -22.52372569716833)
+	);
+	
+	public static final Pose3d LIMELIGHT_RIGHT_CAMERA_ROBOT_POSE = new Pose3d(
+			new Translation3d(0.2022, 0.13, 0.508),
+			AngleUnit.DEGREES.toRotation3d(10.612258493096334, -27.18966371065684, 20.10328620400214)
+	);
+	
+	public static final Pose3d LIMELIGHT_FEEDER_CAMERA_ROBOT_POSE = new Pose3d(
+			new Translation3d(-0.07575, 0.27, 0.93),
+			AngleUnit.DEGREES.toRotation3d(-2.8, 52.64, -176.7)
+	);
+	
+	public static final VisionSource<AprilTagVisionData> LIMELIGHT_LEFT = new DynamicSwitchingLimelight(
+			true,
+			"limelight-left",
+			VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
+			"limelight4-front",
+			VisionConstants.DEFAULT_VISION_FILTER,
+			LIMELIGHT_LEFT_CAMERA_ROBOT_POSE
+	);
+	
+	public static final VisionSource<AprilTagVisionData> LIMELIGHT_RIGHT = new DynamicSwitchingLimelight(
+			true,
+			"limelight",
+			VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
+			"limelight3gb-front",
+			VisionConstants.DEFAULT_VISION_FILTER,
+			LIMELIGHT_RIGHT_CAMERA_ROBOT_POSE
+	);
+	
+	public static final List<VisionSource<AprilTagVisionData>> VISION_SOURCES = List.of(LIMELIGHT_LEFT, LIMELIGHT_RIGHT);
+	
 }

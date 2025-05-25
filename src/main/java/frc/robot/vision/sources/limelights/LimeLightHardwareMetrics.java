@@ -3,7 +3,7 @@ package frc.robot.vision.sources.limelights;
 public enum LimeLightHardwareMetrics {
 
 	LIMELIGHT_TEMPERATURE(0),
-	CPU_TEMPERATURE(1),
+	CPU_USAGE(1),
 	RAM_USAGE(2),
 	FPS(3);
 

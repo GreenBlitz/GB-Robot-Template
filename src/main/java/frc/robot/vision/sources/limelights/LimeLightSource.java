@@ -89,19 +89,22 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		this.robotOrientationState = new OrientationState3D();
 
 		AlertManager.addAlert(
-			new PeriodicAlert(Alert.AlertType.ERROR, cameraNetworkTablesName + "DisconnectedAt", () -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1)
+			new PeriodicAlert(
+				Alert.AlertType.ERROR,
+				cameraNetworkTablesName + "DisconnectedAt",
+				() -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1
+			)
 		);
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
-					cameraNetworkTablesName + "LimelightTemperatureTooHigh",
+				cameraNetworkTablesName + "LimelightTemperatureTooHigh",
 				() -> VisionConstants.MAXIMUM_LIMELIGHT_TEMPERATURE_CELSIUS <= getLimeLightTemperature()
 			)
 		);
 
 		updateCameraPoseOffset(cameraPoseOffset);
 		update();
-		log();
 	}
 
 	@Override
@@ -118,8 +121,6 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		hardwareMetricsArray = hardwareMetricsEntry.getDoubleArray(new double[LimeLightHardwareMetrics.values().length]);
 		computingPipeLineLatency = computingPipelineLatencyEntry.getDouble(0D);
 		captureLatency = captureLatencyEntry.getDouble(0D);
-
-		log();
 	}
 
 	protected double getLatency() {

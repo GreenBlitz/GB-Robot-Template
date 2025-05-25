@@ -89,12 +89,12 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		this.robotOrientationState = new OrientationState3D();
 
 		AlertManager.addAlert(
-			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1)
+			new PeriodicAlert(Alert.AlertType.ERROR, cameraNetworkTablesName + "DisconnectedAt", () -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1)
 		);
 		AlertManager.addAlert(
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
-				logPath + "LimelightTemperatureTooHigh",
+					cameraNetworkTablesName + "LimelightTemperatureTooHigh",
 				() -> VisionConstants.MAXIMUM_LIMELIGHT_TEMPERATURE_CELSIUS <= getLimeLightTemperature()
 			)
 		);

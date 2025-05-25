@@ -131,7 +131,7 @@ public class SwerveStateHandler {
 			if (closestAlgaeDetectedSupplier.get().isPresent()) {
 				return handleAlgaeIntakeAimAssist(speeds, robotPoseSupplier.get().get(), swerveState);
 			} else {
-				reportMissingSupplier("reef side");
+				reportMissingSupplier("detected algae");
 				return speeds;
 			}
 		}

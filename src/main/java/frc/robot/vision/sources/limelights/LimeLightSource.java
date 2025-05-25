@@ -118,8 +118,6 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		hardwareMetricsArray = hardwareMetricsEntry.getDoubleArray(new double[LimeLightHardwareMetrics.values().length]);
 		computingPipeLineLatency = computingPipelineLatencyEntry.getDouble(0D);
 		captureLatency = captureLatencyEntry.getDouble(0D);
-
-		log();
 	}
 
 	protected double getLatency() {

@@ -597,7 +597,7 @@ public class RobotCommander extends GBSubsystem {
 							() -> MathUtil.isNear(
 								StateMachineConstants.SCORE_NET_X_POSITION_METERS,
 								robot.getPoseEstimator().getEstimatedPose().getX(),
-								Tolerances.NET_X_POSITION_METERS
+								Tolerances.NET_SCORING_X_POSITION_METERS
 							)
 						)
 				),

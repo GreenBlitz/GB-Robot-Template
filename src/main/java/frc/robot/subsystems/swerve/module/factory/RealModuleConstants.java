@@ -6,6 +6,5 @@ public record RealModuleConstants(
 	double wheelDiameterMeters,
 	int driveMotorId,
 	int steerMotorId,
-	int encoderId,
-	boolean isCTRE
+	int encoderId
 ) {}

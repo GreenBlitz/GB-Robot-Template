@@ -26,7 +26,10 @@ public class ModuleFactory {
 	public static Module build(RealModuleConstants constants) {
 		String finalLogPath = ModuleConstants.LOG_PATH_PREFIX + constants.logPath();
 
-		SysIdCalibrator.SysIdConfigInfo configInfo = new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(), constants.isCTRE());
+		SysIdCalibrator.SysIdConfigInfo configInfo = new SysIdCalibrator.SysIdConfigInfo(
+			new SysIdRoutine.Config(),
+			ModuleConstants.ARE_MOTORS_CTRE
+		);
 
 		TalonFXMotor drive = generateDrive(finalLogPath, constants);
 		TalonFXMotor steer = generateSteer(finalLogPath, constants);

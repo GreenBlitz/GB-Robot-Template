@@ -556,26 +556,50 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	private Command autoNet() {
-		double y1 = 0, x2 = 0, x3 = 0, tolerance = 0;
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
 				swerve.getCommandsBuilder()
-					.driveToPose(robot.getPoseEstimator()::getEstimatedPose, () -> new Pose2d(x2, y1, new Rotation2d()))
-					.until(() -> robot.getPoseEstimator().getEstimatedPose().getY() > y1),
+					.driveToPose(
+						robot.getPoseEstimator()::getEstimatedPose,
+						() -> new Pose2d(
+							StateMachineConstants.NET_SCORING_OPEN_SUPERSTRUCTURE_X_POSITION_METERS,
+							StateMachineConstants.MIN_NET_SCORING_Y_POSITION,
+							new Rotation2d()
+						)
+					)
+					.onlyIf(() -> robot.getPoseEstimator().getEstimatedPose().getY() < StateMachineConstants.MIN_NET_SCORING_Y_POSITION),
 				swerve.getCommandsBuilder()
 					.driveToPose(
 						robot.getPoseEstimator()::getEstimatedPose,
-						() -> new Pose2d(x2, robot.getPoseEstimator().getEstimatedPose().getY(), new Rotation2d())
+						() -> new Pose2d(
+							StateMachineConstants.NET_SCORING_OPEN_SUPERSTRUCTURE_X_POSITION_METERS,
+							robot.getPoseEstimator().getEstimatedPose().getY(),
+							new Rotation2d()
+						)
 					)
-					.until(() -> robot.getPoseEstimator().getEstimatedPose().getX() >= x2),
+					.onlyIf(
+						() -> robot.getPoseEstimator().getEstimatedPose().getX()
+							>= StateMachineConstants.NET_SCORING_OPEN_SUPERSTRUCTURE_X_POSITION_METERS
+					),
 				new ParallelCommandGroup(
-					superstructure.preNet().onlyIf(() -> robot.getPoseEstimator().getEstimatedPose().getX() <= x3),
+					superstructure.preNet()
+						.onlyIf(() -> robot.getPoseEstimator().getEstimatedPose().getX() <= StateMachineConstants.SCORE_NET_X_POSITION_METERS),
 					swerve.getCommandsBuilder()
 						.driveToPose(
 							robot.getPoseEstimator()::getEstimatedPose,
-							() -> new Pose2d(x3, robot.getPoseEstimator().getEstimatedPose().getY(), new Rotation2d())
+							() -> new Pose2d(
+								StateMachineConstants.SCORE_NET_X_POSITION_METERS,
+								robot.getPoseEstimator().getEstimatedPose().getY(),
+								new Rotation2d()
+							)
 						)
-						.until(() -> MathUtil.isNear(x3, robot.getPoseEstimator().getEstimatedPose().getX(), tolerance))
+						.until(
+							() -> MathUtil.isNear(
+								StateMachineConstants.SCORE_NET_X_POSITION_METERS,
+								robot.getPoseEstimator().getEstimatedPose().getX(),
+								Tolerances.NET_X_POSITION_METERS
+							)
+						)
 				),
 				superstructure.preNet().until(this::isReadyForNet),
 				superstructure.netWithRelease()

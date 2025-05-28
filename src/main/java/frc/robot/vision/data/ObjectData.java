@@ -11,7 +11,7 @@ public class ObjectData extends VisionData{
         this.objectType = objectType;
     }
 
-    public final String getObjectType() {
+    public String getObjectType() {
         return objectType;
     }
 

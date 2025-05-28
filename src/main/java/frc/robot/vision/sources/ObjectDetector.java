@@ -38,8 +38,4 @@ public interface ObjectDetector{
         setFilter(Filter.nonFilteringFilter());
     }
 
-    default void applyFunctionOnFilter(Function<Filter<? super ObjectData>, Filter<? super ObjectData>> filterChangingFunction) {
-        setFilter(filterChangingFunction.apply(getFilter()));
-    }
-
 }

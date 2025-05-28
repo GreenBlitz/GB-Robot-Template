@@ -1,6 +1,5 @@
 package frc.robot.subsystems.swerve.factories.gyro;
 
-import com.ctre.phoenix6.configs.MountPoseConfigs;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import frc.robot.IDs;
 import frc.robot.RobotConstants;

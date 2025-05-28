@@ -35,25 +35,25 @@ public class AutosBuilder {
 
 	public static List<Supplier<PathPlannerAutoWrapper>> getAllTestAutos() {
 		return List.of(
-				() -> new PathPlannerAutoWrapper("Rotate"),
-				() -> new PathPlannerAutoWrapper("Rotate 2m"),
-				() -> new PathPlannerAutoWrapper("Straight 2m")
+			() -> new PathPlannerAutoWrapper("Rotate"),
+			() -> new PathPlannerAutoWrapper("Rotate 2m"),
+			() -> new PathPlannerAutoWrapper("Straight 2m")
 		);
 	}
 
 	public static List<Supplier<PathPlannerAutoWrapper>> getAllStartingAndScoringFirstObjectAutos(
-			Robot robot,
-			Supplier<Command> scoringCommand,
-			Pose2d tolerance
+		Robot robot,
+		Supplier<Command> scoringCommand,
+		Pose2d tolerance
 	) {
 		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
 		for (AutoPath autoPath : PathHelper.getAllStartingAndScoringFirstObjectPaths()) {
 			autos.add(
-					() -> createAutoFromAutoPath(
-							autoPath,
-							pathPlannerPath -> PathFollowingCommandsBuilder
-									.commandAfterPath(robot, pathPlannerPath, scoringCommand, autoPath.getTargetBranch(), tolerance)
-					)
+				() -> createAutoFromAutoPath(
+					autoPath,
+					pathPlannerPath -> PathFollowingCommandsBuilder
+						.commandAfterPath(robot, pathPlannerPath, scoringCommand, autoPath.getTargetBranch(), tolerance)
+				)
 			);
 		}
 		return autos;
@@ -73,10 +73,10 @@ public class AutosBuilder {
 //	}
 
 	public static List<Supplier<Command>> getAllNoDelayAutos(
-			Robot robot,
-			Supplier<Command> intakingCommand,
-			Supplier<Command> scoringCommand,
-			Pose2d tolerance
+		Robot robot,
+		Supplier<Command> intakingCommand,
+		Supplier<Command> scoringCommand,
+		Pose2d tolerance
 	) {
 		ArrayList<Supplier<Command>> autos = new ArrayList<>();
 		autos.add(() -> leftNoDelayAuto(robot, intakingCommand, scoringCommand, tolerance));
@@ -97,11 +97,11 @@ public class AutosBuilder {
 		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
 		for (AutoPath autoPath : PathHelper.getAllIntakingPaths()) {
 			autos.add(
-					() -> createAutoFromAutoPath(
-							autoPath,
-							pathPlannerPath -> PathFollowingCommandsBuilder
-									.deadlinePathWithCommand(robot, pathPlannerPath, intakingCommand, autoPath.getTargetBranch(), tolerance)
-					)
+				() -> createAutoFromAutoPath(
+					autoPath,
+					pathPlannerPath -> PathFollowingCommandsBuilder
+						.deadlinePathWithCommand(robot, pathPlannerPath, intakingCommand, autoPath.getTargetBranch(), tolerance)
+				)
 			);
 		}
 		return autos;
@@ -111,11 +111,11 @@ public class AutosBuilder {
 		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
 		for (AutoPath autoPath : PathHelper.getAllScoringPathsFromCoralStations()) {
 			autos.add(
-					() -> createAutoFromAutoPath(
-							autoPath,
-							pathPlannerPath -> PathFollowingCommandsBuilder
-									.commandAfterPath(robot, pathPlannerPath, scoringCommand, autoPath.getTargetBranch(), tolerance)
-					)
+				() -> createAutoFromAutoPath(
+					autoPath,
+					pathPlannerPath -> PathFollowingCommandsBuilder
+						.commandAfterPath(robot, pathPlannerPath, scoringCommand, autoPath.getTargetBranch(), tolerance)
+				)
 			);
 		}
 		return autos;
@@ -140,37 +140,37 @@ public class AutosBuilder {
 
 		Pose2d startingPose = robot.getPoseEstimator().getEstimatedPose();
 		Pose2d openSuperstructurePose = ScoringHelpers
-				.getRobotBranchScoringPose(branch, StateMachineConstants.DISTANCE_TO_BRANCH_FOR_STARTING_PATH);
+			.getRobotBranchScoringPose(branch, StateMachineConstants.DISTANCE_TO_BRANCH_FOR_STARTING_PATH);
 		Pose2d scoringPose = ScoringHelpers.getRobotBranchScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS);
 
 		PathPlannerPath path = new PathPlannerPath(
-				PathPlannerPath.waypointsFromPoses(startingPose, openSuperstructurePose, scoringPose),
-				List.of(),
-				List.of(),
-				List.of(
-						new ConstraintsZone(
-								1,
-								2,
-								new PathConstraints(
-										StateMachineConstants.MAX_VELOCITY_WHILE_ELEVATOR_L4_METERS_PER_SECOND,
-										StateMachineConstants.MAX_ACCELERATION_WHILE_ELEVATOR_L4_METERS_PER_SECOND_SQUARED,
-										StateMachineConstants.MAX_VELOCITY_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND.getRadians(),
-										StateMachineConstants.MAX_ACCELERATION_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND_SQUARED.getRadians()
-								)
-						)
-				),
-				List.of(),
-				AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
-				new IdealStartingState(0, startingPose.getRotation()),
-				new GoalEndState(0, scoringPose.getRotation()),
-				false
+			PathPlannerPath.waypointsFromPoses(startingPose, openSuperstructurePose, scoringPose),
+			List.of(),
+			List.of(),
+			List.of(
+				new ConstraintsZone(
+					1,
+					2,
+					new PathConstraints(
+						StateMachineConstants.MAX_VELOCITY_WHILE_ELEVATOR_L4_METERS_PER_SECOND,
+						StateMachineConstants.MAX_ACCELERATION_WHILE_ELEVATOR_L4_METERS_PER_SECOND_SQUARED,
+						StateMachineConstants.MAX_VELOCITY_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND.getRadians(),
+						StateMachineConstants.MAX_ACCELERATION_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND_SQUARED.getRadians()
+					)
+				)
+			),
+			List.of(),
+			AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
+			new IdealStartingState(0, startingPose.getRotation()),
+			new GoalEndState(0, scoringPose.getRotation()),
+			false
 		);
 		path.preventFlipping = true;
 		Logger.recordOutput("Auto/FirstPath", path.getPathPoses().toArray(new Pose2d[] {}));
 		return path;
 	}
 
-	public static Command getAutoAlgaeIntakePath(ReefSide reefSide, Robot robot){
+	public static Command getAutoAlgaeIntakePath(ReefSide reefSide, Robot robot) {
 		PathPlannerPath path = getAutoScorePath(Branch.H, robot);
 		double distanceBehindReefMeters = 0.5;
 
@@ -179,17 +179,17 @@ public class AutosBuilder {
 			new ParallelCommandGroup(
 				robot.getRobotCommander().getSuperstructure().holdAlgae(),
 				PathFollowingCommandsBuilder.moveToPoseByPID(robot, Field.getReefSideMiddle(Branch.H.getReefSide()))
-			),// move back to close elevator
+			), // move back to close elevator
 			new ParallelCommandGroup(
 				robot.getRobotCommander().getSuperstructure().algaeRemove(),
 				PathFollowingCommandsBuilder.moveToPoseByPID(robot, Field.getReefSideMiddle(Branch.H.getReefSide()))
 			)// take algae
-		// score to net point1
-		// take algae
-		// score to net point2
-		// take algae
-		// score to net point3
-		// go back close elevator
+				// score to net point1
+				// take algae
+				// score to net point2
+				// take algae
+				// score to net point3
+				// go back close elevator
 		);
 	}
 
@@ -197,10 +197,10 @@ public class AutosBuilder {
 		Optional<PathPlannerPath> pathOptional = path.getPath();
 
 		return new PathPlannerAutoWrapper(
-				pathOptional.map(pathFollowingCommand).orElse(Commands.none()),
-				pathOptional.map(PathPlannerUtil::getPathStartingPose).orElse(path.getStartingPoint().getSecond()),
-				path.getPathName(),
-				pathOptional.isPresent()
+			pathOptional.map(pathFollowingCommand).orElse(Commands.none()),
+			pathOptional.map(PathPlannerUtil::getPathStartingPose).orElse(path.getStartingPoint().getSecond()),
+			path.getPathName(),
+			pathOptional.isPresent()
 		);
 	}
 
@@ -208,57 +208,57 @@ public class AutosBuilder {
 		PathPlannerPath path = getAutoScorePath(Branch.I, robot);
 
 		Command auto = new SequentialCommandGroup(
-				autoScoreToChosenBranch(robot, path),
-				new SequentialCommandGroup(
-						createAutoFromAutoPath(
-								AutoPath.I_TO_UPPER_CORAL_STATION_2,
-								pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
-										robot,
-										pathPlannerPath,
-										intakingCommand,
-										AutoPath.I_TO_UPPER_CORAL_STATION_2.getTargetBranch(),
-										tolerance
-								)
-						),
-						new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.L)),
-						createAutoFromAutoPath(
-								AutoPath.UPPER_CORAL_STATION_2_TO_L,
-								pathPlannerPath -> PathFollowingCommandsBuilder
-										.scoreToBranch(robot, pathPlannerPath, scoringCommand, AutoPath.UPPER_CORAL_STATION_2_TO_L.getTargetBranch())
-						),
-						createAutoFromAutoPath(
-								AutoPath.L_TO_UPPER_CORAL_STATION_2,
-								pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
-										robot,
-										pathPlannerPath,
-										intakingCommand,
-										AutoPath.L_TO_UPPER_CORAL_STATION_2.getTargetBranch(),
-										tolerance
-								)
-						),
-						new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.K)),
-						createAutoFromAutoPath(
-								AutoPath.UPPER_CORAL_STATION_2_TO_K,
-								pathPlannerPath -> PathFollowingCommandsBuilder
-										.scoreToBranch(robot, pathPlannerPath, scoringCommand, AutoPath.UPPER_CORAL_STATION_2_TO_K.getTargetBranch())
-						),
-						createAutoFromAutoPath(
-								AutoPath.K_TO_UPPER_CORAL_STATION_2,
-								pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
-										robot,
-										pathPlannerPath,
-										intakingCommand,
-										AutoPath.K_TO_UPPER_CORAL_STATION_2.getTargetBranch(),
-										tolerance
-								)
-						),
-						new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.A)),
-						createAutoFromAutoPath(
-								AutoPath.UPPER_CORAL_STATION_2_TO_A,
-								pathPlannerPath -> PathFollowingCommandsBuilder
-										.scoreToBranch(robot, pathPlannerPath, scoringCommand, AutoPath.UPPER_CORAL_STATION_2_TO_A.getTargetBranch())
-						)
-				).asProxy()
+			autoScoreToChosenBranch(robot, path),
+			new SequentialCommandGroup(
+				createAutoFromAutoPath(
+					AutoPath.I_TO_UPPER_CORAL_STATION_2,
+					pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
+						robot,
+						pathPlannerPath,
+						intakingCommand,
+						AutoPath.I_TO_UPPER_CORAL_STATION_2.getTargetBranch(),
+						tolerance
+					)
+				),
+				new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.L)),
+				createAutoFromAutoPath(
+					AutoPath.UPPER_CORAL_STATION_2_TO_L,
+					pathPlannerPath -> PathFollowingCommandsBuilder
+						.scoreToBranch(robot, pathPlannerPath, scoringCommand, AutoPath.UPPER_CORAL_STATION_2_TO_L.getTargetBranch())
+				),
+				createAutoFromAutoPath(
+					AutoPath.L_TO_UPPER_CORAL_STATION_2,
+					pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
+						robot,
+						pathPlannerPath,
+						intakingCommand,
+						AutoPath.L_TO_UPPER_CORAL_STATION_2.getTargetBranch(),
+						tolerance
+					)
+				),
+				new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.K)),
+				createAutoFromAutoPath(
+					AutoPath.UPPER_CORAL_STATION_2_TO_K,
+					pathPlannerPath -> PathFollowingCommandsBuilder
+						.scoreToBranch(robot, pathPlannerPath, scoringCommand, AutoPath.UPPER_CORAL_STATION_2_TO_K.getTargetBranch())
+				),
+				createAutoFromAutoPath(
+					AutoPath.K_TO_UPPER_CORAL_STATION_2,
+					pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
+						robot,
+						pathPlannerPath,
+						intakingCommand,
+						AutoPath.K_TO_UPPER_CORAL_STATION_2.getTargetBranch(),
+						tolerance
+					)
+				),
+				new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.A)),
+				createAutoFromAutoPath(
+					AutoPath.UPPER_CORAL_STATION_2_TO_A,
+					pathPlannerPath -> PathFollowingCommandsBuilder
+						.scoreToBranch(robot, pathPlannerPath, scoringCommand, AutoPath.UPPER_CORAL_STATION_2_TO_A.getTargetBranch())
+				)
+			).asProxy()
 		);
 		auto.setName("left no delay");
 		return auto;
@@ -268,65 +268,63 @@ public class AutosBuilder {
 		PathPlannerPath path = getAutoScorePath(Branch.F, robot);
 
 		Command auto = new SequentialCommandGroup(
-				autoScoreToChosenBranch(robot, path),
-				new SequentialCommandGroup(
-						createAutoFromAutoPath(
-								AutoPath.F_TO_LOWER_CORAL_STATION_2,
-								pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
-										robot,
-										pathPlannerPath,
-										intakingCommand,
-										AutoPath.E_TO_LOWER_CORAL_STATION_2.getTargetBranch(),
-										tolerance
-								)
-						),
-						new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.C)),
-						createAutoFromAutoPath(
-								AutoPath.LOWER_CORAL_STATION_2_TO_C,
-								pathPlannerPath -> PathFollowingCommandsBuilder
-										.scoreToBranch(robot, pathPlannerPath, scoringCommand, AutoPath.LOWER_CORAL_STATION_2_TO_C.getTargetBranch())
-						),
-						createAutoFromAutoPath(
-								AutoPath.C_TO_LOWER_CORAL_STATION_2,
-								pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
-										robot,
-										pathPlannerPath,
-										intakingCommand,
-										AutoPath.C_TO_LOWER_CORAL_STATION_2.getTargetBranch(),
-										tolerance
-								)
-						),
-						new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.D)),
-						createAutoFromAutoPath(
-								AutoPath.LOWER_CORAL_STATION_2_TO_D,
-								pathPlannerPath -> PathFollowingCommandsBuilder
-										.scoreToBranch(robot, pathPlannerPath, scoringCommand, AutoPath.LOWER_CORAL_STATION_2_TO_D.getTargetBranch())
-						),
-						createAutoFromAutoPath(
-								AutoPath.D_TO_LOWER_CORAL_STATION_2,
-								pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
-										robot,
-										pathPlannerPath,
-										intakingCommand,
-										AutoPath.D_TO_LOWER_CORAL_STATION_2.getTargetBranch(),
-										tolerance
-								)
-						),
-						new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.B)),
-						createAutoFromAutoPath(
-								AutoPath.LOWER_CORAL_STATION_2_TO_B,
-								pathPlannerPath -> PathFollowingCommandsBuilder
-										.scoreToBranch(robot, pathPlannerPath, scoringCommand, AutoPath.LOWER_CORAL_STATION_2_TO_B.getTargetBranch())
-						)
-				).asProxy()
+			autoScoreToChosenBranch(robot, path),
+			new SequentialCommandGroup(
+				createAutoFromAutoPath(
+					AutoPath.F_TO_LOWER_CORAL_STATION_2,
+					pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
+						robot,
+						pathPlannerPath,
+						intakingCommand,
+						AutoPath.E_TO_LOWER_CORAL_STATION_2.getTargetBranch(),
+						tolerance
+					)
+				),
+				new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.C)),
+				createAutoFromAutoPath(
+					AutoPath.LOWER_CORAL_STATION_2_TO_C,
+					pathPlannerPath -> PathFollowingCommandsBuilder
+						.scoreToBranch(robot, pathPlannerPath, scoringCommand, AutoPath.LOWER_CORAL_STATION_2_TO_C.getTargetBranch())
+				),
+				createAutoFromAutoPath(
+					AutoPath.C_TO_LOWER_CORAL_STATION_2,
+					pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
+						robot,
+						pathPlannerPath,
+						intakingCommand,
+						AutoPath.C_TO_LOWER_CORAL_STATION_2.getTargetBranch(),
+						tolerance
+					)
+				),
+				new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.D)),
+				createAutoFromAutoPath(
+					AutoPath.LOWER_CORAL_STATION_2_TO_D,
+					pathPlannerPath -> PathFollowingCommandsBuilder
+						.scoreToBranch(robot, pathPlannerPath, scoringCommand, AutoPath.LOWER_CORAL_STATION_2_TO_D.getTargetBranch())
+				),
+				createAutoFromAutoPath(
+					AutoPath.D_TO_LOWER_CORAL_STATION_2,
+					pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
+						robot,
+						pathPlannerPath,
+						intakingCommand,
+						AutoPath.D_TO_LOWER_CORAL_STATION_2.getTargetBranch(),
+						tolerance
+					)
+				),
+				new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.B)),
+				createAutoFromAutoPath(
+					AutoPath.LOWER_CORAL_STATION_2_TO_B,
+					pathPlannerPath -> PathFollowingCommandsBuilder
+						.scoreToBranch(robot, pathPlannerPath, scoringCommand, AutoPath.LOWER_CORAL_STATION_2_TO_B.getTargetBranch())
+				)
+			).asProxy()
 		);
 		auto.setName("right no delay");
 		return auto;
 	}
 
-	private static Command autoBalls(Robot robot, Supplier<Command> algaeIntakingCommand, Supplier<Command> netCommand, Pose2d tolerance){
-
-	}
+	private static Command autoBalls(Robot robot, Supplier<Command> algaeIntakingCommand, Supplier<Command> netCommand, Pose2d tolerance) {}
 
 	private static Command centerNoDelayAuto(Robot robot) {
 		PathPlannerPath path = getAutoScorePath(Branch.H, robot);
@@ -342,12 +340,12 @@ public class AutosBuilder {
 		chassisPowers.xPower = AutonomousConstants.DEFAULT_AUTO_DRIVE_POWER;
 
 		Command auto = new ParallelCommandGroup(
-				robot.getSwerve()
-						.getCommandsBuilder()
-						.drive(() -> chassisPowers)
-						.withTimeout(AutonomousConstants.DEFAULT_AUTO_DRIVE_TIME_SECONDS)
-						.andThen(robot.getSwerve().getCommandsBuilder().resetTargetSpeeds()),
-				robot.getRobotCommander().getSuperstructure().elevatorOpening()
+			robot.getSwerve()
+				.getCommandsBuilder()
+				.drive(() -> chassisPowers)
+				.withTimeout(AutonomousConstants.DEFAULT_AUTO_DRIVE_TIME_SECONDS)
+				.andThen(robot.getSwerve().getCommandsBuilder().resetTargetSpeeds()),
+			robot.getRobotCommander().getSuperstructure().elevatorOpening()
 		);
 		auto.setName("default no delay");
 		return auto;

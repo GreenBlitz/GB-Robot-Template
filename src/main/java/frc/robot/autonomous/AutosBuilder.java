@@ -6,6 +6,9 @@ import com.pathplanner.lib.path.IdealStartingState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -171,26 +174,7 @@ public class AutosBuilder {
 	}
 
 	public static Command getAutoAlgaeIntakePath(ReefSide reefSide, Robot robot) {
-		PathPlannerPath path = getAutoScorePath(Branch.H, robot);
-		double distanceBehindReefMeters = 0.5;
 
-		return new SequentialCommandGroup(
-			autoScoreToChosenBranch(robot, path),
-			new ParallelCommandGroup(
-				robot.getRobotCommander().getSuperstructure().holdAlgae(),
-				PathFollowingCommandsBuilder.moveToPoseByPID(robot, Field.getReefSideMiddle(Branch.H.getReefSide()))
-			), // move back to close elevator
-			new ParallelCommandGroup(
-				robot.getRobotCommander().getSuperstructure().algaeRemove(),
-				PathFollowingCommandsBuilder.moveToPoseByPID(robot, Field.getReefSideMiddle(Branch.H.getReefSide()))
-			)// take algae
-				// score to net point1
-				// take algae
-				// score to net point2
-				// take algae
-				// score to net point3
-				// go back close elevator
-		);
 	}
 
 	public static PathPlannerAutoWrapper createAutoFromAutoPath(AutoPath path, Function<PathPlannerPath, Command> pathFollowingCommand) {
@@ -324,7 +308,30 @@ public class AutosBuilder {
 		return auto;
 	}
 
-	private static Command autoBalls(Robot robot, Supplier<Command> algaeIntakingCommand, Supplier<Command> netCommand, Pose2d tolerance) {}
+	private static Command autoBalls(Robot robot, Supplier<Command> algaeIntakingCommand, Supplier<Command> netCommand, Pose2d tolerance) {
+		PathPlannerPath path = getAutoScorePath(Branch.H, robot);
+		double distanceBehindReefMeters = 0.5;
+		Pose2d backOffPose = Field.getReefSideMiddle(Branch.H.getReefSide()).plus(new Transform2d(0.5, 0, new Rotation2d()));
+
+
+		return new SequentialCommandGroup(
+				autoScoreToChosenBranch(robot, path),
+				new ParallelCommandGroup(
+						robot.getRobotCommander().getSuperstructure().holdAlgae(),
+						PathFollowingCommandsBuilder.moveToPoseByPID(robot, backOffPose)
+				), // move back to close elevator
+				new ParallelCommandGroup(
+						robot.getRobotCommander().getSuperstructure().algaeRemove(),
+						PathFollowingCommandsBuilder.moveToPoseByPID(robot, Field.getReefSideMiddle(Branch.H.getReefSide()))
+				)// take algae
+				// score to net point1
+				// take algae
+				// score to net point2
+				// take algae
+				// score to net point3
+				// go back close elevator
+		);
+	}
 
 	private static Command centerNoDelayAuto(Robot robot) {
 		PathPlannerPath path = getAutoScorePath(Branch.H, robot);

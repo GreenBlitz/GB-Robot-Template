@@ -401,6 +401,10 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
+	public Command autoNet() {
+		return new SequentialCommandGroup(driveToPreNet().until(superstructure::isPreNetReady), net());
+	}
+
 	private Command drive() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(superstructure.idle(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
@@ -513,10 +517,6 @@ public class RobotCommander extends GBSubsystem {
 			),
 			RobotState.ALGAE_OUTTAKE
 		);
-	}
-
-	public Command autoNet() {
-		return new SequentialCommandGroup(driveToPreNet().until(superstructure::isPreNetReady), net());
 	}
 
 	private Command driveToPreNet() {

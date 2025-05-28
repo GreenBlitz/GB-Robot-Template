@@ -439,8 +439,8 @@ public class Superstructure extends GBSubsystem {
 	public Command preNet() {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.CLOSED),
-				armStateHandler.setState(ArmState.HOLD_ALGAE),
+				elevatorStateHandler.setState(ElevatorState.NET),
+				armStateHandler.setState(ArmState.PRE_NET),
 				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 				climbStateHandler.setState(ClimbState.CLOSE)
 			),

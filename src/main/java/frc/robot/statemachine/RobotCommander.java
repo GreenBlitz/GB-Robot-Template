@@ -279,7 +279,7 @@ public class RobotCommander extends GBSubsystem {
 			case ALGAE_REMOVE -> algaeRemove();
 			case ALGAE_OUTTAKE -> algaeOuttake();
 			case PRE_NET -> preNet();
-			case NET -> net();
+			case NET -> autoNet();
 			case PROCESSOR_SCORE -> fullyProcessorScore();
 			case PRE_CLIMB_WITH_AIM_ASSIST -> preClimbWithAimAssist();
 			case PRE_CLIMB_WITHOUT_AIM_ASSIST -> preClimbWithoutAimAssist();
@@ -578,8 +578,11 @@ public class RobotCommander extends GBSubsystem {
 						)
 					)
 					.onlyIf(
-						() -> robot.getPoseEstimator().getEstimatedPose().getX()
-							>= StateMachineConstants.NET_SCORING_OPEN_SUPERSTRUCTURE_X_POSITION_METERS
+						() -> !MathUtil.isNear(
+							StateMachineConstants.NET_SCORING_OPEN_SUPERSTRUCTURE_X_POSITION_METERS,
+							robot.getPoseEstimator().getEstimatedPose().getX(),
+							Tolerances.NET_OPENING_SUPERSTRUCTURE_X_POSITION_METERS
+						)
 					),
 				new ParallelCommandGroup(
 					superstructure.preNet()

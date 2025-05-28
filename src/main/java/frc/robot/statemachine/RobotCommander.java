@@ -658,7 +658,7 @@ public class RobotCommander extends GBSubsystem {
 					superstructure.preNet()
 				),
 				swerve.getCommandsBuilder().resetTargetSpeeds(),
-				superstructure.preNet().until(this::isReadyForNet),
+				superstructure.preNet().until(superstructure::isPreNetReady),
 				superstructure.netWithRelease()
 			),
 			RobotState.NET

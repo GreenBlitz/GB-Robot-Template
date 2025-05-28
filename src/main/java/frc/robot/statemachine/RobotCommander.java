@@ -1,7 +1,6 @@
 package frc.robot.statemachine;
 
 import com.pathplanner.lib.path.PathPlannerPath;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -25,6 +24,8 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
+import frc.utils.math.AngleTransform;
+import frc.utils.math.ToleranceMath;
 import frc.utils.pose.PoseUtil;
 
 import java.util.Set;
@@ -561,49 +562,102 @@ public class RobotCommander extends GBSubsystem {
 				swerve.getCommandsBuilder()
 					.driveToPose(
 						robot.getPoseEstimator()::getEstimatedPose,
-						() -> new Pose2d(
-							StateMachineConstants.NET_SCORING_OPEN_SUPERSTRUCTURE_X_POSITION_METERS,
-							StateMachineConstants.MIN_NET_SCORING_Y_POSITION,
-							new Rotation2d()
+						() -> Field.getAllianceRelative(
+							new Pose2d(
+								StateMachineConstants.NET_SCORING_OPEN_SUPERSTRUCTURE_X_POSITION_METERS,
+								StateMachineConstants.MIN_NET_SCORING_Y_POSITION,
+								new Rotation2d()
+							),
+							true,
+							true,
+							AngleTransform.INVERT
 						)
 					)
-					.onlyIf(() -> robot.getPoseEstimator().getEstimatedPose().getY() < StateMachineConstants.MIN_NET_SCORING_Y_POSITION),
-				swerve.getCommandsBuilder()
-					.driveToPose(
-						robot.getPoseEstimator()::getEstimatedPose,
-						() -> new Pose2d(
-							StateMachineConstants.NET_SCORING_OPEN_SUPERSTRUCTURE_X_POSITION_METERS,
-							robot.getPoseEstimator().getEstimatedPose().getY(),
-							new Rotation2d()
+					.until(
+						() -> ToleranceMath.isNear(
+							Field.getAllianceRelative(
+								new Pose2d(
+									StateMachineConstants.NET_SCORING_OPEN_SUPERSTRUCTURE_X_POSITION_METERS,
+									StateMachineConstants.MIN_NET_SCORING_Y_POSITION,
+									new Rotation2d()
+								),
+								true,
+								true,
+								AngleTransform.INVERT
+							),
+							robot.getPoseEstimator().getEstimatedPose(),
+							Tolerances.NET_OPENING_SUPERSTRUCTURE_POSITION_METERS
 						)
 					)
 					.onlyIf(
-						() -> !MathUtil.isNear(
-							StateMachineConstants.NET_SCORING_OPEN_SUPERSTRUCTURE_X_POSITION_METERS,
-							robot.getPoseEstimator().getEstimatedPose().getX(),
-							Tolerances.NET_OPENING_SUPERSTRUCTURE_X_POSITION_METERS
+						() -> Field.isFieldConventionAlliance()
+							? robot.getPoseEstimator().getEstimatedPose().getY() < StateMachineConstants.MIN_NET_SCORING_Y_POSITION
+							: robot.getPoseEstimator().getEstimatedPose().getY() > StateMachineConstants.MIN_NET_SCORING_Y_POSITION
+					),
+				swerve.getCommandsBuilder()
+					.driveToPose(
+						robot.getPoseEstimator()::getEstimatedPose,
+						() -> Field.getAllianceRelative(
+							new Pose2d(
+								StateMachineConstants.NET_SCORING_OPEN_SUPERSTRUCTURE_X_POSITION_METERS,
+								robot.getPoseEstimator().getEstimatedPose().getY(),
+								new Rotation2d()
+							),
+							true,
+							false,
+							AngleTransform.INVERT
+						)
+					)
+					.until(
+						() -> ToleranceMath.isNear(
+							Field.getAllianceRelative(
+								new Pose2d(
+									StateMachineConstants.NET_SCORING_OPEN_SUPERSTRUCTURE_X_POSITION_METERS,
+									robot.getPoseEstimator().getEstimatedPose().getY(),
+									new Rotation2d()
+								),
+								true,
+								false,
+								AngleTransform.INVERT
+							),
+							robot.getPoseEstimator().getEstimatedPose(),
+							Tolerances.NET_OPENING_SUPERSTRUCTURE_POSITION_METERS
 						)
 					),
-				new ParallelCommandGroup(
-					superstructure.preNet()
-						.onlyIf(() -> robot.getPoseEstimator().getEstimatedPose().getX() <= StateMachineConstants.SCORE_NET_X_POSITION_METERS),
+				new ParallelDeadlineGroup(
 					swerve.getCommandsBuilder()
 						.driveToPose(
 							robot.getPoseEstimator()::getEstimatedPose,
-							() -> new Pose2d(
-								StateMachineConstants.SCORE_NET_X_POSITION_METERS,
-								robot.getPoseEstimator().getEstimatedPose().getY(),
-								new Rotation2d()
+							() -> Field.getAllianceRelative(
+								new Pose2d(
+									StateMachineConstants.SCORE_NET_X_POSITION_METERS,
+									robot.getPoseEstimator().getEstimatedPose().getY(),
+									new Rotation2d()
+								),
+								true,
+								false,
+								AngleTransform.INVERT
 							)
 						)
 						.until(
-							() -> MathUtil.isNear(
-								StateMachineConstants.SCORE_NET_X_POSITION_METERS,
-								robot.getPoseEstimator().getEstimatedPose().getX(),
-								Tolerances.NET_SCORING_X_POSITION_METERS
+							() -> ToleranceMath.isNear(
+								Field.getAllianceRelative(
+									new Pose2d(
+										StateMachineConstants.SCORE_NET_X_POSITION_METERS,
+										robot.getPoseEstimator().getEstimatedPose().getY(),
+										new Rotation2d()
+									),
+									true,
+									false,
+									AngleTransform.INVERT
+								),
+								robot.getPoseEstimator().getEstimatedPose(),
+								Tolerances.NET_SCORING_POSITION_METERS
 							)
-						)
+						),
+					superstructure.preNet()
 				),
+				swerve.getCommandsBuilder().resetTargetSpeeds(),
 				superstructure.preNet().until(this::isReadyForNet),
 				superstructure.netWithRelease()
 			),

@@ -5,10 +5,8 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.vision.data.ObjectData;
 import frc.robot.vision.sources.ObjectDetector;
 import frc.utils.Filter;
-
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.function.BooleanSupplier;
 
 public class LimeLightObjectDetector implements ObjectDetector {
 

@@ -64,12 +64,12 @@ public class ClimbStateHandler {
 		return new ParallelCommandGroup(
 			new SequentialCommandGroup(
 				new InstantCommand(() -> lifterStateHandler.getLifter().setBrake(true)),
-				lifterStateHandler.setState(LifterState.CLIMB).until(() -> lifterStateHandler.isLower(Rotation2d.fromDegrees(40))),
+				lifterStateHandler.setState(LifterState.CLIMB).until(() -> lifterStateHandler.isLower(Rotation2d.fromDegrees(20))),
 				lifterStateHandler.setState(LifterState.BACKWARD)
 					.until(solenoidStateHandler::isAtLimitSwitch)
 					.until(() -> lifterStateHandler.isLower(LifterConstants.MINIMUM_CLIMB_POSITION)),
 				new InstantCommand(() -> climbPositionWithLimitSwitch = lifterStateHandler.getLifter().getPosition()),
-				lifterStateHandler.setState(LifterState.CLIMB)
+				lifterStateHandler.setState(LifterState.BACKWARD)
 					.until(
 						() -> lifterStateHandler.isLower(
 							Rotation2d.fromDegrees(

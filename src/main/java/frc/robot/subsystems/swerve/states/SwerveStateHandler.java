@@ -120,10 +120,6 @@ public class SwerveStateHandler {
 			}
 		}
 
-		if (swerveState.getAimAssist() == AimAssist.NET) {
-			return handleNetAimAssist(speeds, robotPoseSupplier.get().get().getRotation());
-		}
-
 		if (swerveState.getAimAssist() == AimAssist.CAGE_ROTATION) {
 			return handleAngleCageAssist(speeds, robotPoseSupplier.get().get().getRotation());
 		}
@@ -186,10 +182,6 @@ public class SwerveStateHandler {
 
 		chassisSpeeds = AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotPose.getRotation(), headingToReefSide, swerveConstants);
 		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, headingToReefSide, algaeRemovePose, swerveConstants, swerveState);
-	}
-
-	private ChassisSpeeds handleNetAimAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading) {
-		return AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotHeading, ScoringHelpers.getHeadingForNet(swerve), swerveConstants);
 	}
 
 	private ChassisSpeeds handleAngleCageAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading) {

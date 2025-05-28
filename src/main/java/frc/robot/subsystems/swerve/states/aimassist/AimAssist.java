@@ -9,7 +9,6 @@ public enum AimAssist {
 	CORAL_STATION,
 	CORAL_STATION_SLOT,
 	CAGE,
-	CAGE_ROTATION,
-	NET;
+	CAGE_ROTATION;
 
 }

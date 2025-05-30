@@ -129,7 +129,7 @@ public class SwerveStateHandler {
 
 		if (swerveState.getAimAssist() == AimAssist.ALGAE_INTAKE) {
 			if (closestAlgaeDetectedSupplier.get().isPresent()) {
-				return handleAlgaeIntakeAimAssist(speeds, robotPoseSupplier.get().get(), swerveState);
+				return handleAlgaeIntakeAimAssist(speeds, robotPoseSupplier.get().get(), closestAlgaeDetectedSupplier.get().get(), swerveState);
 			} else {
 				reportMissingSupplier("detected algae");
 				return speeds;
@@ -204,7 +204,7 @@ public class SwerveStateHandler {
 		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, headingToReefSide, algaeRemovePose, swerveConstants, swerveState);
 	}
 
-	private ChassisSpeeds handleAlgaeIntakeAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, SwerveState swerveState) {
+	private ChassisSpeeds handleAlgaeIntakeAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, Translation2d closestAlgaeDetected, SwerveState swerveState) {
 		Rotation2d targetHeading = FieldMath.getRelativeTranslation(robotPose.getTranslation(), closestAlgaeDetectedSupplier.get().get())
 			.getAngle();
 
@@ -213,7 +213,7 @@ public class SwerveStateHandler {
 			chassisSpeeds,
 			robotPose,
 			targetHeading,
-			closestAlgaeDetectedSupplier.get().get(),
+			closestAlgaeDetected,
 			swerveConstants,
 			swerveState
 		);

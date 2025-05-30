@@ -33,10 +33,7 @@ public class ModuleFactory {
 	public static Module build(RealModuleConstants constants) {
 		String finalLogPath = ModuleConstants.LOG_PATH_PREFIX + constants.logPath();
 
-		SysIdCalibrator.SysIdConfigInfo configInfo = new SysIdCalibrator.SysIdConfigInfo(
-			new SysIdRoutine.Config(),
-			ARE_MOTORS_CTRE
-		);
+		SysIdCalibrator.SysIdConfigInfo configInfo = new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(), ARE_MOTORS_CTRE);
 
 		TalonFXMotor drive = generateDrive(finalLogPath, constants);
 		TalonFXMotor steer = generateSteer(finalLogPath, constants);
@@ -64,8 +61,7 @@ public class ModuleFactory {
 		IRequest<Rotation2d> driveVelocityRequest = Phoenix6RequestBuilder
 			.build(new VelocityVoltage(0), DEFAULT_ARBITRARY_FEED_FORWARD, enableFOC);
 		IRequest<Double> driveVoltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), enableFOC);
-		IRequest<Rotation2d> steerAngleRequest = Phoenix6RequestBuilder
-			.build(new PositionVoltage(0), DEFAULT_ARBITRARY_FEED_FORWARD, enableFOC);
+		IRequest<Rotation2d> steerAngleRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0), DEFAULT_ARBITRARY_FEED_FORWARD, enableFOC);
 
 		return new ModuleRequests(driveVelocityRequest, driveVoltageRequest, steerAngleRequest);
 	}

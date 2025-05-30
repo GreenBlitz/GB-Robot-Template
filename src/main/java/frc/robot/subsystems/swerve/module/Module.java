@@ -50,7 +50,7 @@ public class Module extends GBSubsystem {
 		this.constants = constants;
 
 		this.targetState = new SwerveModuleState();
-		setStateCloseLoop(targetState);
+		setState(targetState, true);
 	}
 
 	@Override
@@ -72,30 +72,30 @@ public class Module extends GBSubsystem {
 		encoder.updateInputs(signals.encoderAngleSignal());
 	}
 
-	public void setStateCloseLoop(SwerveModuleState state) {
-		this.targetState = state;
-		setTargetDriveVelocityMPSCloseLoop(state.speedMetersPerSecond);
-		pointToAngle(state.angle);
+	public void setState(SwerveModuleState state, boolean isOpenLoop) {
+		if (isOpenLoop) {
+			this.targetState = state;
+			setTargetDriveVelocityOpenLoop(state.speedMetersPerSecond);
+			pointToAngle(state.angle);
+		} else {
+			this.targetState = state;
+			setTargetDriveVelocityCloseLoop(state.speedMetersPerSecond);
+			pointToAngle(state.angle);
+		}
 	}
 
-	public void setStateOpenLoop(SwerveModuleState state) {
-		this.targetState = state;
-		setTargetDriveVelocityMPSOpenLoop(state.speedMetersPerSecond);
-		pointToAngle(state.angle);
+	public void setTargetDriveVelocityCloseLoop(double targetVelocityMPS) {
+		targetState.speedMetersPerSecond = targetVelocityMPS;
+		driveMotor.applyRequest(requests.driveVelocityRequest().withSetPoint(metersToAngle(targetVelocityMPS)));
 	}
 
-	public void setTargetDriveVelocityMPSCloseLoop(double targetVelocity) {
-		targetState.speedMetersPerSecond = targetVelocity;
-		driveMotor.applyRequest(requests.driveVelocityRequest().withSetPoint(metersToAngle(targetVelocity)));
-	}
-
-	public void setTargetDriveVelocityMPSOpenLoop(double targetVelocity) {
-		targetState.speedMetersPerSecond = targetVelocity;
-		setTargetDriveVoltage(BatteryUtil.DEFAULT_VOLTAGE * (targetVelocity / constants.maxDriveVelocityMPS()));
+	public void setTargetDriveVelocityOpenLoop(double targetVelocityMPS) {
+		targetState.speedMetersPerSecond = targetVelocityMPS;
+		setTargetDriveVoltage(BatteryUtil.DEFAULT_VOLTAGE * (targetVelocityMPS / constants.maxDriveVelocityMPS()));
 	}
 
 	public void setTargetDriveVoltage(double voltage) {
-		targetState.speedMetersPerSecond = (voltage / BatteryUtil.getCurrentVoltage()) * constants.maxDriveVelocityMPS();
+		targetState.speedMetersPerSecond = (voltage / BatteryUtil.DEFAULT_VOLTAGE) * constants.maxDriveVelocityMPS();
 		driveMotor.applyRequest(requests.driveVoltageRequest().withSetPoint(voltage));
 	}
 

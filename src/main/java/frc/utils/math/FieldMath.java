@@ -63,7 +63,7 @@ public class FieldMath {
 
 
 	public static Rotation2d getFieldRelativeAngleBetweenPoints(Pose2d pointA, Translation2d pointB) {
-		return pointA.getRotation().plus(getRelativeTranslation(pointA, pointB).getAngle());
+		return getRelativeTranslation(pointA.getTranslation(), pointB).getAngle();
 	}
 
 }

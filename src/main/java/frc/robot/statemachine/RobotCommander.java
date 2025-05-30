@@ -262,6 +262,7 @@ public class RobotCommander extends GBSubsystem {
 			case SCORE -> score();
 			case ALGAE_REMOVE -> algaeRemove();
 			case ALGAE_OUTTAKE -> algaeOuttake();
+			case AUTO_PRE_NET -> driveToPreNet();
 			case PRE_NET -> preNet();
 			case NET -> net();
 			case PROCESSOR_SCORE -> fullyProcessorScore();
@@ -597,7 +598,7 @@ public class RobotCommander extends GBSubsystem {
 					superstructure.preNet()
 				)
 			),
-			RobotState.PRE_NET
+			RobotState.AUTO_PRE_NET
 		);
 	}
 
@@ -728,7 +729,7 @@ public class RobotCommander extends GBSubsystem {
 		return switch (state) {
 			case STAY_IN_PLACE, CORAL_OUTTAKE -> stayInPlace();
 			case INTAKE_WITH_AIM_ASSIST, INTAKE_WITHOUT_AIM_ASSIST, DRIVE, ALIGN_REEF, ALGAE_OUTTAKE, PROCESSOR_SCORE -> drive();
-			case PRE_NET, NET -> afterNet();
+			case AUTO_PRE_NET, PRE_NET, NET -> afterNet();
 			case ALGAE_REMOVE, HOLD_ALGAE -> holdAlgae();
 			case ARM_PRE_SCORE, CLOSE_CLIMB -> armPreScore();
 			case PRE_SCORE -> preScore();

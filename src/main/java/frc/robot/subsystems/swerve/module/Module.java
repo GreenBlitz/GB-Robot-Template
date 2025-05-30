@@ -6,7 +6,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.subsystems.swerve.module.factory.RealModuleConstants;
+import frc.robot.subsystems.swerve.module.factory.ModuleConstants;
+import frc.robot.subsystems.swerve.module.factory.ModuleIDs;
 import frc.utils.Conversions;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.calibration.sysid.SysIdCalibrator;
@@ -22,7 +23,7 @@ public class Module extends GBSubsystem {
 
 	private final SysIdCalibrator sysIdCalibrator;
 
-	private final RealModuleConstants constants;
+	private final ModuleIDs constants;
 
 	private SwerveModuleState targetState;
 
@@ -34,7 +35,7 @@ public class Module extends GBSubsystem {
 		ModuleRequests requests,
 		ModuleSignals signals,
 		SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo,
-		RealModuleConstants constants
+		ModuleIDs constants
 	) {
 		super(logPath);
 
@@ -89,12 +90,13 @@ public class Module extends GBSubsystem {
 	public void setTargetDriveVelocityOpenLoop(double targetVelocityMPS) {
 		targetState.speedMetersPerSecond = targetVelocityMPS;
 		driveMotor.applyRequest(
-			requests.driveVoltageRequest().withSetPoint(BatteryUtil.DEFAULT_VOLTAGE * (targetVelocityMPS / constants.maxDriveVelocityMPS()))
+			requests.driveVoltageRequest()
+				.withSetPoint(BatteryUtil.DEFAULT_VOLTAGE * (targetVelocityMPS / ModuleConstants.MAX_DRIVE_VELOCITY_MPS))
 		);
 	}
 
 	public void setTargetDriveVoltage(double voltage) {
-		targetState.speedMetersPerSecond = (voltage / BatteryUtil.DEFAULT_VOLTAGE) * constants.maxDriveVelocityMPS();
+		targetState.speedMetersPerSecond = (voltage / BatteryUtil.DEFAULT_VOLTAGE) * ModuleConstants.MAX_DRIVE_VELOCITY_MPS;
 		driveMotor.applyRequest(requests.driveVoltageRequest().withSetPoint(voltage));
 	}
 
@@ -157,11 +159,11 @@ public class Module extends GBSubsystem {
 	}
 
 	private Rotation2d metersToAngle(double meters) {
-		return Conversions.distanceToAngle(meters, constants.wheelDiameterMeters());
+		return Conversions.distanceToAngle(meters, ModuleConstants.WHEEL_DIAMETER_METERS);
 	}
 
 	private double angleToMeters(Rotation2d angle) {
-		return Conversions.angleToDistance(angle, constants.wheelDiameterMeters());
+		return Conversions.angleToDistance(angle, ModuleConstants.WHEEL_DIAMETER_METERS);
 	}
 
 }

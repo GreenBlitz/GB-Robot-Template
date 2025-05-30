@@ -30,31 +30,31 @@ public class ModuleFactory {
 	public static final double DEFAULT_ARBITRARY_FEED_FORWARD = 0;
 
 
-	public static Module build(RealModuleConstants constants) {
-		String finalLogPath = ModuleConstants.LOG_PATH_PREFIX + constants.logPath();
+	public static Module build(String logPath, ModuleIDs ids) {
+		String finalLogPath = ModuleConstants.LOG_PATH_PREFIX + logPath;
 
 		SysIdCalibrator.SysIdConfigInfo configInfo = new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(), ARE_MOTORS_CTRE);
 
-		TalonFXMotor drive = generateDrive(finalLogPath, constants);
-		TalonFXMotor steer = generateSteer(finalLogPath, constants);
-		CANCoderEncoder encoder = generateEncoder(finalLogPath, constants);
+		TalonFXMotor drive = generateDrive(finalLogPath, ids.driveMotorId());
+		TalonFXMotor steer = generateSteer(finalLogPath, ids.steerMotorId());
+		CANCoderEncoder encoder = generateEncoder(finalLogPath, ids.encoderId());
 
 		ModuleRequests requests = generateRequests();
 		ModuleSignals signals = generateSignals(drive, steer, encoder);
 
-		return new Module(finalLogPath, drive, steer, encoder, requests, signals, configInfo, constants);
+		return new Module(finalLogPath, drive, steer, encoder, requests, signals, configInfo, ids);
 	}
 
-	private static TalonFXMotor generateDrive(String logPath, RealModuleConstants constants) {
-		return new TalonFXMotor(logPath + "/Drive", new Phoenix6DeviceID(constants.driveMotorId(), BusChain.ROBORIO), new SysIdRoutine.Config());
+	private static TalonFXMotor generateDrive(String logPath, int driveID) {
+		return new TalonFXMotor(logPath + "/Drive", new Phoenix6DeviceID(driveID, BusChain.ROBORIO), new SysIdRoutine.Config());
 	}
 
-	private static TalonFXMotor generateSteer(String logPath, RealModuleConstants constants) {
-		return new TalonFXMotor(logPath + "/Steer", new Phoenix6DeviceID(constants.steerMotorId(), BusChain.ROBORIO), new SysIdRoutine.Config());
+	private static TalonFXMotor generateSteer(String logPath, int steerID) {
+		return new TalonFXMotor(logPath + "/Steer", new Phoenix6DeviceID(steerID, BusChain.ROBORIO), new SysIdRoutine.Config());
 	}
 
-	private static CANCoderEncoder generateEncoder(String logPath, RealModuleConstants constants) {
-		return new CANCoderEncoder(logPath + "/Encoder", new CANcoder(constants.encoderId(), BusChain.ROBORIO.getChainName()));
+	private static CANCoderEncoder generateEncoder(String logPath, int encoderID) {
+		return new CANCoderEncoder(logPath + "/Encoder", new CANcoder(encoderID, BusChain.ROBORIO.getChainName()));
 	}
 
 	private static ModuleRequests generateRequests() {

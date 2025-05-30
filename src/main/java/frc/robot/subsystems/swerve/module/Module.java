@@ -74,14 +74,11 @@ public class Module extends GBSubsystem {
 
 	public void setState(SwerveModuleState state, boolean isOpenLoop) {
 		if (isOpenLoop) {
-			this.targetState = state;
 			setTargetDriveVelocityOpenLoop(state.speedMetersPerSecond);
-			pointToAngle(state.angle);
 		} else {
-			this.targetState = state;
 			setTargetDriveVelocityCloseLoop(state.speedMetersPerSecond);
-			pointToAngle(state.angle);
 		}
+		pointToAngle(state.angle);
 	}
 
 	public void setTargetDriveVelocityCloseLoop(double targetVelocityMPS) {
@@ -91,7 +88,9 @@ public class Module extends GBSubsystem {
 
 	public void setTargetDriveVelocityOpenLoop(double targetVelocityMPS) {
 		targetState.speedMetersPerSecond = targetVelocityMPS;
-		setTargetDriveVoltage(BatteryUtil.DEFAULT_VOLTAGE * (targetVelocityMPS / constants.maxDriveVelocityMPS()));
+		driveMotor.applyRequest(
+			requests.driveVoltageRequest().withSetPoint(BatteryUtil.DEFAULT_VOLTAGE * (targetVelocityMPS / constants.maxDriveVelocityMPS()))
+		);
 	}
 
 	public void setTargetDriveVoltage(double voltage) {

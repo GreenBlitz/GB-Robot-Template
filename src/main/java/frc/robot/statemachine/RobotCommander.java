@@ -402,10 +402,6 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	public Command completeNet() {
-		return new SequentialCommandGroup(preNet().until(superstructure::isPreNetReady), net());
-	}
-
 	public Command autoNet() {
 		return new SequentialCommandGroup(driveToPreNet().until(superstructure::isPreNetReady), net());
 	}

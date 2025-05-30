@@ -262,7 +262,7 @@ public class RobotCommander extends GBSubsystem {
 			case SCORE -> score();
 			case ALGAE_REMOVE -> algaeRemove();
 			case ALGAE_OUTTAKE -> algaeOuttake();
-			case PRE_NET -> driveToPreNet();
+			case PRE_NET -> preNet();
 			case NET -> net();
 			case PROCESSOR_SCORE -> fullyProcessorScore();
 			case PRE_CLIMB_WITH_AIM_ASSIST -> preClimbWithAimAssist();
@@ -401,6 +401,10 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
+	public Command completeNet() {
+		return new SequentialCommandGroup(preNet().until(superstructure::isPreNetReady), net());
+	}
+
 	public Command autoNet() {
 		return new SequentialCommandGroup(driveToPreNet().until(superstructure::isPreNetReady), net());
 	}
@@ -519,6 +523,13 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
+	private Command preNet() {
+		return asSubsystemCommand(
+			new ParallelCommandGroup(superstructure.preNet(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
+			RobotState.PRE_NET
+		);
+	}
+
 	private Command driveToPreNet() {
 		Pose2d netEdgeOpenSuperstructurePosition = Field.getAllianceRelative(
 			new Pose2d(
@@ -591,7 +602,13 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	private Command net() {
-		return asSubsystemCommand(superstructure.netWithRelease(), RobotState.NET);
+		return asSubsystemCommand(
+			new ParallelCommandGroup(
+				superstructure.netWithRelease(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+			),
+			RobotState.NET
+		);
 	}
 
 	private Command holdAlgae() {

@@ -8,7 +8,6 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -16,7 +15,6 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.constants.field.Field;
 import frc.constants.field.enums.Branch;
-import frc.constants.field.enums.ReefSide;
 import frc.robot.Robot;
 import frc.robot.statemachine.StateMachineConstants;
 import frc.robot.subsystems.swerve.ChassisPowers;
@@ -26,6 +24,8 @@ import frc.utils.auto.AutoPath;
 import frc.utils.auto.PathHelper;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.auto.PathPlannerUtil;
+import frc.utils.math.AngleTransform;
+import frc.utils.pose.PoseUtil;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
@@ -79,12 +79,16 @@ public class AutosBuilder {
 		Robot robot,
 		Supplier<Command> intakingCommand,
 		Supplier<Command> scoringCommand,
+		Supplier<Command> algaeRemoveCommand,
+		Supplier<Command> firstNetCommand,
+		Supplier<Command> secondNetCommand,
 		Pose2d tolerance
 	) {
 		ArrayList<Supplier<Command>> autos = new ArrayList<>();
 		autos.add(() -> leftNoDelayAuto(robot, intakingCommand, scoringCommand, tolerance));
 		autos.add(() -> centerNoDelayAuto(robot));
 		autos.add(() -> rightNoDelayAuto(robot, intakingCommand, scoringCommand, tolerance));
+		autos.add(() -> autoBalls(robot, algaeRemoveCommand, firstNetCommand, secondNetCommand, tolerance));
 		return autos;
 	}
 
@@ -171,10 +175,6 @@ public class AutosBuilder {
 		path.preventFlipping = true;
 		Logger.recordOutput("Auto/FirstPath", path.getPathPoses().toArray(new Pose2d[] {}));
 		return path;
-	}
-
-	public static Command getAutoAlgaeIntakePath(ReefSide reefSide, Robot robot) {
-
 	}
 
 	public static PathPlannerAutoWrapper createAutoFromAutoPath(AutoPath path, Function<PathPlannerPath, Command> pathFollowingCommand) {
@@ -308,29 +308,49 @@ public class AutosBuilder {
 		return auto;
 	}
 
-	private static Command autoBalls(Robot robot, Supplier<Command> algaeIntakingCommand, Supplier<Command> netCommand, Pose2d tolerance) {
+	private static Command autoBalls(Robot robot, Supplier<Command> algaeRemoveCommand, Supplier<Command> firstNetCommand, Supplier<Command> secondNetCommand, Pose2d tolerance) {
 		PathPlannerPath path = getAutoScorePath(Branch.H, robot);
 		double distanceBehindReefMeters = 0.5;
-		Pose2d backOffPose = Field.getReefSideMiddle(Branch.H.getReefSide()).plus(new Transform2d(0.5, 0, new Rotation2d()));
-
-
-		return new SequentialCommandGroup(
-				autoScoreToChosenBranch(robot, path),
-				new ParallelCommandGroup(
-						robot.getRobotCommander().getSuperstructure().holdAlgae(),
-						PathFollowingCommandsBuilder.moveToPoseByPID(robot, backOffPose)
-				), // move back to close elevator
-				new ParallelCommandGroup(
-						robot.getRobotCommander().getSuperstructure().algaeRemove(),
-						PathFollowingCommandsBuilder.moveToPoseByPID(robot, Field.getReefSideMiddle(Branch.H.getReefSide()))
-				)// take algae
-				// score to net point1
-				// take algae
-				// score to net point2
-				// take algae
-				// score to net point3
-				// go back close elevator
+		Pose2d backOffPose = Field.getAllianceRelative(
+			Field.getReefSideMiddle(Branch.H.getReefSide()).plus(new Transform2d(-1, 0, new Rotation2d())),
+			false,
+			true,
+			AngleTransform.MIRROR_Y
 		);
+		ScoringHelpers.setTargetBranch(Branch.H);
+
+		Command autoBalls = new SequentialCommandGroup(
+			autoScoreToChosenBranch(robot, path),
+			new ParallelCommandGroup(
+				robot.getRobotCommander().getSuperstructure().holdAlgae(),
+				PathFollowingCommandsBuilder.moveToPoseByPID(robot, backOffPose)
+			).until(() -> PoseUtil.isAtPose(robot.getPoseEstimator().getEstimatedPose(), backOffPose, tolerance, "backOffPose")),
+			new ParallelCommandGroup(
+				robot.getRobotCommander().getSuperstructure().algaeRemove(),
+				PathFollowingCommandsBuilder.moveToPoseByPID(robot, ScoringHelpers.getAlgaeRemovePose())
+			).withTimeout(2),
+			createAutoFromAutoPath(
+				AutoPath.ALGAE_REMOVE_D_TO_FIRST_NET,
+				pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
+					robot,
+					pathPlannerPath,
+					firstNetCommand,
+					AutoPath.ALGAE_REMOVE_D_TO_FIRST_NET.getTargetBranch(),
+					tolerance
+				)
+			)
+			// take algae
+			// score to net point1
+			// take algae
+			// score to net point2
+			// take algae
+			// score to net point3
+			// go back close elevator
+		);
+
+		autoBalls.setName("auto balls");
+
+		return autoBalls;
 	}
 
 	private static Command centerNoDelayAuto(Robot robot) {

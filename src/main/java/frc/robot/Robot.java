@@ -49,6 +49,7 @@ import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
 import frc.utils.TimedValue;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.battery.BatteryUtil;
+import frc.utils.pose.PoseUtil;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -174,6 +175,23 @@ public class Robot {
 			.softCloseL4()
 			.andThen(robotCommander.getSuperstructure().intake().withTimeout(AutonomousConstants.INTAKING_TIMEOUT_SECONDS))
 			.asProxy();
+		Supplier<Command> algaeRemoveCommand = () -> robotCommander.getSuperstructure().algaeRemove();
+		Supplier<Command> firstNetCommand = () -> robotCommander.getSuperstructure()
+			.preNet().withTimeout(2.4)
+			.andThen(robotCommander.getSuperstructure().netWithRelease())
+			.andThen(robotCommander.getSuperstructure().softCloseNet());
+		Supplier<Command> secondNetCommand = () -> robotCommander.getSuperstructure()
+				.preNet()
+				.until(
+						() -> PoseUtil.isAtPose(
+								getPoseEstimator().getEstimatedPose(),
+								AutonomousConstants.LinkedWaypoints.SECOND_NET.getSecond(),
+								AutonomousConstants.TARGET_POSE_TOLERANCES,
+								"firstNet"
+						)
+				)
+				.andThen(robotCommander.getSuperstructure().netWithRelease())
+				.andThen(robotCommander.getSuperstructure().softCloseNet());
 
 		swerve.configPathPlanner(
 			poseEstimator::getEstimatedPose,
@@ -200,7 +218,15 @@ public class Robot {
 
 		this.preBuiltAutosChooser = new AutonomousChooser(
 			"PreBuiltAutos",
-			AutosBuilder.getAllNoDelayAutos(this, intakingCommand, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+			AutosBuilder.getAllNoDelayAutos(
+				this,
+				intakingCommand,
+				scoringCommand,
+				algaeRemoveCommand,
+				firstNetCommand,
+				secondNetCommand,
+				AutonomousConstants.TARGET_POSE_TOLERANCES
+			)
 		);
 //		this.firstObjectScoringLocationChooser = new AutonomousChooser("ScoreFirst", AutosBuilder.getAllAutoScoringAutos(this));
 //		this.secondObjectIntakingLocationChooser = new AutonomousChooser(

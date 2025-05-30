@@ -174,6 +174,21 @@ public enum AutoPath {
 		AutonomousConstants.LinkedWaypoints.UPPER_CORAL_STATION_2,
 		AutonomousConstants.LinkedWaypoints.L,
 		Optional.of(Branch.L)
+	),
+	ALGAE_REMOVE_D_TO_FIRST_NET(
+		AutonomousConstants.LinkedWaypoints.ALGAE_REMOVE_D,
+		AutonomousConstants.LinkedWaypoints.FIRST_NET,
+		Optional.empty()
+	),
+	FIRST_NET_TO_ALGAE_REMOVE_E(
+		AutonomousConstants.LinkedWaypoints.FIRST_NET,
+		AutonomousConstants.LinkedWaypoints.ALGAE_REMOVE_E,
+		Optional.empty()
+	),
+	ALGAE_REMOVE_E_TO_SECOND_NET(
+		AutonomousConstants.LinkedWaypoints.ALGAE_REMOVE_E,
+		AutonomousConstants.LinkedWaypoints.SECOND_NET,
+		Optional.empty()
 	);
 
 	private final Pair<String, Pose2d> startingPoint;

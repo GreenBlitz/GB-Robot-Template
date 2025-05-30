@@ -45,6 +45,18 @@ public class PoseUtil {
 		return isAtX && isAtY && isAtHeading && isStill;
 	}
 
+	public static boolean isAtPose(Pose2d currentPose, Pose2d targetPose, Pose2d tolerances, String logPath) {
+		boolean isAtX = MathUtil.isNear(targetPose.getX(), currentPose.getX(), tolerances.getX());
+		boolean isAtY = MathUtil.isNear(targetPose.getY(), currentPose.getY(), tolerances.getY());
+		boolean isAtHeading = ToleranceMath.isNearWrapped(targetPose.getRotation(), currentPose.getRotation(), tolerances.getRotation());
+
+		Logger.recordOutput(IS_AT_POSE_LOG_PATH_PREFIX + logPath + "/isAtX", isAtX);
+		Logger.recordOutput(IS_AT_POSE_LOG_PATH_PREFIX + logPath + "/isAtY", isAtY);
+		Logger.recordOutput(IS_AT_POSE_LOG_PATH_PREFIX + logPath + "/isAtHeading", isAtHeading);
+
+		return isAtX && isAtY && isAtHeading;
+	}
+
 	public static boolean isAtTranslation(Translation2d currentPose, Translation2d targetPose, Translation2d tolerances) {
 		boolean isAtX = MathUtil.isNear(targetPose.getX(), currentPose.getX(), tolerances.getX());
 		boolean isAtY = MathUtil.isNear(targetPose.getY(), currentPose.getY(), tolerances.getY());

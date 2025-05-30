@@ -204,19 +204,18 @@ public class SwerveStateHandler {
 		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, headingToReefSide, algaeRemovePose, swerveConstants, swerveState);
 	}
 
-	private ChassisSpeeds handleAlgaeIntakeAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, Translation2d closestAlgaeDetected, SwerveState swerveState) {
+	private ChassisSpeeds handleAlgaeIntakeAimAssist(
+		ChassisSpeeds chassisSpeeds,
+		Pose2d robotPose,
+		Translation2d closestAlgaeDetected,
+		SwerveState swerveState
+	) {
 		Rotation2d targetHeading = FieldMath.getRelativeTranslation(robotPose.getTranslation(), closestAlgaeDetectedSupplier.get().get())
 			.getAngle();
 
 		chassisSpeeds = AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotPose.getRotation(), targetHeading, swerveConstants);
-		return AimAssistMath.getObjectAssistedSpeeds(
-			chassisSpeeds,
-			robotPose,
-			targetHeading,
-			closestAlgaeDetected,
-			swerveConstants,
-			swerveState
-		);
+		return AimAssistMath
+			.getObjectAssistedSpeeds(chassisSpeeds, robotPose, targetHeading, closestAlgaeDetected, swerveConstants, swerveState);
 	}
 
 	private ChassisSpeeds handleNetAimAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading) {

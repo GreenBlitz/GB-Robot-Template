@@ -25,6 +25,7 @@ import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.pose.PoseUtil;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -248,6 +249,23 @@ public class RobotCommander extends GBSubsystem {
 		return isPastX && isPastY;
 	}
 
+	private boolean isCloseToNetForAuto() {
+		Logger.recordOutput("NET_POSE", Field.getAllianceRelative(new Translation2d(7.728225, 6.03885), true, true));
+		Logger.recordOutput(
+			"IS_CLOSE_TO",
+			PoseUtil.isAtTranslation(
+				robot.getPoseEstimator().getEstimatedPose().getTranslation(),
+				Field.getAllianceRelative(new Translation2d(7.728225, 6.03885), true, true),
+				new Translation2d(0.035, 2.01295)
+			)
+		);
+		return PoseUtil.isAtTranslation(
+			robot.getPoseEstimator().getEstimatedPose().getTranslation(),
+			Field.getAllianceRelative(new Translation2d(7.728225, 6.03885), true, true),
+			new Translation2d(0.035, 2.01295)
+		);
+	}
+
 	public boolean isReadyForNet() {
 		return isCloseToNet(
 			StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES.getX(),
@@ -255,6 +273,14 @@ public class RobotCommander extends GBSubsystem {
 		)
 			&& swerve.isAtHeading(ScoringHelpers.getHeadingForNet(swerve), Tolerances.HEADING_FOR_NET, Tolerances.NET_DEADBANDS.getRotation())
 			&& SwerveMath.isStill(swerve.getAllianceRelativeVelocity(), Tolerances.NET_DEADBANDS);
+	}
+
+	public boolean isReadyForNetForAuto() {
+		return isCloseToNetForAuto();
+		/*
+		 * && swerve.isAtHeading(ScoringHelpers.getHeadingForNet(swerve), Tolerances.HEADING_FOR_NET, Tolerances.NET_DEADBANDS.getRotation()) &&
+		 * SwerveMath.isStill(swerve.getAllianceRelativeVelocity(), Tolerances.NET_DEADBANDS);
+		 */
 	}
 
 	public Command driveWith(String name, Command command, boolean asDeadline) {

@@ -8,15 +8,13 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.constants.field.Field;
 import frc.constants.field.enums.Branch;
 import frc.robot.Robot;
 import frc.robot.statemachine.StateMachineConstants;
+import frc.robot.statemachine.Tolerances;
+import frc.robot.subsystems.elevator.ElevatorState;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.superstructure.ScoreLevel;
@@ -80,15 +78,14 @@ public class AutosBuilder {
 		Supplier<Command> intakingCommand,
 		Supplier<Command> scoringCommand,
 		Supplier<Command> algaeRemoveCommand,
-		Supplier<Command> firstNetCommand,
-		Supplier<Command> secondNetCommand,
+		Supplier<Command> netCommand,
 		Pose2d tolerance
 	) {
 		ArrayList<Supplier<Command>> autos = new ArrayList<>();
 		autos.add(() -> leftNoDelayAuto(robot, intakingCommand, scoringCommand, tolerance));
 		autos.add(() -> centerNoDelayAuto(robot));
 		autos.add(() -> rightNoDelayAuto(robot, intakingCommand, scoringCommand, tolerance));
-		autos.add(() -> autoBalls(robot, algaeRemoveCommand, firstNetCommand, secondNetCommand, tolerance));
+		autos.add(() -> autoBalls(robot, algaeRemoveCommand, netCommand, tolerance));
 		return autos;
 	}
 
@@ -308,7 +305,7 @@ public class AutosBuilder {
 		return auto;
 	}
 
-	private static Command autoBalls(Robot robot, Supplier<Command> algaeRemoveCommand, Supplier<Command> firstNetCommand, Supplier<Command> secondNetCommand, Pose2d tolerance) {
+	private static Command autoBalls(Robot robot, Supplier<Command> algaeRemoveCommand, Supplier<Command> netCommand, Pose2d tolerance) {
 		PathPlannerPath path = getAutoScorePath(Branch.H, robot);
 		double distanceBehindReefMeters = 0.5;
 		Pose2d backOffPose = Field.getAllianceRelative(
@@ -324,21 +321,54 @@ public class AutosBuilder {
 			new ParallelCommandGroup(
 				robot.getRobotCommander().getSuperstructure().holdAlgae(),
 				PathFollowingCommandsBuilder.moveToPoseByPID(robot, backOffPose)
-			).until(() -> PoseUtil.isAtPose(robot.getPoseEstimator().getEstimatedPose(), backOffPose, tolerance, "backOffPose")),
+			).until(
+				() -> PoseUtil.isAtPose(robot.getPoseEstimator().getEstimatedPose(), backOffPose, tolerance, "backOffPose")
+					&& robot.getElevator().isAtPosition(ElevatorState.HOLD_ALGAE.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
+			),
 			new ParallelCommandGroup(
 				robot.getRobotCommander().getSuperstructure().algaeRemove(),
 				PathFollowingCommandsBuilder.moveToPoseByPID(robot, ScoringHelpers.getAlgaeRemovePose())
-			).withTimeout(2),
+			).withTimeout(1.5),
 			createAutoFromAutoPath(
 				AutoPath.ALGAE_REMOVE_D_TO_FIRST_NET,
 				pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
 					robot,
 					pathPlannerPath,
-					firstNetCommand,
+					netCommand,
 					AutoPath.ALGAE_REMOVE_D_TO_FIRST_NET.getTargetBranch(),
 					tolerance
 				)
+			),
+			new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.I)),
+			createAutoFromAutoPath(
+				AutoPath.FIRST_NET_TO_ALGAE_REMOVE_E,
+				pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
+					robot,
+					pathPlannerPath,
+					() -> algaeRemoveCommand.get()
+						.until(
+							() -> PoseUtil.isAtPose(
+								robot.getPoseEstimator().getEstimatedPose(),
+								ScoringHelpers.getAlgaeRemovePose(),
+								AutonomousConstants.TARGET_POSE_TOLERANCES,
+								"/algaeRemove"
+							)
+						),
+					AutoPath.FIRST_NET_TO_ALGAE_REMOVE_E.getTargetBranch(),
+					tolerance
+				)
+			),
+			createAutoFromAutoPath(
+				AutoPath.ALGAE_REMOVE_E_TO_SECOND_NET,
+				pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
+					robot,
+					pathPlannerPath,
+					netCommand,
+					AutoPath.ALGAE_REMOVE_E_TO_SECOND_NET.getTargetBranch(),
+					tolerance
+				)
 			)
+
 			// take algae
 			// score to net point1
 			// take algae

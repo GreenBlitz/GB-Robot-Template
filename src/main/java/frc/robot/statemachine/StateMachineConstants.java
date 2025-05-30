@@ -18,7 +18,7 @@ public class StateMachineConstants {
 
 	// Field relative
 	public static final Translation2d CLOSE_SUPERSTRUCTURE_LENGTH_AND_WIDTH = new Translation2d(0.6, 1.03);
-	public static final Translation2d SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES = new Translation2d(1.6, 0.1);
+	public static final Translation2d SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES = new Translation2d(1.0458575, 0.1);
 
 	public static final ChassisPowers SWERVE_POWERS_TO_PROCESSOR = new ChassisPowers();
 	static {

@@ -49,7 +49,6 @@ import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
 import frc.utils.TimedValue;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.battery.BatteryUtil;
-import frc.utils.pose.PoseUtil;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -176,22 +175,11 @@ public class Robot {
 			.andThen(robotCommander.getSuperstructure().intake().withTimeout(AutonomousConstants.INTAKING_TIMEOUT_SECONDS))
 			.asProxy();
 		Supplier<Command> algaeRemoveCommand = () -> robotCommander.getSuperstructure().algaeRemove();
-		Supplier<Command> firstNetCommand = () -> robotCommander.getSuperstructure()
-			.preNet().withTimeout(2.4)
+		Supplier<Command> netCommand = () -> robotCommander.getSuperstructure()
+			.preNet()
+			.until(robotCommander::isReadyForNetForAuto)
 			.andThen(robotCommander.getSuperstructure().netWithRelease())
 			.andThen(robotCommander.getSuperstructure().softCloseNet());
-		Supplier<Command> secondNetCommand = () -> robotCommander.getSuperstructure()
-				.preNet()
-				.until(
-						() -> PoseUtil.isAtPose(
-								getPoseEstimator().getEstimatedPose(),
-								AutonomousConstants.LinkedWaypoints.SECOND_NET.getSecond(),
-								AutonomousConstants.TARGET_POSE_TOLERANCES,
-								"firstNet"
-						)
-				)
-				.andThen(robotCommander.getSuperstructure().netWithRelease())
-				.andThen(robotCommander.getSuperstructure().softCloseNet());
 
 		swerve.configPathPlanner(
 			poseEstimator::getEstimatedPose,
@@ -223,8 +211,7 @@ public class Robot {
 				intakingCommand,
 				scoringCommand,
 				algaeRemoveCommand,
-				firstNetCommand,
-				secondNetCommand,
+				netCommand,
 				AutonomousConstants.TARGET_POSE_TOLERANCES
 			)
 		);

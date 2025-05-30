@@ -403,7 +403,7 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public Command autoNet() {
-		return new SequentialCommandGroup(driveToPreNet().until(superstructure::isPreNetReady), net());
+		return new SequentialCommandGroup(driveToPreNet(), net());
 	}
 
 	private Command drive() {
@@ -591,7 +591,7 @@ public class RobotCommander extends GBSubsystem {
 							)
 						)
 						.andThen(swerve.getCommandsBuilder().resetTargetSpeeds()),
-					superstructure.preNet()
+					superstructure.preNet().until(superstructure::isPreNetReady)
 				)
 			),
 			RobotState.AUTO_PRE_NET

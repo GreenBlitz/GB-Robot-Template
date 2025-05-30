@@ -205,7 +205,8 @@ public class SwerveStateHandler {
 	}
 
 	private ChassisSpeeds handleAlgaeIntakeAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, SwerveState swerveState) {
-		Rotation2d targetHeading = FieldMath.getFieldRelativeAngleBetweenPoints(robotPose, closestAlgaeDetectedSupplier.get().get());
+		Rotation2d targetHeading = FieldMath.getRelativeTranslation(robotPose.getTranslation(), closestAlgaeDetectedSupplier.get().get())
+			.getAngle();
 
 		chassisSpeeds = AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotPose.getRotation(), targetHeading, swerveConstants);
 		return AimAssistMath.getObjectAssistedSpeeds(

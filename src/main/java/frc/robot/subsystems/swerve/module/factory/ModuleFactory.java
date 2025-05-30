@@ -23,12 +23,19 @@ import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public class ModuleFactory {
 
+	public static final boolean enableFOC = true;
+
+	public static boolean ARE_MOTORS_CTRE = true;
+
+	public static final double DEFAULT_ARBITRARY_FEED_FORWARD = 0;
+
+
 	public static Module build(RealModuleConstants constants) {
 		String finalLogPath = ModuleConstants.LOG_PATH_PREFIX + constants.logPath();
 
 		SysIdCalibrator.SysIdConfigInfo configInfo = new SysIdCalibrator.SysIdConfigInfo(
 			new SysIdRoutine.Config(),
-			ModuleConstants.ARE_MOTORS_CTRE
+			ARE_MOTORS_CTRE
 		);
 
 		TalonFXMotor drive = generateDrive(finalLogPath, constants);
@@ -55,10 +62,10 @@ public class ModuleFactory {
 
 	private static ModuleRequests generateRequests() {
 		IRequest<Rotation2d> driveVelocityRequest = Phoenix6RequestBuilder
-			.build(new VelocityVoltage(0), ModuleConstants.DEFAULT_ARBITRARY_FEED_FORWARD, ModuleConstants.enableFOC);
-		IRequest<Double> driveVoltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), ModuleConstants.enableFOC);
+			.build(new VelocityVoltage(0), DEFAULT_ARBITRARY_FEED_FORWARD, enableFOC);
+		IRequest<Double> driveVoltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), enableFOC);
 		IRequest<Rotation2d> steerAngleRequest = Phoenix6RequestBuilder
-			.build(new PositionVoltage(0), ModuleConstants.DEFAULT_ARBITRARY_FEED_FORWARD, ModuleConstants.enableFOC);
+			.build(new PositionVoltage(0), DEFAULT_ARBITRARY_FEED_FORWARD, enableFOC);
 
 		return new ModuleRequests(driveVelocityRequest, driveVoltageRequest, steerAngleRequest);
 	}

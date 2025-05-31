@@ -14,8 +14,8 @@ public class EndEffector extends GBSubsystem {
 	private final ControllableMotor roller;
 	private final InputSignal<Double> powerSignal;
 	private final InputSignal<Double> currentSignal;
-	private final IDigitalInput algaeLimitSwitch;
-	private final DigitalInputInputsAutoLogged algaeLimitSwitchInputs;
+	private final IDigitalInput algaeBeamBreaker;
+	private final DigitalInputInputsAutoLogged algaeBeamBreakerInputs;
 	private final IDigitalInput coralBeamBreaker;
 	private final DigitalInputInputsAutoLogged coralBeamBreakerInputs;
 	private final EndEffectorCommandsBuilder commandsBuilder;
@@ -27,7 +27,7 @@ public class EndEffector extends GBSubsystem {
 		ControllableMotor roller,
 		InputSignal<Double> powerSignal,
 		InputSignal<Double> currentSignal,
-		IDigitalInput algaeLimitSwitch,
+		IDigitalInput algaeBeamBreaker,
 		IDigitalInput coralBeamBreaker
 	) {
 		super(logPath);
@@ -35,8 +35,8 @@ public class EndEffector extends GBSubsystem {
 		this.powerSignal = powerSignal;
 		this.currentSignal = currentSignal;
 
-		this.algaeLimitSwitch = algaeLimitSwitch;
-		this.algaeLimitSwitchInputs = new DigitalInputInputsAutoLogged();
+		this.algaeBeamBreaker = algaeBeamBreaker;
+		this.algaeBeamBreakerInputs = new DigitalInputInputsAutoLogged();
 
 		this.inputs = new EndEffectorInputsAutoLogged();
 
@@ -55,7 +55,7 @@ public class EndEffector extends GBSubsystem {
 	}
 
 	public boolean isAlgaeIn() {
-		return algaeLimitSwitchInputs.debouncedValue;
+		return algaeBeamBreakerInputs.debouncedValue;
 	}
 
 	public boolean isCoralIn() {

@@ -83,14 +83,11 @@ public class Module extends GBSubsystem {
 
 	public void setTargetDriveVelocityOpenLoop(double targetVelocityMPS) {
 		targetState.speedMetersPerSecond = targetVelocityMPS;
-		driveMotor.applyRequest(
-			requests.driveVoltageRequest()
-				.withSetPoint(BatteryUtil.DEFAULT_VOLTAGE * (targetVelocityMPS / ModuleConstants.MAX_DRIVE_VELOCITY_MPS))
-		);
+		driveMotor.applyRequest(requests.driveVoltageRequest().withSetPoint(velocityToVoltage(targetVelocityMPS)));
 	}
 
 	public void setTargetDriveVoltage(double voltage) {
-		targetState.speedMetersPerSecond = (voltage / BatteryUtil.DEFAULT_VOLTAGE) * ModuleConstants.MAX_DRIVE_VELOCITY_MPS;
+		targetState.speedMetersPerSecond = voltageToVelocityMPS(voltage);
 		driveMotor.applyRequest(requests.driveVoltageRequest().withSetPoint(voltage));
 	}
 
@@ -128,28 +125,20 @@ public class Module extends GBSubsystem {
 		return targetState;
 	}
 
-	public ModuleSignals getSignals() {
-		return signals;
-	}
-
-	public ModuleRequests getRequests() {
-		return requests;
-	}
-
 	public SysIdCalibrator getSysIdCalibrator() {
 		return sysIdCalibrator;
 	}
 
-	public boolean isAtVelocityMPS(double targetVelocity, double tolerance) {
-		return signals.driveVelocitySignal().isNear(metersToAngle(targetVelocity), metersToAngle(tolerance));
+	public boolean isAtVelocity(double targetVelocityMPS, double tolerance) {
+		return signals.driveVelocitySignal().isNear(metersToAngle(targetVelocityMPS), metersToAngle(tolerance));
 	}
 
 	public boolean isAtAngle(Rotation2d targetAngle, Rotation2d tolerance) {
 		return signals.steerAngleSignal().isNear(targetAngle, tolerance);
 	}
 
-	public boolean isAtState(SwerveModuleState targetState, double velocityTolerance, Rotation2d angleTolerance) {
-		return isAtVelocityMPS(targetState.speedMetersPerSecond, velocityTolerance) && isAtAngle(targetState.angle, angleTolerance);
+	public boolean isAtState(SwerveModuleState targetState, double velocityToleranceMPS, Rotation2d angleTolerance) {
+		return isAtVelocity(targetState.speedMetersPerSecond, velocityToleranceMPS) && isAtAngle(targetState.angle, angleTolerance);
 	}
 
 	private Rotation2d metersToAngle(double meters) {
@@ -159,5 +148,14 @@ public class Module extends GBSubsystem {
 	private double angleToMeters(Rotation2d angle) {
 		return Conversions.angleToDistance(angle, ModuleConstants.WHEEL_DIAMETER_METERS);
 	}
+
+	private double velocityToVoltage(double velocityMPS) {
+		return BatteryUtil.DEFAULT_VOLTAGE * (velocityMPS / ModuleConstants.MAX_DRIVE_VELOCITY_MPS);
+	}
+
+	private double voltageToVelocityMPS(double voltage) {
+		return (voltage / BatteryUtil.DEFAULT_VOLTAGE) * ModuleConstants.MAX_DRIVE_VELOCITY_MPS;
+	}
+
 
 }

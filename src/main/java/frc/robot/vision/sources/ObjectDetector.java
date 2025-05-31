@@ -5,37 +5,36 @@ import frc.utils.Filter;
 
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.function.Function;
 
-public interface ObjectDetector{
+public interface ObjectDetector {
 
-    String getName();
+	String getName();
 
-    void update();
+	void update();
 
-    ArrayList<Optional<ObjectData>> getAllObjectData();
+	ArrayList<Optional<ObjectData>> getAllObjectData();
 
-    private Optional<ObjectData> getFilteredObjectData(Optional<ObjectData> objectData) {
-        if (objectData.isPresent() && getFilter().apply(objectData.get())) {
-            return objectData;
-        }
-        return Optional.empty();
-    }
+	private Optional<ObjectData> getFilteredObjectData(Optional<ObjectData> objectData) {
+		if (objectData.isPresent() && getFilter().apply(objectData.get())) {
+			return objectData;
+		}
+		return Optional.empty();
+	}
 
-    default ArrayList<Optional<ObjectData>> getAllFilteredObjectData() {
-        ArrayList<Optional<ObjectData>> allObjectData = getAllObjectData();
-        allObjectData.replaceAll(this::getFilteredObjectData);
-        return allObjectData;
-    }
+	default ArrayList<Optional<ObjectData>> getAllFilteredObjectData() {
+		ArrayList<Optional<ObjectData>> allObjectData = getAllObjectData();
+		allObjectData.replaceAll(this::getFilteredObjectData);
+		return allObjectData;
+	}
 
-    Optional<ObjectData> getClosestFilteredObjectData();
+	Optional<ObjectData> getClosestFilteredObjectData();
 
-    void setFilter(Filter<? super ObjectData> newFilter);
+	void setFilter(Filter<? super ObjectData> newFilter);
 
-    Filter<? super ObjectData> getFilter();
+	Filter<? super ObjectData> getFilter();
 
-    default void clearFilter() {
-        setFilter(Filter.nonFilteringFilter());
-    }
+	default void clearFilter() {
+		setFilter(Filter.nonFilteringFilter());
+	}
 
 }

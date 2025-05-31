@@ -20,13 +20,13 @@ public class ObjectDetectionMath {
 
 	public static double sideTrigCalculation(Rotation2d cameraRelativePitch, Pose3d cameraPose) {
 		Rotation2d pitch = Rotation2d.fromRadians(cameraPose.getRotation().getY()).plus(cameraRelativePitch);
-	    double cameraHeightMeters = cameraPose.getZ();
-        return Math.abs(Math.tan(pitch.getRadians()) * cameraHeightMeters);
-    }
+		double cameraHeightMeters = cameraPose.getZ();
+		return Math.abs(Math.tan(pitch.getRadians()) * cameraHeightMeters);
+	}
 
-    public static double airviewTrigCalculation(Rotation2d cameraRelativeYaw, Pose3d cameraPose, double forwardAxisDistanceMeters) {
-        Rotation2d yaw = Rotation2d.fromRadians(cameraPose.getRotation().getZ()).plus(cameraRelativeYaw);
-        return Math.abs(Math.tan(yaw.getRadians()) * forwardAxisDistanceMeters);
-    }
+	public static double airviewTrigCalculation(Rotation2d cameraRelativeYaw, Pose3d cameraPose, double forwardAxisDistanceMeters) {
+		Rotation2d yaw = Rotation2d.fromRadians(cameraPose.getRotation().getZ()).plus(cameraRelativeYaw);
+		return Math.abs(Math.tan(yaw.getRadians()) * forwardAxisDistanceMeters);
+	}
 
 }

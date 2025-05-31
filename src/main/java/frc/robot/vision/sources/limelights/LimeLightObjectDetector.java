@@ -10,48 +10,47 @@ import java.util.Optional;
 
 public class LimeLightObjectDetector implements ObjectDetector {
 
-    private final String logPath;
-    private final String cameraNetworkTablesName;
-    private final String detectorName;
-    private Filter<ObjectData> filter;
+	private final String logPath;
+	private final String cameraNetworkTablesName;
+	private final String detectorName;
+	private Filter<ObjectData> filter;
 
-    public LimeLightObjectDetector(String logPath, String cameraNetworkTablesName, String detectorName) {
-        this.logPath = logPath;
-        this.cameraNetworkTablesName = cameraNetworkTablesName;
-        this.detectorName = detectorName;
-    }
+	public LimeLightObjectDetector(String logPath, String cameraNetworkTablesName, String detectorName) {
+		this.logPath = logPath;
+		this.cameraNetworkTablesName = cameraNetworkTablesName;
+		this.detectorName = detectorName;
+	}
 
-    protected NetworkTableEntry getLimelightNetworkTableEntry(String entryName) {
-        return NetworkTableInstance.getDefault().getTable(cameraNetworkTablesName).getEntry(entryName);
-    }
+	protected NetworkTableEntry getLimelightNetworkTableEntry(String entryName) {
+		return NetworkTableInstance.getDefault().getTable(cameraNetworkTablesName).getEntry(entryName);
+	}
 
-    @Override
-    public String getName() {
-        return detectorName;
-    }
+	@Override
+	public String getName() {
+		return detectorName;
+	}
 
-    @Override
-    public void update() {
+	@Override
+	public void update() {}
 
-    }
+	@Override
+	public ArrayList<Optional<ObjectData>> getAllObjectData() {
+		return null;
+	}
 
-    @Override
-    public ArrayList<Optional<ObjectData>> getAllObjectData() {
-        return null;
-    }
+	@Override
+	public Optional<ObjectData> getClosestFilteredObjectData() {
+		return Optional.empty();
+	}
 
-    @Override
-    public Optional<ObjectData> getClosestFilteredObjectData() {
-        return Optional.empty();
-    }
+	@Override
+	public void setFilter(Filter<? super ObjectData> newFilter) {
+		this.filter = filter;
+	}
 
-    @Override
-    public void setFilter(Filter<? super ObjectData> newFilter) {
-        this.filter = filter;
-    }
+	@Override
+	public Filter<? super ObjectData> getFilter() {
+		return null;
+	}
 
-    @Override
-    public Filter<? super ObjectData> getFilter() {
-        return null;
-    }
 }

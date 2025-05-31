@@ -8,8 +8,6 @@ import java.util.Optional;
 
 public interface ObjectDetector {
 
-	String getName();
-
 	void update();
 
 	ArrayList<Optional<ObjectData>> getAllObjectData();

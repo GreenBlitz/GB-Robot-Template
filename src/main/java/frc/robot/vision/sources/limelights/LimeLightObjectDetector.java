@@ -26,11 +26,6 @@ public class LimeLightObjectDetector implements ObjectDetector {
 	}
 
 	@Override
-	public String getName() {
-		return detectorName;
-	}
-
-	@Override
 	public void update() {}
 
 	@Override

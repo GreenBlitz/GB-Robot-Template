@@ -14,6 +14,7 @@ public class ObjectData {
 		this.objectType = objectType;
 		this.timestamp = timestamp;
 	}
+
 	public Pose3d getEstimatedPose() {
 		return estimatedPose;
 	}

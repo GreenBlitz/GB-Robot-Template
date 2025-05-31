@@ -34,7 +34,12 @@ public class LimeLightObjectDetector implements ObjectDetector {
 	}
 
 	@Override
-	public Optional<ObjectData> getClosestFilteredObjectData() {
+	public Optional<ObjectData> getClosestObjectData() {
+		return Optional.empty();
+	}
+
+	@Override
+	public Optional<ObjectData> getFilteredClosestObjectData() {
 		return Optional.empty();
 	}
 

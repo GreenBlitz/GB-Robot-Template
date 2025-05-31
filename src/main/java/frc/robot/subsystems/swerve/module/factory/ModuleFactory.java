@@ -42,7 +42,7 @@ public class ModuleFactory {
 		ModuleRequests requests = generateRequests();
 		ModuleSignals signals = generateSignals(drive, steer, encoder);
 
-		return new Module(finalLogPath, drive, steer, encoder, requests, signals, configInfo, ids);
+		return new Module(finalLogPath, drive, steer, encoder, requests, signals, configInfo);
 	}
 
 	private static TalonFXMotor generateDrive(String logPath, int driveID) {

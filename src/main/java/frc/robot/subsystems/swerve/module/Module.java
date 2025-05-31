@@ -7,7 +7,6 @@ import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.factory.ModuleConstants;
-import frc.robot.subsystems.swerve.module.factory.ModuleIDs;
 import frc.utils.Conversions;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.calibration.sysid.SysIdCalibrator;
@@ -23,8 +22,6 @@ public class Module extends GBSubsystem {
 
 	private final SysIdCalibrator sysIdCalibrator;
 
-	private final ModuleIDs constants;
-
 	private SwerveModuleState targetState;
 
 	public Module(
@@ -34,8 +31,7 @@ public class Module extends GBSubsystem {
 		IAngleEncoder encoder,
 		ModuleRequests requests,
 		ModuleSignals signals,
-		SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo,
-		ModuleIDs constants
+		SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo
 	) {
 		super(logPath);
 
@@ -47,8 +43,6 @@ public class Module extends GBSubsystem {
 		this.signals = signals;
 
 		this.sysIdCalibrator = new SysIdCalibrator(sysIdConfigInfo, this, this::setTargetDriveVoltage);
-
-		this.constants = constants;
 
 		this.targetState = new SwerveModuleState();
 		setState(targetState, true);

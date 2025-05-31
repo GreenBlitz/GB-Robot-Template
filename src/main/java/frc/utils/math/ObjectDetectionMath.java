@@ -14,7 +14,7 @@ public class ObjectDetectionMath {
 
 	public static Translation2d undoRoll(Translation2d pitchAndYaw, Pose3d cameraPose) {
 		double roll = cameraPose.getRotation().getX();
-		pitchAndYaw.rotateAround(new Translation2d(), Rotation2d.fromRadians(-roll));
+		pitchAndYaw.rotateBy(Rotation2d.fromRadians(-roll));
 		return pitchAndYaw;
 	}
 

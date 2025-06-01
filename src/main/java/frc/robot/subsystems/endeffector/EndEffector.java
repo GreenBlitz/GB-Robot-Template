@@ -1,5 +1,4 @@
 package frc.robot.subsystems.endeffector;
-
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.joysticks.SmartJoystick;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
@@ -8,73 +7,62 @@ import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
-
 public class EndEffector extends GBSubsystem {
-
 	private final ControllableMotor roller;
 	private final InputSignal<Double> powerSignal;
 	private final InputSignal<Double> currentSignal;
-	private final IDigitalInput algaeBeamBreaker;
-	private final DigitalInputInputsAutoLogged algaeBeamBreakerInputs;
+	private final IDigitalInput algaeLimitSwitch;
+	private final DigitalInputInputsAutoLogged algaeLimitSwitchInputs;
 	private final IDigitalInput coralBeamBreaker;
 	private final DigitalInputInputsAutoLogged coralBeamBreakerInputs;
 	private final EndEffectorCommandsBuilder commandsBuilder;
 	private final EndEffectorInputsAutoLogged inputs;
 	private double calibrationPower = 0;
-
 	public EndEffector(
-		String logPath,
-		ControllableMotor roller,
-		InputSignal<Double> powerSignal,
-		InputSignal<Double> currentSignal,
-		IDigitalInput algaeBeamBreaker,
-		IDigitalInput coralBeamBreaker
+			String logPath,
+			ControllableMotor roller,
+			InputSignal<Double> powerSignal,
+			InputSignal<Double> currentSignal,
+			IDigitalInput algaeLimitSwitch,
+			IDigitalInput coralBeamBreaker
 	) {
 		super(logPath);
 		this.roller = roller;
 		this.powerSignal = powerSignal;
 		this.currentSignal = currentSignal;
 
-		this.algaeBeamBreaker = algaeBeamBreaker;
-		this.algaeBeamBreakerInputs = new DigitalInputInputsAutoLogged();
+		this.algaeLimitSwitch = algaeLimitSwitch;
+		this.algaeLimitSwitchInputs = new DigitalInputInputsAutoLogged();
 
 		this.inputs = new EndEffectorInputsAutoLogged();
 
 		this.coralBeamBreaker = coralBeamBreaker;
 		this.coralBeamBreakerInputs = new DigitalInputInputsAutoLogged();
-
 		this.commandsBuilder = new EndEffectorCommandsBuilder(this);
-
 		periodic();
-
 		setDefaultCommand(commandsBuilder.setPower(0));
 	}
-
 	public EndEffectorCommandsBuilder getCommandsBuilder() {
 		return commandsBuilder;
 	}
 
 	public boolean isAlgaeIn() {
-		return algaeBeamBreakerInputs.debouncedValue;
+		return algaeLimitSwitchInputs.debouncedValue;
 	}
 
 	public boolean isCoralIn() {
 		return coralBeamBreakerInputs.debouncedValue;
 	}
-
 	public double getPower() {
 		return powerSignal.getLatestValue();
 	}
-
 	public double getCurrent() {
 		return currentSignal.getLatestValue();
 	}
-
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
 	}
-
 	private void updateInputs() {
 		// algaeLimitSwitch.updateInputs(algaeLimitSwitchInputs);
 		coralBeamBreaker.updateInputs(coralBeamBreakerInputs);

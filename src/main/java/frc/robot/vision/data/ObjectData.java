@@ -1,21 +1,21 @@
 package frc.robot.vision.data;
 
-import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Translation2d;
 
 public class ObjectData {
 
-	private final Pose3d estimatedPose;
+	private final Translation2d estimatedPose;
 	private final String objectType;
 	private final double timestamp;
 
 
-	public ObjectData(Pose3d estimatedPose, String objectType, double timestamp) {
+	public ObjectData(Translation2d estimatedPose, String objectType, double timestamp) {
 		this.estimatedPose = estimatedPose;
 		this.objectType = objectType;
 		this.timestamp = timestamp;
 	}
 
-	public Pose3d getEstimatedPose() {
+	public Translation2d getEstimatedPose() {
 		return estimatedPose;
 	}
 

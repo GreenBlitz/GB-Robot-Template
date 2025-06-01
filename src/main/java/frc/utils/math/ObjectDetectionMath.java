@@ -18,13 +18,13 @@ public class ObjectDetectionMath {
 		return pitchAndYaw;
 	}
 
-	public static double getXAxisDistance(Rotation2d cameraRelativePitch, Pose3d cameraPose) {
+	public static double getCameraRelativeXAxisDistance(Rotation2d cameraRelativePitch, Pose3d cameraPose) {
 		Rotation2d pitch = Rotation2d.fromRadians(cameraPose.getRotation().getY()).plus(cameraRelativePitch);
 		double cameraHeightMeters = cameraPose.getZ();
 		return Math.abs(Math.tan(pitch.getRadians()) * cameraHeightMeters);
 	}
 
-	public static double getYAxisDistance(Rotation2d cameraRelativeYaw, Pose3d cameraPose, double XAxisDistanceMeters) {
+	public static double getCameraRelativeYAxisDistance(Rotation2d cameraRelativeYaw, Pose3d cameraPose, double XAxisDistanceMeters) {
 		Rotation2d yaw = Rotation2d.fromRadians(cameraPose.getRotation().getZ()).plus(cameraRelativeYaw);
 		return Math.abs(Math.tan(yaw.getRadians()) * XAxisDistanceMeters);
 	}

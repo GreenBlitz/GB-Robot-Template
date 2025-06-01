@@ -51,6 +51,10 @@ public class Pivot extends GBSubsystem {
 		return voltageSignal.getLatestValue();
 	}
 
+	public boolean isAtPosition(Rotation2d targetPosition, Rotation2d tolerance) {
+		return positionSignal.isNear(targetPosition, tolerance);
+	}
+
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();

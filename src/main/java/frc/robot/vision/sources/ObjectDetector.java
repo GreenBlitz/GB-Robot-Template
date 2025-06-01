@@ -19,6 +19,13 @@ public interface ObjectDetector {
 		return Optional.empty();
 	}
 
+	private Optional<ObjectData> filterObjectData(Optional<ObjectData> objectData) {
+		if (objectData.isPresent() && getFilter().apply(objectData.get())) {
+			return objectData;
+		}
+		return Optional.empty();
+	}
+
 	default ArrayList<ObjectData> getAllFilteredObjectData() {
 		ArrayList<ObjectData> allObjectData = getAllObjectData();
 

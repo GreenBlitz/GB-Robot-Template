@@ -17,9 +17,6 @@ public class PivotStateHandler {
 	}
 
 	public Command setState(PivotState state) {
-		if (state == PivotState.STAY_IN_PLACE) {
-			return pivot.getCommandsBuilder().stayInPlace();
-		}
 		return pivot.getCommandsBuilder().moveToPosition(state.getPosition());
 	}
 
@@ -28,9 +25,6 @@ public class PivotStateHandler {
 	}
 
 	public boolean isAtState(PivotState state, Rotation2d tolerance) {
-		if (state == PivotState.STAY_IN_PLACE) {
-			return currentState == state;
-		}
 		return currentState == state && pivot.isAtPosition(state.getPosition(), tolerance);
 	}
 

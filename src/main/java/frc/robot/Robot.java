@@ -203,6 +203,7 @@ public class Robot {
 		new EventTrigger("ARM_PRE_SCORE").onTrue(
 			robotCommander.getSuperstructure().armPreScore().alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.MOVE_TO_POSE))
 		);
+		new EventTrigger("PRE_NET").onTrue(robotCommander.getSuperstructure().netWithoutRelease());
 
 		this.preBuiltAutosChooser = new AutonomousChooser(
 			"PreBuiltAutos",

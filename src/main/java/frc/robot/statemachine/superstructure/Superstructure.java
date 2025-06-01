@@ -448,6 +448,21 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
+	public Command netWithoutRelease() {
+		return asSubsystemCommand(
+			new DeferredCommand(
+				() -> new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.NET),
+					armStateHandler.setState(ArmState.HOLD_ALGAE),
+					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
+					climbStateHandler.setState(ClimbState.CLOSE)
+				),
+				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector(), robot.getLifter(), robot.getSolenoid())
+			),
+			SuperstructureState.PRE_NET
+		);
+	}
+
 	public Command netWithRelease() {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(

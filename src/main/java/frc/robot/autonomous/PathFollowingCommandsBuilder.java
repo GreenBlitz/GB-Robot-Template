@@ -11,6 +11,7 @@ import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.StateMachineConstants;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.math.AngleTransform;
 import frc.utils.math.ToleranceMath;
@@ -97,6 +98,10 @@ public class PathFollowingCommandsBuilder {
 
 	public static Command moveToPoseByPID(Robot robot, Pose2d targetPose) {
 		return robot.getSwerve().getCommandsBuilder().moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, targetPose);
+	}
+
+	public static Command moveToPoseByPID(Robot robot, Pose2d targetPose, SwerveState swerveState) {
+		return robot.getSwerve().getCommandsBuilder().moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, targetPose, swerveState);
 	}
 
 	public static Command followAdjustedPath(Robot robot, PathPlannerPath path, Optional<Branch> targetBranch, Pose2d tolerance) {

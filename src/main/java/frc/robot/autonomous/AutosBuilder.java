@@ -18,6 +18,8 @@ import frc.robot.subsystems.elevator.ElevatorState;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.superstructure.ScoreLevel;
+import frc.robot.subsystems.swerve.states.DriveSpeed;
+import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.auto.AutoPath;
 import frc.utils.auto.PathHelper;
 import frc.utils.auto.PathPlannerAutoWrapper;
@@ -320,14 +322,15 @@ public class AutosBuilder {
 			autoScoreToChosenBranch(robot, path),
 			new ParallelCommandGroup(
 				robot.getRobotCommander().getSuperstructure().holdAlgae(),
-				PathFollowingCommandsBuilder.moveToPoseByPID(robot, backOffPose)
+				PathFollowingCommandsBuilder.moveToPoseByPID(robot, backOffPose, SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW))
 			).until(
 				() -> PoseUtil.isAtPose(robot.getPoseEstimator().getEstimatedPose(), backOffPose, tolerance, "backOffPose")
 					&& robot.getElevator().isAtPosition(ElevatorState.HOLD_ALGAE.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
 			),
 			new ParallelCommandGroup(
 				robot.getRobotCommander().getSuperstructure().algaeRemove(),
-				PathFollowingCommandsBuilder.moveToPoseByPID(robot, ScoringHelpers.getAlgaeRemovePose())
+				PathFollowingCommandsBuilder
+					.moveToPoseByPID(robot, ScoringHelpers.getAlgaeRemovePose(), SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW))
 			).withTimeout(1.5),
 			createAutoFromAutoPath(
 				AutoPath.ALGAE_REMOVE_D_TO_FIRST_NET,

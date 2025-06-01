@@ -69,4 +69,8 @@ public class Pivot extends GBSubsystem {
 		pivot.applyRequest(positionRequest.withSetPoint(targetPosition));
 	}
 
+	protected void stayInPlace() {
+		pivot.applyRequest(positionRequest.withSetPoint(getPosition()));
+	}
+
 }

@@ -102,4 +102,6 @@ public class VisionConstants {
 
 	public static final List<VisionSource<AprilTagVisionData>> VISION_SOURCES = List.of(LIMELIGHT_LEFT, LIMELIGHT_RIGHT);
 
+	public static final int OBJECT_CELL_AMOUNT_IN_RAW_DETECTIONS_ENTRY = 12;
+
 }

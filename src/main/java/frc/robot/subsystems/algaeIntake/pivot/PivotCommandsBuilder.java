@@ -12,11 +12,11 @@ public class PivotCommandsBuilder {
 		this.pivot = pivot;
 	}
 
-	public Command moveToPosition(Rotation2d targetPosition){
+	public Command moveToPosition(Rotation2d targetPosition) {
 		return new RunCommand(() -> pivot.setTargetPosition(targetPosition), pivot);
 	}
 
-	public Command stayInPlace(){
+	public Command stayInPlace() {
 		return new RunCommand(pivot::stayInPlace, pivot);
 	}
 

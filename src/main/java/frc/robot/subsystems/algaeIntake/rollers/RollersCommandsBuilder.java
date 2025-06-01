@@ -12,15 +12,15 @@ public class RollersCommandsBuilder {
 		this.rollers = rollers;
 	}
 
-	public Command setPower(double power){
+	public Command setPower(double power) {
 		return new RunCommand(() -> rollers.setPower(power));
 	}
 
-	public Command setVelocity(Rotation2d targetVelocityMPS){
+	public Command setVelocity(Rotation2d targetVelocityMPS) {
 		return new RunCommand(() -> rollers.setTargetVelocity(targetVelocityMPS));
 	}
 
-	public Command setVoltage(double voltage){
+	public Command setVoltage(double voltage) {
 		return new RunCommand(() -> rollers.setVoltage(voltage));
 	}
 

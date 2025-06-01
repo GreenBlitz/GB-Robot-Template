@@ -363,12 +363,11 @@ public class AutosBuilder {
 			),
 			createAutoFromAutoPath(
 				AutoPath.ALGAE_REMOVE_E_TO_SECOND_NET,
-				pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
+				pathPlannerPath -> PathFollowingCommandsBuilder.scoreToNet(
 					robot,
 					pathPlannerPath,
 					netCommand,
-					AutoPath.ALGAE_REMOVE_E_TO_SECOND_NET.getTargetBranch(),
-					tolerance
+					AutoPath.ALGAE_REMOVE_E_TO_SECOND_NET.getTargetBranch()
 				)
 			)
 

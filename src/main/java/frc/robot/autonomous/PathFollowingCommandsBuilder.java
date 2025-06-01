@@ -58,6 +58,13 @@ public class PathFollowingCommandsBuilder {
 		);
 	}
 
+	public static Command scoreToNet(Robot robot, PathPlannerPath path, Supplier<Command> commandSupplier, Optional<Branch> targetBranch) {
+		return new ParallelDeadlineGroup(
+			new SequentialCommandGroup(new WaitUntilCommand(() -> robot.getRobotCommander().isReadyForNetForAuto()), commandSupplier.get()),
+			followAdjustedPathWithoutStop(robot, path, targetBranch)
+		);
+	}
+
 
 	public static Command followPath(PathPlannerPath path) {
 		return AutoBuilder.followPath(path);

@@ -175,10 +175,10 @@ public class Robot {
 			.andThen(robotCommander.getSuperstructure().intake().withTimeout(AutonomousConstants.INTAKING_TIMEOUT_SECONDS))
 			.asProxy();
 		Supplier<Command> algaeRemoveCommand = () -> robotCommander.getSuperstructure().algaeRemove();
-		Supplier<Command> netCommand = () -> robotCommander.getSuperstructure()
+		Supplier<Command> netCommand = () -> /*robotCommander.getSuperstructure()
 			.preNet()
 			.until(robotCommander::isReadyForNetForAuto)
-			.andThen(robotCommander.getSuperstructure().netWithRelease())
+			.andThen*/robotCommander.getSuperstructure().netWithRelease()
 			.andThen(robotCommander.getSuperstructure().softCloseNet());
 
 		swerve.configPathPlanner(

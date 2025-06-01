@@ -10,22 +10,21 @@ public interface ObjectDetector {
 
 	void update();
 
-	ArrayList<Optional<ObjectData>> getAllObjectData();
+	ArrayList<ObjectData> getAllObjectData();
 
-	private Optional<ObjectData> filterObjectData(Optional<ObjectData> objectData) {
-		if (objectData.isPresent() && getFilter().apply(objectData.get())) {
-			return objectData;
+	private Optional<ObjectData> filterObjectData(ObjectData objectData) {
+		if (getFilter().apply(objectData)) {
+			return Optional.of(objectData);
 		}
 		return Optional.empty();
 	}
 
 	default ArrayList<ObjectData> getAllFilteredObjectData() {
-		ArrayList<Optional<ObjectData>> allOptionalFilteredObjectData = getAllObjectData();
-		allOptionalFilteredObjectData.replaceAll(this::filterObjectData);
+		ArrayList<ObjectData> allObjectData = getAllObjectData();
 
 		ArrayList<ObjectData> allFilteredObjectData = new ArrayList<>(0);
-		for (Optional<ObjectData> objectData : allOptionalFilteredObjectData) {
-			objectData.ifPresent(allFilteredObjectData::add);
+		for (ObjectData objectData : allObjectData) {
+			filterObjectData(objectData).ifPresent(allFilteredObjectData::add);
 		}
 		return allFilteredObjectData;
 	}

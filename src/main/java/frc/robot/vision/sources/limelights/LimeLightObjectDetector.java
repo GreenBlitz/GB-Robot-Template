@@ -29,7 +29,7 @@ public class LimeLightObjectDetector implements ObjectDetector {
 	public void update() {}
 
 	@Override
-	public ArrayList<Optional<ObjectData>> getAllObjectData() {
+	public ArrayList<ObjectData> getAllObjectData() {
 		return null;
 	}
 

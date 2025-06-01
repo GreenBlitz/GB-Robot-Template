@@ -42,8 +42,11 @@ public class EndEffector extends GBSubsystem {
 
 		this.coralBeamBreaker = coralBeamBreaker;
 		this.coralBeamBreakerInputs = new DigitalInputInputsAutoLogged();
+
 		this.commandsBuilder = new EndEffectorCommandsBuilder(this);
+
 		periodic();
+
 		setDefaultCommand(commandsBuilder.setPower(0));
 	}
 

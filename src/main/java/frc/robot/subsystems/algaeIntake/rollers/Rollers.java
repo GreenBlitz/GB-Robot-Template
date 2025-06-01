@@ -78,6 +78,10 @@ public class Rollers extends GBSubsystem {
 		rollers.setPower(power);
 	}
 
+	protected void stop() {
+		setPower(0);
+	}
+
 	protected void setTargetVelocity(Rotation2d targetVelocityMPS) {
 		rollers.applyRequest(velocityRequest.withSetPoint(targetVelocityMPS));
 	}

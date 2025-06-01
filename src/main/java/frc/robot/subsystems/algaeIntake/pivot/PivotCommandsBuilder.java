@@ -13,11 +13,14 @@ public class PivotCommandsBuilder {
 	}
 
 	public Command moveToPosition(Rotation2d targetPosition) {
-		return new RunCommand(() -> pivot.setTargetPosition(targetPosition), pivot);
+		return pivot.asSubsystemCommand(
+			new RunCommand(() -> pivot.setTargetPosition(targetPosition), pivot),
+			"Set target position to: " + targetPosition
+		);
 	}
 
 	public Command stayInPlace() {
-		return new RunCommand(pivot::stayInPlace, pivot);
+		return pivot.asSubsystemCommand(new RunCommand(pivot::stayInPlace, pivot), "Stay in place");
 	}
 
 }

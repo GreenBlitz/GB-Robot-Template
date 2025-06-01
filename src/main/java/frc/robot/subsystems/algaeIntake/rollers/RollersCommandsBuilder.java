@@ -13,15 +13,21 @@ public class RollersCommandsBuilder {
 	}
 
 	public Command setPower(double power) {
-		return new RunCommand(() -> rollers.setPower(power));
+		return rollers.asSubsystemCommand(new RunCommand(() -> rollers.setPower(power)), "Set power to " + power);
 	}
 
+	public Command stop() {
+		return rollers.asSubsystemCommand(new RunCommand(rollers::stop), "Stop");
+	}
+
+
 	public Command setVelocity(Rotation2d targetVelocityMPS) {
-		return new RunCommand(() -> rollers.setTargetVelocity(targetVelocityMPS));
+		return rollers
+			.asSubsystemCommand(new RunCommand(() -> rollers.setTargetVelocity(targetVelocityMPS)), "Set velocity to " + targetVelocityMPS);
 	}
 
 	public Command setVoltage(double voltage) {
-		return new RunCommand(() -> rollers.setVoltage(voltage));
+		return rollers.asSubsystemCommand(new RunCommand(() -> rollers.setVoltage(voltage)), "Set voltage to " + voltage);
 	}
 
 }

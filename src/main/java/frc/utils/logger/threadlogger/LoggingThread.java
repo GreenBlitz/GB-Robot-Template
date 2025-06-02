@@ -22,13 +22,13 @@ public final class LoggingThread extends Thread {
 	}
 
 	// One time object creation for each type of logger, instead of recreating them every time log() is called. Improves performance.
-	ILogger<Integer> integerLogger = org.littletonrobotics.junction.Logger::recordOutput;
-	ILogger<Boolean> booleanLogger = org.littletonrobotics.junction.Logger::recordOutput;
-	ILogger<String> stringLogger = org.littletonrobotics.junction.Logger::recordOutput;
-	ILogger<Double> doubleLogger = org.littletonrobotics.junction.Logger::recordOutput;
-	ILogger<double[]> doubleArrayLogger = org.littletonrobotics.junction.Logger::recordOutput;
-	ILogger<WPISerializable> wpilibObjectsLogger = org.littletonrobotics.junction.Logger::recordOutput;
-	ILogger<Enum> enumLogger = org.littletonrobotics.junction.Logger::recordOutput;
+	final ILogger<Integer> integerLogger = org.littletonrobotics.junction.Logger::recordOutput;
+	final ILogger<Boolean> booleanLogger = org.littletonrobotics.junction.Logger::recordOutput;
+	final ILogger<String> stringLogger = org.littletonrobotics.junction.Logger::recordOutput;
+	final ILogger<Double> doubleLogger = org.littletonrobotics.junction.Logger::recordOutput;
+	final ILogger<double[]> doubleArrayLogger = org.littletonrobotics.junction.Logger::recordOutput;
+	final ILogger<WPISerializable> wpilibObjectsLogger = org.littletonrobotics.junction.Logger::recordOutput;
+	final ILogger<Enum> enumLogger = org.littletonrobotics.junction.Logger::recordOutput;
 
 	private void log() {
 		org.littletonrobotics.junction.Logger.recordOutput(LoggerConstants.ROOT_LOG_PATH + "FailedLogsCount", Logger.failedLogsCount.get());
@@ -67,7 +67,6 @@ public final class LoggingThread extends Thread {
 
 	@Override
 	public void interrupt() {
-		org.littletonrobotics.junction.Logger.recordOutput("", new Pose2d[] {new Pose2d(), new Pose2d()});
 		super.interrupt();
 		// ensure any resources the thread might have created are cleaned up
 		// right now there are no resources to clean up, but I left this here for future-proofing

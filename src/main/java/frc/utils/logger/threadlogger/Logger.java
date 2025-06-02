@@ -11,24 +11,24 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public final class Logger {
 
 	private static LoggingThread logger;
-	protected static final AtomicInteger failedLogsCount = new AtomicInteger();
+	static final AtomicInteger failedLogsCount = new AtomicInteger();
 
 	// separate locks allows to stop logging to a specific type (while writing on a different thread) of data without blocking other types
 	// concurrent objects are not used here, since data loss is preferred over blocking the main thread
-	protected static final ReadWriteLock integerLock = new ReentrantReadWriteLock(false);
-	protected static final Map<String, Integer> integerData = new HashMap<>();
-	protected static final ReadWriteLock booleanLock = new ReentrantReadWriteLock(false);
-	protected static final Map<String, Boolean> booleanData = new HashMap<>();
-	protected static final ReadWriteLock stringLock = new ReentrantReadWriteLock(false);
-	protected static final Map<String, String> stringData = new HashMap<>();
-	protected static final ReadWriteLock doubleLock = new ReentrantReadWriteLock(false);
-	protected static final Map<String, Double> doubleData = new HashMap<>();
-	protected static final ReadWriteLock doubleArrayLock = new ReentrantReadWriteLock(false);
-	protected static final Map<String, double[]> doubleArrayData = new HashMap<>();
-	protected static final ReadWriteLock wpilibObjectsLock = new ReentrantReadWriteLock(false);
-	protected static final Map<String, WPISerializable> wpilibObjectsData = new HashMap<>();
-	protected static final ReadWriteLock enumLock = new ReentrantReadWriteLock(false);
-	protected static final Map<String, Enum> enumData = new HashMap<>();
+	static final ReadWriteLock integerLock = new ReentrantReadWriteLock(false);
+	static final Map<String, Integer> integerData = new HashMap<>();
+	static final ReadWriteLock booleanLock = new ReentrantReadWriteLock(false);
+	static final Map<String, Boolean> booleanData = new HashMap<>();
+	static final ReadWriteLock stringLock = new ReentrantReadWriteLock(false);
+	static final Map<String, String> stringData = new HashMap<>();
+	static final ReadWriteLock doubleLock = new ReentrantReadWriteLock(false);
+	static final Map<String, Double> doubleData = new HashMap<>();
+	static final ReadWriteLock doubleArrayLock = new ReentrantReadWriteLock(false);
+	static final Map<String, double[]> doubleArrayData = new HashMap<>();
+	static final ReadWriteLock wpilibObjectsLock = new ReentrantReadWriteLock(false);
+	static final Map<String, WPISerializable> wpilibObjectsData = new HashMap<>();
+	static final ReadWriteLock enumLock = new ReentrantReadWriteLock(false);
+	static final Map<String, Enum> enumData = new HashMap<>();
 
 	private static void startLogging() {
 		logger = new LoggingThread("GBLogger");

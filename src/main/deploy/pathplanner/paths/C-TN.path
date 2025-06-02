@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 7.728,
-        "y": 6.729623287671233
+        "y": 6.73
       },
       "prevControl": {
         "x": 4.477654109589041,
-        "y": 6.744648972602739
+        "y": 6.745025684931507
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,20 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "HOLD_ALGAE",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "PRE_NET",
+      "waypointRelativePos": 0.5940744393687709,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.8,
     "maxAcceleration": 3.5,

@@ -320,56 +320,57 @@ public class AutosBuilder {
 
 		Command autoBalls = new SequentialCommandGroup(
 			autoScoreToChosenBranch(robot, path),
-			new ParallelCommandGroup(
-				robot.getRobotCommander().getSuperstructure().holdAlgae(),
-				PathFollowingCommandsBuilder.moveToPoseByPID(robot, backOffPose, SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW))
-			).until(
-				() -> PoseUtil.isAtPose(robot.getPoseEstimator().getEstimatedPose(), backOffPose, tolerance, "backOffPose")
-					&& robot.getElevator().isAtPosition(ElevatorState.HOLD_ALGAE.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
-			),
-			new ParallelCommandGroup(
-				robot.getRobotCommander().getSuperstructure().algaeRemove(),
-				PathFollowingCommandsBuilder
-					.moveToPoseByPID(robot, ScoringHelpers.getAlgaeRemovePose(), SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW))
-			).withTimeout(1.5),
-			createAutoFromAutoPath(
-				AutoPath.ALGAE_REMOVE_D_TO_FIRST_NET,
-				pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
-					robot,
-					pathPlannerPath,
-					netCommand,
-					AutoPath.ALGAE_REMOVE_D_TO_FIRST_NET.getTargetBranch(),
-					tolerance
+			new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					robot.getRobotCommander().getSuperstructure().holdAlgae().asProxy(),
+					PathFollowingCommandsBuilder.moveToPoseByPID(robot, backOffPose, SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW))
+				).until(
+					() -> PoseUtil.isAtPose(robot.getPoseEstimator().getEstimatedPose(), backOffPose, tolerance, "backOffPose")
+						&& robot.getElevator().isAtPosition(ElevatorState.HOLD_ALGAE.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
+				),
+				new ParallelCommandGroup(
+					algaeRemoveCommand.get(),
+					PathFollowingCommandsBuilder
+						.moveToPoseByPID(robot, ScoringHelpers.getAlgaeRemovePose(), SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW))
+				).withTimeout(1.5),
+				createAutoFromAutoPath(
+					AutoPath.ALGAE_REMOVE_D_TO_FIRST_NET,
+					pathPlannerPath -> PathFollowingCommandsBuilder
+						.scoreToNet(robot, pathPlannerPath, netCommand, AutoPath.ALGAE_REMOVE_D_TO_FIRST_NET.getTargetBranch())
+				),
+				new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.I)),
+				createAutoFromAutoPath(
+					AutoPath.FIRST_NET_TO_ALGAE_REMOVE_E,
+					pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
+						robot,
+						pathPlannerPath,
+						algaeRemoveCommand,
+						AutoPath.FIRST_NET_TO_ALGAE_REMOVE_E.getTargetBranch(),
+						tolerance
+					)
+				),
+				createAutoFromAutoPath(
+					AutoPath.ALGAE_REMOVE_E_TO_SECOND_NET,
+					pathPlannerPath -> PathFollowingCommandsBuilder
+						.scoreToNet(robot, pathPlannerPath, netCommand, AutoPath.ALGAE_REMOVE_E_TO_SECOND_NET.getTargetBranch())
+				),
+				createAutoFromAutoPath(
+					AutoPath.SECOND_NET_TO_ALGAE_REMOVE_C,
+					pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
+						robot,
+						pathPlannerPath,
+						algaeRemoveCommand,
+						AutoPath.SECOND_NET_TO_ALGAE_REMOVE_C.getTargetBranch(),
+						tolerance
+					)
+				),
+				createAutoFromAutoPath(
+					AutoPath.ALGAE_REMOVE_C_TO_THIRD_NET,
+					pathPlannerPath -> PathFollowingCommandsBuilder
+						.scoreToNet(robot, pathPlannerPath, netCommand, AutoPath.ALGAE_REMOVE_C_TO_THIRD_NET.getTargetBranch())
+
 				)
-			),
-			new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.I)),
-			createAutoFromAutoPath(
-				AutoPath.FIRST_NET_TO_ALGAE_REMOVE_E,
-				pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
-					robot,
-					pathPlannerPath,
-					() -> algaeRemoveCommand.get()
-						.until(
-							() -> PoseUtil.isAtPose(
-								robot.getPoseEstimator().getEstimatedPose(),
-								ScoringHelpers.getAlgaeRemovePose(),
-								AutonomousConstants.TARGET_POSE_TOLERANCES,
-								"/algaeRemove"
-							)
-						),
-					AutoPath.FIRST_NET_TO_ALGAE_REMOVE_E.getTargetBranch(),
-					tolerance
-				)
-			),
-			createAutoFromAutoPath(
-				AutoPath.ALGAE_REMOVE_E_TO_SECOND_NET,
-				pathPlannerPath -> PathFollowingCommandsBuilder.scoreToNet(
-					robot,
-					pathPlannerPath,
-					netCommand,
-					AutoPath.ALGAE_REMOVE_E_TO_SECOND_NET.getTargetBranch()
-				)
-			)
+			).asProxy()
 
 			// take algae
 			// score to net point1

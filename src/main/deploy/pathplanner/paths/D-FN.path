@@ -45,7 +45,20 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "HOLD_ALGAE",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "PRE_NET",
+      "waypointRelativePos": 0.30445390365448494,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.8,
     "maxAcceleration": 3.5,

@@ -174,12 +174,11 @@ public class Robot {
 			.softCloseL4()
 			.andThen(robotCommander.getSuperstructure().intake().withTimeout(AutonomousConstants.INTAKING_TIMEOUT_SECONDS))
 			.asProxy();
-		Supplier<Command> algaeRemoveCommand = () -> robotCommander.getSuperstructure().algaeRemove();
-		Supplier<Command> netCommand = () -> /*robotCommander.getSuperstructure()
-			.preNet()
-			.until(robotCommander::isReadyForNetForAuto)
-			.andThen*/robotCommander.getSuperstructure().netWithRelease()
-			.andThen(robotCommander.getSuperstructure().softCloseNet());
+		Supplier<Command> algaeRemoveCommand = () -> robotCommander.getSuperstructure().algaeRemove().withTimeout(2.5).asProxy();
+		Supplier<Command> netCommand = () -> robotCommander.getSuperstructure()
+			.netWithRelease()
+			.andThen(robotCommander.getSuperstructure().softCloseNet())
+			.asProxy();
 
 		swerve.configPathPlanner(
 			poseEstimator::getEstimatedPose,
@@ -203,7 +202,13 @@ public class Robot {
 		new EventTrigger("ARM_PRE_SCORE").onTrue(
 			robotCommander.getSuperstructure().armPreScore().alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.MOVE_TO_POSE))
 		);
-		new EventTrigger("PRE_NET").onTrue(robotCommander.getSuperstructure().netWithoutRelease());
+		new EventTrigger("PRE_NET").onTrue(robotCommander.getSuperstructure().netWithoutRelease()
+		/*
+		 * .until(robotCommander::isReadyForNetForAuto) .andThen(robotCommander.getSuperstructure().netWithRelease())
+		 * .andThen(robotCommander.getSuperstructure().softCloseNet())
+		 */
+		);
+		new EventTrigger("HOLD_ALGAE").onTrue(robotCommander.getSuperstructure().holdAlgae());
 
 		this.preBuiltAutosChooser = new AutonomousChooser(
 			"PreBuiltAutos",

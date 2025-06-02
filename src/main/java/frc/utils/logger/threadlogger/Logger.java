@@ -4,14 +4,12 @@ import edu.wpi.first.util.WPISerializable;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public final class Logger {
 
 	private static LoggingThread logger;
-	static final AtomicInteger failedLogsCount = new AtomicInteger();
 
 	// separate locks allows to stop logging to a specific type (while writing on a different thread) of data without blocking other types
 	// concurrent objects are not used here, since data loss is preferred over blocking the main thread

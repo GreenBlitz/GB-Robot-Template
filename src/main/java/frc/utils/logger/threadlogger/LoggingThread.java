@@ -1,9 +1,10 @@
 package frc.utils.logger.threadlogger;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.util.WPISerializable;
 import frc.utils.logger.ILogger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 
@@ -12,6 +13,8 @@ public final class LoggingThread extends Thread {
 
 	public static int NORM_PRIORITY = 2;
 	public static int MAX_PRIORITY = 4;
+
+	private int failedLogsCount = 0;
 
 	public LoggingThread(String name) {
 		super(name);
@@ -31,7 +34,7 @@ public final class LoggingThread extends Thread {
 	final ILogger<Enum> enumLogger = org.littletonrobotics.junction.Logger::recordOutput;
 
 	private void log() {
-		org.littletonrobotics.junction.Logger.recordOutput(LoggerConstants.ROOT_LOG_PATH + "FailedLogsCount", Logger.failedLogsCount.get());
+		org.littletonrobotics.junction.Logger.recordOutput(LoggerConstants.ROOT_LOG_PATH + "FailedLogsCount", failedLogsCount);
 		log(Logger.integerData, Logger.integerLock, integerLogger);
 		log(Logger.booleanData, Logger.booleanLock, booleanLogger);
 		log(Logger.stringData, Logger.stringLock, stringLogger);
@@ -43,17 +46,24 @@ public final class LoggingThread extends Thread {
 
 	private <T> void log(Map<String, T> map, ReadWriteLock lock, ILogger<? super T> logger) {
 		if (lock.readLock().tryLock()) {
+			List<T> dataInMainThread = new ArrayList<>(map.size());
+			List<String> logPathsInMainThread;
 			try {
-				for (String logPath : map.keySet()) {
-					logger.log(LoggerConstants.ROOT_LOG_PATH + logPath, map.get(logPath));
+				logPathsInMainThread = map.keySet().stream().toList();
+				for (String logPath : logPathsInMainThread) {
+					dataInMainThread.add(map.get(logPath));
 				}
 			} finally {
 				lock.readLock().unlock();
 			}
+			// actual logging happens outside the lock
+			for (int i = 0; i < dataInMainThread.size(); i++) {
+				logger.log(LoggerConstants.ROOT_LOG_PATH + logPathsInMainThread.get(i), dataInMainThread.get(i));
+			}
 		} else {
 			// If the lock is not available, we skip logging this time.
 			// This prevents blocking the main thread if the lock is held by another thread.
-			Logger.failedLogsCount.incrementAndGet();
+			failedLogsCount++;
 		}
 	}
 

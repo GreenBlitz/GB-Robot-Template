@@ -393,6 +393,23 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
+	public Command algaeRemoveWithKeepRollers(){
+		return asSubsystemCommand(
+				new DeferredCommand(
+						() -> new SequentialCommandGroup(
+								new ParallelCommandGroup(
+										elevatorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getElevatorState()),
+										armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getArmState()),
+										endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
+										climbStateHandler.setState(ClimbState.STOP)
+								)
+						),
+						Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector(), robot.getLifter(), robot.getSolenoid())
+				),
+				SuperstructureState.ALGAE_REMOVE
+		);
+	}
+
 	public Command processorScore() {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(

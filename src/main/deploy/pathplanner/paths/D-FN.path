@@ -47,14 +47,20 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "HOLD_ALGAE",
+      "name": "STOP_ROLLERS",
       "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
+      "name": "HOLD_ALGAE",
+      "waypointRelativePos": 0.17960963455149503,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
       "name": "PRE_NET",
-      "waypointRelativePos": 0.30445390365448494,
+      "waypointRelativePos": 0.3693287998338871,
       "endWaypointRelativePos": null,
       "command": null
     }

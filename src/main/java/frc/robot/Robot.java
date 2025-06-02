@@ -176,7 +176,7 @@ public class Robot {
 			.asProxy();
 		Supplier<Command> algaeRemoveCommand = () -> robotCommander.getSuperstructure()
 			.softCloseNetToHoldAlgae()
-			.andThen(robotCommander.getSuperstructure().algaeRemove().withTimeout(2.5))
+			.andThen(robotCommander.getSuperstructure().algaeRemove().withTimeout(1.5))
 			.asProxy();
 		Supplier<Command> netCommand = () -> robotCommander.getSuperstructure().netWithRelease().asProxy();
 
@@ -204,6 +204,7 @@ public class Robot {
 		);
 		new EventTrigger("PRE_NET").onTrue(robotCommander.getSuperstructure().netWithoutRelease());
 		new EventTrigger("HOLD_ALGAE").onTrue(robotCommander.getSuperstructure().holdAlgae());
+		new EventTrigger("STOP_ROLLERS").onTrue(robotCommander.getSuperstructure().algaeRemoveWithKeepRollers());
 
 		this.preBuiltAutosChooser = new AutonomousChooser(
 			"PreBuiltAutos",

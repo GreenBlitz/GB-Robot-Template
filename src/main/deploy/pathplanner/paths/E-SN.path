@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.615192780671296,
-        "y": 7.278017578125
+        "x": 5.813725043402777,
+        "y": 7.239700882523147
       },
       "isLocked": false,
       "linkedName": "SIDE-E"
@@ -20,8 +20,8 @@
         "y": 6.133
       },
       "prevControl": {
-        "x": 6.255772540509258,
-        "y": 6.328310329861111
+        "x": 5.253416160300925,
+        "y": 6.962865668402778
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,8 +33,14 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "HOLD_ALGAE",
+      "name": "STOP_ROLLERS",
       "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "HOLD_ALGAE",
+      "waypointRelativePos": 0.10639015780730893,
       "endWaypointRelativePos": null,
       "command": null
     },

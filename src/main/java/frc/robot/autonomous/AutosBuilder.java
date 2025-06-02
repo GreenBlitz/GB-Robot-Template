@@ -331,7 +331,7 @@ public class AutosBuilder {
 					robot.getRobotCommander().getSuperstructure().algaeRemove().asProxy(),
 					PathFollowingCommandsBuilder
 						.moveToPoseByPID(robot, ScoringHelpers.getAlgaeRemovePose(), SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW))
-				).withTimeout(1.5),
+				).withTimeout(1),
 				createAutoFromAutoPath(
 					AutoPath.ALGAE_REMOVE_D_TO_FIRST_NET,
 					pathPlannerPath -> PathFollowingCommandsBuilder

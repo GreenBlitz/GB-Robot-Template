@@ -4,7 +4,7 @@ import frc.robot.vision.VisionConstants;
 import frc.robot.vision.data.VisionData;
 import frc.robot.vision.sources.VisionSource;
 import frc.utils.Filter;
-import org.littletonrobotics.junction.Logger;
+import frc.utils.logger.threadlogger.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;

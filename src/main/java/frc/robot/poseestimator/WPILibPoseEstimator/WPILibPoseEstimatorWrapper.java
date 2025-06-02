@@ -13,7 +13,7 @@ import frc.robot.subsystems.GBSubsystem;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.data.VisionData;
 import frc.utils.time.TimeUtil;
-import org.littletonrobotics.junction.Logger;
+import frc.utils.logger.threadlogger.Logger;
 
 import java.util.List;
 import java.util.Optional;

@@ -21,7 +21,7 @@ import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
 import frc.utils.time.TimeUtil;
-import org.littletonrobotics.junction.Logger;
+import frc.utils.logger.threadlogger.Logger;
 
 import java.util.Arrays;
 import java.util.Optional;

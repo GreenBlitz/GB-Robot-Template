@@ -24,7 +24,7 @@ import frc.robot.subsystems.GBSubsystem;
 import frc.utils.alerts.Alert;
 import frc.utils.math.ToleranceMath;
 import org.json.simple.parser.ParseException;
-import org.littletonrobotics.junction.Logger;
+import frc.utils.logger.threadlogger.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -61,8 +61,10 @@ public class PathPlannerUtil {
 	}
 
 	public static void setupPathPlannerLogging() {
+		// TODO: use the newer logger
 		PathPlannerLogging.setLogActivePathCallback(
-			activePath -> Logger.recordOutput(AutonomousConstants.LOG_PATH_PREFIX + "/ActivePath", activePath.toArray(Pose2d[]::new))
+			activePath -> org.littletonrobotics.junction.Logger
+				.recordOutput(AutonomousConstants.LOG_PATH_PREFIX + "/ActivePath", activePath.toArray(Pose2d[]::new))
 		);
 		PathPlannerLogging
 			.setLogTargetPoseCallback(targetPose -> Logger.recordOutput(AutonomousConstants.LOG_PATH_PREFIX + "/TargetPose", targetPose));

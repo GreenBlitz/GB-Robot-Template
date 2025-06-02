@@ -17,7 +17,7 @@ import frc.utils.time.TimeUtil;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
 import frc.utils.brakestate.BrakeStateManager;
-import org.littletonrobotics.junction.Logger;
+import frc.utils.logger.threadlogger.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the TimedRobot

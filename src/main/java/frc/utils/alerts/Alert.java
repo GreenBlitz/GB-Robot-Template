@@ -3,7 +3,7 @@ package frc.utils.alerts;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.utils.DriverStationUtil;
 import frc.utils.time.TimeUtil;
-import org.littletonrobotics.junction.Logger;
+import frc.utils.logger.threadlogger.Logger;
 
 public class Alert {
 

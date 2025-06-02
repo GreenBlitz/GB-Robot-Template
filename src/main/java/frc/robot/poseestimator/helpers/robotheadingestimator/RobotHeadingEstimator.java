@@ -8,7 +8,7 @@ import frc.utils.math.PoseEstimationMath;
 import frc.utils.buffers.RingBuffer.RingBuffer;
 import frc.utils.TimedValue;
 import frc.utils.math.AngleMath;
-import org.littletonrobotics.junction.Logger;
+import frc.utils.logger.threadlogger.Logger;
 
 import java.util.Optional;
 

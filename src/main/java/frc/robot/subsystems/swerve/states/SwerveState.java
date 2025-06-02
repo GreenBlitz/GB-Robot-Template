@@ -2,7 +2,7 @@ package frc.robot.subsystems.swerve.states;
 
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.robot.subsystems.swerve.states.heading.HeadingControl;
-import org.littletonrobotics.junction.Logger;
+import frc.utils.logger.threadlogger.Logger;
 
 public class SwerveState {
 

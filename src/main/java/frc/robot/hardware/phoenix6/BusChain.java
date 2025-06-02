@@ -5,7 +5,7 @@ import com.ctre.phoenix6.CANBus;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
-import org.littletonrobotics.junction.Logger;
+import frc.utils.logger.threadlogger.Logger;
 import com.ctre.phoenix6.CANBus.CANBusStatus;
 
 public enum BusChain {

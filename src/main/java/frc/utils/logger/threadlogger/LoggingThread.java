@@ -1,6 +1,5 @@
 package frc.utils.logger.threadlogger;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.util.WPISerializable;
 import frc.utils.logger.ILogger;
 

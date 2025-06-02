@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
 
@@ -27,8 +26,9 @@ public class Modules {
 		for (Module currentModule : modules) {
 			currentModule.updateInputs();
 		}
-		Logger.recordOutput(logPath + "/CurrentStates", getCurrentStates());
-		Logger.recordOutput(logPath + "/TargetStates", getTargetStates());
+		// TODO: use the new logger
+		org.littletonrobotics.junction.Logger.recordOutput(logPath + "/CurrentStates", getCurrentStates());
+		org.littletonrobotics.junction.Logger.recordOutput(logPath + "/TargetStates", getTargetStates());
 	}
 
 

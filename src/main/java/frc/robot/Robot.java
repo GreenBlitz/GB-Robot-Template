@@ -174,11 +174,11 @@ public class Robot {
 			.softCloseL4()
 			.andThen(robotCommander.getSuperstructure().intake().withTimeout(AutonomousConstants.INTAKING_TIMEOUT_SECONDS))
 			.asProxy();
-		Supplier<Command> algaeRemoveCommand = () -> robotCommander.getSuperstructure().algaeRemove().withTimeout(2.5).asProxy();
-		Supplier<Command> netCommand = () -> robotCommander.getSuperstructure()
-			.netWithRelease()
-			.andThen(robotCommander.getSuperstructure().softCloseNet())
+		Supplier<Command> algaeRemoveCommand = () -> robotCommander.getSuperstructure()
+			.softCloseNetToHoldAlgae()
+			.andThen(robotCommander.getSuperstructure().algaeRemove().withTimeout(2.5))
 			.asProxy();
+		Supplier<Command> netCommand = () -> robotCommander.getSuperstructure().netWithRelease().asProxy();
 
 		swerve.configPathPlanner(
 			poseEstimator::getEstimatedPose,

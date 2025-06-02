@@ -20,8 +20,8 @@
         "y": 2.8793
       },
       "prevControl": {
-        "x": 6.070376712328767,
-        "y": 0.6592465753424657
+        "x": 6.7910337094907405,
+        "y": 0.19810546874999924
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,14 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "SOFT_CLOSE_NET",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.8,
     "maxAcceleration": 3.5,

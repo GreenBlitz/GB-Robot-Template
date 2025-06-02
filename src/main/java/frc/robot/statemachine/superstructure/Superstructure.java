@@ -330,6 +330,18 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
+	public Command softCloseNetToHoldAlgae() {
+		return softClose(
+			"Net",
+			ArmState.MID_WAY_CLOSE,
+			ArmState.HOLD_ALGAE,
+			ElevatorState.NET,
+			ElevatorState.HOLD_ALGAE,
+			0.6,
+			Rotation2d.fromDegrees(45)
+		);
+	}
+
 	private Command softClose(
 		String name,
 		ArmState notTouchingField,

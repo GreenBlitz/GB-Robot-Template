@@ -309,7 +309,6 @@ public class AutosBuilder {
 
 	private static Command autoBalls(Robot robot, Supplier<Command> algaeRemoveCommand, Supplier<Command> netCommand, Pose2d tolerance) {
 		PathPlannerPath path = getAutoScorePath(Branch.H, robot);
-		double distanceBehindReefMeters = 0.5;
 		Pose2d backOffPose = Field.getAllianceRelative(
 			Field.getReefSideMiddle(Branch.H.getReefSide()).plus(new Transform2d(-1, 0, new Rotation2d())),
 			false,
@@ -329,7 +328,7 @@ public class AutosBuilder {
 						&& robot.getElevator().isAtPosition(ElevatorState.HOLD_ALGAE.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
 				),
 				new ParallelCommandGroup(
-					algaeRemoveCommand.get(),
+					robot.getRobotCommander().getSuperstructure().algaeRemove().asProxy(),
 					PathFollowingCommandsBuilder
 						.moveToPoseByPID(robot, ScoringHelpers.getAlgaeRemovePose(), SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW))
 				).withTimeout(1.5),

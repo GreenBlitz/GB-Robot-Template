@@ -49,19 +49,19 @@ public final class Logger {
         }
     }
 
-    public static void log(String logPath, double data) {
+    public static void recordOutput(String logPath, double data) {
         logMap(doubleData, doubleLock, logPath, data);
     }
 
-    public static void log(String logPath, int data) {
+    public static void recordOutput(String logPath, int data) {
         logMap(integerData, integerLock, logPath, data);
     }
 
-    public static void log(String logPath, double[] data) {
+    public static void recordOutput(String logPath, double[] data) {
         logMap(doubleArrayData, doubleArrayLock, logPath, data);
     }
 
-    public static void log(String logPath, WPISerializable data) {
+    public static void recordOutput(String logPath, WPISerializable data) {
         logMap(wpilibObjectsData, wpilibObjectsLock, logPath, data);
     }
 

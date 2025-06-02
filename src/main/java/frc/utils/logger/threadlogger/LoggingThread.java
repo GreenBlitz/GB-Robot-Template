@@ -6,7 +6,7 @@ import frc.utils.logger.ILogger;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 
-public class LoggingThread extends Thread {
+public final class LoggingThread extends Thread {
 
 
     public static int NORM_PRIORITY = 2;
@@ -20,13 +20,6 @@ public class LoggingThread extends Thread {
         super(threadGroup, name);
     }
 
-    @Override
-    public void run() {
-        while (this.isAlive() && !Thread.currentThread().isInterrupted()) {
-            this.log();
-        }
-    }
-
     // One time object creation for each type of logger, instead of recreating them every time log() is called. Improves performance.
     ILogger<Integer> integerLogger = org.littletonrobotics.junction.Logger::recordOutput;
     ILogger<Double> doubleLogger = org.littletonrobotics.junction.Logger::recordOutput;
@@ -34,7 +27,7 @@ public class LoggingThread extends Thread {
     ILogger<WPISerializable> wpilibObjectsLogger = org.littletonrobotics.junction.Logger::recordOutput;
 
     private void log() {
-        org.littletonrobotics.junction.Logger.recordOutput(LoggerConstants.FATHER_LOG_PATH + "FailedLogsCount", Logger.failedLogsCount.get());
+        org.littletonrobotics.junction.Logger.recordOutput(LoggerConstants.ROOT_LOG_PATH + "FailedLogsCount", Logger.failedLogsCount.get());
         log(Logger.integerData, Logger.integerLock, integerLogger);
         log(Logger.doubleData, Logger.doubleLock, doubleLogger);
         log(Logger.doubleArrayData, Logger.doubleArrayLock, doubleArrayLogger);
@@ -45,7 +38,7 @@ public class LoggingThread extends Thread {
         if (lock.readLock().tryLock()) {
             try {
                 for (String logPath : map.keySet()) {
-                    logger.log(logPath, map.get(logPath));
+                    logger.log(LoggerConstants.ROOT_LOG_PATH + logPath, map.get(logPath));
                 }
             } finally {
                 lock.readLock().unlock();
@@ -55,6 +48,21 @@ public class LoggingThread extends Thread {
             // This prevents blocking the main thread if the lock is held by another thread.
             Logger.failedLogsCount.incrementAndGet();
         }
+    }
+
+    @Override
+    public void run() {
+        super.run();
+        while (this.isAlive() && !Thread.currentThread().isInterrupted()) {
+            this.log();
+        }
+    }
+
+    @Override
+    public void interrupt() {
+        super.interrupt();
+        // ensure any resources the thread might have created are cleaned up
+        // right now there are no resources to clean up, but I left this here for future-proofing
     }
 
 }

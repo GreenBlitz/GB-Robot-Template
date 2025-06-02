@@ -202,12 +202,7 @@ public class Robot {
 		new EventTrigger("ARM_PRE_SCORE").onTrue(
 			robotCommander.getSuperstructure().armPreScore().alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.MOVE_TO_POSE))
 		);
-		new EventTrigger("PRE_NET").onTrue(robotCommander.getSuperstructure().netWithoutRelease()
-		/*
-		 * .until(robotCommander::isReadyForNetForAuto) .andThen(robotCommander.getSuperstructure().netWithRelease())
-		 * .andThen(robotCommander.getSuperstructure().softCloseNet())
-		 */
-		);
+		new EventTrigger("PRE_NET").onTrue(robotCommander.getSuperstructure().netWithoutRelease());
 		new EventTrigger("HOLD_ALGAE").onTrue(robotCommander.getSuperstructure().holdAlgae());
 
 		this.preBuiltAutosChooser = new AutonomousChooser(

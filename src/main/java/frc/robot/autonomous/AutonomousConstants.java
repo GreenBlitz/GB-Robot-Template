@@ -95,7 +95,7 @@ public class AutonomousConstants {
 		public static final Pair<String, Pose2d> ALGAE_REMOVE_E = Pair.of("E", ScoringHelpers.getAlgaeRemovePose(ReefSide.E));
 
 		public static final Pair<String, Pose2d> FIRST_NET = Pair
-			.of("FN", new Pose2d(7.728, 5.064, Rotation2d.fromDegrees(0)) /* new Pose2d(9.83, 2.99, Rotation2d.fromDegrees(0)) */);
+			.of("FN", new Pose2d(7.728, 5.064, Rotation2d.fromDegrees(0)));
 
 		public static final Pair<String, Pose2d> SECOND_NET = Pair.of("SN", new Pose2d(7.728, 6.133, Rotation2d.fromDegrees(0)));
 

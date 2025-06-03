@@ -32,9 +32,13 @@ public class ObjectDetectionMath {
 		Pose3d cameraPose,
 		double centerOfObjectHeightMeters
 	) {
-		Translation2d yawAndPitch = correctForCameraRoll(cameraRelativeYaw, cameraRelativePitch, cameraPose);
-		double xDistance = getRobotRelativeXAxisDistance(cameraRelativePitch, cameraPose, centerOfObjectHeightMeters);
-		double yDistance = getRobotRelativeYAxisDistance(cameraRelativeYaw, cameraPose, xDistance);
+		Translation2d correctedYawAndPitch = correctForCameraRoll(cameraRelativeYaw, cameraRelativePitch, cameraPose);
+		double xDistance = getRobotRelativeXAxisDistance(
+			Rotation2d.fromRadians(correctedYawAndPitch.getY()),
+			cameraPose,
+			centerOfObjectHeightMeters
+		);
+		double yDistance = getRobotRelativeYAxisDistance(Rotation2d.fromRadians(correctedYawAndPitch.getX()), cameraPose, xDistance);
 		return new Translation2d(xDistance, yDistance);
 	}
 

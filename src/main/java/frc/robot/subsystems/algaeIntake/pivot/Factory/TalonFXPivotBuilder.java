@@ -29,8 +29,8 @@ public class TalonFXPivotBuilder {
 	private static final boolean SIMULATE_GRAVITY = false;
 	private static final double DEFAULT_ARBITRARY_FEED_FORWARD = 0;
 	private static final boolean ENABLE_FOC = false;
-	private static final double KP = 1;
-	private static final double KG = 1;
+	private static final double KP = 500;
+	private static final double KG = 0;
 
 	private static TalonFXMotor generateMotor(String logPath) {
 		SingleJointedArmSimulation sim = new SingleJointedArmSimulation(

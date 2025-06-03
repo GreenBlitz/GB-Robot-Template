@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public enum PivotState {
 
 	CLOSED(Rotation2d.fromDegrees(110)),
-	INTAKE(Rotation2d.fromDegrees(0)),
+	INTAKE(Rotation2d.fromDegrees(10)),
 	TRANSFER_TO_END_EFFECTOR(Rotation2d.fromDegrees(100)),
 	OUTTAKE(Rotation2d.fromDegrees(0)),
 	STAY_IN_PLACE(null);

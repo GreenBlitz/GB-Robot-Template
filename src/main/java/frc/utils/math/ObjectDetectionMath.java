@@ -26,7 +26,7 @@ public class ObjectDetectionMath {
 		return cameraRelativeDistance + cameraPose.getY();
 	}
 
-	public static Translation2d cameraRelativeYawAndPitchToRobotRelativePose(
+	public static Translation2d cameraRollRelativeYawAndPitchToRobotRelativePose(
 		Rotation2d cameraRelativeYaw,
 		Rotation2d cameraRelativePitch,
 		Pose3d cameraPose,

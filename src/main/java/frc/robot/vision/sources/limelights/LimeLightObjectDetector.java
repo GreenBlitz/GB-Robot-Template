@@ -69,12 +69,12 @@ public class LimeLightObjectDetector implements ObjectDetector {
 
 		Rotation2d cameraRelativeYaw = Rotation2d.fromDegrees(entryArray[firstCell + 1]);
 		Rotation2d cameraRelativePitch = Rotation2d.fromDegrees(entryArray[firstCell + 2]);
-		Translation2d rootRelativeObjectPose = ObjectDetectionMath
-			.cameraRelativeYawAndPitchToRobotRelativePose(cameraRelativeYaw, cameraRelativePitch, cameraPose, 0.203);
+		Translation2d robotRelativeObjectPose = ObjectDetectionMath
+			.cameraRollRelativeYawAndPitchToRobotRelativePose(cameraRelativeYaw, cameraRelativePitch, cameraPose, 0.203);
 
 		double timeStamp = 100;
 
-		return new ObjectData(rootRelativeObjectPose, objectType, timeStamp);
+		return new ObjectData(robotRelativeObjectPose, objectType, timeStamp);
 	}
 
 	private ObjectData closestObjectEntriesToObjectData(
@@ -89,7 +89,7 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		Rotation2d cameraRelativeYaw = Rotation2d.fromDegrees(txEntry.getDouble(0));
 		Rotation2d cameraRelativePitch = Rotation2d.fromDegrees(tyEntry.getDouble(0));
 		Translation2d robotRelativeObjectPose = ObjectDetectionMath
-			.cameraRelativeYawAndPitchToRobotRelativePose(cameraRelativeYaw, cameraRelativePitch, cameraPose, 0.203);
+			.cameraRollRelativeYawAndPitchToRobotRelativePose(cameraRelativeYaw, cameraRelativePitch, cameraPose, 0.203);
 
 		double totalLatency = pipelineLatencyEntry.getDouble(0) + captureLatencyEntry.getDouble(0);
 		double timeStamp = TimeUtil.getCurrentTimeSeconds() - totalLatency;

@@ -10,6 +10,7 @@ import frc.robot.vision.data.ObjectData;
 import frc.robot.vision.sources.ObjectDetector;
 import frc.utils.Filter;
 import frc.utils.math.ObjectDetectionMath;
+import frc.utils.time.TimeUtil;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -25,6 +26,12 @@ public class LimeLightObjectDetector implements ObjectDetector {
 	private ArrayList<ObjectData> detectedObjects;
 
 	private final NetworkTableEntry allObjectsEntry;
+	private final NetworkTableEntry doesTargetExistEntry;
+	private final NetworkTableEntry closestObjectTxEntry;
+	private final NetworkTableEntry closestObjectTyEntry;
+	private final NetworkTableEntry closestObjectClassificationEntry;
+	private final NetworkTableEntry closestObjectPipelineLatencyEntry;
+	private final NetworkTableEntry closestObjectCaptureLatencyEntry;
 
 	public LimeLightObjectDetector(String logPath, String cameraNetworkTablesName, String detectorName, Pose3d cameraPose) {
 		this.logPath = logPath;
@@ -33,6 +40,16 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		this.cameraPose = cameraPose;
 
 		allObjectsEntry = getLimelightNetworkTableEntry("rawdetections");
+		doesTargetExistEntry = getLimelightNetworkTableEntry("tv");
+		closestObjectTxEntry = getLimelightNetworkTableEntry("tx");
+		closestObjectTyEntry = getLimelightNetworkTableEntry("ty");
+		closestObjectClassificationEntry = getLimelightNetworkTableEntry("tdclass");
+		closestObjectPipelineLatencyEntry = getLimelightNetworkTableEntry("tl");
+		closestObjectCaptureLatencyEntry = getLimelightNetworkTableEntry("cl");
+	}
+
+	protected NetworkTableEntry getLimelightNetworkTableEntry(String entryName) {
+		return NetworkTableInstance.getDefault().getTable(cameraNetworkTablesName).getEntry(entryName);
 	}
 
 	private ArrayList<ObjectData> objectsEntryToObjectDataArray(NetworkTableEntry allObjectsEntry, ArrayList<ObjectData> detectedObjects) {
@@ -61,12 +78,26 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		return new ObjectData(cameraRelativeObjectPose, objectType, timeStamp);
 	}
 
-	protected NetworkTableEntry getLimelightNetworkTableEntry(String entryName) {
-		return NetworkTableInstance.getDefault().getTable(cameraNetworkTablesName).getEntry(entryName);
-	}
+	private ObjectData closestObjectEntriesToObjectData(
+		NetworkTableEntry txEntry,
+		NetworkTableEntry tyEntry,
+		NetworkTableEntry classificationEntry,
+		NetworkTableEntry pipelineLatencyEntry,
+		NetworkTableEntry captureLatencyEntry
+	) {
+		Rotation2d cameraRelativeYaw = Rotation2d.fromDegrees(txEntry.getDouble(0));
+		Rotation2d cameraRelativePitch = Rotation2d.fromDegrees(tyEntry.getDouble(0));
+		double xAxisDistance = ObjectDetectionMath.getCameraRelativeXAxisDistance(cameraRelativePitch, cameraPose);
+		double yAxisDistance = ObjectDetectionMath.getCameraRelativeYAxisDistance(cameraRelativeYaw, cameraPose, xAxisDistance);
+		Translation2d cameraRelativeObjectPose = new Translation2d(xAxisDistance, yAxisDistance);
 
-	@Override
-	public void update() {}
+		String objectType = classificationEntry.getString("none");
+
+		double totalLatency = pipelineLatencyEntry.getDouble(0) + captureLatencyEntry.getDouble(0);
+		double timeStamp = TimeUtil.getCurrentTimeSeconds() - totalLatency;
+
+		return new ObjectData(cameraRelativeObjectPose, objectType, timeStamp);
+	}
 
 	@Override
 	public ArrayList<ObjectData> getAllObjectData() {
@@ -75,13 +106,22 @@ public class LimeLightObjectDetector implements ObjectDetector {
 
 	@Override
 	public Optional<ObjectData> getClosestObjectData() {
+		if (doesTargetExistEntry.getInteger(0) == 1) {
+			return Optional.of(
+				closestObjectEntriesToObjectData(
+					closestObjectTxEntry,
+					closestObjectTyEntry,
+					closestObjectClassificationEntry,
+					closestObjectPipelineLatencyEntry,
+					closestObjectCaptureLatencyEntry
+				)
+			);
+		}
 		return Optional.empty();
 	}
 
 	@Override
-	public Optional<ObjectData> getFilteredClosestObjectData() {
-		return Optional.empty();
-	}
+	public void update() {}
 
 	@Override
 	public void setFilter(Filter<? super ObjectData> newFilter) {

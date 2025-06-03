@@ -6,12 +6,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 public class ObjectDetectionMath {
 
-	public static Translation2d pixelsToPitchAndYaw(Translation2d pose) {
-		double yaw = pose.getX();
-		double pitch = pose.getY();
-		return new Translation2d(yaw, pitch);
-	}
-
 	public static Translation2d correctForCameraRoll(Translation2d pitchAndYaw, Pose3d cameraPose) {
 		double roll = cameraPose.getRotation().getX();
 		pitchAndYaw.rotateBy(Rotation2d.fromRadians(-roll));

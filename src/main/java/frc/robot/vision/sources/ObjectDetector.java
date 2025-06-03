@@ -39,10 +39,10 @@ public interface ObjectDetector {
 	default ObjectData getClosestFilteredObjectData() {
 		ArrayList<ObjectData> allFilteredObjectData = getAllFilteredObjectData();
 		ObjectData closestObject = allFilteredObjectData.get(0);
-		double minDistance = allFilteredObjectData.get(0).getEstimatedPose().toPose2d().getTranslation().getNorm();
+		double minDistance = allFilteredObjectData.get(0).getEstimatedPose().getNorm();
 
 		for (ObjectData objectData : allFilteredObjectData) {
-			double distance = objectData.getEstimatedPose().toPose2d().getTranslation().getNorm();
+			double distance = objectData.getEstimatedPose().getNorm();
 			if (distance < minDistance) {
 				minDistance = distance;
 				closestObject = objectData;

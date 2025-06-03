@@ -12,6 +12,8 @@ public interface ObjectDetector {
 
 	Optional<ObjectData> getClosestObjectData();
 
+	void log();
+
 	void update();
 
 	void setFilter(Filter<? super ObjectData> newFilter);

@@ -65,17 +65,16 @@ public class LimeLightObjectDetector implements ObjectDetector {
 	}
 
 	private ObjectData objectsEntryArrayToObjectData(double[] entryArray, int firstCell) {
+		String objectType = "AAAAAAAAAAAA";
+
 		Rotation2d cameraRelativeYaw = Rotation2d.fromDegrees(entryArray[firstCell + 1]);
 		Rotation2d cameraRelativePitch = Rotation2d.fromDegrees(entryArray[firstCell + 2]);
-		double xAxisDistance = ObjectDetectionMath.getCameraRelativeXAxisDistance(cameraRelativePitch, cameraPose);
-		double yAxisDistance = ObjectDetectionMath.getCameraRelativeYAxisDistance(cameraRelativeYaw, cameraPose, xAxisDistance);
-		Translation2d cameraRelativeObjectPose = new Translation2d(xAxisDistance, yAxisDistance);
-
-		String objectType = "AAAAAAAAAAAA";
+		Translation2d rootRelativeObjectPose = ObjectDetectionMath
+			.cameraRelativeYawAndPitchToRobotRelativePose(cameraRelativeYaw, cameraRelativePitch, cameraPose, 0.203);
 
 		double timeStamp = 100;
 
-		return new ObjectData(cameraRelativeObjectPose, objectType, timeStamp);
+		return new ObjectData(rootRelativeObjectPose, objectType, timeStamp);
 	}
 
 	private ObjectData closestObjectEntriesToObjectData(
@@ -85,18 +84,17 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		NetworkTableEntry pipelineLatencyEntry,
 		NetworkTableEntry captureLatencyEntry
 	) {
+		String objectType = classificationEntry.getString("none");
+
 		Rotation2d cameraRelativeYaw = Rotation2d.fromDegrees(txEntry.getDouble(0));
 		Rotation2d cameraRelativePitch = Rotation2d.fromDegrees(tyEntry.getDouble(0));
-		double xAxisDistance = ObjectDetectionMath.getCameraRelativeXAxisDistance(cameraRelativePitch, cameraPose);
-		double yAxisDistance = ObjectDetectionMath.getCameraRelativeYAxisDistance(cameraRelativeYaw, cameraPose, xAxisDistance);
-		Translation2d cameraRelativeObjectPose = new Translation2d(xAxisDistance, yAxisDistance);
-
-		String objectType = classificationEntry.getString("none");
+		Translation2d robotRelativeObjectPose = ObjectDetectionMath
+			.cameraRelativeYawAndPitchToRobotRelativePose(cameraRelativeYaw, cameraRelativePitch, cameraPose, 0.203);
 
 		double totalLatency = pipelineLatencyEntry.getDouble(0) + captureLatencyEntry.getDouble(0);
 		double timeStamp = TimeUtil.getCurrentTimeSeconds() - totalLatency;
 
-		return new ObjectData(cameraRelativeObjectPose, objectType, timeStamp);
+		return new ObjectData(robotRelativeObjectPose, objectType, timeStamp);
 	}
 
 	@Override
@@ -119,6 +117,9 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		}
 		return Optional.empty();
 	}
+
+	@Override
+	public void log() {}
 
 	@Override
 	public void update() {}

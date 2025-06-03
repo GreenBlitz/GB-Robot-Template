@@ -7,7 +7,8 @@ public enum PivotState {
 	CLOSED(Rotation2d.fromDegrees(110)),
 	INTAKE(Rotation2d.fromDegrees(0)),
 	TRANSFER_TO_END_EFFECTOR(Rotation2d.fromDegrees(100)),
-	OUTTAKE(Rotation2d.fromDegrees(0));
+	OUTTAKE(Rotation2d.fromDegrees(0)),
+	STAY_IN_PLACE(null);
 
 	private final Rotation2d position;
 

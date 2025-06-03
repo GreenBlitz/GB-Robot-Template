@@ -321,7 +321,7 @@ public class AutosBuilder {
 			autoScoreToChosenBranch(robot, path),
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
-					robot.getRobotCommander().getSuperstructure().holdAlgae().asProxy(),
+					robot.getRobotCommander().getSuperstructure().algaeRemove().asProxy(),
 					PathFollowingCommandsBuilder.moveToPoseByPID(robot, backOffPose, SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW))
 				).until(
 					() -> PoseUtil.isAtPose(robot.getPoseEstimator().getEstimatedPose(), backOffPose, tolerance, "backOffPose")

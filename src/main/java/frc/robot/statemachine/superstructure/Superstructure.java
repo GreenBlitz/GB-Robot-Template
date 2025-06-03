@@ -393,20 +393,20 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command algaeRemoveWithKeepRollers(){
+	public Command algaeRemoveWithKeepRollers() {
 		return asSubsystemCommand(
-				new DeferredCommand(
-						() -> new SequentialCommandGroup(
-								new ParallelCommandGroup(
-										elevatorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getElevatorState()),
-										armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getArmState()),
-										endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
-										climbStateHandler.setState(ClimbState.STOP)
-								)
-						),
-						Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector(), robot.getLifter(), robot.getSolenoid())
+			new DeferredCommand(
+				() -> new SequentialCommandGroup(
+					new ParallelCommandGroup(
+						elevatorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getElevatorState()),
+						armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getArmState()),
+						endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
+						climbStateHandler.setState(ClimbState.STOP)
+					)
 				),
-				SuperstructureState.ALGAE_REMOVE
+				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector(), robot.getLifter(), robot.getSolenoid())
+			),
+			SuperstructureState.ALGAE_REMOVE
 		);
 	}
 
@@ -497,7 +497,7 @@ public class Superstructure extends GBSubsystem {
 			new SequentialCommandGroup(
 				new ParallelDeadlineGroup(
 					new SequentialCommandGroup(
-						endEffectorStateHandler.setState(EndEffectorState.DEFAULT).until(this::isReadyForNetRelease),
+						endEffectorStateHandler.setState(EndEffectorState.DEFAULT), // .until(this::isReadyForNetRelease),
 						endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE)
 							.withTimeout(StateMachineConstants.NET_OUTTAKE_TIME_SECONDS)
 					),

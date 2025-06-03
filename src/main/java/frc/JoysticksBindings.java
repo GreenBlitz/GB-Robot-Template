@@ -169,11 +169,12 @@ public class JoysticksBindings {
 			RobotState state = robotCommander.getCurrentState();
 			Command command;
 
-			if (state == RobotState.NET || state == RobotState.PRE_NET) {
-				command = robotCommander.setState(RobotState.NET);
-			} else {
-				command = robotCommander.completeNet();
-			}
+//			if (state == RobotState.NET || state == RobotState.PRE_NET) {
+			command = robotCommander.setState(RobotState.NET);
+//			}
+//			else {
+//				command = robotCommander.completeNet();
+//			}
 			command.schedule();
 		});
 	}

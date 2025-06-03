@@ -29,6 +29,7 @@ public class AlgaeIntakeStateHandler {
 			case INTAKE -> intake();
 			case TRANSFER_TO_END_EFFECTOR -> transferToEndEffector();
 			case OUTTAKE -> outtake();
+			case STAY_IN_PLACE -> null;
 		};
 	}
 
@@ -50,6 +51,10 @@ public class AlgaeIntakeStateHandler {
 
 	private Command outtake() {
 		return new ParallelCommandGroup(pivotStateHandler.setState(PivotState.OUTTAKE), rollersStateHandler.setState(RollersState.OUTTAKE));
+	}
+
+	private Command stayInPlace() {
+		return new ParallelCommandGroup(pivotStateHandler.setState(PivotState.STAY_IN_PLACE), rollersStateHandler.setState(RollersState.IDLE));
 	}
 
 }

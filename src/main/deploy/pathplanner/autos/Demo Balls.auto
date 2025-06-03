@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "DToNet"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "NetToE"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "EMidNet"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MidNetC"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CToNet"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

@@ -8,9 +8,15 @@ import java.util.Optional;
 
 public interface ObjectDetector {
 
+	ArrayList<ObjectData> getAllObjectData();
+
+	Optional<ObjectData> getClosestObjectData();
+
 	void update();
 
-	ArrayList<ObjectData> getAllObjectData();
+	void setFilter(Filter<? super ObjectData> newFilter);
+
+	Filter<? super ObjectData> getFilter();
 
 	private Optional<ObjectData> filterObjectData(ObjectData objectData) {
 		if (getFilter().apply(objectData)) {
@@ -51,15 +57,9 @@ public interface ObjectDetector {
 		return closestObject;
 	}
 
-	Optional<ObjectData> getClosestObjectData();
-
 	default Optional<ObjectData> getFilteredClosestObjectData() {
 		return filterObjectData(getClosestObjectData());
 	}
-
-	void setFilter(Filter<? super ObjectData> newFilter);
-
-	Filter<? super ObjectData> getFilter();
 
 	default void clearFilter() {
 		setFilter(Filter.nonFilteringFilter());

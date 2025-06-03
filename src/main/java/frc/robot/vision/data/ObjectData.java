@@ -8,7 +8,6 @@ public class ObjectData {
 	private final String objectType;
 	private final double timestamp;
 
-
 	public ObjectData(Translation2d estimatedPose, String objectType, double timestamp) {
 		this.estimatedPose = estimatedPose;
 		this.objectType = objectType;

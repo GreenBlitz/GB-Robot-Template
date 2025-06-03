@@ -61,6 +61,8 @@ public class RobotManager extends LoggedRobot {
 				.withTimeout(LEDConstants.CORAL_IN_BLINK_TIME_SECONDS)
 				.onlyIf(robot.getRobotCommander().getSuperstructure()::isCoralIn)
 				.ignoringDisable(true)
+				
+				
 		);
 
 		Trigger climbSwitchPressed = new Trigger(() -> robot.getSolenoid().isAtLimitSwitch());

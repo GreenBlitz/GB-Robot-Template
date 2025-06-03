@@ -29,7 +29,7 @@ public class AlgaeIntakeStateHandler {
 			case INTAKE -> intake();
 			case TRANSFER_TO_END_EFFECTOR -> transferToEndEffector();
 			case OUTTAKE -> outtake();
-			case STAY_IN_PLACE -> null;
+			case STAY_IN_PLACE -> stayInPlace();
 		};
 	}
 

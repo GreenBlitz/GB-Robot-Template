@@ -24,6 +24,7 @@ public class AlgaeIntakeStateHandler {
 	}
 
 	public Command setState(AlgaeIntakeState state) {
+		currentState = state;
 		return switch (state) {
 			case CLOSED -> close();
 			case INTAKE -> intake();

@@ -10,7 +10,6 @@ public class Rollers extends GBSubsystem {
 
 	private final ControllableMotor rollers;
 
-	private final IRequest<Rotation2d> velocityRequest;
 	private final IRequest<Double> voltageRequest;
 
 	private final InputSignal<Rotation2d> velocitySignal;
@@ -22,7 +21,6 @@ public class Rollers extends GBSubsystem {
 	public Rollers(
 		String logPath,
 		ControllableMotor rollers,
-		IRequest<Rotation2d> velocityRequest,
 		IRequest<Double> voltageRequest,
 		InputSignal<Rotation2d> velocitySignal,
 		InputSignal<Double> voltageSignal,
@@ -32,16 +30,17 @@ public class Rollers extends GBSubsystem {
 
 		this.rollers = rollers;
 
-		this.velocityRequest = velocityRequest;
 		this.voltageRequest = voltageRequest;
 
 		this.velocitySignal = velocitySignal;
 		this.voltageSignal = voltageSignal;
 		this.currentSignal = currentSignal;
 
+		this.commandsBuilder = new RollersCommandsBuilder(this);
+
 		periodic();
 
-		this.commandsBuilder = new RollersCommandsBuilder(this);
+		setDefaultCommand(commandsBuilder.stop());
 	}
 
 	public RollersCommandsBuilder getCommandsBuilder() {
@@ -66,8 +65,8 @@ public class Rollers extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		rollers.updateInputs(velocitySignal, voltageSignal, currentSignal);
 		rollers.updateSimulation();
+		rollers.updateInputs(velocitySignal, voltageSignal, currentSignal);
 	}
 
 	public void setBrake(boolean brake) {
@@ -80,10 +79,6 @@ public class Rollers extends GBSubsystem {
 
 	protected void stop() {
 		setPower(0);
-	}
-
-	protected void setTargetVelocity(Rotation2d targetVelocityMPS) {
-		rollers.applyRequest(velocityRequest.withSetPoint(targetVelocityMPS));
 	}
 
 	protected void setVoltage(double voltage) {

@@ -8,7 +8,6 @@ import frc.robot.subsystems.GBSubsystem;
 
 public class Pivot extends GBSubsystem {
 
-
 	private final ControllableMotor pivot;
 
 	private final IRequest<Rotation2d> positionRequest;
@@ -34,9 +33,11 @@ public class Pivot extends GBSubsystem {
 		this.positionSignal = positionSignal;
 		this.voltageSignal = voltageSignal;
 
+		this.commandsBuilder = new PivotCommandsBuilder(this);
+
 		periodic();
 
-		this.commandsBuilder = new PivotCommandsBuilder(this);
+		setDefaultCommand(commandsBuilder.stayInPlace());
 	}
 
 	public PivotCommandsBuilder getCommandsBuilder() {
@@ -61,8 +62,8 @@ public class Pivot extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		pivot.updateInputs(positionSignal, voltageSignal);
 		pivot.updateSimulation();
+		pivot.updateInputs(positionSignal, voltageSignal);
 	}
 
 	public void setBrake(boolean brake) {

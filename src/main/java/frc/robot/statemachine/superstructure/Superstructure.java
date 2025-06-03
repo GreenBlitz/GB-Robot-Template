@@ -13,6 +13,7 @@ import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.StateMachineConstants;
 import frc.robot.statemachine.Tolerances;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.subsystems.algaeIntake.AlgaeIntakeStateHandler;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmState;
 import frc.robot.subsystems.arm.ArmStateHandler;
@@ -36,6 +37,8 @@ public class Superstructure extends GBSubsystem {
 	private final ArmStateHandler armStateHandler;
 	private final EndEffectorStateHandler endEffectorStateHandler;
 	private final ClimbStateHandler climbStateHandler;
+	private AlgaeIntakeStateHandler algaeIntakeStateHandler;
+	// not creating yet because there is no factory
 
 	private SuperstructureState currentState;
 	public boolean driverIsCoralInOverride;
@@ -162,6 +165,7 @@ public class Superstructure extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/ArmState", armStateHandler.getCurrentState());
 		Logger.recordOutput(getLogPath() + "/EndEffectorState", endEffectorStateHandler.getCurrentState());
 		Logger.recordOutput(getLogPath() + "/ClimbState", climbStateHandler.getCurrentState());
+		Logger.recordOutput(getLogPath() + "/AlgaeIntakeState", algaeIntakeStateHandler.getCurrentState());
 	}
 
 	public Command idle() {

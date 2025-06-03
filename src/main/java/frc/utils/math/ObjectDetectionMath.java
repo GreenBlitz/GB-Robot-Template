@@ -8,8 +8,8 @@ public class ObjectDetectionMath {
 
 	public static Translation2d correctForCameraRoll(Rotation2d yaw, Rotation2d pitch, Pose3d cameraPose) {
 		Translation2d yawAndPitch = new Translation2d(yaw.getRadians(), pitch.getRadians());
-		double roll = cameraPose.getRotation().getX();
-		yawAndPitch.rotateBy(Rotation2d.fromRadians(-roll));
+		double rollRadians = cameraPose.getRotation().getX();
+		yawAndPitch.rotateBy(Rotation2d.fromRadians(-rollRadians));
 		return yawAndPitch;
 	}
 

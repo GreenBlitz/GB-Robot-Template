@@ -19,11 +19,11 @@ public class LimeLightObjectDetector implements ObjectDetector {
 
 	private final String logPath;
 	private final String cameraNetworkTablesName;
-	private final String detectorName;
 	private final Pose3d cameraPose;
 
 	private Filter<? super ObjectData> filter;
 	private ArrayList<ObjectData> detectedObjects;
+	private Optional<ObjectData> closestObject;
 
 	private final NetworkTableEntry allObjectsEntry;
 	private final NetworkTableEntry doesTargetExistEntry;
@@ -33,10 +33,9 @@ public class LimeLightObjectDetector implements ObjectDetector {
 	private final NetworkTableEntry closestObjectPipelineLatencyEntry;
 	private final NetworkTableEntry closestObjectCaptureLatencyEntry;
 
-	public LimeLightObjectDetector(String logPath, String cameraNetworkTablesName, String detectorName, Pose3d cameraPose) {
+	public LimeLightObjectDetector(String logPath, String cameraNetworkTablesName, Pose3d cameraPose) {
 		this.logPath = logPath;
 		this.cameraNetworkTablesName = cameraNetworkTablesName;
-		this.detectorName = detectorName;
 		this.cameraPose = cameraPose;
 
 		allObjectsEntry = getLimelightNetworkTableEntry("rawdetections");
@@ -52,9 +51,10 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		return NetworkTableInstance.getDefault().getTable(cameraNetworkTablesName).getEntry(entryName);
 	}
 
-	private ArrayList<ObjectData> objectsEntryToObjectDataArray(NetworkTableEntry allObjectsEntry, ArrayList<ObjectData> detectedObjects) {
+	private ArrayList<ObjectData> objectsEntryToObjectDataArray(NetworkTableEntry allObjectsEntry) {
 		double[] entryArray = allObjectsEntry.getDoubleArray(new double[0]);
 		int objectAmount = entryArray.length / VisionConstants.OBJECT_CELL_AMOUNT_IN_RAW_DETECTIONS_ENTRY;
+		ArrayList<ObjectData> detectedObjects = new ArrayList<>();
 
 		for (int i = 0; i < objectAmount; i++) {
 			int firstCell = VisionConstants.OBJECT_CELL_AMOUNT_IN_RAW_DETECTIONS_ENTRY * i;
@@ -99,7 +99,7 @@ public class LimeLightObjectDetector implements ObjectDetector {
 
 	@Override
 	public ArrayList<ObjectData> getAllObjectData() {
-		return null;
+		return objectsEntryToObjectDataArray(allObjectsEntry);
 	}
 
 	@Override
@@ -122,7 +122,11 @@ public class LimeLightObjectDetector implements ObjectDetector {
 	public void log() {}
 
 	@Override
-	public void update() {}
+	public void update() {
+		detectedObjects = getAllFilteredObjectData();
+		closestObject = getFilteredClosestObjectData();
+//		closestObject = getClosestFilteredObjectData();
+	}
 
 	@Override
 	public void setFilter(Filter<? super ObjectData> newFilter) {

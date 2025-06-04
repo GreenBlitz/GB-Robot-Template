@@ -1,0 +1,66 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.69610655737705,
+        "y": 6.0449282786885234
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.1247663934426235,
+        "y": 5.839073770491801
+      },
+      "isLocked": false,
+      "linkedName": "SN"
+    },
+    {
+      "anchor": {
+        "x": 5.136,
+        "y": 2.8793
+      },
+      "prevControl": {
+        "x": 6.79103370949074,
+        "y": 0.19810546874999968
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "SIDE-C"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.8742004264392347,
+      "rotationDegrees": 119.99999999999999
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "SOFT_CLOSE_NET",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.8,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 119.99999999999999
+  },
+  "reversed": false,
+  "folder": "net",
+  "idealStartingState": {
+    "velocity": 0.0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}

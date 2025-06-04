@@ -2,6 +2,7 @@ package frc.robot.subsystems.algaeIntake.pivot.Factory;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -29,10 +30,7 @@ public class TalonFXPivotBuilder {
 	private static final boolean SIMULATE_GRAVITY = false;
 	private static final double DEFAULT_ARBITRARY_FEED_FORWARD = 0;
 	private static final boolean ENABLE_FOC = true;
-	private static final double REAL_KP = 1;
-	private static final double REAL_KG = 0;
-	private static final double SIMULATION_KP = 1;
-	private static final double SIMULATION_KG = 0;
+	public static final boolean IS_INVERTED = false;
 
 	public static TalonFXMotor generateMotor(String logPath) {
 		SingleJointedArmSimulation sim = new SingleJointedArmSimulation(
@@ -61,16 +59,16 @@ public class TalonFXPivotBuilder {
 
 		switch (Robot.ROBOT_TYPE) {
 			case REAL -> {
-				config.Slot0.kP = REAL_KP;
-				config.Slot0.kG = REAL_KG;
+				config.Slot0.kP = 1;
+				config.Slot0.kG = 0;
 			}
 			case SIMULATION -> {
-				config.Slot0.kP = SIMULATION_KP;
-				config.Slot0.kG = SIMULATION_KG;
+				config.Slot0.kP = 1;
+				config.Slot0.kG = 0;
 			}
 		}
 
-		config.MotorOutput.Inverted = PivotConstants.IS_INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
+		config.MotorOutput.Inverted = IS_INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 
 		config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = PivotConstants.FORWARD_LIMIT.getRotations();
 		config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
@@ -78,6 +76,11 @@ public class TalonFXPivotBuilder {
 		config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
 
 		config.Feedback.RotorToSensorRatio = GEAR_RATIO;
+
+		config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
+
+		config.CurrentLimits.StatorCurrentLimit = 40;
+		config.CurrentLimits.StatorCurrentLimitEnable = true;
 
 		return config;
 	}

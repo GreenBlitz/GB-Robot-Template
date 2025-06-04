@@ -34,9 +34,10 @@ public class Pivot extends GBSubsystem {
 		this.voltageSignal = voltageSignal;
 
 		this.commandsBuilder = new PivotCommandsBuilder(this);
-		periodic();
 
 		setDefaultCommand(commandsBuilder.stayInPlace());
+
+		periodic();
 	}
 
 	public PivotCommandsBuilder getCommandsBuilder() {

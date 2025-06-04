@@ -31,7 +31,6 @@ public class Field {
 		return robotTranslation.getX() < Field.LENGTH_METERS / 2.0;
 	}
 
-
 	private static final Translation2d REEF_MIDDLE = new Translation2d(4.48934, 4.03225);
 
 	public static final double REEF_SIDE_LENGTH_METERS = 0.96;

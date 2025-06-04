@@ -126,6 +126,8 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		detectedObjects = getAllFilteredObjectData();
 		closestObject = getFilteredClosestObjectData();
 //		closestObject = getClosestFilteredObjectData();
+
+		log();
 	}
 
 	@Override

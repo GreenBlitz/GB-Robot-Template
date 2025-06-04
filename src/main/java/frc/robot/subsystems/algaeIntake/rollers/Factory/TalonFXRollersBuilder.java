@@ -25,7 +25,7 @@ public class TalonFXRollersBuilder {
 	private static final int NUM_MOTORS = 1;
 	private static final double MOMENT_OF_INERTIA = 0.02;
 	private static final double GEAR_RATIO = 1 / 1;
-	private static final boolean ENABLE_FOC = false;
+	private static final boolean ENABLE_FOC = true;
 	private static final boolean IS_INVERTED = false;
 
 	private static TalonFXMotor generateMotor(String logPath) {

@@ -28,7 +28,7 @@ public class TalonFXPivotBuilder {
 	private static final double GEAR_RATIO = 1 / 1;
 	private static final boolean SIMULATE_GRAVITY = false;
 	private static final double DEFAULT_ARBITRARY_FEED_FORWARD = 0;
-	private static final boolean ENABLE_FOC = false;
+	private static final boolean ENABLE_FOC = true;
 	private static final double REAL_KP = 1;
 	private static final double REAL_KG = 0;
 	private static final double SIMULATION_KP = 1;

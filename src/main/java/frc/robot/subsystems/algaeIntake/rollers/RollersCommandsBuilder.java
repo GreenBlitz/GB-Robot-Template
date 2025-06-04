@@ -19,8 +19,4 @@ public class RollersCommandsBuilder {
 		return rollers.asSubsystemCommand(new RunCommand(rollers::stop), "Stop");
 	}
 
-	public Command setVoltage(double voltage) {
-		return rollers.asSubsystemCommand(new RunCommand(() -> rollers.setVoltage(voltage)), "Set voltage to " + voltage);
-	}
-
 }

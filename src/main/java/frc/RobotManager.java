@@ -101,7 +101,6 @@ public class RobotManager extends LoggedRobot {
 			this.auto = robot.getAuto();
 		}
 		auto.schedule();
-		robot.getPivot().pivot.applyRequest(robot.getPivot().positionRequest.withSetPoint(Rotation2d.fromDegrees(90)));
 	}
 
 	@Override

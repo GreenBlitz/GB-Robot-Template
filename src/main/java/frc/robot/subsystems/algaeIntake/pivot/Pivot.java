@@ -9,9 +9,9 @@ import org.littletonrobotics.junction.Logger;
 
 public class Pivot extends GBSubsystem {
 
-	public final ControllableMotor pivot;
+	private final ControllableMotor pivot;
 
-	public final IRequest<Rotation2d> positionRequest;
+	private final IRequest<Rotation2d> positionRequest;
 
 	private final InputSignal<Rotation2d> positionSignal;
 	private final InputSignal<Double> voltageSignal;
@@ -35,10 +35,10 @@ public class Pivot extends GBSubsystem {
 		this.voltageSignal = voltageSignal;
 
 		this.commandsBuilder = new PivotCommandsBuilder(this);
-//		pivot.resetPosition(Rotation2d.fromDegrees(110));
+		pivot.resetPosition(Rotation2d.fromDegrees(110));
 		periodic();
 
-//		setDefaultCommand(commandsBuilder.stayInPlace());
+		setDefaultCommand(commandsBuilder.stayInPlace());
 	}
 
 	public PivotCommandsBuilder getCommandsBuilder() {
@@ -72,12 +72,8 @@ public class Pivot extends GBSubsystem {
 		pivot.setBrake(brake);
 	}
 
-	public void setTargetPosition(Rotation2d targetPosition) {
+	protected void setTargetPosition(Rotation2d targetPosition) {
 		pivot.applyRequest(positionRequest.withSetPoint(targetPosition));
-	}
-
-	public void setPower(double power) {
-		pivot.setPower(power);
 	}
 
 	protected void stayInPlace() {

@@ -59,10 +59,8 @@ public class TalonFXRollersBuilder {
 			.build(rollers.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 		InputSignal<Double> voltageSignal = Phoenix6SignalBuilder
 			.build(rollers.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
-		InputSignal<Double> currentSignal = Phoenix6SignalBuilder
-			.build(rollers.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
 
-		return new Rollers(logPath, rollers, voltageRequest, velocitySignal, voltageSignal, currentSignal);
+		return new Rollers(logPath, rollers, voltageRequest, velocitySignal, voltageSignal);
 	}
 
 }

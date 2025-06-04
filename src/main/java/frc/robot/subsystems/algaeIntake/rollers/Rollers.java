@@ -14,7 +14,6 @@ public class Rollers extends GBSubsystem {
 
 	private final InputSignal<Rotation2d> velocitySignal;
 	private final InputSignal<Double> voltageSignal;
-	private final InputSignal<Double> currentSignal;
 
 	private final RollersCommandsBuilder commandsBuilder;
 
@@ -23,8 +22,7 @@ public class Rollers extends GBSubsystem {
 		ControllableMotor rollers,
 		IRequest<Double> voltageRequest,
 		InputSignal<Rotation2d> velocitySignal,
-		InputSignal<Double> voltageSignal,
-		InputSignal<Double> currentSignal
+		InputSignal<Double> voltageSignal
 	) {
 		super(logPath);
 
@@ -34,7 +32,6 @@ public class Rollers extends GBSubsystem {
 
 		this.velocitySignal = velocitySignal;
 		this.voltageSignal = voltageSignal;
-		this.currentSignal = currentSignal;
 
 		this.commandsBuilder = new RollersCommandsBuilder(this);
 
@@ -55,10 +52,6 @@ public class Rollers extends GBSubsystem {
 		return voltageSignal.getLatestValue();
 	}
 
-	public double getCurrent() {
-		return currentSignal.getLatestValue();
-	}
-
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
@@ -66,7 +59,7 @@ public class Rollers extends GBSubsystem {
 
 	private void updateInputs() {
 		rollers.updateSimulation();
-		rollers.updateInputs(velocitySignal, voltageSignal, currentSignal);
+		rollers.updateInputs(velocitySignal, voltageSignal);
 	}
 
 	public void setBrake(boolean brake) {

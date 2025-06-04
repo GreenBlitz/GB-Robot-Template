@@ -7,20 +7,14 @@ import frc.robot.subsystems.GBSubsystem;
 public class Rollers extends GBSubsystem {
 
 	private final ControllableMotor rollers;
-
 	private final InputSignal<Double> voltageSignal;
-
 	private final RollersCommandsBuilder commandsBuilder;
 
 	public Rollers(String logPath, ControllableMotor rollers, InputSignal<Double> voltageSignal) {
 		super(logPath);
-
 		this.rollers = rollers;
-
 		this.voltageSignal = voltageSignal;
-
 		this.commandsBuilder = new RollersCommandsBuilder(this);
-
 		setDefaultCommand(commandsBuilder.stop());
 
 		periodic();

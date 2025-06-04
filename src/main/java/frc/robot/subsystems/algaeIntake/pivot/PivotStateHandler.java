@@ -2,6 +2,7 @@ package frc.robot.subsystems.algaeIntake.pivot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.statemachine.Tolerances;
 
 public class PivotStateHandler {
 
@@ -24,7 +25,7 @@ public class PivotStateHandler {
 	}
 
 	public boolean isAtState(PivotState state) {
-		return isAtState(state, Tolerances.TOLERANCE);
+		return isAtState(state, Tolerances.PIVOT);
 	}
 
 	public boolean isAtState(PivotState state, Rotation2d tolerance) {

@@ -75,7 +75,7 @@ public class TalonFXPivotBuilder {
 		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = PivotConstants.BACKWARD_LIMIT.getRotations();
 		config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
 
-		config.Feedback.RotorToSensorRatio = GEAR_RATIO;
+		config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
 		config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
 

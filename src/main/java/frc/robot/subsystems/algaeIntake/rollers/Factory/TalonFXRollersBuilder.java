@@ -39,7 +39,7 @@ public class TalonFXRollersBuilder {
 
 		config.MotorOutput.Inverted = IS_INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 
-		config.Feedback.RotorToSensorRatio = GEAR_RATIO;
+		config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
 		config.CurrentLimits.StatorCurrentLimit = 40;
 		config.CurrentLimits.StatorCurrentLimitEnable = true;

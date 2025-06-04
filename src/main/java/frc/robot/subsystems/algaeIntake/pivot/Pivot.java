@@ -11,7 +11,6 @@ public class Pivot extends GBSubsystem {
 	private final ControllableMotor pivot;
 
 	private final IRequest<Rotation2d> positionRequest;
-
 	private final InputSignal<Rotation2d> positionSignal;
 	private final InputSignal<Double> voltageSignal;
 

@@ -24,6 +24,8 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
+import frc.utils.math.AngleTransform;
+import frc.utils.math.ToleranceMath;
 import frc.utils.pose.PoseUtil;
 
 import java.util.Set;
@@ -240,23 +242,6 @@ public class RobotCommander extends GBSubsystem {
 			<= StateMachineConstants.DISTANCE_FROM_CORAL_STATION_SLOT_TO_START_AIM_ASSIST_METERS;
 	}
 
-	private boolean isCloseToNet(double distanceOnXAxis, double distanceOnYAxis) {
-		boolean isPastX = Field.getAllianceRelative(robot.getPoseEstimator().getEstimatedPose().getTranslation(), true, true).getX()
-			> Field.LENGTH_METERS / 2 - distanceOnXAxis;
-		boolean isPastY = Field.getAllianceRelative(robot.getPoseEstimator().getEstimatedPose().getTranslation(), true, true).getY()
-			> Field.WIDTH_METERS / 2 - distanceOnYAxis;
-		return isPastX && isPastY;
-	}
-
-	public boolean isReadyForNet() {
-		return isCloseToNet(
-			StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES.getX(),
-			StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES.getY()
-		)
-			&& swerve.isAtHeading(ScoringHelpers.getHeadingForNet(swerve), Tolerances.HEADING_FOR_NET, Tolerances.NET_DEADBANDS.getRotation())
-			&& SwerveMath.isStill(swerve.getAllianceRelativeVelocity(), Tolerances.NET_DEADBANDS);
-	}
-
 	public Command driveWith(String name, Command command, boolean asDeadline) {
 		Command swerveDriveCommand = swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE);
 		Command wantedCommand = asDeadline ? command.deadlineFor(swerveDriveCommand) : command.alongWith(swerveDriveCommand);
@@ -277,6 +262,7 @@ public class RobotCommander extends GBSubsystem {
 			case SCORE -> score();
 			case ALGAE_REMOVE -> algaeRemove();
 			case ALGAE_OUTTAKE -> algaeOuttake();
+			case AUTO_PRE_NET -> driveToPreNet();
 			case PRE_NET -> preNet();
 			case NET -> net();
 			case PROCESSOR_SCORE -> fullyProcessorScore();
@@ -416,8 +402,8 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	public Command completeNet() {
-		return new SequentialCommandGroup(preNet().until(this::isReadyForNet), net());
+	public Command autoNet() {
+		return new SequentialCommandGroup(driveToPreNet(), net());
 	}
 
 	private Command drive() {
@@ -536,11 +522,79 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command preNet() {
 		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				superstructure.preNet(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
-			),
+			new ParallelCommandGroup(superstructure.preNet(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
 			RobotState.PRE_NET
+		);
+	}
+
+	private Command driveToPreNet() {
+		Pose2d netEdgeOpenSuperstructurePosition = Field.getAllianceRelative(
+			new Pose2d(
+				StateMachineConstants.NET_SCORING_OPEN_SUPERSTRUCTURE_X_POSITION_METERS,
+				StateMachineConstants.MIN_NET_SCORING_Y_POSITION,
+				new Rotation2d()
+			),
+			true,
+			true,
+			AngleTransform.INVERT
+		);
+		Supplier<Pose2d> openSuperstructurePosition = () -> Field.getAllianceRelative(
+			new Pose2d(
+				StateMachineConstants.NET_SCORING_OPEN_SUPERSTRUCTURE_X_POSITION_METERS,
+				robot.getPoseEstimator().getEstimatedPose().getY(),
+				new Rotation2d()
+			),
+			true,
+			false,
+			AngleTransform.INVERT
+		);
+		Supplier<Pose2d> scoringPosition = () -> Field.getAllianceRelative(
+			new Pose2d(StateMachineConstants.SCORE_NET_X_POSITION_METERS, robot.getPoseEstimator().getEstimatedPose().getY(), new Rotation2d()),
+			true,
+			false,
+			AngleTransform.INVERT
+		);
+
+		return asSubsystemCommand(
+			new SequentialCommandGroup(
+				swerve.getCommandsBuilder()
+					.driveToPose(robot.getPoseEstimator()::getEstimatedPose, () -> netEdgeOpenSuperstructurePosition)
+					.until(
+						() -> ToleranceMath.isNear(
+							netEdgeOpenSuperstructurePosition,
+							robot.getPoseEstimator().getEstimatedPose(),
+							Tolerances.NET_OPENING_SUPERSTRUCTURE_POSITION_METERS
+						)
+					)
+					.onlyIf(
+						() -> Field.isFieldConventionAlliance()
+							? robot.getPoseEstimator().getEstimatedPose().getY() < StateMachineConstants.MIN_NET_SCORING_Y_POSITION
+							: robot.getPoseEstimator().getEstimatedPose().getY() > StateMachineConstants.MIN_NET_SCORING_Y_POSITION
+					),
+				swerve.getCommandsBuilder()
+					.driveToPose(robot.getPoseEstimator()::getEstimatedPose, openSuperstructurePosition)
+					.until(
+						() -> ToleranceMath.isNear(
+							openSuperstructurePosition.get(),
+							robot.getPoseEstimator().getEstimatedPose(),
+							Tolerances.NET_OPENING_SUPERSTRUCTURE_POSITION_METERS
+						)
+					),
+				new ParallelCommandGroup(
+					swerve.getCommandsBuilder()
+						.driveToPose(robot.getPoseEstimator()::getEstimatedPose, scoringPosition)
+						.until(
+							() -> ToleranceMath.isNear(
+								scoringPosition.get(),
+								robot.getPoseEstimator().getEstimatedPose(),
+								Tolerances.NET_SCORING_POSITION_METERS
+							)
+						)
+						.andThen(swerve.getCommandsBuilder().resetTargetSpeeds()),
+					superstructure.preNet().until(superstructure::isPreNetReady)
+				)
+			),
+			RobotState.AUTO_PRE_NET
 		);
 	}
 
@@ -671,7 +725,7 @@ public class RobotCommander extends GBSubsystem {
 		return switch (state) {
 			case STAY_IN_PLACE, CORAL_OUTTAKE -> stayInPlace();
 			case INTAKE_WITH_AIM_ASSIST, INTAKE_WITHOUT_AIM_ASSIST, DRIVE, ALIGN_REEF, ALGAE_OUTTAKE, PROCESSOR_SCORE -> drive();
-			case PRE_NET, NET -> afterNet();
+			case AUTO_PRE_NET, PRE_NET, NET -> afterNet();
 			case ALGAE_REMOVE, HOLD_ALGAE -> holdAlgae();
 			case ARM_PRE_SCORE, CLOSE_CLIMB -> armPreScore();
 			case PRE_SCORE -> preScore();

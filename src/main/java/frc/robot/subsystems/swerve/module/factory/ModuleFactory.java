@@ -1,11 +1,16 @@
 package frc.robot.subsystems.swerve.module.factory;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Robot;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
@@ -23,11 +28,15 @@ import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public class ModuleFactory {
 
-	public static final boolean enableFOC = true;
+	private static final boolean enableFOC = true;
 
-	public static boolean ARE_MOTORS_CTRE = true;
+	private static boolean ARE_MOTORS_CTRE = true;
 
-	public static final double DEFAULT_ARBITRARY_FEED_FORWARD = 0;
+	private static final double DEFAULT_ARBITRARY_FEED_FORWARD = 0;
+	private static double MAX_DRIVE_VELOCITY_MPS = 10;
+	private static double WHEEL_DIAMETER_METERS = 0.05;
+	private static boolean IS_DRIVE_INVERTED = false;
+	private static boolean IS_STEER_INVERTED = false;
 
 
 	public static Module build(String logPath, ModuleIDs ids) {
@@ -36,13 +45,18 @@ public class ModuleFactory {
 		SysIdCalibrator.SysIdConfigInfo configInfo = new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(), ARE_MOTORS_CTRE);
 
 		TalonFXMotor drive = generateDrive(finalLogPath, ids.driveMotorId());
+		drive.applyConfiguration(generateDriveConfig());
+
 		TalonFXMotor steer = generateSteer(finalLogPath, ids.steerMotorId());
+		steer.applyConfiguration(generateSteerConfig());
+
 		CANCoderEncoder encoder = generateEncoder(finalLogPath, ids.encoderId());
+		encoder.getDevice().getConfigurator().apply(generateEncoderConfig());
 
 		ModuleRequests requests = generateRequests();
 		ModuleSignals signals = generateSignals(drive, steer, encoder);
 
-		return new Module(finalLogPath, drive, steer, encoder, requests, signals, configInfo);
+		return new Module(finalLogPath, drive, steer, encoder, requests, signals, configInfo, MAX_DRIVE_VELOCITY_MPS, WHEEL_DIAMETER_METERS);
 	}
 
 	private static TalonFXMotor generateDrive(String logPath, int driveID) {
@@ -89,6 +103,92 @@ public class ModuleFactory {
 			steerVoltageSignal,
 			encoderAngleSignal
 		);
+	}
+
+	private static TalonFXConfiguration generateDriveConfig() {
+		TalonFXConfiguration config = new TalonFXConfiguration();
+
+		switch (Robot.ROBOT_TYPE) {
+			case REAL -> {
+				config.Slot0.kP = 1;
+				config.Slot0.kI = 0;
+				config.Slot0.kD = 0;
+
+				config.Slot0.kG = 0;
+				config.Slot0.kS = 0;
+				config.Slot0.kV = 0;
+				config.Slot0.kA = 0;
+			}
+			case SIMULATION -> {
+				config.Slot0.kP = 1;
+				config.Slot0.kI = 0;
+				config.Slot0.kD = 0;
+
+				config.Slot0.kG = 0;
+				config.Slot0.kS = 0;
+				config.Slot0.kV = 0;
+				config.Slot0.kA = 0;
+			}
+		}
+
+		config.MotorOutput.Inverted = IS_DRIVE_INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
+
+		config.Feedback.RotorToSensorRatio = 1 / 1;
+		config.Feedback.SensorToMechanismRatio = 1 / 1;
+
+		config.CurrentLimits.StatorCurrentLimit = 40;
+		config.CurrentLimits.StatorCurrentLimitEnable = true;
+		config.CurrentLimits.SupplyCurrentLimit = 44;
+		config.CurrentLimits.SupplyCurrentLimitEnable = true;
+
+		return config;
+	}
+
+	private static TalonFXConfiguration generateSteerConfig() {
+		TalonFXConfiguration config = new TalonFXConfiguration();
+
+		switch (Robot.ROBOT_TYPE) {
+			case REAL -> {
+				config.Slot0.kP = 1;
+				config.Slot0.kI = 0;
+				config.Slot0.kD = 0;
+
+				config.Slot0.kG = 0;
+				config.Slot0.kS = 0;
+				config.Slot0.kV = 0;
+				config.Slot0.kA = 0;
+			}
+			case SIMULATION -> {
+				config.Slot0.kP = 1;
+				config.Slot0.kI = 0;
+				config.Slot0.kD = 0;
+
+				config.Slot0.kG = 0;
+				config.Slot0.kS = 0;
+				config.Slot0.kV = 0;
+				config.Slot0.kA = 0;
+			}
+		}
+
+		config.MotorOutput.Inverted = IS_STEER_INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
+
+		config.Feedback.RotorToSensorRatio = 1 / 1;
+
+		config.CurrentLimits.StatorCurrentLimit = 40;
+		config.CurrentLimits.StatorCurrentLimitEnable = true;
+		config.CurrentLimits.SupplyCurrentLimit = 44;
+		config.CurrentLimits.SupplyCurrentLimitEnable = true;
+		return config;
+	}
+
+	private static CANcoderConfiguration generateEncoderConfig() {
+		CANcoderConfiguration config = new CANcoderConfiguration();
+
+		config.MagnetSensor.MagnetOffset = 0;
+		config.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+		config.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
+
+		return config;
 	}
 
 }

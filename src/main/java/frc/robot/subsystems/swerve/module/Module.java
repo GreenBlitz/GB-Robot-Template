@@ -6,10 +6,10 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.subsystems.swerve.module.factory.ModuleConstants;
 import frc.utils.Conversions;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.calibration.sysid.SysIdCalibrator;
+import org.littletonrobotics.junction.Logger;
 
 public class Module extends GBSubsystem {
 
@@ -22,6 +22,9 @@ public class Module extends GBSubsystem {
 
 	private final SysIdCalibrator sysIdCalibrator;
 
+	private final double maxDriveVelocityMps;
+	private final double wheelDiameterMeters;
+
 	private SwerveModuleState targetState;
 
 	public Module(
@@ -31,7 +34,9 @@ public class Module extends GBSubsystem {
 		IAngleEncoder encoder,
 		ModuleRequests requests,
 		ModuleSignals signals,
-		SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo
+		SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo,
+		double maxDriveVelocityMps,
+		double wheelDiameterMeters
 	) {
 		super(logPath);
 
@@ -44,16 +49,22 @@ public class Module extends GBSubsystem {
 
 		this.sysIdCalibrator = new SysIdCalibrator(sysIdConfigInfo, this, this::setTargetDriveVoltage);
 
+		this.maxDriveVelocityMps = maxDriveVelocityMps;
+		this.wheelDiameterMeters = wheelDiameterMeters;
+
 		this.targetState = new SwerveModuleState();
 		setState(targetState, true);
+
+		subsystemPeriodic();
 	}
 
 	@Override
 	protected void subsystemPeriodic() {
 		driveMotor.updateSimulation();
 		steerMotor.updateSimulation();
-
 		updateInputs();
+		Logger.recordOutput(getLogPath() + "/TargetState", targetState);
+		Logger.recordOutput(getLogPath() + "/CurrentState", new SwerveModuleState(getDriveVelocityMPS(), getAbsolutAngle()));
 	}
 
 	private void updateInputs() {
@@ -142,19 +153,19 @@ public class Module extends GBSubsystem {
 	}
 
 	private Rotation2d metersToAngle(double meters) {
-		return Conversions.distanceToAngle(meters, ModuleConstants.WHEEL_DIAMETER_METERS);
+		return Conversions.distanceToAngle(meters, wheelDiameterMeters);
 	}
 
 	private double angleToMeters(Rotation2d angle) {
-		return Conversions.angleToDistance(angle, ModuleConstants.WHEEL_DIAMETER_METERS);
+		return Conversions.angleToDistance(angle, wheelDiameterMeters);
 	}
 
 	private double velocityToVoltage(double velocityMPS) {
-		return BatteryUtil.DEFAULT_VOLTAGE * (velocityMPS / ModuleConstants.MAX_DRIVE_VELOCITY_MPS);
+		return BatteryUtil.DEFAULT_VOLTAGE * (velocityMPS / maxDriveVelocityMps);
 	}
 
 	private double voltageToVelocityMPS(double voltage) {
-		return (voltage / BatteryUtil.DEFAULT_VOLTAGE) * ModuleConstants.MAX_DRIVE_VELOCITY_MPS;
+		return (voltage / BatteryUtil.DEFAULT_VOLTAGE) * maxDriveVelocityMps;
 	}
 
 

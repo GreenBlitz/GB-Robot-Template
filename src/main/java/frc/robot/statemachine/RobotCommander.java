@@ -25,7 +25,6 @@ import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.pose.PoseUtil;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -250,19 +249,12 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	private boolean isCloseToNetForAuto() {
-		Logger.recordOutput("NET_POSE", Field.getAllianceRelative(new Translation2d(7.728225, 6.03885), true, true));
-		Logger.recordOutput(
-			"IS_CLOSE_TO",
-			PoseUtil.isAtTranslation(
-				robot.getPoseEstimator().getEstimatedPose().getTranslation(),
-				Field.getAllianceRelative(new Translation2d(7.728225, 6.03885), true, true),
-				new Translation2d(0.035, 2.01295)
-			)
-		);
+		Translation2d middleOfNetScoringRange = new Translation2d(7.728225, 6.03885);
+		Translation2d netScoringRangeDistancesFromMiddle = new Translation2d(0.035, 2.01295);
 		return PoseUtil.isAtTranslation(
 			robot.getPoseEstimator().getEstimatedPose().getTranslation(),
-			Field.getAllianceRelative(new Translation2d(7.728225, 6.03885), true, true),
-			new Translation2d(0.035, 2.01295)
+			Field.getAllianceRelative(middleOfNetScoringRange, true, true),
+			netScoringRangeDistancesFromMiddle
 		);
 	}
 

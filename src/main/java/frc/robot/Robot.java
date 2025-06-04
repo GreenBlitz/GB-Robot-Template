@@ -176,7 +176,7 @@ public class Robot {
 			.asProxy();
 		Supplier<Command> algaeRemoveCommand = () -> robotCommander.getSuperstructure()
 			.softCloseNetToAlgaeRemove()
-			.andThen(robotCommander.getSuperstructure().algaeRemove().withTimeout(1.5))
+			.andThen(robotCommander.getSuperstructure().algaeRemove().withTimeout(AutonomousConstants.ALGAE_REMOVE_TIMEOUT_SECONDS))
 			.asProxy();
 		Supplier<Command> netCommand = () -> robotCommander.getSuperstructure().netWithRelease().asProxy();
 

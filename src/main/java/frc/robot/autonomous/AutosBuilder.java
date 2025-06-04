@@ -25,7 +25,7 @@ import frc.utils.auto.PathHelper;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.math.AngleTransform;
-import frc.utils.pose.PoseUtil;
+import frc.utils.math.ToleranceMath;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
@@ -309,8 +309,9 @@ public class AutosBuilder {
 
 	private static Command autoBalls(Robot robot, Supplier<Command> algaeRemoveCommand, Supplier<Command> netCommand, Pose2d tolerance) {
 		PathPlannerPath path = getAutoScorePath(Branch.H, robot);
-		Pose2d backOffPose = Field.getAllianceRelative(
-			Field.getReefSideMiddle(Branch.H.getReefSide()).plus(new Transform2d(-1, 0, new Rotation2d())),
+		Pose2d backOffFromReefPose = Field.getAllianceRelative(
+			Field.getReefSideMiddle(Branch.H.getReefSide())
+				.plus(new Transform2d(AutonomousConstants.BACK_OFF_FROM_REEF_DISTANCE_METERS, 0, new Rotation2d())),
 			false,
 			true,
 			AngleTransform.MIRROR_Y
@@ -322,16 +323,27 @@ public class AutosBuilder {
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					robot.getRobotCommander().getSuperstructure().algaeRemove().asProxy(),
-					PathFollowingCommandsBuilder.moveToPoseByPID(robot, backOffPose, SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW))
+					robot.getSwerve()
+						.getCommandsBuilder()
+						.moveToPoseByPID(
+							robot.getPoseEstimator()::getEstimatedPose,
+							backOffFromReefPose,
+							SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW)
+						)
 				).until(
-					() -> PoseUtil.isAtPose(robot.getPoseEstimator().getEstimatedPose(), backOffPose, tolerance, "backOffPose")
+					() -> ToleranceMath.isNear(robot.getPoseEstimator().getEstimatedPose(), backOffFromReefPose, tolerance)
 						&& robot.getElevator().isAtPosition(ElevatorState.HOLD_ALGAE.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
 				),
 				new ParallelCommandGroup(
 					robot.getRobotCommander().getSuperstructure().algaeRemove().asProxy(),
-					PathFollowingCommandsBuilder
-						.moveToPoseByPID(robot, ScoringHelpers.getAlgaeRemovePose(), SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW))
-				).withTimeout(1),
+					robot.getSwerve()
+						.getCommandsBuilder()
+						.moveToPoseByPID(
+							robot.getPoseEstimator()::getEstimatedPose,
+							ScoringHelpers.getAlgaeRemovePose(),
+							SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW)
+						)
+				).withTimeout(AutonomousConstants.ALGAE_REMOVE_TIMEOUT_SECONDS),
 				createAutoFromAutoPath(
 					AutoPath.ALGAE_REMOVE_D_TO_FIRST_NET,
 					pathPlannerPath -> PathFollowingCommandsBuilder
@@ -370,14 +382,6 @@ public class AutosBuilder {
 
 				)
 			).asProxy()
-
-			// take algae
-			// score to net point1
-			// take algae
-			// score to net point2
-			// take algae
-			// score to net point3
-			// go back close elevator
 		);
 
 		autoBalls.setName("auto balls");

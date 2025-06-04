@@ -66,21 +66,21 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public void initializeDefaultCommand() {
-		setDefaultCommand(
-			new DeferredCommand(
-				() -> endState(currentState),
-				Set.of(
-					this,
-					superstructure,
-					swerve,
-					robot.getElevator(),
-					robot.getArm(),
-					robot.getEndEffector(),
-					robot.getLifter(),
-					robot.getSolenoid()
-				)
-			)
-		);
+//		setDefaultCommand(
+//			new DeferredCommand(
+//				() -> endState(currentState),
+//				Set.of(
+//					this,
+//					superstructure,
+//					swerve,
+//					robot.getElevator(),
+//					robot.getArm(),
+//					robot.getEndEffector(),
+//					robot.getLifter(),
+//					robot.getSolenoid()
+//				)
+//			)
+//		);
 	}
 
 	/**

@@ -5,7 +5,6 @@ import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
-import org.littletonrobotics.junction.Logger;
 
 public class Pivot extends GBSubsystem {
 
@@ -35,10 +34,9 @@ public class Pivot extends GBSubsystem {
 		this.voltageSignal = voltageSignal;
 
 		this.commandsBuilder = new PivotCommandsBuilder(this);
-		pivot.resetPosition(Rotation2d.fromDegrees(110));
 		periodic();
 
-		setDefaultCommand(commandsBuilder.stayInPlace());
+//		setDefaultCommand(commandsBuilder.stayInPlace());
 	}
 
 	public PivotCommandsBuilder getCommandsBuilder() {
@@ -60,7 +58,6 @@ public class Pivot extends GBSubsystem {
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
-		Logger.recordOutput("aaa", positionRequest.getSetPoint());
 	}
 
 	private void updateInputs() {
@@ -72,8 +69,12 @@ public class Pivot extends GBSubsystem {
 		pivot.setBrake(brake);
 	}
 
-	protected void setTargetPosition(Rotation2d targetPosition) {
+	public void setTargetPosition(Rotation2d targetPosition) {
 		pivot.applyRequest(positionRequest.withSetPoint(targetPosition));
+	}
+
+	public void setPower(double power) {
+		pivot.setPower(power);
 	}
 
 	protected void stayInPlace() {

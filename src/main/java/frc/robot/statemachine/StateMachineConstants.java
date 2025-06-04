@@ -10,8 +10,9 @@ public class StateMachineConstants {
 	public static final double ROBOT_SCORING_DISTANCE_FROM_REEF_METERS = 0.59;
 	public static final double OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS = 0.8;
 	public static final double DISTANCE_TO_BRANCH_FOR_STARTING_PATH = 1;
-	public static final double OPEN_SUPERSTRUCTURE_DISTANCE_FROM_NET_METERS = 2.4;
-	public static final double SCORE_DISTANCE_FROM_NET_METERS = 2.1;
+	public static final double NET_SCORING_OPEN_SUPERSTRUCTURE_X_POSITION_METERS = 7;
+	public static final double SCORE_NET_X_POSITION_METERS = 7.73;
+	public static final double MIN_NET_SCORING_Y_POSITION = 4.5;
 	public static final double POWER_FOR_MANUAL_CLIMB = -0.5;
 
 	public static final double DISTANCE_FROM_CORAL_STATION_SLOT_TO_START_AIM_ASSIST_METERS = 2.2;

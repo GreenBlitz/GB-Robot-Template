@@ -13,9 +13,6 @@ import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.StateMachineConstants;
 import frc.robot.statemachine.Tolerances;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.subsystems.algaeIntake.AlgaeIntakeStateHandler;
-import frc.robot.subsystems.algaeIntake.pivot.PivotStateHandler;
-import frc.robot.subsystems.algaeIntake.rollers.RollersStateHandler;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmState;
 import frc.robot.subsystems.arm.ArmStateHandler;
@@ -39,7 +36,7 @@ public class Superstructure extends GBSubsystem {
 	private final ArmStateHandler armStateHandler;
 	private final EndEffectorStateHandler endEffectorStateHandler;
 	private final ClimbStateHandler climbStateHandler;
-	private final AlgaeIntakeStateHandler algaeIntakeStateHandler;
+//	private final AlgaeIntakeStateHandler algaeIntakeStateHandler;
 
 	private SuperstructureState currentState;
 	public boolean driverIsCoralInOverride;
@@ -52,10 +49,10 @@ public class Superstructure extends GBSubsystem {
 		this.armStateHandler = new ArmStateHandler(robot.getArm(), this::getDistanceToReef);
 		this.endEffectorStateHandler = new EndEffectorStateHandler(robot.getEndEffector(), this);
 		this.climbStateHandler = new ClimbStateHandler(new SolenoidStateHandler(robot.getSolenoid()), new LifterStateHandler(robot.getLifter()));
-		this.algaeIntakeStateHandler = new AlgaeIntakeStateHandler(
-			new PivotStateHandler(robot.getPivot()),
-			new RollersStateHandler(robot.getRollers())
-		);
+//		this.algaeIntakeStateHandler = new AlgaeIntakeStateHandler(
+//			new PivotStateHandler(robot.getPivot()),
+//			new RollersStateHandler(robot.getRollers())
+//		);
 
 		this.currentState = SuperstructureState.STAY_IN_PLACE;
 		this.driverIsCoralInOverride = false;
@@ -84,9 +81,9 @@ public class Superstructure extends GBSubsystem {
 		return climbStateHandler;
 	}
 
-	public AlgaeIntakeStateHandler getAlgaeIntakeStateHandler() {
-		return algaeIntakeStateHandler;
-	}
+//	public AlgaeIntakeStateHandler getAlgaeIntakeStateHandler() {
+//		return algaeIntakeStateHandler;
+//	}
 
 	public SuperstructureState getCurrentState() {
 		return currentState;
@@ -174,7 +171,7 @@ public class Superstructure extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/ArmState", armStateHandler.getCurrentState());
 		Logger.recordOutput(getLogPath() + "/EndEffectorState", endEffectorStateHandler.getCurrentState());
 		Logger.recordOutput(getLogPath() + "/ClimbState", climbStateHandler.getCurrentState());
-		Logger.recordOutput(getLogPath() + "/AlgaeIntakeState", algaeIntakeStateHandler.getCurrentState());
+//		Logger.recordOutput(getLogPath() + "/AlgaeIntakeState", algaeIntakeStateHandler.getCurrentState());
 	}
 
 	public Command idle() {
@@ -184,6 +181,7 @@ public class Superstructure extends GBSubsystem {
 				armStateHandler.setState(ArmState.CLOSED),
 				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 				climbStateHandler.setState(ClimbState.STOP)
+//					algaeIntakeStateHandler.setState(AlgaeIntakeState.CLOSED)
 			),
 			SuperstructureState.IDLE
 		);
@@ -196,6 +194,7 @@ public class Superstructure extends GBSubsystem {
 				armStateHandler.setState(ArmState.STAY_IN_PLACE),
 				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 				climbStateHandler.setState(ClimbState.STOP)
+//					algaeIntakeStateHandler.setState(AlgaeIntakeState.CLOSED)
 			),
 			SuperstructureState.STAY_IN_PLACE
 		);
@@ -228,7 +227,8 @@ public class Superstructure extends GBSubsystem {
 				armStateHandler.setState(ArmState.STAY_IN_PLACE),
 				endEffectorStateHandler.setState(EndEffectorState.CORAL_OUTTAKE),
 				climbStateHandler.setState(ClimbState.STOP)
-			).until(() -> !isCoralIn()),
+//					algaeIntakeStateHandler.setState(AlgaeIntakeState.INTAKE)
+			),
 			SuperstructureState.OUTTAKE
 		);
 	}

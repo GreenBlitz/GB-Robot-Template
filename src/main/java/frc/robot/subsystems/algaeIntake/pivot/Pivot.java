@@ -36,7 +36,7 @@ public class Pivot extends GBSubsystem {
 		this.commandsBuilder = new PivotCommandsBuilder(this);
 		periodic();
 
-//		setDefaultCommand(commandsBuilder.stayInPlace());
+		setDefaultCommand(commandsBuilder.stayInPlace());
 	}
 
 	public PivotCommandsBuilder getCommandsBuilder() {

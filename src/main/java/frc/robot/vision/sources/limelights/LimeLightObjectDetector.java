@@ -122,13 +122,18 @@ public class LimeLightObjectDetector implements ObjectDetector {
 
 	@Override
 	public void log() {
-		Logger.recordOutput(logPath + "closestObjectTranslation", new Pose2d(closestObject.get().getRobotRelativeEstimatedTranslation(), new Rotation2d()));
+		if (closestObject.isPresent()) {
+			Logger.recordOutput(
+				logPath + "closestObjectTranslation",
+				new Pose2d(closestObject.get().getRobotRelativeEstimatedTranslation(), new Rotation2d())
+			);
+		}
 	}
 
 	@Override
 	public void update() {
-		detectedObjects = getAllFilteredObjectData();
-		closestObject = getFilteredClosestObjectData();
+//		detectedObjects = getAllFilteredObjectData();
+		closestObject = getClosestObjectData();
 //		closestObject = getClosestFilteredObjectData();
 
 		log();

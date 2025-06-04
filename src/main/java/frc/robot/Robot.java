@@ -95,6 +95,7 @@ public class Robot {
 
 		objectDetector = new LimeLightObjectDetector("/ObjectDetection", "limelight-object", VisionConstants.LIMELIGHT_RIGHT_CAMERA_ROBOT_POSE);
 
+		objectDetector.clearFilter();
 		IGyro gyro = GyroFactory.createGyro(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
@@ -240,6 +241,8 @@ public class Robot {
 
 		swerve.update();
 		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());
+
+		objectDetector.update();
 
 		double poseTime = TimeUtil.getCurrentTimeSeconds();
 		poseEstimator.updateOdometry(swerve.getLatestOdometryData());

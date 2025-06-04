@@ -36,7 +36,7 @@ public class TalonFXRollersBuilder {
 			)
 		);
 
-		return new TalonFXMotor(logPath + "/Motor", IDs.TalonFXIDs.PIVOT, new SysIdRoutine.Config(), sim);
+		return new TalonFXMotor(logPath + "/Motor", IDs.TalonFXIDs.ROLLERS, new SysIdRoutine.Config(), sim);
 	}
 
 	private static TalonFXConfiguration generateMotorConfig() {

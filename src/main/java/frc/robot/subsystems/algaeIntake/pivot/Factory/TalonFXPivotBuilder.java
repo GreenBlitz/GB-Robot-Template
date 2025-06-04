@@ -8,12 +8,12 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.IDs;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.mechanisms.wpilib.SingleJointedArmSimulation;
 import frc.robot.hardware.phoenix6.BusChain;
-import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
@@ -32,28 +32,25 @@ public class TalonFXPivotBuilder {
 	private static final double KG = 0;
 
 	public static TalonFXMotor generateMotor(String logPath) {
-		return new TalonFXMotor(
-			logPath + "/Motor",
-			new Phoenix6DeviceID(17, BusChain.ROBORIO),
-			new SysIdRoutine.Config(),
-			new SingleJointedArmSimulation(
-				new SingleJointedArmSim(
-					LinearSystemId.createDCMotorSystem(
-						DCMotor.getKrakenX60Foc(NUMBER_OF_MOTORS),
-						SingleJointedArmSim.estimateMOI(PivotConstants.LENGTH_METERS, PivotConstants.MASS_KG),
-						GEAR_RATIO
-					),
+		SingleJointedArmSimulation sim = new SingleJointedArmSimulation(
+			new SingleJointedArmSim(
+				LinearSystemId.createDCMotorSystem(
 					DCMotor.getKrakenX60Foc(NUMBER_OF_MOTORS),
-					GEAR_RATIO,
-					PivotConstants.LENGTH_METERS,
-					PivotConstants.MIN_POSITION.getRadians(),
-					PivotConstants.MAX_POSITION.getRadians(),
-					SIMULATE_GRAVITY,
-					PivotConstants.STARTING_POSITION.getRadians()
+					SingleJointedArmSim.estimateMOI(PivotConstants.LENGTH_METERS, PivotConstants.MASS_KG),
+					GEAR_RATIO
 				),
-				GEAR_RATIO
-			)
+				DCMotor.getKrakenX60Foc(NUMBER_OF_MOTORS),
+				GEAR_RATIO,
+				PivotConstants.LENGTH_METERS,
+				PivotConstants.MIN_POSITION.getRadians(),
+				PivotConstants.MAX_POSITION.getRadians(),
+				SIMULATE_GRAVITY,
+				PivotConstants.STARTING_POSITION.getRadians()
+			),
+			GEAR_RATIO
 		);
+
+		return new TalonFXMotor(logPath + "/Motor", IDs.TalonFXIDs.PIVOT, new SysIdRoutine.Config(), sim);
 	}
 
 	private static TalonFXConfiguration generateMotorConfig() {

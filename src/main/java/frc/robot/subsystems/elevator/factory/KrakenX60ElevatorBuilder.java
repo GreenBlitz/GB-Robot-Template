@@ -48,7 +48,7 @@ public class KrakenX60ElevatorBuilder {
 	private static final boolean SOFT_LIMIT_ENABLE = true;
 	private static final boolean IS_FIRST_MOTOR_INVERTED = true;
 	private static final boolean IS_SECOND_MOTOR_INVERTED = true;
-	public static final double kG = 0.31;
+	public static final double kG = 0;
 
 	private static final int NUMBER_OF_MOTORS = 2;
 	private static final double STARTING_HEIGHT_METERS = 0;
@@ -74,7 +74,7 @@ public class KrakenX60ElevatorBuilder {
 			configuration.Slot0.kI = 0;
 			configuration.Slot0.kD = 0;
 			configuration.Slot0.kG = kG;
-			configuration.Slot0.kS = 0.1;
+			configuration.Slot0.kS = 0;
 			configuration.Slot0.kV = 0.49307;
 			configuration.Slot0.kA = 0.032026;
 
@@ -83,7 +83,7 @@ public class KrakenX60ElevatorBuilder {
 			configuration.Slot1.kI = 0;
 			configuration.Slot1.kD = 0.5;
 			configuration.Slot1.kG = kG;
-			configuration.Slot1.kS = 0.050413;
+			configuration.Slot1.kS = 0;
 		} else {
 			configuration.Slot0.kP = 1;
 			configuration.Slot0.kI = 0;

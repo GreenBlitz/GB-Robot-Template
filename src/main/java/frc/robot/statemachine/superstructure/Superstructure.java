@@ -330,15 +330,19 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command softCloseNetToHoldAlgae() {
-		return softClose(
-			"Net",
-			ArmState.MID_WAY_CLOSE,
-			ArmState.HOLD_ALGAE,
-			ElevatorState.NET,
-			ElevatorState.HOLD_ALGAE,
-			0.6,
-			Rotation2d.fromDegrees(45)
+	public Command softCloseNetToAlgaeRemove() {
+		return new DeferredCommand(
+			() -> softClose(
+				"Net",
+				ArmState.MID_WAY_CLOSE,
+				ScoringHelpers.getAlgaeRemoveLevel().getArmState(),
+				ElevatorState.NET,
+				ScoringHelpers.getAlgaeRemoveLevel().getElevatorState(),
+				0.6,
+				Rotation2d.fromDegrees(45)
+			),
+			Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector(), robot.getLifter(), robot.getSolenoid())
+
 		);
 	}
 
@@ -497,7 +501,7 @@ public class Superstructure extends GBSubsystem {
 			new SequentialCommandGroup(
 				new ParallelDeadlineGroup(
 					new SequentialCommandGroup(
-						endEffectorStateHandler.setState(EndEffectorState.DEFAULT), // .until(this::isReadyForNetRelease),
+						endEffectorStateHandler.setState(EndEffectorState.DEFAULT).until(this::isReadyForNetRelease),
 						endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE)
 							.withTimeout(StateMachineConstants.NET_OUTTAKE_TIME_SECONDS)
 					),

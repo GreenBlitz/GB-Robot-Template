@@ -177,27 +177,27 @@ public enum AutoPath {
 	),
 	ALGAE_REMOVE_D_TO_FIRST_NET(
 		AutonomousConstants.LinkedWaypoints.ALGAE_REMOVE_D,
-		AutonomousConstants.LinkedWaypoints.FIRST_NET,
+		AutonomousConstants.LinkedWaypoints.LEFT_NET,
 		Optional.empty()
 	),
-	FIRST_NET_TO_ALGAE_REMOVE_E(
-		AutonomousConstants.LinkedWaypoints.FIRST_NET,
+	LEFT_NET_TO_ALGAE_REMOVE_E(
+		AutonomousConstants.LinkedWaypoints.LEFT_NET,
 		AutonomousConstants.LinkedWaypoints.ALGAE_REMOVE_E,
 		Optional.empty()
 	),
-	ALGAE_REMOVE_E_TO_SECOND_NET(
+	ALGAE_REMOVE_E_TO_MIDDLE_NET(
 		AutonomousConstants.LinkedWaypoints.ALGAE_REMOVE_E,
-		AutonomousConstants.LinkedWaypoints.SECOND_NET,
+		AutonomousConstants.LinkedWaypoints.MIDDLE_NET,
 		Optional.empty()
 	),
-	SECOND_NET_TO_ALGAE_REMOVE_C(
-		AutonomousConstants.LinkedWaypoints.SECOND_NET,
+	MIDDLE_NET_TO_ALGAE_REMOVE_C(
+		AutonomousConstants.LinkedWaypoints.MIDDLE_NET,
 		AutonomousConstants.LinkedWaypoints.ALGAE_REMOVE_C,
 		Optional.empty()
 	),
-	ALGAE_REMOVE_C_TO_THIRD_NET(
+	ALGAE_REMOVE_C_TO_RIGHT_NET(
 		AutonomousConstants.LinkedWaypoints.ALGAE_REMOVE_C,
-		AutonomousConstants.LinkedWaypoints.THIRD_NET,
+		AutonomousConstants.LinkedWaypoints.RIGHT_NET,
 		Optional.empty()
 	);
 

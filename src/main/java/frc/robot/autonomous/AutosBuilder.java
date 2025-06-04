@@ -339,34 +339,34 @@ public class AutosBuilder {
 				),
 				new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.I)),
 				createAutoFromAutoPath(
-					AutoPath.FIRST_NET_TO_ALGAE_REMOVE_E,
+					AutoPath.LEFT_NET_TO_ALGAE_REMOVE_E,
 					pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
 						robot,
 						pathPlannerPath,
 						algaeRemoveCommand,
-						AutoPath.FIRST_NET_TO_ALGAE_REMOVE_E.getTargetBranch(),
+						AutoPath.LEFT_NET_TO_ALGAE_REMOVE_E.getTargetBranch(),
 						tolerance
 					)
 				),
 				createAutoFromAutoPath(
-					AutoPath.ALGAE_REMOVE_E_TO_SECOND_NET,
+					AutoPath.ALGAE_REMOVE_E_TO_MIDDLE_NET,
 					pathPlannerPath -> PathFollowingCommandsBuilder
-						.scoreToNet(robot, pathPlannerPath, netCommand, AutoPath.ALGAE_REMOVE_E_TO_SECOND_NET.getTargetBranch())
+						.scoreToNet(robot, pathPlannerPath, netCommand, AutoPath.ALGAE_REMOVE_E_TO_MIDDLE_NET.getTargetBranch())
 				),
 				createAutoFromAutoPath(
-					AutoPath.SECOND_NET_TO_ALGAE_REMOVE_C,
+					AutoPath.MIDDLE_NET_TO_ALGAE_REMOVE_C,
 					pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
 						robot,
 						pathPlannerPath,
 						algaeRemoveCommand,
-						AutoPath.SECOND_NET_TO_ALGAE_REMOVE_C.getTargetBranch(),
+						AutoPath.MIDDLE_NET_TO_ALGAE_REMOVE_C.getTargetBranch(),
 						tolerance
 					)
 				),
 				createAutoFromAutoPath(
-					AutoPath.ALGAE_REMOVE_C_TO_THIRD_NET,
+					AutoPath.ALGAE_REMOVE_C_TO_RIGHT_NET,
 					pathPlannerPath -> PathFollowingCommandsBuilder
-						.scoreToNet(robot, pathPlannerPath, netCommand, AutoPath.ALGAE_REMOVE_C_TO_THIRD_NET.getTargetBranch())
+						.scoreToNet(robot, pathPlannerPath, netCommand, AutoPath.ALGAE_REMOVE_C_TO_RIGHT_NET.getTargetBranch())
 
 				)
 			).asProxy()

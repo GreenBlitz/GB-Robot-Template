@@ -88,17 +88,17 @@ public class AutonomousConstants {
 
 		public static final Pair<String, Pose2d> L = Pair.of("L", getRobotBranchScoringBluePose(Branch.L));
 
-		public static final Pair<String, Pose2d> ALGAE_REMOVE_C = Pair.of("C", ScoringHelpers.getAlgaeRemovePose(ReefSide.C));
+		public static final Pair<String, Pose2d> ALGAE_REMOVE_C = Pair.of("ARC", ScoringHelpers.getAlgaeRemovePose(ReefSide.C));
 
-		public static final Pair<String, Pose2d> ALGAE_REMOVE_D = Pair.of("D", ScoringHelpers.getAlgaeRemovePose(ReefSide.D));
+		public static final Pair<String, Pose2d> ALGAE_REMOVE_D = Pair.of("ARD", ScoringHelpers.getAlgaeRemovePose(ReefSide.D));
 
-		public static final Pair<String, Pose2d> ALGAE_REMOVE_E = Pair.of("E", ScoringHelpers.getAlgaeRemovePose(ReefSide.E));
+		public static final Pair<String, Pose2d> ALGAE_REMOVE_E = Pair.of("ARE", ScoringHelpers.getAlgaeRemovePose(ReefSide.E));
 
-		public static final Pair<String, Pose2d> FIRST_NET = Pair.of("FN", new Pose2d(7.728, 5.064, Rotation2d.fromDegrees(0)));
+		public static final Pair<String, Pose2d> LEFT_NET = Pair.of("LN", new Pose2d(7.728, 6.740, Rotation2d.fromDegrees(0)));
 
-		public static final Pair<String, Pose2d> SECOND_NET = Pair.of("SN", new Pose2d(7.728, 6.133, Rotation2d.fromDegrees(0)));
+		public static final Pair<String, Pose2d> MIDDLE_NET = Pair.of("MN", new Pose2d(7.728, 6.045, Rotation2d.fromDegrees(0)));
 
-		public static final Pair<String, Pose2d> THIRD_NET = Pair.of("TN", new Pose2d(7.728, 6.730, Rotation2d.fromDegrees(0)));
+		public static final Pair<String, Pose2d> RIGHT_NET = Pair.of("RN", new Pose2d(7.728, 5.064, Rotation2d.fromDegrees(0)));
 
 		private static Pose2d getRobotBranchScoringBluePose(Branch branch) {
 			return ScoringHelpers.getRobotBranchScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS, false);

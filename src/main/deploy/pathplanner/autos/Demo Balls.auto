@@ -7,25 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "DToNet"
+            "pathName": null
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "NetToE"
+            "pathName": null
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "EMidNet"
+            "pathName": null
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "MidNetC"
+            "pathName": null
           }
         },
         {

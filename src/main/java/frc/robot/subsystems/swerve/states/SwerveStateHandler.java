@@ -194,10 +194,21 @@ public class SwerveStateHandler {
 
 	private ChassisSpeeds handleAlgaeRemoveAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, ReefSide reefSide, SwerveState swerveState) {
 		Translation2d algaeRemovePose = ScoringHelpers.getAlgaeRemovePose().getTranslation();
-		Rotation2d headingToReefSide = Field.getReefSideMiddle(reefSide).getRotation();
+		Rotation2d headingToReefSide = Field.getReefSideMiddle(reefSide, false).getRotation();
 
-		chassisSpeeds = AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotPose.getRotation(), headingToReefSide, swerveConstants);
-		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, headingToReefSide, algaeRemovePose, swerveConstants, swerveState);
+		Pose2d algaeRemovePoseBySide = Field
+			.getPoseBySide(new Pose2d(algaeRemovePose, headingToReefSide), Field.isOnBlueSide(robotPose.getTranslation()));
+
+		chassisSpeeds = AimAssistMath
+			.getRotationAssistedSpeeds(chassisSpeeds, robotPose.getRotation(), algaeRemovePoseBySide.getRotation(), swerveConstants);
+		return AimAssistMath.getObjectAssistedSpeeds(
+			chassisSpeeds,
+			robotPose,
+			algaeRemovePoseBySide.getRotation(),
+			algaeRemovePoseBySide.getTranslation(),
+			swerveConstants,
+			swerveState
+		);
 	}
 
 	private ChassisSpeeds handleAlgaeIntakeAimAssist(

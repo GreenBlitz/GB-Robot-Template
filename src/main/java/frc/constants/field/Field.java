@@ -27,6 +27,10 @@ public class Field {
 	public static final double LENGTH_METERS = 17.548225;
 	public static final double WIDTH_METERS = 8.0518;
 
+	public static boolean isOnBlueSide(Translation2d robotTranslation) {
+		return robotTranslation.getX() < Field.LENGTH_METERS / 2.0;
+	}
+
 	private static final Translation2d REEF_MIDDLE = new Translation2d(4.48934, 4.03225);
 
 	public static final double REEF_SIDE_LENGTH_METERS = 0.96;
@@ -89,6 +93,10 @@ public class Field {
 	public static Pose2d getReefSideMiddle(ReefSide side, boolean isAllianceRelative) {
 		Pose2d sideBlueRelativePose = REEF_SIDE_MIDDLES[side.getIndex()];
 		return isAllianceRelative ? getAllianceRelative(sideBlueRelativePose, true, true, AngleTransform.INVERT) : sideBlueRelativePose;
+	}
+
+	public static Pose2d getPoseBySide(Pose2d pose2d, boolean blueSide) {
+		return blueSide ? pose2d : FieldMath.mirror(pose2d, true, true, AngleTransform.INVERT);
 	}
 
 	public static Pose2d getReefSideMiddle(ReefSide side) {

@@ -136,9 +136,13 @@ public class ScoringHelpers {
 		ReefSide[] reefSides = ReefSide.values();
 		ReefSide closetSide = reefSides[0];
 
-		double minDistance = robotTranslation.getDistance(Field.getReefSideMiddle(closetSide).getTranslation());
+		boolean isOnBlueSide = Field.isOnBlueSide(robotTranslation);
+
+		double minDistance = robotTranslation
+			.getDistance(Field.getPoseBySide(Field.getReefSideMiddle(closetSide, false), isOnBlueSide).getTranslation());
 		for (int i = 1; i < reefSides.length; i++) {
-			double distanceFromBranch = robotTranslation.getDistance(Field.getReefSideMiddle(reefSides[i]).getTranslation());
+			double distanceFromBranch = robotTranslation
+				.getDistance(Field.getPoseBySide(Field.getReefSideMiddle(reefSides[i], false), isOnBlueSide).getTranslation());
 			if (distanceFromBranch < minDistance) {
 				closetSide = reefSides[i];
 				minDistance = distanceFromBranch;
@@ -196,7 +200,7 @@ public class ScoringHelpers {
 	}
 
 	public static Pose2d getAlgaeRemovePose() {
-		Pose2d middleOfReefSide = Field.getReefSideMiddle(getTargetReefSide());
+		Pose2d middleOfReefSide = Field.getReefSideMiddle(getTargetReefSide(), false);
 		Translation2d rotatedEndEffectorOffset = ScoringHelpers.END_EFFECTOR_TUSKS_OFFSET_FROM_MID_ROBOT
 			.rotateBy(middleOfReefSide.getRotation());
 

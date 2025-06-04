@@ -145,9 +145,11 @@ public class ScoringHelpers {
 
 		boolean isOnBlueSide = Field.isOnBlueSide(robotTranslation);
 
-		double minDistance = robotTranslation.getDistance(Field.getPoseBySide(Field.getReefSideMiddle(closetSide, false), isOnBlueSide).getTranslation());
+		double minDistance = robotTranslation
+			.getDistance(Field.getPoseBySide(Field.getReefSideMiddle(closetSide, false), isOnBlueSide).getTranslation());
 		for (int i = 1; i < reefSides.length; i++) {
-			double distanceFromBranch = robotTranslation.getDistance(Field.getPoseBySide(Field.getReefSideMiddle(reefSides[i], false), isOnBlueSide).getTranslation());
+			double distanceFromBranch = robotTranslation
+				.getDistance(Field.getPoseBySide(Field.getReefSideMiddle(reefSides[i], false), isOnBlueSide).getTranslation());
 			if (distanceFromBranch < minDistance) {
 				closetSide = reefSides[i];
 				minDistance = distanceFromBranch;

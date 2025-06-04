@@ -4,18 +4,18 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 public class ObjectData {
 
-	private final Translation2d robotRelativeEstimatedPose;
+	private final Translation2d robotRelativeEstimatedTranslation;
 	private final String objectType;
 	private final double timestamp;
 
-	public ObjectData(Translation2d robotRelativeEstimatedPose, String objectType, double timestamp) {
-		this.robotRelativeEstimatedPose = robotRelativeEstimatedPose;
+	public ObjectData(Translation2d robotRelativeEstimatedTranslation, String objectType, double timestamp) {
+		this.robotRelativeEstimatedTranslation = robotRelativeEstimatedTranslation;
 		this.objectType = objectType;
 		this.timestamp = timestamp;
 	}
 
-	public Translation2d getRobotRelativeEstimatedPose() {
-		return robotRelativeEstimatedPose;
+	public Translation2d getRobotRelativeEstimatedTranslation() {
+		return robotRelativeEstimatedTranslation;
 	}
 
 	public String getObjectType() {

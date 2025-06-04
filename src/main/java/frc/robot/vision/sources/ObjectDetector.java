@@ -28,7 +28,7 @@ public interface ObjectDetector {
 	}
 
 	private Optional<ObjectData> filterObjectData(Optional<ObjectData> objectData) {
-		if (filterObjectData(objectData).isPresent() && objectData.isPresent()) {
+		if (objectData.isPresent() && filterObjectData(objectData.get()).isPresent()) {
 			return objectData;
 		}
 		return Optional.empty();
@@ -48,10 +48,10 @@ public interface ObjectDetector {
 		ArrayList<ObjectData> allFilteredObjectData = getAllFilteredObjectData();
 		if (!allFilteredObjectData.isEmpty()) {
 			ObjectData closestObject = allFilteredObjectData.get(0);
-			double minDistance = allFilteredObjectData.get(0).getRobotRelativeEstimatedPose().getNorm();
+			double minDistance = allFilteredObjectData.get(0).getRobotRelativeEstimatedTranslation().getNorm();
 
 			for (ObjectData objectData : allFilteredObjectData) {
-				double distance = objectData.getRobotRelativeEstimatedPose().getNorm();
+				double distance = objectData.getRobotRelativeEstimatedTranslation().getNorm();
 				if (distance < minDistance) {
 					minDistance = distance;
 					closestObject = objectData;

@@ -1,5 +1,6 @@
 package frc.robot.vision.sources.limelights;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -11,6 +12,7 @@ import frc.robot.vision.sources.ObjectDetector;
 import frc.utils.Filter;
 import frc.utils.math.ObjectDetectionMath;
 import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -119,7 +121,9 @@ public class LimeLightObjectDetector implements ObjectDetector {
 	}
 
 	@Override
-	public void log() {}
+	public void log() {
+		Logger.recordOutput(logPath + "closestObjectTranslation", new Pose2d(closestObject.get().getRobotRelativeEstimatedTranslation(), new Rotation2d()));
+	}
 
 	@Override
 	public void update() {

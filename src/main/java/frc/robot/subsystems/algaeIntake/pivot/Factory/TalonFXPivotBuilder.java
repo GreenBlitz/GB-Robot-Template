@@ -9,6 +9,7 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.IDs;
+import frc.robot.Robot;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
@@ -28,8 +29,10 @@ public class TalonFXPivotBuilder {
 	private static final boolean SIMULATE_GRAVITY = false;
 	private static final double DEFAULT_ARBITRARY_FEED_FORWARD = 0;
 	private static final boolean ENABLE_FOC = false;
-	private static final double KP = 1;
-	private static final double KG = 0;
+	private static final double REAL_KP = 1;
+	private static final double REAL_KG = 0;
+	private static final double SIMULATION_KP = 1;
+	private static final double SIMULATION_KG = 0;
 
 	public static TalonFXMotor generateMotor(String logPath) {
 		SingleJointedArmSimulation sim = new SingleJointedArmSimulation(
@@ -56,8 +59,16 @@ public class TalonFXPivotBuilder {
 	private static TalonFXConfiguration generateMotorConfig() {
 		TalonFXConfiguration config = new TalonFXConfiguration();
 
-		config.Slot0.kP = KP;
-		config.Slot0.kG = KG;
+		switch (Robot.ROBOT_TYPE) {
+			case REAL -> {
+				config.Slot0.kP = REAL_KP;
+				config.Slot0.kG = REAL_KG;
+			}
+			case SIMULATION -> {
+				config.Slot0.kP = SIMULATION_KP;
+				config.Slot0.kG = SIMULATION_KG;
+			}
+		}
 
 		config.MotorOutput.Inverted = PivotConstants.IS_INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 

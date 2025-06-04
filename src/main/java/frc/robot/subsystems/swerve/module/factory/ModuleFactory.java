@@ -133,7 +133,6 @@ public class ModuleFactory {
 
 		config.MotorOutput.Inverted = IS_DRIVE_INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 
-		config.Feedback.RotorToSensorRatio = 1 / 1;
 		config.Feedback.SensorToMechanismRatio = 1 / 1;
 
 		config.CurrentLimits.StatorCurrentLimit = 40;
@@ -172,7 +171,7 @@ public class ModuleFactory {
 
 		config.MotorOutput.Inverted = IS_STEER_INVERTED ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 
-		config.Feedback.RotorToSensorRatio = 1 / 1;
+		config.Feedback.SensorToMechanismRatio = 1 / 1;
 
 		config.CurrentLimits.StatorCurrentLimit = 40;
 		config.CurrentLimits.StatorCurrentLimitEnable = true;

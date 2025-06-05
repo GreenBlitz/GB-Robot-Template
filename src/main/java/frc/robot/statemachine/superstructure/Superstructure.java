@@ -485,7 +485,7 @@ public class Superstructure extends GBSubsystem {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.NET),
-				armStateHandler.setState(ArmState.HOLD_ALGAE),
+				armStateHandler.setState(ArmState.NET),
 				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 				climbStateHandler.setState(ClimbState.CLOSE)
 			),

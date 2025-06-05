@@ -536,8 +536,8 @@ public class RobotCommander extends GBSubsystem {
 				new Rotation2d()
 			),
 			!Field.isOnBlueSide(robot.getPoseEstimator().getEstimatedPose().getTranslation()),
-			Field.isFieldConventionAlliance(),
-			Field.isFieldConventionAlliance() ? AngleTransform.KEEP : AngleTransform.INVERT
+			!Field.isFieldConventionAlliance(),
+			Field.isOnBlueSide(robot.getPoseEstimator().getEstimatedPose().getTranslation()) ? AngleTransform.KEEP : AngleTransform.INVERT
 		);
 		Supplier<Pose2d> openSuperstructurePosition = () -> FieldMath.mirror(
 			new Pose2d(
@@ -546,14 +546,14 @@ public class RobotCommander extends GBSubsystem {
 				new Rotation2d()
 			),
 			!Field.isOnBlueSide(robot.getPoseEstimator().getEstimatedPose().getTranslation()),
-			Field.isFieldConventionAlliance(),
-			Field.isFieldConventionAlliance() ? AngleTransform.KEEP : AngleTransform.INVERT
+			false,
+			Field.isOnBlueSide(robot.getPoseEstimator().getEstimatedPose().getTranslation()) ? AngleTransform.KEEP : AngleTransform.INVERT
 		);
 		Supplier<Pose2d> scoringPosition = () -> FieldMath.mirror(
 			new Pose2d(StateMachineConstants.SCORE_NET_X_POSITION_METERS, robot.getPoseEstimator().getEstimatedPose().getY(), new Rotation2d()),
 			!Field.isOnBlueSide(robot.getPoseEstimator().getEstimatedPose().getTranslation()),
-			Field.isFieldConventionAlliance(),
-			Field.isFieldConventionAlliance() ? AngleTransform.KEEP : AngleTransform.INVERT
+			false,
+			Field.isOnBlueSide(robot.getPoseEstimator().getEstimatedPose().getTranslation()) ? AngleTransform.KEEP : AngleTransform.INVERT
 		);
 
 		return asSubsystemCommand(

@@ -243,15 +243,7 @@ public class RobotCommander extends GBSubsystem {
 			<= StateMachineConstants.DISTANCE_FROM_CORAL_STATION_SLOT_TO_START_AIM_ASSIST_METERS;
 	}
 
-	private boolean isCloseToNet(double distanceOnXAxis, double distanceOnYAxis) {
-		boolean isPastX = Field.getAllianceRelative(robot.getPoseEstimator().getEstimatedPose().getTranslation(), true, true).getX()
-			> Field.LENGTH_METERS / 2 - distanceOnXAxis;
-		boolean isPastY = Field.getAllianceRelative(robot.getPoseEstimator().getEstimatedPose().getTranslation(), true, true).getY()
-			> Field.WIDTH_METERS / 2 - distanceOnYAxis;
-		return isPastX && isPastY;
-	}
-
-	private boolean isCloseToNetForAuto() {
+	private boolean isCloseToNet() {
 		Translation2d middleOfNetScoringRange = new Translation2d(7.728225, 6.03885);
 		Translation2d netScoringRangeDistancesFromMiddle = new Translation2d(0.035, 2.01295);
 		return PoseUtil.isAtTranslation(
@@ -262,11 +254,7 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public boolean isReadyForNetForAuto() {
-		return isCloseToNetForAuto();
-		/*
-		 * && swerve.isAtHeading(ScoringHelpers.getHeadingForNet(swerve), Tolerances.HEADING_FOR_NET, Tolerances.NET_DEADBANDS.getRotation()) &&
-		 * SwerveMath.isStill(swerve.getAllianceRelativeVelocity(), Tolerances.NET_DEADBANDS);
-		 */
+		return isCloseToNet();
 	}
 
 	public Command driveWith(String name, Command command, boolean asDeadline) {

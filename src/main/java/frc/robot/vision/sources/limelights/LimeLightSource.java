@@ -57,7 +57,6 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	private BooleanSupplier shouldDataBeFiltered;
 	private Filter<? super AprilTagVisionData> filter;
 	private OrientationState3D robotOrientationState;
-	private boolean isTemperatureBeingRegulated;
 
 	protected LimeLightSource(
 		String cameraNetworkTablesName,
@@ -176,7 +175,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 				pose3dDoublePair.getFirst(),
 				pose3dDoublePair.getSecond(),
 				new StandardDeviations3D(
-					poseEstimationMethod == LimelightPoseEstimationMethod.MEGATAG_1
+					poseEstimationMethod.equals(LimelightPoseEstimationMethod.MEGATAG_1)
 						? Arrays.copyOfRange(standardDeviationsArray, 0, Pose3dComponentsValue.values().length)
 						: Arrays.copyOfRange(
 							standardDeviationsArray,

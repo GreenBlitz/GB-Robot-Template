@@ -7,31 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ARD-LN"
+            "pathName": "D-FN"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "LN-ARE"
+            "pathName": "FN-E"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "ARE-MN"
+            "pathName": "E-SN"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "MN-ARC"
+            "pathName": "SN-C"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "ARC-RN"
+            "pathName": "C-TN"
           }
         }
       ]

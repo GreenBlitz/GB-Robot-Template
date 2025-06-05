@@ -381,6 +381,21 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
+	public Command postAlgaeRemove() {
+		return asSubsystemCommand(
+			new DeferredCommand(
+				() -> new ParallelCommandGroup(
+					elevatorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getElevatorState()),
+					armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getArmState()),
+					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
+					climbStateHandler.setState(ClimbState.STOP)
+				).withTimeout(StateMachineConstants.ALGAE_REMOVE_TIME_AFTER_LIMIT_SWITCH_SECONDS),
+				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector(), robot.getLifter(), robot.getSolenoid())
+			),
+			SuperstructureState.ALGAE_REMOVE
+		);
+	}
+
 	public Command processorScore() {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
@@ -588,7 +603,8 @@ public class Superstructure extends GBSubsystem {
 	private Command endState(SuperstructureState state) {
 		return switch (state) {
 			case STAY_IN_PLACE, OUTTAKE -> stayInPlace();
-			case INTAKE, IDLE, ALGAE_REMOVE, ALGAE_OUTTAKE, PROCESSOR_OUTTAKE, PRE_NET -> idle();
+			case INTAKE, IDLE, ALGAE_OUTTAKE, PROCESSOR_OUTTAKE, PRE_NET -> idle();
+			case ALGAE_REMOVE, POST_ALGAE_REMOVE -> postAlgaeRemove();
 			case NET -> softCloseNet().andThen(idle());
 			case ARM_PRE_SCORE, CLOSE_CLIMB -> armPreScore();
 			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> preScore();

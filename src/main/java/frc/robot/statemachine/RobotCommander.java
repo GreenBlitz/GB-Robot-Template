@@ -388,16 +388,14 @@ public class RobotCommander extends GBSubsystem {
 
 	public Command fullyProcessorScore() {
 		return asSubsystemCommand(
-			new SequentialCommandGroup(
-				new ParallelCommandGroup(
-					superstructure.processorWithoutRelease(),
-					swerve.getCommandsBuilder()
-						.driveToPose(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers::getAllianceRelativeProcessorScoringPose)
-				).until(this::isAtProcessorScoringPose),
-				new ParallelCommandGroup(
-					superstructure.processorScore(),
-					swerve.getCommandsBuilder().drive(() -> StateMachineConstants.SWERVE_POWERS_TO_PROCESSOR)
-				).withTimeout(StateMachineConstants.TIME_TO_RELEASE_ALGAE_TO_PROCESSOR)
+			new ParallelDeadlineGroup(
+				new SequentialCommandGroup(
+					superstructure.processorWithoutRelease().until(this::isAtProcessorScoringPose),
+					superstructure.processorScore()
+				),
+				swerve.getCommandsBuilder()
+					.driveToPose(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers::getAllianceRelativeProcessorScoringPose)
+
 			),
 			RobotState.PROCESSOR_SCORE
 		);
@@ -502,10 +500,16 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command algaeRemove() {
 		return asSubsystemCommand(
-			new ParallelDeadlineGroup(
-				superstructure.algaeRemove(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE)),
-				new StartEndCommand(() -> {}, () -> ScoringHelpers.isAutoAlgaeRemoveActivated = false)
+			new SequentialCommandGroup(
+				new ParallelDeadlineGroup(
+					superstructure.algaeRemove(),
+					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE)),
+					new StartEndCommand(() -> {}, () -> ScoringHelpers.isAutoAlgaeRemoveActivated = false)
+				),
+				new ParallelCommandGroup(
+					superstructure.postAlgaeRemove(),
+					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE))
+				).until(this::isReadyToCloseSuperstructure)
 			),
 			RobotState.ALGAE_REMOVE
 		);

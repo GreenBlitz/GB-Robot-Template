@@ -214,20 +214,20 @@ public class ScoringHelpers {
 		Translation2d rotatedRemove = ROBOT_DISTANCE_FROM_REEF_FOR_ALGAE_REMOVE.rotateBy(middleOfReefSide.getRotation());
 
 		return new Pose2d(
-				middleOfReefSide.getTranslation().minus(rotatedEndEffectorOffset).minus(rotatedRemove),
-				middleOfReefSide.getRotation()
+			middleOfReefSide.getTranslation().minus(rotatedEndEffectorOffset).minus(rotatedRemove),
+			middleOfReefSide.getRotation()
 		);
 	}
 
 	public static Pose2d getAlgaeRemovePose(ReefSide reefSide) {
 		Pose2d middleOfReefSide = Field.getReefSideMiddle(reefSide);
 		Translation2d rotatedEndEffectorOffset = ScoringHelpers.END_EFFECTOR_TUSKS_OFFSET_FROM_MID_ROBOT
-				.rotateBy(middleOfReefSide.getRotation());
+			.rotateBy(middleOfReefSide.getRotation());
 		Translation2d rotatedRemove = new Translation2d(0.49, 0).rotateBy(middleOfReefSide.getRotation());
 
 		return new Pose2d(
-				middleOfReefSide.getTranslation().minus(rotatedEndEffectorOffset).minus(rotatedRemove),
-				middleOfReefSide.getRotation()
+			middleOfReefSide.getTranslation().minus(rotatedEndEffectorOffset).minus(rotatedRemove),
+			middleOfReefSide.getRotation()
 		);
 	}
 

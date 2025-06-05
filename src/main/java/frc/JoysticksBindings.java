@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.constants.field.Field;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
@@ -83,9 +84,11 @@ public class JoysticksBindings {
 	private static Command reefActionChooser(Robot robot) {
 		return new DeferredCommand(
 			() -> robot.getRobotCommander().getSuperstructure().isCoralIn()
-				? (ScoringHelpers.isAutoAlgaeRemoveActivated
-					? robot.getRobotCommander().autoScoreThenAlgaeRemove()
-					: robot.getRobotCommander().autoScore())
+				? Field.isOnBlueSide(robot.getPoseEstimator().getEstimatedPose().getTranslation()) == Field.isFieldConventionAlliance()
+					? (ScoringHelpers.isAutoAlgaeRemoveActivated
+						? robot.getRobotCommander().autoScoreThenAlgaeRemove()
+						: robot.getRobotCommander().autoScore())
+					: new InstantCommand()
 				: new InstantCommand(() -> ScoringHelpers.setClosetReefSideTarget(robot))
 					.andThen(robot.getRobotCommander().setState(RobotState.ALGAE_REMOVE)),
 			Set.of(
@@ -169,12 +172,22 @@ public class JoysticksBindings {
 			RobotState state = robotCommander.getCurrentState();
 			Command command;
 
+<<<<<<< HEAD
 //			if (state == RobotState.NET || state == RobotState.PRE_NET) {
 			command = robotCommander.setState(RobotState.NET);
 //			}
 //			else {
 //				command = robotCommander.completeNet();
 //			}
+=======
+			if (state == RobotState.NET || state == RobotState.PRE_NET) {
+				command = robotCommander.setState(RobotState.NET);
+			} else if (state == RobotState.AUTO_PRE_NET) {
+				command = robotCommander.setState(RobotState.PRE_NET);
+			} else {
+				command = robotCommander.autoNet();
+			}
+>>>>>>> master
 			command.schedule();
 		});
 	}

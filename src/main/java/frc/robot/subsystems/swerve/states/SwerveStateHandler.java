@@ -136,10 +136,6 @@ public class SwerveStateHandler {
 			}
 		}
 
-		if (swerveState.getAimAssist() == AimAssist.NET) {
-			return handleNetAimAssist(speeds, robotPoseSupplier.get().get().getRotation());
-		}
-
 		if (swerveState.getAimAssist() == AimAssist.CAGE_ROTATION) {
 			return handleAngleCageAssist(speeds, robotPoseSupplier.get().get().getRotation());
 		}
@@ -197,11 +193,22 @@ public class SwerveStateHandler {
 	}
 
 	private ChassisSpeeds handleAlgaeRemoveAimAssist(ChassisSpeeds chassisSpeeds, Pose2d robotPose, ReefSide reefSide, SwerveState swerveState) {
-		Translation2d algaeRemovePose = ScoringHelpers.getAlgaeRemovePose().getTranslation();
-		Rotation2d headingToReefSide = Field.getReefSideMiddle(reefSide).getRotation();
+		Translation2d algaeRemovePose = ScoringHelpers.getAlgaeRemovePoseForAimAssist().getTranslation();
+		Rotation2d headingToReefSide = Field.getReefSideMiddle(reefSide, false).getRotation();
 
-		chassisSpeeds = AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotPose.getRotation(), headingToReefSide, swerveConstants);
-		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, headingToReefSide, algaeRemovePose, swerveConstants, swerveState);
+		Pose2d algaeRemovePoseBySide = Field
+			.getPoseBySide(new Pose2d(algaeRemovePose, headingToReefSide), Field.isOnBlueSide(robotPose.getTranslation()));
+
+		chassisSpeeds = AimAssistMath
+			.getRotationAssistedSpeeds(chassisSpeeds, robotPose.getRotation(), algaeRemovePoseBySide.getRotation(), swerveConstants);
+		return AimAssistMath.getObjectAssistedSpeeds(
+			chassisSpeeds,
+			robotPose,
+			algaeRemovePoseBySide.getRotation(),
+			algaeRemovePoseBySide.getTranslation(),
+			swerveConstants,
+			swerveState
+		);
 	}
 
 	private ChassisSpeeds handleAlgaeIntakeAimAssist(
@@ -214,10 +221,6 @@ public class SwerveStateHandler {
 
 		chassisSpeeds = AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotPose.getRotation(), targetHeading, swerveConstants);
 		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, targetHeading, closestAlgae, swerveConstants, swerveState);
-	}
-
-	private ChassisSpeeds handleNetAimAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading) {
-		return AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotHeading, ScoringHelpers.getHeadingForNet(swerve), swerveConstants);
 	}
 
 	private ChassisSpeeds handleAngleCageAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading) {

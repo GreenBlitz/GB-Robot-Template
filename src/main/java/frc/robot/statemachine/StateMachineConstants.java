@@ -27,8 +27,9 @@ public class StateMachineConstants {
 	}
 	public static final double TIME_TO_RELEASE_ALGAE_TO_PROCESSOR = 1;
 	public static final double SCORE_OUTTAKE_TIME_AFTER_BEAM_BREAK_SECONDS = 0;
-	public static final double NET_OUTTAKE_TIME_SECONDS = 1;
+	public static final double NET_OUTTAKE_TIME_AFTER_LIMIT_SWITCH_SECONDS = 1;
 	public static final double ALGAE_REMOVE_TIME_AFTER_LIMIT_SWITCH_SECONDS = 0;
+	public static final double PROCESSOR_TIME_AFTER_LIMIT_SWITCH_SECONDS = 0;
 	public static final double INTAKE_TIME_AFTER_BEAM_BREAK_SECONDS = 0;
 	public static final Rotation2d ARM_POSITION_TO_CLOSE_ELEVATOR_L4 = Rotation2d.fromDegrees(63 + ArmConstants.POSITION_OFFSET.getDegrees());
 	public static final Rotation2d ARM_POSITION_TO_DEPLOY_LIFTER = Rotation2d.fromDegrees(26 + ArmConstants.POSITION_OFFSET.getDegrees());

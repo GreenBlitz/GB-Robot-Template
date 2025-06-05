@@ -367,13 +367,13 @@ public class Superstructure extends GBSubsystem {
 						armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getArmState()),
 						endEffectorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getEndEffectorState()),
 						climbStateHandler.setState(ClimbState.STOP)
-					)
-//							.until(this::isAlgaeIn),
-//					new ParallelCommandGroup(
-//						elevatorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getElevatorState()),
-//						armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getArmState()),
-//						endEffectorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getEndEffectorState())
-//					).withTimeout(StateMachineConstants.ALGAE_REMOVE_TIME_AFTER_LIMIT_SWITCH_SECONDS)
+					).until(this::isAlgaeIn),
+					new ParallelCommandGroup(
+						elevatorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getElevatorState()),
+						armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getArmState()),
+						endEffectorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getEndEffectorState()),
+						climbStateHandler.setState(ClimbState.STOP)
+					).withTimeout(StateMachineConstants.ALGAE_REMOVE_TIME_AFTER_LIMIT_SWITCH_SECONDS)
 				),
 				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector(), robot.getLifter(), robot.getSolenoid())
 			),
@@ -395,9 +395,14 @@ public class Superstructure extends GBSubsystem {
 					armStateHandler.setState(ArmState.PROCESSOR_OUTTAKE),
 					endEffectorStateHandler.setState(EndEffectorState.PROCESSOR_OUTTAKE),
 					climbStateHandler.setState(ClimbState.STOP)
-				)
+				).until(() -> !isAlgaeIn()),
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getElevatorState()),
+					armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getArmState()),
+					endEffectorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getEndEffectorState()),
+					climbStateHandler.setState(ClimbState.STOP)
+				).withTimeout(StateMachineConstants.PROCESSOR_TIME_AFTER_LIMIT_SWITCH_SECONDS)
 			),
-//					.until(() -> !isAlgaeIn()),
 			SuperstructureState.PROCESSOR_OUTTAKE
 		);
 	}
@@ -453,7 +458,9 @@ public class Superstructure extends GBSubsystem {
 			new ParallelDeadlineGroup(
 				new SequentialCommandGroup(
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT).until(this::isReadyForNetRelease),
-					endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE).withTimeout(StateMachineConstants.NET_OUTTAKE_TIME_SECONDS)
+					endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE).until(() -> !isAlgaeIn()),
+					endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE)
+						.withTimeout(StateMachineConstants.NET_OUTTAKE_TIME_AFTER_LIMIT_SWITCH_SECONDS)
 				),
 				elevatorStateHandler.setState(ElevatorState.NET),
 				new SequentialCommandGroup(

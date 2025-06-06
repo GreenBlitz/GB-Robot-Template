@@ -388,14 +388,16 @@ public class RobotCommander extends GBSubsystem {
 
 	public Command fullyProcessorScore() {
 		return asSubsystemCommand(
-			new ParallelDeadlineGroup(
-				new SequentialCommandGroup(
-					superstructure.processorWithoutRelease().until(this::isAtProcessorScoringPose),
-					superstructure.processorScore()
-				),
-				swerve.getCommandsBuilder()
-					.driveToPose(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers::getAllianceRelativeProcessorScoringPose)
-
+			new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					superstructure.processorWithoutRelease(),
+					swerve.getCommandsBuilder()
+						.driveToPose(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers::getAllianceRelativeProcessorScoringPose)
+				).until(this::isAtProcessorScoringPose),
+				new ParallelCommandGroup(
+					superstructure.processorScore(),
+					swerve.getCommandsBuilder().drive(() -> StateMachineConstants.SWERVE_POWERS_TO_PROCESSOR)
+				).withTimeout(StateMachineConstants.TIME_TO_RELEASE_ALGAE_TO_PROCESSOR)
 			),
 			RobotState.PROCESSOR_SCORE
 		);

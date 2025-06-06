@@ -389,7 +389,7 @@ public class Superstructure extends GBSubsystem {
 					armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getArmState()),
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 					climbStateHandler.setState(ClimbState.STOP)
-				).withTimeout(StateMachineConstants.ALGAE_REMOVE_TIME_AFTER_LIMIT_SWITCH_SECONDS),
+				),
 				Set.of(this, robot.getElevator(), robot.getArm(), robot.getEndEffector(), robot.getLifter(), robot.getSolenoid())
 			),
 			SuperstructureState.ALGAE_REMOVE

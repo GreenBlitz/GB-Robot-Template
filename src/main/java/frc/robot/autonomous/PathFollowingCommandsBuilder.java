@@ -66,6 +66,10 @@ public class PathFollowingCommandsBuilder {
 		return AutoBuilder.pathfindToPose(targetPose, pathfindingConstraints);
 	}
 
+	public static Command pathfindToPose(Pose2d targetPose, PathConstraints pathfindingConstraints, double goalEndVelocityMetersPerSecond) {
+		return AutoBuilder.pathfindToPose(targetPose, pathfindingConstraints, goalEndVelocityMetersPerSecond);
+	}
+
 	public static Command pathfindThenFollowPath(PathPlannerPath path, PathConstraints pathfindingConstraints) {
 		return AutoBuilder.pathfindThenFollowPath(path, pathfindingConstraints);
 	}
@@ -75,13 +79,11 @@ public class PathFollowingCommandsBuilder {
 		PathConstraints pathfindingConstraints,
 		double velocityBetweenPathfindingToPathFollowingMetersPerSecond
 	) {
-		return AutoBuilder
-			.pathfindToPose(
-				Field.getAllianceRelative(PathPlannerUtil.getPathStartingPose(path), true, true, AngleTransform.INVERT),
-				pathfindingConstraints,
-				velocityBetweenPathfindingToPathFollowingMetersPerSecond
-			)
-			.andThen(followPath(path));
+		return pathfindToPose(
+			Field.getAllianceRelative(PathPlannerUtil.getPathStartingPose(path), true, true, AngleTransform.INVERT),
+			pathfindingConstraints,
+			velocityBetweenPathfindingToPathFollowingMetersPerSecond
+		).andThen(followPath(path));
 	}
 
 	public static Command followPathOrPathfindAndFollowPath(Swerve swerve, PathPlannerPath path, Supplier<Pose2d> currentPose) {

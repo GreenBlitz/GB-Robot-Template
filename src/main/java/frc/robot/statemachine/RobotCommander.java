@@ -25,6 +25,7 @@ import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.math.AngleTransform;
+import frc.utils.math.FieldMath;
 import frc.utils.math.ToleranceMath;
 import frc.utils.pose.PoseUtil;
 
@@ -528,31 +529,31 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	private Command driveToPreNet() {
-		Pose2d netEdgeOpenSuperstructurePosition = Field.getAllianceRelative(
+		Pose2d netEdgeOpenSuperstructurePosition = FieldMath.mirror(
 			new Pose2d(
 				StateMachineConstants.NET_SCORING_OPEN_SUPERSTRUCTURE_X_POSITION_METERS,
 				StateMachineConstants.MIN_NET_SCORING_Y_POSITION,
 				new Rotation2d()
 			),
-			true,
-			true,
-			AngleTransform.INVERT
+			!Field.isOnBlueSide(robot.getPoseEstimator().getEstimatedPose().getTranslation()),
+			!Field.isFieldConventionAlliance(),
+			Field.isOnBlueSide(robot.getPoseEstimator().getEstimatedPose().getTranslation()) ? AngleTransform.KEEP : AngleTransform.INVERT
 		);
-		Supplier<Pose2d> openSuperstructurePosition = () -> Field.getAllianceRelative(
+		Supplier<Pose2d> openSuperstructurePosition = () -> FieldMath.mirror(
 			new Pose2d(
 				StateMachineConstants.NET_SCORING_OPEN_SUPERSTRUCTURE_X_POSITION_METERS,
 				robot.getPoseEstimator().getEstimatedPose().getY(),
 				new Rotation2d()
 			),
-			true,
+			!Field.isOnBlueSide(robot.getPoseEstimator().getEstimatedPose().getTranslation()),
 			false,
-			AngleTransform.INVERT
+			Field.isOnBlueSide(robot.getPoseEstimator().getEstimatedPose().getTranslation()) ? AngleTransform.KEEP : AngleTransform.INVERT
 		);
-		Supplier<Pose2d> scoringPosition = () -> Field.getAllianceRelative(
+		Supplier<Pose2d> scoringPosition = () -> FieldMath.mirror(
 			new Pose2d(StateMachineConstants.SCORE_NET_X_POSITION_METERS, robot.getPoseEstimator().getEstimatedPose().getY(), new Rotation2d()),
-			true,
+			!Field.isOnBlueSide(robot.getPoseEstimator().getEstimatedPose().getTranslation()),
 			false,
-			AngleTransform.INVERT
+			Field.isOnBlueSide(robot.getPoseEstimator().getEstimatedPose().getTranslation()) ? AngleTransform.KEEP : AngleTransform.INVERT
 		);
 
 		return asSubsystemCommand(

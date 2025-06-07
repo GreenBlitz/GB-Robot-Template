@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.749077868852458,
-        "y": 4.3666495901639335
+        "x": 7.384426229508196,
+        "y": 4.0549692622950815
       },
       "isLocked": false,
       "linkedName": "SIDE-D"
     },
     {
       "anchor": {
-        "x": 7.628,
-        "y": 6.74
+        "x": 7.578,
+        "y": 5.5
       },
       "prevControl": {
-        "x": 5.522233606557377,
-        "y": 7.027920081967213
+        "x": 5.524282786885245,
+        "y": 5.841137295081967
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,18 +30,22 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
+      "waypointRelativePos": 0.05543710021322042,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 0.910447761194027,
       "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.5707148048172758,
+      "minWaypointRelativePos": 0.7400405131667792,
       "maxWaypointRelativePos": 0.9832848837209303,
       "constraints": {
         "maxVelocity": 3.8,
-        "maxAcceleration": 1.5,
+        "maxAcceleration": 1.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -65,7 +69,7 @@
     },
     {
       "name": "PRE_NET",
-      "waypointRelativePos": 0.34031060094530746,
+      "waypointRelativePos": 0.7724510465901332,
       "endWaypointRelativePos": null,
       "command": null
     }

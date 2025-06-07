@@ -42,7 +42,6 @@ import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.vision.data.AprilTagVisionData;
-import frc.robot.vision.sources.limelights.LimeLightObjectDetector;
 import frc.utils.auto.AutonomousChooser;
 import frc.utils.auto.PathPlannerUtil;
 import frc.robot.vision.VisionFilters;
@@ -76,7 +75,6 @@ public class Robot {
 	private final EndEffector endEffector;
 	private final Solenoid solenoid;
 	private final Lifter lifter;
-	private final LimeLightObjectDetector objectDetector;
 
 	private final SimulationManager simulationManager;
 	private final RobotCommander robotCommander;
@@ -93,9 +91,6 @@ public class Robot {
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 
-		objectDetector = new LimeLightObjectDetector("/ObjectDetection", "limelight-object", VisionConstants.LIMELIGHT_RIGHT_CAMERA_ROBOT_POSE);
-
-		objectDetector.clearFilter();
 		IGyro gyro = GyroFactory.createGyro(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
@@ -241,8 +236,6 @@ public class Robot {
 
 		swerve.update();
 		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());
-
-		objectDetector.update();
 
 		double poseTime = TimeUtil.getCurrentTimeSeconds();
 		poseEstimator.updateOdometry(swerve.getLatestOdometryData());

@@ -39,6 +39,7 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		this.logPath = logPath;
 		this.cameraNetworkTablesName = cameraNetworkTablesName;
 		this.cameraPose = cameraPose;
+		clearFilter();
 
 		allObjectsEntry = getLimelightNetworkTableEntry("rawdetections");
 		doesTargetExistEntry = getLimelightNetworkTableEntry("tv");
@@ -133,7 +134,7 @@ public class LimeLightObjectDetector implements ObjectDetector {
 	@Override
 	public void update() {
 //		detectedObjects = getAllFilteredObjectData();
-		closestObject = getClosestObjectData();
+		closestObject = getFilteredClosestObjectData();
 //		closestObject = getClosestFilteredObjectData();
 
 		log();

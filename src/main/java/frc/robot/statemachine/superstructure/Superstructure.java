@@ -511,6 +511,24 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
+	public Command netWithReleaseForAutonomous() {
+		return asSubsystemCommand(
+				new ParallelDeadlineGroup(
+						new SequentialCommandGroup(
+								endEffectorStateHandler.setState(EndEffectorState.DEFAULT).until(this::isReadyForNetRelease),
+								endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE).withTimeout(StateMachineConstants.AUTONOMOUS_NET_OUTTAKE_TIME_SECONDS)
+						),
+						elevatorStateHandler.setState(ElevatorState.NET),
+						new SequentialCommandGroup(
+								armStateHandler.setState(ArmState.PRE_NET).until(this::isPreNetReady),
+								armStateHandler.setState(ArmState.NET)
+						),
+						climbStateHandler.setState(ClimbState.STOP)
+				),
+				SuperstructureState.NET
+		);
+	}
+
 
 	public Command preClimb() {
 		return asSubsystemCommand(

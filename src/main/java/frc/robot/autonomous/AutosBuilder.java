@@ -308,27 +308,26 @@ public class AutosBuilder {
 	}
 
 	private static Command autoBalls(Robot robot, Supplier<Command> algaeRemoveCommand, Supplier<Command> netCommand, Pose2d tolerance) {
-		PathPlannerPath path = getAutoScorePath(Branch.H, robot);
+		PathPlannerPath path = getAutoScorePath(Branch.G, robot);
 		Pose2d backOffFromReefPose = Field.getAllianceRelative(
-			Field.getReefSideMiddle(Branch.H.getReefSide())
+			Field.getReefSideMiddle(Branch.G.getReefSide())
 				.plus(new Transform2d(AutonomousConstants.BACK_OFF_FROM_REEF_DISTANCE_METERS, 0, new Rotation2d())),
 			false,
 			true,
 			AngleTransform.MIRROR_Y
 		);
-		ScoringHelpers.setTargetBranch(Branch.H);
+		ScoringHelpers.setTargetBranch(Branch.G);
 
 		Command autoBalls = new SequentialCommandGroup(
 			autoScoreToChosenBranch(robot, path),
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
-					robot.getRobotCommander().getSuperstructure().algaeRemove().asProxy(),
+					robot.getRobotCommander().getSuperstructure().holdAlgae().asProxy(),
 					robot.getSwerve()
 						.getCommandsBuilder()
 						.moveToPoseByPID(
 							robot.getPoseEstimator()::getEstimatedPose,
-							backOffFromReefPose,
-							SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW)
+							backOffFromReefPose
 						)
 				).until(
 					() -> ToleranceMath.isNear(robot.getPoseEstimator().getEstimatedPose(), backOffFromReefPose, tolerance)
@@ -340,10 +339,9 @@ public class AutosBuilder {
 						.getCommandsBuilder()
 						.moveToPoseByPID(
 							robot.getPoseEstimator()::getEstimatedPose,
-							ScoringHelpers.getAlgaeRemovePose(),
-							SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW)
+							ScoringHelpers.getAlgaeRemovePose()
 						)
-				).withTimeout(AutonomousConstants.ALGAE_REMOVE_TIMEOUT_SECONDS),
+				).withTimeout(AutonomousConstants.FIRST_ALGAE_REMOVE_TIMEOUT_SECONDS),
 				createAutoFromAutoPath(
 					AutoPath.ALGAE_REMOVE_D_TO_FIRST_NET,
 					pathPlannerPath -> PathFollowingCommandsBuilder

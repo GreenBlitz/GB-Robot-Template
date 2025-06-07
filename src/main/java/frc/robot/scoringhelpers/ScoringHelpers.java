@@ -21,7 +21,7 @@ public class ScoringHelpers {
 
 	public static final Translation2d END_EFFECTOR_OFFSET_FROM_MID_ROBOT = new Translation2d(0, -0.025);
 	public static final Translation2d END_EFFECTOR_TUSKS_OFFSET_FROM_MID_ROBOT = new Translation2d(0, -0.017);
-	public static final Translation2d ROBOT_DISTANCE_FROM_REEF_FOR_ALGAE_REMOVE = new Translation2d(0.49, 0);
+	public static final Translation2d ROBOT_DISTANCE_FROM_REEF_FOR_ALGAE_REMOVE = new Translation2d(0.26, 0);
 	private static final double TIME_FOR_POSE_MOVEMENT_SECONDS = 0.5;
 	private static final Pose2d PROCESSOR_SCORING_POSE = new Pose2d(6.05, 1, Rotation2d.fromDegrees(90));
 	private static final Rotation2d HEADING_FOR_CAGE = Rotation2d.fromDegrees(180);

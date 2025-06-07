@@ -87,7 +87,8 @@ public class AutosBuilder {
 		autos.add(() -> leftNoDelayAuto(robot, intakingCommand, scoringCommand, tolerance));
 		autos.add(() -> centerNoDelayAuto(robot));
 		autos.add(() -> rightNoDelayAuto(robot, intakingCommand, scoringCommand, tolerance));
-		autos.add(() -> autoBalls(robot, algaeRemoveCommand, netCommand, tolerance));
+		autos.add(() -> autoBalls(robot, algaeRemoveCommand, netCommand, tolerance, Branch.G, ScoreLevel.L4));
+		autos.add(() -> autoBalls(robot, algaeRemoveCommand, netCommand, tolerance, Branch.H, ScoreLevel.L4));
 		return autos;
 	}
 
@@ -140,8 +141,8 @@ public class AutosBuilder {
 		return robot.getRobotCommander().autoScoreForAutonomous(path);
 	}
 
-	public static PathPlannerPath getAutoScorePath(Branch branch, Robot robot) {
-		ScoringHelpers.targetScoreLevel = ScoreLevel.L4;
+	public static PathPlannerPath getAutoScorePath(Branch branch, Robot robot, ScoreLevel scoreLevel) {
+		ScoringHelpers.targetScoreLevel = scoreLevel;
 		ScoringHelpers.setTargetBranch(branch);
 
 		Pose2d startingPose = robot.getPoseEstimator().getEstimatedPose();
@@ -188,7 +189,7 @@ public class AutosBuilder {
 	}
 
 	public static Command leftNoDelayAuto(Robot robot, Supplier<Command> intakingCommand, Supplier<Command> scoringCommand, Pose2d tolerance) {
-		PathPlannerPath path = getAutoScorePath(Branch.I, robot);
+		PathPlannerPath path = getAutoScorePath(Branch.I, robot, ScoreLevel.L4);
 
 		Command auto = new SequentialCommandGroup(
 			autoScoreToChosenBranch(robot, path),
@@ -248,7 +249,7 @@ public class AutosBuilder {
 	}
 
 	private static Command rightNoDelayAuto(Robot robot, Supplier<Command> intakingCommand, Supplier<Command> scoringCommand, Pose2d tolerance) {
-		PathPlannerPath path = getAutoScorePath(Branch.F, robot);
+		PathPlannerPath path = getAutoScorePath(Branch.F, robot, ScoreLevel.L4);
 
 		Command auto = new SequentialCommandGroup(
 			autoScoreToChosenBranch(robot, path),
@@ -307,16 +308,16 @@ public class AutosBuilder {
 		return auto;
 	}
 
-	private static Command autoBalls(Robot robot, Supplier<Command> algaeRemoveCommand, Supplier<Command> netCommand, Pose2d tolerance) {
-		PathPlannerPath path = getAutoScorePath(Branch.G, robot);
+	private static Command autoBalls(Robot robot, Supplier<Command> algaeRemoveCommand, Supplier<Command> netCommand, Pose2d tolerance, Branch firstAutoScoreTargetBranch, ScoreLevel firstAutoScoreTargetScoreLevel) {
+		PathPlannerPath path = getAutoScorePath(firstAutoScoreTargetBranch, robot, firstAutoScoreTargetScoreLevel);
 		Pose2d backOffFromReefPose = Field.getAllianceRelative(
-			Field.getReefSideMiddle(Branch.G.getReefSide())
+			Field.getReefSideMiddle(firstAutoScoreTargetBranch.getReefSide())
 				.plus(new Transform2d(AutonomousConstants.BACK_OFF_FROM_REEF_DISTANCE_METERS, 0, new Rotation2d())),
 			false,
 			true,
 			AngleTransform.MIRROR_Y
 		);
-		ScoringHelpers.setTargetBranch(Branch.G);
+		ScoringHelpers.setTargetBranch(firstAutoScoreTargetBranch);
 
 		Command autoBalls = new SequentialCommandGroup(
 			autoScoreToChosenBranch(robot, path),
@@ -382,13 +383,17 @@ public class AutosBuilder {
 			).asProxy()
 		);
 
-		autoBalls.setName("auto balls");
+		String side = firstAutoScoreTargetBranch.isLeft() ? "left" : "right";
+
+		autoBalls.setName(
+				side + " " + firstAutoScoreTargetScoreLevel.toString() + " auto balls"
+		);
 
 		return autoBalls;
 	}
 
 	private static Command centerNoDelayAuto(Robot robot) {
-		PathPlannerPath path = getAutoScorePath(Branch.H, robot);
+		PathPlannerPath path = getAutoScorePath(Branch.H, robot, ScoreLevel.L4);
 
 		Command auto = autoScoreToChosenBranch(robot, path);
 		auto.setName("center no delay");

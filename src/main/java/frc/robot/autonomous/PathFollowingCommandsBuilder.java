@@ -10,7 +10,9 @@ import frc.constants.field.enums.Branch;
 import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.StateMachineConstants;
+import frc.robot.statemachine.Tolerances;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.SwerveMath;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.math.AngleTransform;
 import frc.utils.math.ToleranceMath;
@@ -60,6 +62,11 @@ public class PathFollowingCommandsBuilder {
 	public static Command scoreToNet(Robot robot, PathPlannerPath path, Supplier<Command> commandSupplier, Optional<Branch> targetBranch) {
 		return new ParallelDeadlineGroup(
 			new SequentialCommandGroup(new WaitUntilCommand(() -> robot.getRobotCommander().isReadyForNetForAuto()), commandSupplier.get()),
+			new ConditionalCommand(
+					new RunCommand(() -> {}).withTimeout(2).andThen(commandSupplier.get()),
+					new InstantCommand(),
+					() -> SwerveMath.isStill(robot.getSwerve().getRobotRelativeVelocity(), Tolerances.REEF_RELATIVE_SCORING_DEADBANDS)
+			),
 			followAdjustedPathWithoutStop(robot, path, targetBranch)
 		);
 	}

@@ -15,7 +15,7 @@ public class ObjectDetectionMath {
 	}
 
 	public static double getCameraRelativeXAxisDistance(Rotation2d cameraRelativePitch, Pose3d cameraPose, double centerOfObjectHeightMeters) {
-		Rotation2d pitch = cameraRelativePitch.minus(Rotation2d.fromRadians(cameraPose.getRotation().getY()));
+		Rotation2d pitch = cameraRelativePitch.plus(Rotation2d.fromRadians(cameraPose.getRotation().getY()));
 		double heightMeters = centerOfObjectHeightMeters - cameraPose.getZ();
 		return heightMeters / Math.tan(pitch.getRadians());
 	}

@@ -28,7 +28,6 @@ public class EndEffectorSparkMaxBuilder {
 	private static final double GEAR_RATIO = 25.0 / 6.0;
 	private static final double MOMENT_OF_INERTIA = 0.001;
 
-
 	private static final Double DEBOUNCE_TIME_SECONDS = 0.1;
 
 	private static void configMotor(SparkMaxMotor sparkMaxMotor) {

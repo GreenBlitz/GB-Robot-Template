@@ -76,7 +76,7 @@ public class EndEffector extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-// algaeLimitSwitch.updateInputs(algaeLimitSwitchInputs);
+		// algaeLimitSwitch.updateInputs(algaeLimitSwitchInputs);
 		coralBeamBreaker.updateInputs(coralBeamBreakerInputs);
 
 		roller.updateSimulation();

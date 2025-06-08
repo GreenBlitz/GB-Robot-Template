@@ -502,10 +502,16 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command algaeRemove() {
 		return asSubsystemCommand(
-			new ParallelDeadlineGroup(
-				superstructure.algaeRemove(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE)),
-				new StartEndCommand(() -> {}, () -> ScoringHelpers.isAutoAlgaeRemoveActivated = false)
+			new SequentialCommandGroup(
+				new ParallelDeadlineGroup(
+					superstructure.algaeRemove(),
+					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE)),
+					new StartEndCommand(() -> {}, () -> ScoringHelpers.isAutoAlgaeRemoveActivated = false)
+				),
+				new ParallelCommandGroup(
+					superstructure.postAlgaeRemove(),
+					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE))
+				).until(this::isReadyToCloseSuperstructure)
 			),
 			RobotState.ALGAE_REMOVE
 		);

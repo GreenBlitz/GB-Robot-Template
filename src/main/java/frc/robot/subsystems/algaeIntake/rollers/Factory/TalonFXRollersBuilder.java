@@ -1,6 +1,8 @@
 package frc.robot.subsystems.algaeIntake.rollers.Factory;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -54,7 +56,9 @@ public class TalonFXRollersBuilder {
 		InputSignal<Double> voltageSignal = Phoenix6SignalBuilder
 			.build(rollers.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
 
-		return new Rollers(logPath, rollers, voltageSignal);
+		CANrange canRange = new CANrange(IDs.CANRangeIDs.ROLLERS_CAN_RANGE, BusChain.ROBORIO.getChainName());
+
+		return new Rollers(logPath, rollers, voltageSignal, canRange);
 	}
 
 }

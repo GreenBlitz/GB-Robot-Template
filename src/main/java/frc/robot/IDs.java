@@ -47,6 +47,12 @@ public class IDs {
 
 	}
 
+	public static class CANRangeIDs {
+
+		public static final int ROLLERS_CAN_RANGE = 3;
+
+	}
+
 	public static class SparkMAXIDs {
 
 		public static final SparkMaxDeviceID END_EFFECTOR = new SparkMaxDeviceID(5);

@@ -19,4 +19,8 @@ public class RollersStateHandler {
 		return rollers.getCommandsBuilder().setPower(state.getPower());
 	}
 
+	public boolean isAlgaeIn() {
+		return rollers.isAlgaeIn();
+	}
+
 }

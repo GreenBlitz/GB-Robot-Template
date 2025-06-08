@@ -262,7 +262,10 @@ public class RobotCommander extends GBSubsystem {
 			case SCORE_WITHOUT_RELEASE -> scoreWithoutRelease();
 			case SCORE -> score();
 			case ALGAE_REMOVE -> algaeRemove();
-			case ALGAE_OUTTAKE -> algaeOuttake();
+			case ALGAE_OUTTAKE_FROM_END_EFFECTOR -> algaeOuttakeFromEndEffector();
+			case ALGAE_OUTTAKE_FROM_INTAKE -> algaeOuttakeFromIntake();
+			case ALGAE_INTAKE -> algaeIntake();
+			case TRANSFER_ALGAE_TO_END_EFFECTOR -> transferAlgaeFromIntakeToEndEffector();
 			case AUTO_PRE_NET -> driveToPreNet();
 			case PRE_NET -> preNet();
 			case NET -> net();
@@ -511,15 +514,46 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	private Command algaeOuttake() {
+	private Command algaeOuttakeFromEndEffector() {
 		return asSubsystemCommand(
 			new ParallelDeadlineGroup(
-				superstructure.algaeOuttake(),
+				superstructure.algaeOuttakeFromEndEffector(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
 			),
-			RobotState.ALGAE_OUTTAKE
+			RobotState.ALGAE_OUTTAKE_FROM_END_EFFECTOR
 		);
 	}
+
+	private Command algaeOuttakeFromIntake() {
+		return asSubsystemCommand(
+			new ParallelDeadlineGroup(
+				superstructure.algaeOuttakeFromIntake(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+			),
+			RobotState.ALGAE_OUTTAKE_FROM_INTAKE
+		);
+	}
+
+	private Command algaeIntake() {
+		return asSubsystemCommand(
+			new ParallelDeadlineGroup(
+				superstructure.algaeIntake(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_INTAKE))
+			),
+			RobotState.ALGAE_INTAKE
+		);
+	}
+
+	private Command transferAlgaeFromIntakeToEndEffector() {
+		return asSubsystemCommand(
+			new ParallelDeadlineGroup(
+				superstructure.transferAlgaeFromIntakeToEndEffector(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+			),
+			RobotState.TRANSFER_ALGAE_TO_END_EFFECTOR
+		);
+	}
+
 
 	private Command preNet() {
 		return asSubsystemCommand(
@@ -725,9 +759,18 @@ public class RobotCommander extends GBSubsystem {
 	private Command endState(RobotState state) {
 		return switch (state) {
 			case STAY_IN_PLACE, CORAL_OUTTAKE -> stayInPlace();
-			case INTAKE_WITH_AIM_ASSIST, INTAKE_WITHOUT_AIM_ASSIST, DRIVE, ALIGN_REEF, ALGAE_OUTTAKE, PROCESSOR_SCORE -> drive();
+			case
+				INTAKE_WITH_AIM_ASSIST,
+				INTAKE_WITHOUT_AIM_ASSIST,
+				DRIVE,
+				ALIGN_REEF,
+				ALGAE_OUTTAKE_FROM_END_EFFECTOR,
+				PROCESSOR_SCORE,
+				ALGAE_OUTTAKE_FROM_INTAKE,
+				ALGAE_INTAKE ->
+				drive();
 			case AUTO_PRE_NET, PRE_NET, NET -> afterNet();
-			case ALGAE_REMOVE, HOLD_ALGAE -> holdAlgae();
+			case ALGAE_REMOVE, HOLD_ALGAE, TRANSFER_ALGAE_TO_END_EFFECTOR -> holdAlgae();
 			case ARM_PRE_SCORE, CLOSE_CLIMB -> armPreScore();
 			case PRE_SCORE -> preScore();
 			case SCORE, SCORE_WITHOUT_RELEASE -> afterScore();

@@ -8,7 +8,11 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.constants.field.Field;
 import frc.constants.field.enums.Branch;
 import frc.robot.Robot;
@@ -375,7 +379,6 @@ public class AutosBuilder {
 					AutoPath.ALGAE_REMOVE_C_TO_RIGHT_NET,
 					pathPlannerPath -> PathFollowingCommandsBuilder
 						.scoreToNet(robot, pathPlannerPath, netCommand, AutoPath.ALGAE_REMOVE_C_TO_RIGHT_NET.getTargetBranch())
-
 				)
 			).asProxy()
 		);

@@ -10,7 +10,6 @@ import frc.constants.field.enums.Branch;
 import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.StateMachineConstants;
-import frc.robot.statemachine.Tolerances;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveMath;
 import frc.utils.auto.PathPlannerUtil;
@@ -65,7 +64,7 @@ public class PathFollowingCommandsBuilder {
 			new SequentialCommandGroup(new WaitUntilCommand(() -> robot.getRobotCommander().isReadyForNetForAuto()), commandSupplier.get()),
 			followAdjustedPath(robot, path, targetBranch, AutonomousConstants.TARGET_POSE_TOLERANCES).andThen(
 				netAutoReleaseAfterDelay.onlyIf(
-					() -> SwerveMath.isStill(robot.getSwerve().getRobotRelativeVelocity(), Tolerances.REEF_RELATIVE_SCORING_DEADBANDS)
+					() -> SwerveMath.isStill(robot.getSwerve().getRobotRelativeVelocity(), AutonomousConstants.NET_AUTO_RELEASE_DEADBANDS)
 						&& !robot.getRobotCommander().isReadyForNetForAuto()
 				)
 			)

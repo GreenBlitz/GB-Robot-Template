@@ -20,6 +20,8 @@ public class AutonomousConstants {
 
 	public static final Pose2d TARGET_POSE_TOLERANCES = new Pose2d(0.035, 0.035, Rotation2d.fromDegrees(2));
 
+	public static final Pose2d NET_AUTO_RELEASE_DEADBANDS = new Pose2d(1, 1, Rotation2d.fromRadians(2));
+
 	public static final double DEFAULT_AUTO_DRIVE_POWER = -0.3;
 
 	public static final double DEFAULT_AUTO_DRIVE_TIME_SECONDS = 1;

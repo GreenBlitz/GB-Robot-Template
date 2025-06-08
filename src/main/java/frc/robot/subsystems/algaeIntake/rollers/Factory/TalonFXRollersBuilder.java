@@ -1,6 +1,5 @@
 package frc.robot.subsystems.algaeIntake.rollers.Factory;
 
-import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.signals.InvertedValue;

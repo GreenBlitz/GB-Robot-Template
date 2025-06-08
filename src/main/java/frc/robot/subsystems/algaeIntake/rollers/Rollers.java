@@ -1,7 +1,6 @@
 package frc.robot.subsystems.algaeIntake.rollers;
 
 import com.ctre.phoenix6.hardware.CANrange;
-import edu.wpi.first.units.DistanceUnit;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
@@ -13,7 +12,7 @@ public class Rollers extends GBSubsystem {
 	private final CANrange canRange;
 	private final RollersCommandsBuilder commandsBuilder;
 
-	public Rollers(String logPath, ControllableMotor rollers, InputSignal<Double> voltageSignal, CANrange canRange){
+	public Rollers(String logPath, ControllableMotor rollers, InputSignal<Double> voltageSignal, CANrange canRange) {
 		super(logPath);
 		this.rollers = rollers;
 		this.voltageSignal = voltageSignal;
@@ -32,7 +31,7 @@ public class Rollers extends GBSubsystem {
 		return voltageSignal.getLatestValue();
 	}
 
-	public boolean isAlgaeIn(){
+	public boolean isAlgaeIn() {
 		return canRange.getDistance().getValueAsDouble() < RollersConstants.DISTANCE_FROM_CAN_RANGE_TO_DETECT_ALGAE_METERS;
 	}
 

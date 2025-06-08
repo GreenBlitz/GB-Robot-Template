@@ -6,6 +6,7 @@ public enum AlgaeIntakeState {
 	INTAKE,
 	TRANSFER_TO_END_EFFECTOR,
 	OUTTAKE,
+	HOLD_ALGAE,
 	STAY_IN_PLACE
 
 }

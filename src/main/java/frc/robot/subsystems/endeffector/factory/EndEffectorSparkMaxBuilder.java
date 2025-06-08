@@ -28,8 +28,6 @@ public class EndEffectorSparkMaxBuilder {
 	private static final double GEAR_RATIO = 25.0 / 6.0;
 	private static final double MOMENT_OF_INERTIA = 0.001;
 
-	private static final boolean IS_ALGAE_DIGITAL_INPUT_INVERTED = true;
-	private static final boolean IS_CORAL_DIGITAL_INPUT_INVERTED = false;
 
 	private static final Double DEBOUNCE_TIME_SECONDS = 0.1;
 
@@ -71,17 +69,9 @@ public class EndEffectorSparkMaxBuilder {
 
 		return switch (limitSwitch) {
 			case FORWARD ->
-				new SuppliedDigitalInput(
-					() -> sparkMaxWrapper.getForwardLimitSwitch().isPressed(),
-					new Debouncer(DEBOUNCE_TIME_SECONDS),
-					IS_ALGAE_DIGITAL_INPUT_INVERTED
-				);
+				new SuppliedDigitalInput(() -> sparkMaxWrapper.getForwardLimitSwitch().isPressed(), new Debouncer(DEBOUNCE_TIME_SECONDS));
 			case REVERSE ->
-				new SuppliedDigitalInput(
-					() -> sparkMaxWrapper.getReverseLimitSwitch().isPressed(),
-					new Debouncer(DEBOUNCE_TIME_SECONDS),
-					IS_CORAL_DIGITAL_INPUT_INVERTED
-				);
+				new SuppliedDigitalInput(() -> sparkMaxWrapper.getReverseLimitSwitch().isPressed(), new Debouncer(DEBOUNCE_TIME_SECONDS));
 		};
 	}
 

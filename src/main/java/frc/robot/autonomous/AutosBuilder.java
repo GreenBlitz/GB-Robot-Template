@@ -18,8 +18,6 @@ import frc.robot.subsystems.elevator.ElevatorState;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.superstructure.ScoreLevel;
-import frc.robot.subsystems.swerve.states.DriveSpeed;
-import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.auto.AutoPath;
 import frc.utils.auto.PathHelper;
 import frc.utils.auto.PathPlannerAutoWrapper;
@@ -308,7 +306,14 @@ public class AutosBuilder {
 		return auto;
 	}
 
-	private static Command autoBalls(Robot robot, Supplier<Command> algaeRemoveCommand, Supplier<Command> netCommand, Pose2d tolerance, Branch firstAutoScoreTargetBranch, ScoreLevel firstAutoScoreTargetScoreLevel) {
+	private static Command autoBalls(
+		Robot robot,
+		Supplier<Command> algaeRemoveCommand,
+		Supplier<Command> netCommand,
+		Pose2d tolerance,
+		Branch firstAutoScoreTargetBranch,
+		ScoreLevel firstAutoScoreTargetScoreLevel
+	) {
 		PathPlannerPath path = getAutoScorePath(firstAutoScoreTargetBranch, robot, firstAutoScoreTargetScoreLevel);
 		Pose2d backOffFromReefPose = Field.getAllianceRelative(
 			Field.getReefSideMiddle(firstAutoScoreTargetBranch.getReefSide())
@@ -324,12 +329,7 @@ public class AutosBuilder {
 			new SequentialCommandGroup(
 				new ParallelCommandGroup(
 					robot.getRobotCommander().getSuperstructure().holdAlgae().asProxy(),
-					robot.getSwerve()
-						.getCommandsBuilder()
-						.moveToPoseByPID(
-							robot.getPoseEstimator()::getEstimatedPose,
-							backOffFromReefPose
-						)
+					robot.getSwerve().getCommandsBuilder().moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, backOffFromReefPose)
 				).until(
 					() -> ToleranceMath.isNear(robot.getPoseEstimator().getEstimatedPose(), backOffFromReefPose, tolerance)
 						&& robot.getElevator().isAtPosition(ElevatorState.HOLD_ALGAE.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
@@ -338,10 +338,7 @@ public class AutosBuilder {
 					robot.getRobotCommander().getSuperstructure().algaeRemove().asProxy(),
 					robot.getSwerve()
 						.getCommandsBuilder()
-						.moveToPoseByPID(
-							robot.getPoseEstimator()::getEstimatedPose,
-							ScoringHelpers.getAlgaeRemovePose()
-						)
+						.moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers.getAlgaeRemovePose())
 				).withTimeout(AutonomousConstants.FIRST_ALGAE_REMOVE_TIMEOUT_SECONDS),
 				createAutoFromAutoPath(
 					AutoPath.ALGAE_REMOVE_D_TO_FIRST_NET,
@@ -385,9 +382,7 @@ public class AutosBuilder {
 
 		String side = firstAutoScoreTargetBranch.isLeft() ? "left" : "right";
 
-		autoBalls.setName(
-				side + " " + firstAutoScoreTargetScoreLevel.toString() + " auto balls"
-		);
+		autoBalls.setName(side + " " + firstAutoScoreTargetScoreLevel.toString() + " auto balls");
 
 		return autoBalls;
 	}

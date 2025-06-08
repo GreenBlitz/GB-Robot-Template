@@ -49,7 +49,7 @@ public class IDs {
 
 	public static class CANRangeIDs {
 
-		public static final int ROLLERS_CAN_RANGE = 3;
+		public static final Phoenix6DeviceID ROLLERS_CAN_RANGE = new Phoenix6DeviceID(13, BusChain.ROBORIO);
 
 	}
 

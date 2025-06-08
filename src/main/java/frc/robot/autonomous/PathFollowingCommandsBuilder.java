@@ -58,16 +58,19 @@ public class PathFollowingCommandsBuilder {
 			followAdjustedPathWithoutStop(robot, path, targetBranch)
 		);
 	}
+	
 
 	public static Command scoreToNet(Robot robot, PathPlannerPath path, Supplier<Command> commandSupplier, Optional<Branch> targetBranch) {
-		return new ParallelDeadlineGroup(
+		Command idk = new SequentialCommandGroup(
+				new WaitCommand(2),
+				commandSupplier.get()
+		);
+		return new ParallelRaceGroup(
 			new SequentialCommandGroup(new WaitUntilCommand(() -> robot.getRobotCommander().isReadyForNetForAuto()), commandSupplier.get()),
-			new ConditionalCommand(
-					new RunCommand(() -> {}).withTimeout(2).andThen(commandSupplier.get()),
-					new InstantCommand(),
-					() -> SwerveMath.isStill(robot.getSwerve().getRobotRelativeVelocity(), Tolerances.REEF_RELATIVE_SCORING_DEADBANDS)
-			),
-			followAdjustedPathWithoutStop(robot, path, targetBranch)
+			followAdjustedPathWithoutStop(robot, path, targetBranch).andThen(idk/*.onlyIf(() -> SwerveMath.isStill(
+					robot.getSwerve().getRobotRelativeVelocity(),
+					Tolerances.REEF_RELATIVE_SCORING_DEADBANDS
+			))*/)
 		);
 	}
 

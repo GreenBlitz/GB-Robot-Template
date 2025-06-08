@@ -55,7 +55,7 @@ public class TalonFXRollersBuilder {
 		InputSignal<Double> voltageSignal = Phoenix6SignalBuilder
 			.build(rollers.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
 
-		CANrange canRange = new CANrange(IDs.CANRangeIDs.ROLLERS_CAN_RANGE, BusChain.ROBORIO.getChainName());
+		CANrange canRange = new CANrange(IDs.CANRangeIDs.ROLLERS_CAN_RANGE.id(), IDs.CANRangeIDs.ROLLERS_CAN_RANGE.busChain().getChainName());
 
 		return new Rollers(logPath, rollers, voltageSignal, canRange);
 	}

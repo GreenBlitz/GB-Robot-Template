@@ -42,7 +42,6 @@ import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.vision.data.AprilTagVisionData;
-import frc.robot.vision.od.LimeLightObjectDetector;
 import frc.utils.auto.AutonomousChooser;
 import frc.utils.auto.PathPlannerUtil;
 import frc.robot.vision.VisionFilters;
@@ -89,12 +88,8 @@ public class Robot {
 	private AutonomousChooser fourthObjectIntakingLocationChooser;
 	private AutonomousChooser fourthObjectScoringLocationChooser;
 
-	private final LimeLightObjectDetector objectDetector;
-
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
-
-		objectDetector = new LimeLightObjectDetector("ObjectDetection/", "limelight-object", VisionConstants.LIMELIGHT_RIGHT_CAMERA_ROBOT_POSE);
 
 		IGyro gyro = GyroFactory.createGyro(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(
@@ -236,8 +231,6 @@ public class Robot {
 
 	public void periodic() {
 		double startingTime = TimeUtil.getCurrentTimeSeconds();
-
-		objectDetector.update();
 
 		Phoenix6SignalBuilder.refreshAll();
 

@@ -6,14 +6,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import frc.robot.vision.VisionConstants;
 import frc.robot.vision.data.ObjectData;
 import frc.utils.Filter;
 import frc.utils.math.ObjectDetectionMath;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 public class LimeLightObjectDetector implements ObjectDetector {
@@ -23,10 +21,8 @@ public class LimeLightObjectDetector implements ObjectDetector {
 	private final Pose3d cameraPose;
 
 	private Filter<? super ObjectData> filter;
-	private ArrayList<ObjectData> detectedObjects;
 	private Optional<ObjectData> closestObject;
 
-	private final NetworkTableEntry allObjectsEntry;
 	private final NetworkTableEntry doesTargetExistEntry;
 	private final NetworkTableEntry closestObjectTxEntry;
 	private final NetworkTableEntry closestObjectTyEntry;
@@ -40,7 +36,6 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		this.cameraPose = cameraPose;
 		clearFilter();
 
-		allObjectsEntry = getLimelightNetworkTableEntry("rawdetections");
 		doesTargetExistEntry = getLimelightNetworkTableEntry("tv");
 		closestObjectTxEntry = getLimelightNetworkTableEntry("tx");
 		closestObjectTyEntry = getLimelightNetworkTableEntry("ty");
@@ -51,46 +46,6 @@ public class LimeLightObjectDetector implements ObjectDetector {
 
 	protected NetworkTableEntry getLimelightNetworkTableEntry(String entryName) {
 		return NetworkTableInstance.getDefault().getTable(cameraNetworkTablesName).getEntry(entryName);
-	}
-
-	private static ArrayList<ObjectData> objectsEntryToObjectDataArray(
-		NetworkTableEntry allObjectsEntry,
-		NetworkTableEntry pipelineLatencyEntry,
-		NetworkTableEntry captureLatencyEntry,
-		Pose3d cameraPose
-	) {
-		double[] entryArray = allObjectsEntry.getDoubleArray(new double[0]);
-		int objectAmount = entryArray.length / VisionConstants.OBJECT_CELL_AMOUNT_IN_RAW_DETECTIONS_ENTRY;
-		ArrayList<ObjectData> detectedObjects = new ArrayList<>();
-
-		for (int i = 0; i < objectAmount; i++) {
-			int firstCell = VisionConstants.OBJECT_CELL_AMOUNT_IN_RAW_DETECTIONS_ENTRY * i;
-			ObjectData objectData = objectsEntryArrayToObjectData(entryArray, firstCell, pipelineLatencyEntry, captureLatencyEntry, cameraPose);
-			detectedObjects.add(objectData);
-		}
-		return detectedObjects;
-	}
-
-	private static ObjectData objectsEntryArrayToObjectData(
-		double[] entryArray,
-		int firstCell,
-		NetworkTableEntry pipelineLatencyEntry,
-		NetworkTableEntry captureLatencyEntry,
-		Pose3d cameraPose
-	) {
-		ObjectType objectType = ObjectType.ALGAE;
-
-		Rotation2d cameraRelativeYaw = Rotation2d
-			.fromDegrees(entryArray[firstCell + 1] - (VisionConstants.LIMELIGHT_3_HORIZONTAL_FOV.getDegrees() / 2));
-		Rotation2d cameraRelativePitch = Rotation2d
-			.fromDegrees(entryArray[firstCell + 2] - (VisionConstants.LIMELIGHT_3_VERTICAL_FOV.getDegrees() / 2));
-		Translation2d robotRelativeObjectPose = ObjectDetectionMath
-			.cameraRollRelativeYawAndPitchToRobotRelativePose(cameraRelativeYaw, cameraRelativePitch, cameraPose, 0.203);
-
-		double totalLatency = pipelineLatencyEntry.getDouble(0) + captureLatencyEntry.getDouble(0);
-		double timeStamp = TimeUtil.getCurrentTimeSeconds() - totalLatency;
-
-		return new ObjectData(robotRelativeObjectPose, objectType, timeStamp);
 	}
 
 	private static ObjectData closestObjectEntriesToObjectData(
@@ -117,11 +72,6 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		double timeStamp = TimeUtil.getCurrentTimeSeconds() - totalLatency;
 
 		return new ObjectData(robotRelativeObjectPose, objectType, timeStamp);
-	}
-
-	@Override
-	public ArrayList<ObjectData> getAllObjectData() {
-		return objectsEntryToObjectDataArray(allObjectsEntry, closestObjectPipelineLatencyEntry, closestObjectCaptureLatencyEntry, cameraPose);
 	}
 
 	@Override
@@ -153,9 +103,7 @@ public class LimeLightObjectDetector implements ObjectDetector {
 
 	@Override
 	public void update() {
-//		detectedObjects = getAllFilteredObjectData();
 		closestObject = getFilteredClosestObjectData();
-//		closestObject = getClosestFilteredObjectData();
 
 		log();
 	}

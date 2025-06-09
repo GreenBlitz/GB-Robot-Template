@@ -4,7 +4,6 @@ public enum RollersState {
 
 	IDLE(0.1),
 	INTAKE(0.5),
-	TRANSFER_TO_END_EFFECTOR(-0.5),
 	OUTTAKE(-0.5);
 
 	private final double power;

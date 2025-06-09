@@ -3,7 +3,6 @@
   "robotLength": 0.9,
   "holonomicMode": true,
   "pathFolders": [
-    "net",
     "from auto line",
     "from coral station",
     "test",

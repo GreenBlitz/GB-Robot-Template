@@ -12,7 +12,7 @@
         "y": 4.0549692622950815
       },
       "isLocked": false,
-      "linkedName": "SIDE-D"
+      "linkedName": "ARD"
     },
     {
       "anchor": {
@@ -25,7 +25,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "FN"
+      "linkedName": "LN"
     }
   ],
   "rotationTargets": [

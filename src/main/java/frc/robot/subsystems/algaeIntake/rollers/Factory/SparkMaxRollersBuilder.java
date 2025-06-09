@@ -1,7 +1,6 @@
 package frc.robot.subsystems.algaeIntake.rollers.Factory;
 
 import com.ctre.phoenix6.hardware.CANrange;
-import com.revrobotics.spark.config.EncoderConfig;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;

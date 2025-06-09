@@ -37,8 +37,6 @@ public class IDs {
 
 		public static final Phoenix6DeviceID PIVOT = new Phoenix6DeviceID(15, BusChain.ROBORIO);
 
-		public static final Phoenix6DeviceID ROLLERS = new Phoenix6DeviceID(17, BusChain.ROBORIO);
-
 	}
 
 	public static class CANDleIDs {
@@ -58,6 +56,8 @@ public class IDs {
 		public static final SparkMaxDeviceID END_EFFECTOR = new SparkMaxDeviceID(5);
 
 		public static final SparkMaxDeviceID SOLENOID = new SparkMaxDeviceID(10, SparkLowLevel.MotorType.kBrushed);
+
+		public static final SparkMaxDeviceID ROLLERS = new SparkMaxDeviceID(17, SparkLowLevel.MotorType.kBrushless);
 
 	}
 

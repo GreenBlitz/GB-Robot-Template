@@ -226,11 +226,4 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-	public Command moveToPoseByPID(Supplier<Pose2d> currentPose, Pose2d targetPose, SwerveState swerveState) {
-		return swerve.asSubsystemCommand(
-			new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.moveToPoseByPID(currentPose.get(), targetPose, swerveState)),
-			"PID to pose: " + targetPose
-		);
-	}
-
 }

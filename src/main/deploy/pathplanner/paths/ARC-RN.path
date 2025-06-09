@@ -3,58 +3,55 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.61,
-        "y": 0.7
+        "x": 5.136,
+        "y": 2.8793
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.960187355205198,
-        "y": 1.096633417895783
+        "x": 6.28155737704918,
+        "y": 1.6214651639344269
       },
       "isLocked": false,
-      "linkedName": "LS2"
+      "linkedName": "ARC"
     },
     {
       "anchor": {
-        "x": 3.64,
-        "y": 2.94
+        "x": 7.578,
+        "y": 5.064
       },
       "prevControl": {
-        "x": 3.5119204296242974,
-        "y": 2.7253010860475175
+        "x": 5.711987704918033,
+        "y": 5.3496413934426235
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "C"
+      "linkedName": "RN"
     }
   ],
-  "rotationTargets": [],
-  "constraintZones": [
+  "rotationTargets": [
     {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.6,
-      "maxWaypointRelativePos": 1.0,
-      "constraints": {
-        "maxVelocity": 4.0,
-        "maxAcceleration": 1.5,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
+      "waypointRelativePos": 0.6311300639658738,
+      "rotationDegrees": 0.0
     }
   ],
+  "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "ARM_PRE_SCORE",
-      "waypointRelativePos": 0.05,
+      "name": "STOP_ROLLERS",
+      "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
-      "name": "PRE_SCORE",
-      "waypointRelativePos": 0.6,
+      "name": "HOLD_ALGAE",
+      "waypointRelativePos": 0.08912896691424554,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "PRE_NET",
+      "waypointRelativePos": 0.5940744393687709,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -69,13 +66,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 59.99999999999999
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": "from coral station",
+  "folder": "net",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 54.0
+    "rotation": 119.99999999999999
   },
   "useDefaultConstraints": true
 }

@@ -174,6 +174,11 @@ public class Robot {
 			.softCloseL4()
 			.andThen(robotCommander.getSuperstructure().intake().withTimeout(AutonomousConstants.INTAKING_TIMEOUT_SECONDS))
 			.asProxy();
+		Supplier<Command> algaeRemoveCommand = () -> robotCommander.getSuperstructure()
+			.softCloseNetToAlgaeRemove()
+			.andThen(robotCommander.getSuperstructure().algaeRemove().withTimeout(AutonomousConstants.ALGAE_REMOVE_TIMEOUT_SECONDS))
+			.asProxy();
+		Supplier<Command> netCommand = () -> robotCommander.getSuperstructure().netWithRelease().asProxy();
 
 		swerve.configPathPlanner(
 			poseEstimator::getEstimatedPose,
@@ -197,10 +202,20 @@ public class Robot {
 		new EventTrigger("ARM_PRE_SCORE").onTrue(
 			robotCommander.getSuperstructure().armPreScore().alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.MOVE_TO_POSE))
 		);
+		new EventTrigger("PRE_NET").onTrue(robotCommander.getSuperstructure().preNet());
+		new EventTrigger("HOLD_ALGAE").onTrue(robotCommander.getSuperstructure().holdAlgae());
+		new EventTrigger("STOP_ROLLERS").onTrue(robotCommander.getSuperstructure().algaeRemoveWithKeepRollers());
 
 		this.preBuiltAutosChooser = new AutonomousChooser(
 			"PreBuiltAutos",
-			AutosBuilder.getAllNoDelayAutos(this, intakingCommand, scoringCommand, AutonomousConstants.TARGET_POSE_TOLERANCES)
+			AutosBuilder.getAllNoDelayAutos(
+				this,
+				intakingCommand,
+				scoringCommand,
+				algaeRemoveCommand,
+				netCommand,
+				AutonomousConstants.TARGET_POSE_TOLERANCES
+			)
 		);
 //		this.firstObjectScoringLocationChooser = new AutonomousChooser("ScoreFirst", AutosBuilder.getAllAutoScoringAutos(this));
 //		this.secondObjectIntakingLocationChooser = new AutonomousChooser(

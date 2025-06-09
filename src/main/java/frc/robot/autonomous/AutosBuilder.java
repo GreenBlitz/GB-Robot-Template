@@ -91,6 +91,7 @@ public class AutosBuilder {
 		autos.add(() -> rightNoDelayAuto(robot, intakingCommand, scoringCommand, tolerance));
 		autos.add(() -> autoBalls(robot, algaeRemoveCommand, netCommand, tolerance, Branch.G, ScoreLevel.L4));
 		autos.add(() -> autoBalls(robot, algaeRemoveCommand, netCommand, tolerance, Branch.H, ScoreLevel.L4));
+		autos.add(() -> autoBalls(robot, algaeRemoveCommand, netCommand, tolerance, Branch.G, ScoreLevel.L3));
 		return autos;
 	}
 
@@ -309,37 +310,47 @@ public class AutosBuilder {
 		auto.setName("right no delay");
 		return auto;
 	}
-	
-	private static Command getFirstAlgaeRemoveCommand(ScoreLevel scoreLevel, Robot robot, Branch firstAutoScoreTargetBranch, Pose2d tolerance){
-		if (scoreLevel == ScoreLevel.L4) {
-			Pose2d backOffFromReefPose = Field.getAllianceRelative(
-					Field.getReefSideMiddle(firstAutoScoreTargetBranch.getReefSide())
-							.plus(new Transform2d(AutonomousConstants.BACK_OFF_FROM_REEF_DISTANCE_METERS, 0, new Rotation2d())),
-					false,
-					true,
-					AngleTransform.MIRROR_Y
-			);
-			return new SequentialCommandGroup(
-					new ParallelCommandGroup(
-							robot.getRobotCommander().getSuperstructure().holdAlgae().asProxy(),
-							robot.getSwerve().getCommandsBuilder().moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, backOffFromReefPose)
-					).until(
-							() -> ToleranceMath.isNear(robot.getPoseEstimator().getEstimatedPose(), backOffFromReefPose, tolerance)
-									&& robot.getElevator().isAtPosition(ElevatorState.HOLD_ALGAE.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
-					),
-					new ParallelCommandGroup(
-							robot.getRobotCommander().getSuperstructure().algaeRemove().asProxy(),
-							robot.getSwerve()
-									.getCommandsBuilder()
-									.moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers.getAlgaeRemovePose(true))
-					).withTimeout(AutonomousConstants.FIRST_ALGAE_REMOVE_TIMEOUT_SECONDS)
+
+	private static Command getFirstAlgaeRemoveCommand(ScoreLevel scoreLevel, Robot robot, Branch firstAutoScoreTargetBranch, Pose2d tolerance) {
+		boolean isL4 = scoreLevel == ScoreLevel.L4;
+		Pose2d backOffFromReefPose;
+		if (isL4) {
+			backOffFromReefPose = Field.getAllianceRelative(
+				Field.getReefSideMiddle(firstAutoScoreTargetBranch.getReefSide())
+					.plus(new Transform2d(AutonomousConstants.BACK_OFF_FROM_REEF_DISTANCE_METERS, 0, new Rotation2d())),
+				false,
+				true,
+				AngleTransform.MIRROR_Y
 			);
 		} else {
-			Pose2d backOff = ScoringHelpers.getAlgaeRemovePose(true);
-			return new SequentialCommandGroup(
-			
-			)
+			backOffFromReefPose = Field.getAllianceRelative(
+				Field.getReefSideMiddle(firstAutoScoreTargetBranch.getReefSide())
+					.plus(new Transform2d(AutonomousConstants.BACK_OFF_FROM_REEF_DISTANCE_METERS, 0, new Rotation2d())),
+				false,
+				true,
+				AngleTransform.MIRROR_Y
+			);
 		}
+		Command algaeRemove = robot.getRobotCommander().getSuperstructure().algaeRemove().asProxy();
+		Command afterScore = isL4
+			? robot.getRobotCommander().getSuperstructure().holdAlgae().asProxy()
+			: robot.getRobotCommander().getSuperstructure().stayInPlace().asProxy();
+		ElevatorState elevatorStateAfterScore = isL4 ? ElevatorState.HOLD_ALGAE : ElevatorState.L3;
+		return new SequentialCommandGroup(
+			new ParallelCommandGroup(
+				afterScore,
+				robot.getSwerve().getCommandsBuilder().moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, backOffFromReefPose)
+			).until(
+				() -> ToleranceMath.isNear(robot.getPoseEstimator().getEstimatedPose(), backOffFromReefPose, tolerance)
+					&& robot.getElevator().isAtPosition(elevatorStateAfterScore.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
+			),
+			new ParallelCommandGroup(
+				algaeRemove,
+				robot.getSwerve()
+					.getCommandsBuilder()
+					.moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers.getAlgaeRemovePose(true))
+			).withTimeout(AutonomousConstants.FIRST_ALGAE_REMOVE_TIMEOUT_SECONDS)
+		);
 	}
 
 	private static Command autoBalls(
@@ -356,7 +367,7 @@ public class AutosBuilder {
 		Command autoBalls = new SequentialCommandGroup(
 			autoScoreToChosenBranch(robot, path),
 			new SequentialCommandGroup(
-				
+				getFirstAlgaeRemoveCommand(firstAutoScoreTargetScoreLevel, robot, firstAutoScoreTargetBranch, tolerance),
 				createAutoFromAutoPath(
 					AutoPath.ALGAE_REMOVE_D_TO_FIRST_NET,
 					pathPlannerPath -> PathFollowingCommandsBuilder

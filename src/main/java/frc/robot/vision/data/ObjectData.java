@@ -19,7 +19,7 @@ public class ObjectData {
 		return robotRelativeEstimatedTranslation;
 	}
 
-	public String getObjectType() {
+	public ObjectType getObjectType() {
 		return objectType;
 	}
 

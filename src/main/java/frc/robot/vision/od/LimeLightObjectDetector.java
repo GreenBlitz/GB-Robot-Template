@@ -57,11 +57,15 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		Pose3d cameraPose
 	) {
 		ObjectType objectType = switch (classificationEntry.getString("none")) {
-			case "algae" -> ObjectType.ALGAE;
+			case "algae\r" -> ObjectType.ALGAE;
 			case "coral" -> ObjectType.CORAL;
 			default -> null;
 		};
+		if (objectType == null) {
+			return new ObjectData(new Translation2d(0, 0), ObjectType.CORAL, 0);
+		}
 		double centerOfObjectHeightMeters = objectType.objectHeightMeters / 2;
+
 
 		Rotation2d cameraRelativeYaw = Rotation2d.fromDegrees(txEntry.getDouble(0));
 		Rotation2d cameraRelativePitch = Rotation2d.fromDegrees(tyEntry.getDouble(0));
@@ -99,6 +103,7 @@ public class LimeLightObjectDetector implements ObjectDetector {
 				new Pose2d(closestObject.get().getRobotRelativeEstimatedTranslation(), new Rotation2d())
 			);
 		}
+		Logger.recordOutput(logPath + "referenceRobotPose", new Pose2d(new Translation2d(-0.75 / 2.0, 0.75 / 2), new Rotation2d()));
 	}
 
 	@Override

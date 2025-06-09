@@ -104,8 +104,8 @@ public class VisionConstants {
 
 	public static final int OBJECT_CELL_AMOUNT_IN_RAW_DETECTIONS_ENTRY = 12;
 
-	public static final Rotation2d LIMELIGHT_OBJECT_DETECTION_HORIZONTAL_FOV = Rotation2d.fromDegrees(62.5);
+	public static final Rotation2d LIMELIGHT_3_HORIZONTAL_FOV = Rotation2d.fromDegrees(62.5);
 
-	public static final Rotation2d LIMELIGHT_OBJECT_DETECTION_VERTICAL_FOV = Rotation2d.fromDegrees(48.9);
+	public static final Rotation2d LIMELIGHT_3_VERTICAL_FOV = Rotation2d.fromDegrees(48.9);
 
 }

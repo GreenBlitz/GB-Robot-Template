@@ -78,12 +78,12 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		NetworkTableEntry captureLatencyEntry,
 		Pose3d cameraPose
 	) {
-		String objectType = "AAAAAAAAAAAA";
+		ObjectType objectType = ObjectType.ALGAE;
 
 		Rotation2d cameraRelativeYaw = Rotation2d
-			.fromDegrees(entryArray[firstCell + 1] - (VisionConstants.LIMELIGHT_OBJECT_DETECTION_HORIZONTAL_FOV.getDegrees() / 2));
+			.fromDegrees(entryArray[firstCell + 1] - (VisionConstants.LIMELIGHT_3_HORIZONTAL_FOV.getDegrees() / 2));
 		Rotation2d cameraRelativePitch = Rotation2d
-			.fromDegrees(entryArray[firstCell + 2] - (VisionConstants.LIMELIGHT_OBJECT_DETECTION_VERTICAL_FOV.getDegrees() / 2));
+			.fromDegrees(entryArray[firstCell + 2] - (VisionConstants.LIMELIGHT_3_VERTICAL_FOV.getDegrees() / 2));
 		Translation2d robotRelativeObjectPose = ObjectDetectionMath
 			.cameraRollRelativeYawAndPitchToRobotRelativePose(cameraRelativeYaw, cameraRelativePitch, cameraPose, 0.203);
 
@@ -101,12 +101,12 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		NetworkTableEntry captureLatencyEntry,
 		Pose3d cameraPose
 	) {
-		String objectType = classificationEntry.getString("none");
-		double centerOfObjectHeightMeters = switch (objectType) {
-			case "algae" -> ObjectHeights.ALGAE.objectHeightMeters / 2;
-			case "coral" -> ObjectHeights.CORAL.objectHeightMeters / 2;
-			default -> 0;
+		ObjectType objectType = switch (classificationEntry.getString("none")) {
+			case "algae" -> ObjectType.ALGAE;
+			case "coral" -> ObjectType.CORAL;
+			default -> null;
 		};
+		double centerOfObjectHeightMeters = objectType.objectHeightMeters / 2;
 
 		Rotation2d cameraRelativeYaw = Rotation2d.fromDegrees(txEntry.getDouble(0));
 		Rotation2d cameraRelativePitch = Rotation2d.fromDegrees(tyEntry.getDouble(0));

@@ -68,7 +68,7 @@
       "command": null
     },
     {
-      "name": "PRE_NET",
+      "name": "NET_WITHOUT_RELEASE",
       "waypointRelativePos": 0.7724510465901332,
       "endWaypointRelativePos": null,
       "command": null

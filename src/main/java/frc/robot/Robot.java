@@ -202,7 +202,7 @@ public class Robot {
 		new EventTrigger("ARM_PRE_SCORE").onTrue(
 			robotCommander.getSuperstructure().armPreScore().alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.MOVE_TO_POSE))
 		);
-		new EventTrigger("NET_WITHOUT_RELEASE").onTrue(robotCommander.getSuperstructure().netWithoutRelease());
+		new EventTrigger("PRE_NET").onTrue(robotCommander.getSuperstructure().preNet());
 		new EventTrigger("HOLD_ALGAE").onTrue(robotCommander.getSuperstructure().holdAlgae());
 		new EventTrigger("STOP_ROLLERS").onTrue(robotCommander.getSuperstructure().algaeRemoveWithKeepRollers());
 

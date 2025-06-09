@@ -58,10 +58,10 @@ public class PathFollowingCommandsBuilder {
 		);
 	}
 
-	public static Command scoreToNet(Robot robot, PathPlannerPath path, Supplier<Command> commandSupplier, Optional<Branch> targetBranch) {
-		Command netAutoReleaseAfterDelay = new SequentialCommandGroup(new WaitCommand(2), commandSupplier.get());
+	public static Command scoreToNet(Robot robot, PathPlannerPath path, Supplier<Command> netCommandSupplier, Optional<Branch> targetBranch) {
+		Command netAutoReleaseAfterDelay = new SequentialCommandGroup(new WaitCommand(2), netCommandSupplier.get());
 		return new ParallelRaceGroup(
-			new SequentialCommandGroup(new WaitUntilCommand(() -> robot.getRobotCommander().isReadyForNetForAuto()), commandSupplier.get()),
+			new SequentialCommandGroup(new WaitUntilCommand(() -> robot.getRobotCommander().isReadyForNetForAuto()), netCommandSupplier.get()),
 			followAdjustedPath(robot, path, targetBranch, AutonomousConstants.TARGET_POSE_TOLERANCES).andThen(
 				netAutoReleaseAfterDelay.onlyIf(
 					() -> SwerveMath.isStill(robot.getSwerve().getRobotRelativeVelocity(), AutonomousConstants.NET_AUTO_RELEASE_DEADBANDS)

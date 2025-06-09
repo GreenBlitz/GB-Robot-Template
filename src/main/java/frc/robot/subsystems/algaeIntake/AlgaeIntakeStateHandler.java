@@ -30,8 +30,12 @@ public class AlgaeIntakeStateHandler {
 		);
 	}
 
-	public Command handleIdle() {
-		if (rollersStateHandler.isAlgaeIn()) {
+	public boolean isAtState(AlgaeIntakeState state) {
+		return pivotStateHandler.isAtState(state.getPivotState());
+	}
+
+	public Command handleIdle(boolean isAlgaeInAlgaeIntakeOverride) {
+		if (rollersStateHandler.isAlgaeIn() || isAlgaeInAlgaeIntakeOverride) {
 			return setState(AlgaeIntakeState.HOLD_ALGAE);
 		}
 		return setState(AlgaeIntakeState.CLOSED);

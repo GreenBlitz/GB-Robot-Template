@@ -26,7 +26,7 @@ import frc.utils.math.AngleUnit;
 public class TalonFXPivotBuilder {
 
 	private static final int NUMBER_OF_MOTORS = 1;
-	private static final double GEAR_RATIO = 1 / 1;
+	private static final double GEAR_RATIO = 60 / 1;
 	private static final boolean SIMULATE_GRAVITY = false;
 	private static final double DEFAULT_ARBITRARY_FEED_FORWARD = 0;
 	private static final boolean ENABLE_FOC = true;
@@ -68,7 +68,7 @@ public class TalonFXPivotBuilder {
 				config.Slot0.kA = 0;
 			}
 			case SIMULATION -> {
-				config.Slot0.kP = 1;
+				config.Slot0.kP = 5;
 				config.Slot0.kI = 0;
 				config.Slot0.kD = 0;
 				config.Slot0.kG = 0;

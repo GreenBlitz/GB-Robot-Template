@@ -200,7 +200,7 @@ public class Superstructure extends GBSubsystem {
 				armStateHandler.setState(ArmState.CLOSED),
 				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 				climbStateHandler.setState(ClimbState.STOP),
-				algaeIntakeStateHandler.handleIdle()
+				algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
 			),
 			SuperstructureState.IDLE
 		);
@@ -227,14 +227,14 @@ public class Superstructure extends GBSubsystem {
 					armStateHandler.setState(ArmState.INTAKE),
 					endEffectorStateHandler.setState(EndEffectorState.CORAL_INTAKE),
 					climbStateHandler.setState(ClimbState.STOP),
-					algaeIntakeStateHandler.handleIdle()
+					algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
 				).until(this::isCoralIn),
 				new ParallelCommandGroup(
 					elevatorStateHandler.setState(ElevatorState.INTAKE),
 					armStateHandler.setState(ArmState.INTAKE),
 					endEffectorStateHandler.setState(EndEffectorState.CORAL_INTAKE),
 					climbStateHandler.setState(ClimbState.STOP),
-					algaeIntakeStateHandler.handleIdle()
+					algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
 				).withTimeout(StateMachineConstants.INTAKE_TIME_AFTER_BEAM_BREAK_SECONDS)
 			),
 			SuperstructureState.INTAKE
@@ -248,7 +248,7 @@ public class Superstructure extends GBSubsystem {
 				armStateHandler.setState(ArmState.STAY_IN_PLACE),
 				endEffectorStateHandler.setState(EndEffectorState.CORAL_OUTTAKE),
 				climbStateHandler.setState(ClimbState.STOP),
-				algaeIntakeStateHandler.handleIdle()
+				algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
 			).until(() -> !isCoralIn()),
 			SuperstructureState.OUTTAKE
 		);
@@ -262,7 +262,7 @@ public class Superstructure extends GBSubsystem {
 					armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmPreScore()),
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 					climbStateHandler.setState(ClimbState.STOP),
-					algaeIntakeStateHandler.handleIdle()
+					algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
 				),
 				Set.of(
 					this,
@@ -287,7 +287,7 @@ public class Superstructure extends GBSubsystem {
 					armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmPreScore()),
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 					climbStateHandler.setState(ClimbState.STOP),
-					algaeIntakeStateHandler.handleIdle()
+					algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
 				),
 				Set.of(
 					this,
@@ -316,7 +316,7 @@ public class Superstructure extends GBSubsystem {
 					elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorPreScore()),
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 					climbStateHandler.setState(ClimbState.STOP),
-					algaeIntakeStateHandler.handleIdle()
+					algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
 				),
 				Set.of(
 					this,
@@ -359,7 +359,7 @@ public class Superstructure extends GBSubsystem {
 					armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmScore()),
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 					climbStateHandler.setState(ClimbState.STOP),
-					algaeIntakeStateHandler.handleIdle()
+					algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
 				),
 				Set.of(
 					this,
@@ -385,14 +385,14 @@ public class Superstructure extends GBSubsystem {
 						armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmScore()),
 						endEffectorStateHandler.setState(ScoringHelpers.targetScoreLevel.getEndEffectorScore()),
 						climbStateHandler.setState(ClimbState.STOP),
-						algaeIntakeStateHandler.handleIdle()
+						algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
 					).until(() -> !isCoralIn()),
 					new ParallelCommandGroup(
 						elevatorStateHandler.setState(ScoringHelpers.targetScoreLevel.getElevatorScore()),
 						armStateHandler.setState(ScoringHelpers.targetScoreLevel.getArmScore()),
 						endEffectorStateHandler.setState(ScoringHelpers.targetScoreLevel.getEndEffectorScore()),
 						climbStateHandler.setState(ClimbState.STOP),
-						algaeIntakeStateHandler.handleIdle()
+						algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
 					).withTimeout(StateMachineConstants.SCORE_OUTTAKE_TIME_AFTER_BEAM_BREAK_SECONDS)
 				),
 				Set.of(
@@ -449,7 +449,7 @@ public class Superstructure extends GBSubsystem {
 				),
 				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 				climbStateHandler.setState(ClimbState.STOP),
-				algaeIntakeStateHandler.handleIdle()
+				algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
 			),
 			"Soft Close " + name
 		);
@@ -464,7 +464,7 @@ public class Superstructure extends GBSubsystem {
 						armStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getArmState()),
 						endEffectorStateHandler.setState(ScoringHelpers.getAlgaeRemoveLevel().getEndEffectorState()),
 						climbStateHandler.setState(ClimbState.STOP),
-						algaeIntakeStateHandler.handleIdle()
+						algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
 					)
 //							.until(this::isAlgaeIn),
 //					new ParallelCommandGroup(
@@ -487,14 +487,14 @@ public class Superstructure extends GBSubsystem {
 					armStateHandler.setState(ArmState.PROCESSOR_OUTTAKE),
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 					climbStateHandler.setState(ClimbState.STOP),
-					algaeIntakeStateHandler.handleIdle()
+					algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
 				).until(this::isReadyToProcessor),
 				new ParallelCommandGroup(
 					elevatorStateHandler.setState(ElevatorState.PROCESSOR_OUTTAKE),
 					armStateHandler.setState(ArmState.PROCESSOR_OUTTAKE),
 					endEffectorStateHandler.setState(EndEffectorState.PROCESSOR_OUTTAKE),
 					climbStateHandler.setState(ClimbState.STOP),
-					algaeIntakeStateHandler.handleIdle()
+					algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
 				)
 			),
 //					.until(() -> !isAlgaeIn()),
@@ -524,14 +524,14 @@ public class Superstructure extends GBSubsystem {
 					armStateHandler.setState(ArmState.ALGAE_OUTTAKE),
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 					climbStateHandler.setState(ClimbState.STOP),
-					algaeIntakeStateHandler.handleIdle()
+					algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
 				).until(this::isReadyToOuttakeAlgae),
 				new ParallelCommandGroup(
 					elevatorStateHandler.setState(ElevatorState.ALGAE_OUTTAKE),
 					armStateHandler.setState(ArmState.ALGAE_OUTTAKE),
 					endEffectorStateHandler.setState(EndEffectorState.ALGAE_OUTTAKE),
 					climbStateHandler.setState(ClimbState.STOP),
-					algaeIntakeStateHandler.handleIdle()
+					algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
 				)
 			),
 			SuperstructureState.ALGAE_OUTTAKE_FROM_END_EFFECTOR
@@ -549,7 +549,7 @@ public class Superstructure extends GBSubsystem {
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 					climbStateHandler.setState(ClimbState.STOP),
 					algaeIntakeStateHandler.setState(AlgaeIntakeState.INTAKE)
-				).until(robot.getRollers()::isAlgaeIn)
+				).until(this::isAlgaeInAlgaeIntake)
 			),
 			SuperstructureState.ALGAE_FLOOR_INTAKE
 		);
@@ -571,7 +571,7 @@ public class Superstructure extends GBSubsystem {
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 					climbStateHandler.setState(ClimbState.STOP),
 					algaeIntakeStateHandler.setState(AlgaeIntakeState.OUTTAKE_WITH_RELEASE)
-				).until(() -> !robot.getRollers().isAlgaeIn()),
+				).until(() -> !isAlgaeInAlgaeIntake()),
 				new ParallelCommandGroup(
 					elevatorStateHandler.setState(ElevatorState.CLOSED),
 					armStateHandler.setState(ArmState.CLOSED),
@@ -616,7 +616,7 @@ public class Superstructure extends GBSubsystem {
 				armStateHandler.setState(ArmState.PRE_NET),
 				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 				climbStateHandler.setState(ClimbState.CLOSE),
-				algaeIntakeStateHandler.handleIdle()
+				algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
 			),
 			SuperstructureState.PRE_NET
 		);
@@ -636,7 +636,7 @@ public class Superstructure extends GBSubsystem {
 					armStateHandler.setState(ArmState.NET)
 				),
 				climbStateHandler.setState(ClimbState.STOP),
-				algaeIntakeStateHandler.handleIdle()
+				algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
 			),
 			SuperstructureState.NET
 		);
@@ -653,7 +653,7 @@ public class Superstructure extends GBSubsystem {
 				),
 				elevatorStateHandler.setState(ElevatorState.CLIMB),
 				endEffectorStateHandler.setState(EndEffectorState.STOP),
-				algaeIntakeStateHandler.handleIdle()
+				algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
 			),
 			SuperstructureState.PRE_CLIMB
 		);
@@ -666,7 +666,7 @@ public class Superstructure extends GBSubsystem {
 				armStateHandler.setState(ArmState.CLIMB),
 				endEffectorStateHandler.setState(EndEffectorState.STOP),
 				climbStateHandler.setState(ClimbState.CLIMB_WITHOUT_LIMIT_SWITCH),
-				algaeIntakeStateHandler.handleIdle()
+				algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
 			),
 			SuperstructureState.CLIMB_WITHOUT_LIMIT_SWITCH
 		);
@@ -679,7 +679,7 @@ public class Superstructure extends GBSubsystem {
 				armStateHandler.setState(ArmState.CLIMB),
 				endEffectorStateHandler.setState(EndEffectorState.STOP),
 				climbStateHandler.setState(ClimbState.CLIMB_WITH_LIMIT_SWITCH),
-				algaeIntakeStateHandler.handleIdle()
+				algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
 			),
 			SuperstructureState.CLIMB_WITH_LIMIT_SWITCH
 		);
@@ -692,7 +692,7 @@ public class Superstructure extends GBSubsystem {
 				armStateHandler.setState(ArmState.CLIMB),
 				endEffectorStateHandler.setState(EndEffectorState.STOP),
 				climbStateHandler.setState(ClimbState.MANUAL_CLIMB),
-				algaeIntakeStateHandler.handleIdle()
+				algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
 			),
 			SuperstructureState.MANUAL_CLIMB
 		);
@@ -705,7 +705,7 @@ public class Superstructure extends GBSubsystem {
 				armStateHandler.setState(ArmState.CLIMB),
 				endEffectorStateHandler.setState(EndEffectorState.STOP),
 				climbStateHandler.setState(ClimbState.EXIT_CLIMB),
-				algaeIntakeStateHandler.handleIdle()
+				algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
 			),
 			SuperstructureState.EXIT_CLIMB
 		);
@@ -718,7 +718,7 @@ public class Superstructure extends GBSubsystem {
 				armStateHandler.setState(ArmState.CLIMB),
 				endEffectorStateHandler.setState(EndEffectorState.STOP),
 				climbStateHandler.setState(ClimbState.STOP),
-				algaeIntakeStateHandler.handleIdle()
+				algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
 			),
 			SuperstructureState.STOP_CLIMB
 		);
@@ -734,7 +734,7 @@ public class Superstructure extends GBSubsystem {
 				),
 				elevatorStateHandler.setState(ElevatorState.WHILE_DRIVE_L4),
 				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
-				algaeIntakeStateHandler.handleIdle()
+				algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
 			).until(() -> robot.getLifter().isLower(LifterState.CLOSE.getTargetPosition())),
 			SuperstructureState.CLOSE_CLIMB
 		);
@@ -747,7 +747,7 @@ public class Superstructure extends GBSubsystem {
 				armStateHandler.setState(ArmState.HOLD_ALGAE),
 				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 				climbStateHandler.setState(ClimbState.STOP),
-				algaeIntakeStateHandler.handleIdle()
+				algaeIntakeStateHandler.setState(AlgaeIntakeState.CLOSED)
 			),
 			SuperstructureState.HOLD_ALGAE
 		);

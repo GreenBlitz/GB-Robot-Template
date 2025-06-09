@@ -92,7 +92,7 @@ public class AlgaeIntakeStateHandler {
 			case CLOSED -> PivotState.CLOSED;
 			case INTAKE -> PivotState.INTAKE;
 			case TRANSFER_TO_END_EFFECTOR_WITHOUT_RELEASE, TRANSFER_TO_END_EFFECTOR_WITH_RELEASE -> PivotState.TRANSFER_TO_END_EFFECTOR;
-			case OUTTAKE -> PivotState.OUTTAKE;
+			case OUTTAKE_WITHOUT_RELEASE, OUTTAKE_WITH_RELEASE -> PivotState.OUTTAKE;
 			case HOLD_ALGAE -> PivotState.HOLD_ALGAE;
 			case STAY_IN_PLACE -> PivotState.STAY_IN_PLACE;
 		};

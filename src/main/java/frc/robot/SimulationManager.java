@@ -46,12 +46,7 @@ public class SimulationManager {
 	}
 
 	private void logAlgaeIntakePosition3d() {
-		Logger.recordOutput(
-				logPath + "/AlgaeIntake/Position",
-				getAlgaeIntakePose3d(
-						robot.getPivot().getPosition().getRadians()
-				)
-		);
+		Logger.recordOutput(logPath + "/AlgaeIntake/Position", getAlgaeIntakePose3d(robot.getPivot().getPosition().getRadians()));
 	}
 
 	private static Pose3d getElevatorFirstStagePosition(double heightMeters) {
@@ -73,8 +68,8 @@ public class SimulationManager {
 		return new Pose3d(new Translation3d(0, 0, heightMeters), new Rotation3d(0.0, pitch, 0.0));
 	}
 
-	private static Pose3d getAlgaeIntakePose3d(double pitch){
-		return new Pose3d(new Translation3d(-1, 0, 0), new Rotation3d(0.0, pitch, 0.0));
+	private static Pose3d getAlgaeIntakePose3d(double pitch) {
+		return new Pose3d(new Translation3d(0, 0, 0), new Rotation3d(0.0, pitch, 0.0));
 	}
 
 }

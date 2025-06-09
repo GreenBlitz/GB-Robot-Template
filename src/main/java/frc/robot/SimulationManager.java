@@ -69,7 +69,7 @@ public class SimulationManager {
 	}
 
 	private static Pose3d getAlgaeIntakePose3d(double pitch) {
-		return new Pose3d(new Translation3d(0, 0, 0), new Rotation3d(0.0, pitch, 0.0));
+		return new Pose3d(new Translation3d(-0.2, 0, 0.4), new Rotation3d(0.0, pitch, 0.0));
 	}
 
 }

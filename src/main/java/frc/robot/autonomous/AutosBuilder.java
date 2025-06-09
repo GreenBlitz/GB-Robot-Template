@@ -342,7 +342,7 @@ public class AutosBuilder {
 					robot.getRobotCommander().getSuperstructure().algaeRemove().asProxy(),
 					robot.getSwerve()
 						.getCommandsBuilder()
-						.moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers.getAlgaeRemovePose())
+						.moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers.getAlgaeRemovePose(true))
 				).withTimeout(AutonomousConstants.FIRST_ALGAE_REMOVE_TIMEOUT_SECONDS),
 				createAutoFromAutoPath(
 					AutoPath.ALGAE_REMOVE_D_TO_FIRST_NET,

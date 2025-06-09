@@ -1,7 +1,5 @@
 package frc.robot.subsystems.algaeIntake.rollers;
 
-import com.ctre.phoenix6.hardware.CANrange;
-import frc.robot.hardware.digitalinput.DigitalInputInputs;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.ControllableMotor;

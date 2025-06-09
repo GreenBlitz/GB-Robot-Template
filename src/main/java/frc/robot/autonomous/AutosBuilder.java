@@ -310,7 +310,7 @@ public class AutosBuilder {
 		return auto;
 	}
 	
-	private static Command getFirstAlgaeRemoveCommand(ScoreLevel scoreLevel, Robot robot){
+	private static Command getFirstAlgaeRemoveCommand(ScoreLevel scoreLevel, Robot robot, Branch firstAutoScoreTargetBranch, Pose2d tolerance){
 		if (scoreLevel == ScoreLevel.L4) {
 			Pose2d backOffFromReefPose = Field.getAllianceRelative(
 					Field.getReefSideMiddle(firstAutoScoreTargetBranch.getReefSide())
@@ -332,7 +332,12 @@ public class AutosBuilder {
 							robot.getSwerve()
 									.getCommandsBuilder()
 									.moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers.getAlgaeRemovePose(true))
-					).withTimeout(AutonomousConstants.FIRST_ALGAE_REMOVE_TIMEOUT_SECONDS),
+					).withTimeout(AutonomousConstants.FIRST_ALGAE_REMOVE_TIMEOUT_SECONDS)
+			);
+		} else {
+			Pose2d backOff = ScoringHelpers.getAlgaeRemovePose(true);
+			return new SequentialCommandGroup(
+			
 			)
 		}
 	}

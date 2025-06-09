@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ARD-LN"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LN-ARE"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ARE-MN"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MN-ARC"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ARC-RN"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

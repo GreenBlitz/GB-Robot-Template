@@ -1,4 +1,4 @@
-Pivot Calibrations
+Rollers Calibrations
 -----------------------------
 
 ##### IDs
@@ -10,8 +10,11 @@ Pivot Calibrations
 
 - [ ] is inverted
 - [ ] gear ratio
-- [ ] states powers
 
 ##### Limits
 
 - [ ] current limit
+
+#### General
+
+- [ ] states powers

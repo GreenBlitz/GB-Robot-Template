@@ -17,15 +17,15 @@ public class SparkMaxRollersBuilder {
 
 	private static final int NUM_MOTORS = 1;
 	private static final double MOMENT_OF_INERTIA = 0.02;
-	private static final double GEAR_RATIO = 1 / 1;
+	private static final double GEAR_RATIO = 60;
 	private static final boolean IS_INVERTED = false;
 
 
 	private static BrushlessSparkMAXMotor generateMotor(String logPath, SparkMaxWrapper wrapper) {
 		SimpleMotorSimulation sim = new SimpleMotorSimulation(
 			new DCMotorSim(
-				LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60(NUM_MOTORS), MOMENT_OF_INERTIA, GEAR_RATIO),
-				DCMotor.getKrakenX60(NUM_MOTORS)
+				LinearSystemId.createDCMotorSystem(DCMotor.getNEO(NUM_MOTORS), MOMENT_OF_INERTIA, GEAR_RATIO),
+				DCMotor.getNEO(NUM_MOTORS)
 			)
 		);
 
@@ -38,6 +38,8 @@ public class SparkMaxRollersBuilder {
 		config.getSparkMaxConfig().inverted(IS_INVERTED);
 
 		config.getSparkMaxConfig().encoder.velocityConversionFactor(GEAR_RATIO);
+		config.getSparkMaxConfig().encoder.positionConversionFactor(GEAR_RATIO);
+
 		config.getSparkMaxConfig().smartCurrentLimit(40);
 
 		return config;

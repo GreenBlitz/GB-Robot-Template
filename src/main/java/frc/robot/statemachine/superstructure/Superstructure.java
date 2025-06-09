@@ -611,7 +611,7 @@ public class Superstructure extends GBSubsystem {
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 					climbStateHandler.setState(ClimbState.STOP),
 					algaeIntakeStateHandler.setState(AlgaeIntakeState.OUTTAKE_WITH_RELEASE)
-				).withTimeout(StateMachineConstants.ALGAE_OUTTAKE_TIME_FROM_INTAKE_TIME_AFTER_SENSOR_SECONDS)
+				).withTimeout(StateMachineConstants.ALGAE_OUTTAKE_FROM_INTAKE_TIME_AFTER_SENSOR_SECONDS)
 			),
 			SuperstructureState.ALGAE_FLOOR_INTAKE
 		);

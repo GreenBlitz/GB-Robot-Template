@@ -3,6 +3,7 @@ package frc.robot.subsystems.algaeIntake;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import frc.joysticks.SmartJoystick;
 import frc.robot.subsystems.algaeIntake.pivot.PivotStateHandler;
 import frc.robot.subsystems.algaeIntake.rollers.RollersStateHandler;
 
@@ -39,6 +40,15 @@ public class AlgaeIntakeStateHandler {
 			return setState(AlgaeIntakeState.HOLD_ALGAE);
 		}
 		return setState(AlgaeIntakeState.CLOSED);
+	}
+
+
+	public void applyCalibrationBindings(SmartJoystick joystick) {
+		joystick.A.onTrue(setState(AlgaeIntakeState.CLOSED));
+		joystick.B.onTrue(setState(AlgaeIntakeState.INTAKE));
+		joystick.X.onTrue(setState(AlgaeIntakeState.OUTTAKE_WITHOUT_RELEASE));
+		joystick.Y.onTrue(setState(AlgaeIntakeState.TRANSFER_TO_END_EFFECTOR));
+		joystick.R1.onTrue(setState(AlgaeIntakeState.OUTTAKE_WITH_RELEASE));
 	}
 
 }

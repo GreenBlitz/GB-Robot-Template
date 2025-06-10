@@ -1,5 +1,6 @@
 package frc.robot.subsystems.algaeIntake.rollers;
 
+import frc.joysticks.SmartJoystick;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.ControllableMotor;
@@ -59,6 +60,14 @@ public class Rollers extends GBSubsystem {
 
 	protected void stop() {
 		setPower(0);
+	}
+
+
+	public void applyCalibrationBindings(SmartJoystick joystick) {
+		joystick.A.onTrue(commandsBuilder.setPower(RollersState.IDLE.getPower()));
+		joystick.B.onTrue(commandsBuilder.setPower(RollersState.INTAKE.getPower()));
+		joystick.X.onTrue(commandsBuilder.setPower(RollersState.OUTTAKE.getPower()));
+		joystick.Y.onTrue(commandsBuilder.stop());
 	}
 
 }

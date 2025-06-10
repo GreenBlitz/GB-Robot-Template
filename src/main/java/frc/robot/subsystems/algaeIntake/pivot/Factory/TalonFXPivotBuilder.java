@@ -2,8 +2,6 @@ package frc.robot.subsystems.algaeIntake.pivot.Factory;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.core.CoreCANcoder;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -18,7 +16,6 @@ import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.mechanisms.wpilib.SingleJointedArmSimulation;
 import frc.robot.hardware.phoenix6.BusChain;
-import frc.robot.hardware.phoenix6.angleencoder.CANCoderEncoder;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
@@ -57,7 +54,9 @@ public class TalonFXPivotBuilder {
 		return new TalonFXMotor(logPath + "/Motor", IDs.TalonFXIDs.PIVOT, new SysIdRoutine.Config(), sim);
 	}
 
-	private static TalonFXConfiguration generateMotorConfig(CoreCANcoder coreCANcoder) {
+	private static TalonFXConfiguration generateMotorConfig(
+		// CoreCANcoder coreCANcoder
+	) {
 		TalonFXConfiguration config = new TalonFXConfiguration();
 
 		switch (Robot.ROBOT_TYPE) {
@@ -88,9 +87,9 @@ public class TalonFXPivotBuilder {
 		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = PivotConstants.BACKWARD_LIMIT.getRotations();
 		config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
 
-		config.Feedback.withFusedCANcoder(coreCANcoder);
+//		config.Feedback.withFusedCANcoder(coreCANcoder);
 		config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
-		config.Feedback.withFeedbackRemoteSensorID(coreCANcoder.getDeviceID());
+//		config.Feedback.withFeedbackRemoteSensorID(coreCANcoder.getDeviceID());
 
 		config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
 
@@ -112,16 +111,20 @@ public class TalonFXPivotBuilder {
 		InputSignal<Double> voltageSignal = Phoenix6SignalBuilder
 			.build(pivot.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
 
-		CANCoderEncoder encoder = new CANCoderEncoder(
-			logPath + "Encoder",
-			new CANcoder(IDs.CANCodersIDs.PIVOT.id(), IDs.CANCodersIDs.PIVOT.busChain().getChainName())
+//		CANCoderEncoder encoder = new CANCoderEncoder(
+//			logPath + "Encoder",
+//			new CANcoder(IDs.CANCodersIDs.PIVOT.id(), IDs.CANCodersIDs.PIVOT.busChain().getChainName())
+//		);
+//		InputSignal<Rotation2d> absolutPositionSignal = Phoenix6SignalBuilder
+//			.build(encoder.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
+
+		pivot.applyConfiguration(
+			generateMotorConfig(
+				// encoder.getDevice()
+			)
 		);
-		InputSignal<Rotation2d> absolutPositionSignal = Phoenix6SignalBuilder
-			.build(encoder.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 
-		pivot.applyConfiguration(generateMotorConfig(encoder.getDevice()));
-
-		return new Pivot(logPath, pivot, positionRequest, positionSignal, voltageSignal, encoder, absolutPositionSignal);
+		return new Pivot(logPath, pivot, positionRequest, positionSignal, voltageSignal);
 	}
 
 }

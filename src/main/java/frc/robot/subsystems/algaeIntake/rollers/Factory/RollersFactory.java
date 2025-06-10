@@ -6,7 +6,7 @@ import frc.robot.subsystems.algaeIntake.rollers.RollersConstants;
 public class RollersFactory {
 
 	public static Rollers create(String logPath) {
-		return RollersConstants.isMotorSparkMax ? SparkMaxRollersBuilder.generate(logPath) : TalonFXRollersBuilder.generate(logPath);
+		return RollersConstants.IS_MOTOR_SPARK_MAX ? SparkMaxRollersBuilder.generate(logPath) : TalonFXRollersBuilder.generate(logPath);
 	}
 
 }

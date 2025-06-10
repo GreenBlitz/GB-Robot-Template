@@ -3,6 +3,7 @@ package frc.robot.subsystems.algaeIntake.pivot.Factory;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.core.CoreCANcoder;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -56,7 +57,7 @@ public class TalonFXPivotBuilder {
 		return new TalonFXMotor(logPath + "/Motor", IDs.TalonFXIDs.PIVOT, new SysIdRoutine.Config(), sim);
 	}
 
-	private static TalonFXConfiguration generateMotorConfig() {
+	private static TalonFXConfiguration generateMotorConfig(CoreCANcoder coreCANcoder) {
 		TalonFXConfiguration config = new TalonFXConfiguration();
 
 		switch (Robot.ROBOT_TYPE) {
@@ -87,7 +88,9 @@ public class TalonFXPivotBuilder {
 		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = PivotConstants.BACKWARD_LIMIT.getRotations();
 		config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
 
+		config.Feedback.withFusedCANcoder(coreCANcoder);
 		config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
+		config.Feedback.withFeedbackRemoteSensorID(coreCANcoder.getDeviceID());
 
 		config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
 
@@ -99,7 +102,7 @@ public class TalonFXPivotBuilder {
 
 	public static Pivot generate(String logPath) {
 		TalonFXMotor pivot = generateMotor(logPath);
-		pivot.applyConfiguration(generateMotorConfig());
+
 
 		IRequest<Rotation2d> positionRequest = Phoenix6RequestBuilder
 			.build(new PositionVoltage(PivotConstants.STARTING_POSITION.getRotations()), DEFAULT_ARBITRARY_FEED_FORWARD, ENABLE_FOC);
@@ -116,6 +119,7 @@ public class TalonFXPivotBuilder {
 		InputSignal<Rotation2d> absolutPositionSignal = Phoenix6SignalBuilder
 			.build(encoder.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 
+		pivot.applyConfiguration(generateMotorConfig(encoder.getDevice()));
 
 		return new Pivot(logPath, pivot, positionRequest, positionSignal, voltageSignal, encoder, absolutPositionSignal);
 	}

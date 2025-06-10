@@ -1,6 +1,7 @@
 package frc.robot.subsystems.algaeIntake.rollers;
 
-import com.ctre.phoenix6.hardware.CANrange;
+import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
+import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
@@ -9,14 +10,16 @@ public class Rollers extends GBSubsystem {
 
 	private final ControllableMotor rollers;
 	private final InputSignal<Double> voltageSignal;
-	private final CANrange canRange;
+	private final IDigitalInput algaeSensor;
+	private final DigitalInputInputsAutoLogged algaeSensorInputs;
 	private final RollersCommandsBuilder commandsBuilder;
 
-	public Rollers(String logPath, ControllableMotor rollers, InputSignal<Double> voltageSignal, CANrange canRange) {
+	public Rollers(String logPath, ControllableMotor rollers, InputSignal<Double> voltageSignal, IDigitalInput algaeSensor) {
 		super(logPath);
 		this.rollers = rollers;
 		this.voltageSignal = voltageSignal;
-		this.canRange = canRange;
+		this.algaeSensor = algaeSensor;
+		this.algaeSensorInputs = new DigitalInputInputsAutoLogged();
 		this.commandsBuilder = new RollersCommandsBuilder(this);
 		setDefaultCommand(commandsBuilder.stop());
 
@@ -32,7 +35,7 @@ public class Rollers extends GBSubsystem {
 	}
 
 	public boolean isAlgaeIn() {
-		return canRange.getDistance().getValueAsDouble() < RollersConstants.DISTANCE_FROM_CAN_RANGE_TO_DETECT_ALGAE_METERS;
+		return algaeSensorInputs.debouncedValue;
 	}
 
 	@Override
@@ -43,7 +46,7 @@ public class Rollers extends GBSubsystem {
 	private void updateInputs() {
 		rollers.updateSimulation();
 		rollers.updateInputs(voltageSignal);
-		canRange.getDistance().refresh();
+		algaeSensor.updateInputs(algaeSensorInputs);
 	}
 
 	public void setBrake(boolean brake) {

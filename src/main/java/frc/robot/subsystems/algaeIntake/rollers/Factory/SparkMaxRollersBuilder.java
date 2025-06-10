@@ -1,11 +1,14 @@
 package frc.robot.subsystems.algaeIntake.rollers.Factory;
 
-import com.ctre.phoenix6.hardware.CANrange;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.IDs;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.wpilibj.DigitalInput;
+import frc.robot.hardware.digitalinput.IDigitalInput;
+import frc.robot.hardware.digitalinput.channeled.ChanneledDigitalInput;
 import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
 import frc.robot.hardware.rev.motors.BrushlessSparkMAXMotor;
 import frc.robot.hardware.rev.motors.SparkMaxConfiguration;
@@ -17,15 +20,17 @@ public class SparkMaxRollersBuilder {
 
 	private static final int NUM_MOTORS = 1;
 	private static final double MOMENT_OF_INERTIA = 0.02;
-	private static final double GEAR_RATIO = 1 / 1;
 	private static final boolean IS_INVERTED = false;
+	private static final double GEAR_RATIO = 60;
+	private static final int ALGAE_SENSOR_CHANNEL = 4;
+	private static final double DEBOUNCE_TIME_SECONDS = 0.05;
 
 
 	private static BrushlessSparkMAXMotor generateMotor(String logPath, SparkMaxWrapper wrapper) {
 		SimpleMotorSimulation sim = new SimpleMotorSimulation(
 			new DCMotorSim(
-				LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60(NUM_MOTORS), MOMENT_OF_INERTIA, GEAR_RATIO),
-				DCMotor.getKrakenX60(NUM_MOTORS)
+				LinearSystemId.createDCMotorSystem(DCMotor.getNEO(NUM_MOTORS), MOMENT_OF_INERTIA, GEAR_RATIO),
+				DCMotor.getNEO(NUM_MOTORS)
 			)
 		);
 
@@ -37,7 +42,8 @@ public class SparkMaxRollersBuilder {
 
 		config.getSparkMaxConfig().inverted(IS_INVERTED);
 
-		config.getSparkMaxConfig().analogSensor.velocityConversionFactor(GEAR_RATIO);
+		config.getSparkMaxConfig().encoder.velocityConversionFactor(GEAR_RATIO);
+		config.getSparkMaxConfig().encoder.positionConversionFactor(GEAR_RATIO);
 
 		config.getSparkMaxConfig().smartCurrentLimit(40);
 
@@ -51,9 +57,9 @@ public class SparkMaxRollersBuilder {
 
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("Voltage", wrapper::getVoltage);
 
-		CANrange canRange = new CANrange(IDs.CANRangeIDs.ROLLERS_CAN_RANGE.id(), IDs.CANRangeIDs.ROLLERS_CAN_RANGE.busChain().getChainName());
+		IDigitalInput algaeSensor = new ChanneledDigitalInput(new DigitalInput(ALGAE_SENSOR_CHANNEL), new Debouncer(DEBOUNCE_TIME_SECONDS));
 
-		return new Rollers(logPath, rollers, voltageSignal, canRange);
+		return new Rollers(logPath, rollers, voltageSignal, algaeSensor);
 	}
 
 }

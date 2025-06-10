@@ -1,14 +1,17 @@
 package frc.robot.subsystems.algaeIntake.rollers.Factory;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.signals.InvertedValue;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.IDs;
 import frc.robot.RobotConstants;
+import frc.robot.hardware.digitalinput.IDigitalInput;
+import frc.robot.hardware.digitalinput.channeled.ChanneledDigitalInput;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -22,6 +25,8 @@ public class TalonFXRollersBuilder {
 	private static final double MOMENT_OF_INERTIA = 0.02;
 	private static final double GEAR_RATIO = 1 / 1;
 	private static final boolean IS_INVERTED = false;
+	private static final int ALGAE_SENSOR_CHANNEL = 4;
+	private static final double DEBOUNCE_TIME_SECONDS = 0.05;
 
 
 	private static TalonFXMotor generateMotor(String logPath) {
@@ -55,9 +60,9 @@ public class TalonFXRollersBuilder {
 		InputSignal<Double> voltageSignal = Phoenix6SignalBuilder
 			.build(rollers.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
 
-		CANrange canRange = new CANrange(IDs.CANRangeIDs.ROLLERS_CAN_RANGE.id(), IDs.CANRangeIDs.ROLLERS_CAN_RANGE.busChain().getChainName());
+		IDigitalInput algaeSensor = new ChanneledDigitalInput(new DigitalInput(ALGAE_SENSOR_CHANNEL), new Debouncer(DEBOUNCE_TIME_SECONDS));
 
-		return new Rollers(logPath, rollers, voltageSignal, canRange);
+		return new Rollers(logPath, rollers, voltageSignal, algaeSensor);
 	}
 
 }

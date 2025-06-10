@@ -590,28 +590,26 @@ public class Superstructure extends GBSubsystem {
 
 	public Command algaeOuttakeFromIntake() {
 		return asSubsystemCommand(
-			new SequentialCommandGroup(
+			new ParallelCommandGroup(
 				new ParallelCommandGroup(
 					elevatorStateHandler.setState(ElevatorState.CLOSED),
 					armStateHandler.setState(ArmState.CLOSED),
-					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
-					climbStateHandler.setState(ClimbState.CLOSE),
-					algaeIntakeStateHandler.setState(AlgaeIntakeState.OUTTAKE_WITHOUT_RELEASE)
-				).until(() -> algaeIntakeStateHandler.isAtState(AlgaeIntakeState.OUTTAKE_WITHOUT_RELEASE)),
-				new ParallelCommandGroup(
-					elevatorStateHandler.setState(ElevatorState.CLOSED),
-					armStateHandler.setState(ArmState.CLOSED),
-					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
-					climbStateHandler.setState(ClimbState.STOP),
-					algaeIntakeStateHandler.setState(AlgaeIntakeState.OUTTAKE_WITH_RELEASE)
-				).until(() -> !isAlgaeInAlgaeIntake()),
-				new ParallelCommandGroup(
-					elevatorStateHandler.setState(ElevatorState.CLOSED),
-					armStateHandler.setState(ArmState.CLOSED),
-					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
-					climbStateHandler.setState(ClimbState.STOP),
-					algaeIntakeStateHandler.setState(AlgaeIntakeState.OUTTAKE_WITH_RELEASE)
-				).withTimeout(StateMachineConstants.ALGAE_OUTTAKE_FROM_INTAKE_TIME_AFTER_SENSOR_SECONDS)
+					endEffectorStateHandler.setState(EndEffectorState.DEFAULT)
+				),
+				new SequentialCommandGroup(
+					new ParallelCommandGroup(
+						climbStateHandler.setState(ClimbState.CLOSE),
+						algaeIntakeStateHandler.setState(AlgaeIntakeState.OUTTAKE_WITHOUT_RELEASE)
+					).until(() -> algaeIntakeStateHandler.isAtState(AlgaeIntakeState.OUTTAKE_WITHOUT_RELEASE)),
+					new ParallelCommandGroup(
+						climbStateHandler.setState(ClimbState.STOP),
+						algaeIntakeStateHandler.setState(AlgaeIntakeState.OUTTAKE_WITH_RELEASE)
+					).until(() -> !isAlgaeInAlgaeIntake()),
+					new ParallelCommandGroup(
+						climbStateHandler.setState(ClimbState.STOP),
+						algaeIntakeStateHandler.setState(AlgaeIntakeState.OUTTAKE_WITH_RELEASE)
+					).withTimeout(StateMachineConstants.ALGAE_OUTTAKE_FROM_INTAKE_TIME_AFTER_SENSOR_SECONDS)
+				)
 			),
 			SuperstructureState.ALGAE_FLOOR_INTAKE
 		);

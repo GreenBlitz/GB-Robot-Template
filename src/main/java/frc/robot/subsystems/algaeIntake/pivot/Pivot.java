@@ -1,8 +1,8 @@
 package frc.robot.subsystems.algaeIntake.pivot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.joysticks.SmartJoystick;
 import frc.robot.hardware.interfaces.ControllableMotor;
-import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
@@ -14,9 +14,9 @@ public class Pivot extends GBSubsystem {
 	private final IRequest<Rotation2d> positionRequest;
 	private final InputSignal<Rotation2d> positionSignal;
 	private final InputSignal<Double> voltageSignal;
-
-	private final IAngleEncoder encoder;
-	private final InputSignal<Rotation2d> absolutePositionSignal;
+//
+//	private final IAngleEncoder encoder;
+//	private final InputSignal<Rotation2d> absolutePositionSignal;
 
 	private final PivotCommandsBuilder commandsBuilder;
 
@@ -25,21 +25,22 @@ public class Pivot extends GBSubsystem {
 		ControllableMotor pivot,
 		IRequest<Rotation2d> positionRequest,
 		InputSignal<Rotation2d> positionSignal,
-		InputSignal<Double> voltageSignal,
-		IAngleEncoder encoder,
-		InputSignal<Rotation2d> absolutePositionSignal
+		InputSignal<Double> voltageSignal
+//		IAngleEncoder encoder,
+//		InputSignal<Rotation2d> absolutePositionSignal
 	) {
 		super(logPath);
 
 		this.pivot = pivot;
+		this.pivot.resetPosition(PivotConstants.STARTING_POSITION);
 
 		this.positionRequest = positionRequest;
 
 		this.positionSignal = positionSignal;
 		this.voltageSignal = voltageSignal;
 
-		this.encoder = encoder;
-		this.absolutePositionSignal = absolutePositionSignal;
+//		this.encoder = encoder;
+//		this.absolutePositionSignal = absolutePositionSignal;
 
 		this.commandsBuilder = new PivotCommandsBuilder(this);
 
@@ -56,27 +57,30 @@ public class Pivot extends GBSubsystem {
 		return positionSignal.getLatestValue();
 	}
 
-	public Rotation2d getAbsolutePosition() {
-		return absolutePositionSignal.getLatestValue();
-	}
+//	public Rotation2d getAbsolutePosition() {
+//		return absolutePositionSignal.getLatestValue();
+//	}
 
 	public double getVoltage() {
 		return voltageSignal.getLatestValue();
 	}
 
 	public boolean isAtPosition(Rotation2d targetPosition, Rotation2d tolerance) {
-		return absolutePositionSignal.isNear(targetPosition, tolerance);
+		return positionSignal.isNear(targetPosition, tolerance);
 	}
 
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
+		if (getPosition().getDegrees() > PivotConstants.MAX_POSITION.getDegrees()) {
+			pivot.resetPosition(PivotConstants.MAX_POSITION);
+		}
 	}
 
 	private void updateInputs() {
 		pivot.updateSimulation();
 		pivot.updateInputs(positionSignal, voltageSignal);
-		encoder.updateInputs(absolutePositionSignal);
+//		encoder.updateInputs(absolutePositionSignal);
 	}
 
 	public void setBrake(boolean brake) {
@@ -92,7 +96,14 @@ public class Pivot extends GBSubsystem {
 	}
 
 	protected void stayInPlace() {
-		pivot.applyRequest(positionRequest.withSetPoint(getAbsolutePosition()));
+		pivot.applyRequest(positionRequest.withSetPoint(getPosition()));
+	}
+
+	public void applyCalibrationBindings(SmartJoystick joystick) {
+		joystick.A.onTrue(commandsBuilder.moveToPosition(PivotState.CLOSED.getPosition()));
+		joystick.B.onTrue(commandsBuilder.moveToPosition(PivotState.INTAKE.getPosition()));
+		joystick.X.onTrue(commandsBuilder.stayInPlace());
+		joystick.Y.onTrue(commandsBuilder.setPower(0.1));
 	}
 
 }

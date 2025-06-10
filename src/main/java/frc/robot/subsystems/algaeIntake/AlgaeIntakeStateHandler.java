@@ -3,6 +3,7 @@ package frc.robot.subsystems.algaeIntake;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import frc.joysticks.SmartJoystick;
 import frc.robot.subsystems.algaeIntake.pivot.PivotState;
 import frc.robot.subsystems.algaeIntake.pivot.PivotStateHandler;
 import frc.robot.subsystems.algaeIntake.rollers.RollersState;
@@ -56,6 +57,14 @@ public class AlgaeIntakeStateHandler {
 
 	private Command stayInPlace() {
 		return new ParallelCommandGroup(pivotStateHandler.setState(PivotState.STAY_IN_PLACE), rollersStateHandler.setState(RollersState.IDLE));
+	}
+
+
+	public void applyCalibrationBindings(SmartJoystick joystick) {
+		joystick.A.onTrue(setState(AlgaeIntakeState.CLOSED));
+		joystick.B.onTrue(setState(AlgaeIntakeState.INTAKE));
+		joystick.X.onTrue(setState(AlgaeIntakeState.OUTTAKE));
+		joystick.Y.onTrue(setState(AlgaeIntakeState.TRANSFER_TO_END_EFFECTOR));
 	}
 
 }

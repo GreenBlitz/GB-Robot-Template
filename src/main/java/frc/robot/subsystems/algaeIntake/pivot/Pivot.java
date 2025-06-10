@@ -2,6 +2,7 @@ package frc.robot.subsystems.algaeIntake.pivot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.ControllableMotor;
+import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
@@ -14,6 +15,9 @@ public class Pivot extends GBSubsystem {
 	private final InputSignal<Rotation2d> positionSignal;
 	private final InputSignal<Double> voltageSignal;
 
+	private final IAngleEncoder encoder;
+	private final InputSignal<Rotation2d> absolutePositionSignal;
+
 	private final PivotCommandsBuilder commandsBuilder;
 
 	public Pivot(
@@ -21,7 +25,9 @@ public class Pivot extends GBSubsystem {
 		ControllableMotor pivot,
 		IRequest<Rotation2d> positionRequest,
 		InputSignal<Rotation2d> positionSignal,
-		InputSignal<Double> voltageSignal
+		InputSignal<Double> voltageSignal,
+		IAngleEncoder encoder,
+		InputSignal<Rotation2d> absolutePositionSignal
 	) {
 		super(logPath);
 
@@ -31,6 +37,9 @@ public class Pivot extends GBSubsystem {
 
 		this.positionSignal = positionSignal;
 		this.voltageSignal = voltageSignal;
+
+		this.encoder = encoder;
+		this.absolutePositionSignal = absolutePositionSignal;
 
 		this.commandsBuilder = new PivotCommandsBuilder(this);
 
@@ -47,12 +56,16 @@ public class Pivot extends GBSubsystem {
 		return positionSignal.getLatestValue();
 	}
 
+	public Rotation2d getAbsolutePosition() {
+		return absolutePositionSignal.getLatestValue();
+	}
+
 	public double getVoltage() {
 		return voltageSignal.getLatestValue();
 	}
 
 	public boolean isAtPosition(Rotation2d targetPosition, Rotation2d tolerance) {
-		return positionSignal.isNear(targetPosition, tolerance);
+		return absolutePositionSignal.isNear(targetPosition, tolerance);
 	}
 
 	@Override
@@ -63,6 +76,7 @@ public class Pivot extends GBSubsystem {
 	private void updateInputs() {
 		pivot.updateSimulation();
 		pivot.updateInputs(positionSignal, voltageSignal);
+		encoder.updateInputs(absolutePositionSignal);
 	}
 
 	public void setBrake(boolean brake) {
@@ -78,7 +92,7 @@ public class Pivot extends GBSubsystem {
 	}
 
 	protected void stayInPlace() {
-		pivot.applyRequest(positionRequest.withSetPoint(getPosition()));
+		pivot.applyRequest(positionRequest.withSetPoint(getAbsolutePosition()));
 	}
 
 }

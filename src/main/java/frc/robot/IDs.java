@@ -47,12 +47,6 @@ public class IDs {
 
 	}
 
-	public static class CANRangeIDs {
-
-		public static final Phoenix6DeviceID ROLLERS_CAN_RANGE = new Phoenix6DeviceID(13, BusChain.ROBORIO);
-
-	}
-
 	public static class SparkMAXIDs {
 
 		public static final SparkMaxDeviceID END_EFFECTOR = new SparkMaxDeviceID(5);
@@ -74,6 +68,8 @@ public class IDs {
 		public static final Phoenix6DeviceID SWERVE_BACK_RIGHT = new Phoenix6DeviceID(3, BusChain.SWERVE_CANIVORE);
 
 		public static final Phoenix6DeviceID ARM = new Phoenix6DeviceID(20, BusChain.SUPERSTRUCTURE_CANIVORE);
+
+		public static final Phoenix6DeviceID PIVOT = new Phoenix6DeviceID(13, BusChain.ROBORIO);
 
 	}
 

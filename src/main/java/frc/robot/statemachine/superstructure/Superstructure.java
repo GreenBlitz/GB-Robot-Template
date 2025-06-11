@@ -695,8 +695,7 @@ public class Superstructure extends GBSubsystem {
 			new ParallelDeadlineGroup(
 				new SequentialCommandGroup(
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT).until(this::isReadyForNetRelease),
-					endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE).until(() -> !isAlgaeInEndEffector()),
-					endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE)
+					endEffectorStateHandler.setState(EndEffectorState.NET_OUTTAKE).withTimeout(1)
 				),
 				elevatorStateHandler.setState(ElevatorState.NET),
 				new SequentialCommandGroup(

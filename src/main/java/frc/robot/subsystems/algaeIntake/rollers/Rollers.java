@@ -69,7 +69,7 @@ public class Rollers extends GBSubsystem {
 		if (isPowerConstant() && !lastIsPowerStable){
 			b = true;
 		}
-		if (!isCurrentSpiking() && !lastIsCurrentSpiking){
+		if (!isCurrentSpiking() && lastIsCurrentSpiking){
 			b = false;
 		}
 		Logger.recordOutput(getLogPath() + "/isPowerStable", isPowerConstant());

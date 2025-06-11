@@ -600,29 +600,23 @@ public class Superstructure extends GBSubsystem {
 	}
 
 	public Command algaeIntake() {
-		return new DeferredCommand(() -> new InstantCommand(() -> {
-			ElevatorState elevatorState = robot.getEndEffector().isCoralIn() ? ElevatorState.CLOSED : ElevatorState.TRANSFER_ALGAE_FROM_INTAKE;
-			ArmState armState = robot.getEndEffector().isCoralIn() ? ArmState.CLOSED : ArmState.TRANSFER_ALGAE_FROM_INTAKE;
-			asSubsystemCommand(
+		return asSubsystemCommand(new DeferredCommand(() ->
 				new SequentialCommandGroup(
 					new ParallelCommandGroup(
-						elevatorStateHandler.setState(elevatorState),
-						armStateHandler.setState(armState),
+						elevatorStateHandler.setState(robot.getEndEffector().isCoralIn() ? ElevatorState.CLOSED : ElevatorState.TRANSFER_ALGAE_FROM_INTAKE),
+						armStateHandler.setState(robot.getEndEffector().isCoralIn() ? ArmState.CLOSED : ArmState.TRANSFER_ALGAE_FROM_INTAKE),
 						endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 						climbStateHandler.setState(ClimbState.STOP),
 						algaeIntakeStateHandler.setState(AlgaeIntakeState.INTAKE)
 					).until(this::isAlgaeInAlgaeIntake),
 					new ParallelCommandGroup(
-						elevatorStateHandler.setState(elevatorState),
-						armStateHandler.setState(armState),
+						elevatorStateHandler.setState(robot.getEndEffector().isCoralIn() ? ElevatorState.CLOSED : ElevatorState.TRANSFER_ALGAE_FROM_INTAKE),
+						armStateHandler.setState(robot.getEndEffector().isCoralIn() ? ArmState.CLOSED : ArmState.TRANSFER_ALGAE_FROM_INTAKE),
 						endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 						climbStateHandler.setState(ClimbState.STOP),
 						algaeIntakeStateHandler.setState(AlgaeIntakeState.INTAKE)
 					).withTimeout(StateMachineConstants.ALGAE_INTAKE_TIME_AFTER_SENSOR_SECONDS)
-				),
-				SuperstructureState.ALGAE_FLOOR_INTAKE
-			).schedule();
-		}),
+		),
 			Set.of(
 				this,
 				robot.getElevator(),
@@ -633,7 +627,8 @@ public class Superstructure extends GBSubsystem {
 				robot.getPivot(),
 				robot.getRollers()
 			)
-		);
+		)
+		, SuperstructureState.INTAKE);
 	}
 
 	public Command algaeOuttakeFromIntake() {

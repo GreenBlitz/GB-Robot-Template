@@ -110,7 +110,7 @@ public class TalonFXPivotBuilder {
 			.build(pivot.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 		InputSignal<Double> voltageSignal = Phoenix6SignalBuilder
 			.build(pivot.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
-pivot.getDevice().getClosedLoopReference().setUpdateFrequency(100);
+		pivot.getDevice().getClosedLoopReference().setUpdateFrequency(100);
 
 //		CANCoderEncoder encoder = new CANCoderEncoder(
 //			logPath + "Encoder",

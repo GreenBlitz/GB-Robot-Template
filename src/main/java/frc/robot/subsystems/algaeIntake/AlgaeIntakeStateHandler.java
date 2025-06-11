@@ -14,6 +14,8 @@ public class AlgaeIntakeStateHandler {
 
 	private AlgaeIntakeState currentState;
 
+	private boolean isAlgaeCurrentlyIn;
+
 	public AlgaeIntakeStateHandler(PivotStateHandler pivotStateHandler, RollersStateHandler rollersStateHandler) {
 		this.pivotStateHandler = pivotStateHandler;
 		this.rollersStateHandler = rollersStateHandler;
@@ -26,10 +28,19 @@ public class AlgaeIntakeStateHandler {
 	public Command setState(AlgaeIntakeState state) {
 		if (state == AlgaeIntakeState.INTAKE){
 			return new ParallelCommandGroup(
+					new InstantCommand(() -> isAlgaeCurrentlyIn = true),
 					new InstantCommand(() -> currentState = state),
 					pivotStateHandler.setState(state.getPivotState()),
 					rollersStateHandler.setState(state.getRollersState())
 			).until(rollersStateHandler::isAlgaeIn);
+		}
+		if (state == AlgaeIntakeState.OUTTAKE_WITH_RELEASE || state == AlgaeIntakeState.TRANSFER_TO_END_EFFECTOR_WITH_RELEASE) {
+			return new ParallelCommandGroup(
+					new InstantCommand(() -> isAlgaeCurrentlyIn = false),
+					new InstantCommand(() -> currentState = state),
+					pivotStateHandler.setState(state.getPivotState()),
+					rollersStateHandler.setState(state.getRollersState())
+			);
 		}
 		return new ParallelCommandGroup(
 			new InstantCommand(() -> currentState = state),
@@ -42,8 +53,12 @@ public class AlgaeIntakeStateHandler {
 		return pivotStateHandler.isAtState(state.getPivotState());
 	}
 
+	public boolean isAlgaeCurrentlyIn() {
+		return isAlgaeCurrentlyIn;
+	}
+
 	public Command handleIdle(boolean isAlgaeInAlgaeIntakeOverride) {
-		if (rollersStateHandler.isAlgaeIn() && isAlgaeInAlgaeIntakeOverride) {
+		if (isAlgaeCurrentlyIn || isAlgaeInAlgaeIntakeOverride) {
 			return setState(AlgaeIntakeState.HOLD_ALGAE);
 		}
 		return setState(AlgaeIntakeState.CLOSED);
@@ -54,7 +69,7 @@ public class AlgaeIntakeStateHandler {
 		joystick.A.onTrue(setState(AlgaeIntakeState.CLOSED));
 		joystick.B.onTrue(setState(AlgaeIntakeState.INTAKE));
 		joystick.X.onTrue(setState(AlgaeIntakeState.OUTTAKE_WITHOUT_RELEASE));
-		joystick.Y.onTrue(setState(AlgaeIntakeState.TRANSFER_TO_END_EFFECTOR));
+		joystick.Y.onTrue(setState(AlgaeIntakeState.TRANSFER_TO_END_EFFECTOR_WITHOUT_RELEASE));
 		joystick.POV_LEFT.onTrue(setState(AlgaeIntakeState.OUTTAKE_WITH_RELEASE));
 		joystick.POV_RIGHT.onTrue(setState(AlgaeIntakeState.HOLD_ALGAE));
 	}

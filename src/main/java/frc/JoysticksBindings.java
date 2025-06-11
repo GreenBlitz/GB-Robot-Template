@@ -257,7 +257,10 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = SIXTH_JOYSTICK;
 		// bindings...
 
-		robot.getRobotCommander().getSuperstructure().getAlgaeIntakeStateHandler().applyCalibrationBindings(usedJoystick);
+		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
+		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_INTAKE));
+		usedJoystick.X.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_OUTTAKE_FROM_INTAKE));
+
 	}
 
 }

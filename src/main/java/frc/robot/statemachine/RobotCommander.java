@@ -53,7 +53,7 @@ public class RobotCommander extends GBSubsystem {
 		this.superstructure = new Superstructure("StateMachine/Superstructure", robot);
 
 		this.handleBalls = new Trigger(
-			() -> superstructure.isAlgaeInAlgaeIntake() && !robot.getEndEffector().isCoralIn() && currentState == RobotState.DRIVE
+			() -> superstructure.getAlgaeIntakeStateHandler().isAlgaeCurrentlyIn() && !robot.getEndEffector().isCoralIn() && (currentState == RobotState.DRIVE || currentState == RobotState.STAY_IN_PLACE)
 		);
 		handleBalls.onTrue(transferAlgaeFromIntakeToEndEffector());
 

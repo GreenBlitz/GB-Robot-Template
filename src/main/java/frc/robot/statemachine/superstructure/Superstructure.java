@@ -63,21 +63,21 @@ public class Superstructure extends GBSubsystem {
 		this.driverIsCoralInOverride = false;
 		this.driverIsAlgaeInEndEffectorOverride = false;
 		this.driverIsAlgaeInAlgaeIntakeOverride = false;
-//		setDefaultCommand(
-//			new DeferredCommand(
-//				() -> endState(currentState),
-//				Set.of(
-//					this,
-//					robot.getElevator(),
-//					robot.getArm(),
-//					robot.getEndEffector(),
-//					robot.getLifter(),
-//					robot.getSolenoid(),
-//					robot.getPivot(),
-//					robot.getRollers()
-//				)
-//			)
-//		);
+		setDefaultCommand(
+			new DeferredCommand(
+				() -> endState(currentState),
+				Set.of(
+					this,
+					robot.getElevator(),
+					robot.getArm(),
+					robot.getEndEffector(),
+					robot.getLifter(),
+					robot.getSolenoid(),
+					robot.getPivot(),
+					robot.getRollers()
+				)
+			)
+		);
 	}
 
 	public ElevatorStateHandler getElevatorStateHandler() {
@@ -126,7 +126,7 @@ public class Superstructure extends GBSubsystem {
 	}
 
 	public boolean isAlgaeInAlgaeIntake() {
-		return robot.getRollers().isAlgaeIn() && driverIsAlgaeInAlgaeIntakeOverride;
+		return robot.getRollers().isAlgaeIn() || driverIsAlgaeInAlgaeIntakeOverride;
 	}
 
 	public boolean isClosed() {
@@ -191,6 +191,7 @@ public class Superstructure extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/EndEffectorState", endEffectorStateHandler.getCurrentState());
 		Logger.recordOutput(getLogPath() + "/ClimbState", climbStateHandler.getCurrentState());
 		Logger.recordOutput(getLogPath() + "/AlgaeIntakeState", algaeIntakeStateHandler.getCurrentState());
+		Logger.recordOutput(getLogPath() + "/IsAlgaeCurrentlyInIntake", algaeIntakeStateHandler.isAlgaeCurrentlyIn());
 	}
 
 	public Command idle() {
@@ -582,7 +583,14 @@ public class Superstructure extends GBSubsystem {
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 					climbStateHandler.setState(ClimbState.STOP),
 					algaeIntakeStateHandler.setState(AlgaeIntakeState.INTAKE)
-				).until(this::isAlgaeInAlgaeIntake)
+				).until(this::isAlgaeInAlgaeIntake),
+					new ParallelCommandGroup(
+							elevatorStateHandler.setState(elevatorState),
+							armStateHandler.setState(armState),
+							endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
+							climbStateHandler.setState(ClimbState.STOP),
+							algaeIntakeStateHandler.setState(AlgaeIntakeState.INTAKE)
+					).withTimeout(StateMachineConstants.ALGAE_INTAKE_TIME_AFTER_SENSOR_SECONDS)
 			),
 			SuperstructureState.ALGAE_FLOOR_INTAKE
 		);
@@ -603,7 +611,7 @@ public class Superstructure extends GBSubsystem {
 					new ParallelCommandGroup(
 						climbStateHandler.setState(ClimbState.STOP),
 						algaeIntakeStateHandler.setState(AlgaeIntakeState.OUTTAKE_WITH_RELEASE)
-					).withTimeout(StateMachineConstants.ALGAE_OUTTAKE_FROM_INTAKE_TIME_AFTER_SENSOR_SECONDS)
+					).withTimeout(StateMachineConstants.ALGAE_INTAKE_TIME_AFTER_SENSOR_SECONDS)
 				),
 				new ParallelCommandGroup(
 					elevatorStateHandler.setState(ElevatorState.CLOSED),
@@ -631,10 +639,10 @@ public class Superstructure extends GBSubsystem {
 				new ParallelCommandGroup(
 					elevatorStateHandler.setState(ElevatorState.TRANSFER_ALGAE_FROM_INTAKE),
 					armStateHandler.setState(ArmState.TRANSFER_ALGAE_FROM_INTAKE),
-					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
+					endEffectorStateHandler.setState(EndEffectorState.TRANSFER_ALGAE_FROM_INTAKE),
 					climbStateHandler.setState(ClimbState.STOP),
-					algaeIntakeStateHandler.setState(AlgaeIntakeState.TRANSFER_TO_END_EFFECTOR)
-				).until(() -> algaeIntakeStateHandler.isAtState(AlgaeIntakeState.TRANSFER_TO_END_EFFECTOR))
+					algaeIntakeStateHandler.setState(AlgaeIntakeState.TRANSFER_TO_END_EFFECTOR_WITHOUT_RELEASE)
+				).until(() -> algaeIntakeStateHandler.isAtState(AlgaeIntakeState.TRANSFER_TO_END_EFFECTOR_WITHOUT_RELEASE)).withTimeout(0.8)
 			),
 			SuperstructureState.TRANSFER_ALGAE_TO_END_EFFECTOR
 		);
@@ -772,13 +780,21 @@ public class Superstructure extends GBSubsystem {
 
 	public Command holdAlgae() {
 		return asSubsystemCommand(
+				new SequentialCommandGroup(
+						new ParallelCommandGroup(
+								elevatorStateHandler.setState(ElevatorState.HOLD_ALGAE),
+								armStateHandler.setState(ArmState.HOLD_ALGAE),
+								endEffectorStateHandler.setState(EndEffectorState.TRANSFER_ALGAE_FROM_INTAKE),
+								climbStateHandler.setState(ClimbState.STOP),
+								algaeIntakeStateHandler.setState(AlgaeIntakeState.TRANSFER_TO_END_EFFECTOR_WITH_RELEASE)
+						).withTimeout(1),
 			new ParallelCommandGroup(
 				elevatorStateHandler.setState(ElevatorState.HOLD_ALGAE),
 				armStateHandler.setState(ArmState.HOLD_ALGAE),
 				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 				climbStateHandler.setState(ClimbState.STOP),
 				algaeIntakeStateHandler.setState(AlgaeIntakeState.CLOSED)
-			),
+			)),
 			SuperstructureState.HOLD_ALGAE
 		);
 	}

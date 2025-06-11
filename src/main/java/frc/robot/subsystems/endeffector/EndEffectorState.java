@@ -12,7 +12,8 @@ public enum EndEffectorState {
 	DEFAULT(Double.NaN),
 	ALGAE_OUTTAKE(0.7),
 	NET_OUTTAKE(0.8),
-	PROCESSOR_OUTTAKE(0.5);
+	PROCESSOR_OUTTAKE(0.5),
+	TRANSFER_ALGAE_FROM_INTAKE(-0.9);
 
 	public static final double CORAL_KEEP_POWER = 0.02;
 	public static final double ALGAE_KEEP_POWER = -0.02;

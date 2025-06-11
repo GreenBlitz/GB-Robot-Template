@@ -233,14 +233,14 @@ public class JoysticksBindings {
 
 	private static void fourthJoystickButtons(Robot robot) {
 //		SmartJoystick usedJoystick = FOURTH_JOYSTICK;
-//		bindings...
+		// bindings...
 
 // 		robot.getElevator().applyCalibrationBindings(usedJoystick);
 	}
 
 	private static void fifthJoystickButtons(Robot robot) {
 //		SmartJoystick usedJoystick = FIFTH_JOYSTICK;
-//      bindings...
+		// bindings...
 
 //		robot.getRobotCommander().getSuperstructure().getClimbStateHandler().applyCalibrationBindings(usedJoystick);
 //		robot.getRobotCommander().getSuperstructure().getClimbStateHandler().applyCalibrationBindings(usedJoystick);
@@ -248,7 +248,6 @@ public class JoysticksBindings {
 
 	private static void sixthJoystickButtons(Robot robot) {
 //		SmartJoystick usedJoystick = SIXTH_JOYSTICK;
-// 		bindings...
 
 //		robot.getArm().applyCalibrationBindings(usedJoystick);
 //		robot.getEndEffector().applyCalibrationsBindings(usedJoystick);

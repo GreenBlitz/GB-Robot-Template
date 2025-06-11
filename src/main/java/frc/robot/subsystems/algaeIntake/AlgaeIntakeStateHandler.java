@@ -14,7 +14,6 @@ public class AlgaeIntakeStateHandler {
 
 	private AlgaeIntakeState currentState;
 
-	private boolean isAlgaeCurrentlyIn;
 
 	public AlgaeIntakeStateHandler(PivotStateHandler pivotStateHandler, RollersStateHandler rollersStateHandler) {
 		this.pivotStateHandler = pivotStateHandler;
@@ -26,21 +25,12 @@ public class AlgaeIntakeStateHandler {
 	}
 
 	public Command setState(AlgaeIntakeState state) {
-		if (state == AlgaeIntakeState.INTAKE){
+		if (state == AlgaeIntakeState.INTAKE) {
 			return new ParallelCommandGroup(
-					new InstantCommand(() -> isAlgaeCurrentlyIn = true),
-					new InstantCommand(() -> currentState = state),
-					pivotStateHandler.setState(state.getPivotState()),
-					rollersStateHandler.setState(state.getRollersState())
+				new InstantCommand(() -> currentState = state),
+				pivotStateHandler.setState(state.getPivotState()),
+				rollersStateHandler.setState(state.getRollersState())
 			).until(rollersStateHandler::isAlgaeIn);
-		}
-		if (state == AlgaeIntakeState.OUTTAKE_WITH_RELEASE || state == AlgaeIntakeState.TRANSFER_TO_END_EFFECTOR_WITH_RELEASE) {
-			return new ParallelCommandGroup(
-					new InstantCommand(() -> isAlgaeCurrentlyIn = false),
-					new InstantCommand(() -> currentState = state),
-					pivotStateHandler.setState(state.getPivotState()),
-					rollersStateHandler.setState(state.getRollersState())
-			);
 		}
 		return new ParallelCommandGroup(
 			new InstantCommand(() -> currentState = state),
@@ -53,12 +43,9 @@ public class AlgaeIntakeStateHandler {
 		return pivotStateHandler.isAtState(state.getPivotState());
 	}
 
-	public boolean isAlgaeCurrentlyIn() {
-		return isAlgaeCurrentlyIn;
-	}
 
 	public Command handleIdle(boolean isAlgaeInAlgaeIntakeOverride) {
-		if (isAlgaeCurrentlyIn || isAlgaeInAlgaeIntakeOverride) {
+		if (rollersStateHandler.isAlgaeIn() || isAlgaeInAlgaeIntakeOverride) {
 			return setState(AlgaeIntakeState.HOLD_ALGAE);
 		}
 		return setState(AlgaeIntakeState.CLOSED);

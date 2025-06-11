@@ -52,12 +52,14 @@ public class RobotCommander extends GBSubsystem {
 		this.swerve = robot.getSwerve();
 		this.superstructure = new Superstructure("StateMachine/Superstructure", robot);
 
+		this.currentState = RobotState.STAY_IN_PLACE;
+
 		this.handleBalls = new Trigger(
-			() -> superstructure.getAlgaeIntakeStateHandler().isAlgaeCurrentlyIn() && !robot.getEndEffector().isCoralIn() && (currentState == RobotState.DRIVE || currentState == RobotState.STAY_IN_PLACE)
+			() -> superstructure.isAlgaeInAlgaeIntake()
+				&& !robot.getEndEffector().isCoralIn()
+				&& currentState == RobotState.DRIVE
 		);
 		handleBalls.onTrue(transferAlgaeFromIntakeToEndEffector());
-
-		this.currentState = RobotState.STAY_IN_PLACE;
 
 		this.caNdleWrapper = new CANdleWrapper(IDs.CANDleIDs.CANDLE, LEDConstants.NUMBER_OF_LEDS, "candle");
 		this.ledStateHandler = new LEDStateHandler("CANdle", caNdleWrapper);
@@ -78,21 +80,23 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public void initializeDefaultCommand() {
-//		setDefaultCommand(
-//			new DeferredCommand(
-//				() -> endState(currentState),
-//				Set.of(
-//					this,
-//					superstructure,
-//					swerve,
-//					robot.getElevator(),
-//					robot.getArm(),
-//					robot.getEndEffector(),
-//					robot.getLifter(),
-//					robot.getSolenoid()
-//				)
-//			)
-//		);
+		setDefaultCommand(
+			new DeferredCommand(
+				() -> endState(currentState),
+				Set.of(
+					this,
+					superstructure,
+					swerve,
+					robot.getElevator(),
+					robot.getArm(),
+					robot.getEndEffector(),
+					robot.getLifter(),
+					robot.getSolenoid(),
+					robot.getPivot(),
+					robot.getRollers()
+				)
+			)
+		);
 	}
 
 	/**
@@ -336,7 +340,9 @@ public class RobotCommander extends GBSubsystem {
 					robot.getArm(),
 					robot.getEndEffector(),
 					robot.getLifter(),
-					robot.getSolenoid()
+					robot.getSolenoid(),
+					robot.getPivot(),
+					robot.getRollers()
 				)
 			),
 			RobotState.SCORE
@@ -385,7 +391,9 @@ public class RobotCommander extends GBSubsystem {
 				robot.getArm(),
 				robot.getEndEffector(),
 				robot.getLifter(),
-				robot.getSolenoid()
+				robot.getSolenoid(),
+				robot.getPivot(),
+				robot.getRollers()
 			)
 		);
 	}
@@ -754,7 +762,9 @@ public class RobotCommander extends GBSubsystem {
 				robot.getArm(),
 				robot.getEndEffector(),
 				robot.getLifter(),
-				robot.getSolenoid()
+				robot.getSolenoid(),
+				robot.getPivot(),
+				robot.getRollers()
 			)
 		);
 	}
@@ -770,7 +780,9 @@ public class RobotCommander extends GBSubsystem {
 				robot.getArm(),
 				robot.getEndEffector(),
 				robot.getLifter(),
-				robot.getSolenoid()
+				robot.getSolenoid(),
+				robot.getPivot(),
+				robot.getRollers()
 			)
 		);
 	}

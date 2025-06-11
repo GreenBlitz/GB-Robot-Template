@@ -100,6 +100,8 @@ public class JoysticksBindings {
 				robot.getEndEffector(),
 				robot.getLifter(),
 				robot.getSolenoid(),
+				robot.getPivot(),
+				robot.getRollers(),
 				robot.getRobotCommander().getLedStateHandler()
 			)
 		);
@@ -118,6 +120,8 @@ public class JoysticksBindings {
 					robot.getArm(),
 					robot.getEndEffector(),
 					robot.getLifter(),
+					robot.getPivot(),
+					robot.getRollers(),
 					robot.getSolenoid(),
 					robot.getRobotCommander().getLedStateHandler()
 				)
@@ -260,7 +264,6 @@ public class JoysticksBindings {
 		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
 		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_INTAKE));
 		usedJoystick.X.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_OUTTAKE_FROM_INTAKE));
-
 	}
 
 }

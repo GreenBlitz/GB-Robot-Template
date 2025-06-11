@@ -24,6 +24,13 @@ public class AlgaeIntakeStateHandler {
 	}
 
 	public Command setState(AlgaeIntakeState state) {
+		if (state == AlgaeIntakeState.INTAKE){
+			return new ParallelCommandGroup(
+					new InstantCommand(() -> currentState = state),
+					pivotStateHandler.setState(state.getPivotState()),
+					rollersStateHandler.setState(state.getRollersState())
+			).until(rollersStateHandler::isAlgaeIn);
+		}
 		return new ParallelCommandGroup(
 			new InstantCommand(() -> currentState = state),
 			pivotStateHandler.setState(state.getPivotState()),
@@ -48,7 +55,8 @@ public class AlgaeIntakeStateHandler {
 		joystick.B.onTrue(setState(AlgaeIntakeState.INTAKE));
 		joystick.X.onTrue(setState(AlgaeIntakeState.OUTTAKE_WITHOUT_RELEASE));
 		joystick.Y.onTrue(setState(AlgaeIntakeState.TRANSFER_TO_END_EFFECTOR));
-		joystick.R1.onTrue(setState(AlgaeIntakeState.OUTTAKE_WITH_RELEASE));
+		joystick.POV_LEFT.onTrue(setState(AlgaeIntakeState.OUTTAKE_WITH_RELEASE));
+		joystick.POV_RIGHT.onTrue(setState(AlgaeIntakeState.HOLD_ALGAE));
 	}
 
 }

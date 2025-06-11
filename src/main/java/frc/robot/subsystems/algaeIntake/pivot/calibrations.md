@@ -3,36 +3,36 @@ Pivot Calibrations
 
 ##### IDs
 
-- [ ] motor ID
-- [ ] motor Buschain
+- [x] motor ID
+- [x] motor Buschain
 
 ##### Motor
 
-- [ ] is inverted
-- [ ] gear ratio
+- [x] is inverted
+- [x] gear ratio
 
 ##### Limits
 
-- [ ] current limit
-- [ ] software forward limit
-- [ ] software reverse limit
+- [x] current limit
+- [x] software forward limit
+- [x] software reverse limit
 
 ##### Feed Forward
 
-- [ ] kS
-- [ ] kG
+- [x] kS
+- [x] kG
 
 ##### PID
 
-- [ ] kP
-- [ ] kI
-- [ ] kD
+- [x] kP
+- [x] kI
+- [x] kD
 
 ##### General
 
-- [ ] starting position
-- [ ] length
-- [ ] mass
-- [ ] states positions
+- [x] starting position
+- [x] length
+- [x] mass
+- [x] states positions
 
 

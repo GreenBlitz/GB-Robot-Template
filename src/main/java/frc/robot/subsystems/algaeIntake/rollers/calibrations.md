@@ -3,18 +3,18 @@ Rollers Calibrations
 
 ##### IDs
 
-- [ ] motor ID
-- [ ] motor Buschain
+- [x] motor ID
+- [x] motor Buschain
 
 ##### Motor
 
-- [ ] is inverted
-- [ ] gear ratio
+- [x] is inverted
+- [x] gear ratio
 
 ##### Limits
 
-- [ ] current limit
+- [x] current limit
 
 #### General
 
-- [ ] states powers
+- [x] states powers

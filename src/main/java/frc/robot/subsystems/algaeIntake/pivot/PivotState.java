@@ -4,10 +4,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public enum PivotState {
 
-	CLOSED(Rotation2d.fromDegrees(110)),
-	INTAKE(Rotation2d.fromDegrees(-15)),
-	TRANSFER_TO_END_EFFECTOR(Rotation2d.fromDegrees(75)),
-	OUTTAKE(Rotation2d.fromDegrees(-15)),
+	CLOSED(Rotation2d.fromDegrees(115)),
+	INTAKE(Rotation2d.fromDegrees(-10)),
+	TRANSFER_TO_END_EFFECTOR(Rotation2d.fromDegrees(85)),
+	OUTTAKE(Rotation2d.fromDegrees(-10)),
 	HOLD_ALGAE(Rotation2d.fromDegrees(20)),
 	STAY_IN_PLACE(null);
 

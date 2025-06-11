@@ -53,7 +53,7 @@ public class IDs {
 
 		public static final SparkMaxDeviceID SOLENOID = new SparkMaxDeviceID(10, SparkLowLevel.MotorType.kBrushed);
 
-		public static final SparkMaxDeviceID ROLLERS = new SparkMaxDeviceID(17, SparkLowLevel.MotorType.kBrushless);
+		public static final SparkMaxDeviceID ROLLERS = new SparkMaxDeviceID(12, SparkLowLevel.MotorType.kBrushless);
 
 	}
 

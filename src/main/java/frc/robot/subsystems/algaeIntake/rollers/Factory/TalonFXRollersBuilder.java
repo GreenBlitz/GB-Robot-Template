@@ -23,7 +23,7 @@ public class TalonFXRollersBuilder {
 
 	private static final int NUM_MOTORS = 1;
 	private static final double MOMENT_OF_INERTIA = 0.02;
-	private static final double GEAR_RATIO = 1 / 1;
+	private static final double GEAR_RATIO = 1 / 10;
 	private static final boolean IS_INVERTED = false;
 	private static final int ALGAE_SENSOR_CHANNEL = 4;
 	private static final double DEBOUNCE_TIME_SECONDS = 0.05;

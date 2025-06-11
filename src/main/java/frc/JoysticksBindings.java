@@ -236,9 +236,10 @@ public class JoysticksBindings {
 //		 bindings...
 
 		robot.getPivot().applyCalibrationBindings(usedJoystick);
-		usedJoystick.POV_LEFT.onTrue(new InstantCommand(() -> robot.getRobotCommander().getSuperstructure().driverIsAlgaeInAlgaeIntakeOverride = false));
-		usedJoystick.POV_RIGHT.onTrue(new InstantCommand(() -> robot.getRobotCommander().getSuperstructure().driverIsAlgaeInAlgaeIntakeOverride = true));
-
+		usedJoystick.POV_LEFT
+			.onTrue(new InstantCommand(() -> robot.getRobotCommander().getSuperstructure().driverIsAlgaeInAlgaeIntakeOverride = false));
+		usedJoystick.POV_RIGHT
+			.onTrue(new InstantCommand(() -> robot.getRobotCommander().getSuperstructure().driverIsAlgaeInAlgaeIntakeOverride = true));
 	}
 
 	private static void fifthJoystickButtons(Robot robot) {
@@ -246,9 +247,10 @@ public class JoysticksBindings {
 		// bindings...
 
 		robot.getRollers().applyCalibrationBindings(usedJoystick);
-		usedJoystick.POV_LEFT.onTrue(new InstantCommand(() -> robot.getRobotCommander().getSuperstructure().driverIsAlgaeInAlgaeIntakeOverride = false));
-		usedJoystick.POV_RIGHT.onTrue(new InstantCommand(() -> robot.getRobotCommander().getSuperstructure().driverIsAlgaeInAlgaeIntakeOverride = true));
-
+		usedJoystick.POV_LEFT
+			.onTrue(new InstantCommand(() -> robot.getRobotCommander().getSuperstructure().driverIsAlgaeInAlgaeIntakeOverride = false));
+		usedJoystick.POV_RIGHT
+			.onTrue(new InstantCommand(() -> robot.getRobotCommander().getSuperstructure().driverIsAlgaeInAlgaeIntakeOverride = true));
 	}
 
 	private static void sixthJoystickButtons(Robot robot) {
@@ -256,9 +258,10 @@ public class JoysticksBindings {
 		// bindings...
 
 		robot.getRobotCommander().getSuperstructure().getClimbStateHandler().applyCalibrationBindings(usedJoystick);
-		usedJoystick.POV_LEFT.onTrue(new InstantCommand(() -> robot.getRobotCommander().getSuperstructure().driverIsAlgaeInAlgaeIntakeOverride = false));
-		usedJoystick.POV_RIGHT.onTrue(new InstantCommand(() -> robot.getRobotCommander().getSuperstructure().driverIsAlgaeInAlgaeIntakeOverride = true));
-
+		usedJoystick.POV_LEFT
+			.onTrue(new InstantCommand(() -> robot.getRobotCommander().getSuperstructure().driverIsAlgaeInAlgaeIntakeOverride = false));
+		usedJoystick.POV_RIGHT
+			.onTrue(new InstantCommand(() -> robot.getRobotCommander().getSuperstructure().driverIsAlgaeInAlgaeIntakeOverride = true));
 	}
 
 }

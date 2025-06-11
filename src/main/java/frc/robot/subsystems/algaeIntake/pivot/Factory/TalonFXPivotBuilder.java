@@ -26,7 +26,7 @@ import frc.utils.math.AngleUnit;
 public class TalonFXPivotBuilder {
 
 	private static final int NUMBER_OF_MOTORS = 1;
-	private static final double GEAR_RATIO = 60 / 1;
+	private static final double GEAR_RATIO = 21.43;
 	private static final boolean SIMULATE_GRAVITY = false;
 	private static final double DEFAULT_ARBITRARY_FEED_FORWARD = 0;
 	private static final boolean ENABLE_FOC = true;
@@ -61,11 +61,11 @@ public class TalonFXPivotBuilder {
 
 		switch (Robot.ROBOT_TYPE) {
 			case REAL -> {
-				config.Slot0.kP = 1;
+				config.Slot0.kP = 20;
 				config.Slot0.kI = 0;
 				config.Slot0.kD = 0;
-				config.Slot0.kG = 0;
-				config.Slot0.kS = 0;
+				config.Slot0.kG = 0.4;
+				config.Slot0.kS = 0.05;
 				config.Slot0.kV = 0;
 				config.Slot0.kA = 0;
 			}
@@ -110,6 +110,7 @@ public class TalonFXPivotBuilder {
 			.build(pivot.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 		InputSignal<Double> voltageSignal = Phoenix6SignalBuilder
 			.build(pivot.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
+		pivot.getDevice().getClosedLoopReference().setUpdateFrequency(100);
 
 //		CANCoderEncoder encoder = new CANCoderEncoder(
 //			logPath + "Encoder",

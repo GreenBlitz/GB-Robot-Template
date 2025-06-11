@@ -56,10 +56,12 @@ public class SparkMaxRollersBuilder {
 		rollers.applyConfiguration(generateMotorConfig());
 
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("Voltage", wrapper::getVoltage);
+		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("Current", wrapper::getOutputCurrent);
+		SuppliedDoubleSignal powerSignal = new SuppliedDoubleSignal("Power", wrapper::get);
 
 		IDigitalInput algaeSensor = new ChanneledDigitalInput(new DigitalInput(ALGAE_SENSOR_CHANNEL), new Debouncer(DEBOUNCE_TIME_SECONDS));
 
-		return new Rollers(logPath, rollers, voltageSignal, algaeSensor);
+		return new Rollers(logPath, rollers, voltageSignal, currentSignal, powerSignal, algaeSensor);
 	}
 
 }

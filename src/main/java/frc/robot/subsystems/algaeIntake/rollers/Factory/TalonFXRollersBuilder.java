@@ -1,6 +1,7 @@
 package frc.robot.subsystems.algaeIntake.rollers.Factory;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -60,9 +61,17 @@ public class TalonFXRollersBuilder {
 		InputSignal<Double> voltageSignal = Phoenix6SignalBuilder
 			.build(rollers.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
 
+
+		InputSignal<Double> currentSignal = Phoenix6SignalBuilder
+				.build(rollers.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
+
+		InputSignal<Double> powerSignal = Phoenix6SignalBuilder
+				.build(rollers.getDevice().getDutyCycle(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
+
+
 		IDigitalInput algaeSensor = new ChanneledDigitalInput(new DigitalInput(ALGAE_SENSOR_CHANNEL), new Debouncer(DEBOUNCE_TIME_SECONDS));
 
-		return new Rollers(logPath, rollers, voltageSignal, algaeSensor);
+		return new Rollers(logPath, rollers, voltageSignal, currentSignal, powerSignal, algaeSensor);
 	}
 
 }

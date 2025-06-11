@@ -63,21 +63,21 @@ public class Superstructure extends GBSubsystem {
 		this.driverIsCoralInOverride = false;
 		this.driverIsAlgaeInEndEffectorOverride = false;
 		this.driverIsAlgaeInAlgaeIntakeOverride = false;
-		setDefaultCommand(
-			new DeferredCommand(
-				() -> endState(currentState),
-				Set.of(
-					this,
-					robot.getElevator(),
-					robot.getArm(),
-					robot.getEndEffector(),
-					robot.getLifter(),
-					robot.getSolenoid(),
-					robot.getPivot(),
-					robot.getRollers()
-				)
-			)
-		);
+//		setDefaultCommand(
+//			new DeferredCommand(
+//				() -> endState(currentState),
+//				Set.of(
+//					this,
+//					robot.getElevator(),
+//					robot.getArm(),
+//					robot.getEndEffector(),
+//					robot.getLifter(),
+//					robot.getSolenoid(),
+//					robot.getPivot(),
+//					robot.getRollers()
+//				)
+//			)
+//		);
 	}
 
 	public ElevatorStateHandler getElevatorStateHandler() {

@@ -1,8 +1,6 @@
 package frc.robot.subsystems.algaeIntake.rollers;
 
-public enum
-RollersState {
-
+public enum RollersState {
 
 	IDLE(0.01),
 	INTAKE(0.5),

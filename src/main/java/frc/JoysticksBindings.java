@@ -240,7 +240,7 @@ public class JoysticksBindings {
 
 	private static void fourthJoystickButtons(Robot robot) {
 //		SmartJoystick usedJoystick = FOURTH_JOYSTICK;
-//		 bindings...
+		// bindings...
 
 //		robot.getElevator().applyCalibrationBindings(usedJoystick);
 	}

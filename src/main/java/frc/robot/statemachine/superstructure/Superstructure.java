@@ -636,8 +636,8 @@ public class Superstructure extends GBSubsystem {
 			new ParallelDeadlineGroup(
 				new SequentialCommandGroup(
 					algaeIntakeStateHandler.setState(AlgaeIntakeState.OUTTAKE_WITHOUT_RELEASE)
-						.until(() -> algaeIntakeStateHandler.isAtState(AlgaeIntakeState.OUTTAKE_WITHOUT_RELEASE)),
-					algaeIntakeStateHandler.setState(AlgaeIntakeState.OUTTAKE_WITH_RELEASE).until(() -> !isAlgaeInAlgaeIntake()).withTimeout(0.8),
+						.until(() -> algaeIntakeStateHandler.isAtState(AlgaeIntakeState.OUTTAKE_WITHOUT_RELEASE)).withTimeout(0.8),
+					algaeIntakeStateHandler.setState(AlgaeIntakeState.OUTTAKE_WITH_RELEASE).until(() -> !isAlgaeInAlgaeIntake()),
 					algaeIntakeStateHandler.setState(AlgaeIntakeState.OUTTAKE_WITH_RELEASE)
 						.withTimeout(StateMachineConstants.ALGAE_INTAKE_TIME_AFTER_SENSOR_SECONDS)
 				),

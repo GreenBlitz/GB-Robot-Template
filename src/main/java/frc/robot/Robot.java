@@ -16,6 +16,10 @@ import frc.robot.autonomous.AutosBuilder;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.led.LEDState;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
+import frc.robot.subsystems.algaeIntake.pivot.Factory.PivotFactory;
+import frc.robot.subsystems.algaeIntake.pivot.Pivot;
+import frc.robot.subsystems.algaeIntake.rollers.Factory.RollersFactory;
+import frc.robot.subsystems.algaeIntake.rollers.Rollers;
 import frc.robot.subsystems.climb.lifter.Lifter;
 import frc.robot.subsystems.climb.lifter.factory.LifterFactory;
 import frc.robot.subsystems.swerve.factories.modules.drive.KrakenX60DriveBuilder;
@@ -75,6 +79,8 @@ public class Robot {
 	private final EndEffector endEffector;
 	private final Solenoid solenoid;
 	private final Lifter lifter;
+	private final Pivot pivot;
+	private final Rollers rollers;
 
 	private final SimulationManager simulationManager;
 	private final RobotCommander robotCommander;
@@ -156,6 +162,12 @@ public class Robot {
 
 		this.lifter = LifterFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Lifter");
 		BrakeStateManager.add(() -> lifter.setBrake(true), () -> lifter.setBrake(false));
+
+		this.pivot = PivotFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/AlgaeIntake/Pivot");
+		BrakeStateManager.add(() -> pivot.setBrake(true), () -> pivot.setBrake(false));
+
+		this.rollers = RollersFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/AlgaeIntake/Rollers");
+		BrakeStateManager.add(() -> rollers.setBrake(true), () -> rollers.setBrake(false));
 
 		this.simulationManager = new SimulationManager("SimulationManager", this);
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
@@ -333,6 +345,14 @@ public class Robot {
 
 	public Lifter getLifter() {
 		return lifter;
+	}
+
+	public Pivot getPivot() {
+		return pivot;
+	}
+
+	public Rollers getRollers() {
+		return rollers;
 	}
 
 	public RobotCommander getRobotCommander() {

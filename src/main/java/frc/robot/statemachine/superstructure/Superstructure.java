@@ -13,6 +13,9 @@ import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.StateMachineConstants;
 import frc.robot.statemachine.Tolerances;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.subsystems.algaeIntake.AlgaeIntakeStateHandler;
+import frc.robot.subsystems.algaeIntake.pivot.PivotStateHandler;
+import frc.robot.subsystems.algaeIntake.rollers.RollersStateHandler;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmState;
 import frc.robot.subsystems.arm.ArmStateHandler;
@@ -36,6 +39,7 @@ public class Superstructure extends GBSubsystem {
 	private final ArmStateHandler armStateHandler;
 	private final EndEffectorStateHandler endEffectorStateHandler;
 	private final ClimbStateHandler climbStateHandler;
+	private final AlgaeIntakeStateHandler algaeIntakeStateHandler;
 
 	private SuperstructureState currentState;
 	public boolean driverIsCoralInOverride;
@@ -48,6 +52,10 @@ public class Superstructure extends GBSubsystem {
 		this.armStateHandler = new ArmStateHandler(robot.getArm(), this::getDistanceToReef);
 		this.endEffectorStateHandler = new EndEffectorStateHandler(robot.getEndEffector(), this);
 		this.climbStateHandler = new ClimbStateHandler(new SolenoidStateHandler(robot.getSolenoid()), new LifterStateHandler(robot.getLifter()));
+		this.algaeIntakeStateHandler = new AlgaeIntakeStateHandler(
+			new PivotStateHandler(robot.getPivot()),
+			new RollersStateHandler(robot.getRollers())
+		);
 
 		this.currentState = SuperstructureState.STAY_IN_PLACE;
 		this.driverIsCoralInOverride = false;
@@ -74,6 +82,10 @@ public class Superstructure extends GBSubsystem {
 
 	public ClimbStateHandler getClimbStateHandler() {
 		return climbStateHandler;
+	}
+
+	public AlgaeIntakeStateHandler getAlgaeIntakeStateHandler() {
+		return algaeIntakeStateHandler;
 	}
 
 	public SuperstructureState getCurrentState() {
@@ -162,6 +174,7 @@ public class Superstructure extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/ArmState", armStateHandler.getCurrentState());
 		Logger.recordOutput(getLogPath() + "/EndEffectorState", endEffectorStateHandler.getCurrentState());
 		Logger.recordOutput(getLogPath() + "/ClimbState", climbStateHandler.getCurrentState());
+		Logger.recordOutput(getLogPath() + "/AlgaeIntakeState", algaeIntakeStateHandler.getCurrentState());
 	}
 
 	public Command idle() {

@@ -30,9 +30,9 @@ public class JoysticksBindings {
 	private static final SmartJoystick MAIN_JOYSTICK = new SmartJoystick(JoystickPorts.MAIN);
 	private static final SmartJoystick SECOND_JOYSTICK = new SmartJoystick(JoystickPorts.SECOND);
 //	private static final SmartJoystick THIRD_JOYSTICK = new SmartJoystick(JoystickPorts.THIRD);
-	private static final SmartJoystick FOURTH_JOYSTICK = new SmartJoystick(JoystickPorts.FOURTH);
-	private static final SmartJoystick FIFTH_JOYSTICK = new SmartJoystick(JoystickPorts.FIFTH);
-	private static final SmartJoystick SIXTH_JOYSTICK = new SmartJoystick(JoystickPorts.SIXTH);
+//	private static final SmartJoystick FOURTH_JOYSTICK = new SmartJoystick(JoystickPorts.FOURTH);
+//	private static final SmartJoystick FIFTH_JOYSTICK = new SmartJoystick(JoystickPorts.FIFTH);
+//	private static final SmartJoystick SIXTH_JOYSTICK = new SmartJoystick(JoystickPorts.SIXTH);
 
 	private static final ChassisPowers driversInputChassisPowers = new ChassisPowers();
 
@@ -239,34 +239,25 @@ public class JoysticksBindings {
 	}
 
 	private static void fourthJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = FOURTH_JOYSTICK;
+//		SmartJoystick usedJoystick = FOURTH_JOYSTICK;
 //		 bindings...
 
-		robot.getPivot().applyCalibrationBindings(usedJoystick);
-		usedJoystick.POV_LEFT
-			.onTrue(new InstantCommand(() -> robot.getRobotCommander().getSuperstructure().driverIsAlgaeInAlgaeIntakeOverride = false));
-		usedJoystick.POV_RIGHT
-			.onTrue(new InstantCommand(() -> robot.getRobotCommander().getSuperstructure().driverIsAlgaeInAlgaeIntakeOverride = true));
+//		robot.getElevator().applyCalibrationBindings(usedJoystick);
 	}
 
 	private static void fifthJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = FIFTH_JOYSTICK;
+//		SmartJoystick usedJoystick = FIFTH_JOYSTICK;
 		// bindings...
 
-		robot.getRollers().applyCalibrationBindings(usedJoystick);
-		usedJoystick.POV_LEFT
-			.onTrue(new InstantCommand(() -> robot.getRobotCommander().getSuperstructure().driverIsAlgaeInAlgaeIntakeOverride = false));
-		usedJoystick.POV_RIGHT
-			.onTrue(new InstantCommand(() -> robot.getRobotCommander().getSuperstructure().driverIsAlgaeInAlgaeIntakeOverride = true));
+//		robot.getRobotCommander().getSuperstructure().getClimbStateHandler().applyCalibrationBindings(usedJoystick);
+//		robot.getRobotCommander().getSuperstructure().getClimbStateHandler().applyCalibrationBindings(usedJoystick);
 	}
 
 	private static void sixthJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = SIXTH_JOYSTICK;
-		// bindings...
+//		SmartJoystick usedJoystick = SIXTH_JOYSTICK;
 
-		usedJoystick.A.onTrue(robot.getRobotCommander().setState(RobotState.DRIVE));
-		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_INTAKE));
-		usedJoystick.X.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_OUTTAKE_FROM_INTAKE));
+//		robot.getArm().applyCalibrationBindings(usedJoystick);
+//		robot.getEndEffector().applyCalibrationsBindings(usedJoystick);
 	}
 
 }

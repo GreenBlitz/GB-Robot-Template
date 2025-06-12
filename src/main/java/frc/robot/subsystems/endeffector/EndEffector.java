@@ -115,7 +115,7 @@ public class EndEffector extends GBSubsystem {
 		joystick.POV_UP.onTrue(commandsBuilder.setPower(EndEffectorState.BRANCH_OUTTAKE.getPower()).until(() -> !isCoralIn()));
 		joystick.POV_RIGHT.onTrue(commandsBuilder.stop());
 
-		joystick.L1.onTrue(commandsBuilder.setPower(EndEffectorState.ALGAE_INTAKE.getPower()));
+		joystick.L1.onTrue(commandsBuilder.setPower(EndEffectorState.ALGAE_INTAKE_FROM_REEF.getPower()));
 		joystick.R1.onTrue(commandsBuilder.setPower(EndEffectorState.ALGAE_OUTTAKE.getPower()));
 	}
 

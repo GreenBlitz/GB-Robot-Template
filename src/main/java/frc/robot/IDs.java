@@ -35,6 +35,10 @@ public class IDs {
 
 		public static final Phoenix6DeviceID LIFTER = new Phoenix6DeviceID(40, BusChain.ROBORIO);
 
+		public static final Phoenix6DeviceID PIVOT = new Phoenix6DeviceID(15, BusChain.ROBORIO);
+
+		public static final Phoenix6DeviceID ROLLERS = new Phoenix6DeviceID(17, BusChain.ROBORIO);
+
 	}
 
 	public static class CANDleIDs {
@@ -49,6 +53,8 @@ public class IDs {
 
 		public static final SparkMaxDeviceID SOLENOID = new SparkMaxDeviceID(10, SparkLowLevel.MotorType.kBrushed);
 
+		public static final SparkMaxDeviceID ROLLERS = new SparkMaxDeviceID(12, SparkLowLevel.MotorType.kBrushless);
+
 	}
 
 	public static class CANCodersIDs {
@@ -62,6 +68,8 @@ public class IDs {
 		public static final Phoenix6DeviceID SWERVE_BACK_RIGHT = new Phoenix6DeviceID(3, BusChain.SWERVE_CANIVORE);
 
 		public static final Phoenix6DeviceID ARM = new Phoenix6DeviceID(20, BusChain.SUPERSTRUCTURE_CANIVORE);
+
+		public static final Phoenix6DeviceID PIVOT = new Phoenix6DeviceID(13, BusChain.ROBORIO);
 
 	}
 

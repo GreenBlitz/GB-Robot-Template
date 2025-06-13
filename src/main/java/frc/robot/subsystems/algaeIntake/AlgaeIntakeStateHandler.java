@@ -4,9 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.joysticks.SmartJoystick;
-import frc.robot.subsystems.algaeIntake.pivot.PivotState;
 import frc.robot.subsystems.algaeIntake.pivot.PivotStateHandler;
-import frc.robot.subsystems.algaeIntake.rollers.RollersState;
 import frc.robot.subsystems.algaeIntake.rollers.RollersStateHandler;
 
 public class AlgaeIntakeStateHandler {
@@ -15,6 +13,7 @@ public class AlgaeIntakeStateHandler {
 	private final RollersStateHandler rollersStateHandler;
 
 	private AlgaeIntakeState currentState;
+
 
 	public AlgaeIntakeStateHandler(PivotStateHandler pivotStateHandler, RollersStateHandler rollersStateHandler) {
 		this.pivotStateHandler = pivotStateHandler;
@@ -26,45 +25,40 @@ public class AlgaeIntakeStateHandler {
 	}
 
 	public Command setState(AlgaeIntakeState state) {
-		return new ParallelCommandGroup(new InstantCommand(() -> currentState = state), switch (state) {
-			case CLOSED -> close();
-			case INTAKE -> intake();
-			case TRANSFER_TO_END_EFFECTOR -> transferToEndEffector();
-			case OUTTAKE -> outtake();
-			case STAY_IN_PLACE -> stayInPlace();
-		});
-	}
-
-
-	private Command close() {
-		return new ParallelCommandGroup(pivotStateHandler.setState(PivotState.CLOSED), rollersStateHandler.setState(RollersState.IDLE));
-	}
-
-	private Command intake() {
-		return new ParallelCommandGroup(pivotStateHandler.setState(PivotState.INTAKE), rollersStateHandler.setState(RollersState.INTAKE));
-	}
-
-	private Command transferToEndEffector() {
+		if (state == AlgaeIntakeState.INTAKE) {
+			return new ParallelCommandGroup(
+				new InstantCommand(() -> currentState = state),
+				pivotStateHandler.setState(state.getPivotState()),
+				rollersStateHandler.setState(state.getRollersState())
+			).until(rollersStateHandler::isAlgaeIn);
+		}
 		return new ParallelCommandGroup(
-			pivotStateHandler.setState(PivotState.TRANSFER_TO_END_EFFECTOR),
-			rollersStateHandler.setState(RollersState.TRANSFER_TO_END_EFFECTOR)
+			new InstantCommand(() -> currentState = state),
+			pivotStateHandler.setState(state.getPivotState()),
+			rollersStateHandler.setState(state.getRollersState())
 		);
 	}
 
-	private Command outtake() {
-		return new ParallelCommandGroup(pivotStateHandler.setState(PivotState.OUTTAKE), rollersStateHandler.setState(RollersState.OUTTAKE));
+	public boolean isAtState(AlgaeIntakeState state) {
+		return pivotStateHandler.isAtState(state.getPivotState());
 	}
 
-	private Command stayInPlace() {
-		return new ParallelCommandGroup(pivotStateHandler.setState(PivotState.STAY_IN_PLACE), rollersStateHandler.setState(RollersState.IDLE));
+
+	public Command handleIdle(boolean isAlgaeInAlgaeIntakeOverride) {
+		if (rollersStateHandler.isAlgaeIn() || isAlgaeInAlgaeIntakeOverride) {
+			return setState(AlgaeIntakeState.HOLD_ALGAE);
+		}
+		return setState(AlgaeIntakeState.CLOSED);
 	}
 
 
 	public void applyCalibrationBindings(SmartJoystick joystick) {
 		joystick.A.onTrue(setState(AlgaeIntakeState.CLOSED));
 		joystick.B.onTrue(setState(AlgaeIntakeState.INTAKE));
-		joystick.X.onTrue(setState(AlgaeIntakeState.OUTTAKE));
-		joystick.Y.onTrue(setState(AlgaeIntakeState.TRANSFER_TO_END_EFFECTOR));
+		joystick.X.onTrue(setState(AlgaeIntakeState.OUTTAKE_WITHOUT_RELEASE));
+		joystick.Y.onTrue(setState(AlgaeIntakeState.TRANSFER_TO_END_EFFECTOR_WITHOUT_RELEASE));
+		joystick.POV_LEFT.onTrue(setState(AlgaeIntakeState.OUTTAKE_WITH_RELEASE));
+		joystick.POV_RIGHT.onTrue(setState(AlgaeIntakeState.HOLD_ALGAE));
 	}
 
 }

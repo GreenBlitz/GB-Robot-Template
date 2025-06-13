@@ -30,7 +30,7 @@ public class AutonomousConstants {
 
 	public static final double BACK_OFF_FROM_REEF_DISTANCE_METERS = -1;
 
-	public static final double FIRST_ALGAE_REMOVE_TIMEOUT_SECONDS = 0.9;
+	public static final double FIRST_ALGAE_REMOVE_TIMEOUT_SECONDS = 1;
 	public static final double ALGAE_REMOVE_TIMEOUT_SECONDS = 0.5;
 
 	public static PathConstraints getRealTimeConstraints(Swerve swerve) {

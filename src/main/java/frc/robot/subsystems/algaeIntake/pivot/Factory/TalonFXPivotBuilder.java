@@ -70,7 +70,7 @@ public class TalonFXPivotBuilder {
 				config.Slot0.kA = 0;
 			}
 			case SIMULATION -> {
-				config.Slot0.kP = 1;
+				config.Slot0.kP = 5;
 				config.Slot0.kI = 0;
 				config.Slot0.kD = 0;
 				config.Slot0.kG = 0;
@@ -110,7 +110,6 @@ public class TalonFXPivotBuilder {
 			.build(pivot.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 		InputSignal<Double> voltageSignal = Phoenix6SignalBuilder
 			.build(pivot.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
-		pivot.getDevice().getClosedLoopReference().setUpdateFrequency(100);
 
 //		CANCoderEncoder encoder = new CANCoderEncoder(
 //			logPath + "Encoder",

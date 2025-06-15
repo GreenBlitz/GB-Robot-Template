@@ -187,6 +187,21 @@ public class JoysticksBindings {
 		});
 	}
 
+	private static Command algaeOuttakeActionChooser(Robot robot) {
+		return new InstantCommand(() -> {
+			RobotCommander robotCommander = robot.getRobotCommander();
+			Command command;
+
+			if (robotCommander.getSuperstructure().isAlgaeInAlgaeIntake()) {
+				command = robotCommander.setState(RobotState.ALGAE_OUTTAKE_FROM_INTAKE);
+			}
+			else {
+				command = robotCommander.setState(RobotState.ALGAE_OUTTAKE_FROM_END_EFFECTOR);
+			}
+			command.schedule();
+		});
+	}
+
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
@@ -200,7 +215,7 @@ public class JoysticksBindings {
 		usedJoystick.R1.onTrue(netActionChooser(robot));
 
 		usedJoystick.Y.onTrue(robot.getRobotCommander().setState(RobotState.CORAL_OUTTAKE));
-		usedJoystick.X.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_OUTTAKE_FROM_INTAKE));
+		usedJoystick.X.onTrue(algaeOuttakeActionChooser(robot));
 		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.PROCESSOR_SCORE));
 
 

@@ -194,8 +194,7 @@ public class JoysticksBindings {
 
 			if (robotCommander.getSuperstructure().isAlgaeInAlgaeIntake()) {
 				command = robotCommander.setState(RobotState.ALGAE_OUTTAKE_FROM_INTAKE);
-			}
-			else {
+			} else {
 				command = robotCommander.setState(RobotState.ALGAE_OUTTAKE_FROM_END_EFFECTOR);
 			}
 			command.schedule();

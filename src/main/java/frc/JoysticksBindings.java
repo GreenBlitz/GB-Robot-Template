@@ -188,17 +188,13 @@ public class JoysticksBindings {
 	}
 
 	private static Command algaeOuttakeActionChooser(Robot robot) {
-		return new InstantCommand(() -> {
-			RobotCommander robotCommander = robot.getRobotCommander();
-			Command command;
+		RobotCommander robotCommander = robot.getRobotCommander();
 
-			if (robotCommander.getSuperstructure().isAlgaeInAlgaeIntake()) {
-				command = robotCommander.setState(RobotState.ALGAE_OUTTAKE_FROM_INTAKE);
-			} else {
-				command = robotCommander.setState(RobotState.ALGAE_OUTTAKE_FROM_END_EFFECTOR);
-			}
-			command.schedule();
-		});
+		return robotCommander.setState(
+			robotCommander.getSuperstructure().isAlgaeInAlgaeIntake()
+				? RobotState.ALGAE_OUTTAKE_FROM_INTAKE
+				: RobotState.ALGAE_OUTTAKE_FROM_END_EFFECTOR
+		);
 	}
 
 	private static void mainJoystickButtons(Robot robot) {

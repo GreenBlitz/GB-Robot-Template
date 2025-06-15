@@ -15,21 +15,19 @@ public class ObjectDetectionMath {
 	}
 
 	public static double getCameraRelativeXAxisDistance(Rotation2d cameraRelativePitch, Pose3d cameraPose, double centerOfObjectHeightMeters) {
-		double cameraPitch = cameraPose.getRotation()
-			.rotateBy(new Rotation3d(-cameraPose.getRotation().getX(), 0, -cameraPose.getRotation().getZ()))
-			.getY();
-		Rotation2d pitch = cameraRelativePitch.plus(Rotation2d.fromRadians(cameraPitch));
+		double cameraPitch = cameraPose.getRotation().rotateBy(new Rotation3d(0, 0, -cameraPose.getRotation().getZ())).getY();
+		Rotation2d pitch = cameraRelativePitch.unaryMinus().plus(Rotation2d.fromRadians(cameraPitch));
 
 		double heightMeters = centerOfObjectHeightMeters - cameraPose.getZ();
 		return heightMeters / Math.tan(pitch.getRadians());
 	}
 
 	public static double getCameraRelativeYAxisDistance(Rotation2d cameraRelativeYaw, double XAxisDistanceMeters) {
-		return (Math.tan(cameraRelativeYaw.getRadians()) * XAxisDistanceMeters);
+		return (Math.tan(cameraRelativeYaw.unaryMinus().getRadians()) * XAxisDistanceMeters);
 	}
 
 	public static Translation2d cameraRelativeToRobotRelative(Translation2d translation, Pose3d cameraPose) {
-		translation = translation.rotateBy(Rotation2d.fromRadians(cameraPose.getRotation().getZ()).unaryMinus());
+		translation = translation.rotateBy(Rotation2d.fromRadians(cameraPose.getRotation().getZ()));
 		return new Translation2d(translation.getX() + cameraPose.getX(), translation.getY() + cameraPose.getY());
 	}
 
@@ -40,12 +38,6 @@ public class ObjectDetectionMath {
 		double centerOfObjectHeightMeters
 	) {
 		Pair<Rotation2d, Rotation2d> correctedYawAndPitch = correctForCameraRoll(cameraRelativeYaw, cameraRelativePitch, cameraPose);
-
-//		Quaternion cameraRotation = Quaternion.fromRotationVector(cameraPose.getRotation().toVector());
-//		cameraRotation = cameraRotation.times(Quaternion.fromRotationVector(new Rotation3d(-cameraPose.getRotation().getX(), 0, 0).toVector()));
-//
-//		Rotation3d newRot = cameraPose.getRotation().rotateBy(new Rotation3d(-cameraPose.getRotation().getX(), 0, 0));
-//		cameraPose = new Pose3d(cameraPose.getTranslation(), newRot);
 
 		double xDistance = getCameraRelativeXAxisDistance(correctedYawAndPitch.getSecond(), cameraPose, centerOfObjectHeightMeters);
 		double yDistance = getCameraRelativeYAxisDistance(correctedYawAndPitch.getFirst(), xDistance);

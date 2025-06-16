@@ -190,10 +190,24 @@ public class JoysticksBindings {
 	private static Command algaeOuttakeActionChooser(Robot robot) {
 		RobotCommander robotCommander = robot.getRobotCommander();
 
-		return robotCommander.setState(
-			robotCommander.getSuperstructure().isAlgaeInAlgaeIntake()
-				? RobotState.ALGAE_OUTTAKE_FROM_INTAKE
-				: RobotState.ALGAE_OUTTAKE_FROM_END_EFFECTOR
+		return new DeferredCommand(
+			() -> robotCommander.setState(
+				robotCommander.getSuperstructure().isAlgaeInAlgaeIntake()
+					? RobotState.ALGAE_OUTTAKE_FROM_INTAKE
+					: RobotState.ALGAE_OUTTAKE_FROM_END_EFFECTOR
+			),
+			Set.of(
+				robotCommander,
+				robotCommander.getSuperstructure(),
+				robot.getSwerve(),
+				robot.getElevator(),
+				robot.getArm(),
+				robot.getEndEffector(),
+				robot.getLifter(),
+				robot.getSolenoid(),
+				robot.getPivot(),
+				robot.getRollers()
+			)
 		);
 	}
 

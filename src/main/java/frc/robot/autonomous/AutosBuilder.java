@@ -8,6 +8,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -308,6 +309,82 @@ public class AutosBuilder {
 		);
 		auto.setName("right no delay");
 		return auto;
+	}
+
+	private static Command bulbulBalls(
+			Robot robot,
+			Supplier<Optional<Translation2d>> algaeTranslation,
+			Supplier<Command> algaeRemoveCommand,
+			Supplier<Command> netCommand,
+			Pose2d tolerance,
+			Branch firstAutoScoreTargetBranch,
+			ScoreLevel firstAutoScoreTargetScoreLevel
+	){
+		PathPlannerPath path = getAutoScorePath(firstAutoScoreTargetBranch, robot, firstAutoScoreTargetScoreLevel);
+		Pose2d backOffFromReefPose = Field.getAllianceRelative(
+				Field.getReefSideMiddle(firstAutoScoreTargetBranch.getReefSide())
+						.plus(new Transform2d(AutonomousConstants.BACK_OFF_FROM_REEF_DISTANCE_METERS, 0, new Rotation2d())),
+				false,
+				true,
+				AngleTransform.MIRROR_Y
+		);
+		ScoringHelpers.setTargetBranch(firstAutoScoreTargetBranch);
+
+		Pose2d rightBallIntakePose = new Pose2d();
+		Pose2d leftBallIntakePose = new Pose2d();
+
+		Command bulbulBalls = new SequentialCommandGroup(
+				autoScoreToChosenBranch(robot, path),
+				new SequentialCommandGroup(
+					new ParallelCommandGroup(
+						robot.getRobotCommander().getSuperstructure().holdAlgae().asProxy(),
+						robot.getSwerve().getCommandsBuilder().moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, backOffFromReefPose)
+					).until(
+						() -> ToleranceMath.isNear(robot.getPoseEstimator().getEstimatedPose(), backOffFromReefPose, tolerance)
+							&& robot.getElevator().isAtPosition(ElevatorState.HOLD_ALGAE.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
+					),
+					new ParallelCommandGroup(
+						robot.getRobotCommander().getSuperstructure().algaeRemove().asProxy(),
+						robot.getSwerve()
+							.getCommandsBuilder()
+							.moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers.getAlgaeRemovePose(true))
+					).withTimeout(AutonomousConstants.FIRST_ALGAE_REMOVE_TIMEOUT_SECONDS),
+					createAutoFromAutoPath(
+						AutoPath.ALGAE_REMOVE_D_TO_FIRST_NET,
+						pathPlannerPath -> PathFollowingCommandsBuilder
+							.scoreToNet(robot, pathPlannerPath, netCommand, AutoPath.ALGAE_REMOVE_D_TO_FIRST_NET.getTargetBranch())
+					),
+					new ParallelCommandGroup(
+						robot.getRobotCommander().getSuperstructure().algaeIntake().asProxy(),
+						robot.getSwerve().getCommandsBuilder().moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, rightBallIntakePose)
+					).until(() -> ToleranceMath.isNear(robot.getPoseEstimator().getEstimatedPose(), backOffFromReefPose, tolerance)),
+					algaeTranslation.get().isPresent() ?
+							new ParallelCommandGroup(
+								robot.getSwerve().getCommandsBuilder().driveToObject(
+									robot.getPoseEstimator()::getEstimatedPose,
+									algaeTranslation,
+									AutonomousConstants.DISTANCE_FROM_ALGAE_FOR_FLOOR_INTAKE
+								),
+								robot.getRobotCommander().getSuperstructure().algaeIntake().asProxy()
+							)
+							: createAutoFromAutoPath(
+								AutoPath.LEFT_NET_TO_ALGAE_REMOVE_E,
+								pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
+									robot,
+									pathPlannerPath,
+									algaeRemoveCommand,
+									AutoPath.LEFT_NET_TO_ALGAE_REMOVE_E.getTargetBranch(),
+									tolerance
+								)
+					)
+				)
+		);
+
+		String side = firstAutoScoreTargetBranch.isLeft() ? "left" : "right";
+
+		bulbulBalls.setName(side + " " + firstAutoScoreTargetScoreLevel.toString() + " bulbul balls");
+
+		return bulbulBalls;
 	}
 
 	private static Command autoBalls(

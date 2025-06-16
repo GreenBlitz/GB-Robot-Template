@@ -7,16 +7,17 @@ public class ObjectDetectionMath {
 
 	public static Pair<Rotation2d, Rotation2d> correctForCameraRoll(Rotation2d yaw, Rotation2d pitch, Pose3d cameraPose) {
 		Translation2d yawAndPitch = new Translation2d(yaw.getRadians(), pitch.getRadians());
-		double rollRadians = cameraPose.getRotation()
-			.rotateBy(new Rotation3d(0, -cameraPose.getRotation().getY(), -cameraPose.getRotation().getZ()))
-			.getX();
+
+		Rotation3d cameraRotation = cameraPose.getRotation().rotateBy(new Rotation3d(0, 0, -cameraPose.getRotation().getZ()));
+		double rollRadians = cameraRotation.rotateBy(new Rotation3d(0, -cameraRotation.getY(), 0)).getX();
+
 		yawAndPitch = yawAndPitch.rotateBy(Rotation2d.fromRadians(rollRadians).unaryMinus());
 		return new Pair<>(Rotation2d.fromRadians(yawAndPitch.getX()), Rotation2d.fromRadians(yawAndPitch.getY()));
 	}
 
 	public static double getCameraRelativeXAxisDistance(Rotation2d cameraRelativePitch, Pose3d cameraPose, double centerOfObjectHeightMeters) {
-		double cameraPitch = cameraPose.getRotation().rotateBy(new Rotation3d(0, 0, -cameraPose.getRotation().getZ())).getY();
-		Rotation2d pitch = cameraRelativePitch.unaryMinus().plus(Rotation2d.fromRadians(cameraPitch));
+		double cameraPitchRadians = cameraPose.getRotation().rotateBy(new Rotation3d(0, 0, -cameraPose.getRotation().getZ())).getZ();
+		Rotation2d pitch = cameraRelativePitch.unaryMinus().plus(Rotation2d.fromRadians(cameraPitchRadians));
 
 		double heightMeters = centerOfObjectHeightMeters - cameraPose.getZ();
 		return heightMeters / pitch.getTan();

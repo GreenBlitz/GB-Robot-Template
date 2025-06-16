@@ -641,7 +641,7 @@ public class Superstructure extends GBSubsystem {
 				new SequentialCommandGroup(
 					algaeIntakeStateHandler.setState(AlgaeIntakeState.OUTTAKE_WITHOUT_RELEASE)
 						.until(() -> algaeIntakeStateHandler.isAtState(AlgaeIntakeState.OUTTAKE_WITHOUT_RELEASE))
-						.withTimeout(0.8),
+						.withTimeout(StateMachineConstants.ALGAE_INTAKE_MOVE_TO_OUTTAKE_POSITION_TIME_SECONDS),
 					algaeIntakeStateHandler.setState(AlgaeIntakeState.OUTTAKE_WITH_RELEASE).until(() -> !isAlgaeInAlgaeIntake()),
 					algaeIntakeStateHandler.setState(AlgaeIntakeState.OUTTAKE_WITH_RELEASE)
 						.withTimeout(StateMachineConstants.ALGAE_OUTTAKE_FROM_INTAKE_TIME_AFTER_SENSOR_SECONDS)

@@ -19,7 +19,7 @@ public class Rollers extends GBSubsystem {
 
 	private double lastCyclePower;
 	private boolean isAlgaeCurrentlyIn;
-	private boolean b;
+	private boolean cantDetectAlgaeInByCurrent;
 
 	private final RollersCommandsBuilder commandsBuilder;
 
@@ -56,7 +56,7 @@ public class Rollers extends GBSubsystem {
 	}
 
 	private boolean isAlgaeInByCurrent() {
-		return isCurrentSpiking() && isPowerConstant() && !b;
+		return isCurrentSpiking() && isPowerConstant() && !cantDetectAlgaeInByCurrent;
 	}
 
 	public boolean isPowerConstant() {
@@ -78,10 +78,10 @@ public class Rollers extends GBSubsystem {
 		lastCyclePower = powerSignal.getLatestValue();
 		updateInputs();
 		if (isPowerConstant() && !lastIsPowerStable) {
-			b = true;
+			cantDetectAlgaeInByCurrent = true;
 		}
 		if (!isCurrentSpiking() && lastIsCurrentSpiking) {
-			b = false;
+			cantDetectAlgaeInByCurrent = false;
 		}
 		if (isAlgaeInByCurrent()) {
 			isAlgaeCurrentlyIn = true;

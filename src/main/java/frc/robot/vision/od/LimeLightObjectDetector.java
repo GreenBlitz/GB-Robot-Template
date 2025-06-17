@@ -103,7 +103,6 @@ public class LimeLightObjectDetector implements ObjectDetector {
 				new Pose2d(closestObject.get().getRobotRelativeEstimatedTranslation(), new Rotation2d())
 			);
 		}
-		Logger.recordOutput(logPath + "referenceRobotPose", new Pose2d(new Translation2d(-0.75 / 2.0, 0.75 / 2), new Rotation2d()));
 	}
 
 	@Override

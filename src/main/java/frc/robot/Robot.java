@@ -7,6 +7,7 @@ package frc.robot;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.events.EventTrigger;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.*;
@@ -94,7 +95,7 @@ public class Robot {
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 
-		objectDetector = new LimeLightObjectDetector("ObjectDet/", "limelight-object", VisionConstants.LIMELIGHT_RIGHT_CAMERA_ROBOT_POSE);
+		objectDetector = new LimeLightObjectDetector("ObjectDetector/", "limelight-object", new Pose3d());
 
 		IGyro gyro = GyroFactory.createGyro(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(

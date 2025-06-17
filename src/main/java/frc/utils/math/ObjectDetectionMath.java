@@ -16,8 +16,9 @@ public class ObjectDetectionMath {
 	}
 
 	public static double getCameraRelativeXAxisDistance(Rotation2d cameraRelativePitch, Pose3d cameraPose, double centerOfObjectHeightMeters) {
-		double cameraPitchRadians = cameraPose.getRotation().rotateBy(new Rotation3d(0, 0, -cameraPose.getRotation().getZ())).getY();
-		Rotation2d pitch = cameraRelativePitch.unaryMinus().plus(Rotation2d.fromRadians(cameraPitchRadians));
+//		double cameraPitchRadians = cameraPose.getRotation().rotateBy(new Rotation3d(0, 0, -cameraPose.getRotation().getZ())).getY();
+		double cameraPitchRadians = cameraPose.getRotation().getY();
+		Rotation2d pitch = cameraRelativePitch.plus(Rotation2d.fromRadians(cameraPitchRadians));
 
 		double heightMeters = centerOfObjectHeightMeters - cameraPose.getZ();
 		return heightMeters / pitch.getTan();
@@ -35,7 +36,7 @@ public class ObjectDetectionMath {
 	}
 
 	public static Translation2d cameraRelativeToRobotRelative(Translation2d translation, Pose3d cameraPose) {
-		translation = translation.rotateBy(Rotation2d.fromRadians(cameraPose.getRotation().getZ()));
+//		translation = translation.rotateBy(Rotation2d.fromRadians(cameraPose.getRotation().getZ()));
 		return new Translation2d(translation.getX() + cameraPose.getX(), translation.getY() + cameraPose.getY());
 	}
 
@@ -45,7 +46,8 @@ public class ObjectDetectionMath {
 		Pose3d cameraPose,
 		double centerOfObjectHeightMeters
 	) {
-		Pair<Rotation2d, Rotation2d> correctedYawAndPitch = correctForCameraRoll(cameraRelativeYaw, cameraRelativePitch, cameraPose);
+//		Pair<Rotation2d, Rotation2d> correctedYawAndPitch = correctForCameraRoll(cameraRelativeYaw, cameraRelativePitch, cameraPose);
+		Pair<Rotation2d, Rotation2d> correctedYawAndPitch = new Pair<>(cameraRelativeYaw, cameraRelativePitch);
 
 		double xDistance = getCameraRelativeXAxisDistance(correctedYawAndPitch.getSecond(), cameraPose, centerOfObjectHeightMeters);
 		double yDistance = getCameraRelativeYAxisDistance(correctedYawAndPitch.getFirst(), xDistance, cameraPose, centerOfObjectHeightMeters);

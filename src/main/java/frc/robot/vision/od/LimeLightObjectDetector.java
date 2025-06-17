@@ -61,9 +61,6 @@ public class LimeLightObjectDetector implements ObjectDetector {
 			case "coral" -> ObjectType.CORAL;
 			default -> null;
 		};
-		if (objectType == null) {
-			return null;
-		}
 		double centerOfObjectHeightMeters = objectType.objectHeightMeters / 2;
 
 

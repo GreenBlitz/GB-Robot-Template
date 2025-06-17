@@ -78,7 +78,7 @@ public class Robot {
 		objectDetector = new LimeLightObjectDetector(
 			"ObjectDetector/",
 			"limelight-object",
-			new Pose3d(new Translation3d(0, 0, 0.685), new Rotation3d(0, Rotation2d.fromDegrees(0).getRadians(), 0))
+			new Pose3d(new Translation3d(0, 0, 0.685), new Rotation3d(0, Rotation2d.fromDegrees(-12).getRadians(), 0))
 		);
 
 //		IGyro gyro = GyroFactory.createGyro(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");

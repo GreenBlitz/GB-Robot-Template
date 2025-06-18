@@ -1,5 +1,6 @@
 package frc.robot.vision.objectdetection;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -29,6 +30,7 @@ public class LimeLightObjectDetector implements ObjectDetector {
 	private final NetworkTableEntry closestObjectNameEntry;
 	private final NetworkTableEntry closestObjectPipelineLatencyEntry;
 	private final NetworkTableEntry closestObjectCaptureLatencyEntry;
+	private final NetworkTableEntry t2dEntry;
 
 	public LimeLightObjectDetector(String logPath, String cameraNetworkTablesName, Pose3d cameraPose) {
 		this.logPath = logPath;
@@ -41,6 +43,7 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		closestObjectNameEntry = getLimelightNetworkTableEntry("tdclass");
 		closestObjectPipelineLatencyEntry = getLimelightNetworkTableEntry("tl");
 		closestObjectCaptureLatencyEntry = getLimelightNetworkTableEntry("cl");
+		t2dEntry = getLimelightNetworkTableEntry("t2d");
 	}
 
 	private NetworkTableEntry getLimelightNetworkTableEntry(String entryName) {
@@ -78,11 +81,24 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		return new ObjectData(robotRelativeObjectTranslation, objectType, timeStamp);
 	}
 
+	public static Filter<double[]> squishedAlgaeFilter(double algaeHeightToWidthRatio, double heightToWidthRatioTolerance) {
+		return (t2dEntryArray) -> {
+			double detectedHorizontalPixels = t2dEntryArray[14];
+			double detectedVerticalPixels = t2dEntryArray[15];
+			double detectedHeightToWidthRatio = detectedVerticalPixels / detectedHorizontalPixels;
+			return MathUtil.isNear(algaeHeightToWidthRatio, detectedHeightToWidthRatio, heightToWidthRatioTolerance);
+		};
+	}
+
 	@Override
 	public Optional<ObjectData> getClosestObjectData() {
 		Optional<ObjectType> objectType = getObjectType(closestObjectNameEntry);
 
-		if (objectType.isEmpty()) {
+		if (
+			objectType.isEmpty()
+				|| squishedAlgaeFilter(VisionConstants.ALGAE_HEIGHT_TO_WIDTH_RATIO, VisionConstants.ALGAE_HEIGHT_TO_WIDTH_RATIO_TOLERANCE)
+					.apply(t2dEntry.getDoubleArray(new double[0]))
+		) {
 			return Optional.empty();
 		}
 		return Optional.of(

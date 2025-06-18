@@ -113,4 +113,8 @@ public class VisionConstants {
 
 	public static final String CLASSIFICATION_ENTRY_NO_OBJECT_VALUE = "none";
 
+	public static final double ALGAE_HEIGHT_TO_WIDTH_RATIO_TOLERANCE = 0.1;
+
+	public static final double ALGAE_HEIGHT_TO_WIDTH_RATIO = 1;
+
 }

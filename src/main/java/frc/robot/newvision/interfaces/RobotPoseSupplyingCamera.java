@@ -1,10 +1,12 @@
 package frc.robot.newvision.interfaces;
 
-import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Pose2d;
 import frc.utils.TimedValue;
+
+import java.util.Optional;
 
 public interface RobotPoseSupplyingCamera {
 
-	TimedValue<Pose3d> getRobotPose();
+	Optional<TimedValue<Pose2d>> getRobotPose();
 
 }

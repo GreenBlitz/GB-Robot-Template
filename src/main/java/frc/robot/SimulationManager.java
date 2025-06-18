@@ -21,6 +21,7 @@ public class SimulationManager {
 	public void logPoses() {
 		logElevatorPosition3d();
 		logArmPosition3d();
+		logAlgaeIntakePosition3d();
 	}
 
 	private void logElevatorPosition3d() {
@@ -44,6 +45,10 @@ public class SimulationManager {
 		);
 	}
 
+	private void logAlgaeIntakePosition3d() {
+		Logger.recordOutput(logPath + "/AlgaeIntake/Position", getAlgaeIntakePose3d(robot.getPivot().getPosition().getRadians()));
+	}
+
 	private static Pose3d getElevatorFirstStagePosition(double heightMeters) {
 		if (heightMeters > ElevatorConstants.FIRST_STAGE_MAXIMUM_HEIGHT_METERS) {
 			return getElevatorPose3dFromHeight(heightMeters - ElevatorConstants.FIRST_STAGE_MAXIMUM_HEIGHT_METERS);
@@ -61,6 +66,10 @@ public class SimulationManager {
 
 	private static Pose3d getArmPose3dFromHeight(double heightMeters, double pitch) {
 		return new Pose3d(new Translation3d(0, 0, heightMeters), new Rotation3d(0.0, pitch, 0.0));
+	}
+
+	private static Pose3d getAlgaeIntakePose3d(double pitch) {
+		return new Pose3d(new Translation3d(-0.311, 0, 0.325), new Rotation3d(0.0, pitch, 0.0));
 	}
 
 }

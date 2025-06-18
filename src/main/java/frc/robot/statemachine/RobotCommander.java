@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.constants.field.Field;
 import frc.constants.field.enums.Branch;
 import frc.robot.IDs;
@@ -24,6 +25,9 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
+import frc.utils.math.AngleTransform;
+import frc.utils.math.FieldMath;
+import frc.utils.math.ToleranceMath;
 import frc.utils.pose.PoseUtil;
 
 import java.util.Set;
@@ -35,6 +39,8 @@ public class RobotCommander extends GBSubsystem {
 	private final Swerve swerve;
 	private final Superstructure superstructure;
 
+	private final Trigger handleBalls;
+
 	private RobotState currentState;
 
 	private CANdleWrapper caNdleWrapper;
@@ -45,7 +51,13 @@ public class RobotCommander extends GBSubsystem {
 		this.robot = robot;
 		this.swerve = robot.getSwerve();
 		this.superstructure = new Superstructure("StateMachine/Superstructure", robot);
+
 		this.currentState = RobotState.STAY_IN_PLACE;
+
+		this.handleBalls = new Trigger(
+			() -> superstructure.isAlgaeInAlgaeIntake() && !robot.getEndEffector().isCoralIn() && currentState == RobotState.DRIVE
+		);
+		handleBalls.onTrue(transferAlgaeFromIntakeToEndEffector());
 
 		this.caNdleWrapper = new CANdleWrapper(IDs.CANDleIDs.CANDLE, LEDConstants.NUMBER_OF_LEDS, "candle");
 		this.ledStateHandler = new LEDStateHandler("CANdle", caNdleWrapper);
@@ -77,7 +89,9 @@ public class RobotCommander extends GBSubsystem {
 					robot.getArm(),
 					robot.getEndEffector(),
 					robot.getLifter(),
-					robot.getSolenoid()
+					robot.getSolenoid(),
+					robot.getPivot(),
+					robot.getRollers()
 				)
 			)
 		);
@@ -240,21 +254,18 @@ public class RobotCommander extends GBSubsystem {
 			<= StateMachineConstants.DISTANCE_FROM_CORAL_STATION_SLOT_TO_START_AIM_ASSIST_METERS;
 	}
 
-	private boolean isCloseToNet(double distanceOnXAxis, double distanceOnYAxis) {
-		boolean isPastX = Field.getAllianceRelative(robot.getPoseEstimator().getEstimatedPose().getTranslation(), true, true).getX()
-			> Field.LENGTH_METERS / 2 - distanceOnXAxis;
-		boolean isPastY = Field.getAllianceRelative(robot.getPoseEstimator().getEstimatedPose().getTranslation(), true, true).getY()
-			> Field.WIDTH_METERS / 2 - distanceOnYAxis;
-		return isPastX && isPastY;
+	private boolean isCloseToNet() {
+		Translation2d middleOfNetScoringRange = new Translation2d(7.578, 6.03885);
+		Translation2d netScoringRangeDistancesFromMiddle = new Translation2d(0.035, 2.01295);
+		return PoseUtil.isAtTranslation(
+			robot.getPoseEstimator().getEstimatedPose().getTranslation(),
+			Field.getAllianceRelative(middleOfNetScoringRange, true, true),
+			netScoringRangeDistancesFromMiddle
+		);
 	}
 
-	public boolean isReadyForNet() {
-		return isCloseToNet(
-			StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES.getX(),
-			StateMachineConstants.SCORE_DISTANCES_FROM_MIDDLE_OF_BARGE_METRES.getY()
-		)
-			&& swerve.isAtHeading(ScoringHelpers.getHeadingForNet(swerve), Tolerances.HEADING_FOR_NET, Tolerances.NET_DEADBANDS.getRotation())
-			&& SwerveMath.isStill(swerve.getAllianceRelativeVelocity(), Tolerances.NET_DEADBANDS);
+	public boolean isReadyForNetForAuto() {
+		return isCloseToNet();
 	}
 
 	public Command driveWith(String name, Command command, boolean asDeadline) {
@@ -276,7 +287,11 @@ public class RobotCommander extends GBSubsystem {
 			case SCORE_WITHOUT_RELEASE -> scoreWithoutRelease();
 			case SCORE -> score();
 			case ALGAE_REMOVE -> algaeRemove();
-			case ALGAE_OUTTAKE -> algaeOuttake();
+			case ALGAE_OUTTAKE_FROM_END_EFFECTOR -> algaeOuttakeFromEndEffector();
+			case ALGAE_OUTTAKE_FROM_INTAKE -> algaeOuttakeFromIntake();
+			case ALGAE_INTAKE -> algaeIntake();
+			case TRANSFER_ALGAE_TO_END_EFFECTOR -> transferAlgaeFromIntakeToEndEffector();
+			case AUTO_PRE_NET -> driveToPreNet();
 			case PRE_NET -> preNet();
 			case NET -> net();
 			case PROCESSOR_SCORE -> fullyProcessorScore();
@@ -323,7 +338,9 @@ public class RobotCommander extends GBSubsystem {
 					robot.getArm(),
 					robot.getEndEffector(),
 					robot.getLifter(),
-					robot.getSolenoid()
+					robot.getSolenoid(),
+					robot.getPivot(),
+					robot.getRollers()
 				)
 			),
 			RobotState.SCORE
@@ -372,7 +389,9 @@ public class RobotCommander extends GBSubsystem {
 				robot.getArm(),
 				robot.getEndEffector(),
 				robot.getLifter(),
-				robot.getSolenoid()
+				robot.getSolenoid(),
+				robot.getPivot(),
+				robot.getRollers()
 			)
 		);
 	}
@@ -416,8 +435,8 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	public Command completeNet() {
-		return new SequentialCommandGroup(preNet().until(this::isReadyForNet), net());
+	public Command autoNet() {
+		return new SequentialCommandGroup(driveToPreNet(), net());
 	}
 
 	private Command drive() {
@@ -524,23 +543,122 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	private Command algaeOuttake() {
+	private Command algaeOuttakeFromEndEffector() {
 		return asSubsystemCommand(
 			new ParallelDeadlineGroup(
-				superstructure.algaeOuttake(),
+				superstructure.algaeOuttakeFromEndEffector(),
 				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
 			),
-			RobotState.ALGAE_OUTTAKE
+			RobotState.ALGAE_OUTTAKE_FROM_END_EFFECTOR
 		);
 	}
 
+	private Command algaeOuttakeFromIntake() {
+		return asSubsystemCommand(
+			new ParallelDeadlineGroup(
+				superstructure.algaeOuttakeFromIntake(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+			),
+			RobotState.ALGAE_OUTTAKE_FROM_INTAKE
+		);
+	}
+
+	private Command algaeIntake() {
+		return asSubsystemCommand(
+			new ParallelDeadlineGroup(
+				superstructure.algaeIntake(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_INTAKE))
+			),
+			RobotState.ALGAE_INTAKE
+		);
+	}
+
+	private Command transferAlgaeFromIntakeToEndEffector() {
+		return asSubsystemCommand(
+			new ParallelDeadlineGroup(
+				superstructure.transferAlgaeFromIntakeToEndEffector(),
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+			),
+			RobotState.TRANSFER_ALGAE_TO_END_EFFECTOR
+		);
+	}
+
+
 	private Command preNet() {
 		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				superstructure.preNet(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.NET))
-			),
+			new ParallelCommandGroup(superstructure.preNet(), swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)),
 			RobotState.PRE_NET
+		);
+	}
+
+	private Command driveToPreNet() {
+		Pose2d netEdgeOpenSuperstructurePosition = FieldMath.mirror(
+			new Pose2d(
+				StateMachineConstants.NET_SCORING_OPEN_SUPERSTRUCTURE_X_POSITION_METERS,
+				StateMachineConstants.MIN_NET_SCORING_Y_POSITION,
+				new Rotation2d()
+			),
+			!Field.isOnBlueSide(robot.getPoseEstimator().getEstimatedPose().getTranslation()),
+			!Field.isFieldConventionAlliance(),
+			Field.isOnBlueSide(robot.getPoseEstimator().getEstimatedPose().getTranslation()) ? AngleTransform.KEEP : AngleTransform.INVERT
+		);
+		Supplier<Pose2d> openSuperstructurePosition = () -> FieldMath.mirror(
+			new Pose2d(
+				StateMachineConstants.NET_SCORING_OPEN_SUPERSTRUCTURE_X_POSITION_METERS,
+				robot.getPoseEstimator().getEstimatedPose().getY(),
+				new Rotation2d()
+			),
+			!Field.isOnBlueSide(robot.getPoseEstimator().getEstimatedPose().getTranslation()),
+			false,
+			Field.isOnBlueSide(robot.getPoseEstimator().getEstimatedPose().getTranslation()) ? AngleTransform.KEEP : AngleTransform.INVERT
+		);
+		Supplier<Pose2d> scoringPosition = () -> FieldMath.mirror(
+			new Pose2d(StateMachineConstants.SCORE_NET_X_POSITION_METERS, robot.getPoseEstimator().getEstimatedPose().getY(), new Rotation2d()),
+			!Field.isOnBlueSide(robot.getPoseEstimator().getEstimatedPose().getTranslation()),
+			false,
+			Field.isOnBlueSide(robot.getPoseEstimator().getEstimatedPose().getTranslation()) ? AngleTransform.KEEP : AngleTransform.INVERT
+		);
+
+		return asSubsystemCommand(
+			new SequentialCommandGroup(
+				swerve.getCommandsBuilder()
+					.driveToPose(robot.getPoseEstimator()::getEstimatedPose, () -> netEdgeOpenSuperstructurePosition)
+					.until(
+						() -> ToleranceMath.isNear(
+							netEdgeOpenSuperstructurePosition,
+							robot.getPoseEstimator().getEstimatedPose(),
+							Tolerances.NET_OPENING_SUPERSTRUCTURE_POSITION_METERS
+						)
+					)
+					.onlyIf(
+						() -> Field.isFieldConventionAlliance()
+							? robot.getPoseEstimator().getEstimatedPose().getY() < StateMachineConstants.MIN_NET_SCORING_Y_POSITION
+							: robot.getPoseEstimator().getEstimatedPose().getY() > StateMachineConstants.MIN_NET_SCORING_Y_POSITION
+					),
+				swerve.getCommandsBuilder()
+					.driveToPose(robot.getPoseEstimator()::getEstimatedPose, openSuperstructurePosition)
+					.until(
+						() -> ToleranceMath.isNear(
+							openSuperstructurePosition.get(),
+							robot.getPoseEstimator().getEstimatedPose(),
+							Tolerances.NET_OPENING_SUPERSTRUCTURE_POSITION_METERS
+						)
+					),
+				new ParallelCommandGroup(
+					swerve.getCommandsBuilder()
+						.driveToPose(robot.getPoseEstimator()::getEstimatedPose, scoringPosition)
+						.until(
+							() -> ToleranceMath.isNear(
+								scoringPosition.get(),
+								robot.getPoseEstimator().getEstimatedPose(),
+								Tolerances.NET_SCORING_POSITION_METERS
+							)
+						)
+						.andThen(swerve.getCommandsBuilder().resetTargetSpeeds()),
+					superstructure.preNet().until(superstructure::isPreNetReady)
+				)
+			),
+			RobotState.AUTO_PRE_NET
 		);
 	}
 
@@ -642,7 +760,9 @@ public class RobotCommander extends GBSubsystem {
 				robot.getArm(),
 				robot.getEndEffector(),
 				robot.getLifter(),
-				robot.getSolenoid()
+				robot.getSolenoid(),
+				robot.getPivot(),
+				robot.getRollers()
 			)
 		);
 	}
@@ -658,7 +778,9 @@ public class RobotCommander extends GBSubsystem {
 				robot.getArm(),
 				robot.getEndEffector(),
 				robot.getLifter(),
-				robot.getSolenoid()
+				robot.getSolenoid(),
+				robot.getPivot(),
+				robot.getRollers()
 			)
 		);
 	}
@@ -670,9 +792,18 @@ public class RobotCommander extends GBSubsystem {
 	private Command endState(RobotState state) {
 		return switch (state) {
 			case STAY_IN_PLACE, CORAL_OUTTAKE -> stayInPlace();
-			case INTAKE_WITH_AIM_ASSIST, INTAKE_WITHOUT_AIM_ASSIST, DRIVE, ALIGN_REEF, ALGAE_OUTTAKE, PROCESSOR_SCORE -> drive();
-			case PRE_NET, NET -> afterNet();
-			case ALGAE_REMOVE, HOLD_ALGAE -> holdAlgae();
+			case
+				INTAKE_WITH_AIM_ASSIST,
+				INTAKE_WITHOUT_AIM_ASSIST,
+				DRIVE,
+				ALIGN_REEF,
+				ALGAE_OUTTAKE_FROM_END_EFFECTOR,
+				PROCESSOR_SCORE,
+				ALGAE_OUTTAKE_FROM_INTAKE,
+				ALGAE_INTAKE ->
+				drive();
+			case AUTO_PRE_NET, PRE_NET, NET -> afterNet();
+			case ALGAE_REMOVE, HOLD_ALGAE, TRANSFER_ALGAE_TO_END_EFFECTOR -> holdAlgae();
 			case ARM_PRE_SCORE, CLOSE_CLIMB -> armPreScore();
 			case PRE_SCORE -> preScore();
 			case SCORE, SCORE_WITHOUT_RELEASE -> afterScore();

@@ -13,7 +13,6 @@ import frc.constants.field.enums.ReefSide;
 import frc.constants.field.enums.*;
 import frc.robot.Robot;
 import frc.robot.statemachine.superstructure.ScoreLevel;
-import frc.robot.subsystems.swerve.Swerve;
 import frc.utils.math.AngleTransform;
 import frc.utils.pose.Side;
 import org.littletonrobotics.junction.Logger;
@@ -22,9 +21,9 @@ public class ScoringHelpers {
 
 	public static final Translation2d END_EFFECTOR_OFFSET_FROM_MID_ROBOT = new Translation2d(0, -0.025);
 	public static final Translation2d END_EFFECTOR_TUSKS_OFFSET_FROM_MID_ROBOT = new Translation2d(0, -0.017);
+	public static final Translation2d ROBOT_DISTANCE_FROM_REEF_FOR_ALGAE_REMOVE = new Translation2d(0.49, 0);
 	private static final double TIME_FOR_POSE_MOVEMENT_SECONDS = 0.5;
 	private static final Pose2d PROCESSOR_SCORING_POSE = new Pose2d(6.05, 1, Rotation2d.fromDegrees(90));
-	private static final Rotation2d HEADING_FOR_NET = Rotation2d.fromDegrees(30);
 	private static final Rotation2d HEADING_FOR_CAGE = Rotation2d.fromDegrees(180);
 
 	public static ScoreLevel targetScoreLevel = ScoreLevel.L4;
@@ -36,11 +35,6 @@ public class ScoringHelpers {
 	private static CoralStation latestWantedCoralStation = CoralStation.LEFT;
 	private static CoralStationSlot latestWantedCoralStationSlot = CoralStationSlot.L1;
 	private static Cage latestWantedCage = Cage.FIELD_WALL;
-
-	public static Rotation2d getHeadingForNet(Swerve swerve) {
-		return Field
-			.getAllianceRelative(swerve.getAllianceRelativeHeading().getRotations() > 0 ? HEADING_FOR_NET : HEADING_FOR_NET.unaryMinus());
-	}
 
 	public static Rotation2d getHeadingForCage() {
 		return Field.getAllianceRelative(HEADING_FOR_CAGE);
@@ -143,9 +137,13 @@ public class ScoringHelpers {
 		ReefSide[] reefSides = ReefSide.values();
 		ReefSide closetSide = reefSides[0];
 
-		double minDistance = robotTranslation.getDistance(Field.getReefSideMiddle(closetSide).getTranslation());
+		boolean isOnBlueSide = Field.isOnBlueSide(robotTranslation);
+
+		double minDistance = robotTranslation
+			.getDistance(Field.getPoseBySide(Field.getReefSideMiddle(closetSide, false), isOnBlueSide).getTranslation());
 		for (int i = 1; i < reefSides.length; i++) {
-			double distanceFromBranch = robotTranslation.getDistance(Field.getReefSideMiddle(reefSides[i]).getTranslation());
+			double distanceFromBranch = robotTranslation
+				.getDistance(Field.getPoseBySide(Field.getReefSideMiddle(reefSides[i], false), isOnBlueSide).getTranslation());
 			if (distanceFromBranch < minDistance) {
 				closetSide = reefSides[i];
 				minDistance = distanceFromBranch;
@@ -202,12 +200,20 @@ public class ScoringHelpers {
 		return new Pose2d(coralStationSlotPose.getTranslation().plus(rotatedEndEffectorOffset), coralStationSlotPose.getRotation());
 	}
 
-	public static Pose2d getAlgaeRemovePose() {
-		Pose2d middleOfReefSide = Field.getReefSideMiddle(getTargetReefSide());
+	public static Pose2d getAlgaeRemovePose(boolean isAllianceRelative) {
+		return getAlgaeRemovePose(getTargetReefSide(), isAllianceRelative);
+	}
+
+	public static Pose2d getAlgaeRemovePose(ReefSide reefSide, boolean isAllianceRelative) {
+		Pose2d middleOfReefSide = Field.getReefSideMiddle(reefSide, isAllianceRelative);
 		Translation2d rotatedEndEffectorOffset = ScoringHelpers.END_EFFECTOR_TUSKS_OFFSET_FROM_MID_ROBOT
 			.rotateBy(middleOfReefSide.getRotation());
+		Translation2d rotatedRemove = ROBOT_DISTANCE_FROM_REEF_FOR_ALGAE_REMOVE.rotateBy(middleOfReefSide.getRotation());
 
-		return new Pose2d(middleOfReefSide.getTranslation().minus(rotatedEndEffectorOffset), middleOfReefSide.getRotation());
+		return new Pose2d(
+			middleOfReefSide.getTranslation().minus(rotatedEndEffectorOffset).minus(rotatedRemove),
+			middleOfReefSide.getRotation()
+		);
 	}
 
 	private static Cage getClosestCage(Translation2d robotTranslation, Cage... cages) {

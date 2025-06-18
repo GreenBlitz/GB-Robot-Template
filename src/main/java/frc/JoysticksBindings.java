@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.constants.field.Field;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
@@ -83,9 +84,11 @@ public class JoysticksBindings {
 	private static Command reefActionChooser(Robot robot) {
 		return new DeferredCommand(
 			() -> robot.getRobotCommander().getSuperstructure().isCoralIn()
-				? (ScoringHelpers.isAutoAlgaeRemoveActivated
-					? robot.getRobotCommander().autoScoreThenAlgaeRemove()
-					: robot.getRobotCommander().autoScore())
+				? Field.isOnBlueSide(robot.getPoseEstimator().getEstimatedPose().getTranslation()) == Field.isFieldConventionAlliance()
+					? (ScoringHelpers.isAutoAlgaeRemoveActivated
+						? robot.getRobotCommander().autoScoreThenAlgaeRemove()
+						: robot.getRobotCommander().autoScore())
+					: new InstantCommand()
 				: new InstantCommand(() -> ScoringHelpers.setClosetReefSideTarget(robot))
 					.andThen(robot.getRobotCommander().setState(RobotState.ALGAE_REMOVE)),
 			Set.of(
@@ -97,6 +100,8 @@ public class JoysticksBindings {
 				robot.getEndEffector(),
 				robot.getLifter(),
 				robot.getSolenoid(),
+				robot.getPivot(),
+				robot.getRollers(),
 				robot.getRobotCommander().getLedStateHandler()
 			)
 		);
@@ -115,6 +120,8 @@ public class JoysticksBindings {
 					robot.getArm(),
 					robot.getEndEffector(),
 					robot.getLifter(),
+					robot.getPivot(),
+					robot.getRollers(),
 					robot.getSolenoid(),
 					robot.getRobotCommander().getLedStateHandler()
 				)
@@ -171,11 +178,37 @@ public class JoysticksBindings {
 
 			if (state == RobotState.NET || state == RobotState.PRE_NET) {
 				command = robotCommander.setState(RobotState.NET);
+			} else if (state == RobotState.AUTO_PRE_NET) {
+				command = robotCommander.setState(RobotState.PRE_NET);
 			} else {
-				command = robotCommander.completeNet();
+				command = robotCommander.autoNet();
 			}
 			command.schedule();
 		});
+	}
+
+	private static Command algaeOuttakeActionChooser(Robot robot) {
+		RobotCommander robotCommander = robot.getRobotCommander();
+
+		return new DeferredCommand(
+			() -> robotCommander.setState(
+				robotCommander.getSuperstructure().isAlgaeInAlgaeIntake()
+					? RobotState.ALGAE_OUTTAKE_FROM_INTAKE
+					: RobotState.ALGAE_OUTTAKE_FROM_END_EFFECTOR
+			),
+			Set.of(
+				robotCommander,
+				robotCommander.getSuperstructure(),
+				robot.getSwerve(),
+				robot.getElevator(),
+				robot.getArm(),
+				robot.getEndEffector(),
+				robot.getLifter(),
+				robot.getSolenoid(),
+				robot.getPivot(),
+				robot.getRollers()
+			)
+		);
 	}
 
 	private static void mainJoystickButtons(Robot robot) {
@@ -183,16 +216,19 @@ public class JoysticksBindings {
 		// bindings...
 		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(closeReefActionChooser(robot));
 
-		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE_WITH_AIM_ASSIST));
+//		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE_WITH_AIM_ASSIST));
+		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_INTAKE));
+
 		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(intakeActionChooser(robot));
 
 		usedJoystick.R1.onTrue(netActionChooser(robot));
 
 		usedJoystick.Y.onTrue(robot.getRobotCommander().setState(RobotState.CORAL_OUTTAKE));
-		usedJoystick.X.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_OUTTAKE));
+		usedJoystick.X.onTrue(algaeOuttakeActionChooser(robot));
 		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.PROCESSOR_SCORE));
 
-		usedJoystick.POV_LEFT.onTrue(robot.getRobotCommander().setState(RobotState.PRE_CLIMB_WITH_AIM_ASSIST));
+
+//		usedJoystick.POV_LEFT.onTrue(robot.getRobotCommander().setState(RobotState.PRE_CLIMB_WITH_AIM_ASSIST));
 		usedJoystick.POV_UP.onTrue(robot.getRobotCommander().setState(RobotState.PRE_CLIMB_WITHOUT_AIM_ASSIST));
 		usedJoystick.POV_DOWN.onTrue(robot.getRobotCommander().setState(RobotState.CLIMB_WITH_LIMIT_SWITCH));
 		usedJoystick.A.onTrue(driveActionChooser(robot));
@@ -237,6 +273,7 @@ public class JoysticksBindings {
 //		SmartJoystick usedJoystick = FIFTH_JOYSTICK;
 		// bindings...
 
+//		robot.getRobotCommander().getSuperstructure().getClimbStateHandler().applyCalibrationBindings(usedJoystick);
 //		robot.getRobotCommander().getSuperstructure().getClimbStateHandler().applyCalibrationBindings(usedJoystick);
 	}
 

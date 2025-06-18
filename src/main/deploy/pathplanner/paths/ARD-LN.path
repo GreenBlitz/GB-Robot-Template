@@ -3,40 +3,49 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.61,
-        "y": 0.7
+        "x": 5.811,
+        "y": 4.105
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.960187355205198,
-        "y": 1.096633417895783
+        "x": 7.384426229508196,
+        "y": 4.0549692622950815
       },
       "isLocked": false,
-      "linkedName": "LS2"
+      "linkedName": "ARD"
     },
     {
       "anchor": {
-        "x": 3.64,
-        "y": 2.94
+        "x": 7.578,
+        "y": 5.5
       },
       "prevControl": {
-        "x": 3.5119204296242974,
-        "y": 2.7253010860475175
+        "x": 5.524282786885245,
+        "y": 5.841137295081967
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "C"
+      "linkedName": "LN"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.05543710021322042,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 0.910447761194027,
+      "rotationDegrees": 0.0
+    }
+  ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.6,
-      "maxWaypointRelativePos": 1.0,
+      "minWaypointRelativePos": 0.7400405131667792,
+      "maxWaypointRelativePos": 0.9832848837209303,
       "constraints": {
-        "maxVelocity": 4.0,
-        "maxAcceleration": 1.5,
+        "maxVelocity": 3.8,
+        "maxAcceleration": 1.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -47,14 +56,20 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "ARM_PRE_SCORE",
-      "waypointRelativePos": 0.05,
+      "name": "STOP_ROLLERS",
+      "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
-      "name": "PRE_SCORE",
-      "waypointRelativePos": 0.6,
+      "name": "HOLD_ALGAE",
+      "waypointRelativePos": 0.17960963455149503,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "PRE_NET",
+      "waypointRelativePos": 0.7724510465901332,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -69,13 +84,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 59.99999999999999
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": "from coral station",
+  "folder": "net",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 54.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

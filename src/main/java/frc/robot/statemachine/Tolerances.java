@@ -14,8 +14,8 @@ public class Tolerances {
 
 	public static final Pose2d REEF_RELATIVE_SCORING_POSITION = new Pose2d(0.15, 0.025, Rotation2d.fromDegrees(3.5));
 	public static final Pose2d REEF_RELATIVE_SCORING_DEADBANDS = new Pose2d(1, 1, Rotation2d.fromRadians(2));
-	public static final Rotation2d HEADING_FOR_NET = Rotation2d.fromDegrees(10);
-	public static final Pose2d NET_DEADBANDS = new Pose2d(0.1, 0.1, Rotation2d.fromRadians(3));
+	public static final Pose2d NET_OPENING_SUPERSTRUCTURE_POSITION_METERS = new Pose2d(0.07, 0.07, Rotation2d.fromDegrees(2));
+	public static final Pose2d NET_SCORING_POSITION_METERS = new Pose2d(0.02, 0.07, Rotation2d.fromDegrees(2));
 
 
 	public static final Pose2d REEF_RELATIVE_OPEN_SUPERSTRUCTURE_POSITION = new Pose2d(
@@ -41,5 +41,7 @@ public class Tolerances {
 
 	public static final Pose2d PROCESSOR_RELATIVE_SCORING_POSITION = new Pose2d(0.05, 0.05, Rotation2d.fromDegrees(6));
 	public static final Pose2d PROCESSOR_RELATIVE_SCORING_DEADBANDS = new Pose2d(3.8, 0.5, Rotation2d.fromRadians(2));
+
+	public static final Rotation2d PIVOT = Rotation2d.fromDegrees(3);
 
 }

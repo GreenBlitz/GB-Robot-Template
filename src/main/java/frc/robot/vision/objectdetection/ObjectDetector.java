@@ -1,4 +1,4 @@
-package frc.robot.vision.od;
+package frc.robot.vision.objectdetection;
 
 import frc.robot.vision.data.ObjectData;
 import frc.utils.Filter;

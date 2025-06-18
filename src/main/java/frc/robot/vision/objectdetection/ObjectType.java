@@ -1,4 +1,4 @@
-package frc.robot.vision.od;
+package frc.robot.vision.objectdetection;
 
 public enum ObjectType {
 

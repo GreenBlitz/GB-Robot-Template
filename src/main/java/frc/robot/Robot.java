@@ -46,7 +46,7 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.vision.VisionConstants;
 import frc.robot.vision.VisionFilters;
 import frc.robot.vision.data.AprilTagVisionData;
-import frc.robot.vision.od.LimeLightObjectDetector;
+import frc.robot.vision.objectdetection.LimeLightObjectDetector;
 import frc.utils.TimedValue;
 import frc.utils.auto.AutonomousChooser;
 import frc.utils.auto.PathPlannerUtil;

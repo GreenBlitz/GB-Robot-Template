@@ -1,7 +1,7 @@
 package frc.robot.vision.data;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import frc.robot.vision.od.ObjectType;
+import frc.robot.vision.objectdetection.ObjectType;
 
 public class ObjectData {
 

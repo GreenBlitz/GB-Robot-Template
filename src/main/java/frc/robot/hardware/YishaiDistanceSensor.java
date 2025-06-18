@@ -8,14 +8,14 @@ public class YishaiDistanceSensor {
 
     private static final double SCALING_SLOPE = 0.0002, SCALING_INTERCEPT_POINT = -200;
 
-    private final DutyCycle dutyCycle;
+    private final DutyCycle sensorDutyCycle;
 
     public YishaiDistanceSensor(DigitalInput digitalInput) {
-        this.dutyCycle = new DutyCycle(digitalInput);
+        this.sensorDutyCycle = new DutyCycle(digitalInput);
     }
 
     public double getDistanceMeters() {
-        return Conversions.centimetersToMeters(dutyCycle.getHighTimeNanoseconds() * SCALING_SLOPE + SCALING_INTERCEPT_POINT);
+        return Conversions.centimetersToMeters(sensorDutyCycle.getHighTimeNanoseconds() * SCALING_SLOPE + SCALING_INTERCEPT_POINT);
     }
 
 }

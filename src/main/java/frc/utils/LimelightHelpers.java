@@ -2,6 +2,7 @@
 
 package frc.utils;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.networktables.DoubleArrayEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -1251,6 +1252,12 @@ public class LimelightHelpers {
 	}
 
 	/////
+	public static Pair<double[], double[]> getStandardDeviations(String limelightName) {
+		double[] standardDeviations = getLimelightNTDoubleArray(limelightName, "stddevs");
+		double[] megaTag1standardDeviations = Arrays.copyOfRange(standardDeviations, 0, standardDeviations.length / 2);
+		double[] megaTag2standardDeviations = Arrays.copyOfRange(standardDeviations, standardDeviations.length / 2, standardDeviations.length);
+		return Pair.of(megaTag1standardDeviations, megaTag2standardDeviations);
+	}
 	/////
 
 	public static Pose3d getBotPose3d(String limelightName) {

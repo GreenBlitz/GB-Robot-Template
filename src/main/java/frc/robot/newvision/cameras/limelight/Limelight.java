@@ -1,21 +1,24 @@
 package frc.robot.newvision.cameras.limelight;
 
-import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import frc.robot.newvision.RobotPoseObservation;
 import frc.robot.newvision.interfaces.RobotOrientationRequiringCamera;
-import frc.robot.newvision.interfaces.RobotPoseSupplyingCamera;
+import frc.robot.newvision.interfaces.IndependentRobotPoseSupplyingCamera;
 import frc.utils.LimelightHelpers;
-import frc.utils.TimedValue;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 
-public class Limelight implements RobotPoseSupplyingCamera, RobotOrientationRequiringCamera {
+public class Limelight implements IndependentRobotPoseSupplyingCamera, RobotOrientationRequiringCamera {
 
 	private final String name;
 	private final String logPath;
 	private final Pose3d robotRelativeCameraPose;
+
+	private final RobotPoseObservation megaTag1RobotPoseObservation;
+	private final RobotPoseObservation megaTag2RobotPoseObservation;
 
 	private LimelightPipeline pipeline;
 	private LimelightHelpers.PoseEstimate megaTag1RobotPoseEstimate;
@@ -28,6 +31,9 @@ public class Limelight implements RobotPoseSupplyingCamera, RobotOrientationRequ
 		this.robotRelativeCameraPose = robotRelativeCameraPose;
 		setRobotRelativeCameraPose(robotRelativeCameraPose);
 
+		this.megaTag1RobotPoseObservation = new RobotPoseObservation();
+		this.megaTag2RobotPoseObservation = new RobotPoseObservation();
+
 		setPipeline(pipeline);
 
 		this.megaTag1RobotPoseEstimate = new LimelightHelpers.PoseEstimate();
@@ -39,6 +45,19 @@ public class Limelight implements RobotPoseSupplyingCamera, RobotOrientationRequ
 			case APRIL_TAG -> {
 				megaTag1RobotPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
 				megaTag2RobotPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
+
+				Pair<double[], double[]> standardDeviations = LimelightHelpers.getStandardDeviations(name);
+
+				megaTag1RobotPoseObservation.setObservationValues(
+					megaTag1RobotPoseEstimate.timestampSeconds,
+					megaTag1RobotPoseEstimate.pose,
+					LimelightHelpers.toPose2D(standardDeviations.getFirst())
+				);
+				megaTag2RobotPoseObservation.setObservationValues(
+					megaTag2RobotPoseEstimate.timestampSeconds,
+					megaTag2RobotPoseEstimate.pose,
+					LimelightHelpers.toPose2D(standardDeviations.getSecond())
+				);
 			}
 			default -> {}
 		}
@@ -49,8 +68,10 @@ public class Limelight implements RobotPoseSupplyingCamera, RobotOrientationRequ
 	private void log() {
 		switch (pipeline) {
 			case APRIL_TAG -> {
-				Logger.recordOutput(logPath + "/megaTag1Pose", megaTag1RobotPoseEstimate.pose);
-				Logger.recordOutput(logPath + "/megaTag2Pose", megaTag2RobotPoseEstimate.pose);
+				Logger.recordOutput(logPath + "/megaTag1Pose", megaTag1RobotPoseObservation.getRobotPose());
+				Logger.recordOutput(logPath + "/megaTag1StandardDeviations", megaTag1RobotPoseObservation.getStandardDeviations());
+				Logger.recordOutput(logPath + "/megaTag2Pose", megaTag2RobotPoseObservation.getRobotPose());
+				Logger.recordOutput(logPath + "/megaTag2StandardDeviations", megaTag2RobotPoseObservation.getStandardDeviations());
 			}
 			default -> {}
 		}
@@ -73,17 +94,17 @@ public class Limelight implements RobotPoseSupplyingCamera, RobotOrientationRequ
 	}
 
 	@Override
-	public Optional<TimedValue<Pose2d>> getRobotPose() {
+	public Optional<RobotPoseObservation> getRobotPose() {
 		if (pipeline.equals(LimelightPipeline.APRIL_TAG)) {
-			return Optional.of(new TimedValue<>(megaTag1RobotPoseEstimate.pose, megaTag1RobotPoseEstimate.timestampSeconds));
+			return Optional.of(megaTag1RobotPoseObservation);
 		}
 		return Optional.empty();
 	}
 
 	@Override
-	public Optional<TimedValue<Pose2d>> getOrientationRequiringRobotPose() {
+	public Optional<RobotPoseObservation> getOrientationRequiringRobotPose() {
 		if (pipeline.equals(LimelightPipeline.APRIL_TAG)) {
-			return Optional.of(new TimedValue<>(megaTag2RobotPoseEstimate.pose, megaTag2RobotPoseEstimate.timestampSeconds));
+			return Optional.of(megaTag2RobotPoseObservation);
 		}
 		return Optional.empty();
 	}

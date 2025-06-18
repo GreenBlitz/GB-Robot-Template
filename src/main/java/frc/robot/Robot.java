@@ -7,10 +7,7 @@ package frc.robot;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.events.EventTrigger;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.RobotManager;
@@ -76,6 +73,7 @@ public class Robot {
 	private final IPoseEstimator poseEstimator;
 	private final RobotHeadingEstimator headingEstimator;
 	private final MultiAprilTagVisionSources multiAprilTagVisionSources;
+	private final LimeLightObjectDetector objectDetector;
 
 	private final Swerve swerve;
 	private final Elevator elevator;
@@ -98,16 +96,8 @@ public class Robot {
 	private AutonomousChooser fourthObjectIntakingLocationChooser;
 	private AutonomousChooser fourthObjectScoringLocationChooser;
 
-	private LimeLightObjectDetector objectDetector;
-
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
-
-		objectDetector = new LimeLightObjectDetector(
-			"ObjectDetector/",
-			"limelight-object",
-			new Pose3d(new Translation3d(0, 0, 0.685), new Rotation3d(0, Rotation2d.fromDegrees(-12).getRadians(), 0))
-		);
 
 		IGyro gyro = GyroFactory.createGyro(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(
@@ -149,6 +139,8 @@ public class Robot {
 					.apply(data)
 			)
 		);
+
+		objectDetector = VisionConstants.LIMELIGHT_OBJECT;
 
 		swerve.setHeadingSupplier(
 			ROBOT_TYPE.isSimulation() ? () -> poseEstimator.getEstimatedPose().getRotation() : headingEstimator::getEstimatedHeading
@@ -271,8 +263,6 @@ public class Robot {
 	public void periodic() {
 		double startingTime = TimeUtil.getCurrentTimeSeconds();
 
-		objectDetector.update();
-
 		Phoenix6SignalBuilder.refreshAll();
 
 		swerve.update();
@@ -293,6 +283,8 @@ public class Robot {
 //		multiAprilTagVisionSources.log();
 		headingEstimator.log();
 		Logger.recordOutput("TimeTest/Pose", TimeUtil.getCurrentTimeSeconds() - poseTime);
+
+		objectDetector.update();
 
 		BatteryUtil.logStatus();
 //		BusChain.logChainsStatuses();

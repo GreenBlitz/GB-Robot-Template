@@ -17,13 +17,11 @@ import frc.RobotManager;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.AutosBuilder;
 import frc.robot.hardware.interfaces.IGyro;
-import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.led.LEDState;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
-import frc.robot.scoringhelpers.ButtonDriverHelper;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.subsystems.arm.factory.ArmFactory;
 import frc.robot.subsystems.climb.lifter.Lifter;
@@ -265,15 +263,15 @@ public class Robot {
 		}
 		List<AprilTagVisionData> visionData = multiAprilTagVisionSources.getFilteredVisionData();
 		poseEstimator.updateVision(visionData);
-		multiAprilTagVisionSources.log();
+//		multiAprilTagVisionSources.log();
 		headingEstimator.log();
 		Logger.recordOutput("TimeTest/Pose", TimeUtil.getCurrentTimeSeconds() - poseTime);
 
 		BatteryUtil.logStatus();
-		BusChain.logChainsStatuses();
+//		BusChain.logChainsStatuses();
 		simulationManager.logPoses();
 		ScoringHelpers.log("Scoring");
-		ButtonDriverHelper.log("Scoring/ButtonDriverDisplay");
+//		ButtonDriverHelper.log("Scoring/ButtonDriverDisplay");
 
 		double startingSchedularTime = TimeUtil.getCurrentTimeSeconds();
 		CommandScheduler.getInstance().run(); // Should be last

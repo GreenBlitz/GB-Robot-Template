@@ -80,7 +80,7 @@ public class VisionConstants {
 		AngleUnit.DEGREES.toRotation3d(10.612258493096334, -27.18966371065684, 20.10328620400214)
 	);
 
-	public static final Pose3d LIMELIGHT_ELEVATOR_CAMERA_ROBOT_POSE = new Pose3d(
+	public static final Pose3d OBJECT_DETECTION_LIMELIGHT_CAMERA_POSE = new Pose3d(
 		new Translation3d(-0.07575, 0.27, 0.93),
 		AngleUnit.DEGREES.toRotation3d(-2.8, 52.64, -176.7)
 	);
@@ -106,7 +106,7 @@ public class VisionConstants {
 	public static final LimeLightObjectDetector LIMELIGHT_OBJECT = new LimeLightObjectDetector(
 		VisionConstants.OBJECT_DETECTOR_SOURCE_LOGPATH,
 		"limelight-object",
-		LIMELIGHT_ELEVATOR_CAMERA_ROBOT_POSE
+		OBJECT_DETECTION_LIMELIGHT_CAMERA_POSE
 	);
 
 	public static final List<VisionSource<AprilTagVisionData>> VISION_SOURCES = List.of(LIMELIGHT_LEFT, LIMELIGHT_RIGHT);

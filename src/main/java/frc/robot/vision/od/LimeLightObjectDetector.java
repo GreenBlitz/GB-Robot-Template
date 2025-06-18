@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.robot.vision.VisionConstants;
 import frc.robot.vision.data.ObjectData;
 import frc.utils.Filter;
 import frc.utils.math.ObjectDetectionMath;
@@ -23,7 +24,6 @@ public class LimeLightObjectDetector implements ObjectDetector {
 	private Filter<? super ObjectData> filter;
 	private Optional<ObjectData> closestObject;
 
-	private final NetworkTableEntry doesTargetExistEntry;
 	private final NetworkTableEntry closestObjectTxEntry;
 	private final NetworkTableEntry closestObjectTyEntry;
 	private final NetworkTableEntry closestObjectClassificationEntry;
@@ -36,7 +36,6 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		this.cameraPose = cameraPose;
 		clearFilter();
 
-		doesTargetExistEntry = getLimelightNetworkTableEntry("tv");
 		closestObjectTxEntry = getLimelightNetworkTableEntry("tx");
 		closestObjectTyEntry = getLimelightNetworkTableEntry("ty");
 		closestObjectClassificationEntry = getLimelightNetworkTableEntry("tdclass");
@@ -48,21 +47,24 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		return NetworkTableInstance.getDefault().getTable(cameraNetworkTablesName).getEntry(entryName);
 	}
 
-	private static ObjectData closestObjectEntriesToObjectData(
+	private static Optional<ObjectType> classificationEntryToObjectType(NetworkTableEntry classificationEntry) {
+		for (ObjectType type : ObjectType.values()) {
+			if (type.classificationEntryName.equals(classificationEntry.getString(VisionConstants.CLASSIFICATION_ENTRY_DEFAULT_VALUE))) {
+				return Optional.of(type);
+			}
+		}
+		return Optional.empty();
+	}
+
+	private static ObjectData closestObjectEntriesAndTypeToObjectData(
 		NetworkTableEntry txEntry,
 		NetworkTableEntry tyEntry,
-		NetworkTableEntry classificationEntry,
 		NetworkTableEntry pipelineLatencyEntry,
 		NetworkTableEntry captureLatencyEntry,
+		ObjectType objectType,
 		Pose3d cameraPose
 	) {
-		ObjectType objectType = switch (classificationEntry.getString("none")) {
-			case "algae\r" -> ObjectType.ALGAE;
-			case "coral" -> ObjectType.CORAL;
-			default -> null;
-		};
 		double centerOfObjectHeightMeters = objectType.objectHeightMeters / 2;
-
 
 		Rotation2d cameraRelativeYaw = Rotation2d.fromDegrees(txEntry.getDouble(0));
 		Rotation2d cameraRelativePitch = Rotation2d.fromDegrees(tyEntry.getDouble(0));
@@ -77,14 +79,16 @@ public class LimeLightObjectDetector implements ObjectDetector {
 
 	@Override
 	public Optional<ObjectData> getClosestObjectData() {
-		if (doesTargetExistEntry.getInteger(0) == 1) {
+		Optional<ObjectType> objectType = classificationEntryToObjectType(closestObjectClassificationEntry);
+
+		if (!objectType.isEmpty()) {
 			return Optional.of(
-				closestObjectEntriesToObjectData(
+				closestObjectEntriesAndTypeToObjectData(
 					closestObjectTxEntry,
 					closestObjectTyEntry,
-					closestObjectClassificationEntry,
 					closestObjectPipelineLatencyEntry,
 					closestObjectCaptureLatencyEntry,
+					objectType.get(),
 					cameraPose
 				)
 			);

@@ -15,6 +15,8 @@ import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.led.LEDConstants;
 import frc.robot.led.LEDState;
 import frc.robot.subsystems.climb.lifter.LifterConstants;
+import frc.utils.DriverStationUtil;
+import frc.utils.alerts.AlertManager;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.time.TimeUtil;
 import frc.utils.logger.LoggerFactory;
@@ -42,10 +44,10 @@ public class RobotManager extends LoggedRobot {
 		this.roborioCycles = 0;
 		this.robot = new Robot();
 
-//		createAutoReadyForConstructionChooser();
-//		JoysticksBindings.configureBindings(robot);
+		createAutoReadyForConstructionChooser();
+		JoysticksBindings.configureBindings(robot);
 
-//		initializeLEDTriggers();
+		initializeLEDTriggers();
 
 		Threads.setCurrentThreadPriority(true, 10);
 	}
@@ -74,12 +76,12 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void disabledInit() {
-//		if (!DriverStationUtil.isMatch()) {
-//			BrakeStateManager.coast();
-//		}
+		if (!DriverStationUtil.isMatch()) {
+			BrakeStateManager.coast();
+		}
 
-//		robot.getSwerve().getCommandsBuilder().resetTargetSpeeds().ignoringDisable(true).schedule();
-//		robot.getRobotCommander().getLedStateHandler().setState(LEDState.DISABLE).ignoringDisable(true).schedule();
+		robot.getSwerve().getCommandsBuilder().resetTargetSpeeds().ignoringDisable(true).schedule();
+		robot.getRobotCommander().getLedStateHandler().setState(LEDState.DISABLE).ignoringDisable(true).schedule();
 	}
 
 	@Override
@@ -115,9 +117,9 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void robotPeriodic() {
 		updateTimeRelatedData(); // Better to be first
-//		JoysticksBindings.setDriversInputsToSwerve(robot.getSwerve());
+		JoysticksBindings.setDriversInputsToSwerve(robot.getSwerve());
 		robot.periodic();
-//		AlertManager.reportAlerts();
+		AlertManager.reportAlerts();
 	}
 
 	private void createAutoReadyForConstructionChooser() {

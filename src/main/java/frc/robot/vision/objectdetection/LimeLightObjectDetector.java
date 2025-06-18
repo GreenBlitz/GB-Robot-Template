@@ -26,7 +26,7 @@ public class LimeLightObjectDetector implements ObjectDetector {
 
 	private final NetworkTableEntry closestObjectTxEntry;
 	private final NetworkTableEntry closestObjectTyEntry;
-	private final NetworkTableEntry closestObjectClassificationEntry;
+	private final NetworkTableEntry closestObjectNameEntry;
 	private final NetworkTableEntry closestObjectPipelineLatencyEntry;
 	private final NetworkTableEntry closestObjectCaptureLatencyEntry;
 
@@ -38,7 +38,7 @@ public class LimeLightObjectDetector implements ObjectDetector {
 
 		closestObjectTxEntry = getLimelightNetworkTableEntry("tx");
 		closestObjectTyEntry = getLimelightNetworkTableEntry("ty");
-		closestObjectClassificationEntry = getLimelightNetworkTableEntry("tdclass");
+		closestObjectNameEntry = getLimelightNetworkTableEntry("tdclass");
 		closestObjectPipelineLatencyEntry = getLimelightNetworkTableEntry("tl");
 		closestObjectCaptureLatencyEntry = getLimelightNetworkTableEntry("cl");
 	}
@@ -47,17 +47,17 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		return NetworkTableInstance.getDefault().getTable(cameraNetworkTablesName).getEntry(entryName);
 	}
 
-	private static Optional<ObjectType> classificationEntryToObjectType(NetworkTableEntry classificationEntry) {
-		String classificationEntryName = classificationEntry.getString(VisionConstants.CLASSIFICATION_ENTRY_DEFAULT_VALUE);
+	private static Optional<ObjectType> getObjectType(NetworkTableEntry nameEntry) {
+		String nameEntryValue = nameEntry.getString(VisionConstants.CLASSIFICATION_ENTRY_NO_OBJECT_VALUE);
 		for (ObjectType type : ObjectType.values()) {
-			if (type.getClassificationEntryName().equals(classificationEntryName)) {
+			if (type.getNameEntryValue().equals(nameEntryValue)) {
 				return Optional.of(type);
 			}
 		}
 		return Optional.empty();
 	}
 
-	private static ObjectData closestObjectEntriesAndTypeToObjectData(
+	private static ObjectData getClosestObjectData(
 		NetworkTableEntry txEntry,
 		NetworkTableEntry tyEntry,
 		NetworkTableEntry pipelineLatencyEntry,
@@ -69,32 +69,32 @@ public class LimeLightObjectDetector implements ObjectDetector {
 
 		Rotation2d cameraRelativeYaw = Rotation2d.fromDegrees(txEntry.getDouble(0));
 		Rotation2d cameraRelativePitch = Rotation2d.fromDegrees(tyEntry.getDouble(0));
-		Translation2d robotRelativeObjectPose = ObjectDetectionMath
-			.cameraRollRelativeYawAndPitchToRobotRelativePose(cameraRelativeYaw, cameraRelativePitch, cameraPose, centerOfObjectHeightMeters);
+		Translation2d robotRelativeObjectTranslation = ObjectDetectionMath
+			.getRobotRelativeTranslation(cameraRelativeYaw, cameraRelativePitch, cameraPose, centerOfObjectHeightMeters);
 
 		double totalLatency = pipelineLatencyEntry.getDouble(0) + captureLatencyEntry.getDouble(0);
 		double timeStamp = TimeUtil.getCurrentTimeSeconds() - totalLatency;
 
-		return new ObjectData(robotRelativeObjectPose, objectType, timeStamp);
+		return new ObjectData(robotRelativeObjectTranslation, objectType, timeStamp);
 	}
 
 	@Override
 	public Optional<ObjectData> getClosestObjectData() {
-		Optional<ObjectType> objectType = classificationEntryToObjectType(closestObjectClassificationEntry);
+		Optional<ObjectType> objectType = getObjectType(closestObjectNameEntry);
 
-		if (!objectType.isEmpty()) {
-			return Optional.of(
-				closestObjectEntriesAndTypeToObjectData(
-					closestObjectTxEntry,
-					closestObjectTyEntry,
-					closestObjectPipelineLatencyEntry,
-					closestObjectCaptureLatencyEntry,
-					objectType.get(),
-					cameraPose
-				)
-			);
+		if (objectType.isEmpty()) {
+			return Optional.empty();
 		}
-		return Optional.empty();
+		return Optional.of(
+			getClosestObjectData(
+				closestObjectTxEntry,
+				closestObjectTyEntry,
+				closestObjectPipelineLatencyEntry,
+				closestObjectCaptureLatencyEntry,
+				objectType.get(),
+				cameraPose
+			)
+		);
 	}
 
 	@Override

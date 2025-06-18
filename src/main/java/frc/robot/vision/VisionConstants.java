@@ -102,6 +102,6 @@ public class VisionConstants {
 
 	public static final List<VisionSource<AprilTagVisionData>> VISION_SOURCES = List.of(LIMELIGHT_LEFT, LIMELIGHT_RIGHT);
 
-	public static final String CLASSIFICATION_ENTRY_DEFAULT_VALUE = "none";
+	public static final String CLASSIFICATION_ENTRY_NO_OBJECT_VALUE = "none";
 
 }

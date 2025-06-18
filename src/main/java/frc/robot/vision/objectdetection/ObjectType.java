@@ -2,23 +2,23 @@ package frc.robot.vision.objectdetection;
 
 public enum ObjectType {
 
-	ALGAE(0.41275, "algae\r"),
-	CORAL(0.1143, "coral");
+	ALGAE("algae\r", 0.41275),
+	CORAL("coral", 0.1143);
 
+	private final String nameEntryValue;
 	private final double objectHeightMeters;
-	private final String classificationEntryName;
 
-	ObjectType(double objectHeightMeters, String classificationEntryName) {
+	ObjectType(String nameEntryValue, double objectHeightMeters) {
+		this.nameEntryValue = nameEntryValue;
 		this.objectHeightMeters = objectHeightMeters;
-		this.classificationEntryName = classificationEntryName;
+	}
+
+	public String getNameEntryValue() {
+		return nameEntryValue;
 	}
 
 	public double getObjectHeightMeters() {
 		return objectHeightMeters;
-	}
-
-	public String getClassificationEntryName() {
-		return classificationEntryName;
 	}
 
 }

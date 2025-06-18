@@ -67,10 +67,10 @@ public class LimeLightObjectDetector implements ObjectDetector {
 	) {
 		double centerOfObjectHeightMeters = objectType.getObjectHeightMeters() / 2;
 
-		Rotation2d cameraRelativeYaw = Rotation2d.fromDegrees(txEntry.getDouble(0));
-		Rotation2d cameraRelativePitch = Rotation2d.fromDegrees(tyEntry.getDouble(0));
+		Rotation2d cameraRelativeObjectYaw = Rotation2d.fromDegrees(txEntry.getDouble(0));
+		Rotation2d cameraRelativeObjectPitch = Rotation2d.fromDegrees(tyEntry.getDouble(0));
 		Translation2d robotRelativeObjectTranslation = ObjectDetectionMath
-			.getRobotRelativeTranslation(cameraRelativeYaw, cameraRelativePitch, cameraPose, centerOfObjectHeightMeters);
+			.getRobotRelativeTranslation(cameraRelativeObjectYaw, cameraRelativeObjectPitch, cameraPose, centerOfObjectHeightMeters);
 
 		double totalLatency = pipelineLatencyEntry.getDouble(0) + captureLatencyEntry.getDouble(0);
 		double timeStamp = TimeUtil.getCurrentTimeSeconds() - totalLatency;

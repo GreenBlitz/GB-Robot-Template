@@ -1,6 +1,5 @@
 package frc.robot.newvision.cameras.limelight;
 
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import frc.robot.newvision.RobotPoseObservation;
@@ -21,8 +20,6 @@ public class Limelight implements IndependentRobotPoseSupplyingCamera, RobotOrie
 	private final RobotPoseObservation megaTag2RobotPoseObservation;
 
 	private LimelightPipeline pipeline;
-	private LimelightHelpers.PoseEstimate megaTag1RobotPoseEstimate;
-	private LimelightHelpers.PoseEstimate megaTag2RobotPoseEstimate;
 
 	public Limelight(String name, String logPathPrefix, Pose3d robotRelativeCameraPose, LimelightPipeline pipeline) {
 		this.name = name;
@@ -35,28 +32,23 @@ public class Limelight implements IndependentRobotPoseSupplyingCamera, RobotOrie
 		this.megaTag2RobotPoseObservation = new RobotPoseObservation();
 
 		setPipeline(pipeline);
-
-		this.megaTag1RobotPoseEstimate = new LimelightHelpers.PoseEstimate();
-		this.megaTag2RobotPoseEstimate = new LimelightHelpers.PoseEstimate();
 	}
 
 	public void update() {
 		switch (pipeline) {
 			case APRIL_TAG -> {
-				megaTag1RobotPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
-				megaTag2RobotPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-
-				Pair<double[], double[]> standardDeviations = LimelightHelpers.getStandardDeviations(name);
+				LimelightHelpers.PoseEstimate megaTag1RobotPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
+				LimelightHelpers.PoseEstimate megaTag2RobotPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
 
 				megaTag1RobotPoseObservation.setObservationValues(
 					megaTag1RobotPoseEstimate.timestampSeconds,
 					megaTag1RobotPoseEstimate.pose,
-					LimelightHelpers.toPose2D(standardDeviations.getFirst())
+					LimelightConstants.DEFAULT_STANDARD_DEVIATIONS
 				);
 				megaTag2RobotPoseObservation.setObservationValues(
 					megaTag2RobotPoseEstimate.timestampSeconds,
 					megaTag2RobotPoseEstimate.pose,
-					LimelightHelpers.toPose2D(standardDeviations.getSecond())
+					LimelightConstants.DEFAULT_STANDARD_DEVIATIONS
 				);
 			}
 			default -> {}
@@ -83,14 +75,6 @@ public class Limelight implements IndependentRobotPoseSupplyingCamera, RobotOrie
 
 	public Pose3d getRobotRelativeCameraPose() {
 		return robotRelativeCameraPose;
-	}
-
-	public LimelightHelpers.PoseEstimate getMegaTag1RobotPoseEstimate() {
-		return megaTag1RobotPoseEstimate;
-	}
-
-	public LimelightHelpers.PoseEstimate getMegaTag2RobotPoseEstimate() {
-		return megaTag2RobotPoseEstimate;
 	}
 
 	@Override

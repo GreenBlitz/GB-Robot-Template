@@ -43,13 +43,14 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		closestObjectCaptureLatencyEntry = getLimelightNetworkTableEntry("cl");
 	}
 
-	protected NetworkTableEntry getLimelightNetworkTableEntry(String entryName) {
+	private NetworkTableEntry getLimelightNetworkTableEntry(String entryName) {
 		return NetworkTableInstance.getDefault().getTable(cameraNetworkTablesName).getEntry(entryName);
 	}
 
 	private static Optional<ObjectType> classificationEntryToObjectType(NetworkTableEntry classificationEntry) {
+		String classificationEntryName = classificationEntry.getString(VisionConstants.CLASSIFICATION_ENTRY_DEFAULT_VALUE);
 		for (ObjectType type : ObjectType.values()) {
-			if (type.classificationEntryName.equals(classificationEntry.getString(VisionConstants.CLASSIFICATION_ENTRY_DEFAULT_VALUE))) {
+			if (type.getClassificationEntryName().equals(classificationEntryName)) {
 				return Optional.of(type);
 			}
 		}
@@ -64,7 +65,7 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		ObjectType objectType,
 		Pose3d cameraPose
 	) {
-		double centerOfObjectHeightMeters = objectType.objectHeightMeters / 2;
+		double centerOfObjectHeightMeters = objectType.getObjectHeightMeters() / 2;
 
 		Rotation2d cameraRelativeYaw = Rotation2d.fromDegrees(txEntry.getDouble(0));
 		Rotation2d cameraRelativePitch = Rotation2d.fromDegrees(tyEntry.getDouble(0));

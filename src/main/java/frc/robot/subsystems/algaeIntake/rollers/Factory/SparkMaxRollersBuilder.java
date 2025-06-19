@@ -1,14 +1,12 @@
 package frc.robot.subsystems.algaeIntake.rollers.Factory;
 
-import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.IDs;
-import frc.robot.hardware.digitalinput.IDigitalInput;
-import frc.robot.hardware.digitalinput.channeled.ChanneledDigitalInput;
+import frc.robot.hardware.YishaiDistanceSensor;
 import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
 import frc.robot.hardware.rev.motors.BrushlessSparkMAXMotor;
 import frc.robot.hardware.rev.motors.SparkMaxConfiguration;
@@ -23,7 +21,6 @@ public class SparkMaxRollersBuilder {
 	private static final double GEAR_RATIO = 10;
 	private static final boolean IS_INVERTED = false;
 	private static final int ALGAE_SENSOR_CHANNEL = 4;
-	private static final double DEBOUNCE_TIME_SECONDS = 0.05;
 
 
 	private static BrushlessSparkMAXMotor generateMotor(String logPath, SparkMaxWrapper wrapper) {
@@ -59,9 +56,9 @@ public class SparkMaxRollersBuilder {
 		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("Current", wrapper::getOutputCurrent);
 		SuppliedDoubleSignal powerSignal = new SuppliedDoubleSignal("Power", wrapper::get);
 
-		IDigitalInput algaeSensor = new ChanneledDigitalInput(new DigitalInput(ALGAE_SENSOR_CHANNEL), new Debouncer(DEBOUNCE_TIME_SECONDS));
+		YishaiDistanceSensor distanceSensor = new YishaiDistanceSensor(new DigitalInput(ALGAE_SENSOR_CHANNEL));
 
-		return new Rollers(logPath, rollers, voltageSignal, currentSignal, powerSignal, algaeSensor);
+		return new Rollers(logPath, rollers, voltageSignal, currentSignal, powerSignal, distanceSensor);
 	}
 
 }

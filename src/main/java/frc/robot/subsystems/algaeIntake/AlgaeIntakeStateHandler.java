@@ -25,13 +25,6 @@ public class AlgaeIntakeStateHandler {
 	}
 
 	public Command setState(AlgaeIntakeState state) {
-		if (state == AlgaeIntakeState.INTAKE) {
-			return new ParallelCommandGroup(
-				new InstantCommand(() -> currentState = state),
-				pivotStateHandler.setState(state.getPivotState()),
-				rollersStateHandler.setState(state.getRollersState())
-			).until(rollersStateHandler::isAlgaeIn);
-		}
 		return new ParallelCommandGroup(
 			new InstantCommand(() -> currentState = state),
 			pivotStateHandler.setState(state.getPivotState()),

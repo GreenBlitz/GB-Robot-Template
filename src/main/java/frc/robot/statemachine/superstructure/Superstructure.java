@@ -126,7 +126,7 @@ public class Superstructure extends GBSubsystem {
 	}
 
 	public boolean isAlgaeInAlgaeIntake() {
-		return robot.getRollers().isAlgaeCurrentlyIn() || driverIsAlgaeInAlgaeIntakeOverride;
+		return robot.getRollers().isAlgaeIn() || driverIsAlgaeInAlgaeIntakeOverride;
 	}
 
 	public boolean isClosed() {

@@ -22,7 +22,7 @@ public class RollersStateHandler {
 	}
 
 	public boolean isAlgaeIn() {
-		return rollers.isAlgaeCurrentlyIn();
+		return rollers.isAlgaeIn();
 	}
 
 }

@@ -80,9 +80,11 @@ public class AutosBuilder {
 
 	public static List<Supplier<Command>> getAllNoDelayAutos(
 		Robot robot,
+		Supplier<Optional<Translation2d>> algaeTranslation,
 		Supplier<Command> intakingCommand,
 		Supplier<Command> scoringCommand,
 		Supplier<Command> algaeRemoveCommand,
+		Supplier<Command> floorAlgaeIntakeCommand,
 		Supplier<Command> netCommand,
 		Pose2d tolerance
 	) {
@@ -92,6 +94,7 @@ public class AutosBuilder {
 		autos.add(() -> rightNoDelayAuto(robot, intakingCommand, scoringCommand, tolerance));
 		autos.add(() -> autoBalls(robot, algaeRemoveCommand, netCommand, tolerance, Branch.G, ScoreLevel.L4));
 		autos.add(() -> autoBalls(robot, algaeRemoveCommand, netCommand, tolerance, Branch.H, ScoreLevel.L4));
+		autos.add(() -> bulbulBalls(robot, algaeTranslation, algaeRemoveCommand, netCommand, tolerance, ))
 		return autos;
 	}
 
@@ -311,10 +314,71 @@ public class AutosBuilder {
 		return auto;
 	}
 
+	private static Command getNetToNetCommand(
+			Robot robot,
+			Supplier<Optional<Translation2d>> algaeTranslation,
+			Supplier<Command> algaeRemoveCommand,
+			Supplier<Command> floorAlgaeIntakeCommand,
+			Supplier<Command> netCommand,
+			Pose2d tolerance,
+			boolean isRightFloorAlgae
+	){
+
+		AutoPath netToFloorAlgaePath = isRightFloorAlgae ? AutoPath.LEFT_NET_TO_RIGHT_FLOOR_ALGAE : AutoPath.MIDDLE_NET_TO_LEFT_FLOOR_ALGAE;
+		Pose2d
+
+		Command driveToFloorAlgae = createAutoFromAutoPath(
+				netToFloorAlgaePath,
+				pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
+						robot,
+						pathPlannerPath,
+						floorAlgaeIntakeCommand,
+						AutoPath.LEFT_NET_TO_RIGHT_FLOOR_ALGAE.getTargetBranch(),
+						tolerance
+				)
+		);
+
+		if (algaeTranslation.get().isPresent()) {
+			return new SequentialCommandGroup(
+					new ParallelCommandGroup(
+							robot.getSwerve().getCommandsBuilder().driveToObject(
+									robot.getPoseEstimator()::getEstimatedPose,
+									algaeTranslation,
+									AutonomousConstants.DISTANCE_FROM_ALGAE_FOR_FLOOR_INTAKE
+							),
+							robot.getRobotCommander().getSuperstructure().algaeIntake().asProxy()
+					),
+					new ParallelCommandGroup(
+							robot.getSwerve().getCommandsBuilder().moveToPoseByPID(
+									robot.getPoseEstimator()::getEstimatedPose,
+									AutonomousConstants.LinkedWaypoints.
+							)
+							robot.getRobotCommander().getSuperstructure().algaeIntake().asProxy()
+					),
+
+			);
+		}
+
+
+		Command command=	algaeTranslation.get().isPresent() ?
+
+					: createAutoFromAutoPath(
+					AutoPath.LEFT_NET_TO_ALGAE_REMOVE_E,
+					pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
+							robot,
+							pathPlannerPath,
+							algaeRemoveCommand,
+							AutoPath.LEFT_NET_TO_ALGAE_REMOVE_E.getTargetBranch(),
+							tolerance
+					)
+			);
+	}
+
 	private static Command bulbulBalls(
 			Robot robot,
 			Supplier<Optional<Translation2d>> algaeTranslation,
 			Supplier<Command> algaeRemoveCommand,
+			Supplier<Command> floorAlgaeIntakeCommand,
 			Supplier<Command> netCommand,
 			Pose2d tolerance,
 			Branch firstAutoScoreTargetBranch,
@@ -329,9 +393,6 @@ public class AutosBuilder {
 				AngleTransform.MIRROR_Y
 		);
 		ScoringHelpers.setTargetBranch(firstAutoScoreTargetBranch);
-
-		Pose2d rightBallIntakePose = new Pose2d();
-		Pose2d leftBallIntakePose = new Pose2d();
 
 		Command bulbulBalls = new SequentialCommandGroup(
 				autoScoreToChosenBranch(robot, path),
@@ -350,33 +411,11 @@ public class AutosBuilder {
 							.moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers.getAlgaeRemovePose(true))
 					).withTimeout(AutonomousConstants.FIRST_ALGAE_REMOVE_TIMEOUT_SECONDS),
 					createAutoFromAutoPath(
-						AutoPath.ALGAE_REMOVE_D_TO_FIRST_NET,
+						AutoPath.ALGAE_REMOVE_D_TO_LEFT_NET,
 						pathPlannerPath -> PathFollowingCommandsBuilder
-							.scoreToNet(robot, pathPlannerPath, netCommand, AutoPath.ALGAE_REMOVE_D_TO_FIRST_NET.getTargetBranch())
+							.scoreToNet(robot, pathPlannerPath, netCommand, AutoPath.ALGAE_REMOVE_D_TO_LEFT_NET.getTargetBranch())
 					),
-					new ParallelCommandGroup(
-						robot.getRobotCommander().getSuperstructure().algaeIntake().asProxy(),
-						robot.getSwerve().getCommandsBuilder().moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, rightBallIntakePose)
-					).until(() -> ToleranceMath.isNear(robot.getPoseEstimator().getEstimatedPose(), backOffFromReefPose, tolerance)),
-					algaeTranslation.get().isPresent() ?
-							new ParallelCommandGroup(
-								robot.getSwerve().getCommandsBuilder().driveToObject(
-									robot.getPoseEstimator()::getEstimatedPose,
-									algaeTranslation,
-									AutonomousConstants.DISTANCE_FROM_ALGAE_FOR_FLOOR_INTAKE
-								),
-								robot.getRobotCommander().getSuperstructure().algaeIntake().asProxy()
-							)
-							: createAutoFromAutoPath(
-								AutoPath.LEFT_NET_TO_ALGAE_REMOVE_E,
-								pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
-									robot,
-									pathPlannerPath,
-									algaeRemoveCommand,
-									AutoPath.LEFT_NET_TO_ALGAE_REMOVE_E.getTargetBranch(),
-									tolerance
-								)
-					)
+
 				)
 		);
 
@@ -422,9 +461,9 @@ public class AutosBuilder {
 						.moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers.getAlgaeRemovePose(true))
 				).withTimeout(AutonomousConstants.FIRST_ALGAE_REMOVE_TIMEOUT_SECONDS),
 				createAutoFromAutoPath(
-					AutoPath.ALGAE_REMOVE_D_TO_FIRST_NET,
+					AutoPath.ALGAE_REMOVE_D_TO_LEFT_NET,
 					pathPlannerPath -> PathFollowingCommandsBuilder
-						.scoreToNet(robot, pathPlannerPath, netCommand, AutoPath.ALGAE_REMOVE_D_TO_FIRST_NET.getTargetBranch())
+						.scoreToNet(robot, pathPlannerPath, netCommand, AutoPath.ALGAE_REMOVE_D_TO_LEFT_NET.getTargetBranch())
 				),
 				new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.I)),
 				createAutoFromAutoPath(

@@ -8,6 +8,7 @@ import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.events.EventTrigger;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.RobotManager;
@@ -190,6 +191,10 @@ public class Robot {
 			.softCloseNetToAlgaeRemove()
 			.andThen(robotCommander.getSuperstructure().algaeRemove().withTimeout(AutonomousConstants.ALGAE_REMOVE_TIMEOUT_SECONDS))
 			.asProxy();
+		Supplier<Command> floorAlgaeIntakeCommand = () -> robotCommander.getSuperstructure()
+				.softCloseNetToAlgaeRemove()
+				.andThen(robotCommander.getSuperstructure().algaeIntake())
+				.asProxy();
 		Supplier<Command> netCommand = () -> robotCommander.getSuperstructure().netWithRelease().asProxy();
 
 		swerve.configPathPlanner(
@@ -222,9 +227,11 @@ public class Robot {
 			"PreBuiltAutos",
 			AutosBuilder.getAllNoDelayAutos(
 				this,
+				() -> Optional.of(new Translation2d()),
 				intakingCommand,
 				scoringCommand,
 				algaeRemoveCommand,
+				floorAlgaeIntakeCommand,
 				netCommand,
 				AutonomousConstants.TARGET_POSE_TOLERANCES
 			)

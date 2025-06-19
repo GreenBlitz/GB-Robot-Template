@@ -97,7 +97,7 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 
 	@Override
 	public Optional<RobotPoseObservation> getRobotPose() {
-		if (pipeline.equals(LimelightPipeline.APRIL_TAG)) {
+		if (pipeline.equals(LimelightPipeline.APRIL_TAG) && megaTag1RobotPoseObservation.getTimestampSeconds() != 0) {
 			return Optional.of(megaTag1RobotPoseObservation);
 		}
 		return Optional.empty();
@@ -105,7 +105,7 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 
 	@Override
 	public Optional<RobotPoseObservation> getOrientationRequiringRobotPose() {
-		if (pipeline.equals(LimelightPipeline.APRIL_TAG)) {
+		if (pipeline.equals(LimelightPipeline.APRIL_TAG) && megaTag2RobotPoseObservation.getTimestampSeconds() != 0) {
 			return Optional.of(megaTag2RobotPoseObservation);
 		}
 		return Optional.empty();

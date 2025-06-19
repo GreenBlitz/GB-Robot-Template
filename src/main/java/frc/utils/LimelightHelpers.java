@@ -761,7 +761,7 @@ public class LimelightHelpers {
 
 		if (poseArray.length == 0) {
 			// Handle the case where no data is available
-			return null; // or some default PoseEstimate
+			return new PoseEstimate(); // or some default PoseEstimate
 		}
 
 		var pose = toPose2D(poseArray);

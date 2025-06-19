@@ -81,8 +81,8 @@ public class VisionConstants {
 	);
 
 	public static final Pose3d OBJECT_DETECTION_LIMELIGHT_CAMERA_POSE = new Pose3d(
-		new Translation3d(-0.07575, 0.27, 0.93),
-		AngleUnit.DEGREES.toRotation3d(-2.8, 52.64, -176.7)
+		new Translation3d(-0.08, -0.23, 0.865),
+		AngleUnit.DEGREES.toRotation3d(0, -27, 180)
 	);
 
 	public static final VisionSource<AprilTagVisionData> LIMELIGHT_LEFT = new DynamicSwitchingLimelight(

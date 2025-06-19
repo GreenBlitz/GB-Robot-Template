@@ -10,7 +10,9 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.vision.VisionConstants;
 import frc.robot.vision.data.ObjectData;
 import frc.utils.Filter;
+import frc.utils.math.AngleUnit;
 import frc.utils.math.ObjectDetectionMath;
+import frc.utils.pose.PoseUtil;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -46,6 +48,9 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		closestObjectCaptureLatencyEntry = getLimelightNetworkTableEntry("cl");
 		t2dEntry = getLimelightNetworkTableEntry("t2d");
 		allObjectsEntry = getLimelightNetworkTableEntry("rawdetections");
+		
+		getLimelightNetworkTableEntry("camerapose_robotspace_set").setDoubleArray(PoseUtil.pose3DToPoseArray(cameraPose, AngleUnit.DEGREES));
+		
 	}
 
 	private NetworkTableEntry getLimelightNetworkTableEntry(String entryName) {

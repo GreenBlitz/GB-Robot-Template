@@ -1,16 +1,18 @@
 package frc.robot.newvision.cameras.limelight;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import frc.robot.newvision.RobotPoseObservation;
-import frc.robot.newvision.interfaces.RobotOrientationRequiringCamera;
-import frc.robot.newvision.interfaces.IndependentRobotPoseSupplyingCamera;
+import frc.robot.newvision.interfaces.OrientationRequiringRobotPoseSupplier;
+import frc.robot.newvision.interfaces.IndependentRobotPoseSupplier;
 import frc.utils.LimelightHelpers;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 
-public class Limelight implements IndependentRobotPoseSupplyingCamera, RobotOrientationRequiringCamera {
+public class Limelight implements IndependentRobotPoseSupplier, OrientationRequiringRobotPoseSupplier {
 
 	private final String name;
 	private final String logPath;
@@ -43,12 +45,12 @@ public class Limelight implements IndependentRobotPoseSupplyingCamera, RobotOrie
 				megaTag1RobotPoseObservation.setObservationValues(
 					megaTag1RobotPoseEstimate.timestampSeconds,
 					megaTag1RobotPoseEstimate.pose,
-					LimelightConstants.DEFAULT_STANDARD_DEVIATIONS
+					getStandardDeviations(megaTag1RobotPoseEstimate)
 				);
 				megaTag2RobotPoseObservation.setObservationValues(
 					megaTag2RobotPoseEstimate.timestampSeconds,
 					megaTag2RobotPoseEstimate.pose,
-					LimelightConstants.DEFAULT_STANDARD_DEVIATIONS
+					getStandardDeviations(megaTag2RobotPoseEstimate)
 				);
 			}
 			default -> {}
@@ -121,6 +123,14 @@ public class Limelight implements IndependentRobotPoseSupplyingCamera, RobotOrie
 			robotRelativeCameraPose.getRotation().getY(),
 			robotRelativeCameraPose.getRotation().getZ()
 		);
+	}
+
+	private static Pose2d getStandardDeviations(LimelightHelpers.PoseEstimate poseEstimate) {
+		double standardDeviation = Math.max(
+			Math.pow(poseEstimate.avgTagDist, 2) * LimelightConstants.VISION_STANDARD_DEVIATION_FACTOR,
+			LimelightConstants.MINIMUM_STANDARD_DEVIATION
+		);
+		return new Pose2d(standardDeviation, standardDeviation, Rotation2d.fromDegrees(standardDeviation));
 	}
 
 }

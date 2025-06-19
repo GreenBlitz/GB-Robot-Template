@@ -4,7 +4,7 @@ import frc.robot.newvision.RobotPoseObservation;
 
 import java.util.Optional;
 
-public interface IndependentRobotPoseSupplyingCamera {
+public interface IndependentRobotPoseSupplier {
 
 	Optional<RobotPoseObservation> getRobotPose();
 

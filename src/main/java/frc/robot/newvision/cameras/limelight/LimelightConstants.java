@@ -1,10 +1,10 @@
 package frc.robot.newvision.cameras.limelight;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 
 public class LimelightConstants {
 
-    public static final Pose2d DEFAULT_STANDARD_DEVIATIONS = new Pose2d(0.0001, 0.0001, Rotation2d.fromDegrees(0.0001));
+	public static final double VISION_STANDARD_DEVIATION_FACTOR = 0.001;
+
+	public static final double MINIMUM_STANDARD_DEVIATION = 0.0001;
 
 }

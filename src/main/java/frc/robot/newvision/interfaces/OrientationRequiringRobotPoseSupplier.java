@@ -5,7 +5,7 @@ import frc.robot.newvision.RobotPoseObservation;
 
 import java.util.Optional;
 
-public interface RobotOrientationRequiringCamera {
+public interface OrientationRequiringRobotPoseSupplier {
 
 	void setRobotOrientation(Rotation3d robotOrientation);
 

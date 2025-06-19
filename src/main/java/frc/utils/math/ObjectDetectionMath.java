@@ -34,9 +34,7 @@ public class ObjectDetectionMath {
 		double heightMeters = centerOfObjectHeightMeters - cameraPose.getZ();
 		double cameraToObjectXAxisHypotenuseMeters = Math.hypot(XDistanceMeters, heightMeters);
 
-		/**
-		 * tx (represented by cameraRelativeYaw) is flipped (unaryMinus) because of x-axis positive direction conventions
-		 */
+//		tx (represented by cameraRelativeYaw) is flipped (unaryMinus) because of x-axis positive direction conventions
 		return cameraRelativeYaw.unaryMinus().getTan() * cameraToObjectXAxisHypotenuseMeters;
 	}
 

@@ -52,8 +52,8 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		return NetworkTableInstance.getDefault().getTable(cameraNetworkTablesName).getEntry(entryName);
 	}
 
-	private static Optional<ObjectType> getObjectType(NetworkTableEntry nameEntry) {
-		String nameEntryValue = nameEntry.getString(VisionConstants.CLASSIFICATION_ENTRY_NO_OBJECT_VALUE);
+	private static Optional<ObjectType> getObjectType(NetworkTableEntry objectNameEntry) {
+		String nameEntryValue = objectNameEntry.getString(VisionConstants.NAME_ENTRY_NO_OBJECT_VALUE);
 		for (ObjectType type : ObjectType.values()) {
 			if (type.getNameEntryValue().equals(nameEntryValue)) {
 				return Optional.of(type);

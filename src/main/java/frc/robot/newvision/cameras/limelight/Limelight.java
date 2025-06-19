@@ -130,7 +130,7 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 			Math.pow(poseEstimate.avgTagDist, 2) * LimelightConstants.VISION_STANDARD_DEVIATION_FACTOR,
 			LimelightConstants.MINIMUM_STANDARD_DEVIATION
 		);
-		return new Pose2d(standardDeviation, standardDeviation, Rotation2d.fromDegrees(standardDeviation));
+		return new Pose2d(standardDeviation, standardDeviation, new Rotation2d(standardDeviation));
 	}
 
 }

@@ -61,12 +61,12 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 				megaTag1RobotPoseObservation.setObservationValues(
 					megaTag1RobotPoseEstimate.timestampSeconds,
 					megaTag1RobotPoseEstimate.pose,
-					getStandardDeviations(megaTag1RobotPoseEstimate)
+					calculateStandardDeviations(megaTag1RobotPoseEstimate)
 				);
 				megaTag2RobotPoseObservation.setObservationValues(
 					megaTag2RobotPoseEstimate.timestampSeconds,
 					megaTag2RobotPoseEstimate.pose,
-					getStandardDeviations(megaTag2RobotPoseEstimate)
+					calculateStandardDeviations(megaTag2RobotPoseEstimate)
 				);
 			}
 			default -> {}
@@ -141,7 +141,7 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 		);
 	}
 
-	private Pose2d getStandardDeviations(LimelightHelpers.PoseEstimate poseEstimate) {
+	private Pose2d calculateStandardDeviations(LimelightHelpers.PoseEstimate poseEstimate) {
 		double translationStandardDeviation = Math
 			.max(Math.pow(poseEstimate.avgTagDist, 2) * translationStandardDeviationFactor, minStandardDeviation);
 		double rotationStandardDeviation = Math

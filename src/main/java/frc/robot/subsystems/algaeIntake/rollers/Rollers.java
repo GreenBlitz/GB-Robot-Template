@@ -54,6 +54,7 @@ public class Rollers extends GBSubsystem {
 	protected void subsystemPeriodic() {
 		updateInputs();
 		Logger.recordOutput(getLogPath() + "/isAlgaeIn", isAlgaeIn());
+		Logger.recordOutput(getLogPath() + "/SensorDistance", distanceSensor.getDistanceMeters());
 	}
 
 	private void updateInputs() {

@@ -10,8 +10,11 @@ import com.pathplanner.lib.events.EventTrigger;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.RobotManager;
+import frc.constants.field.Field;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.AutosBuilder;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
@@ -85,6 +88,8 @@ public class Robot {
 
 	private final SimulationManager simulationManager;
 	private final RobotCommander robotCommander;
+
+	private final SendableChooser<Boolean> isAlgaeIn;
 
 	private AutonomousChooser preBuiltAutosChooser;
 	private AutonomousChooser firstObjectScoringLocationChooser;
@@ -173,6 +178,12 @@ public class Robot {
 		this.simulationManager = new SimulationManager("SimulationManager", this);
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
 
+		isAlgaeIn = new SendableChooser<>();
+
+		isAlgaeIn.setDefaultOption("false", false);
+		isAlgaeIn.addOption("true", true);
+		SmartDashboard.putData("isAlgaeInIntake", isAlgaeIn);
+
 		configureAuto();
 	}
 
@@ -194,6 +205,7 @@ public class Robot {
 		Supplier<Command> floorAlgaeIntakeCommand = () -> robotCommander.getSuperstructure()
 				.softCloseNetToAlgaeRemove()
 				.andThen(robotCommander.getSuperstructure().algaeIntake())
+				.andThen(robotCommander.getSuperstructure().transferAlgaeFromIntakeToEndEffector())
 				.asProxy();
 		Supplier<Command> netCommand = () -> robotCommander.getSuperstructure().netWithRelease().asProxy();
 
@@ -227,7 +239,7 @@ public class Robot {
 			"PreBuiltAutos",
 			AutosBuilder.getAllNoDelayAutos(
 				this,
-				() -> Optional.of(new Translation2d(5.460, 7)),
+				() -> Optional.of(Field.getAllianceRelative(new Translation2d(5.460, 7), true, true)),
 				intakingCommand,
 				scoringCommand,
 				algaeRemoveCommand,
@@ -298,6 +310,8 @@ public class Robot {
 		Logger.recordOutput("TimeTest/CommandSchedular", TimeUtil.getCurrentTimeSeconds() - startingSchedularTime);
 
 		Logger.recordOutput("TimeTest/RobotPeriodic", TimeUtil.getCurrentTimeSeconds() - startingTime);
+
+		getRobotCommander().getSuperstructure().driverIsAlgaeInAlgaeIntakeOverride = isAlgaeIn.getSelected();
 	}
 
 	public Command getAuto() {

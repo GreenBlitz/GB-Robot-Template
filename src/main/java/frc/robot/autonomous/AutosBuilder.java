@@ -9,11 +9,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.constants.field.Field;
 import frc.constants.field.enums.Branch;
 import frc.robot.Robot;
@@ -324,23 +320,31 @@ public class AutosBuilder {
 			boolean isRightFloorAlgae
 	){
 		if (algaeTranslationSupplier.get().isPresent()) {
-			Pose2d floorAlgaeLinkedWayPoint = isRightFloorAlgae ? AutonomousConstants.LinkedWaypoints.RIGHT_FLOOR_ALGAE.getSecond() : AutonomousConstants.LinkedWaypoints.LEFT_FLOOR_ALGAE.getSecond();
+			Pose2d floorAlgaeLinkedWayPoint = Field.getAllianceRelative(
+					isRightFloorAlgae ? AutonomousConstants.LinkedWaypoints.RIGHT_FLOOR_ALGAE.getSecond() : AutonomousConstants.LinkedWaypoints.LEFT_FLOOR_ALGAE.getSecond(),
+					true,
+					true,
+					AngleTransform.INVERT
+
+			);
 			AutoPath floorAlgaeToNetPath = isRightFloorAlgae ? AutoPath.RIGHT_FLOOR_ALGAE_TO_MIDDLE_NET : AutoPath.LEFT_FLOOR_ALGAE_TO_RIGHT_NET;
 			return new SequentialCommandGroup(
 					new ParallelCommandGroup(
-							robot.getSwerve().getCommandsBuilder().driveToObject(
+							/*robot.getSwerve().getCommandsBuilder().driveToObject(
 									robot.getPoseEstimator()::getEstimatedPose,
 									algaeTranslationSupplier,
 									AutonomousConstants.DISTANCE_FROM_ALGAE_FOR_FLOOR_INTAKE
-							),
-							robot.getRobotCommander().getSuperstructure().algaeIntake().asProxy()
-					),
+							)*/
+							robot.getSwerve().getCommandsBuilder().moveToPoseByPID(
+									robot.getPoseEstimator()::getEstimatedPose,
+									new Pose2d(algaeTranslationSupplier.get().get(), robot.getPoseEstimator().getEstimatedPose().getRotation())
+							)
+					).until(() -> ToleranceMath.isNear(robot.getPoseEstimator().getEstimatedPose(), new Pose2d(algaeTranslationSupplier.get().get(), robot.getPoseEstimator().getEstimatedPose().getRotation()), tolerance)),
 					new ParallelCommandGroup(
 							robot.getSwerve().getCommandsBuilder().moveToPoseByPID(
 									robot.getPoseEstimator()::getEstimatedPose,
 									floorAlgaeLinkedWayPoint
-							),
-							robot.getRobotCommander().getSuperstructure().algaeIntake().asProxy()
+							)
 					).until(() -> ToleranceMath.isNear(robot.getPoseEstimator().getEstimatedPose(), floorAlgaeLinkedWayPoint, tolerance)),
 					createAutoFromAutoPath(
 							floorAlgaeToNetPath,
@@ -401,14 +405,13 @@ public class AutosBuilder {
 		Command bulbulBalls = new SequentialCommandGroup(
 				autoScoreToChosenBranch(robot, path),
 				new SequentialCommandGroup(
-					new ParallelCommandGroup(
-						robot.getRobotCommander().getSuperstructure().holdAlgae().asProxy(),
-						new InstantCommand(() -> Logger.recordOutput("RUN", true)),
-						robot.getSwerve().getCommandsBuilder().moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, backOffFromReefPose)
-					).until(
-						() -> ToleranceMath.isNear(robot.getPoseEstimator().getEstimatedPose(), backOffFromReefPose, tolerance)
-							&& robot.getElevator().isAtPosition(ElevatorState.HOLD_ALGAE.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
-					),
+						new ParallelCommandGroup(
+								robot.getRobotCommander().getSuperstructure().holdAlgae().asProxy(),
+								robot.getSwerve().getCommandsBuilder().moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, backOffFromReefPose)
+						).until(
+								() -> ToleranceMath.isNear(robot.getPoseEstimator().getEstimatedPose(), backOffFromReefPose, tolerance)
+										&& robot.getElevator().isAtPosition(ElevatorState.HOLD_ALGAE.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
+						),
 					new ParallelCommandGroup(
 						robot.getRobotCommander().getSuperstructure().algaeRemove().asProxy(),
 						robot.getSwerve()
@@ -456,7 +459,7 @@ public class AutosBuilder {
 							tolerance,
 							true
 					)
-				)
+				).asProxy()
 		);
 
 		String side = firstAutoScoreTargetBranch.isLeft() ? "left" : "right";

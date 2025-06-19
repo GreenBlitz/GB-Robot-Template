@@ -18,17 +18,33 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 	private final String logPath;
 	private final Pose3d robotRelativeCameraPose;
 
+	private final double minStandardDeviation;
+	private final double translationStandardDeviationFactor;
+	private final double rotationStandardDeviationFactor;
+
 	private final RobotPoseObservation megaTag1RobotPoseObservation;
 	private final RobotPoseObservation megaTag2RobotPoseObservation;
 
 	private LimelightPipeline pipeline;
 
-	public Limelight(String name, String logPathPrefix, Pose3d robotRelativeCameraPose, LimelightPipeline pipeline) {
+	public Limelight(
+		String name,
+		String logPathPrefix,
+		Pose3d robotRelativeCameraPose,
+		LimelightPipeline pipeline,
+		double minStandardDeviation,
+		double translationStandardDeviationFactor,
+		double rotationStandardDeviationFactor
+	) {
 		this.name = name;
 		this.logPath = logPathPrefix + "/" + name;
 
 		this.robotRelativeCameraPose = robotRelativeCameraPose;
 		setRobotRelativeCameraPose(robotRelativeCameraPose);
+
+		this.minStandardDeviation = minStandardDeviation;
+		this.translationStandardDeviationFactor = translationStandardDeviationFactor;
+		this.rotationStandardDeviationFactor = rotationStandardDeviationFactor;
 
 		this.megaTag1RobotPoseObservation = new RobotPoseObservation();
 		this.megaTag2RobotPoseObservation = new RobotPoseObservation();
@@ -125,12 +141,12 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 		);
 	}
 
-	private static Pose2d getStandardDeviations(LimelightHelpers.PoseEstimate poseEstimate) {
-		double standardDeviation = Math.max(
-			Math.pow(poseEstimate.avgTagDist, 2) * LimelightConstants.VISION_STANDARD_DEVIATION_FACTOR,
-			LimelightConstants.MINIMUM_STANDARD_DEVIATION
-		);
-		return new Pose2d(standardDeviation, standardDeviation, new Rotation2d(standardDeviation));
+	private Pose2d getStandardDeviations(LimelightHelpers.PoseEstimate poseEstimate) {
+		double translationStandardDeviation = Math
+			.max(Math.pow(poseEstimate.avgTagDist, 2) * translationStandardDeviationFactor, minStandardDeviation);
+		double rotationStandardDeviation = Math
+			.max(Math.pow(poseEstimate.avgTagDist, 2) * rotationStandardDeviationFactor, minStandardDeviation);
+		return new Pose2d(translationStandardDeviation, translationStandardDeviation, new Rotation2d(rotationStandardDeviation));
 	}
 
 }

@@ -227,7 +227,7 @@ public class Robot {
 			"PreBuiltAutos",
 			AutosBuilder.getAllNoDelayAutos(
 				this,
-				() -> Optional.of(new Translation2d()),
+				() -> Optional.of(new Translation2d(5.460, 7)),
 				intakingCommand,
 				scoringCommand,
 				algaeRemoveCommand,

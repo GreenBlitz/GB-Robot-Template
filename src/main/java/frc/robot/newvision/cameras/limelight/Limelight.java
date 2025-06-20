@@ -6,7 +6,9 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import frc.robot.newvision.RobotPoseObservation;
 import frc.robot.newvision.interfaces.OrientationRequiringRobotPoseSupplier;
 import frc.robot.newvision.interfaces.IndependentRobotPoseSupplier;
+import frc.utils.Conversions;
 import frc.utils.LimelightHelpers;
+import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
@@ -56,12 +58,12 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 				LimelightHelpers.PoseEstimate megaTag2RobotPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
 
 				megaTag1RobotPoseObservation.setObservationValues(
-					megaTag1RobotPoseEstimate.timestampSeconds,
+					getEstimateTimestampSeconds(megaTag1RobotPoseEstimate),
 					megaTag1RobotPoseEstimate.pose,
 					calculateMegaTag1StandardDeviations.apply(megaTag1RobotPoseEstimate)
 				);
 				megaTag2RobotPoseObservation.setObservationValues(
-					megaTag2RobotPoseEstimate.timestampSeconds,
+					getEstimateTimestampSeconds(megaTag2RobotPoseEstimate),
 					megaTag2RobotPoseEstimate.pose,
 					calculateMegaTag2StandardDeviations.apply(megaTag2RobotPoseEstimate)
 				);
@@ -140,6 +142,13 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 
 	private static boolean isObservationValid(RobotPoseObservation robotPoseObservation) {
 		return robotPoseObservation.getTimestampSeconds() != 0;
+	}
+
+	private static double getEstimateTimestampSeconds(LimelightHelpers.PoseEstimate poseEstimate) {
+		if (poseEstimate.timestampSeconds != 0) {
+			return TimeUtil.getCurrentTimeSeconds() - Conversions.milliSecondsToSeconds(poseEstimate.latency);
+		}
+		return 0;
 	}
 
 }

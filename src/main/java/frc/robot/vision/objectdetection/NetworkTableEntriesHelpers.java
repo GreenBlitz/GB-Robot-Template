@@ -1,5 +1,6 @@
 package frc.robot.vision.objectdetection;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -13,6 +14,12 @@ import java.util.Optional;
 
 public class NetworkTableEntriesHelpers {
 
+	public static Pair<Double, Double> txNoCrossAndTyNoCrossToTxAndTy(double txNoCross, double tyNoCross) {
+		double tx = txNoCross - (VisionConstants.LIMELIGHT_3_HORIZONTAL_FOV.getDegrees() / 2);
+		double ty = tyNoCross - (VisionConstants.LIMELIGHT_3_VERTICAL_FOV.getDegrees() / 2);
+		return new Pair<>(tx, ty);
+	}
+
 	public static Optional<Integer> getObjectsFirstCellInAllObjectsArray(
 		double txEntryValue,
 		double tyEntryValue,
@@ -22,12 +29,14 @@ public class NetworkTableEntriesHelpers {
 
 		for (int i = 0; i < objectAmount; i++) {
 			int firstCell = VisionConstants.OBJECT_CELL_AMOUNT_IN_RAW_DETECTIONS_ENTRY * i;
-			double allObjectsEntryTxncValue = allObjectsEntryArray[firstCell + 1];
-			double allObjectsEntryTxValue = 0;
-			double allObjectsEntryTyncValue = allObjectsEntryArray[firstCell + 2];
-			double allObjectsEntryTyValue = 0;
+			double allObjectsEntryTxNoCrossValue = allObjectsEntryArray[firstCell + 1];
+			double allObjectsEntryTyNoCrossValue = allObjectsEntryArray[firstCell + 2];
+			Pair<Double, Double> allObjectsEntryTxAndTyValues = txNoCrossAndTyNoCrossToTxAndTy(
+				allObjectsEntryTxNoCrossValue,
+				allObjectsEntryTyNoCrossValue
+			);
 
-			if (allObjectsEntryTxValue == txEntryValue && allObjectsEntryTyValue == tyEntryValue) {
+			if (allObjectsEntryTxAndTyValues.getFirst() == txEntryValue && allObjectsEntryTxAndTyValues.getSecond() == tyEntryValue) {
 				return Optional.of(firstCell);
 			}
 		}

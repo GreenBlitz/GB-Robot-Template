@@ -5,10 +5,6 @@ import edu.wpi.first.math.geometry.*;
 
 public class ObjectDetectionMath {
 
-	public static Pair<Double, Double> TxNoCrossAndTyNoCrossToTxAndTy(double txNoCross, double tyNoCross) {
-		double tx =
-	}
-
 	public static Translation2d findRealSquishedAlgaeCenter(
 		Translation2d squishedCenterPixel,
 		double algaeHeightToWidthRatio,
@@ -62,7 +58,12 @@ public class ObjectDetectionMath {
 		return new Translation2d(squishedCenterPixel.getX(), realCenterY);
 	}
 
-	public static boolean isPixelOnEdgeOfPicture(Translation2d pixel, double pictureMaxXPixelValue, double pictureMaxYPixelValue, double tolerance) {
+	public static boolean isPixelOnEdgeOfPicture(
+		Translation2d pixel,
+		double pictureMaxXPixelValue,
+		double pictureMaxYPixelValue,
+		double tolerance
+	) {
 		return ToleranceMath.isInRange(pixel.getX(), 0, pictureMaxXPixelValue, tolerance)
 			|| ToleranceMath.isInRange(pixel.getY(), 0, pictureMaxYPixelValue, tolerance);
 	}

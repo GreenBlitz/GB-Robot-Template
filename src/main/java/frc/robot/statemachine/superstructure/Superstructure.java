@@ -182,6 +182,7 @@ public class Superstructure extends GBSubsystem {
 
 	@Override
 	protected void subsystemPeriodic() {
+		algaeIntakeStateHandler.updateAlgaeSensor(robot);
 		log();
 	}
 

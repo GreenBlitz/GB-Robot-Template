@@ -9,7 +9,6 @@ import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.hardware.YishaiDistanceSensor;
 import frc.robot.subsystems.algaeIntake.pivot.PivotStateHandler;
-import frc.robot.subsystems.algaeIntake.rollers.RollersConstants;
 import frc.robot.subsystems.algaeIntake.rollers.RollersStateHandler;
 
 public class AlgaeIntakeStateHandler {
@@ -49,8 +48,8 @@ public class AlgaeIntakeStateHandler {
 		return pivotStateHandler.isAtState(state.getPivotState());
 	}
 
-	public boolean isAlgaeIn(){
-		return distanceFilter.lastValue() < AlgaeIntakeConstants.DISTANCE_FROM_SENSOR_TO_CONSIDER_ALGAE_IN_METERS
+	public boolean isAlgaeIn() {
+		return distanceFilter.lastValue() < AlgaeIntakeConstants.DISTANCE_FROM_SENSOR_TO_CONSIDER_ALGAE_IN_METERS;
 	}
 
 	public Command handleIdle(boolean isAlgaeInAlgaeIntakeOverride) {
@@ -60,8 +59,11 @@ public class AlgaeIntakeStateHandler {
 		return setState(AlgaeIntakeState.CLOSED);
 	}
 
-	public void updateAlgaeSensor(Robot robot){
-		if (robot.getPivot().getVelocity().getDegrees() < AlgaeIntakeConstants.MAXIMAL_PIVOT_VELOCITY_TO_UPDATE_FILTER_ANGLE_PER_SECOND.getDegrees()) {
+	public void updateAlgaeSensor(Robot robot) {
+		if (
+			robot.getPivot().getVelocity().getDegrees()
+				< AlgaeIntakeConstants.MAXIMAL_PIVOT_VELOCITY_TO_UPDATE_FILTER_ANGLE_PER_SECOND.getDegrees()
+		) {
 			distanceFilter.calculate(distanceSensor.getDistanceMeters());
 		}
 	}

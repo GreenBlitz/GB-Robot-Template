@@ -2,7 +2,6 @@ package frc.robot.subsystems.algaeIntake;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
-import java.util.Random;
 
 public class AlgaeIntakeConstants {
 

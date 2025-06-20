@@ -64,7 +64,7 @@ public class LimeLightObjectDetector implements ObjectDetector {
 
 	@Override
 	public Optional<ObjectData> getClosestObjectData() {
-		Optional<ObjectType> objectType = NetworkTableEntriesHelpers.getObjectType(closestObjectNameEntry);
+		Optional<ObjectType> objectType = ObjectDetectionHelpers.getObjectType(closestObjectNameEntry);
 
 		if (
 			objectType.isEmpty()
@@ -74,7 +74,7 @@ public class LimeLightObjectDetector implements ObjectDetector {
 			return Optional.empty();
 		}
 		return Optional.of(
-			NetworkTableEntriesHelpers.getClosestObjectData(
+			ObjectDetectionHelpers.getClosestObjectData(
 				closestObjectTxEntry,
 				closestObjectTyEntry,
 				closestObjectPipelineLatencyEntry,

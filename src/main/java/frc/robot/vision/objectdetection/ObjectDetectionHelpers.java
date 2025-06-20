@@ -12,7 +12,7 @@ import frc.utils.time.TimeUtil;
 
 import java.util.Optional;
 
-public class NetworkTableEntriesHelpers {
+public class ObjectDetectionHelpers {
 
 	public static Pair<Double, Double> txNoCrossAndTyNoCrossToTxAndTy(double txNoCross, double tyNoCross) {
 		double tx = txNoCross - (VisionConstants.LIMELIGHT_3_HORIZONTAL_FOV.getDegrees() / 2);

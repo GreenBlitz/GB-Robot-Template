@@ -20,7 +20,7 @@ public class NetworkTableEntriesHelpers {
 		return new Pair<>(tx, ty);
 	}
 
-	public static Optional<Integer> getObjectsFirstCellInAllObjectsArray(
+	public static Optional<Integer> getObjectsFirstCellIndexInAllObjectsArray(
 		double txEntryValue,
 		double tyEntryValue,
 		double[] allObjectsEntryArray
@@ -31,6 +31,7 @@ public class NetworkTableEntriesHelpers {
 			int firstCell = VisionConstants.OBJECT_CELL_AMOUNT_IN_RAW_DETECTIONS_ENTRY * i;
 			double allObjectsEntryTxNoCrossValue = allObjectsEntryArray[firstCell + 1];
 			double allObjectsEntryTyNoCrossValue = allObjectsEntryArray[firstCell + 2];
+
 			Pair<Double, Double> allObjectsEntryTxAndTyValues = txNoCrossAndTyNoCrossToTxAndTy(
 				allObjectsEntryTxNoCrossValue,
 				allObjectsEntryTyNoCrossValue
@@ -46,9 +47,9 @@ public class NetworkTableEntriesHelpers {
 	public static int getNumberOfObjectCornersOnPictureEdge(
 		double[] allObjectsEntryArray,
 		int objectFirstCellIndex,
-		double pictureMaxXValue,
-		double pictureMaxYValue,
-		double edgePixelTolerance
+		int pictureWidthPixels,
+		int pictureHeightPixels,
+		int edgePixelTolerance
 	) {
 		int numberOfCornersOnPictureEdge = 0;
 
@@ -59,7 +60,7 @@ public class NetworkTableEntriesHelpers {
 			new Translation2d(allObjectsEntryArray[objectFirstCellIndex + 10], allObjectsEntryArray[objectFirstCellIndex + 11])};
 
 		for (Translation2d corner : objectFrameCorners) {
-			if (ObjectDetectionMath.isPixelOnEdgeOfPicture(corner, pictureMaxXValue, pictureMaxYValue, edgePixelTolerance)) {
+			if (ObjectDetectionMath.isPixelOnEdgeOfPicture(corner, pictureWidthPixels, pictureHeightPixels, edgePixelTolerance)) {
 				numberOfCornersOnPictureEdge++;
 			}
 		}

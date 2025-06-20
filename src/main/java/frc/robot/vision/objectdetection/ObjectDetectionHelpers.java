@@ -44,6 +44,16 @@ public class ObjectDetectionHelpers {
 		return Optional.empty();
 	}
 
+	public static Optional<Translation2d> getObjectCenterPixel(double txEntryValue, double tyEntryValue, double[] allObjectsEntryArray) {
+		Optional<Integer> firstCellIndex = getObjectsFirstCellIndexInAllObjectsArray(txEntryValue, tyEntryValue, allObjectsEntryArray);
+		if (firstCellIndex.isEmpty()) {
+			return Optional.empty();
+		}
+
+		Translation2d[] objectFrameCorners = getAllObjectFrameCorners(allObjectsEntryArray, firstCellIndex.get());
+//		double
+	}
+
 	public static int getNumberOfObjectCornersOnPictureEdge(
 		double[] allObjectsEntryArray,
 		int objectFirstCellIndex,
@@ -52,8 +62,18 @@ public class ObjectDetectionHelpers {
 		int edgePixelTolerance
 	) {
 		int numberOfCornersOnPictureEdge = 0;
+		Translation2d[] objectFrameCorners = getAllObjectFrameCorners(allObjectsEntryArray, objectFirstCellIndex);
 
-		Translation2d[] objectFrameCorners = {
+		for (Translation2d corner : objectFrameCorners) {
+			if (ObjectDetectionMath.isPixelOnEdgeOfPicture(corner, pictureWidthPixels, pictureHeightPixels, edgePixelTolerance)) {
+				numberOfCornersOnPictureEdge++;
+			}
+		}
+		return numberOfCornersOnPictureEdge;
+	}
+
+	public static Translation2d[] getAllObjectFrameCorners(double[] allObjectsEntryArray, int objectFirstCellIndex) {
+		return new Translation2d[] {
 			new Translation2d(
 				allObjectsEntryArray[objectFirstCellIndex + AllObjectsEntryIndexes.CORNER_0_X.getIndex()],
 				allObjectsEntryArray[objectFirstCellIndex + AllObjectsEntryIndexes.CORNER_0_Y.getIndex()]
@@ -70,13 +90,6 @@ public class ObjectDetectionHelpers {
 				allObjectsEntryArray[objectFirstCellIndex + AllObjectsEntryIndexes.CORNER_3_X.getIndex()],
 				allObjectsEntryArray[objectFirstCellIndex + AllObjectsEntryIndexes.CORNER_3_Y.getIndex()]
 			)};
-
-		for (Translation2d corner : objectFrameCorners) {
-			if (ObjectDetectionMath.isPixelOnEdgeOfPicture(corner, pictureWidthPixels, pictureHeightPixels, edgePixelTolerance)) {
-				numberOfCornersOnPictureEdge++;
-			}
-		}
-		return numberOfCornersOnPictureEdge;
 	}
 
 	public static Optional<ObjectType> getObjectType(NetworkTableEntry objectNameEntry) {

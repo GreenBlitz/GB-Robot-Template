@@ -4,6 +4,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import frc.constants.DirectoryPaths;
 import frc.robot.vision.data.AprilTagVisionData;
@@ -122,5 +123,9 @@ public class VisionConstants {
 	public static final Rotation2d LIMELIGHT_3_HORIZONTAL_FOV = Rotation2d.fromDegrees(62.5);
 
 	public static final Rotation2d LIMELIGHT_3_VERTICAL_FOV = Rotation2d.fromDegrees(48.9);
+
+	public static final Translation2d LIMELIGHT_OBJECT_RESOLUTION_PIXELS = new Translation2d(100, 100);
+
+	public static final int EDGE_PIXEL_TOLERANCE = 10;
 
 }

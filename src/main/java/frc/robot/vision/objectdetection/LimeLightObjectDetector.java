@@ -1,9 +1,7 @@
 package frc.robot.vision.objectdetection;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.vision.VisionConstants;
@@ -58,8 +56,32 @@ public class LimeLightObjectDetector implements ObjectDetector {
 			double detectedHorizontalPixels = t2dEntryArray[14];
 			double detectedVerticalPixels = t2dEntryArray[15];
 			double detectedHeightToWidthRatio = detectedVerticalPixels / detectedHorizontalPixels;
-			return MathUtil.isNear(algaeHeightToWidthRatio, detectedHeightToWidthRatio, heightToWidthRatioTolerance);
+			return !MathUtil.isNear(algaeHeightToWidthRatio, detectedHeightToWidthRatio, heightToWidthRatioTolerance);
 		};
+	}
+
+	public static Translation2d filtaa(
+		double txEntryValue,
+		double tyEntryValue,
+		Translation2d algaeCenterPixel,
+		Filter<double[]> t2dEntrySquishedAlgaeFilter,
+		double[] t2dEntryArray,
+		double[] allObjectsEntryArray
+	) {
+		if (!t2dEntrySquishedAlgaeFilter.apply(t2dEntryArray)) {
+			if (
+				ObjectDetectionHelpers.getNumberOfObjectCornersOnPictureEdge(
+					allObjectsEntryArray,
+					ObjectDetectionHelpers.getObjectsFirstCellIndexInAllObjectsArray(txEntryValue, tyEntryValue, allObjectsEntryArray).get(),
+					(int) VisionConstants.LIMELIGHT_OBJECT_RESOLUTION_PIXELS.getX(),
+					(int) VisionConstants.LIMELIGHT_OBJECT_RESOLUTION_PIXELS.getY(),
+					VisionConstants.EDGE_PIXEL_TOLERANCE
+				) < 3
+			) {
+				return algaeCenterPixel;
+			}
+		} else {
+		}
 	}
 
 	@Override

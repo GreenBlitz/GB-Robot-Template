@@ -8,27 +8,27 @@ public class ObjectDetectionMath {
 	public static Translation2d findRealSquishedAlgaeCenter(
 		Translation2d squishedCenterPixel,
 		double algaeHeightToWidthRatio,
-		double pictureMaxXValue,
-		double pictureMaxYValue
+		double pictureMaxXPixelValue,
+		double pictureMaxYPixelValue
 	) {
 		if (algaeHeightToWidthRatio > 1) {
-			return findRealXSquishedAlgaeCenter(squishedCenterPixel, algaeHeightToWidthRatio, pictureMaxXValue);
+			return findRealXSquishedAlgaeCenter(squishedCenterPixel, algaeHeightToWidthRatio, pictureMaxXPixelValue);
 		} else {
-			return findRealYSquishedAlgaeCenter(squishedCenterPixel, algaeHeightToWidthRatio, pictureMaxYValue);
+			return findRealYSquishedAlgaeCenter(squishedCenterPixel, algaeHeightToWidthRatio, pictureMaxYPixelValue);
 		}
 	}
 
 	private static Translation2d findRealXSquishedAlgaeCenter(
 		Translation2d squishedCenterPixel,
 		double algaeHeightToWidthRatio,
-		double pictureMaxXValue
+		double pictureMaxXPixelValue
 	) {
 		double squishedCenterX = squishedCenterPixel.getX();
 		double realCenterX;
 
-		if (squishedCenterX > (pictureMaxXValue / 2)) {
-			double objectFrameXLength = 2 * (pictureMaxXValue - squishedCenterX);
-			double verticalFrameEdgeSmallestX = pictureMaxXValue - objectFrameXLength;
+		if (squishedCenterX > (pictureMaxXPixelValue / 2)) {
+			double objectFrameXLength = 2 * (pictureMaxXPixelValue - squishedCenterX);
+			double verticalFrameEdgeSmallestX = pictureMaxXPixelValue - objectFrameXLength;
 			realCenterX = ((objectFrameXLength / 2) * algaeHeightToWidthRatio) + verticalFrameEdgeSmallestX;
 		} else {
 			double objectFrameXLength = 2 * squishedCenterX;
@@ -41,14 +41,14 @@ public class ObjectDetectionMath {
 	private static Translation2d findRealYSquishedAlgaeCenter(
 		Translation2d squishedCenterPixel,
 		double algaeHeightToWidthRatio,
-		double pictureMaxYValue
+		double pictureMaxYPixelValue
 	) {
 		double squishedCenterY = squishedCenterPixel.getY();
 		double realCenterY;
 
-		if (squishedCenterY > (pictureMaxYValue / 2)) {
-			double objectFrameYLength = 2 * (pictureMaxYValue - squishedCenterY);
-			double horizontalFrameEdgeSmallestY = pictureMaxYValue - objectFrameYLength;
+		if (squishedCenterY > (pictureMaxYPixelValue / 2)) {
+			double objectFrameYLength = 2 * (pictureMaxYPixelValue - squishedCenterY);
+			double horizontalFrameEdgeSmallestY = pictureMaxYPixelValue - objectFrameYLength;
 			realCenterY = ((objectFrameYLength / 2) * (1 / algaeHeightToWidthRatio)) + horizontalFrameEdgeSmallestY;
 		} else {
 			double objectFrameYLength = 2 * squishedCenterY;
@@ -58,9 +58,9 @@ public class ObjectDetectionMath {
 		return new Translation2d(squishedCenterPixel.getX(), realCenterY);
 	}
 
-	public static boolean isPixelOnEdgeOfPicture(Translation2d pixel, double pictureMaxXValue, double pictureMaxYValue, double tolerance) {
-		return ToleranceMath.isInRange(pixel.getX(), 0, pictureMaxXValue, tolerance)
-			|| ToleranceMath.isInRange(pixel.getY(), 0, pictureMaxYValue, tolerance);
+	public static boolean isPixelOnEdgeOfPicture(Translation2d pixel, double pictureMaxXPixelValue, double pictureMaxYPixelValue, double tolerance) {
+		return ToleranceMath.isInRange(pixel.getX(), 0, pictureMaxXPixelValue, tolerance)
+			|| ToleranceMath.isInRange(pixel.getY(), 0, pictureMaxYPixelValue, tolerance);
 	}
 
 	public static Pair<Rotation2d, Rotation2d> correctForCameraRoll(Rotation2d yaw, Rotation2d pitch, Pose3d cameraPose) {

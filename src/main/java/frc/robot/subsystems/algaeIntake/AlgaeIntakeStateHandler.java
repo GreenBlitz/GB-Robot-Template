@@ -49,11 +49,12 @@ public class AlgaeIntakeStateHandler {
 	}
 
 	public boolean isAlgaeIn() {
-		return distanceFilter.lastValue() < AlgaeIntakeConstants.DISTANCE_FROM_SENSOR_TO_CONSIDER_ALGAE_IN_METERS;
+		return distanceFilter.lastValue() < AlgaeIntakeConstants.DISTANCE_FROM_SENSOR_TO_CONSIDER_ALGAE_IN_METERS
+			&& currentState != AlgaeIntakeState.CLOSED;
 	}
 
 	public Command handleIdle(boolean isAlgaeInAlgaeIntakeOverride) {
-		if ((isAlgaeIn() && currentState != AlgaeIntakeState.CLOSED) || isAlgaeInAlgaeIntakeOverride) {
+		if (isAlgaeIn() || isAlgaeInAlgaeIntakeOverride) {
 			return setState(AlgaeIntakeState.HOLD_ALGAE);
 		}
 		return setState(AlgaeIntakeState.CLOSED);

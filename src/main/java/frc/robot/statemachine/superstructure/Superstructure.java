@@ -126,8 +126,7 @@ public class Superstructure extends GBSubsystem {
 	}
 
 	public boolean isAlgaeInAlgaeIntake() {
-		return (algaeIntakeStateHandler.isAlgaeIn() && algaeIntakeStateHandler.getCurrentState() != AlgaeIntakeState.CLOSED)
-			|| driverIsAlgaeInAlgaeIntakeOverride;
+		return algaeIntakeStateHandler.isAlgaeIn() || driverIsAlgaeInAlgaeIntakeOverride;
 	}
 
 	public boolean isClosed() {

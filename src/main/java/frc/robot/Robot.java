@@ -205,7 +205,6 @@ public class Robot {
 			.asProxy();
 		Supplier<Command> floorAlgaeIntakeCommand = () -> robotCommander.getSuperstructure()
 				.softCloseNetToFloorAlgaeIntake()
-				.alongWith(robotCommander.getSuperstructure().getAlgaeIntakeStateHandler().setState(AlgaeIntakeState.INTAKE).asProxy())
 				.asProxy();
 		Supplier<Command> netCommand = () -> robotCommander.getSuperstructure().netWithRelease().asProxy();
 

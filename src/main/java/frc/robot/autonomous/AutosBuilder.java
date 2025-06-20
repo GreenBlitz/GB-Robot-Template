@@ -335,17 +335,20 @@ public class AutosBuilder {
 						algaeTranslationSupplier,
 						AutonomousConstants.DISTANCE_FROM_ALGAE_FOR_FLOOR_INTAKE
 				)*/
-				robot.getSwerve().getCommandsBuilder().moveToPoseByPID(
-						robot.getPoseEstimator()::getEstimatedPose,
-						new Pose2d(algaeTranslationSupplier.get().get(), Rotation2d.fromDegrees(90))
+				new ParallelCommandGroup(
+						robot.getSwerve().getCommandsBuilder().moveToPoseByPID(
+								robot.getPoseEstimator()::getEstimatedPose,
+								new Pose2d(algaeTranslationSupplier.get().get(), Rotation2d.fromDegrees(90))
+						),
+						robot.getRobotCommander().getSuperstructure().algaeIntake().asProxy()
 				).until(() -> ToleranceMath.isNear(
 						robot.getPoseEstimator().getEstimatedPose(),
 						new Pose2d(algaeTranslationSupplier.get().get(),
 								Rotation2d.fromDegrees(90)),
-						tolerance
+						new Pose2d(0.035, 0.035, Rotation2d.fromDegrees(2))
 					)
+						&& robot.getRobotCommander().getSuperstructure().isAlgaeInAlgaeIntake()
 				),
-
 				robot.getSwerve().getCommandsBuilder().moveToPoseByPID(
 						robot.getPoseEstimator()::getEstimatedPose,
 						floorAlgaeLinkedWayPoint

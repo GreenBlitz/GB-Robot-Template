@@ -53,7 +53,7 @@ public class AlgaeIntakeStateHandler {
 	}
 
 	public Command handleIdle(boolean isAlgaeInAlgaeIntakeOverride) {
-		if (((isAlgaeIn() && currentState != AlgaeIntakeState.CLOSED)) || isAlgaeInAlgaeIntakeOverride) {
+		if ((isAlgaeIn() && currentState != AlgaeIntakeState.CLOSED) || isAlgaeInAlgaeIntakeOverride) {
 			return setState(AlgaeIntakeState.HOLD_ALGAE);
 		}
 		return setState(AlgaeIntakeState.CLOSED);

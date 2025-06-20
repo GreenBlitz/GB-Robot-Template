@@ -2,11 +2,9 @@ package frc.robot.subsystems.algaeIntake.rollers.Factory;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.IDs;
-import frc.robot.hardware.YishaiDistanceSensor;
 import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
 import frc.robot.hardware.rev.motors.BrushlessSparkMAXMotor;
 import frc.robot.hardware.rev.motors.SparkMaxConfiguration;
@@ -53,12 +51,9 @@ public class SparkMaxRollersBuilder {
 		rollers.applyConfiguration(generateMotorConfig());
 
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("Voltage", wrapper::getVoltage);
-		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("Current", wrapper::getOutputCurrent);
 		SuppliedDoubleSignal powerSignal = new SuppliedDoubleSignal("Power", wrapper::get);
 
-		YishaiDistanceSensor distanceSensor = new YishaiDistanceSensor(new DigitalInput(ALGAE_SENSOR_CHANNEL));
-
-		return new Rollers(logPath, rollers, voltageSignal, currentSignal, powerSignal, distanceSensor);
+		return new Rollers(logPath, rollers, voltageSignal, powerSignal);
 	}
 
 }

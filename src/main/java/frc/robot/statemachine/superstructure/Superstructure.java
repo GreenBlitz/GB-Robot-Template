@@ -126,7 +126,8 @@ public class Superstructure extends GBSubsystem {
 	}
 
 	public boolean isAlgaeInAlgaeIntake() {
-		return robot.getRollers().isAlgaeIn() || driverIsAlgaeInAlgaeIntakeOverride;
+		return (algaeIntakeStateHandler.isAlgaeIn() && algaeIntakeStateHandler.getCurrentState() != AlgaeIntakeState.CLOSED)
+			|| driverIsAlgaeInAlgaeIntakeOverride;
 	}
 
 	public boolean isClosed() {
@@ -191,7 +192,7 @@ public class Superstructure extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/EndEffectorState", endEffectorStateHandler.getCurrentState());
 		Logger.recordOutput(getLogPath() + "/ClimbState", climbStateHandler.getCurrentState());
 		Logger.recordOutput(getLogPath() + "/AlgaeIntakeState", algaeIntakeStateHandler.getCurrentState());
-		Logger.recordOutput(getLogPath() + "/IsAlgaeCurrentlyInIntake", isAlgaeInAlgaeIntake());
+		Logger.recordOutput(getLogPath() + "/IsAlgaeInIntake", isAlgaeInAlgaeIntake());
 	}
 
 	public Command idle() {

@@ -1,36 +1,23 @@
 package frc.robot.subsystems.algaeIntake.rollers;
 
 import frc.joysticks.SmartJoystick;
-import frc.robot.hardware.YishaiDistanceSensor;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
-import org.littletonrobotics.junction.Logger;
 
 public class Rollers extends GBSubsystem {
 
 	private final ControllableMotor rollers;
 	private final InputSignal<Double> voltageSignal;
-	private final InputSignal<Double> currentSignal;
 	private final InputSignal<Double> powerSignal;
-	private final YishaiDistanceSensor distanceSensor;
 
 	private final RollersCommandsBuilder commandsBuilder;
 
-	public Rollers(
-		String logPath,
-		ControllableMotor rollers,
-		InputSignal<Double> voltageSignal,
-		InputSignal<Double> currentSignal,
-		InputSignal<Double> powerSignal,
-		YishaiDistanceSensor distanceSensor
-	) {
+	public Rollers(String logPath, ControllableMotor rollers, InputSignal<Double> voltageSignal, InputSignal<Double> powerSignal) {
 		super(logPath);
 		this.rollers = rollers;
 		this.voltageSignal = voltageSignal;
-		this.currentSignal = currentSignal;
 		this.powerSignal = powerSignal;
-		this.distanceSensor = distanceSensor;
 
 		this.commandsBuilder = new RollersCommandsBuilder(this);
 		setDefaultCommand(commandsBuilder.stop());
@@ -46,20 +33,14 @@ public class Rollers extends GBSubsystem {
 		return voltageSignal.getLatestValue();
 	}
 
-	public boolean isAlgaeIn() {
-		return distanceSensor.getDistanceMeters() < RollersConstants.DISTANCE_FROM_SENSOR_TO_CONSIDER_ALGAE_IN_METERS;
-	}
-
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
-		Logger.recordOutput(getLogPath() + "/isAlgaeIn", isAlgaeIn());
-		Logger.recordOutput(getLogPath() + "/SensorDistance", distanceSensor.getDistanceMeters());
 	}
 
 	private void updateInputs() {
 		rollers.updateSimulation();
-		rollers.updateInputs(voltageSignal, currentSignal, powerSignal);
+		rollers.updateInputs(voltageSignal, powerSignal);
 	}
 
 	public void setBrake(boolean brake) {

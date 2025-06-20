@@ -4,12 +4,10 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.IDs;
 import frc.robot.RobotConstants;
-import frc.robot.hardware.YishaiDistanceSensor;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -57,17 +55,10 @@ public class TalonFXRollersBuilder {
 		InputSignal<Double> voltageSignal = Phoenix6SignalBuilder
 			.build(rollers.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
 
-
-		InputSignal<Double> currentSignal = Phoenix6SignalBuilder
-			.build(rollers.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
-
 		InputSignal<Double> powerSignal = Phoenix6SignalBuilder
 			.build(rollers.getDevice().getDutyCycle(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
 
-
-		YishaiDistanceSensor distanceSensor = new YishaiDistanceSensor(new DigitalInput(ALGAE_SENSOR_CHANNEL));
-
-		return new Rollers(logPath, rollers, voltageSignal, currentSignal, powerSignal, distanceSensor);
+		return new Rollers(logPath, rollers, voltageSignal, powerSignal);
 	}
 
 }

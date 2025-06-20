@@ -21,8 +21,4 @@ public class RollersStateHandler {
 		return new ParallelCommandGroup(new InstantCommand(() -> currentState = state), rollers.getCommandsBuilder().setPower(state.getPower()));
 	}
 
-	public boolean isAlgaeIn() {
-		return rollers.isAlgaeIn();
-	}
-
 }

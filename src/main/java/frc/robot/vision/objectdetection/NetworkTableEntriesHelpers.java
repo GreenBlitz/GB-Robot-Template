@@ -9,12 +9,21 @@ import frc.robot.vision.data.ObjectData;
 import frc.utils.math.ObjectDetectionMath;
 import frc.utils.time.TimeUtil;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class NetworkTableEntriesHelpers {
 
 	public static double getFirstCellInAllObjectsArray(double txEntryValue, double tyEntryValue, double[] allObjectsEntryArray) {
-		return 1;
+		int objectAmount = allObjectsEntryArray.length / VisionConstants.OBJECT_CELL_AMOUNT_IN_RAW_DETECTIONS_ENTRY;
+		ArrayList<ObjectData> detectedObjects = new ArrayList<>();
+
+		for (int i = 0; i < objectAmount; i++) {
+			int firstCell = VisionConstants.OBJECT_CELL_AMOUNT_IN_RAW_DETECTIONS_ENTRY * i;
+			ObjectData objectData = objectsEntryArrayToObjectData(entryArray, firstCell, pipelineLatencyEntry, captureLatencyEntry, cameraPose);
+			detectedObjects.add(objectData);
+		}
+		return detectedObjects;
 	}
 
 	public static Optional<ObjectType> getObjectType(NetworkTableEntry objectNameEntry) {

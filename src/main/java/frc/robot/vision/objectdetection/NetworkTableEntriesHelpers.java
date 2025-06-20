@@ -9,21 +9,53 @@ import frc.robot.vision.data.ObjectData;
 import frc.utils.math.ObjectDetectionMath;
 import frc.utils.time.TimeUtil;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 public class NetworkTableEntriesHelpers {
 
-	public static double getFirstCellInAllObjectsArray(double txEntryValue, double tyEntryValue, double[] allObjectsEntryArray) {
+	public static Optional<Integer> getObjectsFirstCellInAllObjectsArray(
+		double txEntryValue,
+		double tyEntryValue,
+		double[] allObjectsEntryArray
+	) {
 		int objectAmount = allObjectsEntryArray.length / VisionConstants.OBJECT_CELL_AMOUNT_IN_RAW_DETECTIONS_ENTRY;
-		ArrayList<ObjectData> detectedObjects = new ArrayList<>();
 
 		for (int i = 0; i < objectAmount; i++) {
 			int firstCell = VisionConstants.OBJECT_CELL_AMOUNT_IN_RAW_DETECTIONS_ENTRY * i;
-			ObjectData objectData = objectsEntryArrayToObjectData(entryArray, firstCell, pipelineLatencyEntry, captureLatencyEntry, cameraPose);
-			detectedObjects.add(objectData);
+			double allObjectsEntryTxValue = allObjectsEntryArray[firstCell + 1];
+			double allObjectsEntryTyValue = allObjectsEntryArray[firstCell + 2];
+
+			if (allObjectsEntryTxValue == txEntryValue && allObjectsEntryTyValue == tyEntryValue) {
+				return Optional.of(firstCell);
+			}
 		}
-		return detectedObjects;
+		return Optional.empty();
+	}
+
+	public static int getNumberOfObjectCornersOnPictureEdge(
+		double[] allObjectsEntryArray,
+		int allObjectsEntryArrayFirstCell,
+		double pictureMaxXValue,
+		double pictureMaxYValue,
+		double edgePixelTolerance
+	) {
+		int numberOfCornersOnPictureEdge = 0;
+
+		// rename to make lines shorter :( pls dont kill me
+		int firstCell = allObjectsEntryArrayFirstCell;
+
+		Translation2d[] objectFrameCorners = {
+			new Translation2d(allObjectsEntryArray[firstCell + 4], allObjectsEntryArray[firstCell + 5]),
+			new Translation2d(allObjectsEntryArray[firstCell + 6], allObjectsEntryArray[firstCell + 7]),
+			new Translation2d(allObjectsEntryArray[firstCell + 8], allObjectsEntryArray[firstCell + 9]),
+			new Translation2d(allObjectsEntryArray[firstCell + 10], allObjectsEntryArray[firstCell + 11])};
+
+		for (Translation2d corner : objectFrameCorners) {
+			if (ObjectDetectionMath.isPixelOnEdgeOfPicture(corner, pictureMaxXValue, pictureMaxYValue, edgePixelTolerance)) {
+				numberOfCornersOnPictureEdge++;
+			}
+		}
+		return numberOfCornersOnPictureEdge;
 	}
 
 	public static Optional<ObjectType> getObjectType(NetworkTableEntry objectNameEntry) {

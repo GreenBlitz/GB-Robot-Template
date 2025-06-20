@@ -5,6 +5,50 @@ import edu.wpi.first.math.geometry.*;
 
 public class ObjectDetectionMath {
 
+	public static Translation2d findRealSquishedAlgaeCenter(
+		Translation2d squishedCenterPixel,
+		double algaeHeightToWidthRatio,
+		double pictureMaxXValue,
+		double pictureMaxYValue
+	) {
+		if (algaeHeightToWidthRatio > 1) {
+			return findRealXSquishedAlgaeCenter(squishedCenterPixel, algaeHeightToWidthRatio, pictureMaxXValue);
+		} else {
+			return findRealYSquishedAlgaeCenter(squishedCenterPixel, algaeHeightToWidthRatio, pictureMaxYValue);
+		}
+	}
+
+	private static Translation2d findRealXSquishedAlgaeCenter(
+		Translation2d squishedCenterPixel,
+		double algaeHeightToWidthRatio,
+		double pictureMaxXValue
+	) {
+		double squishedCenterX = squishedCenterPixel.getX();
+		double objectFrameXLength = 2 * (pictureMaxXValue - squishedCenterX);
+		double verticalFrameEdgeSmallestX = pictureMaxXValue - objectFrameXLength;
+		double realCenterX = ((objectFrameXLength / 2) * algaeHeightToWidthRatio) + verticalFrameEdgeSmallestX;
+
+		return new Translation2d(realCenterX, squishedCenterPixel.getY());
+	}
+
+	private static Translation2d findRealYSquishedAlgaeCenter(
+		Translation2d squishedCenterPixel,
+		double algaeHeightToWidthRatio,
+		double pictureMaxYValue
+	) {
+		double squishedCenterY = squishedCenterPixel.getY();
+		double objectFrameYLength = 2 * (pictureMaxYValue - squishedCenterY);
+		double horizontalFrameEdgeSmallestY = pictureMaxYValue - objectFrameYLength;
+		double realCenterY = ((objectFrameYLength / 2) * (1 / algaeHeightToWidthRatio)) + horizontalFrameEdgeSmallestY;
+
+		return new Translation2d(squishedCenterPixel.getX(), realCenterY);
+	}
+
+	public static boolean isPixelOnEdgeOfPicture(Translation2d pixel, double pictureMaxXValue, double pictureMaxYValue, double tolerance) {
+		return ToleranceMath.isInRange(pixel.getX(), 0, pictureMaxXValue, tolerance)
+			|| ToleranceMath.isInRange(pixel.getY(), 0, pictureMaxYValue, tolerance);
+	}
+
 	public static Pair<Rotation2d, Rotation2d> correctForCameraRoll(Rotation2d yaw, Rotation2d pitch, Pose3d cameraPose) {
 		Translation2d yawAndPitch = new Translation2d(yaw.getRadians(), pitch.getRadians());
 

@@ -117,4 +117,6 @@ public class VisionConstants {
 
 	public static final double ALGAE_HEIGHT_TO_WIDTH_RATIO = 1;
 
+	public static final int OBJECT_CELL_AMOUNT_IN_RAW_DETECTIONS_ENTRY = 12;
+
 }

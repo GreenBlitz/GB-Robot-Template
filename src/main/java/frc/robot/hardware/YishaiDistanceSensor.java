@@ -1,11 +1,12 @@
 package frc.robot.hardware;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycle;
 import frc.utils.Conversions;
 
 public class YishaiDistanceSensor {
 
-	private static final double SCALING_SLOPE = 0.0002, SCALING_INTERCEPT_POINT = -200;
+	private static final double SCALING_SLOPE = 0.0004, SCALING_INTERCEPT_POINT = -400;
 
 	private final DutyCycle sensorDutyCycle;
 

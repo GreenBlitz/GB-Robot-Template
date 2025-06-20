@@ -20,6 +20,7 @@ import frc.robot.autonomous.AutosBuilder;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.led.LEDState;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
+import frc.robot.subsystems.algaeIntake.AlgaeIntakeState;
 import frc.robot.subsystems.algaeIntake.pivot.Factory.PivotFactory;
 import frc.robot.subsystems.algaeIntake.pivot.Pivot;
 import frc.robot.subsystems.algaeIntake.rollers.Factory.RollersFactory;
@@ -203,9 +204,8 @@ public class Robot {
 			.andThen(robotCommander.getSuperstructure().algaeRemove().withTimeout(AutonomousConstants.ALGAE_REMOVE_TIMEOUT_SECONDS))
 			.asProxy();
 		Supplier<Command> floorAlgaeIntakeCommand = () -> robotCommander.getSuperstructure()
-				.softCloseNetToAlgaeRemove()
-				.andThen(robotCommander.getSuperstructure().algaeIntake())
-				.andThen(robotCommander.getSuperstructure().transferAlgaeFromIntakeToEndEffector())
+				.softCloseNetToFloorAlgaeIntake()
+				.alongWith(robotCommander.getSuperstructure().getAlgaeIntakeStateHandler().setState(AlgaeIntakeState.INTAKE).asProxy())
 				.asProxy();
 		Supplier<Command> netCommand = () -> robotCommander.getSuperstructure().netWithRelease().asProxy();
 
@@ -234,12 +234,13 @@ public class Robot {
 		new EventTrigger("PRE_NET").onTrue(robotCommander.getSuperstructure().preNet());
 		new EventTrigger("HOLD_ALGAE").onTrue(robotCommander.getSuperstructure().holdAlgae());
 		new EventTrigger("STOP_ROLLERS").onTrue(robotCommander.getSuperstructure().algaeRemoveWithKeepRollers());
+		new EventTrigger("TRANSFER_ALGAE").onTrue(robotCommander.getSuperstructure().transferAlgaeFromIntakeToEndEffector());
 
 		this.preBuiltAutosChooser = new AutonomousChooser(
 			"PreBuiltAutos",
 			AutosBuilder.getAllNoDelayAutos(
 				this,
-				() -> Optional.of(Field.getAllianceRelative(new Translation2d(5.460, 7), true, true)),
+					() -> Optional.of(new Translation2d()),
 				intakingCommand,
 				scoringCommand,
 				algaeRemoveCommand,

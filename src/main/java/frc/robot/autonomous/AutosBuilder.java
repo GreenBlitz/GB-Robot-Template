@@ -329,28 +329,37 @@ public class AutosBuilder {
 			);
 			AutoPath floorAlgaeToNetPath = isRightFloorAlgae ? AutoPath.RIGHT_FLOOR_ALGAE_TO_MIDDLE_NET : AutoPath.LEFT_FLOOR_ALGAE_TO_RIGHT_NET;
 			return new SequentialCommandGroup(
-					new ParallelCommandGroup(
-							/*robot.getSwerve().getCommandsBuilder().driveToObject(
-									robot.getPoseEstimator()::getEstimatedPose,
-									algaeTranslationSupplier,
-									AutonomousConstants.DISTANCE_FROM_ALGAE_FOR_FLOOR_INTAKE
-							)*/
-							robot.getSwerve().getCommandsBuilder().moveToPoseByPID(
-									robot.getPoseEstimator()::getEstimatedPose,
-									new Pose2d(algaeTranslationSupplier.get().get(), robot.getPoseEstimator().getEstimatedPose().getRotation())
-							)
-					).until(() -> ToleranceMath.isNear(robot.getPoseEstimator().getEstimatedPose(), new Pose2d(algaeTranslationSupplier.get().get(), robot.getPoseEstimator().getEstimatedPose().getRotation()), tolerance)),
-					new ParallelCommandGroup(
-							robot.getSwerve().getCommandsBuilder().moveToPoseByPID(
-									robot.getPoseEstimator()::getEstimatedPose,
-									floorAlgaeLinkedWayPoint
-							)
-					).until(() -> ToleranceMath.isNear(robot.getPoseEstimator().getEstimatedPose(), floorAlgaeLinkedWayPoint, tolerance)),
-					createAutoFromAutoPath(
-							floorAlgaeToNetPath,
-							pathPlannerPath -> PathFollowingCommandsBuilder
-								.scoreToNet(robot, pathPlannerPath, netCommand, floorAlgaeToNetPath.getTargetBranch())
+
+				/*robot.getSwerve().getCommandsBuilder().driveToObject(
+						robot.getPoseEstimator()::getEstimatedPose,
+						algaeTranslationSupplier,
+						AutonomousConstants.DISTANCE_FROM_ALGAE_FOR_FLOOR_INTAKE
+				)*/
+				robot.getSwerve().getCommandsBuilder().moveToPoseByPID(
+						robot.getPoseEstimator()::getEstimatedPose,
+						new Pose2d(algaeTranslationSupplier.get().get(), Rotation2d.fromDegrees(90))
+				).until(() -> ToleranceMath.isNear(
+						robot.getPoseEstimator().getEstimatedPose(),
+						new Pose2d(algaeTranslationSupplier.get().get(),
+								Rotation2d.fromDegrees(90)),
+						tolerance
 					)
+				),
+
+				robot.getSwerve().getCommandsBuilder().moveToPoseByPID(
+						robot.getPoseEstimator()::getEstimatedPose,
+						floorAlgaeLinkedWayPoint
+				).until(() -> ToleranceMath.isNear(
+						robot.getPoseEstimator().getEstimatedPose(),
+						floorAlgaeLinkedWayPoint,
+						tolerance
+					)
+				),
+				createAutoFromAutoPath(
+						floorAlgaeToNetPath,
+						pathPlannerPath -> PathFollowingCommandsBuilder
+							.scoreToNet(robot, pathPlannerPath, netCommand, floorAlgaeToNetPath.getTargetBranch())
+				)
 
 			);
 		} else {
@@ -435,12 +444,13 @@ public class AutosBuilder {
 					),
 					getFloorAlgaeToNetCommand(
 							robot,
-							algaeTranslationSupplier,
+							() -> Optional.of(Field.getAllianceRelative(new Translation2d(5.460, 7), true, true)),
 							algaeRemoveCommand,
 							netCommand,
 							tolerance,
 							true
 					),
+					robot.getRobotCommander().getSuperstructure().netWithRelease().asProxy(),
 					createAutoFromAutoPath(
 							AutoPath.MIDDLE_NET_TO_LEFT_FLOOR_ALGAE,
 							pathPlannerPath -> PathFollowingCommandsBuilder.deadlinePathWithCommand(
@@ -453,12 +463,14 @@ public class AutosBuilder {
 					),
 					getFloorAlgaeToNetCommand(
 							robot,
-							algaeTranslationSupplier,
+							() -> Optional.of(Field.getAllianceRelative(new Translation2d(6.300, 7), true, true)),
 							algaeRemoveCommand,
 							netCommand,
 							tolerance,
-							true
-					)
+							false
+					),
+					robot.getRobotCommander().getSuperstructure().netWithRelease().asProxy(),
+					robot.getRobotCommander().getSuperstructure().idle().asProxy()
 				).asProxy()
 		);
 

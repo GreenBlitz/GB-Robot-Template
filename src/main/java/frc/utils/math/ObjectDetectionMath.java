@@ -5,6 +5,10 @@ import edu.wpi.first.math.geometry.*;
 
 public class ObjectDetectionMath {
 
+	public static Pair<Double, Double> TxNoCrossAndTyNoCrossToTxAndTy(double txNoCross, double tyNoCross) {
+		double tx =
+	}
+
 	public static Translation2d findRealSquishedAlgaeCenter(
 		Translation2d squishedCenterPixel,
 		double algaeHeightToWidthRatio,

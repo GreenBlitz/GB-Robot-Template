@@ -22,8 +22,10 @@ public class NetworkTableEntriesHelpers {
 
 		for (int i = 0; i < objectAmount; i++) {
 			int firstCell = VisionConstants.OBJECT_CELL_AMOUNT_IN_RAW_DETECTIONS_ENTRY * i;
-			double allObjectsEntryTxValue = allObjectsEntryArray[firstCell + 1];
-			double allObjectsEntryTyValue = allObjectsEntryArray[firstCell + 2];
+			double allObjectsEntryTxncValue = allObjectsEntryArray[firstCell + 1];
+			double allObjectsEntryTxValue = 0;
+			double allObjectsEntryTyncValue = allObjectsEntryArray[firstCell + 2];
+			double allObjectsEntryTyValue = 0;
 
 			if (allObjectsEntryTxValue == txEntryValue && allObjectsEntryTyValue == tyEntryValue) {
 				return Optional.of(firstCell);

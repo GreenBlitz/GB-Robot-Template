@@ -34,21 +34,18 @@ public class NetworkTableEntriesHelpers {
 
 	public static int getNumberOfObjectCornersOnPictureEdge(
 		double[] allObjectsEntryArray,
-		int allObjectsEntryArrayFirstCell,
+		int objectFirstCellIndex,
 		double pictureMaxXValue,
 		double pictureMaxYValue,
 		double edgePixelTolerance
 	) {
 		int numberOfCornersOnPictureEdge = 0;
 
-		// rename to make lines shorter :( pls dont kill me
-		int firstCell = allObjectsEntryArrayFirstCell;
-
 		Translation2d[] objectFrameCorners = {
-			new Translation2d(allObjectsEntryArray[firstCell + 4], allObjectsEntryArray[firstCell + 5]),
-			new Translation2d(allObjectsEntryArray[firstCell + 6], allObjectsEntryArray[firstCell + 7]),
-			new Translation2d(allObjectsEntryArray[firstCell + 8], allObjectsEntryArray[firstCell + 9]),
-			new Translation2d(allObjectsEntryArray[firstCell + 10], allObjectsEntryArray[firstCell + 11])};
+			new Translation2d(allObjectsEntryArray[objectFirstCellIndex + 4], allObjectsEntryArray[objectFirstCellIndex + 5]),
+			new Translation2d(allObjectsEntryArray[objectFirstCellIndex + 6], allObjectsEntryArray[objectFirstCellIndex + 7]),
+			new Translation2d(allObjectsEntryArray[objectFirstCellIndex + 8], allObjectsEntryArray[objectFirstCellIndex + 9]),
+			new Translation2d(allObjectsEntryArray[objectFirstCellIndex + 10], allObjectsEntryArray[objectFirstCellIndex + 11])};
 
 		for (Translation2d corner : objectFrameCorners) {
 			if (ObjectDetectionMath.isPixelOnEdgeOfPicture(corner, pictureMaxXValue, pictureMaxYValue, edgePixelTolerance)) {

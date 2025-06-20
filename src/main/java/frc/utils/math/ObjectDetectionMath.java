@@ -24,9 +24,16 @@ public class ObjectDetectionMath {
 		double pictureMaxXValue
 	) {
 		double squishedCenterX = squishedCenterPixel.getX();
-		double objectFrameXLength = 2 * (pictureMaxXValue - squishedCenterX);
-		double verticalFrameEdgeSmallestX = pictureMaxXValue - objectFrameXLength;
-		double realCenterX = ((objectFrameXLength / 2) * algaeHeightToWidthRatio) + verticalFrameEdgeSmallestX;
+		double realCenterX;
+
+		if (squishedCenterX > (pictureMaxXValue / 2)) {
+			double objectFrameXLength = 2 * (pictureMaxXValue - squishedCenterX);
+			double verticalFrameEdgeSmallestX = pictureMaxXValue - objectFrameXLength;
+			realCenterX = ((objectFrameXLength / 2) * algaeHeightToWidthRatio) + verticalFrameEdgeSmallestX;
+		} else {
+			double objectFrameXLength = 2 * squishedCenterX;
+			realCenterX = objectFrameXLength - (squishedCenterX * algaeHeightToWidthRatio);
+		}
 
 		return new Translation2d(realCenterX, squishedCenterPixel.getY());
 	}
@@ -37,9 +44,16 @@ public class ObjectDetectionMath {
 		double pictureMaxYValue
 	) {
 		double squishedCenterY = squishedCenterPixel.getY();
-		double objectFrameYLength = 2 * (pictureMaxYValue - squishedCenterY);
-		double horizontalFrameEdgeSmallestY = pictureMaxYValue - objectFrameYLength;
-		double realCenterY = ((objectFrameYLength / 2) * (1 / algaeHeightToWidthRatio)) + horizontalFrameEdgeSmallestY;
+		double realCenterY;
+
+		if (squishedCenterY > (pictureMaxYValue / 2)) {
+			double objectFrameYLength = 2 * (pictureMaxYValue - squishedCenterY);
+			double horizontalFrameEdgeSmallestY = pictureMaxYValue - objectFrameYLength;
+			realCenterY = ((objectFrameYLength / 2) * (1 / algaeHeightToWidthRatio)) + horizontalFrameEdgeSmallestY;
+		} else {
+			double objectFrameYLength = 2 * squishedCenterY;
+			realCenterY = objectFrameYLength - (squishedCenterY * (1 / algaeHeightToWidthRatio));
+		}
 
 		return new Translation2d(squishedCenterPixel.getX(), realCenterY);
 	}

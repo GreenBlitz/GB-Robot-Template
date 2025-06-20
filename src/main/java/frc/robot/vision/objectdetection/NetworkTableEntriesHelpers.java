@@ -29,8 +29,8 @@ public class NetworkTableEntriesHelpers {
 
 		for (int i = 0; i < objectAmount; i++) {
 			int firstCell = VisionConstants.OBJECT_CELL_AMOUNT_IN_RAW_DETECTIONS_ENTRY * i;
-			double allObjectsEntryTxNoCrossValue = allObjectsEntryArray[firstCell + 1];
-			double allObjectsEntryTyNoCrossValue = allObjectsEntryArray[firstCell + 2];
+			double allObjectsEntryTxNoCrossValue = allObjectsEntryArray[firstCell + AllObjectsEntryIndexes.TX_NO_CROSS.getIndex()];
+			double allObjectsEntryTyNoCrossValue = allObjectsEntryArray[firstCell + AllObjectsEntryIndexes.TY_NO_CROSS.getIndex()];
 
 			Pair<Double, Double> allObjectsEntryTxAndTyValues = txNoCrossAndTyNoCrossToTxAndTy(
 				allObjectsEntryTxNoCrossValue,
@@ -54,10 +54,22 @@ public class NetworkTableEntriesHelpers {
 		int numberOfCornersOnPictureEdge = 0;
 
 		Translation2d[] objectFrameCorners = {
-			new Translation2d(allObjectsEntryArray[objectFirstCellIndex + 4], allObjectsEntryArray[objectFirstCellIndex + 5]),
-			new Translation2d(allObjectsEntryArray[objectFirstCellIndex + 6], allObjectsEntryArray[objectFirstCellIndex + 7]),
-			new Translation2d(allObjectsEntryArray[objectFirstCellIndex + 8], allObjectsEntryArray[objectFirstCellIndex + 9]),
-			new Translation2d(allObjectsEntryArray[objectFirstCellIndex + 10], allObjectsEntryArray[objectFirstCellIndex + 11])};
+			new Translation2d(
+				allObjectsEntryArray[objectFirstCellIndex + AllObjectsEntryIndexes.CORNER_0_X.getIndex()],
+				allObjectsEntryArray[objectFirstCellIndex + AllObjectsEntryIndexes.CORNER_0_Y.getIndex()]
+			),
+			new Translation2d(
+				allObjectsEntryArray[objectFirstCellIndex + AllObjectsEntryIndexes.CORNER_1_X.getIndex()],
+				allObjectsEntryArray[objectFirstCellIndex + AllObjectsEntryIndexes.CORNER_1_Y.getIndex()]
+			),
+			new Translation2d(
+				allObjectsEntryArray[objectFirstCellIndex + AllObjectsEntryIndexes.CORNER_2_X.getIndex()],
+				allObjectsEntryArray[objectFirstCellIndex + AllObjectsEntryIndexes.CORNER_2_Y.getIndex()]
+			),
+			new Translation2d(
+				allObjectsEntryArray[objectFirstCellIndex + AllObjectsEntryIndexes.CORNER_3_X.getIndex()],
+				allObjectsEntryArray[objectFirstCellIndex + AllObjectsEntryIndexes.CORNER_3_Y.getIndex()]
+			)};
 
 		for (Translation2d corner : objectFrameCorners) {
 			if (ObjectDetectionMath.isPixelOnEdgeOfPicture(corner, pictureWidthPixels, pictureHeightPixels, edgePixelTolerance)) {

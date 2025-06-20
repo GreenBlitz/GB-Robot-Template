@@ -4,16 +4,13 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.vision.VisionConstants;
 import frc.robot.vision.data.ObjectData;
 import frc.utils.Filter;
 import frc.utils.math.AngleUnit;
-import frc.utils.math.ObjectDetectionMath;
 import frc.utils.pose.PoseUtil;
-import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
@@ -48,44 +45,12 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		closestObjectCaptureLatencyEntry = getLimelightNetworkTableEntry("cl");
 		t2dEntry = getLimelightNetworkTableEntry("t2d");
 		allObjectsEntry = getLimelightNetworkTableEntry("rawdetections");
-		
+
 		getLimelightNetworkTableEntry("camerapose_robotspace_set").setDoubleArray(PoseUtil.pose3DToPoseArray(cameraPose, AngleUnit.DEGREES));
-		
 	}
 
 	private NetworkTableEntry getLimelightNetworkTableEntry(String entryName) {
 		return NetworkTableInstance.getDefault().getTable(cameraNetworkTablesName).getEntry(entryName);
-	}
-
-	private static Optional<ObjectType> getObjectType(NetworkTableEntry objectNameEntry) {
-		String nameEntryValue = objectNameEntry.getString(VisionConstants.NAME_ENTRY_NO_OBJECT_VALUE);
-		for (ObjectType type : ObjectType.values()) {
-			if (type.getNameEntryValue().equals(nameEntryValue)) {
-				return Optional.of(type);
-			}
-		}
-		return Optional.empty();
-	}
-
-	private static ObjectData getClosestObjectData(
-		NetworkTableEntry txEntry,
-		NetworkTableEntry tyEntry,
-		NetworkTableEntry pipelineLatencyEntry,
-		NetworkTableEntry captureLatencyEntry,
-		ObjectType objectType,
-		Pose3d cameraPose
-	) {
-		double centerOfObjectHeightMeters = objectType.getObjectHeightMeters() / 2;
-
-		Rotation2d cameraRelativeObjectYaw = Rotation2d.fromDegrees(txEntry.getDouble(0));
-		Rotation2d cameraRelativeObjectPitch = Rotation2d.fromDegrees(tyEntry.getDouble(0));
-		Translation2d robotRelativeObjectTranslation = ObjectDetectionMath
-			.getRobotRelativeTranslation(cameraRelativeObjectYaw, cameraRelativeObjectPitch, cameraPose, centerOfObjectHeightMeters);
-
-		double totalLatency = pipelineLatencyEntry.getDouble(0) + captureLatencyEntry.getDouble(0);
-		double timeStamp = TimeUtil.getCurrentTimeSeconds() - totalLatency;
-
-		return new ObjectData(robotRelativeObjectTranslation, objectType, timeStamp);
 	}
 
 	public static Filter<double[]> squishedAlgaeFilter(double algaeHeightToWidthRatio, double heightToWidthRatioTolerance) {
@@ -99,7 +64,7 @@ public class LimeLightObjectDetector implements ObjectDetector {
 
 	@Override
 	public Optional<ObjectData> getClosestObjectData() {
-		Optional<ObjectType> objectType = getObjectType(closestObjectNameEntry);
+		Optional<ObjectType> objectType = NetworkTableEntriesHelpers.getObjectType(closestObjectNameEntry);
 
 		if (
 			objectType.isEmpty()
@@ -109,7 +74,7 @@ public class LimeLightObjectDetector implements ObjectDetector {
 			return Optional.empty();
 		}
 		return Optional.of(
-			getClosestObjectData(
+			NetworkTableEntriesHelpers.getClosestObjectData(
 				closestObjectTxEntry,
 				closestObjectTyEntry,
 				closestObjectPipelineLatencyEntry,

@@ -34,8 +34,4 @@ public class RobotPoseObservation {
 		return standardDeviations;
 	}
 
-	public boolean isValid() {
-		return timestampSeconds != 0;
-	}
-
 }

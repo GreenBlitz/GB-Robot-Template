@@ -345,7 +345,7 @@ public class AutosBuilder {
 						robot.getPoseEstimator().getEstimatedPose(),
 						new Pose2d(algaeTranslationSupplier.get().get(),
 								Rotation2d.fromDegrees(90)),
-						new Pose2d(0.035, 0.035, Rotation2d.fromDegrees(2))
+						tolerance
 					)
 						&& robot.getRobotCommander().getSuperstructure().isAlgaeInAlgaeIntake()
 				),
@@ -447,7 +447,7 @@ public class AutosBuilder {
 					),
 					getFloorAlgaeToNetCommand(
 							robot,
-							() -> Optional.of(Field.getAllianceRelative(new Translation2d(5.460, 7), true, true)),
+							() -> Optional.of(Field.getAllianceRelative(new Translation2d(6.300, 7), true, true)),
 							algaeRemoveCommand,
 							netCommand,
 							tolerance,
@@ -466,7 +466,7 @@ public class AutosBuilder {
 					),
 					getFloorAlgaeToNetCommand(
 							robot,
-							() -> Optional.of(Field.getAllianceRelative(new Translation2d(6.300, 7), true, true)),
+							() -> Optional.of(Field.getAllianceRelative(new Translation2d(5.460, 7), true, true)),
 							algaeRemoveCommand,
 							netCommand,
 							tolerance,

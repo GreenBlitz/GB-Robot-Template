@@ -109,9 +109,9 @@ public class AutonomousConstants {
 
 		public static final Pair<String, Pose2d> RIGHT_NET = Pair.of("RN", new Pose2d(7.578, 5.064, Rotation2d.fromDegrees(0)));
 
-		public static final Pair<String, Pose2d> RIGHT_FLOOR_ALGAE = Pair.of("RFA", new Pose2d(5.460, 6.640, Rotation2d.fromDegrees(-90)));
+		public static final Pair<String, Pose2d> LEFT_FLOOR_ALGAE = Pair.of("LFA", new Pose2d(5.460, 6.640, Rotation2d.fromDegrees(-90)));
 
-		public static final Pair<String, Pose2d> LEFT_FLOOR_ALGAE = Pair.of("LFA", new Pose2d(6.300, 6.720, Rotation2d.fromDegrees(-90)));
+		public static final Pair<String, Pose2d> RIGHT_FLOOR_ALGAE = Pair.of("RFA", new Pose2d(6.300, 6.720, Rotation2d.fromDegrees(-90)));
 
 		private static Pose2d getRobotBranchScoringBluePose(Branch branch) {
 			return ScoringHelpers.getRobotBranchScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS, false);

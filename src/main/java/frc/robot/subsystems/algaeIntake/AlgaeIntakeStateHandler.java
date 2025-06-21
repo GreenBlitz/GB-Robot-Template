@@ -62,7 +62,7 @@ public class AlgaeIntakeStateHandler {
 
 	public void updateAlgaeSensor(Robot robot) {
 		if (
-			robot.getPivot().getVelocity().getDegrees()
+			Math.abs(robot.getPivot().getVelocity().getDegrees())
 				< AlgaeIntakeConstants.MAXIMAL_PIVOT_VELOCITY_TO_UPDATE_FILTER_ANGLE_PER_SECOND.getDegrees()
 		) {
 			distanceFilter.calculate(distanceSensor.getDistanceMeters());

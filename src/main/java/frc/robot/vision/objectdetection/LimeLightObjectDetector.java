@@ -35,7 +35,8 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		this.logPath = logPath;
 		this.cameraNetworkTablesName = cameraNetworkTablesName;
 		this.cameraPose = cameraPose;
-		setFilter(isObjectTooFarAway(VisionConstants.MAX_VALID_ALGAE_DISTANCE_METERS));
+		clearFilter();
+//		setFilter(isObjectTooFarAway(VisionConstants.MAX_VALID_ALGAE_DISTANCE_METERS));
 
 		closestObjectTxEntry = getLimelightNetworkTableEntry("tx");
 		closestObjectTyEntry = getLimelightNetworkTableEntry("ty");
@@ -112,8 +113,8 @@ public class LimeLightObjectDetector implements ObjectDetector {
 
 		if (
 			objectType.isEmpty()
-				|| squishedAlgaeFilter(VisionConstants.ALGAE_HEIGHT_TO_WIDTH_RATIO, VisionConstants.ALGAE_HEIGHT_TO_WIDTH_RATIO_TOLERANCE)
-					.apply(t2dEntry.getDoubleArray(new double[0]))
+//				|| squishedAlgaeFilter(VisionConstants.ALGAE_HEIGHT_TO_WIDTH_RATIO, VisionConstants.ALGAE_HEIGHT_TO_WIDTH_RATIO_TOLERANCE)
+//					.apply(t2dEntry.getDoubleArray(new double[0]))
 		) {
 			return Optional.empty();
 		}
@@ -142,7 +143,7 @@ public class LimeLightObjectDetector implements ObjectDetector {
 	@Override
 	public void update() {
 		closestObject = getFilteredClosestObjectData();
-
+		Logger.recordOutput("Test/is empty", closestObject.isEmpty());
 		log();
 	}
 

@@ -82,7 +82,7 @@ public class VisionConstants {
 	);
 
 	public static final Pose3d OBJECT_DETECTION_LIMELIGHT_CAMERA_POSE = new Pose3d(
-		new Translation3d(-0.08, -0.23, 0.865),
+		new Translation3d(-0.08, 0.23, 0.865),
 		AngleUnit.DEGREES.toRotation3d(0, -27, 180)
 	);
 
@@ -114,7 +114,7 @@ public class VisionConstants {
 
 	public static final String NAME_ENTRY_NO_OBJECT_VALUE = "none";
 
-	public static final double ALGAE_HEIGHT_TO_WIDTH_RATIO_TOLERANCE = 0.1;
+	public static final double ALGAE_HEIGHT_TO_WIDTH_RATIO_TOLERANCE = 0.3;
 
 	public static final double ALGAE_HEIGHT_TO_WIDTH_RATIO = 1;
 
@@ -128,6 +128,6 @@ public class VisionConstants {
 
 	public static final int EDGE_PIXEL_TOLERANCE = 10;
 
-	public static double MAX_VALID_ALGAE_DISTANCE_METERS = 2.1;
+	public static double MAX_VALID_ALGAE_DISTANCE_METERS = 3;
 
 }

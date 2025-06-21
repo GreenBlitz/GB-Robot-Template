@@ -112,7 +112,7 @@ public class ObjectDetectionMath {
 	}
 
 	public static Translation2d cameraRelativeToRobotRelative(Translation2d translation, Pose3d cameraPose) {
-//		translation = translation.rotateBy(Rotation2d.fromRadians(cameraPose.getRotation().getZ()));
+		translation = translation.rotateBy(Rotation2d.fromRadians(cameraPose.getRotation().getZ()));
 		return new Translation2d(translation.getX() + cameraPose.getX(), translation.getY() + cameraPose.getY());
 	}
 

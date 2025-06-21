@@ -35,8 +35,7 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		this.logPath = logPath;
 		this.cameraNetworkTablesName = cameraNetworkTablesName;
 		this.cameraPose = cameraPose;
-		clearFilter();
-//		setFilter(isObjectTooFarAway(VisionConstants.MAX_VALID_ALGAE_DISTANCE_METERS));
+		setFilter(isObjectTooFarAway(VisionConstants.MAX_VALID_ALGAE_DISTANCE_METERS));
 
 		closestObjectTxEntry = getLimelightNetworkTableEntry("tx");
 		closestObjectTyEntry = getLimelightNetworkTableEntry("ty");
@@ -58,12 +57,12 @@ public class LimeLightObjectDetector implements ObjectDetector {
 			double detectedHorizontalPixels = t2dEntryArray[14];
 			double detectedVerticalPixels = t2dEntryArray[15];
 			double detectedHeightToWidthRatio = detectedVerticalPixels / detectedHorizontalPixels;
-			return !MathUtil.isNear(algaeHeightToWidthRatio, detectedHeightToWidthRatio, heightToWidthRatioTolerance);
+			return MathUtil.isNear(algaeHeightToWidthRatio, detectedHeightToWidthRatio, heightToWidthRatioTolerance);
 		};
 	}
 
-	public static Filter<ObjectData> isObjectTooFarAway(double maxValidDistanceMeters) {
-		return (data) -> data.getRobotRelativeEstimatedTranslation().getX() > maxValidDistanceMeters;
+	public static Filter<ObjectData> isObjectTooFarAway(double maxValidDistanceMeters) {;
+		return (data) -> Math.abs(data.getRobotRelativeEstimatedTranslation().getX()) < maxValidDistanceMeters;
 	}
 
 	public static Optional<Translation2d> filterSquishedAlgae(
@@ -119,7 +118,7 @@ public class LimeLightObjectDetector implements ObjectDetector {
 			return Optional.empty();
 		}
 		return Optional.of(
-			ObjectDetectionHelpers.getClosestObjectData(
+			ObjectDetectionHelpers.getObjectData(
 				closestObjectTxEntry,
 				closestObjectTyEntry,
 				closestObjectPipelineLatencyEntry,
@@ -143,7 +142,6 @@ public class LimeLightObjectDetector implements ObjectDetector {
 	@Override
 	public void update() {
 		closestObject = getFilteredClosestObjectData();
-		Logger.recordOutput("Test/is empty", closestObject.isEmpty());
 		log();
 	}
 

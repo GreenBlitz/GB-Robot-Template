@@ -92,7 +92,7 @@ public class ObjectDetectionHelpers {
 		return Optional.empty();
 	}
 
-	public static ObjectData getClosestObjectData(
+	public static ObjectData getObjectData(
 		NetworkTableEntry txEntry,
 		NetworkTableEntry tyEntry,
 		NetworkTableEntry pipelineLatencyEntry,

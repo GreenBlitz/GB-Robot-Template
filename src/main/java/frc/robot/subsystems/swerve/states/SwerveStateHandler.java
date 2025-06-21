@@ -17,6 +17,7 @@ import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssistMath;
+import frc.robot.vision.data.ObjectData;
 import frc.utils.alerts.Alert;
 import frc.utils.math.FieldMath;
 
@@ -34,7 +35,7 @@ public class SwerveStateHandler {
 	private Supplier<Optional<Branch>> branchSupplier;
 	private Supplier<Optional<CoralStationSlot>> coralStationSlotSupplier;
 	private Supplier<Optional<Cage>> cageSupplier;
-	private Supplier<Optional<Translation2d>> closestAlgaeSupplier;
+	private Supplier<Optional<ObjectData>> closestAlgaeSupplier;
 
 	public SwerveStateHandler(Swerve swerve) {
 		this.swerve = swerve;
@@ -73,7 +74,7 @@ public class SwerveStateHandler {
 		this.cageSupplier = cageSupplier;
 	}
 
-	public void setClosestAlgaeSupplier(Supplier<Optional<Translation2d>> closestAlgaeSupplier) {
+	public void setClosestAlgaeSupplier(Supplier<Optional<ObjectData>> closestAlgaeSupplier) {
 		this.closestAlgaeSupplier = closestAlgaeSupplier;
 	}
 
@@ -129,7 +130,7 @@ public class SwerveStateHandler {
 
 		if (swerveState.getAimAssist() == AimAssist.ALGAE_INTAKE) {
 			if (closestAlgaeSupplier.get().isPresent()) {
-				return handleAlgaeIntakeAimAssist(speeds, robotPoseSupplier.get().get(), closestAlgaeSupplier.get().get(), swerveState);
+				return handleAlgaeIntakeAimAssist(speeds, robotPoseSupplier.get().get(), closestAlgaeSupplier.get().get().getRobotRelativeEstimatedTranslation(), swerveState);
 			} else {
 				reportMissingSupplier("detected algae");
 				return speeds;
@@ -214,13 +215,15 @@ public class SwerveStateHandler {
 	private ChassisSpeeds handleAlgaeIntakeAimAssist(
 		ChassisSpeeds chassisSpeeds,
 		Pose2d robotPose,
-		Translation2d closestAlgae,
+		Translation2d closestAlgaeRobotRelative,
 		SwerveState swerveState
 	) {
-		Rotation2d targetHeading = FieldMath.getRelativeTranslation(robotPose.getTranslation(), closestAlgaeSupplier.get().get()).getAngle();
+		Translation2d algaeTransFieldRelative = robotPose.getTranslation().plus(closestAlgaeRobotRelative);
 
+		Rotation2d targetHeading = closestAlgaeRobotRelative.getAngle().minus(Rotation2d.k180deg);
 		chassisSpeeds = AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotPose.getRotation(), targetHeading, swerveConstants);
-		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, targetHeading, closestAlgae, swerveConstants, swerveState);
+		return chassisSpeeds;
+//		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, targetHeading, closestAlgaeRobotRelative, swerveConstants, swerveState)/;
 	}
 
 	private ChassisSpeeds handleAngleCageAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading) {

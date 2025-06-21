@@ -152,6 +152,7 @@ public class Robot {
 		swerve.getStateHandler().setCoralStationSupplier(() -> Optional.of(ScoringHelpers.getTargetCoralStation(this)));
 		swerve.getStateHandler().setCoralStationSlotSupplier(() -> Optional.of(ScoringHelpers.getTargetCoralStationSlot(this)));
 		swerve.getStateHandler().setCageSupplier(() -> Optional.of(ScoringHelpers.getTargetCage(this)));
+		swerve.getStateHandler().setClosestAlgaeSupplier(() -> objectDetector.getFilteredClosestObjectData());
 
 		this.elevator = ElevatorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Elevator");
 		BrakeStateManager.add(() -> elevator.setBrake(true), () -> elevator.setBrake(false));

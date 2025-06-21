@@ -34,7 +34,7 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		this.logPath = logPath;
 		this.cameraNetworkTablesName = cameraNetworkTablesName;
 		this.cameraPose = cameraPose;
-		clearFilter();
+		setFilter(isObjectTooFarAway(VisionConstants.MAX_VALID_ALGAE_DISTANCE_METERS));
 
 		closestObjectTxEntry = getLimelightNetworkTableEntry("tx");
 		closestObjectTyEntry = getLimelightNetworkTableEntry("ty");
@@ -60,7 +60,11 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		};
 	}
 
-	public static Translation2d filtaa(
+	public static Filter<ObjectData> isObjectTooFarAway(double maxValidDistanceMeters) {
+		return (data) -> data.getRobotRelativeEstimatedTranslation().getX() > maxValidDistanceMeters;
+	}
+
+	public static Optional<Translation2d> filterSquishedAlgae(
 		double txEntryValue,
 		double tyEntryValue,
 		Translation2d algaeCenterPixel,
@@ -68,19 +72,37 @@ public class LimeLightObjectDetector implements ObjectDetector {
 		double[] t2dEntryArray,
 		double[] allObjectsEntryArray
 	) {
-		if (!t2dEntrySquishedAlgaeFilter.apply(t2dEntryArray)) {
-			if (
-				ObjectDetectionHelpers.getNumberOfObjectCornersOnPictureEdge(
-					allObjectsEntryArray,
-					ObjectDetectionHelpers.getObjectsFirstCellIndexInAllObjectsArray(txEntryValue, tyEntryValue, allObjectsEntryArray).get(),
-					(int) VisionConstants.LIMELIGHT_OBJECT_RESOLUTION_PIXELS.getX(),
-					(int) VisionConstants.LIMELIGHT_OBJECT_RESOLUTION_PIXELS.getY(),
-					VisionConstants.EDGE_PIXEL_TOLERANCE
-				) < 3
-			) {
-				return algaeCenterPixel;
-			}
-		} else {
+		Optional<Integer> firstCellIndexInAllObjectsArray = ObjectDetectionHelpers
+			.getObjectsFirstCellIndexInAllObjectsArray(txEntryValue, tyEntryValue, allObjectsEntryArray);
+		if (firstCellIndexInAllObjectsArray.isEmpty()) {
+			return Optional.empty();
+		}
+
+//		Translation2d algaeCenterPixel = ObjectDetectionMath.getObjectCenterPixel();
+		boolean isAlgaeSquished = !t2dEntrySquishedAlgaeFilter.apply(t2dEntryArray);
+		double frameCornersOnPictureEdge = ObjectDetectionHelpers.getNumberOfObjectCornersOnPictureEdge(
+			allObjectsEntryArray,
+			firstCellIndexInAllObjectsArray.get(),
+			(int) VisionConstants.LIMELIGHT_OBJECT_RESOLUTION_PIXELS.getX(),
+			(int) VisionConstants.LIMELIGHT_OBJECT_RESOLUTION_PIXELS.getY(),
+			VisionConstants.EDGE_PIXEL_TOLERANCE
+		);
+
+		if (!isAlgaeSquished && frameCornersOnPictureEdge < 3) {
+			return Optional.of(algaeCenterPixel);
+		}
+//		if (isAlgaeSquished && frameCornersOnPictureEdge < 3) {
+//			return Optional.of(
+//				ObjectDetectionMath.findRealSquishedAlgaeCenter(
+//					algaeCenterPixel,
+//					algaeHeightToWidthRatio,
+//					(int) VisionConstants.LIMELIGHT_OBJECT_RESOLUTION_PIXELS.getX(),
+//					(int) VisionConstants.LIMELIGHT_OBJECT_RESOLUTION_PIXELS.getY()
+//				)
+//			);
+//		}
+		else {
+			return Optional.empty();
 		}
 	}
 

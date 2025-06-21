@@ -128,4 +128,6 @@ public class VisionConstants {
 
 	public static final int EDGE_PIXEL_TOLERANCE = 10;
 
+	public static double MAX_VALID_ALGAE_DISTANCE_METERS = 2.1;
+
 }

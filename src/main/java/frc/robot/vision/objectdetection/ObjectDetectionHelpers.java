@@ -44,16 +44,6 @@ public class ObjectDetectionHelpers {
 		return Optional.empty();
 	}
 
-	public static Optional<Translation2d> getObjectCenterPixel(double txEntryValue, double tyEntryValue, double[] allObjectsEntryArray) {
-		Optional<Integer> firstCellIndex = getObjectsFirstCellIndexInAllObjectsArray(txEntryValue, tyEntryValue, allObjectsEntryArray);
-		if (firstCellIndex.isEmpty()) {
-			return Optional.empty();
-		}
-
-		Translation2d[] objectFrameCorners = getAllObjectFrameCorners(allObjectsEntryArray, firstCellIndex.get());
-//		double
-	}
-
 	public static int getNumberOfObjectCornersOnPictureEdge(
 		double[] allObjectsEntryArray,
 		int objectFirstCellIndex,

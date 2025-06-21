@@ -5,6 +5,16 @@ import edu.wpi.first.math.geometry.*;
 
 public class ObjectDetectionMath {
 
+//	public static Optional<Translation2d> getObjectCenterPixel(double txEntryValue, double tyEntryValue, double[] allObjectsEntryArray) {
+//		Optional<Integer> firstCellIndex = getObjectsFirstCellIndexInAllObjectsArray(txEntryValue, tyEntryValue, allObjectsEntryArray);
+//		if (firstCellIndex.isEmpty()) {
+//			return Optional.empty();
+//		}
+//
+//		Translation2d[] objectFrameCorners = getAllObjectFrameCorners(allObjectsEntryArray, firstCellIndex.get());
+//		double
+//	}
+
 	public static Translation2d findRealSquishedAlgaeCenter(
 		Translation2d squishedCenterPixel,
 		double algaeHeightToWidthRatio,

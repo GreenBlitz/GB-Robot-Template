@@ -8,6 +8,7 @@ import frc.robot.vision.VisionConstants;
 import frc.robot.vision.data.ObjectData;
 import frc.utils.Filter;
 import frc.utils.math.AngleUnit;
+import frc.utils.math.ObjectDetectionMath;
 import frc.utils.pose.PoseUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -67,7 +68,6 @@ public class LimeLightObjectDetector implements ObjectDetector {
 	public static Optional<Translation2d> filterSquishedAlgae(
 		double txEntryValue,
 		double tyEntryValue,
-		Translation2d algaeCenterPixel,
 		Filter<double[]> t2dEntrySquishedAlgaeFilter,
 		double[] t2dEntryArray,
 		double[] allObjectsEntryArray
@@ -78,7 +78,7 @@ public class LimeLightObjectDetector implements ObjectDetector {
 			return Optional.empty();
 		}
 
-//		Translation2d algaeCenterPixel = ObjectDetectionMath.getObjectCenterPixel();
+		Translation2d algaeCenterPixel = ObjectDetectionMath.getObjectCenterPixel(allObjectsEntryArray, firstCellIndexInAllObjectsArray.get());
 		boolean isAlgaeSquished = !t2dEntrySquishedAlgaeFilter.apply(t2dEntryArray);
 		double frameCornersOnPictureEdge = ObjectDetectionHelpers.getNumberOfObjectCornersOnPictureEdge(
 			allObjectsEntryArray,

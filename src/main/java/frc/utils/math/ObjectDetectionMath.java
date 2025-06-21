@@ -2,18 +2,23 @@ package frc.utils.math;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.*;
+import frc.robot.vision.objectdetection.ObjectDetectionHelpers;
+
 
 public class ObjectDetectionMath {
 
-//	public static Optional<Translation2d> getObjectCenterPixel(double txEntryValue, double tyEntryValue, double[] allObjectsEntryArray) {
-//		Optional<Integer> firstCellIndex = getObjectsFirstCellIndexInAllObjectsArray(txEntryValue, tyEntryValue, allObjectsEntryArray);
-//		if (firstCellIndex.isEmpty()) {
-//			return Optional.empty();
-//		}
-//
-//		Translation2d[] objectFrameCorners = getAllObjectFrameCorners(allObjectsEntryArray, firstCellIndex.get());
-//		double
-//	}
+	public static Translation2d getObjectCenterPixel(double[] allObjectsEntryArray, int firstCellIndex) {
+		Translation2d[] objectFrameCorners = ObjectDetectionHelpers.getAllObjectFrameCorners(allObjectsEntryArray, firstCellIndex.get());
+		double smallestFrameX = Math.min(objectFrameCorners[0].getX(), objectFrameCorners[1].getX());
+		double centerXFromEdge = Math.abs(objectFrameCorners[0].getX() - objectFrameCorners[1].getX()) / 2;
+		double centerX = smallestFrameX + centerXFromEdge;
+
+		double smallestFrameY = Math.min(objectFrameCorners[0].getY(), objectFrameCorners[2].getY());
+		double centerYFromEdge = Math.abs(objectFrameCorners[0].getY() - objectFrameCorners[2].getY()) / 2;
+		double centerY = smallestFrameY + centerYFromEdge;
+
+		return new Translation2d(centerX, centerY);
+	}
 
 	public static Translation2d findRealSquishedAlgaeCenter(
 		Translation2d squishedCenterPixel,

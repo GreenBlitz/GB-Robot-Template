@@ -14,6 +14,7 @@ public class Pivot extends GBSubsystem {
 	private final IRequest<Rotation2d> positionRequest;
 	private final InputSignal<Rotation2d> positionSignal;
 	private final InputSignal<Double> voltageSignal;
+	private final InputSignal<Rotation2d> velocitySignal;
 //
 //	private final IAngleEncoder encoder;
 //	private final InputSignal<Rotation2d> absolutePositionSignal;
@@ -25,7 +26,8 @@ public class Pivot extends GBSubsystem {
 		ControllableMotor pivot,
 		IRequest<Rotation2d> positionRequest,
 		InputSignal<Rotation2d> positionSignal,
-		InputSignal<Double> voltageSignal
+		InputSignal<Double> voltageSignal,
+		InputSignal<Rotation2d> velocitySignal
 //		IAngleEncoder encoder,
 //		InputSignal<Rotation2d> absolutePositionSignal
 	) {
@@ -38,6 +40,7 @@ public class Pivot extends GBSubsystem {
 
 		this.positionSignal = positionSignal;
 		this.voltageSignal = voltageSignal;
+		this.velocitySignal = velocitySignal;
 
 //		this.encoder = encoder;
 //		this.absolutePositionSignal = absolutePositionSignal;
@@ -65,6 +68,10 @@ public class Pivot extends GBSubsystem {
 		return voltageSignal.getLatestValue();
 	}
 
+	public Rotation2d getVelocity() {
+		return velocitySignal.getLatestValue();
+	}
+
 	public boolean isAtPosition(Rotation2d targetPosition, Rotation2d tolerance) {
 		return positionSignal.isNear(targetPosition, tolerance);
 	}
@@ -79,7 +86,7 @@ public class Pivot extends GBSubsystem {
 
 	private void updateInputs() {
 		pivot.updateSimulation();
-		pivot.updateInputs(positionSignal, voltageSignal);
+		pivot.updateInputs(positionSignal, voltageSignal, velocitySignal);
 //		encoder.updateInputs(absolutePositionSignal);
 	}
 

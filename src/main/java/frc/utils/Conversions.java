@@ -158,6 +158,10 @@ public class Conversions {
 		return Rotation2d.fromRotations(distance / (wheelDiameter * MathConstants.HALF_CIRCLE.getRadians()));
 	}
 
+	public static double centimetersToMeters(double centimeters) {
+		return centimeters / 100.0;
+	}
+
 	/**
 	 * Converts a target output voltage to a percentage output when voltage compensation is enabled. The voltage compensation saturation
 	 * determines what voltage represents 100% output. The compensated power is the voltage represented by a percentage of the saturation

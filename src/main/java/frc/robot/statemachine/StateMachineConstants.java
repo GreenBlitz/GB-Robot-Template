@@ -29,7 +29,7 @@ public class StateMachineConstants {
 	public static final double SCORE_OUTTAKE_TIME_AFTER_BEAM_BREAK_SECONDS = 0;
 	public static final double NET_OUTTAKE_TIME_SECONDS = 1;
 	public static final double ALGAE_REMOVE_TIME_AFTER_LIMIT_SWITCH_SECONDS = 0;
-	public static final double ALGAE_INTAKE_TIME_AFTER_SENSOR_SECONDS = 0.2;
+	public static final double ALGAE_INTAKE_TIME_AFTER_SENSOR_SECONDS = 0;
 	public static final double ALGAE_INTAKE_MOVE_TO_OUTTAKE_POSITION_TIME_SECONDS = 0.8;
 	public static final double ALGAE_OUTTAKE_FROM_INTAKE_TIME_AFTER_SENSOR_SECONDS = 0.2;
 	public static final double ALGAE_TRANSFER_TO_END_EFFECTOR_TIME_SECONDS = 0.8;
@@ -37,6 +37,7 @@ public class StateMachineConstants {
 	public static final Rotation2d ARM_POSITION_TO_CLOSE_ELEVATOR_L4 = Rotation2d.fromDegrees(63 + ArmConstants.POSITION_OFFSET.getDegrees());
 	public static final Rotation2d ARM_POSITION_TO_DEPLOY_LIFTER = Rotation2d.fromDegrees(26 + ArmConstants.POSITION_OFFSET.getDegrees());
 	public static final Rotation2d ARM_POSITION_TO_RELEASE_NET = Rotation2d.fromDegrees(175 + ArmConstants.POSITION_OFFSET.getDegrees());
+	public static final Rotation2d PIVOT_POSITION_TO_ALLOW_TRANSFER = Rotation2d.fromDegrees(45);
 	public static final double ELEVATOR_POSITION_TO_CLOSE_CLIMB = 0.39;
 	public static final double ELEVATOR_POSITION_FOR_OPENING = 0.3;
 	public static final double ELEVATOR_POSITION_TO_MOVE_ARM_TO_SCORE_L4 = 0.5;

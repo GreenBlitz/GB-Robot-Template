@@ -110,6 +110,8 @@ public class TalonFXPivotBuilder {
 			.build(pivot.getDevice().getPosition(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 		InputSignal<Double> voltageSignal = Phoenix6SignalBuilder
 			.build(pivot.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
+		InputSignal<Rotation2d> velocitySignal = Phoenix6SignalBuilder
+			.build(pivot.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 
 //		CANCoderEncoder encoder = new CANCoderEncoder(
 //			logPath + "Encoder",
@@ -124,7 +126,7 @@ public class TalonFXPivotBuilder {
 			)
 		);
 
-		return new Pivot(logPath, pivot, positionRequest, positionSignal, voltageSignal);
+		return new Pivot(logPath, pivot, positionRequest, positionSignal, voltageSignal, velocitySignal);
 	}
 
 }

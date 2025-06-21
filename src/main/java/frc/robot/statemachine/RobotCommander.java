@@ -55,7 +55,10 @@ public class RobotCommander extends GBSubsystem {
 		this.currentState = RobotState.STAY_IN_PLACE;
 
 		this.handleBalls = new Trigger(
-			() -> superstructure.isAlgaeInAlgaeIntake() && !robot.getEndEffector().isCoralIn() && currentState == RobotState.DRIVE
+			() -> superstructure.isAlgaeInAlgaeIntake()
+				&& !robot.getEndEffector().isCoralIn()
+				&& currentState == RobotState.DRIVE
+				&& robot.getPivot().getPosition().getDegrees() < StateMachineConstants.PIVOT_POSITION_TO_ALLOW_TRANSFER.getDegrees()
 		);
 		handleBalls.onTrue(transferAlgaeFromIntakeToEndEffector());
 

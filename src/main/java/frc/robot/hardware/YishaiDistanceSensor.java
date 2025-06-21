@@ -6,7 +6,7 @@ import frc.utils.Conversions;
 
 public class YishaiDistanceSensor {
 
-	private static final double SCALING_SLOPE = 0.0004, SCALING_INTERCEPT_POINT = -400;
+    private static final double SCALING_SLOPE = 0.0004, SCALING_INTERCEPT_POINT = -400;
 
 	private final DutyCycle sensorDutyCycle;
 

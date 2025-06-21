@@ -27,7 +27,7 @@ public class AlgaeIntakeStateHandler {
 		this.rollersStateHandler = rollersStateHandler;
 
 		this.distanceSensor = new YishaiDistanceSensor(new DigitalInput(AlgaeIntakeConstants.ALGAE_SENSOR_CHANNEL));
-		this.distanceFilter = new MedianFilter(AlgaeIntakeConstants.DISTANCE_SENSOR_SIZE);
+		this.distanceFilter = new MedianFilter(AlgaeIntakeConstants.NUMBER_OF_VALUES_IN_MEDIAN);
 		distanceFilter.reset();
 		distanceFilter.calculate(distanceSensor.getDistanceMeters());
 	}

@@ -8,7 +8,7 @@ import frc.robot.vision.objectdetection.ObjectDetectionHelpers;
 public class ObjectDetectionMath {
 
 	public static Translation2d getObjectCenterPixel(double[] allObjectsEntryArray, int firstCellIndex) {
-		Translation2d[] objectFrameCorners = ObjectDetectionHelpers.getAllObjectFrameCorners(allObjectsEntryArray, firstCellIndex.get());
+		Translation2d[] objectFrameCorners = ObjectDetectionHelpers.getAllObjectFrameCorners(allObjectsEntryArray, firstCellIndex);
 		double smallestFrameX = Math.min(objectFrameCorners[0].getX(), objectFrameCorners[1].getX());
 		double centerXFromEdge = Math.abs(objectFrameCorners[0].getX() - objectFrameCorners[1].getX()) / 2;
 		double centerX = smallestFrameX + centerXFromEdge;

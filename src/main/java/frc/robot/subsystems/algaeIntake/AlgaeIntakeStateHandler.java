@@ -10,6 +10,8 @@ import frc.robot.Robot;
 import frc.robot.hardware.YishaiDistanceSensor;
 import frc.robot.subsystems.algaeIntake.pivot.PivotStateHandler;
 import frc.robot.subsystems.algaeIntake.rollers.RollersStateHandler;
+import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.Logger;
 
 public class AlgaeIntakeStateHandler {
 
@@ -63,10 +65,15 @@ public class AlgaeIntakeStateHandler {
 	public void updateAlgaeSensor(Robot robot) {
 		if (
 			Math.abs(robot.getPivot().getVelocity().getDegrees())
-				< AlgaeIntakeConstants.MAXIMAL_PIVOT_VELOCITY_TO_UPDATE_FILTER_ANGLE_PER_SECOND.getDegrees()
+					< AlgaeIntakeConstants.MAXIMAL_PIVOT_VELOCITY_TO_UPDATE_FILTER_ANGLE_PER_SECOND.getDegrees()
+				&& pivotStateHandler.pivot.getPosition().getDegrees() < 80
 		) {
 			distanceFilter.calculate(distanceSensor.getDistanceMeters());
 		}
+		else {
+			distanceFilter.calculate(0.5);
+		}
+		Logger.recordOutput("DistanceFilter", distanceFilter.lastValue());
 	}
 
 

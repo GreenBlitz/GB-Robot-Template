@@ -49,7 +49,8 @@ public class AlgaeIntakeStateHandler {
 	}
 
 	public boolean isAlgaeIn() {
-		return distanceFilter.lastValue() < AlgaeIntakeConstants.DISTANCE_FROM_SENSOR_TO_CONSIDER_ALGAE_IN_METERS
+		return !(pivotStateHandler.pivot.getPosition().getDegrees() > 80)
+			&& distanceFilter.lastValue() < AlgaeIntakeConstants.DISTANCE_FROM_SENSOR_TO_CONSIDER_ALGAE_IN_METERS
 			&& currentState != AlgaeIntakeState.CLOSED;
 	}
 

@@ -73,7 +73,7 @@ public class AlgaeIntakeStateHandler {
 		} else {
 			distanceFilter.calculate(AlgaeIntakeConstants.NO_OBJECT_DEFAULT_DISTANCE);
 		}
-		Logger.recordOutput("DistanceFilter", distanceFilter.lastValue());
+		Logger.recordOutput(rollersStateHandler.getRollers().getLogPath() + "/DistanceFilterMeters", distanceFilter.lastValue());
 	}
 
 

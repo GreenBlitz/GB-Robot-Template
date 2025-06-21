@@ -17,6 +17,10 @@ public class RollersStateHandler {
 		return currentState;
 	}
 
+	public Rollers getRollers() {
+		return rollers;
+	}
+
 	public Command setState(RollersState state) {
 		return new ParallelCommandGroup(new InstantCommand(() -> currentState = state), rollers.getCommandsBuilder().setPower(state.getPower()));
 	}

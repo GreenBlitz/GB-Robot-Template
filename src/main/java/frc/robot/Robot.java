@@ -7,7 +7,9 @@ package frc.robot;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.events.EventTrigger;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.RobotManager;
@@ -286,6 +288,13 @@ public class Robot {
 		Logger.recordOutput("TimeTest/Pose", TimeUtil.getCurrentTimeSeconds() - poseTime);
 
 		objectDetector.update();
+		Translation2d pose;
+		if (objectDetector.getFilteredClosestObjectData().isPresent()) {
+			pose = objectDetector.getFilteredClosestObjectData().get().getRobotRelativeEstimatedTranslation();
+		}
+		else pose = new Translation2d();
+		Logger.recordOutput("ObjectPose", new Pose2d(poseEstimator.getEstimatedPose().getTranslation().plus(pose.rotateBy(poseEstimator.getEstimatedPose().getRotation())), new Rotation2d()));
+
 
 		BatteryUtil.logStatus();
 //		BusChain.logChainsStatuses();

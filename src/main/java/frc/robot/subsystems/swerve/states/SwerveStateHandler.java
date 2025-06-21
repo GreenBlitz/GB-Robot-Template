@@ -20,6 +20,7 @@ import frc.robot.subsystems.swerve.states.aimassist.AimAssistMath;
 import frc.robot.vision.data.ObjectData;
 import frc.utils.alerts.Alert;
 import frc.utils.math.FieldMath;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -218,12 +219,11 @@ public class SwerveStateHandler {
 		Translation2d closestAlgaeRobotRelative,
 		SwerveState swerveState
 	) {
-		Translation2d algaeTransFieldRelative = robotPose.getTranslation().plus(closestAlgaeRobotRelative);
+		Translation2d algaeTransFieldRelative = robotPose.getTranslation().plus(closestAlgaeRobotRelative.rotateBy(robotPose.getRotation()));
 
-		Rotation2d targetHeading = closestAlgaeRobotRelative.getAngle().minus(Rotation2d.k180deg);
+		Rotation2d targetHeading = closestAlgaeRobotRelative.rotateBy(robotPose.getRotation()).getAngle().minus(Rotation2d.k180deg);
 		chassisSpeeds = AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotPose.getRotation(), targetHeading, swerveConstants);
-		return chassisSpeeds;
-//		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, targetHeading, closestAlgaeRobotRelative, swerveConstants, swerveState)/;
+		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, targetHeading, algaeTransFieldRelative, swerveConstants, swerveState)/;
 	}
 
 	private ChassisSpeeds handleAngleCageAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading) {

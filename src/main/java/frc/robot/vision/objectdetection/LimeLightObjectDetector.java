@@ -80,18 +80,18 @@ public class LimeLightObjectDetector implements ObjectDetector {
 
 		Translation2d algaeCenterPixel = ObjectDetectionMath.getObjectCenterPixel(allObjectsEntryArray, firstCellIndexInAllObjectsArray.get());
 		boolean isAlgaeSquished = !t2dEntrySquishedAlgaeFilter.apply(t2dEntryArray);
-		double frameCornersOnPictureEdge = ObjectDetectionHelpers.getNumberOfObjectCornersOnPictureEdge(
+		boolean isAlgaeCutOffOnCorner = ObjectDetectionHelpers.getNumberOfObjectCornersOnPictureEdge(
 			allObjectsEntryArray,
 			firstCellIndexInAllObjectsArray.get(),
 			(int) VisionConstants.LIMELIGHT_OBJECT_RESOLUTION_PIXELS.getX(),
 			(int) VisionConstants.LIMELIGHT_OBJECT_RESOLUTION_PIXELS.getY(),
 			VisionConstants.EDGE_PIXEL_TOLERANCE
-		);
+		) >= 3;
 
-		if (!isAlgaeSquished && frameCornersOnPictureEdge < 3) {
+		if (!isAlgaeSquished && !isAlgaeCutOffOnCorner) {
 			return Optional.of(algaeCenterPixel);
 		}
-//		if (isAlgaeSquished && frameCornersOnPictureEdge < 3) {
+//		if (isAlgaeSquished && !isAlgaeCutOffOnCorner) {
 //			return Optional.of(
 //				ObjectDetectionMath.findRealSquishedAlgaeCenter(
 //					algaeCenterPixel,

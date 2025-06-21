@@ -85,7 +85,7 @@ public class VisionConstants {
 		new Translation3d(-0.08, 0.23, 0.865),
 		AngleUnit.DEGREES.toRotation3d(0, -27, 180)
 	);
-	
+
 	public static final String NAME_ENTRY_NO_OBJECT_VALUE = "none";
 
 	public static final double ALGAE_HEIGHT_TO_WIDTH_RATIO_TOLERANCE = 0.5;
@@ -103,31 +103,31 @@ public class VisionConstants {
 	public static final int EDGE_PIXEL_TOLERANCE = 10;
 
 	public static double MAX_VALID_ALGAE_DISTANCE_METERS = 3;
-	
+
 	public static final VisionSource<AprilTagVisionData> LIMELIGHT_LEFT = new DynamicSwitchingLimelight(
-			true,
-			"limelight-left",
-			VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
-			"limelight4-front",
-			VisionConstants.DEFAULT_VISION_FILTER,
-			LIMELIGHT_LEFT_CAMERA_ROBOT_POSE
+		true,
+		"limelight-left",
+		VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
+		"limelight4-front",
+		VisionConstants.DEFAULT_VISION_FILTER,
+		LIMELIGHT_LEFT_CAMERA_ROBOT_POSE
 	);
-	
+
 	public static final VisionSource<AprilTagVisionData> LIMELIGHT_RIGHT = new DynamicSwitchingLimelight(
-			true,
-			"limelight",
-			VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
-			"limelight3gb-front",
-			VisionConstants.DEFAULT_VISION_FILTER,
-			LIMELIGHT_RIGHT_CAMERA_ROBOT_POSE
+		true,
+		"limelight",
+		VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
+		"limelight3gb-front",
+		VisionConstants.DEFAULT_VISION_FILTER,
+		LIMELIGHT_RIGHT_CAMERA_ROBOT_POSE
 	);
-	
+
 	public static final LimeLightObjectDetector LIMELIGHT_OBJECT = new LimeLightObjectDetector(
-			VisionConstants.OBJECT_DETECTOR_SOURCE_LOGPATH,
-			"limelight-object",
-			OBJECT_DETECTION_LIMELIGHT_CAMERA_POSE
+		VisionConstants.OBJECT_DETECTOR_SOURCE_LOGPATH,
+		"limelight-object",
+		OBJECT_DETECTION_LIMELIGHT_CAMERA_POSE
 	);
-	
+
 	public static final List<VisionSource<AprilTagVisionData>> VISION_SOURCES = List.of(LIMELIGHT_LEFT, LIMELIGHT_RIGHT);
-	
+
 }

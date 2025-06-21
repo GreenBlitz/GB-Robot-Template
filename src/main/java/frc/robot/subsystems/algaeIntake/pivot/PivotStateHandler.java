@@ -8,7 +8,7 @@ import frc.robot.statemachine.Tolerances;
 
 public class PivotStateHandler {
 
-	public final Pivot pivot;
+	private final Pivot pivot;
 	private PivotState currentState;
 
 	public PivotStateHandler(Pivot pivot) {
@@ -17,6 +17,10 @@ public class PivotStateHandler {
 
 	public PivotState getCurrentState() {
 		return currentState;
+	}
+
+	public Pivot getPivot() {
+		return pivot;
 	}
 
 	public Command setState(PivotState state) {

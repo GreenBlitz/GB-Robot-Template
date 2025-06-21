@@ -19,8 +19,6 @@ import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssistMath;
 import frc.robot.vision.data.ObjectData;
 import frc.utils.alerts.Alert;
-import frc.utils.math.FieldMath;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -131,7 +129,12 @@ public class SwerveStateHandler {
 
 		if (swerveState.getAimAssist() == AimAssist.ALGAE_INTAKE) {
 			if (closestAlgaeSupplier.get().isPresent()) {
-				return handleAlgaeIntakeAimAssist(speeds, robotPoseSupplier.get().get(), closestAlgaeSupplier.get().get().getRobotRelativeEstimatedTranslation(), swerveState);
+				return handleAlgaeIntakeAimAssist(
+					speeds,
+					robotPoseSupplier.get().get(),
+					closestAlgaeSupplier.get().get().getRobotRelativeEstimatedTranslation(),
+					swerveState
+				);
 			} else {
 				reportMissingSupplier("detected algae");
 				return speeds;
@@ -223,7 +226,8 @@ public class SwerveStateHandler {
 
 		Rotation2d targetHeading = closestAlgaeRobotRelative.rotateBy(robotPose.getRotation()).getAngle().minus(Rotation2d.k180deg);
 		chassisSpeeds = AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotPose.getRotation(), targetHeading, swerveConstants);
-		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, targetHeading, algaeTransFieldRelative, swerveConstants, swerveState);
+		return AimAssistMath
+			.getObjectAssistedSpeeds(chassisSpeeds, robotPose, targetHeading, algaeTransFieldRelative, swerveConstants, swerveState);
 	}
 
 	private ChassisSpeeds handleAngleCageAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading) {

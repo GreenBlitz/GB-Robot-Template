@@ -2,7 +2,6 @@ package frc.robot.vision.objectdetection;
 
 import frc.robot.vision.data.ObjectData;
 import frc.utils.Filter;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 

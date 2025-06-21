@@ -223,7 +223,7 @@ public class SwerveStateHandler {
 
 		Rotation2d targetHeading = closestAlgaeRobotRelative.rotateBy(robotPose.getRotation()).getAngle().minus(Rotation2d.k180deg);
 		chassisSpeeds = AimAssistMath.getRotationAssistedSpeeds(chassisSpeeds, robotPose.getRotation(), targetHeading, swerveConstants);
-		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, targetHeading, algaeTransFieldRelative, swerveConstants, swerveState)/;
+		return AimAssistMath.getObjectAssistedSpeeds(chassisSpeeds, robotPose, targetHeading, algaeTransFieldRelative, swerveConstants, swerveState);
 	}
 
 	private ChassisSpeeds handleAngleCageAssist(ChassisSpeeds chassisSpeeds, Rotation2d robotHeading) {

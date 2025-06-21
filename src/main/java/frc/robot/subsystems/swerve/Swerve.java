@@ -78,10 +78,6 @@ public class Swerve extends GBSubsystem {
 		setDefaultCommand(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
 	}
 
-	public void setHeading() {
-		gyro.setYaw(new Rotation2d());
-	}
-
 	public String getLogPath() {
 		return constants.logPath();
 	}

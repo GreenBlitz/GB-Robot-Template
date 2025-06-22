@@ -24,8 +24,8 @@ public class AutonomousConstants {
 
 	public static final Pose2d NET_AUTO_RELEASE_DEADBANDS = new Pose2d(1, 1, Rotation2d.fromRadians(2));
 
-	public static final Translation2d DEFAULT_LEFT_FLOOR_ALGAE_POSITION = Field.getAllianceRelative(new Translation2d(5.460, 7), true, true);
-	public static final Translation2d DEFAULT_RIGHT_FLOOR_ALGAE_POSITION = Field.getAllianceRelative(new Translation2d(6.300, 7), true, true);
+	public static final Translation2d DEFAULT_LEFT_FLOOR_ALGAE_POSITION = Field.getAllianceRelative(new Translation2d(5.460, 7.2), true, true);
+	public static final Translation2d DEFAULT_RIGHT_FLOOR_ALGAE_POSITION = Field.getAllianceRelative(new Translation2d(6.300, 7.2), true, true);
 
 	public static final double DEFAULT_AUTO_DRIVE_POWER = -0.3;
 

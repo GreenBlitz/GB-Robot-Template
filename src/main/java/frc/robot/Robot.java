@@ -7,6 +7,8 @@ package frc.robot;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.events.EventTrigger;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -58,6 +60,7 @@ import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
 import frc.utils.TimedValue;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.battery.BatteryUtil;
+import frc.utils.math.AngleTransform;
 import frc.utils.math.FieldMath;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
@@ -315,11 +318,12 @@ public class Robot {
 		getRobotCommander().getSuperstructure().driverIsAlgaeInAlgaeIntakeOverride = isAlgaeIn.getSelected();
 		Logger.recordOutput("APPROACH", FieldMath.getApproachPoseToObject(
 				AutonomousConstants.DEFAULT_RIGHT_FLOOR_ALGAE_POSITION,
-				AutonomousConstants.LinkedWaypoints.RIGHT_FLOOR_ALGAE.getSecond(),
+				Field.getAllianceRelative(AutonomousConstants.LinkedWaypoints.RIGHT_FLOOR_ALGAE.getSecond(), true, true, AngleTransform.INVERT),
 				0.7
 		));
-		Logger.recordOutput("ROBOT", AutonomousConstants.LinkedWaypoints.RIGHT_FLOOR_ALGAE.getSecond());
-		Logger.recordOutput("ALGAE", AutonomousConstants.DEFAULT_RIGHT_FLOOR_ALGAE_POSITION);
+		Pose2d bobot = AutonomousConstants.LinkedWaypoints.RIGHT_FLOOR_ALGAE.getSecond();
+		Logger.recordOutput("ROBOT", Field.getAllianceRelative(new Pose2d(bobot.getTranslation(), Rotation2d.fromDegrees(-90)), true, true, AngleTransform.INVERT));
+		Logger.recordOutput("ALGAE", new Pose2d(AutonomousConstants.DEFAULT_RIGHT_FLOOR_ALGAE_POSITION, new Rotation2d()));
 	}
 
 	public Command getAuto() {

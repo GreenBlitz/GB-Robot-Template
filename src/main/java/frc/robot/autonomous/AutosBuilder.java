@@ -24,6 +24,7 @@ import frc.utils.auto.PathHelper;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.math.AngleTransform;
+import frc.utils.math.FieldMath;
 import frc.utils.math.ToleranceMath;
 import org.ejml.interfaces.decomposition.LUDecomposition_F64;
 import org.littletonrobotics.junction.Logger;
@@ -344,18 +345,12 @@ public class AutosBuilder {
 //							new Pose2d(algaeTranslation, Rotation2d.fromDegrees(90))
 //					),
 					robot.getSwerve().getCommandsBuilder().driveToObject(
-							robot.getPoseEstimator()::getEstimatedPose,
+							() -> robot.getPoseEstimator().getEstimatedPose(),
 							() -> Optional.of(algaeTranslation),
-							AutonomousConstants.DISTANCE_FROM_ALGAE_FOR_FLOOR_INTAKE
+							0.2
 					),
 					robot.getRobotCommander().getSuperstructure().algaeIntake().asProxy()
-			).until(() -> ToleranceMath.isNear(
-					robot.getPoseEstimator().getEstimatedPose(),
-					new Pose2d(algaeTranslation,
-							Rotation2d.fromDegrees(90)),
-					tolerance
-				)
-					&& robot.getRobotCommander().getSuperstructure().isAlgaeInAlgaeIntake()
+			).until(() -> robot.getRobotCommander().getSuperstructure().isAlgaeInAlgaeIntake()
 			),
 			robot.getSwerve().getCommandsBuilder().moveToPoseByPID(
 					robot.getPoseEstimator()::getEstimatedPose,

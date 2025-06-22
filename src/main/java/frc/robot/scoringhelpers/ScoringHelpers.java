@@ -2,7 +2,6 @@ package frc.robot.scoringhelpers;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.constants.field.Field;
@@ -14,7 +13,6 @@ import frc.constants.field.enums.ReefSide;
 import frc.constants.field.enums.*;
 import frc.robot.Robot;
 import frc.robot.statemachine.superstructure.ScoreLevel;
-import frc.utils.math.AngleTransform;
 import frc.utils.pose.Side;
 import org.littletonrobotics.junction.Logger;
 
@@ -24,7 +22,7 @@ public class ScoringHelpers {
 	public static final Translation2d END_EFFECTOR_TUSKS_OFFSET_FROM_MID_ROBOT = new Translation2d(0, -0.017);
 	public static final Translation2d ROBOT_DISTANCE_FROM_REEF_FOR_ALGAE_REMOVE = new Translation2d(0.49, 0);
 	private static final double TIME_FOR_POSE_MOVEMENT_SECONDS = 0.5;
-	private static final Transform2d PROCESSOR_SCORING_POSE_OFFSET = new Transform2d(0.06256, 0.97251, new Rotation2d());
+	private static final Translation2d PROCESSOR_SCORING_POSE_OFFSET = new Translation2d(0.06256, 0.97251);
 	private static final Rotation2d HEADING_FOR_CAGE = Rotation2d.fromDegrees(180);
 
 	public static ScoreLevel targetScoreLevel = ScoreLevel.L4;
@@ -166,7 +164,13 @@ public class ScoringHelpers {
 	}
 
 	public static Pose2d getAllianceRelativeProcessorScoringPose() {
-		return Field.getAllianceRelative(Field.getProcessor().plus(PROCESSOR_SCORING_POSE_OFFSET), true, true, AngleTransform.INVERT);
+		Pose2d processorPose = Field.getProcessor();
+		return new Pose2d(
+			Field.isFieldConventionAlliance()
+				? processorPose.getTranslation().plus(PROCESSOR_SCORING_POSE_OFFSET)
+				: processorPose.getTranslation().minus(PROCESSOR_SCORING_POSE_OFFSET),
+			processorPose.getRotation()
+		);
 	}
 
 	public static void log(String logPath) {

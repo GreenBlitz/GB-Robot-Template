@@ -249,7 +249,7 @@ public class Robot {
 			"PreBuiltAutos",
 			AutosBuilder.getAllNoDelayAutos(
 				this,
-					() -> Optional.of(new Translation2d()),
+				objectDetector::getClosestObjectData,
 				intakingCommand,
 				scoringCommand,
 				algaeRemoveCommand,
@@ -289,6 +289,8 @@ public class Robot {
 		double startingTime = TimeUtil.getCurrentTimeSeconds();
 
 		Phoenix6SignalBuilder.refreshAll();
+		
+		Logger.recordOutput("ISALGAEIN", robotCommander.getSuperstructure().isAlgaeInAlgaeIntake());
 
 		swerve.update();
 		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());

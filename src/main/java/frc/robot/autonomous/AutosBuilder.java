@@ -21,6 +21,7 @@ import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.subsystems.swerve.states.DriveSpeed;
 import frc.robot.subsystems.swerve.states.SwerveState;
+import frc.robot.vision.data.ObjectData;
 import frc.utils.auto.AutoPath;
 import frc.utils.auto.PathHelper;
 import frc.utils.auto.PathPlannerAutoWrapper;
@@ -80,7 +81,7 @@ public class AutosBuilder {
 
 	public static List<Supplier<Command>> getAllNoDelayAutos(
 		Robot robot,
-		Supplier<Optional<Translation2d>> algaeTranslationSupplier,
+		Supplier<Optional<ObjectData>> algaeTranslationSupplier,
 		Supplier<Command> intakingCommand,
 		Supplier<Command> scoringCommand,
 		Supplier<Command> algaeRemoveCommand,
@@ -316,7 +317,7 @@ public class AutosBuilder {
 
 	private static Command getFloorAlgaeToNetCommand(
 			Robot robot,
-			Supplier<Optional<Translation2d>> algaeTranslationSupplier,
+			Supplier<Optional<ObjectData>> algaeTranslationSupplier,
 			Supplier<Command> algaeRemoveCommand,
 			Supplier<Command> netCommand,
 			Pose2d tolerance,
@@ -325,7 +326,7 @@ public class AutosBuilder {
 //		if (algaeTranslationSupplier.get().isPresent()) {
 		Translation2d algaeTranslation =
 				algaeTranslationSupplier.get().isPresent()
-						? algaeTranslationSupplier.get().get()
+						? algaeTranslationSupplier.get().get().getRobotRelativeEstimatedTranslation()
 						: (isRightFloorAlgae
 							? AutonomousConstants.DEFAULT_RIGHT_FLOOR_ALGAE_POSITION
 							: AutonomousConstants.DEFAULT_LEFT_FLOOR_ALGAE_POSITION
@@ -402,7 +403,7 @@ public class AutosBuilder {
 
 	private static Command bulbulBalls(
 			Robot robot,
-			Supplier<Optional<Translation2d>> algaeTranslationSupplier,
+			Supplier<Optional<ObjectData>> algaeTranslationSupplier,
 			Supplier<Command> algaeRemoveCommand,
 			Supplier<Command> floorAlgaeIntakeCommand,
 			Supplier<Command> netCommand,
@@ -453,7 +454,7 @@ public class AutosBuilder {
 					),
 					getFloorAlgaeToNetCommand(
 							robot,
-							() -> Optional.of(AutonomousConstants.DEFAULT_RIGHT_FLOOR_ALGAE_POSITION),
+							algaeTranslationSupplier,
 							algaeRemoveCommand,
 							netCommand,
 							tolerance,
@@ -472,7 +473,7 @@ public class AutosBuilder {
 					),
 					getFloorAlgaeToNetCommand(
 							robot,
-							() -> Optional.of(AutonomousConstants.DEFAULT_LEFT_FLOOR_ALGAE_POSITION),
+							algaeTranslationSupplier,
 							algaeRemoveCommand,
 							netCommand,
 							tolerance,

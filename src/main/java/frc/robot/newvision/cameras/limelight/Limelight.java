@@ -13,7 +13,6 @@ import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
-import java.util.function.Function;
 
 public class Limelight implements IndependentRobotPoseSupplier, OrientationRequiringRobotPoseSupplier {
 
@@ -147,12 +146,21 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 		);
 	}
 
-	private static Pose2d calculateStandardDeviations(LimelightHelpers.PoseEstimate poseEstimate, Pose2d minStandardDeviations, Pose2d standardDeviationFactors) {
-		double averageTagDistanceSquared =  Math.pow(poseEstimate.avgTagDist, 2);
+	private static Pose2d calculateStandardDeviations(
+		LimelightHelpers.PoseEstimate poseEstimate,
+		Pose2d minStandardDeviations,
+		Pose2d standardDeviationFactors
+	) {
+		double averageTagDistanceSquared = Math.pow(poseEstimate.avgTagDist, 2);
 		return new Pose2d(
-				Math.max(minStandardDeviations.getX(), standardDeviationFactors.getX() * averageTagDistanceSquared),
-				Math.max(minStandardDeviations.getY(), standardDeviationFactors.getY() * averageTagDistanceSquared),
-				new Rotation2d(Math.max(minStandardDeviations.getRotation().getRadians(), standardDeviationFactors.getRotation().times(averageTagDistanceSquared).getRadians()))
+			Math.max(minStandardDeviations.getX(), standardDeviationFactors.getX() * averageTagDistanceSquared),
+			Math.max(minStandardDeviations.getY(), standardDeviationFactors.getY() * averageTagDistanceSquared),
+			new Rotation2d(
+				Math.max(
+					minStandardDeviations.getRotation().getRadians(),
+					standardDeviationFactors.getRotation().times(averageTagDistanceSquared).getRadians()
+				)
+			)
 		);
 	}
 

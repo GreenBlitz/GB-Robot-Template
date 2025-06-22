@@ -7,6 +7,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import frc.constants.DirectoryPaths;
+import frc.constants.field.Field;
+import frc.constants.field.enums.FieldType;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.data.VisionData;
 import frc.robot.vision.objectdetection.LimeLightObjectDetector;
@@ -36,7 +38,7 @@ public class VisionConstants {
 	public static final String DYNAMIC_LIMELIGHT_MEGATAG2_SOURCE_NAME = "headingRequiringLimelight";
 
 
-	public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = getAprilTagFieldLayout();
+	public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = getAprilTagFieldLayout(Field.FIELD_TYPE);
 
 	private static AprilTagFieldLayout getAprilTagFieldLayout() {
 		try {
@@ -48,6 +50,13 @@ public class VisionConstants {
 			).report();
 			return AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 		}
+	}
+
+	private static AprilTagFieldLayout getAprilTagFieldLayout(FieldType fieldType) {
+		return switch (fieldType) {
+			case WELDED -> AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
+			case ANDY_MARK -> AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
+		};
 	}
 
 	public static final int LIMELIGHT_ENTRY_ARRAY_LENGTH = 6;

@@ -202,7 +202,7 @@ public class SwerveCommandsBuilder {
 			moveToPoseByPID(
 				currentPose,
 				() -> objectTranslation.get().isPresent()
-					? FieldMath.findPoseByDistanceFromObject(
+					? FieldMath.getApproachPoseToObject(
 					objectTranslation.get().get(),
 					currentPose.get(),
 					distance

@@ -58,6 +58,7 @@ import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
 import frc.utils.TimedValue;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.battery.BatteryUtil;
+import frc.utils.math.FieldMath;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -312,6 +313,13 @@ public class Robot {
 		Logger.recordOutput("TimeTest/RobotPeriodic", TimeUtil.getCurrentTimeSeconds() - startingTime);
 
 		getRobotCommander().getSuperstructure().driverIsAlgaeInAlgaeIntakeOverride = isAlgaeIn.getSelected();
+		Logger.recordOutput("APPROACH", FieldMath.getApproachPoseToObject(
+				AutonomousConstants.DEFAULT_RIGHT_FLOOR_ALGAE_POSITION,
+				AutonomousConstants.LinkedWaypoints.RIGHT_FLOOR_ALGAE.getSecond(),
+				0.7
+		));
+		Logger.recordOutput("ROBOT", AutonomousConstants.LinkedWaypoints.RIGHT_FLOOR_ALGAE.getSecond());
+		Logger.recordOutput("ALGAE", AutonomousConstants.DEFAULT_RIGHT_FLOOR_ALGAE_POSITION);
 	}
 
 	public Command getAuto() {

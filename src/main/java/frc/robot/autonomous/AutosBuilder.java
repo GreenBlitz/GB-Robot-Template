@@ -337,15 +337,16 @@ public class AutosBuilder {
 		AutoPath floorAlgaeToNetPath = isRightFloorAlgae ? AutoPath.RIGHT_FLOOR_ALGAE_TO_CLOSE_LEFT_NET : AutoPath.LEFT_FLOOR_ALGAE_TO_CLOSE_RIGHT_NET;
 		return new SequentialCommandGroup(
 
-			/*robot.getSwerve().getCommandsBuilder().driveToObject(
-					robot.getPoseEstimator()::getEstimatedPose,
-					algaeTranslationSupplier,
-					AutonomousConstants.DISTANCE_FROM_ALGAE_FOR_FLOOR_INTAKE
-			)*/
+
 			new ParallelCommandGroup(
-					robot.getSwerve().getCommandsBuilder().moveToPoseByPID(
+//					robot.getSwerve().getCommandsBuilder().moveToPoseByPID(
+//							robot.getPoseEstimator()::getEstimatedPose,
+//							new Pose2d(algaeTranslation, Rotation2d.fromDegrees(90))
+//					),
+					robot.getSwerve().getCommandsBuilder().driveToObject(
 							robot.getPoseEstimator()::getEstimatedPose,
-							new Pose2d(algaeTranslation, Rotation2d.fromDegrees(90))
+							() -> Optional.of(algaeTranslation),
+							AutonomousConstants.DISTANCE_FROM_ALGAE_FOR_FLOOR_INTAKE
 					),
 					robot.getRobotCommander().getSuperstructure().algaeIntake().asProxy()
 			).until(() -> ToleranceMath.isNear(

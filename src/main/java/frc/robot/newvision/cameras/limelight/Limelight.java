@@ -2,6 +2,7 @@ package frc.robot.newvision.cameras.limelight;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import frc.robot.newvision.RobotPoseObservation;
 import frc.robot.newvision.interfaces.OrientationRequiringRobotPoseSupplier;
@@ -20,8 +21,10 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 	private final String logPath;
 	private final Pose3d robotRelativeCameraPose;
 
-	private final Function<LimelightHelpers.PoseEstimate, Pose2d> calculateMegaTag1StandardDeviations;
-	private final Function<LimelightHelpers.PoseEstimate, Pose2d> calculateMegaTag2StandardDeviations;
+	private final Pose2d megaTag1MinStandardDeviations;
+	private final Pose2d megaTag1StandardDeviationFactors;
+	private final Pose2d megaTag2MinStandardDeviations;
+	private final Pose2d megaTag2StandardDeviationFactors;
 
 	private final RobotPoseObservation megaTag1RobotPoseObservation;
 	private final RobotPoseObservation megaTag2RobotPoseObservation;
@@ -33,8 +36,10 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 		String logPathPrefix,
 		Pose3d robotRelativeCameraPose,
 		LimelightPipeline pipeline,
-		Function<LimelightHelpers.PoseEstimate, Pose2d> calculateMegaTag1StandardDeviations,
-		Function<LimelightHelpers.PoseEstimate, Pose2d> calculateMegaTag2StandardDeviations
+		Pose2d megaTag1MinStandardDeviations,
+		Pose2d megaTag1StandardDeviationFactors,
+		Pose2d megaTag2MinStandardDeviations,
+		Pose2d megaTag2StandardDeviationFactors
 	) {
 		this.name = name;
 		this.logPath = logPathPrefix + "/" + name;
@@ -42,8 +47,10 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 		this.robotRelativeCameraPose = robotRelativeCameraPose;
 		setRobotRelativeCameraPose(robotRelativeCameraPose);
 
-		this.calculateMegaTag1StandardDeviations = calculateMegaTag1StandardDeviations;
-		this.calculateMegaTag2StandardDeviations = calculateMegaTag2StandardDeviations;
+		this.megaTag1MinStandardDeviations = megaTag1MinStandardDeviations;
+		this.megaTag1StandardDeviationFactors = megaTag1StandardDeviationFactors;
+		this.megaTag2MinStandardDeviations = megaTag2MinStandardDeviations;
+		this.megaTag2StandardDeviationFactors = megaTag2StandardDeviationFactors;
 
 		this.megaTag1RobotPoseObservation = new RobotPoseObservation();
 		this.megaTag2RobotPoseObservation = new RobotPoseObservation();
@@ -60,12 +67,12 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 				megaTag1RobotPoseObservation.setObservationValues(
 					getEstimateTimestampSeconds(megaTag1RobotPoseEstimate),
 					megaTag1RobotPoseEstimate.pose,
-					calculateMegaTag1StandardDeviations.apply(megaTag1RobotPoseEstimate)
+					calculateStandardDeviations(megaTag1RobotPoseEstimate, megaTag1MinStandardDeviations, megaTag1StandardDeviationFactors)
 				);
 				megaTag2RobotPoseObservation.setObservationValues(
 					getEstimateTimestampSeconds(megaTag2RobotPoseEstimate),
 					megaTag2RobotPoseEstimate.pose,
-					calculateMegaTag2StandardDeviations.apply(megaTag2RobotPoseEstimate)
+					calculateStandardDeviations(megaTag2RobotPoseEstimate, megaTag2MinStandardDeviations, megaTag2StandardDeviationFactors)
 				);
 			}
 			default -> {}
@@ -137,6 +144,15 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 			robotRelativeCameraPose.getRotation().getX(),
 			robotRelativeCameraPose.getRotation().getY(),
 			robotRelativeCameraPose.getRotation().getZ()
+		);
+	}
+
+	private static Pose2d calculateStandardDeviations(LimelightHelpers.PoseEstimate poseEstimate, Pose2d minStandardDeviations, Pose2d standardDeviationFactors) {
+		double averageTagDistanceSquared =  Math.pow(poseEstimate.avgTagDist, 2);
+		return new Pose2d(
+				Math.max(minStandardDeviations.getX(), standardDeviationFactors.getX() * averageTagDistanceSquared),
+				Math.max(minStandardDeviations.getY(), standardDeviationFactors.getY() * averageTagDistanceSquared),
+				new Rotation2d(Math.max(minStandardDeviations.getRotation().getRadians(), standardDeviationFactors.getRotation().times(averageTagDistanceSquared).getRadians()))
 		);
 	}
 

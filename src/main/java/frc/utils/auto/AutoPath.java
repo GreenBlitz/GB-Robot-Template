@@ -205,19 +205,19 @@ public enum AutoPath {
 			AutonomousConstants.LinkedWaypoints.RIGHT_FLOOR_ALGAE,
 			Optional.empty()
 	),
-	RIGHT_FLOOR_ALGAE_TO_MIDDLE_NET(
+	RIGHT_FLOOR_ALGAE_TO_CLOSE_LEFT_NET(
 			AutonomousConstants.LinkedWaypoints.RIGHT_FLOOR_ALGAE,
-			AutonomousConstants.LinkedWaypoints.MIDDLE_NET,
+			AutonomousConstants.LinkedWaypoints.CLOSE_LEFT_NET,
 			Optional.empty()
 	),
-	MIDDLE_NET_TO_LEFT_FLOOR_ALGAE(
-			AutonomousConstants.LinkedWaypoints.MIDDLE_NET,
+	CLOSE_LEFT_NET_TO_LEFT_FLOOR_ALGAE(
+			AutonomousConstants.LinkedWaypoints.CLOSE_LEFT_NET,
 			AutonomousConstants.LinkedWaypoints.LEFT_FLOOR_ALGAE,
 			Optional.empty()
 	),
-	LEFT_FLOOR_ALGAE_TO_RIGHT_NET(
+	LEFT_FLOOR_ALGAE_TO_CLOSE_RIGHT_NET(
 			AutonomousConstants.LinkedWaypoints.LEFT_FLOOR_ALGAE,
-			AutonomousConstants.LinkedWaypoints.RIGHT_NET,
+			AutonomousConstants.LinkedWaypoints.CLOSE_RIGHT_NET,
 			Optional.empty()
 	),
 	RIGHT_FLOOR_ALGAE_TO_ALGAE_REMOVE_E(

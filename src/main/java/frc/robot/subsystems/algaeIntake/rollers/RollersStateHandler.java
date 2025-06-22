@@ -17,12 +17,12 @@ public class RollersStateHandler {
 		return currentState;
 	}
 
-	public Command setState(RollersState state) {
-		return new ParallelCommandGroup(new InstantCommand(() -> currentState = state), rollers.getCommandsBuilder().setPower(state.getPower()));
+	public Rollers getRollers() {
+		return rollers;
 	}
 
-	public boolean isAlgaeIn() {
-		return rollers.isAlgaeCurrentlyIn();
+	public Command setState(RollersState state) {
+		return new ParallelCommandGroup(new InstantCommand(() -> currentState = state), rollers.getCommandsBuilder().setPower(state.getPower()));
 	}
 
 }

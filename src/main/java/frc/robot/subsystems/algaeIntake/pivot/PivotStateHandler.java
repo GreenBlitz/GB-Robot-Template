@@ -19,6 +19,10 @@ public class PivotStateHandler {
 		return currentState;
 	}
 
+	public Pivot getPivot() {
+		return pivot;
+	}
+
 	public Command setState(PivotState state) {
 		if (state == PivotState.STAY_IN_PLACE) {
 			return new ParallelCommandGroup(new InstantCommand(() -> currentState = state), pivot.getCommandsBuilder().stayInPlace());

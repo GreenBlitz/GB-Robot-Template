@@ -19,6 +19,8 @@ import frc.robot.subsystems.elevator.ElevatorState;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.superstructure.ScoreLevel;
+import frc.robot.subsystems.swerve.states.DriveSpeed;
+import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.auto.AutoPath;
 import frc.utils.auto.PathHelper;
 import frc.utils.auto.PathPlannerAutoWrapper;
@@ -354,7 +356,8 @@ public class AutosBuilder {
 			),
 			robot.getSwerve().getCommandsBuilder().moveToPoseByPID(
 					robot.getPoseEstimator()::getEstimatedPose,
-					floorAlgaeLinkedWayPoint
+					floorAlgaeLinkedWayPoint,
+					SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW)
 			).until(() -> ToleranceMath.isNear(
 					robot.getPoseEstimator().getEstimatedPose(),
 					floorAlgaeLinkedWayPoint,
@@ -422,7 +425,7 @@ public class AutosBuilder {
 				new SequentialCommandGroup(
 						new ParallelCommandGroup(
 								robot.getRobotCommander().getSuperstructure().holdAlgae().asProxy(),
-								robot.getSwerve().getCommandsBuilder().moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, backOffFromReefPose)
+								robot.getSwerve().getCommandsBuilder().moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, backOffFromReefPose, SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW))
 						).until(
 								() -> ToleranceMath.isNear(robot.getPoseEstimator().getEstimatedPose(), backOffFromReefPose, tolerance)
 										&& robot.getElevator().isAtPosition(ElevatorState.HOLD_ALGAE.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
@@ -431,7 +434,7 @@ public class AutosBuilder {
 						robot.getRobotCommander().getSuperstructure().algaeRemove().asProxy(),
 						robot.getSwerve()
 							.getCommandsBuilder()
-							.moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers.getAlgaeRemovePose(true))
+							.moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers.getAlgaeRemovePose(true), SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW))
 					).withTimeout(AutonomousConstants.FIRST_ALGAE_REMOVE_TIMEOUT_SECONDS),
 					createAutoFromAutoPath(
 						AutoPath.ALGAE_REMOVE_D_TO_LEFT_NET,

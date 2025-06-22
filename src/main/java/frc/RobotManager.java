@@ -4,31 +4,21 @@
 
 package frc;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.constants.field.Field;
-import frc.constants.field.enums.Branch;
 import frc.robot.Robot;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.led.LEDConstants;
 import frc.robot.led.LEDState;
-import frc.robot.statemachine.Tolerances;
 import frc.robot.subsystems.climb.lifter.LifterConstants;
 import frc.utils.DriverStationUtil;
-import frc.robot.subsystems.elevator.ElevatorState;
 import frc.utils.alerts.AlertManager;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.DriverStationUtil;
-import frc.utils.math.AngleTransform;
-import frc.utils.math.ToleranceMath;
 import frc.utils.time.TimeUtil;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;

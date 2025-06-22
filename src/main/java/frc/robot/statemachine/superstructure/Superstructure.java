@@ -455,25 +455,25 @@ public class Superstructure extends GBSubsystem {
 
 	public Command softCloseNetToFloorAlgaeIntake() {
 		return new DeferredCommand(
-				() -> softCloseWithOpenAlgaeIntake(
-						"Net",
-						ArmState.MID_WAY_CLOSE,
-						ArmState.TRANSFER_ALGAE_FROM_INTAKE,
-						ElevatorState.NET,
-						ElevatorState.TRANSFER_ALGAE_FROM_INTAKE,
-						0.6,
-						Rotation2d.fromDegrees(45)
-				),
-				Set.of(
-						this,
-						robot.getElevator(),
-						robot.getArm(),
-						robot.getEndEffector(),
-						robot.getLifter(),
-						robot.getSolenoid(),
-						robot.getPivot(),
-						robot.getRollers()
-				)
+			() -> softCloseWithOpenAlgaeIntake(
+				"Net",
+				ArmState.MID_WAY_CLOSE,
+				ArmState.TRANSFER_ALGAE_FROM_INTAKE,
+				ElevatorState.NET,
+				ElevatorState.TRANSFER_ALGAE_FROM_INTAKE,
+				0.6,
+				Rotation2d.fromDegrees(45)
+			),
+			Set.of(
+				this,
+				robot.getElevator(),
+				robot.getArm(),
+				robot.getEndEffector(),
+				robot.getLifter(),
+				robot.getSolenoid(),
+				robot.getPivot(),
+				robot.getRollers()
+			)
 
 		);
 	}
@@ -508,31 +508,31 @@ public class Superstructure extends GBSubsystem {
 	}
 
 	private Command softCloseWithOpenAlgaeIntake(
-			String name,
-			ArmState notTouchingField,
-			ArmState closed,
-			ElevatorState starting,
-			ElevatorState ending,
-			double elevatorHeightToCloseArm,
-			Rotation2d armPositionToCloseElevator
+		String name,
+		ArmState notTouchingField,
+		ArmState closed,
+		ElevatorState starting,
+		ElevatorState ending,
+		double elevatorHeightToCloseArm,
+		Rotation2d armPositionToCloseElevator
 	) {
 		return asSubsystemCommand(
-				new ParallelDeadlineGroup(
-						new SequentialCommandGroup(
-								new ParallelCommandGroup(armStateHandler.setState(notTouchingField), elevatorStateHandler.setState(starting))
-										.until(() -> robot.getArm().isPastPosition(armPositionToCloseElevator)),
-								new ParallelCommandGroup(armStateHandler.setState(notTouchingField), elevatorStateHandler.setState(ending))
-										.until(() -> !robot.getElevator().isPastPosition(elevatorHeightToCloseArm)),
-								new ParallelDeadlineGroup(armStateHandler.setState(closed), elevatorStateHandler.setState(ending)).until(
-										() -> armStateHandler.isAtState(closed, Tolerances.ARM_POSITION)
-												&& elevatorStateHandler.isAtState(ending, Tolerances.ELEVATOR_HEIGHT_METERS)
-								)
-						),
-						endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
-						climbStateHandler.setState(ClimbState.STOP),
-						algaeIntakeStateHandler.setState(AlgaeIntakeState.INTAKE)
+			new ParallelDeadlineGroup(
+				new SequentialCommandGroup(
+					new ParallelCommandGroup(armStateHandler.setState(notTouchingField), elevatorStateHandler.setState(starting))
+						.until(() -> robot.getArm().isPastPosition(armPositionToCloseElevator)),
+					new ParallelCommandGroup(armStateHandler.setState(notTouchingField), elevatorStateHandler.setState(ending))
+						.until(() -> !robot.getElevator().isPastPosition(elevatorHeightToCloseArm)),
+					new ParallelDeadlineGroup(armStateHandler.setState(closed), elevatorStateHandler.setState(ending)).until(
+						() -> armStateHandler.isAtState(closed, Tolerances.ARM_POSITION)
+							&& elevatorStateHandler.isAtState(ending, Tolerances.ELEVATOR_HEIGHT_METERS)
+					)
 				),
-				"Soft Close " + name
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
+				climbStateHandler.setState(ClimbState.STOP),
+				algaeIntakeStateHandler.setState(AlgaeIntakeState.INTAKE)
+			),
+			"Soft Close " + name
 		);
 	}
 

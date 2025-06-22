@@ -27,13 +27,16 @@ public class ToleranceMath {
 	}
 
 	public static boolean isNearWrapped(Rotation2d wantedAngle, Rotation2d angle, Rotation2d tolerance) {
-		Logger.recordOutput("isNear/isAtRotation", MathUtil.isNear(
+		Logger.recordOutput(
+			"isNear/isAtRotation",
+			MathUtil.isNear(
 				wantedAngle.getRadians(),
 				angle.getRadians(),
 				tolerance.getRadians(),
 				MathConstants.HALF_CIRCLE.unaryMinus().getRadians(),
 				MathConstants.HALF_CIRCLE.getRadians()
-		));
+			)
+		);
 		return MathUtil.isNear(
 			wantedAngle.getRadians(),
 			angle.getRadians(),

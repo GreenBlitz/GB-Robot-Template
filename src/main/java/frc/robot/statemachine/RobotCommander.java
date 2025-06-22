@@ -25,6 +25,7 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
+import frc.utils.DriverStationUtil;
 import frc.utils.math.AngleTransform;
 import frc.utils.math.FieldMath;
 import frc.utils.math.ToleranceMath;
@@ -59,6 +60,7 @@ public class RobotCommander extends GBSubsystem {
 				&& !robot.getEndEffector().isCoralIn()
 				&& currentState == RobotState.DRIVE
 				&& robot.getPivot().getPosition().getDegrees() < StateMachineConstants.PIVOT_POSITION_TO_ALLOW_TRANSFER.getDegrees()
+				&& DriverStationUtil.isTeleop()
 		);
 		handleBalls.onTrue(transferAlgaeFromIntakeToEndEffector());
 

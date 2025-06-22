@@ -8,9 +8,7 @@ import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.events.EventTrigger;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,7 +23,6 @@ import frc.robot.led.LEDState;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
-import frc.robot.subsystems.algaeIntake.AlgaeIntakeState;
 import frc.robot.subsystems.algaeIntake.pivot.Factory.PivotFactory;
 import frc.robot.subsystems.algaeIntake.pivot.Pivot;
 import frc.robot.subsystems.algaeIntake.rollers.Factory.RollersFactory;
@@ -81,6 +78,11 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final IPoseEstimator poseEstimator;
+	
+	public RobotHeadingEstimator getHeadingEstimator() {
+		return headingEstimator;
+	}
+	
 	private final RobotHeadingEstimator headingEstimator;
 	private final MultiAprilTagVisionSources multiAprilTagVisionSources;
 	private final LimeLightObjectDetector objectDetector;
@@ -213,9 +215,7 @@ public class Robot {
 			.softCloseNetToAlgaeRemove()
 			.andThen(robotCommander.getSuperstructure().algaeRemove().withTimeout(AutonomousConstants.ALGAE_REMOVE_TIMEOUT_SECONDS))
 			.asProxy();
-		Supplier<Command> floorAlgaeIntakeCommand = () -> robotCommander.getSuperstructure()
-				.softCloseNetToFloorAlgaeIntake()
-				.asProxy();
+		Supplier<Command> floorAlgaeIntakeCommand = () -> robotCommander.getSuperstructure().softCloseNetToFloorAlgaeIntake().asProxy();
 		Supplier<Command> netCommand = () -> robotCommander.getSuperstructure().netWithRelease().asProxy();
 
 		swerve.configPathPlanner(
@@ -289,7 +289,7 @@ public class Robot {
 		double startingTime = TimeUtil.getCurrentTimeSeconds();
 
 		Phoenix6SignalBuilder.refreshAll();
-		
+
 		Logger.recordOutput("ISALGAEIN", robotCommander.getSuperstructure().isAlgaeInAlgaeIntake());
 
 		swerve.update();
@@ -326,13 +326,19 @@ public class Robot {
 		Logger.recordOutput("TimeTest/RobotPeriodic", TimeUtil.getCurrentTimeSeconds() - startingTime);
 
 		getRobotCommander().getSuperstructure().driverIsAlgaeInAlgaeIntakeOverride = isAlgaeIn.getSelected();
-		Logger.recordOutput("APPROACH", FieldMath.getApproachPoseToObject(
+		Logger.recordOutput(
+			"APPROACH",
+			FieldMath.getApproachPoseToObject(
 				AutonomousConstants.DEFAULT_RIGHT_FLOOR_ALGAE_POSITION,
 				Field.getAllianceRelative(AutonomousConstants.LinkedWaypoints.RIGHT_FLOOR_ALGAE.getSecond(), true, true, AngleTransform.INVERT),
 				0.7
-		));
+			)
+		);
 		Pose2d bobot = AutonomousConstants.LinkedWaypoints.RIGHT_FLOOR_ALGAE.getSecond();
-		Logger.recordOutput("ROBOT", Field.getAllianceRelative(new Pose2d(bobot.getTranslation(), Rotation2d.fromDegrees(-90)), true, true, AngleTransform.INVERT));
+		Logger.recordOutput(
+			"ROBOT",
+			Field.getAllianceRelative(new Pose2d(bobot.getTranslation(), Rotation2d.fromDegrees(-90)), true, true, AngleTransform.INVERT)
+		);
 		Logger.recordOutput("ALGAE", new Pose2d(AutonomousConstants.DEFAULT_RIGHT_FLOOR_ALGAE_POSITION, new Rotation2d()));
 	}
 

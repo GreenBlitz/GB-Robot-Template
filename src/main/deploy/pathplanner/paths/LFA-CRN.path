@@ -3,12 +3,12 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.46,
+        "x": 5.86,
         "y": 6.64
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.684973958333333,
+        "x": 6.084973958333333,
         "y": 5.452791883680556
       },
       "isLocked": false,
@@ -51,12 +51,6 @@
   ],
   "pointTowardsZones": [],
   "eventMarkers": [
-    {
-      "name": "TRANSFER_ALGAE",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
     {
       "name": "PRE_NET",
       "waypointRelativePos": 0.5439939784053158,

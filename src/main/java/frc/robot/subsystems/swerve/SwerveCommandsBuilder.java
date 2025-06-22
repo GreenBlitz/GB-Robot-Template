@@ -204,20 +204,14 @@ public class SwerveCommandsBuilder {
 				currentPose,
 				() -> objectTranslation.get().isPresent()
 					? new Pose2d(
-						FieldMath.getApproachPoseToObject(
-								objectTranslation.get().get(),
-								currentPose.get(),
-								distance
-						).getTranslation(),
-						FieldMath.getApproachPoseToObject(
-								objectTranslation.get().get(),
-								currentPose.get(),
-								distance
-						).getRotation().minus(Rotation2d.fromDegrees(180))
-				)
-				: currentPose.get(),
-					SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW)
-					
+						FieldMath.getApproachPoseToObject(objectTranslation.get().get(), currentPose.get(), distance).getTranslation(),
+						FieldMath.getApproachPoseToObject(objectTranslation.get().get(), currentPose.get(), distance)
+							.getRotation()
+							.minus(Rotation2d.fromDegrees(180))
+					)
+					: currentPose.get(),
+				SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW)
+
 			).until(() -> objectTranslation.get().isEmpty()),
 			"Drive to object"
 		);
@@ -254,25 +248,25 @@ public class SwerveCommandsBuilder {
 			"PID to pose: " + targetPose
 		);
 	}
-	
+
 	public Command moveToPoseByPID(Supplier<Pose2d> currentPose, Pose2d targetPose, SwerveState swerveState) {
 		return swerve.asSubsystemCommand(
-				new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.moveToPoseByPID(currentPose.get(), targetPose, swerveState)),
-				"PID to pose: " + targetPose
+			new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.moveToPoseByPID(currentPose.get(), targetPose, swerveState)),
+			"PID to pose: " + targetPose
 		);
 	}
 
 	public Command moveToPoseByPID(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose) {
 		return swerve.asSubsystemCommand(
-				new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.moveToPoseByPID(currentPose.get(), targetPose.get())),
-				"PID to pose: " + targetPose
+			new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.moveToPoseByPID(currentPose.get(), targetPose.get())),
+			"PID to pose: " + targetPose
 		);
 	}
-	
+
 	public Command moveToPoseByPID(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose, SwerveState swerveState) {
 		return swerve.asSubsystemCommand(
-				new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.moveToPoseByPID(currentPose.get(), targetPose.get(), swerveState)),
-				"PID to pose: " + targetPose
+			new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.moveToPoseByPID(currentPose.get(), targetPose.get(), swerveState)),
+			"PID to pose: " + targetPose
 		);
 	}
 

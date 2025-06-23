@@ -6,6 +6,6 @@ import java.util.Optional;
 
 public interface IndependentRobotPoseSupplier {
 
-	Optional<RobotPoseObservation> getRobotPose();
+	Optional<RobotPoseObservation> getIndependentRobotPose();
 
 }

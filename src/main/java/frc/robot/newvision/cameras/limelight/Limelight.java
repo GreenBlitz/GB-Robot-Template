@@ -1,8 +1,6 @@
 package frc.robot.newvision.cameras.limelight;
 
-import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.numbers.N1;
@@ -16,6 +14,7 @@ import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 public class Limelight implements IndependentRobotPoseSupplier, OrientationRequiringRobotPoseSupplier {
 
@@ -23,13 +22,11 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 	private final String logPath;
 	private final Pose3d robotRelativeCameraPose;
 
-	private final Matrix<N1, N3> megaTag1MinStandardDeviations;
-	private final Matrix<N1, N3> megaTag1StandardDeviationFactors;
-	private final Matrix<N1, N3> megaTag2MinStandardDeviations;
-	private final Matrix<N1, N3> megaTag2StandardDeviationFactors;
-
 	private final RobotPoseObservation megaTag1RobotPoseObservation;
 	private final RobotPoseObservation megaTag2RobotPoseObservation;
+
+	private Function<LimelightHelpers.PoseEstimate, Matrix<N1, N3>> calculateMegaTag1StandardDeviations;
+	private Function<LimelightHelpers.PoseEstimate, Matrix<N1, N3>> calculateMegaTag2StandardDeviations;
 
 	private LimelightPipeline pipeline;
 
@@ -38,10 +35,8 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 		String logPathPrefix,
 		Pose3d robotRelativeCameraPose,
 		LimelightPipeline pipeline,
-		Matrix<N1, N3> megaTag1MinStandardDeviations,
-		Matrix<N1, N3> megaTag1StandardDeviationFactors,
-		Matrix<N1, N3> megaTag2MinStandardDeviations,
-		Matrix<N1, N3> megaTag2StandardDeviationFactors
+		Function<LimelightHelpers.PoseEstimate, Matrix<N1, N3>> calculateMegaTag1StandardDeviations,
+		Function<LimelightHelpers.PoseEstimate, Matrix<N1, N3>> calculateMegaTag2StandardDeviations
 	) {
 		this.name = name;
 		this.logPath = logPathPrefix + "/" + name;
@@ -49,10 +44,8 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 		this.robotRelativeCameraPose = robotRelativeCameraPose;
 		setRobotRelativeCameraPose(robotRelativeCameraPose);
 
-		this.megaTag1MinStandardDeviations = megaTag1MinStandardDeviations;
-		this.megaTag1StandardDeviationFactors = megaTag1StandardDeviationFactors;
-		this.megaTag2MinStandardDeviations = megaTag2MinStandardDeviations;
-		this.megaTag2StandardDeviationFactors = megaTag2StandardDeviationFactors;
+		this.calculateMegaTag1StandardDeviations = calculateMegaTag1StandardDeviations;
+		this.calculateMegaTag2StandardDeviations = calculateMegaTag2StandardDeviations;
 
 		this.megaTag1RobotPoseObservation = new RobotPoseObservation();
 		this.megaTag2RobotPoseObservation = new RobotPoseObservation();
@@ -69,12 +62,12 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 				megaTag1RobotPoseObservation.setObservationValues(
 					getEstimateTimestampSeconds(megaTag1RobotPoseEstimate),
 					megaTag1RobotPoseEstimate.pose,
-					calculateStandardDeviations(megaTag1RobotPoseEstimate, megaTag1MinStandardDeviations, megaTag1StandardDeviationFactors)
+					calculateMegaTag1StandardDeviations.apply(megaTag1RobotPoseEstimate)
 				);
 				megaTag2RobotPoseObservation.setObservationValues(
 					getEstimateTimestampSeconds(megaTag2RobotPoseEstimate),
 					megaTag2RobotPoseEstimate.pose,
-					calculateStandardDeviations(megaTag2RobotPoseEstimate, megaTag2MinStandardDeviations, megaTag2StandardDeviationFactors)
+					calculateMegaTag2StandardDeviations.apply(megaTag2RobotPoseEstimate)
 				);
 			}
 			default -> {}
@@ -137,6 +130,18 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 		LimelightHelpers.setPipelineIndex(name, pipeline.getPipelineIndex());
 	}
 
+	public void setMegaTag1StandardDeviationsCalculationFunction(
+		Function<LimelightHelpers.PoseEstimate, Matrix<N1, N3>> calculateMegaTag1StandardDeviations
+	) {
+		this.calculateMegaTag1StandardDeviations = calculateMegaTag1StandardDeviations;
+	}
+
+	public void setMegaTag2StandardDeviationsCalculationFunction(
+		Function<LimelightHelpers.PoseEstimate, Matrix<N1, N3>> calculateMegaTag2StandardDeviations
+	) {
+		this.calculateMegaTag2StandardDeviations = calculateMegaTag2StandardDeviations;
+	}
+
 	private void setRobotRelativeCameraPose(Pose3d robotRelativeCameraPose) {
 		LimelightHelpers.setCameraPose_RobotSpace(
 			name,
@@ -146,21 +151,6 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 			Math.toDegrees(robotRelativeCameraPose.getRotation().getX()),
 			Math.toDegrees(robotRelativeCameraPose.getRotation().getY()),
 			Math.toDegrees(robotRelativeCameraPose.getRotation().getZ())
-		);
-	}
-
-	private static Matrix<N1, N3> calculateStandardDeviations(
-		LimelightHelpers.PoseEstimate poseEstimate,
-		Matrix<N1, N3> minStandardDeviations,
-		Matrix<N1, N3> standardDeviationFactors
-	) {
-		double averageTagDistanceSquared = Math.pow(poseEstimate.avgTagDist, 2);
-		return MatBuilder.fill(
-			Nat.N1(),
-			Nat.N3(),
-			Math.max(minStandardDeviations.get(0, 0), standardDeviationFactors.get(0, 0) * averageTagDistanceSquared),
-			Math.max(minStandardDeviations.get(0, 1), standardDeviationFactors.get(0, 1) * averageTagDistanceSquared),
-			Math.max(minStandardDeviations.get(0, 2), standardDeviationFactors.get(0, 2) * averageTagDistanceSquared)
 		);
 	}
 

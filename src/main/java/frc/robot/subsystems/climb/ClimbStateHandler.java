@@ -68,16 +68,6 @@ public class ClimbStateHandler {
 				lifterStateHandler.setState(LifterState.BACKWARD)
 					.until(solenoidStateHandler::isAtLimitSwitch)
 					.until(() -> lifterStateHandler.isLower(LifterConstants.MINIMUM_CLIMB_POSITION)),
-				new InstantCommand(() -> climbPositionWithLimitSwitch = lifterStateHandler.getLifter().getPosition()),
-				lifterStateHandler.setState(LifterState.BACKWARD)
-					.until(
-						() -> lifterStateHandler.isLower(
-							Rotation2d.fromDegrees(
-								climbPositionWithLimitSwitch.getDegrees() - LifterConstants.CLIMB_OFFSET_AFTER_LIMIT_SWITCH.getDegrees()
-							)
-						)
-					)
-					.until(() -> lifterStateHandler.isLower(LifterConstants.MINIMUM_CLIMB_POSITION)),
 				lifterStateHandler.setState(LifterState.HOLD)
 			),
 			solenoidStateHandler.setState(SolenoidState.LOCKED)

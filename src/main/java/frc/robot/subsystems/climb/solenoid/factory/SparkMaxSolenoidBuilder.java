@@ -60,7 +60,7 @@ public class SparkMaxSolenoidBuilder {
 	private static IDigitalInput generateDigitalInput(SparkMaxWrapper motor) {
 		return Robot.ROBOT_TYPE.isSimulation()
 			? new ChooserDigitalInput("LifterLimitSwitch")
-			: new SuppliedDigitalInput(() -> motor.getForwardLimitSwitch().isPressed(), new Debouncer(LIMIT_SWITCH_DEBOUNCE_TIME), false);
+			: new SuppliedDigitalInput(() -> motor.getForwardLimitSwitch().isPressed(), new Debouncer(LIMIT_SWITCH_DEBOUNCE_TIME), true);
 	}
 
 	public static Solenoid createSolenoid(String logPath) {

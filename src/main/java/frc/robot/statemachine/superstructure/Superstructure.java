@@ -666,7 +666,9 @@ public class Superstructure extends GBSubsystem {
 					armStateHandler.setState(ArmState.TRANSFER_ALGAE_FROM_INTAKE),
 					endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 					climbStateHandler.setState(ClimbState.STOP),
-					algaeIntakeStateHandler.setState(AlgaeIntakeState.HOLD_ALGAE)
+					algaeIntakeStateHandler.setState(AlgaeIntakeState.PUSH_ALGAE_OUT)
+						.withTimeout(StateMachineConstants.PUSH_ALGAE_OUT_TIME_SECONDS)
+						.andThen(algaeIntakeStateHandler.setState(AlgaeIntakeState.HOLD_ALGAE))
 				).until(
 					() -> armStateHandler.isAtState(ArmState.TRANSFER_ALGAE_FROM_INTAKE)
 						&& elevatorStateHandler.isAtState(ElevatorState.TRANSFER_ALGAE_FROM_INTAKE)

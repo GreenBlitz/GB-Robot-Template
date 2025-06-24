@@ -33,7 +33,7 @@ public class AutonomousConstants {
 
 	public static final double INTAKING_TIMEOUT_SECONDS = 4;
 
-	public static final double DISTANCE_FROM_ALGAE_FOR_FLOOR_INTAKE = 0.2;
+	public static final double DISTANCE_FROM_ALGAE_FOR_FLOOR_INTAKE = 0.3;
 
 	public static final double BACK_OFF_FROM_REEF_DISTANCE_METERS = -1;
 

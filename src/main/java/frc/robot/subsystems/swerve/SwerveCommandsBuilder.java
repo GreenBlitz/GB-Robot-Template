@@ -18,7 +18,6 @@ import frc.robot.autonomous.PathFollowingCommandsBuilder;
 import frc.robot.subsystems.swerve.factories.modules.drive.KrakenX60DriveBuilder;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.Modules;
-import frc.robot.subsystems.swerve.states.DriveSpeed;
 import frc.robot.subsystems.swerve.states.LoopMode;
 import frc.robot.subsystems.swerve.states.RotateAxis;
 import frc.robot.subsystems.swerve.states.SwerveState;
@@ -209,8 +208,7 @@ public class SwerveCommandsBuilder {
 							.getRotation()
 							.minus(Rotation2d.fromDegrees(180))
 					)
-					: currentPose.get(),
-				SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW)
+					: currentPose.get()
 
 			).until(() -> objectTranslation.get().isEmpty()),
 			"Drive to object"
@@ -249,23 +247,9 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-	public Command moveToPoseByPID(Supplier<Pose2d> currentPose, Pose2d targetPose, SwerveState swerveState) {
-		return swerve.asSubsystemCommand(
-			new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.moveToPoseByPID(currentPose.get(), targetPose, swerveState)),
-			"PID to pose: " + targetPose
-		);
-	}
-
 	public Command moveToPoseByPID(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose) {
 		return swerve.asSubsystemCommand(
 			new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.moveToPoseByPID(currentPose.get(), targetPose.get())),
-			"PID to pose: " + targetPose
-		);
-	}
-
-	public Command moveToPoseByPID(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose, SwerveState swerveState) {
-		return swerve.asSubsystemCommand(
-			new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.moveToPoseByPID(currentPose.get(), targetPose.get(), swerveState)),
 			"PID to pose: " + targetPose
 		);
 	}

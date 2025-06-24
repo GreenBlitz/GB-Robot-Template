@@ -219,16 +219,6 @@ public enum AutoPath {
 		AutonomousConstants.LinkedWaypoints.LEFT_FLOOR_ALGAE,
 		AutonomousConstants.LinkedWaypoints.CLOSE_RIGHT_NET,
 		Optional.empty()
-	),
-	RIGHT_FLOOR_ALGAE_TO_ALGAE_REMOVE_E(
-		AutonomousConstants.LinkedWaypoints.RIGHT_FLOOR_ALGAE,
-		AutonomousConstants.LinkedWaypoints.ALGAE_REMOVE_E,
-		Optional.empty()
-	),
-	LEFT_FLOOR_ALGAE_TO_ALGAE_REMOVE_C(
-		AutonomousConstants.LinkedWaypoints.LEFT_FLOOR_ALGAE,
-		AutonomousConstants.LinkedWaypoints.ALGAE_REMOVE_C,
-		Optional.empty()
 	);
 
 	private final Pair<String, Pose2d> startingPoint;

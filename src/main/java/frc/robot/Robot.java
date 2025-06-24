@@ -7,14 +7,10 @@ package frc.robot;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.events.EventTrigger;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.RobotManager;
-import frc.constants.field.Field;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.AutosBuilder;
 import frc.robot.hardware.interfaces.IGyro;
@@ -59,8 +55,6 @@ import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.battery.BatteryUtil;
-import frc.utils.math.AngleTransform;
-import frc.utils.math.FieldMath;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -78,11 +72,7 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final IPoseEstimator poseEstimator;
-	
-	public RobotHeadingEstimator getHeadingEstimator() {
-		return headingEstimator;
-	}
-	
+
 	private final RobotHeadingEstimator headingEstimator;
 	private final MultiAprilTagVisionSources multiAprilTagVisionSources;
 	private final LimeLightObjectDetector objectDetector;
@@ -98,8 +88,6 @@ public class Robot {
 
 	private final SimulationManager simulationManager;
 	private final RobotCommander robotCommander;
-
-	private final SendableChooser<Boolean> isAlgaeIn;
 
 	private AutonomousChooser preBuiltAutosChooser;
 	private AutonomousChooser firstObjectScoringLocationChooser;
@@ -191,12 +179,6 @@ public class Robot {
 		this.simulationManager = new SimulationManager("SimulationManager", this);
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
 
-		isAlgaeIn = new SendableChooser<>();
-
-		isAlgaeIn.setDefaultOption("false", false);
-		isAlgaeIn.addOption("true", true);
-		SmartDashboard.putData("isAlgaeInIntake", isAlgaeIn);
-
 		configureAuto();
 	}
 
@@ -215,7 +197,6 @@ public class Robot {
 			.softCloseNetToAlgaeRemove()
 			.andThen(robotCommander.getSuperstructure().algaeRemove().withTimeout(AutonomousConstants.ALGAE_REMOVE_TIMEOUT_SECONDS))
 			.asProxy();
-		Supplier<Command> floorAlgaeIntakeCommand = () -> robotCommander.getSuperstructure().softCloseNetToFloorAlgaeIntake().asProxy();
 		Supplier<Command> netCommand = () -> robotCommander.getSuperstructure().netWithRelease().asProxy();
 
 		swerve.configPathPlanner(
@@ -253,7 +234,6 @@ public class Robot {
 				intakingCommand,
 				scoringCommand,
 				algaeRemoveCommand,
-				floorAlgaeIntakeCommand,
 				netCommand,
 				AutonomousConstants.TARGET_POSE_TOLERANCES
 			)
@@ -290,8 +270,6 @@ public class Robot {
 
 		Phoenix6SignalBuilder.refreshAll();
 
-		Logger.recordOutput("ISALGAEIN", robotCommander.getSuperstructure().isAlgaeInAlgaeIntake());
-
 		swerve.update();
 		arm.setReversedSoftLimit(robotCommander.getSuperstructure().getArmReversedSoftLimitByElevator());
 
@@ -324,22 +302,6 @@ public class Robot {
 		Logger.recordOutput("TimeTest/CommandSchedular", TimeUtil.getCurrentTimeSeconds() - startingSchedularTime);
 
 		Logger.recordOutput("TimeTest/RobotPeriodic", TimeUtil.getCurrentTimeSeconds() - startingTime);
-
-		getRobotCommander().getSuperstructure().driverIsAlgaeInAlgaeIntakeOverride = isAlgaeIn.getSelected();
-		Logger.recordOutput(
-			"APPROACH",
-			FieldMath.getApproachPoseToObject(
-				AutonomousConstants.DEFAULT_RIGHT_FLOOR_ALGAE_POSITION,
-				Field.getAllianceRelative(AutonomousConstants.LinkedWaypoints.RIGHT_FLOOR_ALGAE.getSecond(), true, true, AngleTransform.INVERT),
-				0.7
-			)
-		);
-		Pose2d bobot = AutonomousConstants.LinkedWaypoints.RIGHT_FLOOR_ALGAE.getSecond();
-		Logger.recordOutput(
-			"ROBOT",
-			Field.getAllianceRelative(new Pose2d(bobot.getTranslation(), Rotation2d.fromDegrees(-90)), true, true, AngleTransform.INVERT)
-		);
-		Logger.recordOutput("ALGAE", new Pose2d(AutonomousConstants.DEFAULT_RIGHT_FLOOR_ALGAE_POSITION, new Rotation2d()));
 	}
 
 	public Command getAuto() {

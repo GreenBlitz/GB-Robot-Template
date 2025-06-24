@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.190639819709049,
-        "y": 5.644249330616401
+        "x": 7.03049649486612,
+        "y": 5.909101055352847
       },
       "isLocked": false,
       "linkedName": "RFA"
@@ -20,8 +20,8 @@
         "y": 6.0
       },
       "prevControl": {
-        "x": 7.176936779173151,
-        "y": 6.23741780787389
+        "x": 7.253978473168826,
+        "y": 6.2850518041325785
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,21 +34,7 @@
       "rotationDegrees": 0.0
     }
   ],
-  "constraintZones": [
-    {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 1.0,
-      "constraints": {
-        "maxVelocity": 1.0,
-        "maxAcceleration": 3.5,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    }
-  ],
+  "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
     {

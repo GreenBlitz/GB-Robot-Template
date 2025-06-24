@@ -88,6 +88,7 @@ public class Robot {
 						MatBuilder.fill(Nat.N3(), Nat.N1(), 0.001, 0.001, 0.9999)
 				)
 		);
+		limelight.update();
 
 //		this.visionSources = new MultiAprilTagVisionSources(
 //			VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
@@ -118,12 +119,7 @@ public class Robot {
 
 		swerve.update();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
-		limelight.update();
 //		poseEstimator.updateVision(visionSources.getFilteredVisionData());
-		poseEstimator.updateVision(List.of(
-				limelight.getIndependentRobotPose().get(),
-				limelight.getOrientationRequiringRobotPose().get()
-		));
 		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
 //		for (TimedValue<Rotation2d> headingData : visionSources.getFilteredRobotHeading()) {
 //			headingEstimator.updateVisionIfGyroOffsetIsNotCalibrated(
@@ -134,6 +130,11 @@ public class Robot {
 //		}
 		headingEstimator.updateVisionIfGyroOffsetIsNotCalibrated(limelight.getIndependentRobotPose().get(), RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION, RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE);
 		limelight.setRobotOrientation(headingEstimator.getEstimatedHeading());
+		limelight.update();
+		poseEstimator.updateVision(List.of(
+				limelight.getIndependentRobotPose().get(),
+				limelight.getOrientationRequiringRobotPose().get()
+		));
 		headingEstimator.log();
 
 		BatteryUtil.logStatus();

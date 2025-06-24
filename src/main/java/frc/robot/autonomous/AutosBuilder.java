@@ -352,7 +352,7 @@ public class AutosBuilder {
 						() -> robot.getPoseEstimator().getEstimatedPose(),
 						algaeTranslation,
 						AutonomousConstants.DISTANCE_FROM_ALGAE_FOR_FLOOR_INTAKE,
-							Rotation2d.fromDegrees(180)
+						Rotation2d.fromDegrees(180)
 					),
 				robot.getRobotCommander().getSuperstructure().algaeIntake().asProxy()
 			).until(() -> robot.getRobotCommander().getSuperstructure().isAlgaeInAlgaeIntake()),

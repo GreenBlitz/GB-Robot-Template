@@ -4,11 +4,18 @@
 
 package frc;
 
+import edu.wpi.first.math.MatBuilder;
+import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Threads;
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonomousConstants;
+import frc.robot.newvision.cameras.limelight.Limelight;
+import frc.robot.newvision.cameras.limelight.LimelightPipeline;
+import frc.robot.newvision.cameras.limelight.LimelightStandardDeviationsCalculations;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.alerts.AlertManager;
@@ -27,6 +34,7 @@ import org.littletonrobotics.junction.Logger;
 public class RobotManager extends LoggedRobot {
 
 	private final Robot robot;
+	private final Limelight limelight;
 	private PathPlannerAutoWrapper autonomousCommand;
 	private int roborioCycles;
 
@@ -39,6 +47,21 @@ public class RobotManager extends LoggedRobot {
 
 		this.roborioCycles = 0;
 		this.robot = new Robot();
+
+		this.limelight = new Limelight(
+			"limelight-left",
+			"NewVision",
+			new Pose3d(),
+			LimelightPipeline.APRIL_TAG,
+			LimelightStandardDeviationsCalculations.averageTagDistanceParabola(
+				MatBuilder.fill(Nat.N1(), Nat.N3(), 0.0001, 0.0001, 0.0001),
+				MatBuilder.fill(Nat.N1(), Nat.N3(), 0.001, 0.001, 0.001)
+			),
+			LimelightStandardDeviationsCalculations.averageTagDistanceParabola(
+				MatBuilder.fill(Nat.N1(), Nat.N3(), 0.0001, 0.0001, 0.9999),
+				MatBuilder.fill(Nat.N1(), Nat.N3(), 0.001, 0.001, 0.9999)
+			)
+		);
 
 		createAutoReadyForConstructionChooser();
 		JoysticksBindings.configureBindings(robot);
@@ -78,6 +101,8 @@ public class RobotManager extends LoggedRobot {
 		updateTimeRelatedData(); // Better to be first
 		JoysticksBindings.updateChassisDriverInputs();
 		robot.periodic();
+		limelight.setRobotOrientation(new Rotation3d());
+		limelight.update();
 		AlertManager.reportAlerts();
 	}
 

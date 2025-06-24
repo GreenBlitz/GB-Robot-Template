@@ -661,6 +661,7 @@ public class Superstructure extends GBSubsystem {
 	public Command transferAlgaeFromIntakeToEndEffector() {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
+					algaeIntakeStateHandler.setState(AlgaeIntakeState.PUSH_ALGAE_OUT).withTimeout(0.2),
 				new ParallelCommandGroup(
 					elevatorStateHandler.setState(ElevatorState.TRANSFER_ALGAE_FROM_INTAKE),
 					armStateHandler.setState(ArmState.TRANSFER_ALGAE_FROM_INTAKE),

@@ -71,6 +71,11 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
 	private final IPoseEstimator poseEstimator;
+	
+	public RobotHeadingEstimator getHeadingEstimator() {
+		return headingEstimator;
+	}
+	
 	private final RobotHeadingEstimator headingEstimator;
 	private final MultiAprilTagVisionSources multiAprilTagVisionSources;
 	private final LimeLightObjectDetector objectDetector;

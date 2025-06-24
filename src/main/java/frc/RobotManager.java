@@ -54,12 +54,12 @@ public class RobotManager extends LoggedRobot {
 			new Pose3d(),
 			LimelightPipeline.APRIL_TAG,
 			LimelightStandardDeviationsCalculations.averageTagDistanceParabola(
-				MatBuilder.fill(Nat.N1(), Nat.N3(), 0.0001, 0.0001, 0.0001),
-				MatBuilder.fill(Nat.N1(), Nat.N3(), 0.001, 0.001, 0.001)
+				MatBuilder.fill(Nat.N3(), Nat.N1(), 0.0001, 0.0001, 0.0001),
+				MatBuilder.fill(Nat.N3(), Nat.N1(), 0.001, 0.001, 0.001)
 			),
 			LimelightStandardDeviationsCalculations.averageTagDistanceParabola(
-				MatBuilder.fill(Nat.N1(), Nat.N3(), 0.0001, 0.0001, 0.9999),
-				MatBuilder.fill(Nat.N1(), Nat.N3(), 0.001, 0.001, 0.9999)
+				MatBuilder.fill(Nat.N3(), Nat.N1(), 0.0001, 0.0001, 0.9999),
+				MatBuilder.fill(Nat.N3(), Nat.N1(), 0.001, 0.001, 0.9999)
 			)
 		);
 

@@ -14,6 +14,7 @@ public class StateMachineConstants {
 	public static final double SCORE_NET_X_POSITION_METERS = 7.73;
 	public static final double MIN_NET_SCORING_Y_POSITION = 4.5;
 	public static final double POWER_FOR_MANUAL_CLIMB = -0.5;
+	public static final double PUSH_ALGAE_OUT_TIME_SECONDS = 0.2;
 
 	public static final double DISTANCE_FROM_CORAL_STATION_SLOT_TO_START_AIM_ASSIST_METERS = 2.2;
 

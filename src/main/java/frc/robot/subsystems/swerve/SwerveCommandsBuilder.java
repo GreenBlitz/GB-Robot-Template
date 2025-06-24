@@ -197,7 +197,7 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-	public Command driveToObject(Supplier<Pose2d> currentPose, Supplier<Optional<Translation2d>> objectTranslation, double distance) {
+	public Command driveToObject(Supplier<Pose2d> currentPose, Supplier<Optional<Translation2d>> objectTranslation, double distance, Rotation2d headingToObject) {
 		return swerve.asSubsystemCommand(
 			moveToPoseByPID(
 				currentPose,
@@ -206,7 +206,7 @@ public class SwerveCommandsBuilder {
 						FieldMath.getApproachPoseToObject(objectTranslation.get().get(), currentPose.get(), distance).getTranslation(),
 						FieldMath.getApproachPoseToObject(objectTranslation.get().get(), currentPose.get(), distance)
 							.getRotation()
-							.minus(Rotation2d.fromDegrees(180))
+							.minus(headingToObject)
 					)
 					: currentPose.get()
 

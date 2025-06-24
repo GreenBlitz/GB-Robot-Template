@@ -90,8 +90,8 @@ public class AutosBuilder {
 		autos.add(() -> rightNoDelayAuto(robot, intakingCommand, scoringCommand, tolerance));
 		autos.add(() -> autoBalls(robot, algaeRemoveCommand, netCommand, tolerance, Branch.G, ScoreLevel.L4));
 		autos.add(() -> autoBalls(robot, algaeRemoveCommand, netCommand, tolerance, Branch.H, ScoreLevel.L4));
-		autos.add(() -> bulbulBalls(robot, algaeTranslationSupplier, algaeRemoveCommand, netCommand, tolerance, Branch.G, ScoreLevel.L4));
-		autos.add(() -> bulbulBalls(robot, algaeTranslationSupplier, algaeRemoveCommand, netCommand, tolerance, Branch.H, ScoreLevel.L4));
+		autos.add(() -> floorAutoBalls(robot, algaeTranslationSupplier, algaeRemoveCommand, netCommand, tolerance, Branch.G, ScoreLevel.L4));
+		autos.add(() -> floorAutoBalls(robot, algaeTranslationSupplier, algaeRemoveCommand, netCommand, tolerance, Branch.H, ScoreLevel.L4));
 		return autos;
 	}
 
@@ -351,7 +351,8 @@ public class AutosBuilder {
 					.driveToObject(
 						() -> robot.getPoseEstimator().getEstimatedPose(),
 						algaeTranslation,
-						AutonomousConstants.DISTANCE_FROM_ALGAE_FOR_FLOOR_INTAKE
+						AutonomousConstants.DISTANCE_FROM_ALGAE_FOR_FLOOR_INTAKE,
+							Rotation2d.fromDegrees(180)
 					),
 				robot.getRobotCommander().getSuperstructure().algaeIntake().asProxy()
 			).until(() -> robot.getRobotCommander().getSuperstructure().isAlgaeInAlgaeIntake()),
@@ -373,7 +374,7 @@ public class AutosBuilder {
 		);
 	}
 
-	private static Command bulbulBalls(
+	private static Command floorAutoBalls(
 		Robot robot,
 		Supplier<Optional<ObjectData>> algaeTranslationSupplier,
 		Supplier<Command> algaeRemoveCommand,
@@ -444,7 +445,7 @@ public class AutosBuilder {
 
 		String side = firstAutoScoreTargetBranch.isLeft() ? "left" : "right";
 
-		bulbulBalls.setName(side + " " + firstAutoScoreTargetScoreLevel.toString() + " bulbul balls");
+		bulbulBalls.setName(side + " " + firstAutoScoreTargetScoreLevel.toString() + " floor balls auto");
 
 		return bulbulBalls;
 	}

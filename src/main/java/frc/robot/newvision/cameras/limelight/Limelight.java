@@ -25,18 +25,18 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 	private final RobotPoseObservation megaTag1RobotPoseObservation;
 	private final RobotPoseObservation megaTag2RobotPoseObservation;
 
-	private Function<LimelightHelpers.PoseEstimate, Matrix<N1, N3>> calculateMegaTag1StandardDeviations;
-	private Function<LimelightHelpers.PoseEstimate, Matrix<N1, N3>> calculateMegaTag2StandardDeviations;
+	private Function<LimelightHelpers.PoseEstimate, Matrix<N3, N1>> calculateMegaTag1StandardDeviations;
+	private Function<LimelightHelpers.PoseEstimate, Matrix<N3, N1>> calculateMegaTag2StandardDeviations;
 
 	private LimelightPipeline pipeline;
 
 	public Limelight(
-		String name,
-		String logPathPrefix,
-		Pose3d robotRelativeCameraPose,
-		LimelightPipeline pipeline,
-		Function<LimelightHelpers.PoseEstimate, Matrix<N1, N3>> calculateMegaTag1StandardDeviations,
-		Function<LimelightHelpers.PoseEstimate, Matrix<N1, N3>> calculateMegaTag2StandardDeviations
+			String name,
+			String logPathPrefix,
+			Pose3d robotRelativeCameraPose,
+			LimelightPipeline pipeline,
+			Function<LimelightHelpers.PoseEstimate, Matrix<N3, N1>> calculateMegaTag1StandardDeviations,
+			Function<LimelightHelpers.PoseEstimate, Matrix<N3, N1>> calculateMegaTag2StandardDeviations
 	) {
 		this.name = name;
 		this.logPath = logPathPrefix + "/" + name;
@@ -131,13 +131,13 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 	}
 
 	public void setMegaTag1StandardDeviationsCalculationFunction(
-		Function<LimelightHelpers.PoseEstimate, Matrix<N1, N3>> calculateMegaTag1StandardDeviations
+			Function<LimelightHelpers.PoseEstimate, Matrix<N3, N1>> calculateMegaTag1StandardDeviations
 	) {
 		this.calculateMegaTag1StandardDeviations = calculateMegaTag1StandardDeviations;
 	}
 
 	public void setMegaTag2StandardDeviationsCalculationFunction(
-		Function<LimelightHelpers.PoseEstimate, Matrix<N1, N3>> calculateMegaTag2StandardDeviations
+			Function<LimelightHelpers.PoseEstimate, Matrix<N3, N1>> calculateMegaTag2StandardDeviations
 	) {
 		this.calculateMegaTag2StandardDeviations = calculateMegaTag2StandardDeviations;
 	}

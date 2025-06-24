@@ -11,17 +11,17 @@ public class RobotPoseObservation {
 
 	private double timestampSeconds;
 	private Pose2d robotPose;
-	private Matrix<N1, N3> standardDeviations;
+	private Matrix<N3, N1> standardDeviations;
 
-	public RobotPoseObservation(double timestampSeconds, Pose2d robotPose, Matrix<N1, N3> standardDeviations) {
+	public RobotPoseObservation(double timestampSeconds, Pose2d robotPose, Matrix<N3, N1> standardDeviations) {
 		setObservationValues(timestampSeconds, robotPose, standardDeviations);
 	}
 
 	public RobotPoseObservation() {
-		this(0, new Pose2d(), MatBuilder.fill(Nat.N1(), Nat.N3(), 0, 0, 0));
+		this(0, new Pose2d(), MatBuilder.fill(Nat.N3(), Nat.N1(), 0, 0, 0));
 	}
 
-	public void setObservationValues(double timestampSeconds, Pose2d robotPose, Matrix<N1, N3> standardDeviations) {
+	public void setObservationValues(double timestampSeconds, Pose2d robotPose, Matrix<N3, N1> standardDeviations) {
 		this.timestampSeconds = timestampSeconds;
 		this.robotPose = robotPose;
 		this.standardDeviations = standardDeviations;
@@ -35,7 +35,7 @@ public class RobotPoseObservation {
 		return robotPose;
 	}
 
-	public Matrix<N1, N3> getStandardDeviations() {
+	public Matrix<N3, N1> getStandardDeviations() {
 		return standardDeviations;
 	}
 

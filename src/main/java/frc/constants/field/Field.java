@@ -10,9 +10,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.constants.field.enums.Branch;
 import frc.constants.field.enums.Cage;
 import frc.constants.field.enums.CoralStation;
+import frc.constants.field.enums.CoralStationSlot;
+import frc.constants.field.enums.FieldType;
 import frc.constants.field.enums.ReefSide;
 import frc.utils.DriverStationUtil;
-import frc.constants.field.enums.CoralStationSlot;
 import frc.utils.math.AngleTransform;
 import frc.utils.math.FieldMath;
 
@@ -23,6 +24,8 @@ public class Field {
 	public static boolean isFieldConventionAlliance() {
 		return DriverStationUtil.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE;
 	}
+
+	public static final FieldType FIELD_TYPE = FieldType.WELDED; // TODO change to andy mark at IRI
 
 	public static final double LENGTH_METERS = 17.548225;
 	public static final double WIDTH_METERS = 8.0518;
@@ -64,7 +67,8 @@ public class Field {
 
 	public static final Translation2d BARGE_CENTER = new Translation2d(LENGTH_METERS / 2, WIDTH_METERS / 2);
 
-	private static final Pose2d PROCESSOR = new Pose2d(5.98744, 0.02749, Rotation2d.fromDegrees(90));
+	private static final Pose2d WELDED_PROCESSOR = new Pose2d(5.98744, 0.02749, Rotation2d.fromDegrees(90));
+	private static final Pose2d ANDY_MARK_PROCESSOR = new Pose2d(6.057841, 0.02749, Rotation2d.fromDegrees(90));
 
 	private static final Rotation2d RIGHT_CORAL_STATION_ANGLE = Rotation2d.fromDegrees(54);
 	private static final Rotation2d LEFT_CORAL_STATION_ANGLE = Rotation2d.fromDegrees(-54);
@@ -117,7 +121,10 @@ public class Field {
 	}
 
 	public static Pose2d getProcessor() {
-		return getAllianceRelative(PROCESSOR, true, true, AngleTransform.INVERT);
+		return switch (FIELD_TYPE) {
+			case WELDED -> getAllianceRelative(WELDED_PROCESSOR, true, true, AngleTransform.INVERT);
+			case ANDY_MARK -> getAllianceRelative(ANDY_MARK_PROCESSOR, true, true, AngleTransform.INVERT);
+		};
 	}
 
 	public static Pose2d getCoralStationMiddle(CoralStation coralStation) {

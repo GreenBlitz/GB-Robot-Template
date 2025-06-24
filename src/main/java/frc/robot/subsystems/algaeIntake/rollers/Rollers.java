@@ -1,8 +1,6 @@
 package frc.robot.subsystems.algaeIntake.rollers;
 
 import frc.joysticks.SmartJoystick;
-import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
-import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
@@ -11,16 +9,16 @@ public class Rollers extends GBSubsystem {
 
 	private final ControllableMotor rollers;
 	private final InputSignal<Double> voltageSignal;
-	private final IDigitalInput algaeSensor;
-	private final DigitalInputInputsAutoLogged algaeSensorInputs;
+	private final InputSignal<Double> powerSignal;
+
 	private final RollersCommandsBuilder commandsBuilder;
 
-	public Rollers(String logPath, ControllableMotor rollers, InputSignal<Double> voltageSignal, IDigitalInput algaeSensor) {
+	public Rollers(String logPath, ControllableMotor rollers, InputSignal<Double> voltageSignal, InputSignal<Double> powerSignal) {
 		super(logPath);
 		this.rollers = rollers;
 		this.voltageSignal = voltageSignal;
-		this.algaeSensor = algaeSensor;
-		this.algaeSensorInputs = new DigitalInputInputsAutoLogged();
+		this.powerSignal = powerSignal;
+
 		this.commandsBuilder = new RollersCommandsBuilder(this);
 		setDefaultCommand(commandsBuilder.stop());
 
@@ -35,10 +33,6 @@ public class Rollers extends GBSubsystem {
 		return voltageSignal.getLatestValue();
 	}
 
-	public boolean isAlgaeIn() {
-		return algaeSensorInputs.debouncedValue;
-	}
-
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
@@ -46,8 +40,7 @@ public class Rollers extends GBSubsystem {
 
 	private void updateInputs() {
 		rollers.updateSimulation();
-		rollers.updateInputs(voltageSignal);
-		algaeSensor.updateInputs(algaeSensorInputs);
+		rollers.updateInputs(voltageSignal, powerSignal);
 	}
 
 	public void setBrake(boolean brake) {

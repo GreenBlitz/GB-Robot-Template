@@ -10,7 +10,7 @@ public class PivotConstants {
 	public static final Rotation2d STARTING_POSITION = Rotation2d.fromDegrees(130);
 	public static final double MASS_KG = 2.5;
 
-	public static final Rotation2d FORWARD_LIMIT = Rotation2d.fromDegrees(90);
+	public static final Rotation2d FORWARD_LIMIT = Rotation2d.fromDegrees(120);
 	public static final Rotation2d BACKWARD_LIMIT = Rotation2d.fromDegrees(-20);
 
 

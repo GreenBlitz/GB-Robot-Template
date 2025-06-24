@@ -13,46 +13,47 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.RobotManager;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.AutosBuilder;
+import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.led.LEDState;
+import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
+import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
 import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
 import frc.robot.subsystems.algaeIntake.pivot.Factory.PivotFactory;
 import frc.robot.subsystems.algaeIntake.pivot.Pivot;
 import frc.robot.subsystems.algaeIntake.rollers.Factory.RollersFactory;
 import frc.robot.subsystems.algaeIntake.rollers.Rollers;
+import frc.robot.scoringhelpers.ScoringHelpers;
+import frc.robot.subsystems.arm.factory.ArmFactory;
 import frc.robot.subsystems.climb.lifter.Lifter;
 import frc.robot.subsystems.climb.lifter.factory.LifterFactory;
-import frc.robot.subsystems.swerve.factories.modules.drive.KrakenX60DriveBuilder;
-import frc.robot.subsystems.swerve.module.ModuleConstants;
-import frc.robot.subsystems.swerve.module.ModuleUtil;
-import frc.robot.vision.VisionConstants;
-import frc.robot.hardware.interfaces.IGyro;
-import frc.robot.poseestimator.IPoseEstimator;
-import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
-import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
-import frc.robot.scoringhelpers.ScoringHelpers;
-import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimator;
-import frc.robot.statemachine.RobotCommander;
-import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.arm.factory.ArmFactory;
-import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.elevator.factory.ElevatorFactory;
-import frc.robot.subsystems.endeffector.EndEffector;
-import frc.robot.subsystems.endeffector.factory.EndEffectorFactory;
-import frc.robot.subsystems.climb.solenoid.Solenoid;
 import frc.robot.subsystems.climb.solenoid.factory.SolenoidFactory;
-import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.elevator.factory.ElevatorFactory;
+import frc.robot.subsystems.endeffector.factory.EndEffectorFactory;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
+import frc.robot.subsystems.swerve.factories.modules.drive.KrakenX60DriveBuilder;
+import frc.robot.subsystems.swerve.module.ModuleConstants;
+import frc.robot.subsystems.swerve.module.ModuleUtil;
+import frc.robot.poseestimator.IPoseEstimator;
+import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimator;
+import frc.robot.statemachine.RobotCommander;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.endeffector.EndEffector;
+import frc.robot.subsystems.climb.solenoid.Solenoid;
+import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.vision.VisionConstants;
+import frc.robot.vision.VisionFilters;
 import frc.robot.vision.data.AprilTagVisionData;
+import frc.robot.vision.objectdetection.LimeLightObjectDetector;
+import frc.utils.TimedValue;
 import frc.utils.auto.AutonomousChooser;
 import frc.utils.auto.PathPlannerUtil;
-import frc.robot.vision.VisionFilters;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
-import frc.utils.TimedValue;
-import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.battery.BatteryUtil;
+import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -72,6 +73,7 @@ public class Robot {
 	private final IPoseEstimator poseEstimator;
 	private final RobotHeadingEstimator headingEstimator;
 	private final MultiAprilTagVisionSources multiAprilTagVisionSources;
+	private final LimeLightObjectDetector objectDetector;
 
 	private final Swerve swerve;
 	private final Elevator elevator;
@@ -138,6 +140,8 @@ public class Robot {
 			)
 		);
 
+		objectDetector = VisionConstants.LIMELIGHT_OBJECT;
+
 		swerve.setHeadingSupplier(
 			ROBOT_TYPE.isSimulation() ? () -> poseEstimator.getEstimatedPose().getRotation() : headingEstimator::getEstimatedHeading
 		);
@@ -148,6 +152,7 @@ public class Robot {
 		swerve.getStateHandler().setCoralStationSupplier(() -> Optional.of(ScoringHelpers.getTargetCoralStation(this)));
 		swerve.getStateHandler().setCoralStationSlotSupplier(() -> Optional.of(ScoringHelpers.getTargetCoralStationSlot(this)));
 		swerve.getStateHandler().setCageSupplier(() -> Optional.of(ScoringHelpers.getTargetCage(this)));
+		swerve.getStateHandler().setClosestAlgaeSupplier(() -> objectDetector.getFilteredClosestObjectData());
 
 		this.elevator = ElevatorFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Elevator");
 		BrakeStateManager.add(() -> elevator.setBrake(true), () -> elevator.setBrake(false));
@@ -276,9 +281,11 @@ public class Robot {
 		}
 		List<AprilTagVisionData> visionData = multiAprilTagVisionSources.getFilteredVisionData();
 		poseEstimator.updateVision(visionData);
-//		 multiAprilTagVisionSources.log();
+//		multiAprilTagVisionSources.log();
 		headingEstimator.log();
 		Logger.recordOutput("TimeTest/Pose", TimeUtil.getCurrentTimeSeconds() - poseTime);
+
+		objectDetector.update();
 
 		BatteryUtil.logStatus();
 //		BusChain.logChainsStatuses();

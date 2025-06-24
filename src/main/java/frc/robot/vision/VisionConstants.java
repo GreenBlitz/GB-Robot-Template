@@ -4,10 +4,14 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import frc.constants.DirectoryPaths;
+import frc.constants.field.Field;
+import frc.constants.field.enums.FieldType;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.data.VisionData;
+import frc.robot.vision.objectdetection.LimeLightObjectDetector;
 import frc.robot.vision.sources.VisionSource;
 import frc.robot.vision.sources.limelights.DynamicSwitchingLimelight;
 import frc.utils.Filter;
@@ -25,6 +29,8 @@ public class VisionConstants {
 
 	public static final String VISION_SOURCE_LOGPATH_ADDITION = "VisionSource/";
 
+	public static final String OBJECT_DETECTOR_SOURCE_LOGPATH = "ObjectDetection/";
+
 	public static final String MULTI_VISION_SOURCES_LOGPATH = "MultiVisionSources/";
 
 	public static final String DYNAMIC_LIMELIGHT_MEGATAG1_SOURCE_NAME = "independentPoseEstimatingLimelight";
@@ -32,7 +38,7 @@ public class VisionConstants {
 	public static final String DYNAMIC_LIMELIGHT_MEGATAG2_SOURCE_NAME = "headingRequiringLimelight";
 
 
-	public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = getAprilTagFieldLayout();
+	public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = getAprilTagFieldLayout(Field.FIELD_TYPE);
 
 	private static AprilTagFieldLayout getAprilTagFieldLayout() {
 		try {
@@ -44,6 +50,13 @@ public class VisionConstants {
 			).report();
 			return AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 		}
+	}
+
+	private static AprilTagFieldLayout getAprilTagFieldLayout(FieldType fieldType) {
+		return switch (fieldType) {
+			case WELDED -> AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
+			case ANDY_MARK -> AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
+		};
 	}
 
 	public static final int LIMELIGHT_ENTRY_ARRAY_LENGTH = 6;
@@ -77,10 +90,28 @@ public class VisionConstants {
 		AngleUnit.DEGREES.toRotation3d(10.612258493096334, -27.18966371065684, 20.10328620400214)
 	);
 
-	public static final Pose3d LIMELIGHT_FEEDER_CAMERA_ROBOT_POSE = new Pose3d(
-		new Translation3d(-0.07575, 0.27, 0.93),
-		AngleUnit.DEGREES.toRotation3d(-2.8, 52.64, -176.7)
+	public static final Pose3d OBJECT_DETECTION_LIMELIGHT_CAMERA_POSE = new Pose3d(
+		new Translation3d(-0.08, 0.23, 0.865),
+		AngleUnit.DEGREES.toRotation3d(0, -27, 180)
 	);
+
+	public static final String NAME_ENTRY_NO_OBJECT_VALUE = "none";
+
+	public static final double ALGAE_HEIGHT_TO_WIDTH_RATIO_TOLERANCE = 0.5;
+
+	public static final double ALGAE_HEIGHT_TO_WIDTH_RATIO = 1;
+
+	public static final int OBJECT_CELL_AMOUNT_IN_RAW_DETECTIONS_ENTRY = 12;
+
+	public static final Rotation2d LIMELIGHT_3_HORIZONTAL_FOV = Rotation2d.fromDegrees(62.5);
+
+	public static final Rotation2d LIMELIGHT_3_VERTICAL_FOV = Rotation2d.fromDegrees(48.9);
+
+	public static final Translation2d LIMELIGHT_OBJECT_RESOLUTION_PIXELS = new Translation2d(100, 100);
+
+	public static final int EDGE_PIXEL_TOLERANCE = 10;
+
+	public static double MAX_VALID_ALGAE_DISTANCE_METERS = 3;
 
 	public static final VisionSource<AprilTagVisionData> LIMELIGHT_LEFT = new DynamicSwitchingLimelight(
 		true,
@@ -98,6 +129,12 @@ public class VisionConstants {
 		"limelight3gb-front",
 		VisionConstants.DEFAULT_VISION_FILTER,
 		LIMELIGHT_RIGHT_CAMERA_ROBOT_POSE
+	);
+
+	public static final LimeLightObjectDetector LIMELIGHT_OBJECT = new LimeLightObjectDetector(
+		VisionConstants.OBJECT_DETECTOR_SOURCE_LOGPATH,
+		"limelight-object",
+		OBJECT_DETECTION_LIMELIGHT_CAMERA_POSE
 	);
 
 	public static final List<VisionSource<AprilTagVisionData>> VISION_SOURCES = List.of(LIMELIGHT_LEFT, LIMELIGHT_RIGHT);

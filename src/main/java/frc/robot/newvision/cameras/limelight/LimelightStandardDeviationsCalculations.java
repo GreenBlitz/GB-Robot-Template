@@ -12,8 +12,8 @@ import java.util.function.Function;
 public class LimelightStandardDeviationsCalculations {
 
 	public static Function<LimelightHelpers.PoseEstimate, Matrix<N3, N1>> averageTagDistanceParabola(
-		Matrix<N1, N3> minStandardDeviations,
-		Matrix<N1, N3> standardDeviationFactors
+		Matrix<N3, N1> minStandardDeviations,
+		Matrix<N3, N1> standardDeviationFactors
 	) {
 		return (poseEstimate) -> {
 			double averageTagDistanceSquared = Math.pow(poseEstimate.avgTagDist, 2);
@@ -21,8 +21,8 @@ public class LimelightStandardDeviationsCalculations {
 				Nat.N3(),
 				Nat.N1(),
 				Math.max(minStandardDeviations.get(0, 0), standardDeviationFactors.get(0, 0) * averageTagDistanceSquared),
-				Math.max(minStandardDeviations.get(0, 1), standardDeviationFactors.get(0, 1) * averageTagDistanceSquared),
-				Math.max(minStandardDeviations.get(0, 2), standardDeviationFactors.get(0, 2) * averageTagDistanceSquared)
+				Math.max(minStandardDeviations.get(1, 0), standardDeviationFactors.get(1, 0) * averageTagDistanceSquared),
+				Math.max(minStandardDeviations.get(2, 0), standardDeviationFactors.get(2, 0) * averageTagDistanceSquared)
 			);
 		};
 	}

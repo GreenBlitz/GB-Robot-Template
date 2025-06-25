@@ -22,6 +22,7 @@ import frc.robot.subsystems.arm.ArmState;
 import frc.robot.subsystems.arm.ArmStateHandler;
 import frc.robot.subsystems.climb.ClimbState;
 import frc.robot.subsystems.climb.ClimbStateHandler;
+import frc.robot.subsystems.climb.lifter.LifterConstants;
 import frc.robot.subsystems.climb.lifter.LifterState;
 import frc.robot.subsystems.climb.lifter.LifterStateHandler;
 import frc.robot.subsystems.climb.solenoid.SolenoidStateHandler;
@@ -749,12 +750,29 @@ public class Superstructure extends GBSubsystem {
 
 	public Command climbWithLimitSwitch() {
 		return asSubsystemCommand(
-			new ParallelCommandGroup(
-				elevatorStateHandler.setState(ElevatorState.CLIMB),
-				armStateHandler.setState(ArmState.CLIMB),
-				endEffectorStateHandler.setState(EndEffectorState.STOP),
-				climbStateHandler.setState(ClimbState.CLIMB_WITH_LIMIT_SWITCH),
-				algaeIntakeStateHandler.setState(AlgaeIntakeState.CLIMB)
+			new SequentialCommandGroup(
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.CLIMB),
+					armStateHandler.setState(ArmState.CLIMB),
+					endEffectorStateHandler.setState(EndEffectorState.STOP),
+					climbStateHandler.setState(ClimbState.CLIMB_WITH_LIMIT_SWITCH),
+					algaeIntakeStateHandler.setState(AlgaeIntakeState.CLOSED)
+				).until(
+					() -> robot.getLifter()
+						.isLower(
+							Rotation2d.fromDegrees(
+								climbStateHandler.getClimbPositionWithLimitSwitch().getDegrees()
+									- LifterConstants.CLIMB_OFFSET_AFTER_LIMIT_SWITCH.getDegrees()
+							)
+						)
+				),
+				new ParallelCommandGroup(
+					elevatorStateHandler.setState(ElevatorState.CLIMB),
+					armStateHandler.setState(ArmState.CLIMB),
+					endEffectorStateHandler.setState(EndEffectorState.STOP),
+					climbStateHandler.setState(ClimbState.CLIMB_WITH_LIMIT_SWITCH),
+					algaeIntakeStateHandler.setState(AlgaeIntakeState.CLIMB)
+				).withTimeout(0.5)
 			),
 			SuperstructureState.CLIMB_WITH_LIMIT_SWITCH
 		);

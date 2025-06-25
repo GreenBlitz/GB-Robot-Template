@@ -26,7 +26,10 @@ public class ClimbStateHandler {
 	}
 
 	public Rotation2d getClimbPositionWithLimitSwitch() {
-		return climbPositionWithLimitSwitch;
+		if (climbPositionWithLimitSwitch != null) {
+			return climbPositionWithLimitSwitch;
+		}
+		return lifterStateHandler.getLifter().getPosition();
 	}
 
 	public Command setState(ClimbState state) {

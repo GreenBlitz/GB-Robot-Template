@@ -729,7 +729,7 @@ public class Superstructure extends GBSubsystem {
 				),
 				elevatorStateHandler.setState(ElevatorState.CLIMB),
 				endEffectorStateHandler.setState(EndEffectorState.STOP),
-				algaeIntakeStateHandler.setState(AlgaeIntakeState.CLIMB)
+				algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
 			),
 			SuperstructureState.PRE_CLIMB
 		);
@@ -772,7 +772,7 @@ public class Superstructure extends GBSubsystem {
 					endEffectorStateHandler.setState(EndEffectorState.STOP),
 					climbStateHandler.setState(ClimbState.CLIMB_WITH_LIMIT_SWITCH),
 					algaeIntakeStateHandler.setState(AlgaeIntakeState.CLIMB)
-				).withTimeout(0.5)
+				).withTimeout(1)
 			),
 			SuperstructureState.CLIMB_WITH_LIMIT_SWITCH
 		);

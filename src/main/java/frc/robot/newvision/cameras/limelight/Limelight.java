@@ -53,38 +53,41 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 		setPipeline(pipeline);
 	}
 
-	public void update() {
+	public void log() {
 		switch (pipeline) {
 			case APRIL_TAG -> {
-				LimelightHelpers.PoseEstimate megaTag1RobotPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
-				LimelightHelpers.PoseEstimate megaTag2RobotPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-
-				megaTag1RobotPoseObservation.setObservationValues(
-					getEstimateTimestampSeconds(megaTag1RobotPoseEstimate),
-					megaTag1RobotPoseEstimate.pose,
-					calculateMegaTag1StandardDeviations.apply(megaTag1RobotPoseEstimate)
-				);
-				megaTag2RobotPoseObservation.setObservationValues(
-					getEstimateTimestampSeconds(megaTag2RobotPoseEstimate),
-					megaTag2RobotPoseEstimate.pose,
-					calculateMegaTag2StandardDeviations.apply(megaTag2RobotPoseEstimate)
-				);
+				if (isObservationPresent(megaTag1RobotPoseObservation)) {
+					Logger.recordOutput(logPath + "/megaTag1Pose", megaTag1RobotPoseObservation.getRobotPose());
+					Logger.recordOutput(logPath + "/megaTag1StandardDeviations", megaTag1RobotPoseObservation.getStandardDeviations());
+				}
+				if (isObservationPresent(megaTag2RobotPoseObservation)) {
+					Logger.recordOutput(logPath + "/megaTag2Pose", megaTag2RobotPoseObservation.getRobotPose());
+					Logger.recordOutput(logPath + "/megaTag2StandardDeviations", megaTag2RobotPoseObservation.getStandardDeviations());
+				}
 			}
 			default -> {}
 		}
-
-		log();
 	}
 
-	private void log() {
-		switch (pipeline) {
-			case APRIL_TAG -> {
-				Logger.recordOutput(logPath + "/megaTag1Pose", megaTag1RobotPoseObservation.getRobotPose());
-				Logger.recordOutput(logPath + "/megaTag1StandardDeviations", megaTag1RobotPoseObservation.getStandardDeviations());
-				Logger.recordOutput(logPath + "/megaTag2Pose", megaTag2RobotPoseObservation.getRobotPose());
-				Logger.recordOutput(logPath + "/megaTag2StandardDeviations", megaTag2RobotPoseObservation.getStandardDeviations());
-			}
-			default -> {}
+	public void updateMegaTag1() {
+		if (pipeline.equals(LimelightPipeline.APRIL_TAG)) {
+			LimelightHelpers.PoseEstimate megaTag1RobotPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
+			megaTag1RobotPoseObservation.setObservationValues(
+				getEstimateTimestampSeconds(megaTag1RobotPoseEstimate),
+				megaTag1RobotPoseEstimate.pose,
+				calculateMegaTag1StandardDeviations.apply(megaTag1RobotPoseEstimate)
+			);
+		}
+	}
+
+	public void updateMegaTag2() {
+		if (pipeline.equals(LimelightPipeline.APRIL_TAG)) {
+			LimelightHelpers.PoseEstimate megaTag2RobotPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
+			megaTag2RobotPoseObservation.setObservationValues(
+				getEstimateTimestampSeconds(megaTag2RobotPoseEstimate),
+				megaTag2RobotPoseEstimate.pose,
+				calculateMegaTag2StandardDeviations.apply(megaTag2RobotPoseEstimate)
+			);
 		}
 	}
 

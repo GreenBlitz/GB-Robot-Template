@@ -357,17 +357,13 @@ public class AutosBuilder {
 				robot.getRobotCommander().getSuperstructure().algaeIntake().asProxy()
 			).until(() -> robot.getRobotCommander().getSuperstructure().isAlgaeInAlgaeIntake()),
 			new ParallelCommandGroup(
-				robot.getRobotCommander().getSuperstructure().transferAlgaeFromIntakeToEndEffector().asProxy(),
 				new SequentialCommandGroup(
-					robot.getSwerve()
-						.getCommandsBuilder()
-						.moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, floorAlgaeLinkedWayPoint)
-						.until(() -> ToleranceMath.isNear(robot.getPoseEstimator().getEstimatedPose(), floorAlgaeLinkedWayPoint, tolerance)),
-					createAutoFromAutoPath(
-						floorAlgaeToNetPath,
-						pathPlannerPath -> PathFollowingCommandsBuilder
-							.scoreToNet(robot, pathPlannerPath, netCommand, floorAlgaeToNetPath.getTargetBranch())
-					)
+					robot.getRobotCommander().getSuperstructure().transferAlgaeFromIntakeToEndEffector().asProxy(),
+					robot.getRobotCommander().getSuperstructure().netWithRelease().asProxy()
+				),
+				PathFollowingCommandsBuilder.pathfindToPose(
+					Field.getAllianceRelative(floorAlgaeToNetPath.getEndPoint().getSecond(), true, true, AngleTransform.INVERT),
+					AutonomousConstants.getRealTimeConstraints(robot.getSwerve())
 				)
 			)
 

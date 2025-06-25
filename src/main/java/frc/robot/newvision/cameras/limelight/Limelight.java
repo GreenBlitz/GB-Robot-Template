@@ -31,12 +31,12 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 	private LimelightPipeline pipeline;
 
 	public Limelight(
-			String name,
-			String logPathPrefix,
-			Pose3d robotRelativeCameraPose,
-			LimelightPipeline pipeline,
-			Function<LimelightHelpers.PoseEstimate, Matrix<N3, N1>> calculateMegaTag1StandardDeviations,
-			Function<LimelightHelpers.PoseEstimate, Matrix<N3, N1>> calculateMegaTag2StandardDeviations
+		String name,
+		String logPathPrefix,
+		Pose3d robotRelativeCameraPose,
+		LimelightPipeline pipeline,
+		Function<LimelightHelpers.PoseEstimate, Matrix<N3, N1>> calculateMegaTag1StandardDeviations,
+		Function<LimelightHelpers.PoseEstimate, Matrix<N3, N1>> calculateMegaTag2StandardDeviations
 	) {
 		this.name = name;
 		this.logPath = logPathPrefix + "/" + name;
@@ -53,38 +53,41 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 		setPipeline(pipeline);
 	}
 
-	public void update() {
+	public void log() {
 		switch (pipeline) {
 			case APRIL_TAG -> {
-				LimelightHelpers.PoseEstimate megaTag1RobotPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
-				LimelightHelpers.PoseEstimate megaTag2RobotPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-
-				megaTag1RobotPoseObservation.setObservationValues(
-					getEstimateTimestampSeconds(megaTag1RobotPoseEstimate),
-					megaTag1RobotPoseEstimate.pose,
-					calculateMegaTag1StandardDeviations.apply(megaTag1RobotPoseEstimate)
-				);
-				megaTag2RobotPoseObservation.setObservationValues(
-					getEstimateTimestampSeconds(megaTag2RobotPoseEstimate),
-					megaTag2RobotPoseEstimate.pose,
-					calculateMegaTag2StandardDeviations.apply(megaTag2RobotPoseEstimate)
-				);
+				if (isObservationPresent(megaTag1RobotPoseObservation)) {
+					Logger.recordOutput(logPath + "/megaTag1Pose", megaTag1RobotPoseObservation.getRobotPose());
+					Logger.recordOutput(logPath + "/megaTag1StandardDeviations", megaTag1RobotPoseObservation.getStandardDeviations());
+				}
+				if (isObservationPresent(megaTag2RobotPoseObservation)) {
+					Logger.recordOutput(logPath + "/megaTag2Pose", megaTag2RobotPoseObservation.getRobotPose());
+					Logger.recordOutput(logPath + "/megaTag2StandardDeviations", megaTag2RobotPoseObservation.getStandardDeviations());
+				}
 			}
 			default -> {}
 		}
-
-		log();
 	}
 
-	private void log() {
-		switch (pipeline) {
-			case APRIL_TAG -> {
-				Logger.recordOutput(logPath + "/megaTag1Pose", megaTag1RobotPoseObservation.getRobotPose());
-				Logger.recordOutput(logPath + "/megaTag1StandardDeviations", megaTag1RobotPoseObservation.getStandardDeviations());
-				Logger.recordOutput(logPath + "/megaTag2Pose", megaTag2RobotPoseObservation.getRobotPose());
-				Logger.recordOutput(logPath + "/megaTag2StandardDeviations", megaTag2RobotPoseObservation.getStandardDeviations());
-			}
-			default -> {}
+	public void updateMegaTag1() {
+		if (pipeline.equals(LimelightPipeline.APRIL_TAG)) {
+			LimelightHelpers.PoseEstimate megaTag1RobotPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
+			megaTag1RobotPoseObservation.setObservationValues(
+				getEstimateTimestampSeconds(megaTag1RobotPoseEstimate),
+				megaTag1RobotPoseEstimate.pose,
+				calculateMegaTag1StandardDeviations.apply(megaTag1RobotPoseEstimate)
+			);
+		}
+	}
+
+	public void updateMegaTag2() {
+		if (pipeline.equals(LimelightPipeline.APRIL_TAG)) {
+			LimelightHelpers.PoseEstimate megaTag2RobotPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
+			megaTag2RobotPoseObservation.setObservationValues(
+				getEstimateTimestampSeconds(megaTag2RobotPoseEstimate),
+				megaTag2RobotPoseEstimate.pose,
+				calculateMegaTag2StandardDeviations.apply(megaTag2RobotPoseEstimate)
+			);
 		}
 	}
 
@@ -131,13 +134,13 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 	}
 
 	public void setMegaTag1StandardDeviationsCalculationFunction(
-			Function<LimelightHelpers.PoseEstimate, Matrix<N3, N1>> calculateMegaTag1StandardDeviations
+		Function<LimelightHelpers.PoseEstimate, Matrix<N3, N1>> calculateMegaTag1StandardDeviations
 	) {
 		this.calculateMegaTag1StandardDeviations = calculateMegaTag1StandardDeviations;
 	}
 
 	public void setMegaTag2StandardDeviationsCalculationFunction(
-			Function<LimelightHelpers.PoseEstimate, Matrix<N3, N1>> calculateMegaTag2StandardDeviations
+		Function<LimelightHelpers.PoseEstimate, Matrix<N3, N1>> calculateMegaTag2StandardDeviations
 	) {
 		this.calculateMegaTag2StandardDeviations = calculateMegaTag2StandardDeviations;
 	}

@@ -341,9 +341,14 @@ public class AutosBuilder {
 			AngleTransform.INVERT
 
 		);
-		AutoPath floorAlgaeToNetPath = isRightFloorAlgae
-			? AutoPath.RIGHT_FLOOR_ALGAE_TO_CLOSE_LEFT_NET
-			: AutoPath.LEFT_FLOOR_ALGAE_TO_CLOSE_RIGHT_NET;
+		Pose2d netLinkedWaypoint = Field.getAllianceRelative(
+			isRightFloorAlgae
+				? AutonomousConstants.LinkedWaypoints.CLOSE_LEFT_NET.getSecond()
+				: AutonomousConstants.LinkedWaypoints.CLOSE_RIGHT_NET.getSecond(),
+			true,
+			true,
+			AngleTransform.INVERT
+		);
 		return new SequentialCommandGroup(
 			new ParallelCommandGroup(
 				robot.getSwerve()
@@ -362,7 +367,7 @@ public class AutosBuilder {
 					robot.getRobotCommander().getSuperstructure().netWithRelease().asProxy()
 				),
 				PathFollowingCommandsBuilder.pathfindToPose(
-					Field.getAllianceRelative(floorAlgaeToNetPath.getEndPoint().getSecond(), true, true, AngleTransform.INVERT),
+					netLinkedWaypoint,
 					AutonomousConstants.getRealTimeConstraints(robot.getSwerve())
 				)
 			)

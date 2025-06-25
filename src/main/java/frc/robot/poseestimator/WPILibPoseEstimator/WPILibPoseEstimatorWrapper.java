@@ -11,7 +11,6 @@ import frc.robot.newvision.RobotPoseObservation;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.OdometryData;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.vision.data.AprilTagVisionData;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -94,9 +93,9 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	}
 
 	@Override
-	public void updateVision(List<RobotPoseObservation> visionRobotPoseObservations) {
-		for (RobotPoseObservation visionRobotPoseObservation : visionRobotPoseObservations) {
-			addVisionMeasurement(visionRobotPoseObservation);
+	public void updateVision(List<Optional<RobotPoseObservation>> visionRobotPoseObservations) {
+		for (Optional<RobotPoseObservation> visionRobotPoseObservation : visionRobotPoseObservations) {
+			visionRobotPoseObservation.ifPresent(this::addVisionMeasurement);
 		}
 	}
 

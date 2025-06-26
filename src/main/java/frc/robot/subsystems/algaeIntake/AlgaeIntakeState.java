@@ -13,6 +13,7 @@ public enum AlgaeIntakeState {
 	OUTTAKE_WITH_RELEASE(PivotState.OUTTAKE, RollersState.OUTTAKE),
 	HOLD_ALGAE(PivotState.HOLD_ALGAE, RollersState.IDLE),
 	PUSH_ALGAE_OUT(PivotState.INTAKE, RollersState.SLOW_OUTTAKE),
+	CLIMB(PivotState.CLOSED, RollersState.CLIMB),
 	STAY_IN_PLACE(PivotState.STAY_IN_PLACE, RollersState.IDLE);
 
 

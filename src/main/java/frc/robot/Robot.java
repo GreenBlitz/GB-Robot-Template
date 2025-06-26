@@ -8,7 +8,10 @@ import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.events.EventTrigger;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.RobotManager;
 import frc.robot.autonomous.AutonomousConstants;
@@ -54,6 +57,7 @@ import frc.utils.auto.PathPlannerUtil;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.brakestate.BrakeStateManager;
+import frc.utils.math.FieldMath;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -86,6 +90,8 @@ public class Robot {
 
 	private final SimulationManager simulationManager;
 	private final RobotCommander robotCommander;
+
+	private final SendableChooser<Boolean> isAlgaeIn;
 
 	private AutonomousChooser preBuiltAutosChooser;
 	private AutonomousChooser firstObjectScoringLocationChooser;
@@ -177,6 +183,12 @@ public class Robot {
 		this.simulationManager = new SimulationManager("SimulationManager", this);
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
 
+		isAlgaeIn = new SendableChooser<>();
+
+		isAlgaeIn.setDefaultOption("false", false);
+		isAlgaeIn.addOption("true", true);
+		SmartDashboard.putData("isAlgaeInIntake", isAlgaeIn);
+
 		configureAuto();
 	}
 
@@ -195,6 +207,7 @@ public class Robot {
 			.softCloseNetToAlgaeRemove()
 			.andThen(robotCommander.getSuperstructure().algaeRemove().withTimeout(AutonomousConstants.ALGAE_REMOVE_TIMEOUT_SECONDS))
 			.asProxy();
+		Supplier<Command> floorAlgaeIntakeCommand = () -> robotCommander.getSuperstructure().softCloseNetToFloorAlgaeIntake().asProxy();
 		Supplier<Command> netCommand = () -> robotCommander.getSuperstructure().netWithRelease().asProxy();
 
 		swerve.configPathPlanner(
@@ -222,14 +235,17 @@ public class Robot {
 		new EventTrigger("PRE_NET").onTrue(robotCommander.getSuperstructure().preNet());
 		new EventTrigger("HOLD_ALGAE").onTrue(robotCommander.getSuperstructure().holdAlgae());
 		new EventTrigger("STOP_ROLLERS").onTrue(robotCommander.getSuperstructure().algaeRemoveWithKeepRollers());
+		new EventTrigger("TRANSFER_ALGAE").onTrue(robotCommander.getSuperstructure().transferAlgaeFromIntakeToEndEffector());
 
 		this.preBuiltAutosChooser = new AutonomousChooser(
 			"PreBuiltAutos",
 			AutosBuilder.getAllNoDelayAutos(
 				this,
+				() -> Optional.of(new Translation2d()),
 				intakingCommand,
 				scoringCommand,
 				algaeRemoveCommand,
+				floorAlgaeIntakeCommand,
 				netCommand,
 				AutonomousConstants.TARGET_POSE_TOLERANCES
 			)
@@ -298,6 +314,18 @@ public class Robot {
 		Logger.recordOutput("TimeTest/CommandSchedular", TimeUtil.getCurrentTimeSeconds() - startingSchedularTime);
 
 		Logger.recordOutput("TimeTest/RobotPeriodic", TimeUtil.getCurrentTimeSeconds() - startingTime);
+
+		getRobotCommander().getSuperstructure().driverIsAlgaeInAlgaeIntakeOverride = isAlgaeIn.getSelected();
+		Logger.recordOutput(
+			"APPROACH",
+			FieldMath.getApproachPoseToObject(
+				AutonomousConstants.DEFAULT_RIGHT_FLOOR_ALGAE_POSITION,
+				AutonomousConstants.LinkedWaypoints.RIGHT_FLOOR_ALGAE.getSecond(),
+				0.7
+			)
+		);
+		Logger.recordOutput("ROBOT", AutonomousConstants.LinkedWaypoints.RIGHT_FLOOR_ALGAE.getSecond());
+		Logger.recordOutput("ALGAE", AutonomousConstants.DEFAULT_RIGHT_FLOOR_ALGAE_POSITION);
 	}
 
 	public Command getAuto() {

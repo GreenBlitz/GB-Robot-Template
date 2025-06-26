@@ -24,8 +24,8 @@ public class AutonomousConstants {
 
 	public static final Pose2d NET_AUTO_RELEASE_DEADBANDS = new Pose2d(1, 1, Rotation2d.fromRadians(2));
 
-	public static final Translation2d DEFAULT_LEFT_FLOOR_ALGAE_POSITION = Field.getAllianceRelative(new Translation2d(5.460, 7), true, true);
-	public static final Translation2d DEFAULT_RIGHT_FLOOR_ALGAE_POSITION = Field.getAllianceRelative(new Translation2d(6.300, 7), true, true);
+	public static final Translation2d DEFAULT_LEFT_FLOOR_ALGAE_POSITION = Field.getAllianceRelative(new Translation2d(5.860, 7.2), true, true);
+	public static final Translation2d DEFAULT_RIGHT_FLOOR_ALGAE_POSITION = Field.getAllianceRelative(new Translation2d(6.700, 7.2), true, true);
 
 	public static final double DEFAULT_AUTO_DRIVE_POWER = -0.3;
 
@@ -113,13 +113,13 @@ public class AutonomousConstants {
 
 		public static final Pair<String, Pose2d> RIGHT_NET = Pair.of("RN", new Pose2d(7.578, 5.064, Rotation2d.fromDegrees(0)));
 
-		public static final Pair<String, Pose2d> LEFT_FLOOR_ALGAE = Pair.of("LFA", new Pose2d(5.460, 6.640, Rotation2d.fromDegrees(-90)));
+		public static final Pair<String, Pose2d> LEFT_FLOOR_ALGAE = Pair.of("LFA", new Pose2d(5.860, 6.640, Rotation2d.fromDegrees(-90)));
 
-		public static final Pair<String, Pose2d> RIGHT_FLOOR_ALGAE = Pair.of("RFA", new Pose2d(6.300, 6.720, Rotation2d.fromDegrees(-90)));
+		public static final Pair<String, Pose2d> RIGHT_FLOOR_ALGAE = Pair.of("RFA", new Pose2d(6.700, 6.720, Rotation2d.fromDegrees(-90)));
 
-		public static final Pair<String, Pose2d> CLOSE_LEFT_NET = Pair.of("CLN", new Pose2d(7.578, 6.000, Rotation2d.fromDegrees(0)));
+		public static final Pair<String, Pose2d> CLOSE_LEFT_NET = Pair.of("CLN", new Pose2d(7.578, 5.300, Rotation2d.fromDegrees(0)));
 
-		public static final Pair<String, Pose2d> CLOSE_RIGHT_NET = Pair.of("CRN", new Pose2d(7.578, 5.800, Rotation2d.fromDegrees(0)));
+		public static final Pair<String, Pose2d> CLOSE_RIGHT_NET = Pair.of("CRN", new Pose2d(7.578, 5.064, Rotation2d.fromDegrees(0)));
 
 		private static Pose2d getRobotBranchScoringBluePose(Branch branch) {
 			return ScoringHelpers.getRobotBranchScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS, false);

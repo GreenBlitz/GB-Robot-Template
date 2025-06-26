@@ -4,24 +4,24 @@
     {
       "anchor": {
         "x": 7.578,
-        "y": 6.0
+        "y": 5.3
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.924463252314814,
-        "y": 5.4958253761574065
+        "x": 6.271044499450066,
+        "y": 5.4511802130441405
       },
       "isLocked": false,
       "linkedName": "CLN"
     },
     {
       "anchor": {
-        "x": 5.46,
+        "x": 5.86,
         "y": 6.64
       },
       "prevControl": {
-        "x": 5.707642708247509,
-        "y": 6.674250387615893
+        "x": 6.101665765914025,
+        "y": 6.704012948574392
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,7 +30,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.8524568256578947,
+      "waypointRelativePos": 1.0,
       "rotationDegrees": -90.0
     }
   ],

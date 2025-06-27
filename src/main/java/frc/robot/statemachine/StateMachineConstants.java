@@ -13,6 +13,7 @@ public class StateMachineConstants {
 	public static final double NET_SCORING_OPEN_SUPERSTRUCTURE_X_POSITION_METERS = 6.5;
 	public static final double SCORE_NET_X_POSITION_METERS = 7.5;
 	public static final double MIN_NET_SCORING_Y_POSITION = 4.5;
+	public static final double VELOCITY_BETWEEN_OPEN_SUPERSTRUCTURE_AND_SCORE_TO_NET_METERS_PER_SECOND = 1.5;
 	public static final double POWER_FOR_MANUAL_CLIMB = -0.5;
 	public static final double PUSH_ALGAE_OUT_TIME_SECONDS = 0.2;
 

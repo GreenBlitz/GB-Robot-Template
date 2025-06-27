@@ -40,7 +40,7 @@ public class SparkMaxRollersBuilder {
 
 		config.getSparkMaxConfig().encoder.velocityConversionFactor(GEAR_RATIO);
 		config.getSparkMaxConfig().encoder.positionConversionFactor(GEAR_RATIO);
-		
+
 		config.getSparkMaxConfig().idleMode(SparkBaseConfig.IdleMode.kCoast);
 
 		config.getSparkMaxConfig().smartCurrentLimit(40);

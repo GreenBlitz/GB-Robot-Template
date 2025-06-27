@@ -750,29 +750,30 @@ public class Superstructure extends GBSubsystem {
 
 	public Command climbWithLimitSwitch() {
 		return asSubsystemCommand(
-			new SequentialCommandGroup(
-				new ParallelCommandGroup(
-					elevatorStateHandler.setState(ElevatorState.CLIMB),
-					armStateHandler.setState(ArmState.CLIMB),
-					endEffectorStateHandler.setState(EndEffectorState.STOP),
-					climbStateHandler.setState(ClimbState.CLIMB_WITH_LIMIT_SWITCH),
-					algaeIntakeStateHandler.setState(AlgaeIntakeState.CLIMB)
-				).until(
-					() -> robot.getLifter()
-						.isLower(
-							Rotation2d.fromDegrees(
-								climbStateHandler.getClimbPositionWithLimitSwitch().getDegrees()
-									- LifterConstants.CLIMB_OFFSET_AFTER_LIMIT_SWITCH.getDegrees()
+			new ParallelDeadlineGroup(
+				new SequentialCommandGroup(
+					new ParallelCommandGroup(
+						climbStateHandler.setState(ClimbState.CLIMB_WITH_LIMIT_SWITCH),
+						algaeIntakeStateHandler.setState(AlgaeIntakeState.CLOSED)
+					).until(
+						() -> robot.getLifter()
+							.isLower(
+								Rotation2d.fromDegrees(
+									climbStateHandler.getClimbPositionWithLimitSwitch().getDegrees()
+										- LifterConstants.CLIMB_OFFSET_AFTER_LIMIT_SWITCH.getDegrees()
+								)
 							)
-						)
-				).until(() -> robot.getLifter().isLower(LifterConstants.MINIMUM_CLIMB_POSITION)),
+					).until(() -> robot.getLifter().isLower(LifterConstants.MINIMUM_CLIMB_POSITION)),
+					new ParallelCommandGroup(
+						climbStateHandler.setState(ClimbState.STOP),
+						algaeIntakeStateHandler.setState(AlgaeIntakeState.CLIMB)
+					).withTimeout(1)
+				),
 				new ParallelCommandGroup(
 					elevatorStateHandler.setState(ElevatorState.CLIMB),
 					armStateHandler.setState(ArmState.CLIMB),
-					endEffectorStateHandler.setState(EndEffectorState.STOP),
-					climbStateHandler.setState(ClimbState.CLIMB_WITH_LIMIT_SWITCH),
-					algaeIntakeStateHandler.setState(AlgaeIntakeState.CLIMB)
-				).withTimeout(1)
+					endEffectorStateHandler.setState(EndEffectorState.STOP)
+				)
 			),
 			SuperstructureState.CLIMB_WITH_LIMIT_SWITCH
 		);

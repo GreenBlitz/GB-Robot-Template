@@ -246,6 +246,8 @@ public class JoysticksBindings {
 		usedJoystick.X.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L3));
 		usedJoystick.Y.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L4));
 
+		usedJoystick.START.onTrue(new InstantCommand(() -> robot.getRobotCommander().getSuperstructure().driverIsAlgaeInAlgaeIntakeOverride = !robot.getRobotCommander().getSuperstructure().driverIsAlgaeInAlgaeIntakeOverride));
+		
 		usedJoystick.R1.onTrue(new InstantCommand(() -> ScoringHelpers.isLeftBranch = false));
 		usedJoystick.L1.onTrue(new InstantCommand(() -> ScoringHelpers.isLeftBranch = true));
 

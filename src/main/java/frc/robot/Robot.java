@@ -172,7 +172,7 @@ public class Robot {
 		BrakeStateManager.add(() -> pivot.setBrake(true), () -> pivot.setBrake(false));
 
 		this.rollers = RollersFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/AlgaeIntake/Rollers");
-		BrakeStateManager.add(() -> rollers.setBrake(true), () -> rollers.setBrake(false));
+//		BrakeStateManager.add(() -> rollers.setBrake(true), () -> rollers.setBrake(false));
 
 		this.simulationManager = new SimulationManager("SimulationManager", this);
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);

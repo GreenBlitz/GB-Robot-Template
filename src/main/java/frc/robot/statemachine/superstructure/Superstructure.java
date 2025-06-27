@@ -756,7 +756,7 @@ public class Superstructure extends GBSubsystem {
 					armStateHandler.setState(ArmState.CLIMB),
 					endEffectorStateHandler.setState(EndEffectorState.STOP),
 					climbStateHandler.setState(ClimbState.CLIMB_WITH_LIMIT_SWITCH),
-					algaeIntakeStateHandler.setState(AlgaeIntakeState.CLOSED)
+					algaeIntakeStateHandler.setState(AlgaeIntakeState.CLIMB)
 				).until(
 					() -> robot.getLifter()
 						.isLower(
@@ -765,7 +765,7 @@ public class Superstructure extends GBSubsystem {
 									- LifterConstants.CLIMB_OFFSET_AFTER_LIMIT_SWITCH.getDegrees()
 							)
 						)
-				),
+				).until(() -> robot.getLifter().isLower(LifterConstants.MINIMUM_CLIMB_POSITION)),
 				new ParallelCommandGroup(
 					elevatorStateHandler.setState(ElevatorState.CLIMB),
 					armStateHandler.setState(ArmState.CLIMB),

@@ -93,7 +93,7 @@ public class TalonFXPivotBuilder {
 
 		config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
 
-		config.CurrentLimits.StatorCurrentLimit = 40;
+		config.CurrentLimits.StatorCurrentLimit = 60;
 		config.CurrentLimits.StatorCurrentLimitEnable = true;
 
 		return config;

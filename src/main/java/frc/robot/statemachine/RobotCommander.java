@@ -60,7 +60,6 @@ public class RobotCommander extends GBSubsystem {
 			() -> superstructure.isAlgaeInAlgaeIntake()
 				&& !robot.getEndEffector().isCoralIn()
 				&& currentState == RobotState.DRIVE
-				&& robot.getPivot().getPosition().getDegrees() < StateMachineConstants.PIVOT_POSITION_TO_ALLOW_TRANSFER.getDegrees()
 				&& DriverStationUtil.isTeleop()
 		);
 		handleBalls.onTrue(transferAlgaeFromIntakeToEndEffector());

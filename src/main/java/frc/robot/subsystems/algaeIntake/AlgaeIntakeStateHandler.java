@@ -1,5 +1,6 @@
 package frc.robot.subsystems.algaeIntake;
 
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -19,6 +20,8 @@ public class AlgaeIntakeStateHandler {
 
 	private final YishaiDistanceSensor distanceSensor;
 	private final MedianFilter distanceFilter;
+	private final Debouncer debouncer;
+	private boolean isIn;
 
 	private AlgaeIntakeState currentState;
 
@@ -31,6 +34,8 @@ public class AlgaeIntakeStateHandler {
 		this.distanceFilter = new MedianFilter(AlgaeIntakeConstants.NUMBER_OF_VALUES_IN_MEDIAN);
 		distanceFilter.reset();
 		distanceFilter.calculate(distanceSensor.getDistanceMeters());
+		
+		this.debouncer = new Debouncer(0.05);
 	}
 
 	public AlgaeIntakeState getCurrentState() {
@@ -49,14 +54,17 @@ public class AlgaeIntakeStateHandler {
 		return pivotStateHandler.isAtState(state.getPivotState());
 	}
 
-	public boolean isAlgaeIn() {
+	public boolean isAlgaeInNoDebounce() {
 		return !(pivotStateHandler.getPivot().getPosition().getDegrees()
 			> AlgaeIntakeConstants.MIN_POSITION_WHEN_CLIMB_INTERRUPT_SENSOR.getDegrees())
 			&& distanceFilter.lastValue() < AlgaeIntakeConstants.DISTANCE_FROM_SENSOR_TO_CONSIDER_ALGAE_IN_METERS;
 	}
+	public boolean isAlgaeIn() {
+		return isIn;
+	}
 
 	public Command handleIdle(boolean isAlgaeInAlgaeIntakeOverride) {
-		if (isAlgaeIn() || isAlgaeInAlgaeIntakeOverride) {
+		if (isAlgaeIn() ){//|| isAlgaeInAlgaeIntakeOverride) {
 			return setState(AlgaeIntakeState.HOLD_ALGAE);
 		}
 		return setState(AlgaeIntakeState.CLOSED);
@@ -73,6 +81,7 @@ public class AlgaeIntakeStateHandler {
 		} else {
 			distanceFilter.calculate(AlgaeIntakeConstants.NO_OBJECT_DEFAULT_DISTANCE);
 		}
+		isIn = debouncer.calculate(isAlgaeInNoDebounce());
 		Logger.recordOutput(rollersStateHandler.getRollers().getLogPath() + "/DistanceFilterMeters", distanceFilter.lastValue());
 	}
 

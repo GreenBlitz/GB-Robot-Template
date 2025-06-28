@@ -1,6 +1,7 @@
 package frc.robot.subsystems.algaeIntake;
 
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -11,17 +12,21 @@ import frc.robot.Robot;
 import frc.robot.hardware.YishaiDistanceSensor;
 import frc.robot.subsystems.algaeIntake.pivot.PivotStateHandler;
 import frc.robot.subsystems.algaeIntake.rollers.RollersStateHandler;
+import frc.utils.buffers.RingBuffer.RingBuffer;
+import frc.utils.buffers.RingBuffer.RingBufferIterator;
 import org.littletonrobotics.junction.Logger;
 
 public class AlgaeIntakeStateHandler {
 
 	private final PivotStateHandler pivotStateHandler;
 	private final RollersStateHandler rollersStateHandler;
+	
+	private RingBuffer<Double> ringBuffer = new RingBuffer<>(5);
+	private final Debouncer debouncer = new Debouncer(0.05);
+	public boolean isIn = false;
 
 	private final YishaiDistanceSensor distanceSensor;
 	private final MedianFilter distanceFilter;
-	private final Debouncer debouncer;
-	private boolean isIn;
 
 	private AlgaeIntakeState currentState;
 
@@ -34,8 +39,6 @@ public class AlgaeIntakeStateHandler {
 		this.distanceFilter = new MedianFilter(AlgaeIntakeConstants.NUMBER_OF_VALUES_IN_MEDIAN);
 		distanceFilter.reset();
 		distanceFilter.calculate(distanceSensor.getDistanceMeters());
-		
-		this.debouncer = new Debouncer(0.05);
 	}
 
 	public AlgaeIntakeState getCurrentState() {
@@ -44,7 +47,7 @@ public class AlgaeIntakeStateHandler {
 
 	public Command setState(AlgaeIntakeState state) {
 		return new ParallelCommandGroup(
-			new InstantCommand(() -> currentState = state),
+			new InstantCommand(() -> {currentState = state; if (state == AlgaeIntakeState.INTAKE){distanceFilter.reset(); min = 0.5;}}),
 			pivotStateHandler.setState(state.getPivotState()),
 			rollersStateHandler.setState(state.getRollersState())
 		);
@@ -54,22 +57,35 @@ public class AlgaeIntakeStateHandler {
 		return pivotStateHandler.isAtState(state.getPivotState());
 	}
 
-	public boolean isAlgaeInNoDebounce() {
-		return !(pivotStateHandler.getPivot().getPosition().getDegrees()
-			> AlgaeIntakeConstants.MIN_POSITION_WHEN_CLIMB_INTERRUPT_SENSOR.getDegrees())
-			&& distanceFilter.lastValue() < AlgaeIntakeConstants.DISTANCE_FROM_SENSOR_TO_CONSIDER_ALGAE_IN_METERS;
-	}
 	public boolean isAlgaeIn() {
-		return isIn;
+		boolean a = pivotStateHandler.getPivot().getPosition().getDegrees()
+				< AlgaeIntakeConstants.MIN_POSITION_WHEN_CLIMB_INTERRUPT_SENSOR.getDegrees()
+				;
+		boolean b = distanceFilter.lastValue() < AlgaeIntakeConstants.DISTANCE_FROM_SENSOR_TO_CONSIDER_ALGAE_IN_METERS;
+		
+		boolean c = min < AlgaeIntakeConstants.DISTANCE_FROM_SENSOR_TO_CONSIDER_ALGAE_IN_METERS;
+		Logger.recordOutput("Test/PivotDown", a);
+		Logger.recordOutput("Test/DistanceClose", b);
+		Logger.recordOutput("Test/MInClose", c);
+		Logger.recordOutput("Test/AlgaeIn", a&& b);
+		Logger.recordOutput("Test/AlgaeInByMin", c&& b);
+		
+		return c && a;
 	}
+	
+//	public boolean isAlgaeIn() {
+//		return isIn;
+//	}
 
 	public Command handleIdle(boolean isAlgaeInAlgaeIntakeOverride) {
-		if (isAlgaeIn() ){//|| isAlgaeInAlgaeIntakeOverride) {
+		if (isAlgaeIn() || isAlgaeInAlgaeIntakeOverride) {
 			return setState(AlgaeIntakeState.HOLD_ALGAE);
 		}
 		return setState(AlgaeIntakeState.CLOSED);
 	}
-
+	
+	double min = 0.5;
+	
 	public void updateAlgaeSensor(Robot robot) {
 		if (
 			Math.abs(robot.getPivot().getVelocity().getDegrees())
@@ -78,11 +94,15 @@ public class AlgaeIntakeStateHandler {
 					< AlgaeIntakeConstants.MIN_POSITION_WHEN_CLIMB_INTERRUPT_SENSOR.getDegrees()
 		) {
 			distanceFilter.calculate(distanceSensor.getDistanceMeters());
+			ringBuffer.insert(distanceSensor.getDistanceMeters());
 		} else {
 			distanceFilter.calculate(AlgaeIntakeConstants.NO_OBJECT_DEFAULT_DISTANCE);
+			ringBuffer.insert(AlgaeIntakeConstants.NO_OBJECT_DEFAULT_DISTANCE);
 		}
-		isIn = debouncer.calculate(isAlgaeInNoDebounce());
+		ringBuffer.forEach((val) -> min = Math.min(min, val));
+//		isIn = debouncer.calculate(isAlgaeInDeb());
 		Logger.recordOutput(rollersStateHandler.getRollers().getLogPath() + "/DistanceFilterMeters", distanceFilter.lastValue());
+		Logger.recordOutput(rollersStateHandler.getRollers().getLogPath() + "/MIn", min);
 	}
 
 

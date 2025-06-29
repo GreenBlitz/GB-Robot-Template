@@ -42,7 +42,7 @@ public class AlgaeIntakeStateHandler {
 
 	public Command setState(AlgaeIntakeState state) {
 		return new ParallelCommandGroup(
-			new InstantCommand(() -> {currentState = state; if (state == AlgaeIntakeState.INTAKE){min = 0.5;}}),
+			new InstantCommand(() -> {currentState = state; if (state == AlgaeIntakeState.INTAKE){min = AlgaeIntakeConstants.NO_OBJECT_DEFAULT_DISTANCE;}}),
 			pivotStateHandler.setState(state.getPivotState()),
 			rollersStateHandler.setState(state.getRollersState())
 		);

@@ -1,8 +1,5 @@
 package frc.robot.subsystems.algaeIntake;
 
-import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.filter.LinearFilter;
-import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -13,20 +10,19 @@ import frc.robot.hardware.YishaiDistanceSensor;
 import frc.robot.subsystems.algaeIntake.pivot.PivotStateHandler;
 import frc.robot.subsystems.algaeIntake.rollers.RollersStateHandler;
 import frc.utils.buffers.RingBuffer.RingBuffer;
-import frc.utils.buffers.RingBuffer.RingBufferIterator;
 import org.littletonrobotics.junction.Logger;
 
 public class AlgaeIntakeStateHandler {
 
 	private final PivotStateHandler pivotStateHandler;
 	private final RollersStateHandler rollersStateHandler;
-	
+
 	private final RingBuffer<Double> ringBuffer;
 	private final YishaiDistanceSensor distanceSensor;
 
 	private AlgaeIntakeState currentState;
 	private double min;
-	
+
 	public AlgaeIntakeStateHandler(PivotStateHandler pivotStateHandler, RollersStateHandler rollersStateHandler) {
 		this.pivotStateHandler = pivotStateHandler;
 		this.rollersStateHandler = rollersStateHandler;
@@ -41,11 +37,12 @@ public class AlgaeIntakeStateHandler {
 	}
 
 	public Command setState(AlgaeIntakeState state) {
-		return new ParallelCommandGroup(
-			new InstantCommand(() -> {currentState = state; if (state == AlgaeIntakeState.INTAKE){min = AlgaeIntakeConstants.NO_OBJECT_DEFAULT_DISTANCE;}}),
-			pivotStateHandler.setState(state.getPivotState()),
-			rollersStateHandler.setState(state.getRollersState())
-		);
+		return new ParallelCommandGroup(new InstantCommand(() -> {
+			currentState = state;
+			if (state == AlgaeIntakeState.INTAKE) {
+				min = AlgaeIntakeConstants.NO_OBJECT_DEFAULT_DISTANCE;
+			}
+		}), pivotStateHandler.setState(state.getPivotState()), rollersStateHandler.setState(state.getRollersState()));
 	}
 
 	public boolean isAtState(AlgaeIntakeState state) {
@@ -54,14 +51,13 @@ public class AlgaeIntakeStateHandler {
 
 	public boolean isAlgaeIn() {
 		boolean isPivotDown = pivotStateHandler.getPivot().getPosition().getDegrees()
-				< AlgaeIntakeConstants.MIN_POSITION_WHEN_CLIMB_INTERRUPT_SENSOR.getDegrees()
-				;
+			< AlgaeIntakeConstants.MIN_POSITION_WHEN_CLIMB_INTERRUPT_SENSOR.getDegrees();
 		boolean isAlgaeInByMin = min < AlgaeIntakeConstants.DISTANCE_FROM_SENSOR_TO_CONSIDER_ALGAE_IN_METERS;
-		
+
 		Logger.recordOutput("Test/PivotDown", isPivotDown);
 		Logger.recordOutput("Test/MinClose", isAlgaeInByMin);
 		Logger.recordOutput("Test/isAlgaeInByMin", isAlgaeInByMin && isPivotDown);
-		
+
 		return isAlgaeInByMin && isPivotDown;
 	}
 
@@ -71,7 +67,7 @@ public class AlgaeIntakeStateHandler {
 		}
 		return setState(AlgaeIntakeState.CLOSED);
 	}
-	
+
 	public void updateAlgaeSensor(Robot robot) {
 		if (
 			Math.abs(robot.getPivot().getVelocity().getDegrees())
@@ -83,7 +79,7 @@ public class AlgaeIntakeStateHandler {
 		} else {
 			ringBuffer.insert(AlgaeIntakeConstants.NO_OBJECT_DEFAULT_DISTANCE);
 		}
-		
+
 		ringBuffer.forEach((val) -> min = Math.min(min, val));
 		Logger.recordOutput(rollersStateHandler.getRollers().getLogPath() + "/Min", min);
 	}

@@ -395,7 +395,7 @@ public class AutosBuilder {
 			true,
 			AngleTransform.INVERT
 		);
-		Pose2d netLinkedWaypointMinus = new Pose2d(netLinkedWaypoint.getX() -0.4,netLinkedWaypoint.getY(),netLinkedWaypoint.getRotation());
+		Pose2d netLinkedWaypointMinus = new Pose2d(netLinkedWaypoint.getX() - 0.4, netLinkedWaypoint.getY(), netLinkedWaypoint.getRotation());
 		return new SequentialCommandGroup(
 			new ParallelCommandGroup(
 				robot.getSwerve()
@@ -409,16 +409,24 @@ public class AutosBuilder {
 				robot.getRobotCommander().getSuperstructure().algaeIntake().asProxy()
 			).until(() -> robot.getRobotCommander().getSuperstructure().isAlgaeInAlgaeIntake()),
 			new ParallelDeadlineGroup(
-					PathFollowingCommandsBuilder.pathfindToPose(netLinkedWaypointMinus, AutonomousConstants.getRealTimeConstraints(robot.getSwerve())).andThen(
-							PathFollowingCommandsBuilder.pathfindToPose(netLinkedWaypoint, AutonomousConstants.getRealTimeConstraints(robot.getSwerve()))),
+				PathFollowingCommandsBuilder
+					.pathfindToPose(netLinkedWaypointMinus, AutonomousConstants.getRealTimeConstraints(robot.getSwerve()))
+					.andThen(
+						PathFollowingCommandsBuilder
+							.pathfindToPose(netLinkedWaypoint, AutonomousConstants.getRealTimeConstraints(robot.getSwerve()))
+					),
 				new SequentialCommandGroup(
 					robot.getRobotCommander().getSuperstructure().transferAlgaeFromIntakeToEndEffector().asProxy(),
 					robot.getRobotCommander().getSuperstructure().holdAlgae().asProxy().withTimeout(1),
-					robot.getRobotCommander().getSuperstructure().preNet().asProxy().until(robot.getRobotCommander().getSuperstructure()::isPreNetReady)
+					robot.getRobotCommander()
+						.getSuperstructure()
+						.preNet()
+						.asProxy()
+						.until(robot.getRobotCommander().getSuperstructure()::isPreNetReady)
 				)
 			),
-				robot.getRobotCommander().getSuperstructure().netWithRelease().asProxy()
-		
+			robot.getRobotCommander().getSuperstructure().netWithRelease().asProxy()
+
 		);
 	}
 

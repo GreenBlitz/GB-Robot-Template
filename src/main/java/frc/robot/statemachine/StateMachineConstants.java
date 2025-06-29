@@ -15,7 +15,7 @@ public class StateMachineConstants {
 	public static final double MIN_NET_SCORING_Y_POSITION = 4.5;
 	public static final double VELOCITY_BETWEEN_OPEN_SUPERSTRUCTURE_AND_SCORE_TO_NET_METERS_PER_SECOND = 1.5;
 	public static final double POWER_FOR_MANUAL_CLIMB = -0.5;
-	public static final double PUSH_ALGAE_OUT_TIME_SECONDS = 0.2;
+	public static final double PUSH_ALGAE_OUT_TIME_SECONDS = 0.15;
 
 	public static final double DISTANCE_FROM_CORAL_STATION_SLOT_TO_START_AIM_ASSIST_METERS = 2.2;
 
@@ -32,9 +32,8 @@ public class StateMachineConstants {
 	public static final double NET_OUTTAKE_TIME_SECONDS = 0.5;
 	public static final double ALGAE_REMOVE_TIME_AFTER_LIMIT_SWITCH_SECONDS = 0;
 	public static final double ALGAE_INTAKE_TIME_AFTER_SENSOR_SECONDS = 0;
-	public static final double ALGAE_INTAKE_MOVE_TO_OUTTAKE_POSITION_TIME_SECONDS = 0.8;
-	public static final double ALGAE_OUTTAKE_FROM_INTAKE_TIME_AFTER_SENSOR_SECONDS = 0.2;
-	public static final double ALGAE_TRANSFER_TO_END_EFFECTOR_TIME_SECONDS = 0.8;
+	public static final double ALGAE_OUTTAKE_FROM_INTAKE_TIME_AFTER_SENSOR_SECONDS = 0.5;
+	public static final double ALGAE_TRANSFER_TO_END_EFFECTOR_TIME_SECONDS = 0.4;
 	public static final double INTAKE_TIME_AFTER_BEAM_BREAK_SECONDS = 0;
 	public static final Rotation2d ARM_POSITION_TO_CLOSE_ELEVATOR_L4 = Rotation2d.fromDegrees(63 + ArmConstants.POSITION_OFFSET.getDegrees());
 	public static final Rotation2d ARM_POSITION_TO_DEPLOY_LIFTER = Rotation2d.fromDegrees(26 + ArmConstants.POSITION_OFFSET.getDegrees());

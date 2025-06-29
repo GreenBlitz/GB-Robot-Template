@@ -21,24 +21,19 @@ public class AlgaeIntakeStateHandler {
 	private final PivotStateHandler pivotStateHandler;
 	private final RollersStateHandler rollersStateHandler;
 	
-	private RingBuffer<Double> ringBuffer = new RingBuffer<>(5);
-	private final Debouncer debouncer = new Debouncer(0.05);
-	public boolean isIn = false;
-
+	private final RingBuffer<Double> ringBuffer;
 	private final YishaiDistanceSensor distanceSensor;
-	private final MedianFilter distanceFilter;
 
 	private AlgaeIntakeState currentState;
-
-
+	private double min;
+	
 	public AlgaeIntakeStateHandler(PivotStateHandler pivotStateHandler, RollersStateHandler rollersStateHandler) {
 		this.pivotStateHandler = pivotStateHandler;
 		this.rollersStateHandler = rollersStateHandler;
 
+		this.ringBuffer = new RingBuffer<>(AlgaeIntakeConstants.NUMBER_OF_VALUES_IN_MEDIAN);
 		this.distanceSensor = new YishaiDistanceSensor(new DigitalInput(AlgaeIntakeConstants.ALGAE_SENSOR_CHANNEL));
-		this.distanceFilter = new MedianFilter(AlgaeIntakeConstants.NUMBER_OF_VALUES_IN_MEDIAN);
-		distanceFilter.reset();
-		distanceFilter.calculate(distanceSensor.getDistanceMeters());
+		this.min = AlgaeIntakeConstants.NO_OBJECT_DEFAULT_DISTANCE;
 	}
 
 	public AlgaeIntakeState getCurrentState() {
@@ -47,7 +42,7 @@ public class AlgaeIntakeStateHandler {
 
 	public Command setState(AlgaeIntakeState state) {
 		return new ParallelCommandGroup(
-			new InstantCommand(() -> {currentState = state; if (state == AlgaeIntakeState.INTAKE){distanceFilter.reset(); min = 0.5;}}),
+			new InstantCommand(() -> {currentState = state; if (state == AlgaeIntakeState.INTAKE){min = 0.5;}}),
 			pivotStateHandler.setState(state.getPivotState()),
 			rollersStateHandler.setState(state.getRollersState())
 		);
@@ -58,24 +53,17 @@ public class AlgaeIntakeStateHandler {
 	}
 
 	public boolean isAlgaeIn() {
-		boolean a = pivotStateHandler.getPivot().getPosition().getDegrees()
+		boolean isPivotDown = pivotStateHandler.getPivot().getPosition().getDegrees()
 				< AlgaeIntakeConstants.MIN_POSITION_WHEN_CLIMB_INTERRUPT_SENSOR.getDegrees()
 				;
-		boolean b = distanceFilter.lastValue() < AlgaeIntakeConstants.DISTANCE_FROM_SENSOR_TO_CONSIDER_ALGAE_IN_METERS;
+		boolean isAlgaeInByMin = min < AlgaeIntakeConstants.DISTANCE_FROM_SENSOR_TO_CONSIDER_ALGAE_IN_METERS;
 		
-		boolean c = min < AlgaeIntakeConstants.DISTANCE_FROM_SENSOR_TO_CONSIDER_ALGAE_IN_METERS;
-		Logger.recordOutput("Test/PivotDown", a);
-		Logger.recordOutput("Test/DistanceClose", b);
-		Logger.recordOutput("Test/MinClose", c);
-		Logger.recordOutput("Test/AlgaeInByMedian", a && b);
-		Logger.recordOutput("Test/AlgaeInByMin", c && b);
+		Logger.recordOutput("Test/PivotDown", isPivotDown);
+		Logger.recordOutput("Test/MinClose", isAlgaeInByMin);
+		Logger.recordOutput("Test/isAlgaeInByMin", isAlgaeInByMin && isPivotDown);
 		
-		return c && a;
+		return isAlgaeInByMin && isPivotDown;
 	}
-	
-//	public boolean isAlgaeIn() {
-//		return isIn;
-//	}
 
 	public Command handleIdle(boolean isAlgaeInAlgaeIntakeOverride) {
 		if (isAlgaeIn() || isAlgaeInAlgaeIntakeOverride) {
@@ -84,8 +72,6 @@ public class AlgaeIntakeStateHandler {
 		return setState(AlgaeIntakeState.CLOSED);
 	}
 	
-	double min = 0.5;
-	
 	public void updateAlgaeSensor(Robot robot) {
 		if (
 			Math.abs(robot.getPivot().getVelocity().getDegrees())
@@ -93,19 +79,13 @@ public class AlgaeIntakeStateHandler {
 				&& pivotStateHandler.getPivot().getPosition().getDegrees()
 					< AlgaeIntakeConstants.MIN_POSITION_WHEN_CLIMB_INTERRUPT_SENSOR.getDegrees()
 		) {
-			distanceFilter.calculate(distanceSensor.getDistanceMeters());
 			ringBuffer.insert(distanceSensor.getDistanceMeters());
 		} else {
-			distanceFilter.calculate(AlgaeIntakeConstants.NO_OBJECT_DEFAULT_DISTANCE);
 			ringBuffer.insert(AlgaeIntakeConstants.NO_OBJECT_DEFAULT_DISTANCE);
 		}
+		
 		ringBuffer.forEach((val) -> min = Math.min(min, val));
-//		if (getCurrentState() == AlgaeIntakeState.OUTTAKE_WITH_RELEASE) {
-//			min = 0.5;
-//		}
-//		isIn = debouncer.calculate(isAlgaeInDeb());
-		Logger.recordOutput(rollersStateHandler.getRollers().getLogPath() + "/DistanceFilterMeters", distanceFilter.lastValue());
-		Logger.recordOutput(rollersStateHandler.getRollers().getLogPath() + "/MIn", min);
+		Logger.recordOutput(rollersStateHandler.getRollers().getLogPath() + "/Min", min);
 	}
 
 

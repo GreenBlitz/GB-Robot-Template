@@ -64,9 +64,9 @@ public class AlgaeIntakeStateHandler {
 
 	public Command handleIdle(boolean isAlgaeInAlgaeIntakeOverride) {
 		return new ConditionalCommand(
-				setState(AlgaeIntakeState.HOLD_ALGAE),
-				setState(AlgaeIntakeState.CLOSED),
-				() -> isAlgaeIn() || isAlgaeInAlgaeIntakeOverride
+			setState(AlgaeIntakeState.HOLD_ALGAE),
+			setState(AlgaeIntakeState.CLOSED),
+			() -> isAlgaeIn() || isAlgaeInAlgaeIntakeOverride
 		);
 	}
 

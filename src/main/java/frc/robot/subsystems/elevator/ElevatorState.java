@@ -23,6 +23,7 @@ public enum ElevatorState {
 	NET(1.1, 6, 6),
 	PROCESSOR_OUTTAKE(0.02),
 	OPENING_HEIGHT(0.4, 5, 6),
+	TRANSFER_ALGAE_TO_END_EFFECTOR(0.25),
 	CLIMB(0.23);
 
 	private final double heightMeters;

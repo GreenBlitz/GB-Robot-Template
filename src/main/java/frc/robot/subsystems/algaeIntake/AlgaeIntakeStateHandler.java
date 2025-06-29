@@ -2,6 +2,7 @@ package frc.robot.subsystems.algaeIntake;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.joysticks.SmartJoystick;
@@ -62,10 +63,11 @@ public class AlgaeIntakeStateHandler {
 	}
 
 	public Command handleIdle(boolean isAlgaeInAlgaeIntakeOverride) {
-		if (isAlgaeIn() || isAlgaeInAlgaeIntakeOverride) {
-			return setState(AlgaeIntakeState.HOLD_ALGAE);
-		}
-		return setState(AlgaeIntakeState.CLOSED);
+		return new ConditionalCommand(
+				setState(AlgaeIntakeState.HOLD_ALGAE),
+				setState(AlgaeIntakeState.CLOSED),
+				() -> isAlgaeIn() || isAlgaeInAlgaeIntakeOverride
+		);
 	}
 
 	public void updateAlgaeSensor(Robot robot) {
@@ -80,6 +82,7 @@ public class AlgaeIntakeStateHandler {
 			ringBuffer.insert(AlgaeIntakeConstants.NO_OBJECT_DEFAULT_DISTANCE);
 		}
 
+		min = AlgaeIntakeConstants.NO_OBJECT_DEFAULT_DISTANCE;
 		ringBuffer.forEach((val) -> min = Math.min(min, val));
 		Logger.recordOutput(rollersStateHandler.getRollers().getLogPath() + "/Min", min);
 	}
@@ -88,7 +91,6 @@ public class AlgaeIntakeStateHandler {
 	public void applyCalibrationBindings(SmartJoystick joystick) {
 		joystick.A.onTrue(setState(AlgaeIntakeState.CLOSED));
 		joystick.B.onTrue(setState(AlgaeIntakeState.INTAKE));
-		joystick.X.onTrue(setState(AlgaeIntakeState.OUTTAKE_WITHOUT_RELEASE));
 		joystick.Y.onTrue(setState(AlgaeIntakeState.TRANSFER_TO_END_EFFECTOR_WITHOUT_RELEASE));
 		joystick.POV_LEFT.onTrue(setState(AlgaeIntakeState.OUTTAKE_WITH_RELEASE));
 		joystick.POV_RIGHT.onTrue(setState(AlgaeIntakeState.HOLD_ALGAE));

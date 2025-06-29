@@ -59,7 +59,7 @@ public class RobotCommander extends GBSubsystem {
 		this.handleBalls = new Trigger(
 			() -> superstructure.isAlgaeInAlgaeIntake()
 				&& !robot.getEndEffector().isCoralIn()
-				&& currentState == RobotState.DRIVE
+				&& (currentState == RobotState.STAY_IN_PLACE || currentState == RobotState.DRIVE)
 				&& DriverStationUtil.isTeleop()
 		);
 		handleBalls.onTrue(transferAlgaeFromIntakeToEndEffector());

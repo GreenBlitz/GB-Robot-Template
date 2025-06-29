@@ -842,13 +842,6 @@ public class Superstructure extends GBSubsystem {
 	public Command holdAlgae() {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
-				// new ParallelCommandGroup(
-//					elevatorStateHandler.setState(ElevatorState.HOLD_ALGAE),
-//					armStateHandler.setState(ArmState.HOLD_ALGAE),
-//					endEffectorStateHandler.setState(EndEffectorState.TRANSFER_ALGAE_FROM_INTAKE),
-//					climbStateHandler.setState(ClimbState.STOP),
-//					algaeIntakeStateHandler.setState(AlgaeIntakeState.TRANSFER_TO_END_EFFECTOR_WITH_RELEASE)
-//				).withTimeout(1),
 				new ParallelCommandGroup(
 					elevatorStateHandler.setState(ElevatorState.HOLD_ALGAE),
 					armStateHandler.setState(ArmState.HOLD_ALGAE),

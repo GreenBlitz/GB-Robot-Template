@@ -11,7 +11,6 @@ import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.StateMachineConstants;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.subsystems.swerve.SwerveMath;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.math.AngleTransform;
 import frc.utils.math.ToleranceMath;
@@ -60,14 +59,14 @@ public class PathFollowingCommandsBuilder {
 
 	public static Command scoreToNet(Robot robot, PathPlannerPath path, Supplier<Command> netCommandSupplier, Optional<Branch> targetBranch) {
 		Command netAutoReleaseAfterDelay = new SequentialCommandGroup(new WaitCommand(2), netCommandSupplier.get());
-		return new ParallelRaceGroup(
+		return new ParallelDeadlineGroup(
 			new SequentialCommandGroup(new WaitUntilCommand(() -> robot.getRobotCommander().isReadyForNetForAuto()), netCommandSupplier.get()),
-			followAdjustedPath(robot, path, targetBranch, AutonomousConstants.TARGET_POSE_TOLERANCES).andThen(
-				netAutoReleaseAfterDelay.onlyIf(
-					() -> SwerveMath.isStill(robot.getSwerve().getRobotRelativeVelocity(), AutonomousConstants.NET_AUTO_RELEASE_DEADBANDS)
-						&& !robot.getRobotCommander().isReadyForNetForAuto()
-				)
-			)
+			followAdjustedPath(robot, path, targetBranch, AutonomousConstants.TARGET_POSE_TOLERANCES)
+//					.andThen(netAutoReleaseAfterDelay.onlyIf(
+//					() -> SwerveMath.isStill(robot.getSwerve().getRobotRelativeVelocity(), AutonomousConstants.NET_AUTO_RELEASE_DEADBANDS)
+//						&& !robot.getRobotCommander().isReadyForNetForAuto()
+//				)
+//			)
 		);
 	}
 
@@ -80,6 +79,10 @@ public class PathFollowingCommandsBuilder {
 		return AutoBuilder.pathfindToPose(targetPose, pathfindingConstraints);
 	}
 
+	public static Command pathfindToPose(Pose2d targetPose, PathConstraints pathfindingConstraints, double goalEndVelocityMetersPerSecond) {
+		return AutoBuilder.pathfindToPose(targetPose, pathfindingConstraints, goalEndVelocityMetersPerSecond);
+	}
+
 	public static Command pathfindThenFollowPath(PathPlannerPath path, PathConstraints pathfindingConstraints) {
 		return AutoBuilder.pathfindThenFollowPath(path, pathfindingConstraints);
 	}
@@ -89,13 +92,11 @@ public class PathFollowingCommandsBuilder {
 		PathConstraints pathfindingConstraints,
 		double velocityBetweenPathfindingToPathFollowingMetersPerSecond
 	) {
-		return AutoBuilder
-			.pathfindToPose(
-				Field.getAllianceRelative(PathPlannerUtil.getPathStartingPose(path), true, true, AngleTransform.INVERT),
-				pathfindingConstraints,
-				velocityBetweenPathfindingToPathFollowingMetersPerSecond
-			)
-			.andThen(followPath(path));
+		return pathfindToPose(
+			Field.getAllianceRelative(PathPlannerUtil.getPathStartingPose(path), true, true, AngleTransform.INVERT),
+			pathfindingConstraints,
+			velocityBetweenPathfindingToPathFollowingMetersPerSecond
+		).andThen(followPath(path));
 	}
 
 	public static Command followPathOrPathfindAndFollowPath(Swerve swerve, PathPlannerPath path, Supplier<Pose2d> currentPose) {

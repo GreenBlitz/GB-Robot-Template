@@ -222,11 +222,13 @@ public class Robot {
 		new EventTrigger("PRE_NET").onTrue(robotCommander.getSuperstructure().preNet());
 		new EventTrigger("HOLD_ALGAE").onTrue(robotCommander.getSuperstructure().holdAlgae());
 		new EventTrigger("STOP_ROLLERS").onTrue(robotCommander.getSuperstructure().algaeRemoveWithKeepRollers());
+		new EventTrigger("TRANSFER_ALGAE").onTrue(robotCommander.getSuperstructure().transferAlgaeFromIntakeToEndEffector());
 
 		this.preBuiltAutosChooser = new AutonomousChooser(
 			"PreBuiltAutos",
 			AutosBuilder.getAllNoDelayAutos(
 				this,
+				objectDetector::getClosestObjectData,
 				intakingCommand,
 				scoringCommand,
 				algaeRemoveCommand,

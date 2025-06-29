@@ -238,6 +238,22 @@ public class Swerve extends GBSubsystem {
 		driveByState(targetAllianceRelativeSpeeds, SwerveState.DEFAULT_DRIVE);
 	}
 
+	protected void moveToPoseByPID(Pose2d currentPose, Pose2d targetPose, SwerveState swerveState) {
+		double xVelocityMetersPerSecond = constants.xMetersPIDController().calculate(currentPose.getX(), targetPose.getX());
+		double yVelocityMetersPerSecond = constants.yMetersPIDController().calculate(currentPose.getY(), targetPose.getY());
+		int direction = Field.isFieldConventionAlliance() ? 1 : -1;
+		Rotation2d rotationVelocityPerSecond = Rotation2d.fromDegrees(
+			constants.rotationDegreesPIDController().calculate(currentPose.getRotation().getDegrees(), targetPose.getRotation().getDegrees())
+		);
+
+		ChassisSpeeds targetAllianceRelativeSpeeds = new ChassisSpeeds(
+			xVelocityMetersPerSecond * direction,
+			yVelocityMetersPerSecond * direction,
+			rotationVelocityPerSecond.getRadians()
+		);
+		driveByState(targetAllianceRelativeSpeeds, swerveState);
+	}
+
 	protected void turnToHeading(Rotation2d targetHeading, SwerveState swerveState) {
 		ChassisSpeeds targetSpeeds = new ChassisSpeeds(
 			0,

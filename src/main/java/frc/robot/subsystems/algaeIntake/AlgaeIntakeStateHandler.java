@@ -1,6 +1,5 @@
 package frc.robot.subsystems.algaeIntake;
 
-import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -10,6 +9,7 @@ import frc.robot.Robot;
 import frc.robot.hardware.YishaiDistanceSensor;
 import frc.robot.subsystems.algaeIntake.pivot.PivotStateHandler;
 import frc.robot.subsystems.algaeIntake.rollers.RollersStateHandler;
+import frc.utils.buffers.RingBuffer.RingBuffer;
 import org.littletonrobotics.junction.Logger;
 
 public class AlgaeIntakeStateHandler {
@@ -17,20 +17,19 @@ public class AlgaeIntakeStateHandler {
 	private final PivotStateHandler pivotStateHandler;
 	private final RollersStateHandler rollersStateHandler;
 
+	private final RingBuffer<Double> ringBuffer;
 	private final YishaiDistanceSensor distanceSensor;
-	private final MedianFilter distanceFilter;
 
 	private AlgaeIntakeState currentState;
-
+	private double min;
 
 	public AlgaeIntakeStateHandler(PivotStateHandler pivotStateHandler, RollersStateHandler rollersStateHandler) {
 		this.pivotStateHandler = pivotStateHandler;
 		this.rollersStateHandler = rollersStateHandler;
 
+		this.ringBuffer = new RingBuffer<>(AlgaeIntakeConstants.NUMBER_OF_VALUES_IN_MEDIAN);
 		this.distanceSensor = new YishaiDistanceSensor(new DigitalInput(AlgaeIntakeConstants.ALGAE_SENSOR_CHANNEL));
-		this.distanceFilter = new MedianFilter(AlgaeIntakeConstants.NUMBER_OF_VALUES_IN_MEDIAN);
-		distanceFilter.reset();
-		distanceFilter.calculate(distanceSensor.getDistanceMeters());
+		this.min = AlgaeIntakeConstants.NO_OBJECT_DEFAULT_DISTANCE;
 	}
 
 	public AlgaeIntakeState getCurrentState() {
@@ -38,11 +37,12 @@ public class AlgaeIntakeStateHandler {
 	}
 
 	public Command setState(AlgaeIntakeState state) {
-		return new ParallelCommandGroup(
-			new InstantCommand(() -> currentState = state),
-			pivotStateHandler.setState(state.getPivotState()),
-			rollersStateHandler.setState(state.getRollersState())
-		);
+		return new ParallelCommandGroup(new InstantCommand(() -> {
+			currentState = state;
+			if (state == AlgaeIntakeState.INTAKE) {
+				min = AlgaeIntakeConstants.NO_OBJECT_DEFAULT_DISTANCE;
+			}
+		}), pivotStateHandler.setState(state.getPivotState()), rollersStateHandler.setState(state.getRollersState()));
 	}
 
 	public boolean isAtState(AlgaeIntakeState state) {
@@ -50,9 +50,15 @@ public class AlgaeIntakeStateHandler {
 	}
 
 	public boolean isAlgaeIn() {
-		return !(pivotStateHandler.getPivot().getPosition().getDegrees()
-			> AlgaeIntakeConstants.MIN_POSITION_WHEN_CLIMB_INTERRUPT_SENSOR.getDegrees())
-			&& distanceFilter.lastValue() < AlgaeIntakeConstants.DISTANCE_FROM_SENSOR_TO_CONSIDER_ALGAE_IN_METERS;
+		boolean isPivotDown = pivotStateHandler.getPivot().getPosition().getDegrees()
+			< AlgaeIntakeConstants.MIN_POSITION_WHEN_CLIMB_INTERRUPT_SENSOR.getDegrees();
+		boolean isAlgaeInByMin = min < AlgaeIntakeConstants.DISTANCE_FROM_SENSOR_TO_CONSIDER_ALGAE_IN_METERS;
+
+		Logger.recordOutput("Test/PivotDown", isPivotDown);
+		Logger.recordOutput("Test/MinClose", isAlgaeInByMin);
+		Logger.recordOutput("Test/isAlgaeInByMin", isAlgaeInByMin && isPivotDown);
+
+		return isAlgaeInByMin && isPivotDown;
 	}
 
 	public Command handleIdle(boolean isAlgaeInAlgaeIntakeOverride) {
@@ -69,11 +75,13 @@ public class AlgaeIntakeStateHandler {
 				&& pivotStateHandler.getPivot().getPosition().getDegrees()
 					< AlgaeIntakeConstants.MIN_POSITION_WHEN_CLIMB_INTERRUPT_SENSOR.getDegrees()
 		) {
-			distanceFilter.calculate(distanceSensor.getDistanceMeters());
+			ringBuffer.insert(distanceSensor.getDistanceMeters());
 		} else {
-			distanceFilter.calculate(AlgaeIntakeConstants.NO_OBJECT_DEFAULT_DISTANCE);
+			ringBuffer.insert(AlgaeIntakeConstants.NO_OBJECT_DEFAULT_DISTANCE);
 		}
-		Logger.recordOutput(rollersStateHandler.getRollers().getLogPath() + "/DistanceFilterMeters", distanceFilter.lastValue());
+
+		ringBuffer.forEach((val) -> min = Math.min(min, val));
+		Logger.recordOutput(rollersStateHandler.getRollers().getLogPath() + "/Min", min);
 	}
 
 

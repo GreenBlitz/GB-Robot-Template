@@ -128,11 +128,12 @@ public class SwerveStateHandler {
 		}
 
 		if (swerveState.getAimAssist() == AimAssist.ALGAE_INTAKE) {
-			if (closestAlgaeSupplier.get().isPresent()) {
+			Optional<ObjectData> closestAlgae = closestAlgaeSupplier.get();
+			if (closestAlgae.isPresent()) {
 				return handleAlgaeIntakeAimAssist(
 					speeds,
 					robotPoseSupplier.get().get(),
-					closestAlgaeSupplier.get().get().getRobotRelativeEstimatedTranslation(),
+					closestAlgae.get().getRobotRelativeEstimatedTranslation(),
 					swerveState
 				);
 			} else {

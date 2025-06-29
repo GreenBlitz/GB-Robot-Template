@@ -3,6 +3,7 @@ package frc.robot.subsystems.swerve;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -17,6 +18,7 @@ import frc.robot.autonomous.PathFollowingCommandsBuilder;
 import frc.robot.subsystems.swerve.factories.modules.drive.KrakenX60DriveBuilder;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.Modules;
+import frc.robot.subsystems.swerve.states.DriveSpeed;
 import frc.robot.subsystems.swerve.states.LoopMode;
 import frc.robot.subsystems.swerve.states.RotateAxis;
 import frc.robot.subsystems.swerve.states.SwerveState;
@@ -25,8 +27,10 @@ import frc.utils.calibration.swervecalibration.maxvelocityacceleration.MaxVeloci
 import frc.utils.calibration.swervecalibration.maxvelocityacceleration.VelocityType;
 import frc.utils.calibration.swervecalibration.wheelradius.WheelRadiusCharacterization;
 import frc.utils.calibration.sysid.SysIdCalibrator;
+import frc.utils.math.FieldMath;
 import frc.utils.utilcommands.InitExecuteCommand;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -194,6 +198,30 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
+	public Command driveToObject(
+		Supplier<Pose2d> currentPose,
+		Supplier<Optional<Translation2d>> objectTranslation,
+		double distance,
+		Rotation2d headingToObject
+	) {
+		return swerve.asSubsystemCommand(
+			moveToPoseByPID(
+				currentPose,
+				() -> objectTranslation.get().isPresent()
+					? new Pose2d(
+						FieldMath.getApproachPoseToObject(objectTranslation.get().get(), currentPose.get(), distance).getTranslation(),
+						FieldMath.getApproachPoseToObject(objectTranslation.get().get(), currentPose.get(), distance)
+							.getRotation()
+							.minus(headingToObject)
+					)
+					: currentPose.get(),
+				SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW)
+
+			).until(() -> objectTranslation.get().isEmpty()),
+			"Drive to object"
+		);
+	}
+
 	private Command pathToPose(Pose2d currentPose, Pose2d targetPose) {
 		Command pathFollowingCommand;
 		if (PathPlannerUtil.isRobotInPathfindingDeadband(currentPose, targetPose)) {
@@ -222,6 +250,20 @@ public class SwerveCommandsBuilder {
 	public Command moveToPoseByPID(Supplier<Pose2d> currentPose, Pose2d targetPose) {
 		return swerve.asSubsystemCommand(
 			new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.moveToPoseByPID(currentPose.get(), targetPose)),
+			"PID to pose: " + targetPose
+		);
+	}
+
+	public Command moveToPoseByPID(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose) {
+		return swerve.asSubsystemCommand(
+			new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.moveToPoseByPID(currentPose.get(), targetPose.get())),
+			"PID to pose: " + targetPose
+		);
+	}
+
+	public Command moveToPoseByPID(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose, SwerveState swerveState) {
+		return swerve.asSubsystemCommand(
+			new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.moveToPoseByPID(currentPose.get(), targetPose.get(), swerveState)),
 			"PID to pose: " + targetPose
 		);
 	}

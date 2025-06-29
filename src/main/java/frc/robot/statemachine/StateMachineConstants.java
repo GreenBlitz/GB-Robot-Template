@@ -10,9 +10,10 @@ public class StateMachineConstants {
 	public static final double ROBOT_SCORING_DISTANCE_FROM_REEF_METERS = 0.59;
 	public static final double OPEN_SUPERSTRUCTURE_DISTANCE_FROM_REEF_METERS = 0.8;
 	public static final double DISTANCE_TO_BRANCH_FOR_STARTING_PATH = 1;
-	public static final double NET_SCORING_OPEN_SUPERSTRUCTURE_X_POSITION_METERS = 7;
-	public static final double SCORE_NET_X_POSITION_METERS = 7.73;
+	public static final double NET_SCORING_OPEN_SUPERSTRUCTURE_X_POSITION_METERS = 6.5;
+	public static final double SCORE_NET_X_POSITION_METERS = 7.6;
 	public static final double MIN_NET_SCORING_Y_POSITION = 4.5;
+	public static final double VELOCITY_BETWEEN_OPEN_SUPERSTRUCTURE_AND_SCORE_TO_NET_METERS_PER_SECOND = 1.5;
 	public static final double POWER_FOR_MANUAL_CLIMB = -0.5;
 	public static final double PUSH_ALGAE_OUT_TIME_SECONDS = 0.2;
 
@@ -28,7 +29,7 @@ public class StateMachineConstants {
 	}
 	public static final double TIME_TO_RELEASE_ALGAE_TO_PROCESSOR = 1;
 	public static final double SCORE_OUTTAKE_TIME_AFTER_BEAM_BREAK_SECONDS = 0;
-	public static final double NET_OUTTAKE_TIME_SECONDS = 1;
+	public static final double NET_OUTTAKE_TIME_SECONDS = 0.5;
 	public static final double ALGAE_REMOVE_TIME_AFTER_LIMIT_SWITCH_SECONDS = 0;
 	public static final double ALGAE_INTAKE_TIME_AFTER_SENSOR_SECONDS = 0;
 	public static final double ALGAE_INTAKE_MOVE_TO_OUTTAKE_POSITION_TIME_SECONDS = 0.8;

@@ -4,7 +4,7 @@ package frc.robot.subsystems.elevator;
 public enum ElevatorState {
 
 	STAY_IN_PLACE(Double.NaN),
-	CLOSED(0.02, 6, 6),
+	CLOSED(0.07, 6, 6),
 	HOLD_ALGAE(0.12, 5, 5),
 	INTAKE(0.05),
 	ALGAE_OUTTAKE(0.02),
@@ -20,7 +20,7 @@ public enum ElevatorState {
 	LOW_ALGAE_REMOVE(0.02),
 	HIGH_ALGAE_REMOVE(0.05),
 	TRANSFER_ALGAE_FROM_INTAKE(0.1),
-	NET(1.05, 6, 6),
+	NET(1.1, 6, 6),
 	PROCESSOR_OUTTAKE(0.02),
 	OPENING_HEIGHT(0.4, 5, 6),
 	CLIMB(0.23);

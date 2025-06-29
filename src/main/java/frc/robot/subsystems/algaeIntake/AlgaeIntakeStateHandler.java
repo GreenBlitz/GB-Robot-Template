@@ -66,9 +66,9 @@ public class AlgaeIntakeStateHandler {
 		boolean c = min < AlgaeIntakeConstants.DISTANCE_FROM_SENSOR_TO_CONSIDER_ALGAE_IN_METERS;
 		Logger.recordOutput("Test/PivotDown", a);
 		Logger.recordOutput("Test/DistanceClose", b);
-		Logger.recordOutput("Test/MInClose", c);
-		Logger.recordOutput("Test/AlgaeIn", a&& b);
-		Logger.recordOutput("Test/AlgaeInByMin", c&& b);
+		Logger.recordOutput("Test/MinClose", c);
+		Logger.recordOutput("Test/AlgaeInByMedian", a && b);
+		Logger.recordOutput("Test/AlgaeInByMin", c && b);
 		
 		return c && a;
 	}
@@ -100,6 +100,9 @@ public class AlgaeIntakeStateHandler {
 			ringBuffer.insert(AlgaeIntakeConstants.NO_OBJECT_DEFAULT_DISTANCE);
 		}
 		ringBuffer.forEach((val) -> min = Math.min(min, val));
+//		if (getCurrentState() == AlgaeIntakeState.OUTTAKE_WITH_RELEASE) {
+//			min = 0.5;
+//		}
 //		isIn = debouncer.calculate(isAlgaeInDeb());
 		Logger.recordOutput(rollersStateHandler.getRollers().getLogPath() + "/DistanceFilterMeters", distanceFilter.lastValue());
 		Logger.recordOutput(rollersStateHandler.getRollers().getLogPath() + "/MIn", min);

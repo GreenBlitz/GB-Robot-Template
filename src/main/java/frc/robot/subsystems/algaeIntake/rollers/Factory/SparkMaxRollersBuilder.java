@@ -1,6 +1,5 @@
 package frc.robot.subsystems.algaeIntake.rollers.Factory;
 
-import com.revrobotics.spark.config.SparkBaseConfig;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
@@ -40,9 +39,7 @@ public class SparkMaxRollersBuilder {
 
 		config.getSparkMaxConfig().encoder.velocityConversionFactor(GEAR_RATIO);
 		config.getSparkMaxConfig().encoder.positionConversionFactor(GEAR_RATIO);
-
-		config.getSparkMaxConfig().idleMode(SparkBaseConfig.IdleMode.kCoast);
-
+		
 		config.getSparkMaxConfig().smartCurrentLimit(40);
 
 		return config;

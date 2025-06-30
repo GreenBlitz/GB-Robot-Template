@@ -241,6 +241,9 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
 
+		usedJoystick.POV_RIGHT.onTrue(new InstantCommand(() -> robot.getRobotCommander().leviButton = false));
+		usedJoystick.POV_LEFT.onTrue(new InstantCommand(() -> robot.getRobotCommander().leviButton = true));
+
 		usedJoystick.A.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L1));
 		usedJoystick.B.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L2));
 		usedJoystick.X.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L3));

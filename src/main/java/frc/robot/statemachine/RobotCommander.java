@@ -57,8 +57,8 @@ public class RobotCommander extends GBSubsystem {
 
 		this.currentState = RobotState.STAY_IN_PLACE;
 		this.keepAlgaeInIntake = false;
-		
-		
+
+
 		this.handleBalls = new Trigger(
 			() -> superstructure.isAlgaeInAlgaeIntake()
 				&& !robot.getEndEffector().isCoralIn()
@@ -69,7 +69,7 @@ public class RobotCommander extends GBSubsystem {
 		handleBalls.onTrue(transferAlgaeFromIntakeToEndEffector());
 
 		Trigger resetKeepAlgaeInIntake = new Trigger(
-				() -> currentState == RobotState.ALGAE_OUTTAKE_FROM_END_EFFECTOR
+			() -> currentState == RobotState.ALGAE_OUTTAKE_FROM_END_EFFECTOR
 				|| currentState == RobotState.ALGAE_OUTTAKE_FROM_INTAKE
 				|| currentState == RobotState.NET
 				|| currentState == RobotState.PROCESSOR_SCORE

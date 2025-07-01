@@ -44,7 +44,7 @@ public class RobotCommander extends GBSubsystem {
 	private final Trigger handleBalls;
 
 	private RobotState currentState;
-	public boolean leviButton = true;
+	public boolean keepAlgaeInIntake;
 
 	private CANdleWrapper caNdleWrapper;
 	private LEDStateHandler ledStateHandler;
@@ -56,23 +56,25 @@ public class RobotCommander extends GBSubsystem {
 		this.superstructure = new Superstructure("StateMachine/Superstructure", robot);
 
 		this.currentState = RobotState.STAY_IN_PLACE;
-
+		this.keepAlgaeInIntake = false;
+		
+		
 		this.handleBalls = new Trigger(
 			() -> superstructure.isAlgaeInAlgaeIntake()
 				&& !robot.getEndEffector().isCoralIn()
 				&& (currentState == RobotState.STAY_IN_PLACE || currentState == RobotState.DRIVE)
 				&& DriverStationUtil.isTeleop()
-				&& leviButton
+				&& !keepAlgaeInIntake
 		);
 		handleBalls.onTrue(transferAlgaeFromIntakeToEndEffector());
 
-		Trigger resetLevi = new Trigger(
+		Trigger resetKeepAlgaeInIntake = new Trigger(
 				() -> currentState == RobotState.ALGAE_OUTTAKE_FROM_END_EFFECTOR
 				|| currentState == RobotState.ALGAE_OUTTAKE_FROM_INTAKE
 				|| currentState == RobotState.NET
 				|| currentState == RobotState.PROCESSOR_SCORE
 		);
-		resetLevi.onTrue(new InstantCommand(() -> leviButton = true));
+		resetKeepAlgaeInIntake.onTrue(new InstantCommand(() -> keepAlgaeInIntake = true));
 
 		this.caNdleWrapper = new CANdleWrapper(IDs.CANDleIDs.CANDLE, LEDConstants.NUMBER_OF_LEDS, "candle");
 		this.ledStateHandler = new LEDStateHandler("CANdle", caNdleWrapper);

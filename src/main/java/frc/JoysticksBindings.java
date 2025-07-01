@@ -241,8 +241,8 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
 
-		usedJoystick.POV_RIGHT.onTrue(new InstantCommand(() -> robot.getRobotCommander().leviButton = false));
-		usedJoystick.POV_LEFT.onTrue(new InstantCommand(() -> robot.getRobotCommander().leviButton = true));
+		usedJoystick.POV_RIGHT.onTrue(new InstantCommand(() -> robot.getRobotCommander().keepAlgaeInIntake = false));
+		usedJoystick.POV_LEFT.onTrue(new InstantCommand(() -> robot.getRobotCommander().keepAlgaeInIntake = true));
 
 		usedJoystick.A.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L1));
 		usedJoystick.B.onTrue(new InstantCommand(() -> ScoringHelpers.targetScoreLevel = ScoreLevel.L2));

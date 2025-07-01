@@ -74,7 +74,7 @@ public class RobotCommander extends GBSubsystem {
 				|| currentState == RobotState.NET
 				|| currentState == RobotState.PROCESSOR_SCORE
 		);
-		resetKeepAlgaeInIntake.onTrue(new InstantCommand(() -> keepAlgaeInIntake = true));
+		resetKeepAlgaeInIntake.onTrue(new InstantCommand(() -> keepAlgaeInIntake = false));
 
 		this.caNdleWrapper = new CANdleWrapper(IDs.CANDleIDs.CANDLE, LEDConstants.NUMBER_OF_LEDS, "candle");
 		this.ledStateHandler = new LEDStateHandler("CANdle", caNdleWrapper);

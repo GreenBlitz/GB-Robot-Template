@@ -7,7 +7,7 @@ public enum RollersState {
 	TRANSFER_TO_END_EFFECTOR(-0.4),
 	OUTTAKE(-0.6),
 	SLOW_OUTTAKE(-0.4),
-	CLIMB(-0.2);
+	CLIMB(-0.3);
 
 	private final double power;
 

@@ -68,7 +68,7 @@ public class ClimbStateHandler {
 	}
 
 	private Command climbWithLimitSwitch() {
-		return new ParallelCommandGroup(
+		return new ParallelDeadlineGroup(
 			new SequentialCommandGroup(
 				new InstantCommand(() -> lifterStateHandler.getLifter().setBrake(true)),
 				lifterStateHandler.setState(LifterState.CLIMB).until(() -> lifterStateHandler.isLower(Rotation2d.fromDegrees(20))),
@@ -84,8 +84,7 @@ public class ClimbStateHandler {
 							)
 						)
 					)
-					.until(() -> lifterStateHandler.isLower(LifterConstants.MINIMUM_CLIMB_POSITION)),
-				lifterStateHandler.setState(LifterState.HOLD)
+					.until(() -> lifterStateHandler.isLower(LifterConstants.MINIMUM_CLIMB_POSITION))
 			),
 			solenoidStateHandler.setState(SolenoidState.LOCKED)
 		);

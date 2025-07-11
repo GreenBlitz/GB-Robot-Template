@@ -29,7 +29,8 @@ public class StateMachineConstants {
 	}
 	public static final double TIME_TO_RELEASE_ALGAE_TO_PROCESSOR = 1;
 	public static final double SCORE_OUTTAKE_TIME_AFTER_BEAM_BREAK_SECONDS = 0;
-	public static final double NET_OUTTAKE_TIME_SECONDS = 0.5;
+	public static final double NET_OUTTAKE_TIME_SECONDS = 0.75
+			;
 	public static final double ALGAE_REMOVE_TIME_AFTER_LIMIT_SWITCH_SECONDS = 0;
 	public static final double ALGAE_INTAKE_TIME_AFTER_SENSOR_SECONDS = 0;
 	public static final double ALGAE_OUTTAKE_FROM_INTAKE_TIME_AFTER_SENSOR_SECONDS = 0.5;

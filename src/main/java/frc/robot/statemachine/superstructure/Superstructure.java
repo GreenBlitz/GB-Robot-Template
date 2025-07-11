@@ -665,7 +665,7 @@ public class Superstructure extends GBSubsystem {
 					() -> armStateHandler.isAtState(ArmState.TRANSFER_ALGAE_FROM_INTAKE)
 						&& elevatorStateHandler.isAtState(ElevatorState.TRANSFER_ALGAE_FROM_INTAKE)
 						&& algaeIntakeStateHandler.getCurrentState() == AlgaeIntakeState.HOLD_ALGAE
-				),
+				).withTimeout(3),
 				new ParallelCommandGroup(
 					new SequentialCommandGroup(
 						endEffectorStateHandler.setState(EndEffectorState.TRANSFER_ALGAE_FROM_INTAKE).withTimeout(0.8),

@@ -22,7 +22,6 @@ import frc.robot.subsystems.arm.ArmState;
 import frc.robot.subsystems.arm.ArmStateHandler;
 import frc.robot.subsystems.climb.ClimbState;
 import frc.robot.subsystems.climb.ClimbStateHandler;
-import frc.robot.subsystems.climb.lifter.LifterConstants;
 import frc.robot.subsystems.climb.lifter.LifterState;
 import frc.robot.subsystems.climb.lifter.LifterStateHandler;
 import frc.robot.subsystems.climb.solenoid.SolenoidStateHandler;
@@ -762,13 +761,14 @@ public class Superstructure extends GBSubsystem {
 				armStateHandler.setState(ArmState.CLIMB),
 				endEffectorStateHandler.setState(EndEffectorState.STOP)
 			).andThen(
-			new ParallelCommandGroup(
-				climbStateHandler.setState(ClimbState.STOP),
-				algaeIntakeStateHandler.setState(AlgaeIntakeState.CLIMB),
-				elevatorStateHandler.setState(ElevatorState.CLIMB),
-				armStateHandler.setState(ArmState.CLIMB),
-				endEffectorStateHandler.setState(EndEffectorState.STOP)
-			)),
+				new ParallelCommandGroup(
+					climbStateHandler.setState(ClimbState.STOP),
+					algaeIntakeStateHandler.setState(AlgaeIntakeState.CLIMB),
+					elevatorStateHandler.setState(ElevatorState.CLIMB),
+					armStateHandler.setState(ArmState.CLIMB),
+					endEffectorStateHandler.setState(EndEffectorState.STOP)
+				)
+			),
 
 			SuperstructureState.CLIMB_WITH_LIMIT_SWITCH
 		);

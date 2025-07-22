@@ -88,6 +88,7 @@ public class EndEffector extends GBSubsystem {
 		);
 
 		Logger.processInputs(getLogPath(), inputs);
+		Logger.recordOutput(getLogPath() + "/IsCoralIn", isCoralIn());
 	}
 
 	public void setBrake(boolean brake) {

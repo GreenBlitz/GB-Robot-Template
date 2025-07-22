@@ -15,7 +15,7 @@ public class StateMachineConstants {
 	public static final double MIN_NET_SCORING_Y_POSITION = 4.5;
 	public static final double VELOCITY_BETWEEN_OPEN_SUPERSTRUCTURE_AND_SCORE_TO_NET_METERS_PER_SECOND = 1.5;
 	public static final double POWER_FOR_MANUAL_CLIMB = -0.5;
-	public static final double PUSH_ALGAE_OUT_TIME_SECONDS = 0.15;
+	public static final double PUSH_ALGAE_OUT_TIME_SECONDS = 0.075;
 
 	public static final double DISTANCE_FROM_CORAL_STATION_SLOT_TO_START_AIM_ASSIST_METERS = 2.2;
 
@@ -29,7 +29,7 @@ public class StateMachineConstants {
 	}
 	public static final double TIME_TO_RELEASE_ALGAE_TO_PROCESSOR = 1;
 	public static final double SCORE_OUTTAKE_TIME_AFTER_BEAM_BREAK_SECONDS = 0;
-	public static final double NET_OUTTAKE_TIME_SECONDS = 0.5;
+	public static final double NET_OUTTAKE_TIME_SECONDS = 0.75;
 	public static final double ALGAE_REMOVE_TIME_AFTER_LIMIT_SWITCH_SECONDS = 0;
 	public static final double ALGAE_INTAKE_TIME_AFTER_SENSOR_SECONDS = 0;
 	public static final double ALGAE_OUTTAKE_FROM_INTAKE_TIME_AFTER_SENSOR_SECONDS = 0.5;

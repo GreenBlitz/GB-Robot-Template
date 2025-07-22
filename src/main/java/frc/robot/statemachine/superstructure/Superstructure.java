@@ -22,7 +22,6 @@ import frc.robot.subsystems.arm.ArmState;
 import frc.robot.subsystems.arm.ArmStateHandler;
 import frc.robot.subsystems.climb.ClimbState;
 import frc.robot.subsystems.climb.ClimbStateHandler;
-import frc.robot.subsystems.climb.lifter.LifterConstants;
 import frc.robot.subsystems.climb.lifter.LifterState;
 import frc.robot.subsystems.climb.lifter.LifterStateHandler;
 import frc.robot.subsystems.climb.solenoid.SolenoidStateHandler;
@@ -665,7 +664,7 @@ public class Superstructure extends GBSubsystem {
 					() -> armStateHandler.isAtState(ArmState.TRANSFER_ALGAE_FROM_INTAKE)
 						&& elevatorStateHandler.isAtState(ElevatorState.TRANSFER_ALGAE_FROM_INTAKE)
 						&& algaeIntakeStateHandler.getCurrentState() == AlgaeIntakeState.HOLD_ALGAE
-				),
+				).withTimeout(3),
 				new ParallelCommandGroup(
 					new SequentialCommandGroup(
 						endEffectorStateHandler.setState(EndEffectorState.TRANSFER_ALGAE_FROM_INTAKE).withTimeout(0.8),
@@ -756,30 +755,21 @@ public class Superstructure extends GBSubsystem {
 	public Command climbWithLimitSwitch() {
 		return asSubsystemCommand(
 			new ParallelDeadlineGroup(
-				new SequentialCommandGroup(
-					new ParallelCommandGroup(
-						climbStateHandler.setState(ClimbState.CLIMB_WITH_LIMIT_SWITCH),
-						algaeIntakeStateHandler.setState(AlgaeIntakeState.CLOSED)
-					).until(
-						() -> robot.getLifter()
-							.isLower(
-								Rotation2d.fromDegrees(
-									climbStateHandler.getClimbPositionWithLimitSwitch().getDegrees()
-										- LifterConstants.CLIMB_OFFSET_AFTER_LIMIT_SWITCH.getDegrees()
-								)
-							)
-					).until(() -> robot.getLifter().isLower(LifterConstants.MINIMUM_CLIMB_POSITION)),
-					new ParallelCommandGroup(
-						climbStateHandler.setState(ClimbState.STOP),
-						algaeIntakeStateHandler.setState(AlgaeIntakeState.CLIMB)
-					)
-				),
+				climbStateHandler.setState(ClimbState.CLIMB_WITH_LIMIT_SWITCH),
+				algaeIntakeStateHandler.setState(AlgaeIntakeState.CLIMB),
+				elevatorStateHandler.setState(ElevatorState.CLIMB),
+				armStateHandler.setState(ArmState.CLIMB),
+				endEffectorStateHandler.setState(EndEffectorState.STOP)
+			).andThen(
 				new ParallelCommandGroup(
+					climbStateHandler.setState(ClimbState.STOP),
+					algaeIntakeStateHandler.setState(AlgaeIntakeState.CLIMB),
 					elevatorStateHandler.setState(ElevatorState.CLIMB),
 					armStateHandler.setState(ArmState.CLIMB),
 					endEffectorStateHandler.setState(EndEffectorState.STOP)
 				)
 			),
+
 			SuperstructureState.CLIMB_WITH_LIMIT_SWITCH
 		);
 	}

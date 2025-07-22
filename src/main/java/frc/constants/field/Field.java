@@ -25,7 +25,7 @@ public class Field {
 		return DriverStationUtil.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE;
 	}
 
-	public static final FieldType FIELD_TYPE = FieldType.WELDED; // TODO change to andy mark at IRI
+	public static final FieldType FIELD_TYPE = FieldType.ANDY_MARK; // TODO change to andy mark at IRI
 
 	public static final double LENGTH_METERS = 17.548225;
 	public static final double WIDTH_METERS = 8.0518;

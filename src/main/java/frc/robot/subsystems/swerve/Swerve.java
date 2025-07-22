@@ -53,11 +53,8 @@ public class Swerve extends GBSubsystem {
 	private SwerveState currentState;
 	private Supplier<Rotation2d> headingSupplier;
 	private ChassisPowers driversPowerInputs;
-<<<<<<< HEAD
 	private double lastMagnitudeMetersPerSecond;
 	private OdometryData odometryData;
-=======
->>>>>>> template/master
 
 	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro, GyroSignals gyroSignals) {
 		super(constants.logPath());
@@ -125,8 +122,6 @@ public class Swerve extends GBSubsystem {
 
 	public void setDriversPowerInputs(ChassisPowers powers) {
 		this.driversPowerInputs = powers;
-<<<<<<< HEAD
-=======
 	}
 
 	public void setHeading(Rotation2d heading) {
@@ -134,7 +129,6 @@ public class Swerve extends GBSubsystem {
 		gyro.updateInputs(gyroSignals.yawSignal());
 		headingStabilizer.unlockTarget();
 		headingStabilizer.setTargetHeading(heading);
->>>>>>> template/master
 	}
 
 	protected void resetPIDControllers() {
@@ -187,7 +181,6 @@ public class Swerve extends GBSubsystem {
 		}
 
 		return odometryData;
-<<<<<<< HEAD
 	}
 
 	public OdometryData getLatestOdometryData() {
@@ -195,8 +188,6 @@ public class Swerve extends GBSubsystem {
 		odometryData.gyroAngle = gyro instanceof EmptyGyro ? Optional.empty() : Optional.of(gyroSignals.yawSignal().getLatestValue());
 		odometryData.timestamp = gyroSignals.yawSignal().getTimestamp();
 		return odometryData;
-=======
->>>>>>> template/master
 	}
 
 	public double getDriveRadiusMeters() {
@@ -349,10 +340,6 @@ public class Swerve extends GBSubsystem {
 		return isAtHeading && isStopping;
 	}
 
-<<<<<<< HEAD
-=======
-
->>>>>>> template/master
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {
 		// Calibrate steer ks with phoenix tuner x
 		// Calibrate steer pid with phoenix tuner x
@@ -375,18 +362,6 @@ public class Swerve extends GBSubsystem {
 		joystick.POV_RIGHT
 			.whileTrue(getCommandsBuilder().driveByState(() -> fastCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)));
 
-<<<<<<< HEAD
-		// Apply 12 volts on x-axis. Use it for max velocity calibrations.
-		// See what velocity the swerve log after it stops accelerating and use it as max.
-		joystick.START.whileTrue(commandsBuilder.maxVelocityAccelerationCalibration(VelocityType.TRANSLATIONAL));
-
-		// Apply 12 volts on rotation-axis.
-		// Use it for max velocity calibrations. See what velocity the swerve log after it stops accelerating and use it as max.
-		joystick.BACK.whileTrue(commandsBuilder.maxVelocityAccelerationCalibration(VelocityType.ROTATIONAL));
-
-
-=======
->>>>>>> template/master
 		// The sysid outputs will be logged to the "CTRE Signal Logger".
 		// Use phoenix tuner x to extract the position, velocity, motorVoltage, state signals into wpilog.
 		// Then enter the wpilog into wpilib sysid app and make sure you enter all info in the correct places.

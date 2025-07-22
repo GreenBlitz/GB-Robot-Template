@@ -1,5 +1,6 @@
 package frc.robot.vision.multivisionsources;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -7,7 +8,11 @@ import frc.robot.vision.VisionConstants;
 import frc.utils.TimedValue;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.IndpendentHeadingVisionSource;
+<<<<<<< HEAD
 import frc.robot.vision.RobotAngleValues;
+=======
+import frc.robot.vision.OrientationState3D;
+>>>>>>> template/master
 import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
 import frc.robot.vision.sources.VisionSource;
 import frc.robot.vision.sources.limelights.DynamicSwitchingLimelight;
@@ -54,20 +59,36 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 		this(logPath, robotHeadingSupplier, useRobotHeadingForPoseEstimating, List.of(visionSources));
 	}
 
+<<<<<<< HEAD
 	private void updateAngleInHeadingRequiringSources(RobotAngleValues robotAngleValues) {
 		for (VisionSource<AprilTagVisionData> visionSource : visionSources) {
 			if (visionSource instanceof RobotHeadingRequiringVisionSource robotHeadingRequiringVisionSource) {
 				robotHeadingRequiringVisionSource.updateRobotAngleValues(robotAngleValues);
+=======
+	private void updateAngleInHeadingRequiringSources(OrientationState3D robotOrientationState) {
+		for (VisionSource<AprilTagVisionData> visionSource : visionSources) {
+			if (visionSource instanceof RobotHeadingRequiringVisionSource robotHeadingRequiringVisionSource) {
+				robotHeadingRequiringVisionSource.updateRobotAngleValues(robotOrientationState);
+>>>>>>> template/master
 			}
 		}
 	}
 
+<<<<<<< HEAD
 	private void updateAngleInHeadingRequiringSources(Rotation3d angle, double yawRate, double pitchRate, double rollRate) {
 		updateAngleInHeadingRequiringSources(new RobotAngleValues(angle, yawRate, pitchRate, rollRate));
 	}
 
 	private void updateAngleInHeadingRequiringSources(Rotation3d angle) {
 		updateAngleInHeadingRequiringSources(new RobotAngleValues(angle));
+=======
+	private void updateAngleInHeadingRequiringSources(Rotation3d angle, Rotation3d angularVelocity) {
+		updateAngleInHeadingRequiringSources(new OrientationState3D(angle, angularVelocity));
+	}
+
+	private void updateAngleInHeadingRequiringSources(Rotation3d angle) {
+		updateAngleInHeadingRequiringSources(new OrientationState3D(angle));
+>>>>>>> template/master
 	}
 
 	private void updateAngleInHeadingRequiringSources(Rotation2d yaw) {
@@ -133,22 +154,36 @@ public class MultiAprilTagVisionSources extends MultiVisionSources<AprilTagVisio
 	}
 
 	private void logAprilTagPoseData() {
+<<<<<<< HEAD
 		List<Integer> seenApriltagIDs = new ArrayList<>();
+=======
+		List<Integer> seenAprilTagsIDs = new ArrayList<>();
+>>>>>>> template/master
 		for (AprilTagVisionData visionData : getUnfilteredVisionData()) {
 			int aprilTagID = visionData.getTrackedAprilTagId();
 			Optional<Pose3d> aprilTag = VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(aprilTagID);
 			aprilTag.ifPresent((pose) -> {
 				Logger.recordOutput(logPath + "targets/" + aprilTagID, pose);
+<<<<<<< HEAD
 				seenApriltagIDs.add(aprilTagID);
 			});
 		}
 		for (int aprilTagID = 1; aprilTagID <= VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTags().size(); aprilTagID++) {
 			if (!seenApriltagIDs.contains(aprilTagID)) {
 				Logger.recordOutput(logPath + "targets/" + aprilTagID, PoseUtil.EMPTY_POSE2D);
+=======
+				seenAprilTagsIDs.add(aprilTagID);
+			});
+		}
+		for (int aprilTagID = 1; aprilTagID <= VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTags().size(); aprilTagID++) {
+			if (!seenAprilTagsIDs.contains(aprilTagID)) {
+				Logger.recordOutput(logPath + "targets/" + aprilTagID, Pose2d.kZero);
+>>>>>>> template/master
 			}
 		}
 	}
 
+	/* Costly on runtime: don't use until gets fixed */
 	@Override
 	public void log() {
 		super.log();

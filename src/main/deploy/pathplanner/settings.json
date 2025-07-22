@@ -17,6 +17,7 @@
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
   "defaultNominalVoltage": 12.0,
+<<<<<<< HEAD
   "robotMass": 68.0,
   "robotMOI": 6.375,
   "robotTrackwidth": 0.61666,
@@ -24,6 +25,15 @@
   "driveGearing": 7.13,
   "maxDriveSpeed": 3.7355556495044984,
   "driveMotorType": "krakenX60FOC",
+=======
+  "robotMass": 60.0,
+  "robotMOI": 8.6,
+  "robotTrackwidth": 0.5778496879611685,
+  "driveWheelRadius": 0.048,
+  "driveGearing": 6.12,
+  "maxDriveSpeed": 5.24,
+  "driveMotorType": "falcon500FOC",
+>>>>>>> template/master
   "driveCurrentLimit": 60.0,
   "wheelCOF": 0.96,
   "flModuleX": 0.30833,

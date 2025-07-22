@@ -37,7 +37,8 @@ import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.utils.alerts.Alert;
-import frc.utils.math.AngleUnit;
+import frc.utils.AngleUnit;
+
 
 import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Volts;

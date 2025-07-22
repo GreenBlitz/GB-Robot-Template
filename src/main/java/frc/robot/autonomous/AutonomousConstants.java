@@ -13,7 +13,6 @@ import frc.robot.statemachine.StateMachineConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.RealSwerveConstants;
 
-
 public class AutonomousConstants {
 
 	public static final String LOG_PATH_PREFIX = "Autonomous";

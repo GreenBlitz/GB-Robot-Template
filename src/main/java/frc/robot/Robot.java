@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+<<<<<<< HEAD
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.events.EventTrigger;
@@ -52,6 +53,12 @@ import frc.utils.TimedValue;
 import frc.utils.auto.AutonomousChooser;
 import frc.utils.auto.PathPlannerUtil;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
+=======
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.RobotManager;
+import frc.robot.hardware.phoenix6.BusChain;
+import frc.utils.auto.PathPlannerAutoWrapper;
+>>>>>>> template/master
 import frc.utils.battery.BatteryUtil;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.time.TimeUtil;
@@ -264,6 +271,7 @@ public class Robot {
 	}
 
 	public void periodic() {
+<<<<<<< HEAD
 		double startingTime = TimeUtil.getCurrentTimeSeconds();
 
 		Phoenix6SignalBuilder.refreshAll();
@@ -288,6 +296,9 @@ public class Robot {
 		Logger.recordOutput("TimeTest/Pose", TimeUtil.getCurrentTimeSeconds() - poseTime);
 
 		objectDetector.update();
+=======
+		BusChain.refreshAll();
+>>>>>>> template/master
 
 		BatteryUtil.logStatus();
 //		BusChain.logChainsStatuses();
@@ -302,6 +313,7 @@ public class Robot {
 		Logger.recordOutput("TimeTest/RobotPeriodic", TimeUtil.getCurrentTimeSeconds() - startingTime);
 	}
 
+<<<<<<< HEAD
 	public Command getAuto() {
 		if (preBuiltAutosChooser.isDefaultOptionChosen()) {
 //			if (firstObjectScoringLocationChooser.isDefaultOptionChosen()) {
@@ -383,6 +395,10 @@ public class Robot {
 			),
 			swerve.getModules().getModulePositionsFromCenterMeters()
 		);
+=======
+	public PathPlannerAutoWrapper getAutonomousCommand() {
+		return new PathPlannerAutoWrapper();
+>>>>>>> template/master
 	}
 
 }

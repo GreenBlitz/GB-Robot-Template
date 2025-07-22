@@ -1,6 +1,5 @@
 package frc.robot.vision;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.constants.field.Field;
 import frc.robot.vision.data.AprilTagVisionData;
@@ -10,6 +9,10 @@ import frc.robot.vision.sources.limelights.LimelightPoseEstimationMethod;
 import frc.utils.Filter;
 import frc.utils.math.ToleranceMath;
 
+<<<<<<< HEAD
+=======
+import java.util.Arrays;
+>>>>>>> template/master
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -43,9 +46,12 @@ public class VisionFilters {
 		return isDataFromMegaTag2().implies(isYawAtAngle(wantedYawSupplier, yawTolerance));
 	}
 
+<<<<<<< HEAD
 	/**
 	 * A Filter that filters the random noise in MegaTag2 that causes the yaw angle to be exactly 0.
 	 */
+=======
+>>>>>>> template/master
 	public static Filter<VisionData> isYawAngleNotZero() {
 		return (visionData) -> visionData.getEstimatedPose().getRotation().getZ() != 0.0;
 	}
@@ -55,11 +61,19 @@ public class VisionFilters {
 	}
 
 	public static Filter<VisionData> isOnGround(double distanceFromGroundToleranceMeters) {
+<<<<<<< HEAD
 		return (visionData) -> MathUtil.isNear(0, visionData.getEstimatedPose().getZ(), distanceFromGroundToleranceMeters);
 	}
 
 	public static Filter<AprilTagVisionData> isAprilTagHeightValid(double aprilTagHeightToleranceMeters) {
 		return aprilTagVisionData -> MathUtil.isNear(
+=======
+		return (visionData) -> ToleranceMath.isNear(0, visionData.getEstimatedPose().getZ(), distanceFromGroundToleranceMeters);
+	}
+
+	public static Filter<AprilTagVisionData> isAprilTagHeightValid(double aprilTagHeightToleranceMeters) {
+		return aprilTagVisionData -> ToleranceMath.isNear(
+>>>>>>> template/master
 			VisionUtils.getAprilTagHeightByID(aprilTagVisionData.getTrackedAprilTagId()),
 			aprilTagVisionData.getAprilTagHeightMeters(),
 			aprilTagHeightToleranceMeters
@@ -83,6 +97,7 @@ public class VisionFilters {
 	}
 
 	public static Filter<AprilTagVisionData> isNotSeeingTags(int... tags) {
+<<<<<<< HEAD
 		Filter<AprilTagVisionData> filter = isSeeingTag(VisionConstants.NO_APRILTAG_ID);
 
 		for (int id : tags) {
@@ -90,6 +105,9 @@ public class VisionFilters {
 		}
 
 		return filter.not();
+=======
+		return Filter.orAll(Arrays.stream(tags).mapToObj(VisionFilters::isSeeingTag).toList()).not();
+>>>>>>> template/master
 	}
 
 }

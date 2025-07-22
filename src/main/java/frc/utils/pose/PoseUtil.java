@@ -14,12 +14,14 @@ import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.vision.data.VisionData;
 import frc.utils.alerts.Alert;
-import frc.utils.math.AngleUnit;
+import frc.utils.AngleUnit;
+
 import frc.utils.math.ToleranceMath;
 import org.littletonrobotics.junction.Logger;
 
 public class PoseUtil {
 
+<<<<<<< HEAD
 	private static final String IS_AT_POSE_LOG_PATH_PREFIX = "isAtPoses";
 
 	public static Pose2d EMPTY_POSE2D = new Pose2d(Double.NaN, Double.NaN, Rotation2d.fromDegrees(Double.NaN));
@@ -51,6 +53,8 @@ public class PoseUtil {
 		return isAtX && isAtY;
 	}
 
+=======
+>>>>>>> template/master
 	public static Pose3d toPose3D(double[] poseArray, AngleUnit angleUnit) {
 		int requiredAmount = Pose3dComponentsValue.POSE3D_COMPONENTS_AMOUNT;
 		if (poseArray.length != requiredAmount) {

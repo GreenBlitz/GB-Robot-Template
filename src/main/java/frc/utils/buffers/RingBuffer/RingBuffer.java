@@ -1,6 +1,9 @@
 package frc.utils.buffers.RingBuffer;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> template/master
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Optional;

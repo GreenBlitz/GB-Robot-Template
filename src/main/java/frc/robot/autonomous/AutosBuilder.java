@@ -1,5 +1,6 @@
 package frc.robot.autonomous;
 
+<<<<<<< HEAD
 import com.pathplanner.lib.path.ConstraintsZone;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.IdealStartingState;
@@ -32,6 +33,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+=======
+import frc.utils.auto.PathPlannerAutoWrapper;
+
+import java.util.List;
+>>>>>>> template/master
 import java.util.function.Supplier;
 
 public class AutosBuilder {
@@ -44,6 +50,7 @@ public class AutosBuilder {
 		);
 	}
 
+<<<<<<< HEAD
 	public static List<Supplier<PathPlannerAutoWrapper>> getAllStartingAndScoringFirstObjectAutos(
 		Robot robot,
 		Supplier<Command> scoringCommand,
@@ -756,4 +763,6 @@ public class AutosBuilder {
 //		);
 //	}
 
+=======
+>>>>>>> template/master
 }

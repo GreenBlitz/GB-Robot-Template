@@ -7,13 +7,24 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.poseestimator.Pose3dComponentsValue;
 import frc.robot.vision.data.LimeLightAprilTagVisionData;
+<<<<<<< HEAD
 import frc.utils.math.StandardDeviations3D;
 import frc.robot.vision.VisionConstants;
 import frc.robot.vision.RobotAngleValues;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.IndpendentHeadingVisionSource;
 import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
-import frc.utils.math.AngleUnit;
+import frc.utils.AngleUnit;
+
+=======
+import frc.utils.AngleUnit;
+import frc.utils.math.StandardDeviations3D;
+import frc.robot.vision.VisionConstants;
+import frc.robot.vision.OrientationState3D;
+import frc.robot.vision.data.AprilTagVisionData;
+import frc.robot.vision.sources.IndpendentHeadingVisionSource;
+import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
+>>>>>>> template/master
 import frc.utils.Conversions;
 import frc.utils.Filter;
 import frc.utils.pose.PoseUtil;
@@ -52,7 +63,11 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	private int lastSeenAprilTagId;
 	private BooleanSupplier shouldDataBeFiltered;
 	private Filter<? super AprilTagVisionData> filter;
+<<<<<<< HEAD
 	private RobotAngleValues robotAngleValues;
+=======
+	private OrientationState3D robotOrientationState;
+>>>>>>> template/master
 
 	protected LimeLightSource(
 		String cameraNetworkTablesName,
@@ -79,7 +94,11 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		this.computingPipelineLatencyEntry = getLimelightNetworkTableEntry("tl");
 		this.captureLatencyEntry = getLimelightNetworkTableEntry("cl");
 
+<<<<<<< HEAD
 		this.robotAngleValues = new RobotAngleValues();
+=======
+		this.robotOrientationState = new OrientationState3D();
+>>>>>>> template/master
 		AlertManager.addAlert(
 			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1)
 		);
@@ -97,8 +116,12 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	@Override
 	public void update() {
 		lastSeenAprilTagId = getAprilTagID();
+<<<<<<< HEAD
 		robotOrientationEntry.setDoubleArray(robotAngleValues.asArray());
 //		Logger.recordOutput(logPath + "gyroAngleValues", robotAngleValues.asArray());
+=======
+		robotOrientationEntry.setDoubleArray(robotOrientationState.asArray());
+>>>>>>> template/master
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		NetworkTableEntry entry = switch (poseEstimationMethod) {
 			case MEGATAG_1 -> robotPoseEntryMegaTag1;
@@ -158,7 +181,11 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		Optional<Pair<Pose3d, Double>> poseEstimation = getUpdatedPose3DEstimation();
 		return poseEstimation.map(
 			pose3dDoublePair -> new LimeLightAprilTagVisionData(
+<<<<<<< HEAD
 				getName(),
+=======
+				sourceName,
+>>>>>>> template/master
 				pose3dDoublePair.getFirst(),
 				pose3dDoublePair.getSecond(),
 				new StandardDeviations3D(
@@ -173,7 +200,11 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 				getAprilTagValueInRobotSpace(Pose3dComponentsValue.Z_VALUE),
 				getDistanceFromTag(),
 				lastSeenAprilTagId,
+<<<<<<< HEAD
 				poseEstimationMethod
+=======
+				getPoseEstimationMethod()
+>>>>>>> template/master
 			)
 		);
 	}
@@ -203,8 +234,13 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	}
 
 	@Override
+<<<<<<< HEAD
 	public void updateRobotAngleValues(RobotAngleValues robotAngleValues) {
 		this.robotAngleValues = robotAngleValues;
+=======
+	public void updateRobotAngleValues(OrientationState3D robotOrientationState) {
+		this.robotOrientationState = robotOrientationState;
+>>>>>>> template/master
 	}
 
 	public LimelightPoseEstimationMethod getPoseEstimationMethod() {
@@ -225,7 +261,11 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 
 	public void log() {
 		Logger.recordOutput(logPath + "filterResult", shouldDataBeFiltered.getAsBoolean());
+<<<<<<< HEAD
 //		Logger.recordOutput(logPath + "megaTagDirectOutput", PoseUtil.toPose3D(robotPoseArray, AngleUnit.DEGREES));
+=======
+		Logger.recordOutput(logPath + "megaTagDirectOutput", PoseUtil.toPose3D(robotPoseArray, AngleUnit.DEGREES));
+>>>>>>> template/master
 		getVisionData().ifPresent(visionData -> {
 			Logger.recordOutput(logPath + "unfiltered3DVision", visionData.getEstimatedPose());
 //			Logger.recordOutput(logPath + "unfiltered2DVision(Projected)", visionData.getEstimatedPose().toPose2d());

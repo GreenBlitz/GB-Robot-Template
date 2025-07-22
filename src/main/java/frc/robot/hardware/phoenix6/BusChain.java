@@ -1,5 +1,6 @@
 package frc.robot.hardware.phoenix6;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.CANBus;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
@@ -22,12 +23,14 @@ public enum BusChain {
 	private final String logPath;
 	private CANBusStatus currentBusStatus;
 	private CANBusStatus lastBusStatus;
+	private BaseStatusSignal[] signals;
 
 	BusChain(String chainName) {
 		this.canBus = new CANBus(chainName);
 		this.logPath = LOG_PATH_PREFIX + "/" + getChainName();
 		this.currentBusStatus = canBus.getStatus();
 		this.lastBusStatus = new CANBusStatus();
+		this.signals = new BaseStatusSignal[0];
 
 //		createAlerts();
 	}
@@ -115,6 +118,25 @@ public enum BusChain {
 		copiedBusStatus.REC = toCopy.REC;
 		copiedBusStatus.TEC = toCopy.TEC;
 		return copiedBusStatus;
+	}
+
+	public void refreshSignals() {
+		if (signals.length > 0) {
+			BaseStatusSignal.refreshAll(signals);
+		}
+	}
+
+	public static void refreshAll() {
+		for (BusChain busChain : BusChain.values()) {
+			busChain.refreshSignals();
+		}
+	}
+
+	public void registerSignal(BaseStatusSignal signal) {
+		BaseStatusSignal[] newSignals = new BaseStatusSignal[signals.length + 1];
+		System.arraycopy(signals, 0, newSignals, 0, signals.length);
+		newSignals[newSignals.length - 1] = signal;
+		signals = newSignals;
 	}
 
 }

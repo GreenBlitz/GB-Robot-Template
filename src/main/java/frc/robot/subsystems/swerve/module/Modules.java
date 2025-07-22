@@ -72,6 +72,12 @@ public class Modules {
 		}
 	}
 
+	public void setDrivesCurrent(double current) {
+		for (Module module : modules) {
+			module.setDriveCurrent(current);
+		}
+	}
+
 	public void setDrivesVoltage(double voltage) {
 		for (Module module : modules) {
 			module.setDriveVoltage(voltage);

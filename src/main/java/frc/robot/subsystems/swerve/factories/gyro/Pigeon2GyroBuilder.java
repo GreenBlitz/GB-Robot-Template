@@ -10,7 +10,8 @@ import frc.robot.hardware.phoenix6.gyro.Pigeon2Wrapper;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.subsystems.swerve.GyroSignals;
 import frc.utils.alerts.Alert;
-import frc.utils.math.AngleUnit;
+import frc.utils.AngleUnit;
+
 
 class Pigeon2GyroBuilder {
 

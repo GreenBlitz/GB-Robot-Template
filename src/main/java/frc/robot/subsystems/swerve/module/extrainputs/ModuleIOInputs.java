@@ -11,21 +11,12 @@ public class ModuleIOInputs {
 		double drivePositionRads,
 		double driveVelocityRadPerSec,
 		double driveTorqueCurrentAmps,
-<<<<<<< HEAD
-		double driveAppliedVolts,
-		double turnAbsolutePositionRads,
-		double turnPositionRads,
-		double turnVelocityRadPerSec,
-		double turnTorqueCurrentAmps,
-		double turnAppliedVolts
-=======
 		double driveVoltage,
 		double encoderPositionRads,
 		double steerPositionRads,
 		double steerVelocityRadPerSec,
 		double steerTorqueCurrentAmps,
 		double steerVoltage
->>>>>>> template/master
 	) {}
 
 }

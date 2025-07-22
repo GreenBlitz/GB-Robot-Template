@@ -84,12 +84,6 @@ public class Modules {
 		}
 	}
 
-	public void setDrivesCurrent(double current) {
-		for (Module module : modules) {
-			module.setDriveCurrent(current);
-		}
-	}
-
 	public void setTargetStates(SwerveModuleState[] moduleStates, boolean isClosedLoop) {
 		for (int i = 0; i < modules.length; i++) {
 			modules[i].setTargetState(moduleStates[i], isClosedLoop);

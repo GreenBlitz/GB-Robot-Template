@@ -4,12 +4,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-<<<<<<< HEAD
-import frc.constants.MathConstants;
-
-public class ToleranceMath {
-
-=======
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.swerve.SwerveMath;
 
@@ -19,7 +13,6 @@ public class ToleranceMath {
 		return isNear(targetPose, currentPose, tolerances) && SwerveMath.isStill(currentSpeeds, deadbands);
 	}
 
->>>>>>> template/master
 	public static boolean isNear(Pose2d wantedPose, Pose2d pose, Pose2d tolerance) {
 		return isNear(wantedPose.getTranslation(), pose.getTranslation(), tolerance.getTranslation())
 			&& isNearWrapped(wantedPose.getRotation(), pose.getRotation(), tolerance.getRotation());
@@ -30,13 +23,8 @@ public class ToleranceMath {
 	}
 
 	public static boolean isNear(Translation2d wantedTranslation, Translation2d translation, Translation2d tolerance) {
-<<<<<<< HEAD
-		return MathUtil.isNear(wantedTranslation.getX(), translation.getX(), tolerance.getX())
-			&& MathUtil.isNear(wantedTranslation.getY(), translation.getY(), tolerance.getY());
-=======
 		return isNear(wantedTranslation.getX(), translation.getX(), tolerance.getX())
 			&& isNear(wantedTranslation.getY(), translation.getY(), tolerance.getY());
->>>>>>> template/master
 	}
 
 	public static boolean isNearWrapped(Rotation2d wantedAngle, Rotation2d angle, Rotation2d tolerance) {

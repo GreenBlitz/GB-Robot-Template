@@ -1,6 +1,5 @@
 package frc.utils.brakestate;
 
-
 import java.util.ArrayList;
 
 public class BrakeStateManager {

@@ -7,26 +7,6 @@ public interface Filter<T> {
 		return data -> true;
 	}
 
-<<<<<<< HEAD
-	boolean apply(T data);
-
-	default Filter<T> not() {
-		return data -> !apply(data);
-	}
-
-	default <E extends T> Filter<E> and(Filter<E> otherFilter) {
-		return data -> apply(data) && otherFilter.apply(data);
-	}
-
-	default <E extends T> Filter<E> or(Filter<E> otherFilter) {
-		return data -> apply(data) || otherFilter.apply(data);
-	}
-
-	default <E extends T> Filter<E> xor(Filter<E> otherFilter) {
-		return data -> apply(data) ^ otherFilter.apply(data);
-	}
-
-=======
 	static <T> Filter<T> alwaysFilteringFilter() {
 		return data -> false;
 	}
@@ -49,7 +29,6 @@ public interface Filter<T> {
 		return data -> apply(data) ^ otherFilter.apply(data);
 	}
 
->>>>>>> template/master
 	default <E extends T> Filter<E> nand(Filter<E> otherFilter) {
 		return data -> and(otherFilter).not().apply(data);
 	}
@@ -64,8 +43,6 @@ public interface Filter<T> {
 
 	default <E extends T> Filter<E> implies(Filter<E> otherFilter) {
 		return data -> !apply(data) || otherFilter.apply(data);
-<<<<<<< HEAD
-=======
 	}
 
 	static <T> Filter<T> orAll(Iterable<Filter<T>> otherFilers) {
@@ -82,7 +59,6 @@ public interface Filter<T> {
 			output = output.and(filter);
 		}
 		return output;
->>>>>>> template/master
 	}
 
 }

@@ -21,7 +21,6 @@ import org.littletonrobotics.junction.Logger;
 
 public class PoseUtil {
 
-<<<<<<< HEAD
 	private static final String IS_AT_POSE_LOG_PATH_PREFIX = "isAtPoses";
 
 	public static Pose2d EMPTY_POSE2D = new Pose2d(Double.NaN, Double.NaN, Rotation2d.fromDegrees(Double.NaN));
@@ -53,8 +52,6 @@ public class PoseUtil {
 		return isAtX && isAtY;
 	}
 
-=======
->>>>>>> template/master
 	public static Pose3d toPose3D(double[] poseArray, AngleUnit angleUnit) {
 		int requiredAmount = Pose3dComponentsValue.POSE3D_COMPONENTS_AMOUNT;
 		if (poseArray.length != requiredAmount) {

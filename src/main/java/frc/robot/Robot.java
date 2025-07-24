@@ -19,7 +19,7 @@ import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.led.LEDState;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
-import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
+import frc.robot.poseestimator.helpers.robotheadingestimator.RobotHeadingEstimatorConstants;
 import frc.robot.subsystems.algaeIntake.pivot.Factory.PivotFactory;
 import frc.robot.subsystems.algaeIntake.pivot.Pivot;
 import frc.robot.subsystems.algaeIntake.rollers.Factory.RollersFactory;
@@ -38,7 +38,7 @@ import frc.robot.subsystems.swerve.factories.modules.drive.KrakenX60DriveBuilder
 import frc.robot.subsystems.swerve.module.ModuleConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.poseestimator.IPoseEstimator;
-import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimator;
+import frc.robot.poseestimator.helpers.robotheadingestimator.RobotHeadingEstimator;
 import frc.robot.statemachine.RobotCommander;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.elevator.Elevator;
@@ -55,7 +55,6 @@ import frc.utils.auto.PathPlannerUtil;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
 =======
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.utils.auto.PathPlannerAutoWrapper;
 >>>>>>> template/master

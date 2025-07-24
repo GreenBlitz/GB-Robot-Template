@@ -4,7 +4,6 @@
 
 package frc;
 
-<<<<<<< HEAD
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -16,19 +15,10 @@ import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.led.LEDConstants;
 import frc.robot.led.LEDState;
 import frc.robot.subsystems.climb.lifter.LifterConstants;
-=======
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.Threads;
-import frc.robot.Robot;
-import frc.robot.autonomous.AutonomousConstants;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.alerts.AlertManager;
->>>>>>> template/master
 import frc.utils.DriverStationUtil;
-import frc.utils.alerts.AlertManager;
-import frc.utils.auto.PathPlannerUtil;
 import frc.utils.time.TimeUtil;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -43,11 +33,7 @@ import org.littletonrobotics.junction.Logger;
 public class RobotManager extends LoggedRobot {
 
 	private final Robot robot;
-<<<<<<< HEAD
 	private Command auto;
-=======
-	private PathPlannerAutoWrapper autonomousCommand;
->>>>>>> template/master
 	private int roborioCycles;
 
 	public RobotManager() {
@@ -111,7 +97,6 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void autonomousInit() {
-<<<<<<< HEAD
 		robot.getRobotCommander().removeDefaultCommand();
 
 		if (auto == null) {
@@ -124,34 +109,18 @@ public class RobotManager extends LoggedRobot {
 	public void autonomousExit() {
 		if (auto != null) {
 			auto.cancel();
-=======
-		if (autonomousCommand == null) {
-			this.autonomousCommand = robot.getAutonomousCommand();
->>>>>>> template/master
 		}
-		autonomousCommand.schedule();
 	}
 
 	@Override
-<<<<<<< HEAD
 	public void teleopInit() {
 		robot.getRobotCommander().initializeDefaultCommand();
-=======
-	public void autonomousExit() {
-		if (autonomousCommand != null) {
-			autonomousCommand.cancel();
-		}
->>>>>>> template/master
 	}
 
 	@Override
 	public void robotPeriodic() {
 		updateTimeRelatedData(); // Better to be first
-<<<<<<< HEAD
-		JoysticksBindings.setDriversInputsToSwerve(robot.getSwerve());
-=======
 		JoysticksBindings.updateChassisDriverInputs();
->>>>>>> template/master
 		robot.periodic();
 		AlertManager.reportAlerts();
 	}
@@ -162,14 +131,10 @@ public class RobotManager extends LoggedRobot {
 		autoReadyForConstructionSendableChooser.addOption("true", true);
 		autoReadyForConstructionSendableChooser.onChange(isReady -> {
 			if (isReady) {
-<<<<<<< HEAD
 				auto = robot.getAuto();
 				BrakeStateManager.brake();
 			} else {
 				BrakeStateManager.coast();
-=======
-				this.autonomousCommand = robot.getAutonomousCommand();
->>>>>>> template/master
 			}
 			Logger.recordOutput(AutonomousConstants.LOG_PATH_PREFIX + "/ReadyToConstruct", isReady);
 		});

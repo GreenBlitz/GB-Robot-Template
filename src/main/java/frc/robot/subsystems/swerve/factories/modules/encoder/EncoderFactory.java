@@ -14,10 +14,10 @@ public class EncoderFactory {
 		logPath += ModuleConstants.MODULES_LOG_PATH_ADDITION + "/" + modulePosition + "/Encoder";
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL -> switch (modulePosition) {
-				case FRONT_LEFT -> CANCoderEncoderBuilder.buildEncoder(logPath, IDs.CANCodersIDs.SWERVE_FRONT_LEFT);
-				case FRONT_RIGHT -> CANCoderEncoderBuilder.buildEncoder(logPath, IDs.CANCodersIDs.SWERVE_FRONT_RIGHT);
-				case BACK_LEFT -> CANCoderEncoderBuilder.buildEncoder(logPath, IDs.CANCodersIDs.SWERVE_BACK_LEFT);
-				case BACK_RIGHT -> CANCoderEncoderBuilder.buildEncoder(logPath, IDs.CANCodersIDs.SWERVE_BACK_RIGHT);
+				case FRONT_LEFT -> CANCoderEncoderBuilder.buildEncoder(logPath, IDs.CANCoderIDs.SWERVE_FRONT_LEFT);
+				case FRONT_RIGHT -> CANCoderEncoderBuilder.buildEncoder(logPath, IDs.CANCoderIDs.SWERVE_FRONT_RIGHT);
+				case BACK_LEFT -> CANCoderEncoderBuilder.buildEncoder(logPath, IDs.CANCoderIDs.SWERVE_BACK_LEFT);
+				case BACK_RIGHT -> CANCoderEncoderBuilder.buildEncoder(logPath, IDs.CANCoderIDs.SWERVE_BACK_RIGHT);
 			};
 			case SIMULATION -> SimulationEncoderBuilder.buildEncoder(logPath);
 		};

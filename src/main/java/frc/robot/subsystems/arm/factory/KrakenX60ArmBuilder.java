@@ -148,7 +148,7 @@ public class KrakenX60ArmBuilder {
 		config.Feedback.SensorToMechanismRatio = 1;
 
 		config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-		config.Feedback.FeedbackRemoteSensorID = IDs.CANCodersIDs.ARM.id();
+		config.Feedback.FeedbackRemoteSensorID = IDs.CANCoderIDs.ARM.id();
 
 		return config;
 	}
@@ -181,7 +181,7 @@ public class KrakenX60ArmBuilder {
 	}
 
 	private static IAngleEncoder buildRealEncoder(String logPath) {
-		CANcoder canCoder = new CANcoder(IDs.CANCodersIDs.ARM.id(), IDs.CANCodersIDs.ARM.busChain().getChainName());
+		CANcoder canCoder = new CANcoder(IDs.CANCoderIDs.ARM.id(), IDs.CANCoderIDs.ARM.busChain().getChainName());
 		CANCoderEncoder encoder = new CANCoderEncoder(logPath + "/Encoder", canCoder);
 		CANcoderConfiguration configuration = buildEncoderConfig(encoder);
 		if (

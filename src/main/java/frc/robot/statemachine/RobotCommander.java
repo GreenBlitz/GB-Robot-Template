@@ -76,7 +76,7 @@ public class RobotCommander extends GBSubsystem {
 		);
 		resetKeepAlgaeInIntake.onTrue(new InstantCommand(() -> keepAlgaeInIntake = false));
 
-		this.caNdleWrapper = new CANdleWrapper(IDs.CANDleIDs.CANDLE, LEDConstants.NUMBER_OF_LEDS, "candle");
+		this.caNdleWrapper = new CANdleWrapper(IDs.CANdleIDs.CANDLE, LEDConstants.NUMBER_OF_LEDS, "candle");
 		this.ledStateHandler = new LEDStateHandler("CANdle", caNdleWrapper);
 
 		initializeDefaultCommand();

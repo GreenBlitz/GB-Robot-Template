@@ -7,8 +7,6 @@ import frc.robot.hardware.rev.motors.SparkMaxDeviceID;
 
 public class IDs {
 
-	public static final Phoenix6DeviceID SWERVE_PIGEON_2 = new Phoenix6DeviceID(0, BusChain.SWERVE_CANIVORE);
-
 	public static class TalonFXIDs {
 
 		public static final Phoenix6DeviceID SWERVE_FRONT_LEFT_STEER = new Phoenix6DeviceID(0, BusChain.SWERVE_CANIVORE);
@@ -41,23 +39,7 @@ public class IDs {
 
 	}
 
-	public static class CANDleIDs {
-
-		public static final Phoenix6DeviceID CANDLE = new Phoenix6DeviceID(0, BusChain.ROBORIO);
-
-	}
-
-	public static class SparkMAXIDs {
-
-		public static final SparkMaxDeviceID END_EFFECTOR = new SparkMaxDeviceID(5);
-
-		public static final SparkMaxDeviceID SOLENOID = new SparkMaxDeviceID(10, SparkLowLevel.MotorType.kBrushed);
-
-		public static final SparkMaxDeviceID ROLLERS = new SparkMaxDeviceID(12, SparkLowLevel.MotorType.kBrushless);
-
-	}
-
-	public static class CANCodersIDs {
+	public static class CANCoderIDs {
 
 		public static final Phoenix6DeviceID SWERVE_FRONT_LEFT = new Phoenix6DeviceID(0, BusChain.SWERVE_CANIVORE);
 
@@ -73,19 +55,26 @@ public class IDs {
 
 	}
 
-	public static class TalonFXIDs {
-	}
-
-	public static class CANCoderIDs {
-	}
-
 	public static class Pigeon2IDs {
+
+		public static final Phoenix6DeviceID SWERVE = new Phoenix6DeviceID(0, BusChain.SWERVE_CANIVORE);
+
 	}
 
 	public static class CANdleIDs {
+
+		public static final Phoenix6DeviceID CANDLE = new Phoenix6DeviceID(0, BusChain.ROBORIO);
+
 	}
 
 	public static class SparkMAXIDs {
+
+		public static final SparkMaxDeviceID END_EFFECTOR = new SparkMaxDeviceID(5);
+
+		public static final SparkMaxDeviceID SOLENOID = new SparkMaxDeviceID(10, SparkLowLevel.MotorType.kBrushed);
+
+		public static final SparkMaxDeviceID ROLLERS = new SparkMaxDeviceID(12, SparkLowLevel.MotorType.kBrushless);
+
 	}
 
 	public static class DigitalInputsIDs {

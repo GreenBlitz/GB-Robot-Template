@@ -211,11 +211,11 @@ public class SwerveCommandsBuilder {
 	}
 
 
-	public Command driveToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose, PathConstraints pathfindingConstraints) {
+	public Command driveToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose) {
 		return swerve.asSubsystemCommand(
 			new DeferredCommand(
 				() -> new SequentialCommandGroup(
-					pathToPose(currentPose.get(), targetPose.get(), pathfindingConstraints),
+					pathToPose(currentPose.get(), targetPose.get()),
 					moveToPoseByPID(currentPose, targetPose.get())
 				),
 				Set.of(swerve)
@@ -224,7 +224,7 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-	private Command pathToPose(Pose2d currentPose, Pose2d targetPose, PathConstraints pathfindingConstraints) {
+	private Command pathToPose(Pose2d currentPose, Pose2d targetPose) {
 		Command pathFollowingCommand;
 		if (PathPlannerUtil.isRobotInPathfindingDeadband(currentPose, targetPose)) {
 			pathFollowingCommand = PathPlannerUtil

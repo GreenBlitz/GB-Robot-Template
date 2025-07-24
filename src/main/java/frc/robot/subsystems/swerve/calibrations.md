@@ -17,8 +17,4 @@ Gyro:
 
 Modules:
 -----------------------
-<<<<<<< HEAD
-- [x] [See module calibrations file](module/calibrations)
-=======
-- [ ] [See module calibrations file](module/calibrations.md)
->>>>>>> template/master
+- [x] [See module calibrations file](module/calibrations.md)

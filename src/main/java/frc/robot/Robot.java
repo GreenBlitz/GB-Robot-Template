@@ -182,12 +182,14 @@ public class Robot {
 	}
 
 	private void configureAuto() {
-		Supplier<Command> scoringCommand = () -> robotCommander.getSuperstructure()
-			.scoreWithoutRelease()
-			.until(robotCommander.getSuperstructure()::isReadyToScore)
-			.andThen(robotCommander.getSuperstructure().scoreWithRelease())
-			.deadlineFor(getRobotCommander().getLedStateHandler().setState(LEDState.IN_POSITION_TO_SCORE))
-			.asProxy();
+		Supplier<Command> scoringCommand = () -> new WaitUntilCommand(robotCommander::isReadyToScore).andThen(
+				robotCommander.getSuperstructure()
+						.scoreWithoutRelease()
+						.until(robotCommander.getSuperstructure()::isReadyToScore)
+						.andThen(robotCommander.getSuperstructure().scoreWithRelease())
+						.deadlineFor(getRobotCommander().getLedStateHandler().setState(LEDState.IN_POSITION_TO_SCORE))
+						.asProxy()
+		);
 		Supplier<Command> intakingCommand = () -> robotCommander.getSuperstructure()
 			.softCloseL4()
 			.andThen(robotCommander.getSuperstructure().intake().withTimeout(AutonomousConstants.INTAKING_TIMEOUT_SECONDS))
@@ -196,7 +198,7 @@ public class Robot {
 			.softCloseNetToAlgaeRemove()
 			.andThen(robotCommander.getSuperstructure().algaeRemove().withTimeout(AutonomousConstants.ALGAE_REMOVE_TIMEOUT_SECONDS))
 			.asProxy();
-		Supplier<Command> netCommand = () -> robotCommander.getSuperstructure().netWithRelease().asProxy();
+		Supplier<Command> netCommand = () -> new WaitUntilCommand(robotCommander::isReadyForNetForAuto).andThen(robotCommander.getSuperstructure().netWithRelease().asProxy());
 
 		swerve.configPathPlanner(
 			poseEstimator::getEstimatedPose,
@@ -227,7 +229,7 @@ public class Robot {
 
 		this.preBuiltAutosChooser = new AutonomousChooser(
 			"PreBuiltAutos",
-			AutosBuilder.getAllNoDelayAutos(
+			AutosBuilder.getAllPreBuiltAutos(
 				this,
 				objectDetector::getClosestObjectData,
 				intakingCommand,
@@ -306,7 +308,7 @@ public class Robot {
 	public Command getAuto() {
 		if (preBuiltAutosChooser.isDefaultOptionChosen()) {
 //			if (firstObjectScoringLocationChooser.isDefaultOptionChosen()) {
-			return AutosBuilder.createDefaultNoDelayAuto(this);
+			return AutosBuilder.createDefaultAuto(this);
 //			}
 //			return getMultiChoosersAuto();
 		}

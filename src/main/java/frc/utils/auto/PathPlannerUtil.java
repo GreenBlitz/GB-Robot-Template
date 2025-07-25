@@ -97,18 +97,6 @@ public class PathPlannerUtil {
 		NamedCommands.registerCommand(commandName, command);
 	}
 
-<<<<<<< HEAD
-	static Optional<PathPlannerPath> getPathFromFile(String pathName) {
-		try {
-			return Optional.of(PathPlannerPath.fromPathFile(pathName));
-		} catch (Exception exception) {
-			reportAlert(Alert.AlertType.ERROR, exception.getMessage());
-		}
-		return Optional.empty();
-	}
-
-=======
->>>>>>> template/master
 	public static Pose2d getPathStartingPose(PathPlannerPath path) {
 		return new Pose2d(path.getPathPoses().get(0).getTranslation(), path.getIdealStartingState().rotation());
 	}

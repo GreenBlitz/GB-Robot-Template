@@ -1,43 +1,8 @@
 package frc.utils.auto;
 
-<<<<<<< HEAD
-import java.util.ArrayList;
-import java.util.List;
-
-public class PathHelper {
-
-
-	public static List<AutoPath> getAllStartingAndScoringFirstObjectPaths() {
-		ArrayList<AutoPath> autoLinePaths = new ArrayList<>();
-		for (AutoPath autoPath : AutoPath.values()) {
-			if (autoPath.getStartingPoint().getFirst().startsWith("AL")) {
-				autoLinePaths.add(autoPath);
-			}
-		}
-		return autoLinePaths;
-	}
-
-	public static List<AutoPath> getAllIntakingPaths() {
-		ArrayList<AutoPath> pathsToCoralStations = new ArrayList<>();
-		for (AutoPath autoPath : AutoPath.values()) {
-			if (autoPath.getEndPoint().getFirst().startsWith("US") || autoPath.getEndPoint().getFirst().startsWith("LS")) {
-				pathsToCoralStations.add(autoPath);
-			}
-		}
-		return pathsToCoralStations;
-	}
-
-	public static List<AutoPath> getAllScoringPathsFromCoralStations() {
-		ArrayList<AutoPath> pathsFromCoralStations = new ArrayList<>();
-		for (AutoPath autoPath : AutoPath.values()) {
-			if (autoPath.getStartingPoint().getFirst().startsWith("US") || autoPath.getStartingPoint().getFirst().startsWith("LS")) {
-				pathsFromCoralStations.add(autoPath);
-			}
-		}
-		return pathsFromCoralStations;
-=======
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj.Filesystem;
+import frc.constants.field.enums.Branch;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.utils.alerts.Alert;
 
@@ -52,6 +17,40 @@ public class PathHelper {
 
 	public static final Map<String, PathPlannerPath> PATH_PLANNER_PATHS = getAllPaths();
 
+	public static Map<String, PathPlannerPath> getAllStartingAndScoringFirstObjectPaths() {
+		Map<String, PathPlannerPath> autoLinePaths = new HashMap<>();
+		for (String pathName : PATH_PLANNER_PATHS.keySet()) {
+			if (pathName.startsWith("AL")) {
+				autoLinePaths.put(pathName, PATH_PLANNER_PATHS.get(pathName));
+			}
+		}
+		return autoLinePaths;
+	}
+
+	public static Map<String, PathPlannerPath> getAllIntakingPaths() {
+		Map<String, PathPlannerPath> pathsToCoralStations = new HashMap<>();
+		for (String pathName : PATH_PLANNER_PATHS.keySet()) {
+			if (pathName.endsWith("US1") || pathName.endsWith("US2") || pathName.endsWith("LS1") || pathName.endsWith("LS2")) {
+				pathsToCoralStations.put(pathName, PATH_PLANNER_PATHS.get(pathName));
+			}
+		}
+		return pathsToCoralStations;
+	}
+
+	public static Map<String, PathPlannerPath> getAllScoringPathsFromCoralStations() {
+		Map<String, PathPlannerPath> pathsFromCoralStations = new HashMap<>();
+		for (String pathName : PATH_PLANNER_PATHS.keySet()) {
+			if (pathName.startsWith("US") || pathName.startsWith("LS")) {
+				pathsFromCoralStations.put(pathName, PATH_PLANNER_PATHS.get(pathName));
+			}
+		}
+		return pathsFromCoralStations;
+	}
+
+	public static Branch getPathTargetBranch(PathPlannerPath path) {
+		return Branch.valueOf(path.name.substring(path.name.length() - 1));
+	}
+
 	private static List<String> getAllPathNames() {
 		File[] pathFiles = new File(Filesystem.getDeployDirectory(), "pathplanner/paths").listFiles();
 
@@ -60,12 +59,12 @@ public class PathHelper {
 		}
 
 		return Stream.of(pathFiles)
-			.filter(file -> !file.isDirectory())
-			.map(File::getName)
-			.filter(name -> name.endsWith(".path"))
-			.map(name -> name.substring(0, name.lastIndexOf(".")))
-			.sorted(String::compareToIgnoreCase)
-			.toList();
+				.filter(file -> !file.isDirectory())
+				.map(File::getName)
+				.filter(name -> name.endsWith(".path"))
+				.map(name -> name.substring(0, name.lastIndexOf(".")))
+				.sorted(String::compareToIgnoreCase)
+				.toList();
 	}
 
 	private static Map<String, PathPlannerPath> getAllPaths() {
@@ -78,7 +77,6 @@ public class PathHelper {
 			}
 		}
 		return paths;
->>>>>>> template/master
 	}
 
 }

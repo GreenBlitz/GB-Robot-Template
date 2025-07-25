@@ -22,11 +22,7 @@ public final class LimeLightAprilTagVisionData extends AprilTagVisionData {
 		this.poseEstimationMethod = poseEstimationMethod;
 	}
 
-<<<<<<< HEAD
-	public LimelightPoseEstimationMethod getPoseEstimationMethod() {
-=======
 	public final LimelightPoseEstimationMethod getPoseEstimationMethod() {
->>>>>>> template/master
 		return poseEstimationMethod;
 	}
 

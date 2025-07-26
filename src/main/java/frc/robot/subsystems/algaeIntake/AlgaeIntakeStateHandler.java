@@ -10,6 +10,7 @@ import frc.robot.Robot;
 import frc.robot.hardware.YishaiDistanceSensor;
 import frc.robot.subsystems.algaeIntake.pivot.PivotStateHandler;
 import frc.robot.subsystems.algaeIntake.rollers.RollersStateHandler;
+import frc.utils.DriverStationUtil;
 import frc.utils.buffers.RingBuffer.RingBuffer;
 import org.littletonrobotics.junction.Logger;
 
@@ -59,7 +60,7 @@ public class AlgaeIntakeStateHandler {
 		Logger.recordOutput("Test/MinClose", isAlgaeInByMin);
 		Logger.recordOutput("Test/isAlgaeInByMin", isAlgaeInByMin && isPivotDown);
 
-		return isAlgaeInByMin && isPivotDown;
+		return isAlgaeInByMin && isPivotDown && Robot.ROBOT_TYPE.isReal();
 	}
 
 	public Command handleIdle(boolean isAlgaeInAlgaeIntakeOverride) {

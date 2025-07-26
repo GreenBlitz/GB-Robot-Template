@@ -2,7 +2,6 @@ package frc.robot.vision;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-<<<<<<< HEAD
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -15,21 +14,11 @@ import frc.robot.vision.data.VisionData;
 import frc.robot.vision.objectdetection.LimeLightObjectDetector;
 import frc.robot.vision.sources.VisionSource;
 import frc.robot.vision.sources.limelights.DynamicSwitchingLimelight;
+import frc.utils.AngleUnit;
 import frc.utils.Filter;
 import frc.utils.alerts.Alert;
-import frc.utils.AngleUnit;
-
-
 import java.io.IOException;
 import java.util.List;
-=======
-import frc.constants.DirectoryPaths;
-import frc.robot.vision.data.VisionData;
-import frc.utils.Filter;
-import frc.utils.alerts.Alert;
-
-import java.io.IOException;
->>>>>>> template/master
 
 public class VisionConstants {
 
@@ -39,11 +28,8 @@ public class VisionConstants {
 
 	public static final String VISION_SOURCE_LOGPATH_ADDITION = "VisionSource/";
 
-<<<<<<< HEAD
 	public static final String OBJECT_DETECTOR_SOURCE_LOGPATH = "ObjectDetection/";
 
-=======
->>>>>>> template/master
 	public static final String MULTI_VISION_SOURCES_LOGPATH = "MultiVisionSources/";
 
 	public static final String DYNAMIC_LIMELIGHT_MEGATAG1_SOURCE_NAME = "independentPoseEstimatingLimelight";
@@ -51,11 +37,7 @@ public class VisionConstants {
 	public static final String DYNAMIC_LIMELIGHT_MEGATAG2_SOURCE_NAME = "headingRequiringLimelight";
 
 
-<<<<<<< HEAD
 	public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = getAprilTagFieldLayout(Field.FIELD_TYPE);
-=======
-	public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = getAprilTagFieldLayout();
->>>>>>> template/master
 
 	private static AprilTagFieldLayout getAprilTagFieldLayout() {
 		try {
@@ -69,7 +51,6 @@ public class VisionConstants {
 		}
 	}
 
-<<<<<<< HEAD
 	private static AprilTagFieldLayout getAprilTagFieldLayout(FieldType fieldType) {
 		return switch (fieldType) {
 			case WELDED -> AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
@@ -77,13 +58,10 @@ public class VisionConstants {
 		};
 	}
 
-=======
->>>>>>> template/master
 	public static final int LIMELIGHT_ENTRY_ARRAY_LENGTH = 6;
 
 	public static final int NO_APRILTAG_ID = -1;
 
-<<<<<<< HEAD
 	public static Rotation2d ROLL_FILTER_TOLERANCE = Rotation2d.fromDegrees(5);
 
 	public static Rotation2d PITCH_FILTER_TOLERANCE = Rotation2d.fromDegrees(5);
@@ -159,8 +137,5 @@ public class VisionConstants {
 	);
 
 	public static final List<VisionSource<AprilTagVisionData>> VISION_SOURCES = List.of(LIMELIGHT_LEFT, LIMELIGHT_RIGHT);
-=======
-	public static final Filter<VisionData> DEFAULT_VISION_FILTER = Filter.nonFilteringFilter();
->>>>>>> template/master
 
 }

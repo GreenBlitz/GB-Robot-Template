@@ -1,4 +1,5 @@
 package frc.robot.autonomous;
+
 import com.pathplanner.lib.path.ConstraintsZone;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.IdealStartingState;
@@ -38,6 +39,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 public class AutosBuilder {
+
 	public static List<Supplier<PathPlannerAutoWrapper>> getAllTestAutos() {
 		return List.of(
 			() -> new PathPlannerAutoWrapper("Rotate"),
@@ -47,9 +49,9 @@ public class AutosBuilder {
 	}
 
 	public static List<Supplier<PathPlannerAutoWrapper>> getAllPreBuiltAutos(
-			Robot robot,
-			Supplier<Command> intakingCommand,
-			Supplier<Command> scoringCommand
+		Robot robot,
+		Supplier<Command> intakingCommand,
+		Supplier<Command> scoringCommand
 	) {
 		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
 		autos.add(() -> leftAuto(robot, intakingCommand, scoringCommand));
@@ -59,13 +61,13 @@ public class AutosBuilder {
 	}
 
 	public static List<Supplier<PathPlannerAutoWrapper>> getAllPreBuiltAutos(
-			Robot robot,
-			Supplier<Optional<ObjectData>> algaeTranslationSupplier,
-			Supplier<Command> intakingCommand,
-			Supplier<Command> scoringCommand,
-			Supplier<Command> algaeRemoveCommand,
-			Supplier<Command> netCommand,
-			Pose2d tolerance
+		Robot robot,
+		Supplier<Optional<ObjectData>> algaeTranslationSupplier,
+		Supplier<Command> intakingCommand,
+		Supplier<Command> scoringCommand,
+		Supplier<Command> algaeRemoveCommand,
+		Supplier<Command> netCommand,
+		Pose2d tolerance
 	) {
 		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
 		autos.add(() -> leftAuto(robot, intakingCommand, scoringCommand));
@@ -83,30 +85,30 @@ public class AutosBuilder {
 	}
 
 	public static List<Supplier<PathPlannerAutoWrapper>> getAllStartingAndScoringFirstObjectAutos(
-			Swerve swerve,
-			Supplier<Pose2d> currentPose,
-			PathConstraints pathfindingConstraints,
-			Supplier<Command> scoringCommand
+		Swerve swerve,
+		Supplier<Pose2d> currentPose,
+		PathConstraints pathfindingConstraints,
+		Supplier<Command> scoringCommand
 	) {
 		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
 		for (
-				PathPlannerPath path : PathHelper.getAllStartingAndScoringFirstObjectPaths()
+			PathPlannerPath path : PathHelper.getAllStartingAndScoringFirstObjectPaths()
 				.values()
 				.stream()
 				.sorted(Comparator.comparing(path -> path.name))
 				.toList()
 		) {
 			autos
-					.add(
-							() -> new PathPlannerAutoWrapper(
-									new InstantCommand(() -> ScoringHelpers.setTargetBranch(PathHelper.getPathTargetBranch(path))).alongWith(
-											PathFollowingCommandsBuilder
-													.deadlinePathWithCommand(swerve, currentPose, path, pathfindingConstraints, scoringCommand)
-									),
-									PathPlannerUtil.getPathStartingPose(path),
-									path.name
-							)
-					);
+				.add(
+					() -> new PathPlannerAutoWrapper(
+						new InstantCommand(() -> ScoringHelpers.setTargetBranch(PathHelper.getPathTargetBranch(path))).alongWith(
+							PathFollowingCommandsBuilder
+								.deadlinePathWithCommand(swerve, currentPose, path, pathfindingConstraints, scoringCommand)
+						),
+						PathPlannerUtil.getPathStartingPose(path),
+						path.name
+					)
+				);
 		}
 		return autos;
 	}
@@ -120,51 +122,51 @@ public class AutosBuilder {
 	}
 
 	public static List<Supplier<PathPlannerAutoWrapper>> getAllIntakingAutos(
-			Swerve swerve,
-			Supplier<Pose2d> currentPose,
-			PathConstraints pathfindingConstraints,
-			Supplier<Command> intakingCommand
+		Swerve swerve,
+		Supplier<Pose2d> currentPose,
+		PathConstraints pathfindingConstraints,
+		Supplier<Command> intakingCommand
 	) {
 		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
 		for (
-				PathPlannerPath path : PathHelper.getAllIntakingPaths().values().stream().sorted(Comparator.comparing(path -> path.name)).toList()
+			PathPlannerPath path : PathHelper.getAllIntakingPaths().values().stream().sorted(Comparator.comparing(path -> path.name)).toList()
 		) {
 			autos.add(
-					() -> new PathPlannerAutoWrapper(
-							PathFollowingCommandsBuilder.deadlinePathWithCommand(swerve, currentPose, path, pathfindingConstraints, intakingCommand),
-							PathPlannerUtil.getPathStartingPose(path),
-							path.name
-					)
+				() -> new PathPlannerAutoWrapper(
+					PathFollowingCommandsBuilder.deadlinePathWithCommand(swerve, currentPose, path, pathfindingConstraints, intakingCommand),
+					PathPlannerUtil.getPathStartingPose(path),
+					path.name
+				)
 			);
 		}
 		return autos;
 	}
 
 	public static List<Supplier<PathPlannerAutoWrapper>> getAllScoringAutos(
-			Swerve swerve,
-			Supplier<Pose2d> currentPose,
-			PathConstraints pathfindingConstraints,
-			Supplier<Command> scoringCommand
+		Swerve swerve,
+		Supplier<Pose2d> currentPose,
+		PathConstraints pathfindingConstraints,
+		Supplier<Command> scoringCommand
 	) {
 		ArrayList<Supplier<PathPlannerAutoWrapper>> autos = new ArrayList<>();
 		for (
-				PathPlannerPath path : PathHelper.getAllScoringPathsFromCoralStations()
+			PathPlannerPath path : PathHelper.getAllScoringPathsFromCoralStations()
 				.values()
 				.stream()
 				.sorted(Comparator.comparing(path -> path.name))
 				.toList()
 		) {
 			autos
-					.add(
-							() -> new PathPlannerAutoWrapper(
-									new InstantCommand(() -> ScoringHelpers.setTargetBranch(PathHelper.getPathTargetBranch(path))).alongWith(
-											PathFollowingCommandsBuilder
-													.deadlinePathWithCommand(swerve, currentPose, path, pathfindingConstraints, scoringCommand)
-									),
-									PathPlannerUtil.getPathStartingPose(path),
-									path.name
-							)
-					);
+				.add(
+					() -> new PathPlannerAutoWrapper(
+						new InstantCommand(() -> ScoringHelpers.setTargetBranch(PathHelper.getPathTargetBranch(path))).alongWith(
+							PathFollowingCommandsBuilder
+								.deadlinePathWithCommand(swerve, currentPose, path, pathfindingConstraints, scoringCommand)
+						),
+						PathPlannerUtil.getPathStartingPose(path),
+						path.name
+					)
+				);
 		}
 		return autos;
 	}
@@ -174,136 +176,136 @@ public class AutosBuilder {
 		chassisPowers.xPower = AutonomousConstants.DEFAULT_AUTO_DRIVE_POWER;
 
 		return new PathPlannerAutoWrapper(
-				new ParallelCommandGroup(
-						robot.getSwerve()
-								.getCommandsBuilder()
-								.drive(() -> chassisPowers)
-								.withTimeout(AutonomousConstants.DEFAULT_AUTO_DRIVE_TIME_SECONDS)
-								.andThen(robot.getSwerve().getCommandsBuilder().resetTargetSpeeds()),
-						robot.getRobotCommander().getSuperstructure().elevatorOpening()
-				),
-				Pose2d.kZero,
-				"Default Auto"
+			new ParallelCommandGroup(
+				robot.getSwerve()
+					.getCommandsBuilder()
+					.drive(() -> chassisPowers)
+					.withTimeout(AutonomousConstants.DEFAULT_AUTO_DRIVE_TIME_SECONDS)
+					.andThen(robot.getSwerve().getCommandsBuilder().resetTargetSpeeds()),
+				robot.getRobotCommander().getSuperstructure().elevatorOpening()
+			),
+			Pose2d.kZero,
+			"Default Auto"
 		);
 	}
 
 	public static PathPlannerAutoWrapper leftAuto(Robot robot, Supplier<Command> intakingCommand, Supplier<Command> scoringCommand) {
 		return new PathPlannerAutoWrapper(
+			new SequentialCommandGroup(
+				autoScoreToBranch(robot, Branch.I, ScoreLevel.L4),
 				new SequentialCommandGroup(
-						autoScoreToBranch(robot, Branch.I, ScoreLevel.L4),
-						new SequentialCommandGroup(
-								PathFollowingCommandsBuilder.deadlinePathWithCommand(
-										robot.getSwerve(),
-										robot.getPoseEstimator()::getEstimatedPose,
-										PathHelper.PATH_PLANNER_PATHS.get("I-US2"),
-										AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
-										intakingCommand
-								),
-								new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.L)).alongWith(
-										PathFollowingCommandsBuilder.deadlinePathWithCommand(
-												robot.getSwerve(),
-												robot.getPoseEstimator()::getEstimatedPose,
-												PathHelper.PATH_PLANNER_PATHS.get("US2-L"),
-												AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
-												scoringCommand
-										)
-								),
-								PathFollowingCommandsBuilder.deadlinePathWithCommand(
-										robot.getSwerve(),
-										robot.getPoseEstimator()::getEstimatedPose,
-										PathHelper.PATH_PLANNER_PATHS.get("L-US2"),
-										AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
-										intakingCommand
-								),
-								new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.K)).alongWith(
-										PathFollowingCommandsBuilder.deadlinePathWithCommand(
-												robot.getSwerve(),
-												robot.getPoseEstimator()::getEstimatedPose,
-												PathHelper.PATH_PLANNER_PATHS.get("US2-K"),
-												AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
-												scoringCommand
-										)
-								),
-								PathFollowingCommandsBuilder.deadlinePathWithCommand(
-										robot.getSwerve(),
-										robot.getPoseEstimator()::getEstimatedPose,
-										PathHelper.PATH_PLANNER_PATHS.get("K-US2"),
-										AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
-										intakingCommand
-								),
-								new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.A)).alongWith(
-										PathFollowingCommandsBuilder.deadlinePathWithCommand(
-												robot.getSwerve(),
-												robot.getPoseEstimator()::getEstimatedPose,
-												PathHelper.PATH_PLANNER_PATHS.get("US2-A"),
-												AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
-												scoringCommand
-										)
-								)
-						).asProxy()
-				),
-				Pose2d.kZero,
-				"Left"
+					PathFollowingCommandsBuilder.deadlinePathWithCommand(
+						robot.getSwerve(),
+						robot.getPoseEstimator()::getEstimatedPose,
+						PathHelper.PATH_PLANNER_PATHS.get("I-US2"),
+						AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
+						intakingCommand
+					),
+					new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.L)).alongWith(
+						PathFollowingCommandsBuilder.deadlinePathWithCommand(
+							robot.getSwerve(),
+							robot.getPoseEstimator()::getEstimatedPose,
+							PathHelper.PATH_PLANNER_PATHS.get("US2-L"),
+							AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
+							scoringCommand
+						)
+					),
+					PathFollowingCommandsBuilder.deadlinePathWithCommand(
+						robot.getSwerve(),
+						robot.getPoseEstimator()::getEstimatedPose,
+						PathHelper.PATH_PLANNER_PATHS.get("L-US2"),
+						AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
+						intakingCommand
+					),
+					new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.K)).alongWith(
+						PathFollowingCommandsBuilder.deadlinePathWithCommand(
+							robot.getSwerve(),
+							robot.getPoseEstimator()::getEstimatedPose,
+							PathHelper.PATH_PLANNER_PATHS.get("US2-K"),
+							AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
+							scoringCommand
+						)
+					),
+					PathFollowingCommandsBuilder.deadlinePathWithCommand(
+						robot.getSwerve(),
+						robot.getPoseEstimator()::getEstimatedPose,
+						PathHelper.PATH_PLANNER_PATHS.get("K-US2"),
+						AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
+						intakingCommand
+					),
+					new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.A)).alongWith(
+						PathFollowingCommandsBuilder.deadlinePathWithCommand(
+							robot.getSwerve(),
+							robot.getPoseEstimator()::getEstimatedPose,
+							PathHelper.PATH_PLANNER_PATHS.get("US2-A"),
+							AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
+							scoringCommand
+						)
+					)
+				).asProxy()
+			),
+			Pose2d.kZero,
+			"Left"
 		);
 	}
 
 	private static PathPlannerAutoWrapper rightAuto(Robot robot, Supplier<Command> intakingCommand, Supplier<Command> scoringCommand) {
 		return new PathPlannerAutoWrapper(
+			new SequentialCommandGroup(
+				autoScoreToBranch(robot, Branch.F, ScoreLevel.L4),
 				new SequentialCommandGroup(
-						autoScoreToBranch(robot, Branch.F, ScoreLevel.L4),
-						new SequentialCommandGroup(
-								PathFollowingCommandsBuilder.deadlinePathWithCommand(
-										robot.getSwerve(),
-										robot.getPoseEstimator()::getEstimatedPose,
-										PathHelper.PATH_PLANNER_PATHS.get("F-LS2"),
-										AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
-										intakingCommand
-								),
-								new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.C)).alongWith(
-										PathFollowingCommandsBuilder.deadlinePathWithCommand(
-												robot.getSwerve(),
-												robot.getPoseEstimator()::getEstimatedPose,
-												PathHelper.PATH_PLANNER_PATHS.get("LS2-C"),
-												AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
-												scoringCommand
-										)
-								),
-								PathFollowingCommandsBuilder.deadlinePathWithCommand(
-										robot.getSwerve(),
-										robot.getPoseEstimator()::getEstimatedPose,
-										PathHelper.PATH_PLANNER_PATHS.get("C-LS2"),
-										AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
-										intakingCommand
-								),
-								new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.D)).alongWith(
-										PathFollowingCommandsBuilder.deadlinePathWithCommand(
-												robot.getSwerve(),
-												robot.getPoseEstimator()::getEstimatedPose,
-												PathHelper.PATH_PLANNER_PATHS.get("LS2-D"),
-												AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
-												scoringCommand
-										)
-								),
-								PathFollowingCommandsBuilder.deadlinePathWithCommand(
-										robot.getSwerve(),
-										robot.getPoseEstimator()::getEstimatedPose,
-										PathHelper.PATH_PLANNER_PATHS.get("D-LS2"),
-										AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
-										intakingCommand
-								),
-								new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.B)).alongWith(
-										PathFollowingCommandsBuilder.deadlinePathWithCommand(
-												robot.getSwerve(),
-												robot.getPoseEstimator()::getEstimatedPose,
-												PathHelper.PATH_PLANNER_PATHS.get("LS2-B"),
-												AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
-												scoringCommand
-										)
-								)
-						).asProxy()
-				),
-				Pose2d.kZero,
-				"Right"
+					PathFollowingCommandsBuilder.deadlinePathWithCommand(
+						robot.getSwerve(),
+						robot.getPoseEstimator()::getEstimatedPose,
+						PathHelper.PATH_PLANNER_PATHS.get("F-LS2"),
+						AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
+						intakingCommand
+					),
+					new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.C)).alongWith(
+						PathFollowingCommandsBuilder.deadlinePathWithCommand(
+							robot.getSwerve(),
+							robot.getPoseEstimator()::getEstimatedPose,
+							PathHelper.PATH_PLANNER_PATHS.get("LS2-C"),
+							AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
+							scoringCommand
+						)
+					),
+					PathFollowingCommandsBuilder.deadlinePathWithCommand(
+						robot.getSwerve(),
+						robot.getPoseEstimator()::getEstimatedPose,
+						PathHelper.PATH_PLANNER_PATHS.get("C-LS2"),
+						AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
+						intakingCommand
+					),
+					new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.D)).alongWith(
+						PathFollowingCommandsBuilder.deadlinePathWithCommand(
+							robot.getSwerve(),
+							robot.getPoseEstimator()::getEstimatedPose,
+							PathHelper.PATH_PLANNER_PATHS.get("LS2-D"),
+							AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
+							scoringCommand
+						)
+					),
+					PathFollowingCommandsBuilder.deadlinePathWithCommand(
+						robot.getSwerve(),
+						robot.getPoseEstimator()::getEstimatedPose,
+						PathHelper.PATH_PLANNER_PATHS.get("D-LS2"),
+						AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
+						intakingCommand
+					),
+					new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.B)).alongWith(
+						PathFollowingCommandsBuilder.deadlinePathWithCommand(
+							robot.getSwerve(),
+							robot.getPoseEstimator()::getEstimatedPose,
+							PathHelper.PATH_PLANNER_PATHS.get("LS2-B"),
+							AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
+							scoringCommand
+						)
+					)
+				).asProxy()
+			),
+			Pose2d.kZero,
+			"Right"
 		);
 	}
 
@@ -312,54 +314,54 @@ public class AutosBuilder {
 	}
 
 	private static PathPlannerAutoWrapper autoBalls(
-			Robot robot,
-			Supplier<Command> algaeRemoveCommand,
-			Supplier<Command> netCommand,
-			Pose2d tolerance,
-			Branch firstAutoScoreTargetBranch,
-			ScoreLevel firstAutoScoreTargetScoreLevel
+		Robot robot,
+		Supplier<Command> algaeRemoveCommand,
+		Supplier<Command> netCommand,
+		Pose2d tolerance,
+		Branch firstAutoScoreTargetBranch,
+		ScoreLevel firstAutoScoreTargetScoreLevel
 	) {
 		Command autoBalls = new SequentialCommandGroup(
-				autoScoreToBranch(robot, firstAutoScoreTargetBranch, firstAutoScoreTargetScoreLevel),
-				new SequentialCommandGroup(
-						getFirstAlgaeRemoveCommand(firstAutoScoreTargetScoreLevel, robot, firstAutoScoreTargetBranch, tolerance),
-						PathFollowingCommandsBuilder.deadlinePathWithCommand(
-								robot.getSwerve(),
-								robot.getPoseEstimator()::getEstimatedPose,
-								PathHelper.PATH_PLANNER_PATHS.get("ARD-LN"),
-								AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
-								netCommand
-						),
-						new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.I)),
-						PathFollowingCommandsBuilder.deadlinePathWithCommand(
-								robot.getSwerve(),
-								robot.getPoseEstimator()::getEstimatedPose,
-								PathHelper.PATH_PLANNER_PATHS.get("LN-ARE"),
-								AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
-								algaeRemoveCommand
-						),
-						PathFollowingCommandsBuilder.deadlinePathWithCommand(
-								robot.getSwerve(),
-								robot.getPoseEstimator()::getEstimatedPose,
-								PathHelper.PATH_PLANNER_PATHS.get("ARe-MN"),
-								AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
-								netCommand
-						),
-						PathFollowingCommandsBuilder.deadlinePathWithCommand(
-								robot.getSwerve(),
-								robot.getPoseEstimator()::getEstimatedPose,
-								PathHelper.PATH_PLANNER_PATHS.get("MN-ARC"),
-								AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
-								algaeRemoveCommand
-						),
-						PathFollowingCommandsBuilder.deadlinePathWithCommand(
-								robot.getSwerve(),
-								robot.getPoseEstimator()::getEstimatedPose,
-								PathHelper.PATH_PLANNER_PATHS.get("ARC-RN"),
-								AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
-								netCommand
-						)
-				).asProxy()
+			autoScoreToBranch(robot, firstAutoScoreTargetBranch, firstAutoScoreTargetScoreLevel),
+			new SequentialCommandGroup(
+				getFirstAlgaeRemoveCommand(firstAutoScoreTargetScoreLevel, robot, firstAutoScoreTargetBranch, tolerance),
+				PathFollowingCommandsBuilder.deadlinePathWithCommand(
+					robot.getSwerve(),
+					robot.getPoseEstimator()::getEstimatedPose,
+					PathHelper.PATH_PLANNER_PATHS.get("ARD-LN"),
+					AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
+					netCommand
+				),
+				new InstantCommand(() -> ScoringHelpers.setTargetBranch(Branch.I)),
+				PathFollowingCommandsBuilder.deadlinePathWithCommand(
+					robot.getSwerve(),
+					robot.getPoseEstimator()::getEstimatedPose,
+					PathHelper.PATH_PLANNER_PATHS.get("LN-ARE"),
+					AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
+					algaeRemoveCommand
+				),
+				PathFollowingCommandsBuilder.deadlinePathWithCommand(
+					robot.getSwerve(),
+					robot.getPoseEstimator()::getEstimatedPose,
+					PathHelper.PATH_PLANNER_PATHS.get("ARe-MN"),
+					AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
+					netCommand
+				),
+				PathFollowingCommandsBuilder.deadlinePathWithCommand(
+					robot.getSwerve(),
+					robot.getPoseEstimator()::getEstimatedPose,
+					PathHelper.PATH_PLANNER_PATHS.get("MN-ARC"),
+					AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
+					algaeRemoveCommand
+				),
+				PathFollowingCommandsBuilder.deadlinePathWithCommand(
+					robot.getSwerve(),
+					robot.getPoseEstimator()::getEstimatedPose,
+					PathHelper.PATH_PLANNER_PATHS.get("ARC-RN"),
+					AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
+					netCommand
+				)
+			).asProxy()
 		);
 
 		String side = firstAutoScoreTargetBranch.isLeft() ? "left" : "right";
@@ -368,69 +370,73 @@ public class AutosBuilder {
 	}
 
 	private static PathPlannerAutoWrapper floorAutoBalls(
-			Robot robot,
-			Supplier<Optional<ObjectData>> algaeTranslationSupplier,
-			Supplier<Command> algaeRemoveCommand,
-			Supplier<Command> netCommand,
-			Pose2d tolerance,
-			Branch firstAutoScoreTargetBranch,
-			ScoreLevel firstAutoScoreTargetScoreLevel
+		Robot robot,
+		Supplier<Optional<ObjectData>> algaeTranslationSupplier,
+		Supplier<Command> algaeRemoveCommand,
+		Supplier<Command> netCommand,
+		Pose2d tolerance,
+		Branch firstAutoScoreTargetBranch,
+		ScoreLevel firstAutoScoreTargetScoreLevel
 	) {
 		Pose2d backOffFromReefPose = Field.getAllianceRelative(
-				Field.getReefSideMiddle(firstAutoScoreTargetBranch.getReefSide())
-						.plus(new Transform2d(AutonomousConstants.BACK_OFF_FROM_REEF_DISTANCE_METERS, 0, new Rotation2d())),
-				false,
-				true,
-				AngleTransform.MIRROR_Y
+			Field.getReefSideMiddle(firstAutoScoreTargetBranch.getReefSide())
+				.plus(new Transform2d(AutonomousConstants.BACK_OFF_FROM_REEF_DISTANCE_METERS, 0, new Rotation2d())),
+			false,
+			true,
+			AngleTransform.MIRROR_Y
 		);
 		Supplier<Command> softCloseNet = () -> robot.getRobotCommander().getSuperstructure().softCloseNet().asProxy();
 
 		Command bulbulBalls = new SequentialCommandGroup(
-				autoScoreToBranch(robot, firstAutoScoreTargetBranch, firstAutoScoreTargetScoreLevel),
-				new SequentialCommandGroup(
-						getFirstAlgaeRemoveCommand(firstAutoScoreTargetScoreLevel, robot, firstAutoScoreTargetBranch, tolerance),
-						PathFollowingCommandsBuilder.deadlinePathWithCommand(
-								robot.getSwerve(),
-								robot.getPoseEstimator()::getEstimatedPose,
-								PathHelper.PATH_PLANNER_PATHS.get("ARD-LN"),
-								AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
-								netCommand
-						),
-						PathFollowingCommandsBuilder.commandDuringPath(
-								robot.getSwerve(),
-								robot.getPoseEstimator()::getEstimatedPose,
-								PathHelper.PATH_PLANNER_PATHS.get("LN-RFA"),
-								AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
-								softCloseNet,
-								tolerance
-						),
-						getFloorAlgaeToNetCommand(robot, algaeTranslationSupplier, algaeRemoveCommand, netCommand, tolerance, true),
-						robot.getRobotCommander().getSuperstructure().netWithRelease().asProxy(),
-						PathFollowingCommandsBuilder.commandDuringPath(
-								robot.getSwerve(),
-								robot.getPoseEstimator()::getEstimatedPose,
-								PathHelper.PATH_PLANNER_PATHS.get("CLN-LFA"),
-								AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
-								softCloseNet,
-								tolerance
-						),
-						getFloorAlgaeToNetCommand(robot, algaeTranslationSupplier, algaeRemoveCommand, netCommand, tolerance, false),
-						robot.getRobotCommander().getSuperstructure().netWithRelease().asProxy(),
-						robot.getRobotCommander().getSuperstructure().idle().asProxy()
-				).asProxy()
+			autoScoreToBranch(robot, firstAutoScoreTargetBranch, firstAutoScoreTargetScoreLevel),
+			new SequentialCommandGroup(
+				getFirstAlgaeRemoveCommand(firstAutoScoreTargetScoreLevel, robot, firstAutoScoreTargetBranch, tolerance),
+				PathFollowingCommandsBuilder.deadlinePathWithCommand(
+					robot.getSwerve(),
+					robot.getPoseEstimator()::getEstimatedPose,
+					PathHelper.PATH_PLANNER_PATHS.get("ARD-LN"),
+					AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
+					netCommand
+				),
+				PathFollowingCommandsBuilder.commandDuringPath(
+					robot.getSwerve(),
+					robot.getPoseEstimator()::getEstimatedPose,
+					PathHelper.PATH_PLANNER_PATHS.get("LN-RFA"),
+					AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
+					softCloseNet,
+					tolerance
+				),
+				getFloorAlgaeToNetCommand(robot, algaeTranslationSupplier, algaeRemoveCommand, netCommand, tolerance, true),
+				robot.getRobotCommander().getSuperstructure().netWithRelease().asProxy(),
+				PathFollowingCommandsBuilder.commandDuringPath(
+					robot.getSwerve(),
+					robot.getPoseEstimator()::getEstimatedPose,
+					PathHelper.PATH_PLANNER_PATHS.get("CLN-LFA"),
+					AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
+					softCloseNet,
+					tolerance
+				),
+				getFloorAlgaeToNetCommand(robot, algaeTranslationSupplier, algaeRemoveCommand, netCommand, tolerance, false),
+				robot.getRobotCommander().getSuperstructure().netWithRelease().asProxy(),
+				robot.getRobotCommander().getSuperstructure().idle().asProxy()
+			).asProxy()
 		);
 
 		String side = firstAutoScoreTargetBranch.isLeft() ? "left" : "right";
 
-		return new PathPlannerAutoWrapper(bulbulBalls, Pose2d.kZero, side + " " + firstAutoScoreTargetScoreLevel.toString() + " floor balls auto");
+		return new PathPlannerAutoWrapper(
+			bulbulBalls,
+			Pose2d.kZero,
+			side + " " + firstAutoScoreTargetScoreLevel.toString() + " floor balls auto"
+		);
 	}
 
 	public static PathPlannerAutoWrapper autoScoreToBranch(Robot robot, Branch branch, ScoreLevel scoreLevel) {
 		return new PathPlannerAutoWrapper(
-				robot.getRobotCommander()
-						.autoScoreForAutonomous(getAutoScorePath(robot.getSwerve(), robot.getPoseEstimator()::getEstimatedPose, branch, scoreLevel)),
-				Pose2d.kZero,
-				branch.name() + " Auto Score"
+			robot.getRobotCommander()
+				.autoScoreForAutonomous(getAutoScorePath(robot.getSwerve(), robot.getPoseEstimator()::getEstimatedPose, branch, scoreLevel)),
+			Pose2d.kZero,
+			branch.name() + " Auto Score"
 		);
 	}
 
@@ -439,29 +445,29 @@ public class AutosBuilder {
 		ScoringHelpers.setTargetBranch(branch);
 		Pose2d startingPose = currentPose.get();
 		Pose2d openSuperstructurePose = ScoringHelpers
-				.getRobotBranchScoringPose(branch, StateMachineConstants.DISTANCE_TO_BRANCH_FOR_STARTING_PATH);
+			.getRobotBranchScoringPose(branch, StateMachineConstants.DISTANCE_TO_BRANCH_FOR_STARTING_PATH);
 		Pose2d scoringPose = ScoringHelpers.getRobotBranchScoringPose(branch, StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS);
 		PathPlannerPath path = new PathPlannerPath(
-				PathPlannerPath.waypointsFromPoses(startingPose, openSuperstructurePose, scoringPose),
-				List.of(),
-				List.of(),
-				List.of(
-						new ConstraintsZone(
-								1,
-								2,
-								new PathConstraints(
-										StateMachineConstants.MAX_VELOCITY_WHILE_ELEVATOR_L4_METERS_PER_SECOND,
-										StateMachineConstants.MAX_ACCELERATION_WHILE_ELEVATOR_L4_METERS_PER_SECOND_SQUARED,
-										StateMachineConstants.MAX_VELOCITY_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND.getRadians(),
-										StateMachineConstants.MAX_ACCELERATION_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND_SQUARED.getRadians()
-								)
-						)
-				),
-				List.of(),
-				AutonomousConstants.getRealTimeConstraintsForAuto(swerve),
-				new IdealStartingState(0, startingPose.getRotation()),
-				new GoalEndState(0, scoringPose.getRotation()),
-				false
+			PathPlannerPath.waypointsFromPoses(startingPose, openSuperstructurePose, scoringPose),
+			List.of(),
+			List.of(),
+			List.of(
+				new ConstraintsZone(
+					1,
+					2,
+					new PathConstraints(
+						StateMachineConstants.MAX_VELOCITY_WHILE_ELEVATOR_L4_METERS_PER_SECOND,
+						StateMachineConstants.MAX_ACCELERATION_WHILE_ELEVATOR_L4_METERS_PER_SECOND_SQUARED,
+						StateMachineConstants.MAX_VELOCITY_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND.getRadians(),
+						StateMachineConstants.MAX_ACCELERATION_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND_SQUARED.getRadians()
+					)
+				)
+			),
+			List.of(),
+			AutonomousConstants.getRealTimeConstraintsForAuto(swerve),
+			new IdealStartingState(0, startingPose.getRotation()),
+			new GoalEndState(0, scoringPose.getRotation()),
+			false
 		);
 		path.preventFlipping = true;
 		path.name = branch.name() + " Auto Score";
@@ -474,112 +480,112 @@ public class AutosBuilder {
 		Pose2d backOffFromReefPose;
 		if (isL4) {
 			backOffFromReefPose = Field.getAllianceRelative(
-					Field.getReefSideMiddle(firstAutoScoreTargetBranch.getReefSide())
-							.plus(new Transform2d(AutonomousConstants.BACK_OFF_FROM_REEF_DISTANCE_METERS, 0, new Rotation2d())),
-					false,
-					true,
-					AngleTransform.MIRROR_Y
+				Field.getReefSideMiddle(firstAutoScoreTargetBranch.getReefSide())
+					.plus(new Transform2d(AutonomousConstants.BACK_OFF_FROM_REEF_DISTANCE_METERS, 0, new Rotation2d())),
+				false,
+				true,
+				AngleTransform.MIRROR_Y
 			);
 		} else {
 			backOffFromReefPose = Field.getAllianceRelative(
-					Field.getReefSideMiddle(firstAutoScoreTargetBranch.getReefSide())
-							.plus(new Transform2d(AutonomousConstants.BACK_OFF_FROM_REEF_DISTANCE_METERS, 0, new Rotation2d())),
-					false,
-					true,
-					AngleTransform.MIRROR_Y
+				Field.getReefSideMiddle(firstAutoScoreTargetBranch.getReefSide())
+					.plus(new Transform2d(AutonomousConstants.BACK_OFF_FROM_REEF_DISTANCE_METERS, 0, new Rotation2d())),
+				false,
+				true,
+				AngleTransform.MIRROR_Y
 			);
 		}
 		Command algaeRemove = robot.getRobotCommander().getSuperstructure().algaeRemove().asProxy();
 		Command afterScore = isL4
-				? robot.getRobotCommander().getSuperstructure().holdAlgae().asProxy()
-				: robot.getRobotCommander().getSuperstructure().stayInPlace().asProxy();
+			? robot.getRobotCommander().getSuperstructure().holdAlgae().asProxy()
+			: robot.getRobotCommander().getSuperstructure().stayInPlace().asProxy();
 		ElevatorState elevatorStateAfterScore = isL4 ? ElevatorState.HOLD_ALGAE : ElevatorState.L3;
 		return new SequentialCommandGroup(
-				new ParallelCommandGroup(
-						afterScore,
-						robot.getSwerve().getCommandsBuilder().moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, backOffFromReefPose)
-				).until(
-						() -> ToleranceMath.isNear(robot.getPoseEstimator().getEstimatedPose(), backOffFromReefPose, tolerance)
-								&& robot.getElevator().isAtPosition(elevatorStateAfterScore.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
-				),
-				new ParallelCommandGroup(
-						algaeRemove,
-						robot.getSwerve()
-								.getCommandsBuilder()
-								.moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers.getAlgaeRemovePose(true))
-				).withTimeout(AutonomousConstants.FIRST_ALGAE_REMOVE_TIMEOUT_SECONDS)
+			new ParallelCommandGroup(
+				afterScore,
+				robot.getSwerve().getCommandsBuilder().moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, backOffFromReefPose)
+			).until(
+				() -> ToleranceMath.isNear(robot.getPoseEstimator().getEstimatedPose(), backOffFromReefPose, tolerance)
+					&& robot.getElevator().isAtPosition(elevatorStateAfterScore.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
+			),
+			new ParallelCommandGroup(
+				algaeRemove,
+				robot.getSwerve()
+					.getCommandsBuilder()
+					.moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers.getAlgaeRemovePose(true))
+			).withTimeout(AutonomousConstants.FIRST_ALGAE_REMOVE_TIMEOUT_SECONDS)
 		);
 	}
 
 	private static Command getFloorAlgaeToNetCommand(
-			Robot robot,
-			Supplier<Optional<ObjectData>> algaeTranslationSupplier,
-			Supplier<Command> algaeRemoveCommand,
-			Supplier<Command> netCommand,
-			Pose2d tolerance,
-			boolean isRightFloorAlgae
+		Robot robot,
+		Supplier<Optional<ObjectData>> algaeTranslationSupplier,
+		Supplier<Command> algaeRemoveCommand,
+		Supplier<Command> netCommand,
+		Pose2d tolerance,
+		boolean isRightFloorAlgae
 	) {
 		Supplier<Optional<Translation2d>> algaeTranslation = () -> algaeTranslationSupplier.get().isPresent()
-				? Optional.of(
+			? Optional.of(
 				algaeTranslationSupplier.get()
-						.get()
-						.getRobotRelativeEstimatedTranslation()
-						.rotateBy(robot.getPoseEstimator().getEstimatedPose().getRotation())
-						.plus(robot.getPoseEstimator().getEstimatedPose().getTranslation())
-		)
-				: Optional.of(
+					.get()
+					.getRobotRelativeEstimatedTranslation()
+					.rotateBy(robot.getPoseEstimator().getEstimatedPose().getRotation())
+					.plus(robot.getPoseEstimator().getEstimatedPose().getTranslation())
+			)
+			: Optional.of(
 				isRightFloorAlgae
-						? AutonomousConstants.DEFAULT_RIGHT_FLOOR_ALGAE_POSITION
-						: AutonomousConstants.DEFAULT_LEFT_FLOOR_ALGAE_POSITION
-		);
+					? AutonomousConstants.DEFAULT_RIGHT_FLOOR_ALGAE_POSITION
+					: AutonomousConstants.DEFAULT_LEFT_FLOOR_ALGAE_POSITION
+			);
 		Pose2d floorAlgaeLinkedWayPoint = Field.getAllianceRelative(
-				isRightFloorAlgae
-						? PathPlannerUtil.getPathStartingPose(PathHelper.PATH_PLANNER_PATHS.get("RFA-CLN"))
-						: PathPlannerUtil.getPathStartingPose(PathHelper.PATH_PLANNER_PATHS.get("LFA-CRN")),
-				true,
-				true,
-				AngleTransform.INVERT
+			isRightFloorAlgae
+				? PathPlannerUtil.getPathStartingPose(PathHelper.PATH_PLANNER_PATHS.get("RFA-CLN"))
+				: PathPlannerUtil.getPathStartingPose(PathHelper.PATH_PLANNER_PATHS.get("LFA-CRN")),
+			true,
+			true,
+			AngleTransform.INVERT
 
 		);
 		Pose2d netLinkedWaypoint = Field.getAllianceRelative(
-				isRightFloorAlgae
-						? PathPlannerUtil.getLastPathPose(PathHelper.PATH_PLANNER_PATHS.get("RFA-CLN"))
-						: PathPlannerUtil.getLastPathPose(PathHelper.PATH_PLANNER_PATHS.get("LFA-CRN")),
-				true,
-				true,
-				AngleTransform.INVERT
+			isRightFloorAlgae
+				? PathPlannerUtil.getLastPathPose(PathHelper.PATH_PLANNER_PATHS.get("RFA-CLN"))
+				: PathPlannerUtil.getLastPathPose(PathHelper.PATH_PLANNER_PATHS.get("LFA-CRN")),
+			true,
+			true,
+			AngleTransform.INVERT
 		);
 		Pose2d netLinkedWaypointMinus = new Pose2d(netLinkedWaypoint.getX() - 0.4, netLinkedWaypoint.getY(), netLinkedWaypoint.getRotation());
 		return new SequentialCommandGroup(
-				new ParallelCommandGroup(
-						robot.getSwerve()
-								.getCommandsBuilder()
-								.driveToObject(
-										() -> robot.getPoseEstimator().getEstimatedPose(),
-										algaeTranslation,
-										AutonomousConstants.DISTANCE_FROM_ALGAE_FOR_FLOOR_INTAKE,
-										Rotation2d.fromDegrees(180)
-								),
-						robot.getRobotCommander().getSuperstructure().algaeIntake().asProxy()
-				).until(() -> robot.getRobotCommander().getSuperstructure().isAlgaeInAlgaeIntake()),
-				new ParallelDeadlineGroup(
+			new ParallelCommandGroup(
+				robot.getSwerve()
+					.getCommandsBuilder()
+					.driveToObject(
+						() -> robot.getPoseEstimator().getEstimatedPose(),
+						algaeTranslation,
+						AutonomousConstants.DISTANCE_FROM_ALGAE_FOR_FLOOR_INTAKE,
+						Rotation2d.fromDegrees(180)
+					),
+				robot.getRobotCommander().getSuperstructure().algaeIntake().asProxy()
+			).until(() -> robot.getRobotCommander().getSuperstructure().isAlgaeInAlgaeIntake()),
+			new ParallelDeadlineGroup(
+				PathFollowingCommandsBuilder
+					.pathfindToPose(netLinkedWaypointMinus, AutonomousConstants.getRealTimeConstraints(robot.getSwerve()))
+					.andThen(
 						PathFollowingCommandsBuilder
-								.pathfindToPose(netLinkedWaypointMinus, AutonomousConstants.getRealTimeConstraints(robot.getSwerve()))
-								.andThen(
-										PathFollowingCommandsBuilder
-												.pathfindToPose(netLinkedWaypoint, AutonomousConstants.getRealTimeConstraints(robot.getSwerve()))
-								),
-						new SequentialCommandGroup(
-								robot.getRobotCommander().getSuperstructure().transferAlgaeFromIntakeToEndEffector().asProxy(),
-								robot.getRobotCommander().getSuperstructure().holdAlgae().asProxy().withTimeout(1),
-								robot.getRobotCommander()
-										.getSuperstructure()
-										.preNet()
-										.asProxy()
-										.until(robot.getRobotCommander().getSuperstructure()::isPreNetReady)
-						)
-				),
-				robot.getRobotCommander().getSuperstructure().netWithRelease().asProxy()
+							.pathfindToPose(netLinkedWaypoint, AutonomousConstants.getRealTimeConstraints(robot.getSwerve()))
+					),
+				new SequentialCommandGroup(
+					robot.getRobotCommander().getSuperstructure().transferAlgaeFromIntakeToEndEffector().asProxy(),
+					robot.getRobotCommander().getSuperstructure().holdAlgae().asProxy().withTimeout(1),
+					robot.getRobotCommander()
+						.getSuperstructure()
+						.preNet()
+						.asProxy()
+						.until(robot.getRobotCommander().getSuperstructure()::isPreNetReady)
+				)
+			),
+			robot.getRobotCommander().getSuperstructure().netWithRelease().asProxy()
 
 		);
 	}

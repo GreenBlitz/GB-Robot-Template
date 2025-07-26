@@ -75,4 +75,5 @@ public class FieldMath {
 		Rotation2d targetAngle = robotPose.getRotation().plus(FieldMath.getRelativeTranslation(robotPose, objectTranslation).getAngle());
 		return new Pose2d(objectTranslation.minus(new Translation2d(distance, targetAngle)), targetAngle);
 	}
+
 }

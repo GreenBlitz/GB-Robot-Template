@@ -1,6 +1,5 @@
 package frc.robot.autonomous;
 
-import java.util.Optional;
 import java.util.function.Supplier;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
@@ -11,31 +10,12 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.constants.field.Field;
-import frc.constants.field.enums.Branch;
-import frc.robot.Robot;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.math.ToleranceMath;
 
 public class PathFollowingCommandsBuilder {
-
-//<<<<<<< HEAD
-//	public static Command scoreToNet(Robot robot, PathPlannerPath path, Supplier<Command> netCommandSupplier, Optional<Branch> targetBranch) {
-//		Command netAutoReleaseAfterDelay = new SequentialCommandGroup(new WaitCommand(2), netCommandSupplier.get());
-//		return new ParallelDeadlineGroup(
-//			new SequentialCommandGroup(new WaitUntilCommand(() -> robot.getRobotCommander().isReadyForNetForAuto()), netCommandSupplier.get()),
-//			followAdjustedPath(robot, path, targetBranch, AutonomousConstants.TARGET_POSE_TOLERANCES)
-//					.andThen(netAutoReleaseAfterDelay.onlyIf(
-//					() -> SwerveMath.isStill(robot.getSwerve().getRobotRelativeVelocity(), AutonomousConstants.NET_AUTO_RELEASE_DEADBANDS)
-//						&& !robot.getRobotCommander().isReadyForNetForAuto()
-//				)
-//			)
-//		);
-//	}
-//=======
 
 	public static Command commandDuringPath(
 		Swerve swerve,

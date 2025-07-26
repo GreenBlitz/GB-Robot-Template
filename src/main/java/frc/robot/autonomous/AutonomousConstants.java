@@ -1,15 +1,10 @@
 package frc.robot.autonomous;
 
 import com.pathplanner.lib.path.PathConstraints;
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.constants.field.Field;
-import frc.constants.field.enums.Branch;
-import frc.constants.field.enums.ReefSide;
-import frc.robot.scoringhelpers.ScoringHelpers;
-import frc.robot.statemachine.StateMachineConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.RealSwerveConstants;
 

@@ -59,12 +59,12 @@ public class PathHelper {
 		}
 
 		return Stream.of(pathFiles)
-				.filter(file -> !file.isDirectory())
-				.map(File::getName)
-				.filter(name -> name.endsWith(".path"))
-				.map(name -> name.substring(0, name.lastIndexOf(".")))
-				.sorted(String::compareToIgnoreCase)
-				.toList();
+			.filter(file -> !file.isDirectory())
+			.map(File::getName)
+			.filter(name -> name.endsWith(".path"))
+			.map(name -> name.substring(0, name.lastIndexOf(".")))
+			.sorted(String::compareToIgnoreCase)
+			.toList();
 	}
 
 	private static Map<String, PathPlannerPath> getAllPaths() {

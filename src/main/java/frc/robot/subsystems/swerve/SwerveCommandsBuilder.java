@@ -10,7 +10,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.constants.field.Field;
-import frc.robot.autonomous.AutonomousConstants;
+import frc.robot.autonomous.PathFollowingCommandsBuilder;
 import frc.robot.subsystems.swerve.module.ModuleConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.Modules;
@@ -193,7 +193,8 @@ public class SwerveCommandsBuilder {
 				SwerveState.DEFAULT_DRIVE.withDriveSpeed(DriveSpeed.SLOW)
 
 			).until(() -> objectTranslation.get().isEmpty()),
-			"Drive to object");
+			"Drive to object"
+		);
 	}
 
 	public Command driveByDriversInputs(SwerveState state) {
@@ -211,11 +212,11 @@ public class SwerveCommandsBuilder {
 	}
 
 
-	public Command driveToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose) {
+	public Command driveToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose, PathConstraints pathfindingConstraints) {
 		return swerve.asSubsystemCommand(
 			new DeferredCommand(
 				() -> new SequentialCommandGroup(
-					pathToPose(currentPose.get(), targetPose.get()),
+					pathToPose(currentPose.get(), targetPose.get(), pathfindingConstraints),
 					moveToPoseByPID(currentPose, targetPose.get())
 				),
 				Set.of(swerve)
@@ -224,13 +225,12 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-	private Command pathToPose(Pose2d currentPose, Pose2d targetPose) {
+	private Command pathToPose(Pose2d currentPose, Pose2d targetPose, PathConstraints pathfindingConstraints) {
 		Command pathFollowingCommand;
 		if (PathPlannerUtil.isRobotInPathfindingDeadband(currentPose, targetPose)) {
-			pathFollowingCommand = PathPlannerUtil
-				.createPathDuringRuntime(currentPose, targetPose, AutonomousConstants.getRealTimeConstraints(swerve));
+			pathFollowingCommand = PathPlannerUtil.createPathDuringRuntime(currentPose, targetPose, pathfindingConstraints);
 		} else {
-			pathFollowingCommand = PathFollowingCommandsBuilder.pathfindToPose(targetPose, AutonomousConstants.getRealTimeConstraints(swerve));
+			pathFollowingCommand = PathFollowingCommandsBuilder.pathfindToPose(targetPose, pathfindingConstraints);
 		}
 
 		return swerve.asSubsystemCommand(
@@ -239,11 +239,11 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-	public Command driveToPath(Supplier<Pose2d> currentPose, PathPlannerPath path, Pose2d targetPose) {
+	public Command driveToPath(Supplier<Pose2d> currentPose, PathPlannerPath path, PathConstraints pathfindingConstraints) {
 		return new DeferredCommand(
 			() -> new SequentialCommandGroup(
-				PathFollowingCommandsBuilder.followPathOrPathfindAndFollowPath(swerve, path, currentPose),
-				moveToPoseByPID(currentPose, targetPose)
+				PathFollowingCommandsBuilder.followPathOrPathfindAndFollowPath(path, currentPose, pathfindingConstraints),
+				moveToPoseByPID(currentPose, Field.getAllianceRelative(PathPlannerUtil.getLastPathPose(path)))
 			),
 			Set.of(swerve)
 		);

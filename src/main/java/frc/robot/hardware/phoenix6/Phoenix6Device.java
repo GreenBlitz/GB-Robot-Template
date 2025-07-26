@@ -67,10 +67,10 @@ public abstract class Phoenix6Device implements IDevice {
 		if (inputSignals.length == 0) {
 			return;
 		}
-//		InputSignal<?>[] validSignals = getValidSignals(inputSignals);
+		InputSignal<?>[] validSignals = getValidSignals(inputSignals);
 		connectedInput.connected = getDevice().isConnected();
 		Logger.processInputs(logPath, connectedInput);
-//		logSignals(validSignals);
+		logSignals(validSignals);
 	}
 
 	public abstract ParentDevice getDevice();

@@ -28,7 +28,6 @@ import frc.robot.subsystems.swerve.states.heading.HeadingControl;
 import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.auto.PathPlannerUtil;
-import frc.utils.calibration.swervecalibration.maxvelocityacceleration.VelocityType;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -184,9 +183,9 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public OdometryData getLatestOdometryData() {
-		odometryData.wheelPositions = modules.getWheelPositions(0);
-		odometryData.gyroAngle = gyro instanceof EmptyGyro ? Optional.empty() : Optional.of(gyroSignals.yawSignal().getLatestValue());
-		odometryData.timestamp = gyroSignals.yawSignal().getTimestamp();
+		odometryData.setWheelPositions(modules.getWheelPositions(0));
+		odometryData.setGyroYaw(gyro instanceof EmptyGyro ? Optional.empty() : Optional.of(gyroSignals.yawSignal().getLatestValue()));
+		odometryData.setTimestamp(gyroSignals.yawSignal().getTimestamp());
 		return odometryData;
 	}
 

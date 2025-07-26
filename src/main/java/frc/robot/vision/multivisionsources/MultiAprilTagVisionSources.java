@@ -14,7 +14,6 @@ import frc.robot.vision.sources.VisionSource;
 import frc.robot.vision.sources.limelights.DynamicSwitchingLimelight;
 import frc.robot.vision.sources.limelights.LimeLightSource;
 import frc.utils.alerts.Alert;
-import frc.utils.pose.PoseUtil;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;

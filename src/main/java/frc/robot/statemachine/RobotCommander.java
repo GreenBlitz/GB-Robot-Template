@@ -1,5 +1,6 @@
 package frc.robot.statemachine;
 
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -340,8 +341,7 @@ public class RobotCommander extends GBSubsystem {
 			.driveToPath(
 				() -> robot.getPoseEstimator().getEstimatedPose(),
 				ScoringPathsHelper.getPathByBranch(ScoringHelpers.getTargetBranch()),
-				ScoringHelpers
-					.getRobotBranchScoringPose(ScoringHelpers.getTargetBranch(), StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS)
+				AutonomousConstants.getRealTimeConstraints(swerve)
 			);
 
 		return asSubsystemCommand(
@@ -441,7 +441,11 @@ public class RobotCommander extends GBSubsystem {
 				new ParallelCommandGroup(
 					superstructure.processorWithoutRelease(),
 					swerve.getCommandsBuilder()
-						.driveToPose(robot.getPoseEstimator()::getEstimatedPose, ScoringHelpers::getAllianceRelativeProcessorScoringPose)
+						.driveToPose(
+							robot.getPoseEstimator()::getEstimatedPose,
+							ScoringHelpers::getAllianceRelativeProcessorScoringPose,
+							AutonomousConstants.getRealTimeConstraints(swerve)
+						)
 				).until(this::isAtProcessorScoringPose),
 				new ParallelCommandGroup(
 					superstructure.processorScore(),
@@ -639,7 +643,11 @@ public class RobotCommander extends GBSubsystem {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
 				swerve.getCommandsBuilder()
-					.driveToPose(robot.getPoseEstimator()::getEstimatedPose, () -> netEdgeOpenSuperstructurePosition)
+					.driveToPose(
+						robot.getPoseEstimator()::getEstimatedPose,
+						() -> netEdgeOpenSuperstructurePosition,
+						AutonomousConstants.getRealTimeConstraints(swerve)
+					)
 					.until(
 						() -> ToleranceMath.isNear(
 							netEdgeOpenSuperstructurePosition,
@@ -667,7 +675,16 @@ public class RobotCommander extends GBSubsystem {
 					),
 				new ParallelCommandGroup(
 					swerve.getCommandsBuilder()
-						.driveToPose(robot.getPoseEstimator()::getEstimatedPose, scoringPosition)
+						.driveToPose(
+							robot.getPoseEstimator()::getEstimatedPose,
+							scoringPosition,
+							new PathConstraints(
+								StateMachineConstants.MAX_VELOCITY_WHILE_ELEVATOR_L4_METERS_PER_SECOND,
+								StateMachineConstants.MAX_ACCELERATION_WHILE_ELEVATOR_L4_METERS_PER_SECOND_SQUARED,
+								StateMachineConstants.MAX_VELOCITY_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND.getRadians(),
+								StateMachineConstants.MAX_ACCELERATION_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND_SQUARED.getRadians()
+							)
+						)
 						.until(
 							() -> ToleranceMath.isNear(
 								scoringPosition.get(),

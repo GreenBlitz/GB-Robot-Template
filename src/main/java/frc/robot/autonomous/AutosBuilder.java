@@ -343,7 +343,7 @@ public class AutosBuilder {
 				PathFollowingCommandsBuilder.deadlinePathWithCommand(
 					robot.getSwerve(),
 					robot.getPoseEstimator()::getEstimatedPose,
-					PathHelper.PATH_PLANNER_PATHS.get("ARe-MN"),
+					PathHelper.PATH_PLANNER_PATHS.get("ARE-MN"),
 					AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
 					netCommand
 				),

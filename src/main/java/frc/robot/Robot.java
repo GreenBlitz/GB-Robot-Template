@@ -13,6 +13,7 @@ import frc.RobotManager;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.newvision.cameras.limelight.Limelight;
+import frc.robot.newvision.cameras.limelight.LimelightFilters;
 import frc.robot.newvision.cameras.limelight.LimelightPipeline;
 import frc.robot.newvision.cameras.limelight.LimelightStandardDeviationsCalculations;
 import frc.robot.poseestimator.IPoseEstimator;
@@ -74,16 +75,19 @@ public class Robot {
 			RobotHeadingEstimatorConstants.DEFAULT_GYRO_STANDARD_DEVIATION
 		);
 
-		this.limelight = new Limelight(
-			"limelight-left",
-			"NewVision",
-			new Pose3d(),
-			LimelightPipeline.APRIL_TAG,
-			LimelightStandardDeviationsCalculations.averageTagDistanceParabola(
+		this.limelight = new Limelight("limelight-left", "NewVision", new Pose3d(), LimelightPipeline.APRIL_TAG);
+		limelight.setMegaTag1RobotPoseFilter(LimelightFilters.megaTag1Filter(limelight));
+		limelight.setMegaTag2RobotPoseFilter(LimelightFilters.megaTag2Filter(limelight));
+		limelight.setMegaTag1StandardDeviationsCalculationFunction(
+			LimelightStandardDeviationsCalculations.getMegaTag1StandardDeviationsCalculation(
+				limelight,
 				MatBuilder.fill(Nat.N3(), Nat.N1(), 0.0001, 0.0001, 0.0001),
 				MatBuilder.fill(Nat.N3(), Nat.N1(), 0.001, 0.001, 0.001)
-			),
-			LimelightStandardDeviationsCalculations.averageTagDistanceParabola(
+			)
+		);
+		limelight.setMegaTag1StandardDeviationsCalculationFunction(
+			LimelightStandardDeviationsCalculations.getMegaTag1StandardDeviationsCalculation(
+				limelight,
 				MatBuilder.fill(Nat.N3(), Nat.N1(), 0.0001, 0.0001, 0.9999),
 				MatBuilder.fill(Nat.N3(), Nat.N1(), 0.001, 0.001, 0.9999)
 			)

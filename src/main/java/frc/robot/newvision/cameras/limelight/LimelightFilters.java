@@ -9,15 +9,15 @@ import java.util.function.Supplier;
 
 public class LimelightFilters {
 
-	public Filter megaTag1Filter(Limelight limelight) {
+	public static Filter megaTag1Filter(Limelight limelight) {
 		return Filter.nonFilteringFilter();
 	}
 
-	public Filter megaTag2Filter(Limelight limelight) {
+	public static Filter megaTag2Filter(Limelight limelight) {
 		return Filter.nonFilteringFilter();
 	}
 
-	private Filter isRobotInField(Supplier<Translation2d> robotTranslation) {
+	private static Filter isRobotInField(Supplier<Translation2d> robotTranslation) {
 		return () -> ToleranceMath.isInRange(robotTranslation.get().getX(), 0, Field.LENGTH_METERS)
 			&& ToleranceMath.isInRange(robotTranslation.get().getY(), 0, Field.WIDTH_METERS);
 	}

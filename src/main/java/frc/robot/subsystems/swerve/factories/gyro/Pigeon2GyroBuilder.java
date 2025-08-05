@@ -12,28 +12,30 @@ import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.subsystems.swerve.GyroSignals;
 import frc.utils.alerts.Alert;
 import frc.utils.AngleUnit;
+import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.Logger;
 
 class Pigeon2GyroBuilder {
 
 	private static final int APPLY_CONFIG_RETRIES = 5;
-
+	
 	private static Pigeon2Configuration buildGyroConfig() {
 		Pigeon2Configuration gyroConfig = new Pigeon2Configuration();
+		gyroConfig.MountPose.MountPoseYaw = 88.75128173828125;
+		gyroConfig.MountPose.MountPoseRoll = 0.2158888727426529;
+		gyroConfig.MountPose.MountPosePitch = -1.2275630235671997;
 		return gyroConfig;
 	}
-
+	
 	static IGyro buildGyro(String logPath) {
 		Pigeon2Wrapper pigeon2Wrapper = new Pigeon2Wrapper(IDs.Pigeon2IDs.SWERVE_PIGEON_2);
-
-		MountPoseConfigs mountPoseConfigs = new MountPoseConfigs();
-		pigeon2Wrapper.getConfigurator().refresh(mountPoseConfigs);
+		
 		Pigeon2Configuration pigeon2Configuration = buildGyroConfig();
-		pigeon2Configuration.MountPose = mountPoseConfigs;
-
 		if (!pigeon2Wrapper.applyConfiguration(pigeon2Configuration, APPLY_CONFIG_RETRIES).isOK()) {
 			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
 		}
-
+		Logger.recordOutput("gyroconfigend", TimeUtil.getCurrentTimeSeconds());
+		
 		return new Pigeon2Gyro(logPath, pigeon2Wrapper);
 	}
 

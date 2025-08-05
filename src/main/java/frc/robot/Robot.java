@@ -25,6 +25,7 @@ import frc.utils.TimedValue;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -42,7 +43,9 @@ public class Robot {
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
-
+//		for (int i = 0; i < 1000000000; i++) {}
+//		Logger.recordOutput("start", TimeUtil.getCurrentTimeSeconds());
+		
 		IGyro gyro = GyroFactory.createGyro(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),

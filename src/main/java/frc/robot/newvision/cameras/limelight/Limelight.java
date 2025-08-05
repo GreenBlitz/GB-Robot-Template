@@ -184,7 +184,7 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 		return robotPoseObservation.getTimestampSeconds() != 0;
 	}
 
-	private static double getEstimateTimestampSeconds(LimelightHelpers.PoseEstimate poseEstimate) {
+	protected static double getEstimateTimestampSeconds(LimelightHelpers.PoseEstimate poseEstimate) {
 		if (poseEstimate.timestampSeconds == 0) {
 			return 0;
 		}

@@ -8,6 +8,7 @@ import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.interfaces.IGyro;
@@ -76,8 +77,10 @@ public class Robot {
 		);
 
 		this.limelight = new Limelight("limelight-left", "NewVision", new Pose3d(), LimelightPipeline.APRIL_TAG);
-		limelight.setMegaTag1RobotPoseFilter(LimelightFilters.megaTag1Filter(limelight));
-		limelight.setMegaTag2RobotPoseFilter(LimelightFilters.megaTag2Filter(limelight));
+		limelight.setMegaTag1RobotPoseFilter(LimelightFilters.megaTag1Filter(limelight, new Translation2d(0.1, 0.1)));
+		limelight.setMegaTag2RobotPoseFilter(
+			LimelightFilters.megaTag2Filter(limelight, headingEstimator, new Translation2d(0.1, 0.1), Rotation2d.fromDegrees(2))
+		);
 		limelight.setMegaTag1StandardDeviationsCalculationFunction(
 			LimelightStandardDeviationsCalculations.getMegaTag1StandardDeviationsCalculation(
 				limelight,

@@ -324,7 +324,7 @@ public class Robot {
 		objectDetector.update();
 
 		BatteryUtil.logStatus();
-//		BusChain.logChainsStatuses();
+		BusChain.logChainsStatuses();
 		simulationManager.logPoses();
 		ScoringHelpers.log("Scoring");
 //		ButtonDriverHelper.log("Scoring/ButtonDriverDisplay");

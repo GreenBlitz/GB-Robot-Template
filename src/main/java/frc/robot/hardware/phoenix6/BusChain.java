@@ -32,7 +32,7 @@ public enum BusChain {
 		this.lastBusStatus = new CANBusStatus();
 		this.signals = new BaseStatusSignal[0];
 
-//		createAlerts();
+		createAlerts();
 	}
 
 	private void createAlerts() {

@@ -35,7 +35,7 @@ public abstract class SparkMaxMotor implements IMotor {
 		this.warnings = motor.getWarnings();
 		this.faults = motor.getFaults();
 
-//		createAlerts();
+		createAlerts();
 	}
 
 	public SparkMaxMotor(String logPath, SparkMaxWrapper motor) {
@@ -233,8 +233,8 @@ public abstract class SparkMaxMotor implements IMotor {
 			}
 		}
 
-//		warnings = motor.getWarnings();
-//		faults = motor.getFaults();
+		warnings = motor.getWarnings();
+		faults = motor.getFaults();
 	}
 
 	@Override

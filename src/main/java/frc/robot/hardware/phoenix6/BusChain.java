@@ -29,7 +29,7 @@ public enum BusChain {
 		this.currentBusStatus = canBus.getStatus();
 		this.lastBusStatus = new CANBusStatus();
 
-//		createAlerts();
+		createAlerts();
 	}
 
 	private void createAlerts() {

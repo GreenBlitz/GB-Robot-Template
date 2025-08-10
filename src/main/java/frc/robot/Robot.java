@@ -14,6 +14,7 @@ import frc.RobotManager;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.AutosBuilder;
 import frc.robot.hardware.interfaces.IGyro;
+import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.led.LEDState;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
@@ -290,7 +291,7 @@ public class Robot {
 		objectDetector.update();
 
 		BatteryUtil.logStatus();
-//		BusChain.logChainsStatuses();
+		BusChain.logChainsStatuses();
 		simulationManager.logPoses();
 		ScoringHelpers.log("Scoring");
 //		ButtonDriverHelper.log("Scoring/ButtonDriverDisplay");

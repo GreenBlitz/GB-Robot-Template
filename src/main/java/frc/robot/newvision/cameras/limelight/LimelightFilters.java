@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.constants.field.Field;
 import frc.robot.poseestimator.helpers.robotheadingestimator.RobotHeadingEstimator;
-import frc.utils.LimelightHelpers;
 import frc.utils.filter.Filter;
 import frc.utils.math.ToleranceMath;
 
@@ -14,8 +13,7 @@ import java.util.function.Supplier;
 public class LimelightFilters {
 
 	public static Filter megaTag1Filter(Limelight limelight, Translation2d robotInFieldTolerance) {
-		LimelightHelpers.PoseEstimate poseEstimate = limelight.getMegaTag1RobotPoseEstimate();
-		return isRobotInField(poseEstimate.pose::getTranslation, robotInFieldTolerance);
+		return isRobotInField(() -> limelight.getMegaTag1RobotPoseEstimate().pose.getTranslation(), robotInFieldTolerance);
 	}
 
 	public static Filter megaTag2Filter(
@@ -24,16 +22,16 @@ public class LimelightFilters {
 		Translation2d robotInFieldTolerance,
 		Rotation2d yawAtAngleTolerance
 	) {
-		LimelightHelpers.PoseEstimate poseEstimate = limelight.getMegaTag2RobotPoseEstimate();
-		return isRobotInField(poseEstimate.pose::getTranslation, robotInFieldTolerance)
+		return isRobotInField(() -> limelight.getMegaTag2RobotPoseEstimate().pose.getTranslation(), robotInFieldTolerance)
 			.and(
 				isYawAtAngle(
-					poseEstimate.pose::getRotation,
-					() -> headingEstimator.getEstimatedHeadingAtTimestamp(Limelight.getEstimateTimestampSeconds(poseEstimate)),
+					() -> limelight.getMegaTag2RobotPoseEstimate().pose.getRotation(),
+					() -> headingEstimator
+						.getEstimatedHeadingAtTimestamp(Limelight.getEstimateTimestampSeconds(limelight.getMegaTag2RobotPoseEstimate())),
 					yawAtAngleTolerance
 				)
 			)
-			.and(isYawNotZero(poseEstimate.pose::getRotation));
+			.and(isYawNotZero(() -> limelight.getMegaTag2RobotPoseEstimate().pose.getRotation()));
 	}
 
 	public static Filter isYawAtAngle(Supplier<Rotation2d> robotYaw, Supplier<Optional<Rotation2d>> wantedYawSupplier, Rotation2d yawTolerance) {
@@ -55,7 +53,8 @@ public class LimelightFilters {
 	}
 
 	private static Filter isRobotInField(Supplier<Translation2d> robotTranslation, Translation2d tolerance) {
-		return isXInField(robotTranslation.get()::getX, tolerance.getX()).and(isYInField(robotTranslation.get()::getY, tolerance.getY()));
+		return isXInField(() -> robotTranslation.get().getX(), tolerance.getX())
+			.and(isYInField(() -> robotTranslation.get().getY(), tolerance.getY()));
 	}
 
 }

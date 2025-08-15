@@ -169,4 +169,8 @@ public class Robot {
 		return swerve;
 	}
 
+	public IPoseEstimator getPoseEstimator() {
+		return poseEstimator;
+	}
+
 }

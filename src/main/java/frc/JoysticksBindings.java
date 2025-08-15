@@ -1,5 +1,7 @@
 package frc;
 
+import com.pathplanner.lib.path.PathConstraints;
+import edu.wpi.first.math.geometry.Pose2d;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
@@ -46,6 +48,12 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
+
+		usedJoystick.A.onTrue(
+			robot.getSwerve()
+				.getCommandsBuilder()
+				.driveToPose(robot.getPoseEstimator()::getEstimatedPose, () -> new Pose2d(), new PathConstraints(3.7, 2.5, 7.9, 4))
+		);
 		// bindings...
 	}
 

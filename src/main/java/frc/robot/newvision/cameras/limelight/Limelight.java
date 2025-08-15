@@ -1,6 +1,7 @@
 package frc.robot.newvision.cameras.limelight;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.numbers.N1;
@@ -181,7 +182,7 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 	}
 
 	private static boolean isObservationPresent(RobotPoseObservation robotPoseObservation) {
-		return robotPoseObservation.getTimestampSeconds() != 0;
+		return !(robotPoseObservation.getTimestampSeconds() == 0 || robotPoseObservation.getRobotPose().equals(Pose2d.kZero));
 	}
 
 	protected static double getEstimateTimestampSeconds(LimelightHelpers.PoseEstimate poseEstimate) {

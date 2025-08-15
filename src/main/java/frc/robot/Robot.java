@@ -9,6 +9,7 @@ import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.interfaces.IGyro;
@@ -29,6 +30,7 @@ import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 //import frc.robot.vision.VisionConstants;
 //import frc.robot.vision.VisionFilters;
 //import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
+import frc.utils.AngleUnit;
 import frc.utils.TimedValue;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
@@ -76,7 +78,15 @@ public class Robot {
 			RobotHeadingEstimatorConstants.DEFAULT_GYRO_STANDARD_DEVIATION
 		);
 
-		this.limelight = new Limelight("limelight-left", "NewVision", new Pose3d(), LimelightPipeline.APRIL_TAG);
+		this.limelight = new Limelight(
+			"limelight-left",
+			"NewVision",
+			new Pose3d(
+				new Translation3d(0.215, -0.11, 0.508),
+				AngleUnit.DEGREES.toRotation3d(-8.06180374425555, -27.07784559039065, -22.52372569716833)
+			),
+			LimelightPipeline.APRIL_TAG
+		);
 		limelight.setMegaTag1RobotPoseFilter(LimelightFilters.megaTag1Filter(limelight, new Translation2d(0.1, 0.1)));
 		limelight.setMegaTag2RobotPoseFilter(
 			LimelightFilters.megaTag2Filter(limelight, headingEstimator, new Translation2d(0.1, 0.1), Rotation2d.fromDegrees(2))

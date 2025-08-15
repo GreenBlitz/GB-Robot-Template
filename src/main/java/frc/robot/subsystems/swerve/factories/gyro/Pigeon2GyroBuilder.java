@@ -19,6 +19,9 @@ class Pigeon2GyroBuilder {
 
 	private static Pigeon2Configuration buildGyroConfig() {
 		Pigeon2Configuration gyroConfig = new Pigeon2Configuration();
+		gyroConfig.MountPose.MountPoseYaw = 90.09569549560547;
+		gyroConfig.MountPose.MountPosePitch = 0.36738622188568115;
+		gyroConfig.MountPose.MountPoseRoll = -2.062540292739868;
 		return gyroConfig;
 	}
 

@@ -28,7 +28,6 @@ import frc.robot.subsystems.swerve.states.heading.HeadingControl;
 import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.auto.PathPlannerUtil;
-import frc.utils.calibration.swervecalibration.maxvelocityacceleration.VelocityType;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -124,6 +123,13 @@ public class Swerve extends GBSubsystem {
 		this.driversPowerInputs = powers;
 	}
 
+	public void setHeading(Rotation2d heading) {
+		gyro.setYaw(heading);
+		gyro.updateInputs(gyroSignals.yawSignal());
+		headingStabilizer.unlockTarget();
+		headingStabilizer.setTargetHeading(heading);
+	}
+
 	protected void resetPIDControllers() {
 		constants.xMetersPIDController().reset();
 		constants.yMetersPIDController().reset();
@@ -177,9 +183,9 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public OdometryData getLatestOdometryData() {
-		odometryData.wheelPositions = modules.getWheelPositions(0);
-		odometryData.gyroAngle = gyro instanceof EmptyGyro ? Optional.empty() : Optional.of(gyroSignals.yawSignal().getLatestValue());
-		odometryData.timestamp = gyroSignals.yawSignal().getTimestamp();
+		odometryData.setWheelPositions(modules.getWheelPositions(0));
+		odometryData.setGyroYaw(gyro instanceof EmptyGyro ? Optional.empty() : Optional.of(gyroSignals.yawSignal().getLatestValue()));
+		odometryData.setTimestamp(gyroSignals.yawSignal().getTimestamp());
 		return odometryData;
 	}
 
@@ -354,15 +360,6 @@ public class Swerve extends GBSubsystem {
 		fastCalibrationPowers.xPower = 0.5;
 		joystick.POV_RIGHT
 			.whileTrue(getCommandsBuilder().driveByState(() -> fastCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)));
-
-		// Apply 12 volts on x-axis. Use it for max velocity calibrations.
-		// See what velocity the swerve log after it stops accelerating and use it as max.
-		joystick.START.whileTrue(commandsBuilder.maxVelocityAccelerationCalibration(VelocityType.TRANSLATIONAL));
-
-		// Apply 12 volts on rotation-axis.
-		// Use it for max velocity calibrations. See what velocity the swerve log after it stops accelerating and use it as max.
-		joystick.BACK.whileTrue(commandsBuilder.maxVelocityAccelerationCalibration(VelocityType.ROTATIONAL));
-
 
 		// The sysid outputs will be logged to the "CTRE Signal Logger".
 		// Use phoenix tuner x to extract the position, velocity, motorVoltage, state signals into wpilog.

@@ -7,13 +7,13 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.poseestimator.Pose3dComponentsValue;
 import frc.robot.vision.data.LimeLightAprilTagVisionData;
+import frc.utils.AngleUnit;
 import frc.utils.math.StandardDeviations3D;
 import frc.robot.vision.VisionConstants;
-import frc.robot.vision.RobotAngleValues;
+import frc.robot.vision.OrientationState3D;
 import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.sources.IndpendentHeadingVisionSource;
 import frc.robot.vision.sources.RobotHeadingRequiringVisionSource;
-import frc.utils.math.AngleUnit;
 import frc.utils.Conversions;
 import frc.utils.Filter;
 import frc.utils.pose.PoseUtil;
@@ -52,7 +52,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	private int lastSeenAprilTagId;
 	private BooleanSupplier shouldDataBeFiltered;
 	private Filter<? super AprilTagVisionData> filter;
-	private RobotAngleValues robotAngleValues;
+	private OrientationState3D robotOrientationState;
 
 	protected LimeLightSource(
 		String cameraNetworkTablesName,
@@ -79,7 +79,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		this.computingPipelineLatencyEntry = getLimelightNetworkTableEntry("tl");
 		this.captureLatencyEntry = getLimelightNetworkTableEntry("cl");
 
-		this.robotAngleValues = new RobotAngleValues();
+		this.robotOrientationState = new OrientationState3D();
 		AlertManager.addAlert(
 			new PeriodicAlert(Alert.AlertType.ERROR, logPath + "DisconnectedAt", () -> getLimelightNetworkTableEntry("tv").getInteger(-1) == -1)
 		);
@@ -97,8 +97,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	@Override
 	public void update() {
 		lastSeenAprilTagId = getAprilTagID();
-		robotOrientationEntry.setDoubleArray(robotAngleValues.asArray());
-//		Logger.recordOutput(logPath + "gyroAngleValues", robotAngleValues.asArray());
+		robotOrientationEntry.setDoubleArray(robotOrientationState.asArray());
 		aprilTagPoseArray = aprilTagPoseEntry.getDoubleArray(new double[VisionConstants.LIMELIGHT_ENTRY_ARRAY_LENGTH]);
 		NetworkTableEntry entry = switch (poseEstimationMethod) {
 			case MEGATAG_1 -> robotPoseEntryMegaTag1;
@@ -158,7 +157,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 		Optional<Pair<Pose3d, Double>> poseEstimation = getUpdatedPose3DEstimation();
 		return poseEstimation.map(
 			pose3dDoublePair -> new LimeLightAprilTagVisionData(
-				getName(),
+				sourceName,
 				pose3dDoublePair.getFirst(),
 				pose3dDoublePair.getSecond(),
 				new StandardDeviations3D(
@@ -173,7 +172,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 				getAprilTagValueInRobotSpace(Pose3dComponentsValue.Z_VALUE),
 				getDistanceFromTag(),
 				lastSeenAprilTagId,
-				poseEstimationMethod
+				getPoseEstimationMethod()
 			)
 		);
 	}
@@ -203,8 +202,8 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 	}
 
 	@Override
-	public void updateRobotAngleValues(RobotAngleValues robotAngleValues) {
-		this.robotAngleValues = robotAngleValues;
+	public void updateRobotAngleValues(OrientationState3D robotOrientationState) {
+		this.robotOrientationState = robotOrientationState;
 	}
 
 	public LimelightPoseEstimationMethod getPoseEstimationMethod() {
@@ -225,7 +224,7 @@ public class LimeLightSource implements IndpendentHeadingVisionSource, RobotHead
 
 	public void log() {
 		Logger.recordOutput(logPath + "filterResult", shouldDataBeFiltered.getAsBoolean());
-//		Logger.recordOutput(logPath + "megaTagDirectOutput", PoseUtil.toPose3D(robotPoseArray, AngleUnit.DEGREES));
+		Logger.recordOutput(logPath + "megaTagDirectOutput", PoseUtil.toPose3D(robotPoseArray, AngleUnit.DEGREES));
 		getVisionData().ifPresent(visionData -> {
 			Logger.recordOutput(logPath + "unfiltered3DVision", visionData.getEstimatedPose());
 //			Logger.recordOutput(logPath + "unfiltered2DVision(Projected)", visionData.getEstimatedPose().toPose2d());

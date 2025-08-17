@@ -16,7 +16,8 @@ import frc.robot.hardware.phoenix6.signal.Phoenix6DoubleSignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.subsystems.climb.lifter.Lifter;
 import frc.robot.subsystems.climb.lifter.LifterConstants;
-import frc.utils.math.AngleUnit;
+import frc.utils.AngleUnit;
+
 
 public class Falcon500LifterBuilder {
 

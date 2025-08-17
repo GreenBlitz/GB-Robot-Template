@@ -14,13 +14,13 @@ public class SteerFactory {
 		logPath += ModuleConstants.MODULES_LOG_PATH_ADDITION + "/" + modulePosition + "/Steer";
 		return switch (modulePosition) {
 			case FRONT_LEFT ->
-				KrakenX60SteerBuilder.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_FRONT_LEFT_STEER, IDs.CANCodersIDs.SWERVE_FRONT_LEFT, false);
+				KrakenX60SteerBuilder.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_FRONT_LEFT_STEER, IDs.CANCoderIDs.SWERVE_FRONT_LEFT, false);
 			case FRONT_RIGHT ->
-				KrakenX60SteerBuilder.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_FRONT_RIGHT_STEER, IDs.CANCodersIDs.SWERVE_FRONT_RIGHT, false);
+				KrakenX60SteerBuilder.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_FRONT_RIGHT_STEER, IDs.CANCoderIDs.SWERVE_FRONT_RIGHT, false);
 			case BACK_LEFT ->
-				KrakenX60SteerBuilder.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_BACK_LEFT_STEER, IDs.CANCodersIDs.SWERVE_BACK_LEFT, false);
+				KrakenX60SteerBuilder.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_BACK_LEFT_STEER, IDs.CANCoderIDs.SWERVE_BACK_LEFT, false);
 			case BACK_RIGHT ->
-				KrakenX60SteerBuilder.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_BACK_RIGHT_STEER, IDs.CANCodersIDs.SWERVE_BACK_RIGHT, false);
+				KrakenX60SteerBuilder.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_BACK_RIGHT_STEER, IDs.CANCoderIDs.SWERVE_BACK_RIGHT, false);
 		};
 	}
 

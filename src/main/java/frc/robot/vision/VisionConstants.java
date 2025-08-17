@@ -14,10 +14,9 @@ import frc.robot.vision.data.VisionData;
 import frc.robot.vision.objectdetection.LimeLightObjectDetector;
 import frc.robot.vision.sources.VisionSource;
 import frc.robot.vision.sources.limelights.DynamicSwitchingLimelight;
+import frc.utils.AngleUnit;
 import frc.utils.Filter;
 import frc.utils.alerts.Alert;
-import frc.utils.math.AngleUnit;
-
 import java.io.IOException;
 import java.util.List;
 

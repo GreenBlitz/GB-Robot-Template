@@ -13,7 +13,8 @@ public class AngleMath {
 		return Rotation2d.fromRotations(rotations);
 	}
 
-	public static Rotation2d getAngleDifference(Rotation2d angle1, Rotation2d angle2) {
+
+	public static Rotation2d getAngleDifferenceWrapped(Rotation2d angle1, Rotation2d angle2) {
 		Rotation2d difference = angle1.minus(angle2);
 		if (difference.getRadians() > Math.PI) {
 			return Rotation2d.fromRadians(MathConstants.FULL_CIRCLE.getRadians() - difference.getRadians());

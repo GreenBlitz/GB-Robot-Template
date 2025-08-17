@@ -26,7 +26,7 @@ public class AprilTagVisionData extends VisionData {
 		this.aprilTagId = aprilTagId;
 	}
 
-	public StandardDeviations3D getStandardDeviations() {
+	public final StandardDeviations3D getStandardDeviations() {
 		return standardDeviations;
 	}
 

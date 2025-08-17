@@ -17,9 +17,7 @@ import frc.robot.statemachine.RobotCommander;
 import frc.robot.statemachine.RobotState;
 import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.subsystems.swerve.ChassisPowers;
-import frc.robot.subsystems.swerve.Swerve;
 import frc.utils.utilcommands.ExecuteEndCommand;
-
 import java.util.Set;
 
 public class JoysticksBindings {
@@ -29,14 +27,17 @@ public class JoysticksBindings {
 
 	private static final SmartJoystick MAIN_JOYSTICK = new SmartJoystick(JoystickPorts.MAIN);
 	private static final SmartJoystick SECOND_JOYSTICK = new SmartJoystick(JoystickPorts.SECOND);
-//	private static final SmartJoystick THIRD_JOYSTICK = new SmartJoystick(JoystickPorts.THIRD);
+	private static final SmartJoystick THIRD_JOYSTICK = new SmartJoystick(JoystickPorts.THIRD);
 	private static final SmartJoystick FOURTH_JOYSTICK = new SmartJoystick(JoystickPorts.FOURTH);
 //	private static final SmartJoystick FIFTH_JOYSTICK = new SmartJoystick(JoystickPorts.FIFTH);
 //	private static final SmartJoystick SIXTH_JOYSTICK = new SmartJoystick(JoystickPorts.SIXTH);
 
-	private static final ChassisPowers driversInputChassisPowers = new ChassisPowers();
+
+	private static final ChassisPowers chassisDriverInputs = new ChassisPowers();
 
 	public static void configureBindings(Robot robot) {
+		robot.getSwerve().setDriversPowerInputs(chassisDriverInputs);
+
 		mainJoystickButtons(robot);
 		secondJoystickButtons(robot);
 		thirdJoystickButtons(robot);
@@ -49,29 +50,6 @@ public class JoysticksBindings {
 
 		Trigger noteOut = new Trigger(() -> !robot.getRobotCommander().getSuperstructure().isCoralIn());
 		noteOut.onTrue(noteInRumble(MAIN_JOYSTICK).alongWith(noteInRumble(SECOND_JOYSTICK)));
-	}
-
-	public static void setDriversInputsToSwerve(Swerve swerve) {
-		if (MAIN_JOYSTICK.isConnected()) {
-			driversInputChassisPowers.xPower = MAIN_JOYSTICK.getAxisValue(Axis.LEFT_Y);
-			driversInputChassisPowers.yPower = MAIN_JOYSTICK.getAxisValue(Axis.LEFT_X);
-			driversInputChassisPowers.rotationalPower = MAIN_JOYSTICK.getAxisValue(Axis.RIGHT_X);
-		}
-//		else if (THIRD_JOYSTICK.isConnected()) {
-//			swerve.setDriversPowerInputs(
-//				new ChassisPowers(
-//					THIRD_JOYSTICK.getAxisValue(Axis.LEFT_Y),
-//					THIRD_JOYSTICK.getAxisValue(Axis.LEFT_X),
-//					THIRD_JOYSTICK.getAxisValue(Axis.RIGHT_X)
-//				)
-//			);
-//		}
-		else {
-			driversInputChassisPowers.xPower = 0;
-			driversInputChassisPowers.yPower = 0;
-			driversInputChassisPowers.rotationalPower = 0;
-		}
-		swerve.setDriversPowerInputs(driversInputChassisPowers);
 	}
 
 	private static Command noteInRumble(SmartJoystick joystick) {
@@ -209,6 +187,22 @@ public class JoysticksBindings {
 				robot.getRollers()
 			)
 		);
+	}
+
+	public static void updateChassisDriverInputs() {
+		if (MAIN_JOYSTICK.isConnected()) {
+			chassisDriverInputs.xPower = MAIN_JOYSTICK.getAxisValue(Axis.LEFT_Y);
+			chassisDriverInputs.yPower = MAIN_JOYSTICK.getAxisValue(Axis.LEFT_X);
+			chassisDriverInputs.rotationalPower = MAIN_JOYSTICK.getAxisValue(Axis.RIGHT_X);
+		} else if (THIRD_JOYSTICK.isConnected()) {
+			chassisDriverInputs.xPower = THIRD_JOYSTICK.getAxisValue(Axis.LEFT_Y);
+			chassisDriverInputs.yPower = THIRD_JOYSTICK.getAxisValue(Axis.LEFT_X);
+			chassisDriverInputs.rotationalPower = THIRD_JOYSTICK.getAxisValue(Axis.RIGHT_X);
+		} else {
+			chassisDriverInputs.xPower = 0;
+			chassisDriverInputs.yPower = 0;
+			chassisDriverInputs.rotationalPower = 0;
+		}
 	}
 
 	private static void mainJoystickButtons(Robot robot) {

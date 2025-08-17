@@ -7,7 +7,8 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.vision.VisionConstants;
 import frc.robot.vision.data.ObjectData;
 import frc.utils.Filter;
-import frc.utils.math.AngleUnit;
+import frc.utils.AngleUnit;
+
 import frc.utils.math.ObjectDetectionMath;
 import frc.utils.pose.PoseUtil;
 import org.littletonrobotics.junction.Logger;

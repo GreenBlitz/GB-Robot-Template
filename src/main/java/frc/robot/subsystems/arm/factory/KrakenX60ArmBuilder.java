@@ -37,7 +37,8 @@ import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.utils.alerts.Alert;
-import frc.utils.math.AngleUnit;
+import frc.utils.AngleUnit;
+
 
 import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Volts;
@@ -147,7 +148,7 @@ public class KrakenX60ArmBuilder {
 		config.Feedback.SensorToMechanismRatio = 1;
 
 		config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-		config.Feedback.FeedbackRemoteSensorID = IDs.CANCodersIDs.ARM.id();
+		config.Feedback.FeedbackRemoteSensorID = IDs.CANCoderIDs.ARM.id();
 
 		return config;
 	}
@@ -180,7 +181,7 @@ public class KrakenX60ArmBuilder {
 	}
 
 	private static IAngleEncoder buildRealEncoder(String logPath) {
-		CANcoder canCoder = new CANcoder(IDs.CANCodersIDs.ARM.id(), IDs.CANCodersIDs.ARM.busChain().getChainName());
+		CANcoder canCoder = new CANcoder(IDs.CANCoderIDs.ARM.id(), IDs.CANCoderIDs.ARM.busChain().getChainName());
 		CANCoderEncoder encoder = new CANCoderEncoder(logPath + "/Encoder", canCoder);
 		CANcoderConfiguration configuration = buildEncoderConfig(encoder);
 		if (

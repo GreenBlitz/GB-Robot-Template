@@ -15,9 +15,9 @@ import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.led.LEDConstants;
 import frc.robot.led.LEDState;
 import frc.robot.subsystems.climb.lifter.LifterConstants;
-import frc.utils.DriverStationUtil;
-import frc.utils.alerts.AlertManager;
 import frc.utils.auto.PathPlannerUtil;
+import frc.utils.alerts.AlertManager;
+import frc.utils.DriverStationUtil;
 import frc.utils.time.TimeUtil;
 import frc.utils.logger.LoggerFactory;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -117,7 +117,7 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void robotPeriodic() {
 		updateTimeRelatedData(); // Better to be first
-		JoysticksBindings.setDriversInputsToSwerve(robot.getSwerve());
+		JoysticksBindings.updateChassisDriverInputs();
 		robot.periodic();
 		AlertManager.reportAlerts();
 	}

@@ -17,4 +17,4 @@ Gyro:
 
 Modules:
 -----------------------
-- [x] [See module calibrations file](module/calibrations)
+- [x] [See module calibrations file](module/calibrations.md)

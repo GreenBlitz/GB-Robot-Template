@@ -7,6 +7,10 @@ public interface Filter<T> {
 		return data -> true;
 	}
 
+	static <T> Filter<T> alwaysFilteringFilter() {
+		return data -> false;
+	}
+
 	boolean apply(T data);
 
 	default Filter<T> not() {
@@ -39,6 +43,22 @@ public interface Filter<T> {
 
 	default <E extends T> Filter<E> implies(Filter<E> otherFilter) {
 		return data -> !apply(data) || otherFilter.apply(data);
+	}
+
+	static <T> Filter<T> orAll(Iterable<Filter<T>> otherFilers) {
+		Filter<T> output = alwaysFilteringFilter();
+		for (Filter<T> filter : otherFilers) {
+			output = output.or(filter);
+		}
+		return output;
+	}
+
+	static <T> Filter<T> andAll(Iterable<Filter<T>> otherFilers) {
+		Filter<T> output = nonFilteringFilter();
+		for (Filter<T> filter : otherFilers) {
+			output = output.and(filter);
+		}
+		return output;
 	}
 
 }

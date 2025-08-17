@@ -7,8 +7,6 @@ import frc.robot.hardware.rev.motors.SparkMaxDeviceID;
 
 public class IDs {
 
-	public static final Phoenix6DeviceID SWERVE_PIGEON_2 = new Phoenix6DeviceID(0, BusChain.SWERVE_CANIVORE);
-
 	public static class TalonFXIDs {
 
 		public static final Phoenix6DeviceID SWERVE_FRONT_LEFT_STEER = new Phoenix6DeviceID(0, BusChain.SWERVE_CANIVORE);
@@ -41,7 +39,29 @@ public class IDs {
 
 	}
 
-	public static class CANDleIDs {
+	public static class CANCoderIDs {
+
+		public static final Phoenix6DeviceID SWERVE_FRONT_LEFT = new Phoenix6DeviceID(0, BusChain.SWERVE_CANIVORE);
+
+		public static final Phoenix6DeviceID SWERVE_FRONT_RIGHT = new Phoenix6DeviceID(1, BusChain.SWERVE_CANIVORE);
+
+		public static final Phoenix6DeviceID SWERVE_BACK_LEFT = new Phoenix6DeviceID(2, BusChain.SWERVE_CANIVORE);
+
+		public static final Phoenix6DeviceID SWERVE_BACK_RIGHT = new Phoenix6DeviceID(3, BusChain.SWERVE_CANIVORE);
+
+		public static final Phoenix6DeviceID ARM = new Phoenix6DeviceID(20, BusChain.SUPERSTRUCTURE_CANIVORE);
+
+		public static final Phoenix6DeviceID PIVOT = new Phoenix6DeviceID(13, BusChain.ROBORIO);
+
+	}
+
+	public static class Pigeon2IDs {
+
+		public static final Phoenix6DeviceID SWERVE = new Phoenix6DeviceID(0, BusChain.SWERVE_CANIVORE);
+
+	}
+
+	public static class CANdleIDs {
 
 		public static final Phoenix6DeviceID CANDLE = new Phoenix6DeviceID(0, BusChain.ROBORIO);
 
@@ -57,20 +77,7 @@ public class IDs {
 
 	}
 
-	public static class CANCodersIDs {
-
-		public static final Phoenix6DeviceID SWERVE_FRONT_LEFT = new Phoenix6DeviceID(0, BusChain.SWERVE_CANIVORE);
-
-		public static final Phoenix6DeviceID SWERVE_FRONT_RIGHT = new Phoenix6DeviceID(1, BusChain.SWERVE_CANIVORE);
-
-		public static final Phoenix6DeviceID SWERVE_BACK_LEFT = new Phoenix6DeviceID(2, BusChain.SWERVE_CANIVORE);
-
-		public static final Phoenix6DeviceID SWERVE_BACK_RIGHT = new Phoenix6DeviceID(3, BusChain.SWERVE_CANIVORE);
-
-		public static final Phoenix6DeviceID ARM = new Phoenix6DeviceID(20, BusChain.SUPERSTRUCTURE_CANIVORE);
-
-		public static final Phoenix6DeviceID PIVOT = new Phoenix6DeviceID(13, BusChain.ROBORIO);
-
+	public static class DigitalInputsIDs {
 	}
 
 }

@@ -21,7 +21,8 @@ import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.subsystems.algaeIntake.pivot.Pivot;
 import frc.robot.subsystems.algaeIntake.pivot.PivotConstants;
-import frc.utils.math.AngleUnit;
+import frc.utils.AngleUnit;
+
 
 public class TalonFXPivotBuilder {
 

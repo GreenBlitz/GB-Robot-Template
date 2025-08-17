@@ -1,7 +1,7 @@
 package frc.utils.math;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.poseestimator.helpers.RobotHeadingEstimator.RobotHeadingEstimatorConstants;
+import frc.robot.poseestimator.helpers.robotheadingestimator.RobotHeadingEstimatorConstants;
 
 public class PoseEstimationMath {
 
@@ -18,11 +18,11 @@ public class PoseEstimationMath {
 		double gyroStandardDeviation,
 		double visionStandardDeviation
 	) {
-		Rotation2d changeInAngleSinceVisionDataWasObserved = AngleMath.getAngleDifference(gyroAngleAtTimeStamp, lastGyroAngle);
+		Rotation2d changeInAngleSinceVisionDataWasObserved = AngleMath.getAngleDifferenceWrapped(gyroAngleAtTimeStamp, lastGyroAngle);
 		double visionAndGyroRatio = getKalmanRatio(gyroStandardDeviation, visionStandardDeviation);
 		Rotation2d estimatedHeadingAtSampleTime = currentEstimatedHeading.minus(changeInAngleSinceVisionDataWasObserved);
 		Rotation2d differenceFromVisionAndEstimatedHeading = AngleMath
-			.getAngleDifference(visionEstimatedHeadingAtTimeStamp, estimatedHeadingAtSampleTime);
+			.getAngleDifferenceWrapped(visionEstimatedHeadingAtTimeStamp, estimatedHeadingAtSampleTime);
 		Rotation2d scaledDifferenceToAddToEstimatedHeading = differenceFromVisionAndEstimatedHeading.times(visionAndGyroRatio);
 		return currentEstimatedHeading.plus(scaledDifferenceToAddToEstimatedHeading);
 	}

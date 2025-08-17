@@ -19,8 +19,11 @@ public class FieldMath {
 		return getRelativeTranslation(relativeTo.getTranslation(), toRelative).rotateBy(relativeTo.getRotation().unaryMinus());
 	}
 
+	public static Pose2d rotatePose(Rotation2d rotation, Pose2d toRelative) {
+		return toRelative.rotateBy(rotation.unaryMinus());
+	}
 
-	public static Rotation2d mirrorAngle(Rotation2d angle, AngleTransform angleTransform) {
+	public static Rotation2d transformAngle(Rotation2d angle, AngleTransform angleTransform) {
 		return switch (angleTransform) {
 			case KEEP -> angle;
 			case MIRROR_X -> MathConstants.HALF_CIRCLE.minus(angle);
@@ -29,8 +32,16 @@ public class FieldMath {
 		};
 	}
 
-	public static Rotation3d mirrorAngle(Rotation3d rotation) {
-		return new Rotation3d(rotation.getX(), -rotation.getY(), rotation.getZ());
+	public static Rotation3d transformAngle(
+		Rotation3d rotation,
+		AngleTransform rollTransform,
+		AngleTransform pitchTransform,
+		AngleTransform yawTransform
+	) {
+		double roll = transformAngle(Rotation2d.fromRadians(rotation.getX()), rollTransform).getRadians();
+		double pitch = transformAngle(Rotation2d.fromRadians(rotation.getY()), pitchTransform).getRadians();
+		double yaw = transformAngle(Rotation2d.fromRadians(rotation.getZ()), yawTransform).getRadians();
+		return new Rotation3d(roll, pitch, yaw);
 	}
 
 	public static double mirrorX(double x) {
@@ -42,8 +53,7 @@ public class FieldMath {
 	}
 
 	public static Pose2d mirror(Pose2d pose2d, boolean mirrorX, boolean mirrorY, AngleTransform angleTransform) {
-		pose2d = new Pose2d(mirror(pose2d.getTranslation(), mirrorX, mirrorY), pose2d.getRotation());
-		return new Pose2d(pose2d.getX(), pose2d.getY(), mirrorAngle(pose2d.getRotation(), angleTransform));
+		return new Pose2d(mirror(pose2d.getTranslation(), mirrorX, mirrorY), transformAngle(pose2d.getRotation(), angleTransform));
 	}
 
 	public static Translation3d mirror(Translation3d translation3d, boolean mirrorX, boolean mirrorY) {

@@ -1,7 +1,8 @@
 package frc.robot.hardware.phoenix6.signal;
 
 import com.ctre.phoenix6.StatusSignal;
-import frc.utils.math.AngleUnit;
+import frc.utils.AngleUnit;
+
 
 public class Phoenix6LatencyAndSlopeSignal extends Phoenix6LatencySignal {
 

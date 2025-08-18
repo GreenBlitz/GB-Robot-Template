@@ -8,8 +8,10 @@ import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.interfaces.IGyro;
@@ -17,7 +19,7 @@ import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.newvision.cameras.limelight.Limelight;
 import frc.robot.newvision.cameras.limelight.LimelightFilters;
 import frc.robot.newvision.cameras.limelight.LimelightPipeline;
-import frc.robot.newvision.cameras.limelight.LimelightStandardDeviationsCalculations;
+import frc.robot.newvision.cameras.limelight.LimelightStdDevCalculations;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
@@ -30,12 +32,10 @@ import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 //import frc.robot.vision.VisionConstants;
 //import frc.robot.vision.VisionFilters;
 //import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
-import frc.utils.AngleUnit;
 import frc.utils.TimedValue;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.time.TimeUtil;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.List;
 
@@ -85,55 +85,55 @@ public class Robot {
 			"NewVision",
 			new Pose3d(
 				new Translation3d(0.215, -0.11, 0.508),
-				AngleUnit.DEGREES.toRotation3d(-8.06180374425555, -27.07784559039065, -22.52372569716833)
+				new Rotation3d(Units.Degrees.of(-8.06180374425555), Units.Degrees.of(-27.07784559039065), Units.Degrees.of(-22.52372569716833))
 			),
 			LimelightPipeline.APRIL_TAG
 		);
-		limelightFour.setMegaTag1RobotPoseFilter(LimelightFilters.megaTag1Filter(limelightFour, new Translation2d(0.1, 0.1)));
-		limelightFour.setMegaTag2RobotPoseFilter(
+		limelightFour.setMT1RobotPoseFilter(LimelightFilters.megaTag1Filter(limelightFour, new Translation2d(0.1, 0.1)));
+		limelightFour.setMT2RobotPoseFilter(
 			LimelightFilters.megaTag2Filter(limelightFour, headingEstimator, new Translation2d(0.1, 0.1), Rotation2d.fromDegrees(2))
 		);
-		limelightFour.setMegaTag1StandardDeviationsCalculationFunction(
-			LimelightStandardDeviationsCalculations.getMegaTag1StandardDeviationsCalculation(
-					limelightFour,
+		limelightFour.setMT1StdDevsCalculation(
+			LimelightStdDevCalculations.getMT1StdDevsCalculation(
+				limelightFour,
 				MatBuilder.fill(Nat.N3(), Nat.N1(), 0.0001, 0.0001, 0.0001),
 				MatBuilder.fill(Nat.N3(), Nat.N1(), 0.001, 0.001, 0.001)
 			)
 		);
-		limelightFour.setMegaTag1StandardDeviationsCalculationFunction(
-			LimelightStandardDeviationsCalculations.getMegaTag1StandardDeviationsCalculation(
-					limelightFour,
+		limelightFour.setMT2StdDevsCalculation(
+			LimelightStdDevCalculations.getMT2StdDevsCalculation(
+				limelightFour,
 				MatBuilder.fill(Nat.N3(), Nat.N1(), 0.0001, 0.0001, 0.9999),
 				MatBuilder.fill(Nat.N3(), Nat.N1(), 0.001, 0.001, 0.9999)
 			)
 		);
 
 		this.limelightThreeGB = new Limelight(
-				"limelight",
-				"NewVision",
-				new Pose3d(
-						new Translation3d(0.2022, 0.13, 0.508),
-						AngleUnit.DEGREES.toRotation3d(10.612258493096334, -27.18966371065684, 20.10328620400214)
-				),
-				LimelightPipeline.APRIL_TAG
+			"limelight",
+			"NewVision",
+			new Pose3d(
+				new Translation3d(0.2022, 0.13, 0.508),
+				new Rotation3d(Units.Degrees.of(10.612258493096334), Units.Degrees.of(-27.18966371065684), Units.Degrees.of(20.10328620400214))
+			),
+			LimelightPipeline.APRIL_TAG
 		);
-		limelightThreeGB.setMegaTag1RobotPoseFilter(LimelightFilters.megaTag1Filter(limelightThreeGB, new Translation2d(0.1, 0.1)));
-		limelightThreeGB.setMegaTag2RobotPoseFilter(
-				LimelightFilters.megaTag2Filter(limelightThreeGB, headingEstimator, new Translation2d(0.1, 0.1), Rotation2d.fromDegrees(2))
+		limelightThreeGB.setMT1RobotPoseFilter(LimelightFilters.megaTag1Filter(limelightThreeGB, new Translation2d(0.1, 0.1)));
+		limelightThreeGB.setMT2RobotPoseFilter(
+			LimelightFilters.megaTag2Filter(limelightThreeGB, headingEstimator, new Translation2d(0.1, 0.1), Rotation2d.fromDegrees(2))
 		);
-		limelightThreeGB.setMegaTag1StandardDeviationsCalculationFunction(
-				LimelightStandardDeviationsCalculations.getMegaTag1StandardDeviationsCalculation(
-						limelightThreeGB,
-						MatBuilder.fill(Nat.N3(), Nat.N1(), 0.0001, 0.0001, 0.0001),
-						MatBuilder.fill(Nat.N3(), Nat.N1(), 0.001, 0.001, 0.001)
-				)
+		limelightThreeGB.setMT1StdDevsCalculation(
+			LimelightStdDevCalculations.getMT1StdDevsCalculation(
+				limelightThreeGB,
+				MatBuilder.fill(Nat.N3(), Nat.N1(), 0.0001, 0.0001, 0.0001),
+				MatBuilder.fill(Nat.N3(), Nat.N1(), 0.001, 0.001, 0.001)
+			)
 		);
-		limelightThreeGB.setMegaTag1StandardDeviationsCalculationFunction(
-				LimelightStandardDeviationsCalculations.getMegaTag1StandardDeviationsCalculation(
-						limelightThreeGB,
-						MatBuilder.fill(Nat.N3(), Nat.N1(), 0.0001, 0.0001, 0.9999),
-						MatBuilder.fill(Nat.N3(), Nat.N1(), 0.001, 0.001, 0.9999)
-				)
+		limelightThreeGB.setMT2StdDevsCalculation(
+			LimelightStdDevCalculations.getMT2StdDevsCalculation(
+				limelightThreeGB,
+				MatBuilder.fill(Nat.N3(), Nat.N1(), 0.0001, 0.0001, 0.9999),
+				MatBuilder.fill(Nat.N3(), Nat.N1(), 0.001, 0.001, 0.9999)
+			)
 		);
 
 //		this.visionSources = new MultiAprilTagVisionSources(
@@ -174,29 +174,39 @@ public class Robot {
 //				RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE
 //			);
 //		}
-		double start = TimeUtil.getCurrentTimeSeconds();
-		limelightFour.updateMegaTag1();
-		limelightThreeGB.updateMegaTag1();
+
+		limelightFour.updateMT1();
+		limelightThreeGB.updateMT1();
+
 		headingEstimator.updateVisionIfGyroOffsetIsNotCalibrated(
 			limelightFour.getIndependentRobotPose(),
 			RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION,
 			RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE
 		);
 		headingEstimator.updateVisionIfGyroOffsetIsNotCalibrated(
-				limelightThreeGB.getIndependentRobotPose(),
-				RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION,
-				RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE
+			limelightThreeGB.getIndependentRobotPose(),
+			RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION,
+			RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE
 		);
+
 		limelightFour.setRobotOrientation(headingEstimator.getEstimatedHeading());
 		limelightThreeGB.setRobotOrientation(headingEstimator.getEstimatedHeading());
-		limelightFour.updateMegaTag2();
-		limelightThreeGB.updateMegaTag2();
-		poseEstimator.updateVision(List.of(limelightFour.getIndependentRobotPose(), limelightFour.getOrientationRequiringRobotPose(), limelightThreeGB.getIndependentRobotPose(), limelightThreeGB.getOrientationRequiringRobotPose()));
+
+		limelightFour.updateMT2();
+		limelightThreeGB.updateMT2();
+
+		poseEstimator.updateVision(
+			List.of(
+				limelightFour.getIndependentRobotPose(),
+				limelightFour.getOrientationRequiringRobotPose(),
+				limelightThreeGB.getIndependentRobotPose(),
+				limelightThreeGB.getOrientationRequiringRobotPose()
+			)
+		);
+
 		limelightFour.log();
 		limelightThreeGB.log();
 		headingEstimator.log();
-		double end = TimeUtil.getCurrentTimeSeconds();
-		Logger.recordOutput("NewVision/visionTime", end-start);
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();

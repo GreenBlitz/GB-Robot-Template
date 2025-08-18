@@ -34,7 +34,11 @@ public class LimelightFilters {
 			.and(isYawNotZero(() -> limelight.getMT2RobotPoseEstimate().pose.getRotation()));
 	}
 
-	private static Filter isYawAtAngle(Supplier<Rotation2d> robotYaw, Supplier<Optional<Rotation2d>> wantedYawSupplier, Rotation2d yawTolerance) {
+	private static Filter isYawAtAngle(
+		Supplier<Rotation2d> robotYaw,
+		Supplier<Optional<Rotation2d>> wantedYawSupplier,
+		Rotation2d yawTolerance
+	) {
 		return () -> wantedYawSupplier.get()
 			.map(wantedAngle -> ToleranceMath.isNearWrapped(wantedAngle, robotYaw.get(), yawTolerance))
 			.orElse(false);

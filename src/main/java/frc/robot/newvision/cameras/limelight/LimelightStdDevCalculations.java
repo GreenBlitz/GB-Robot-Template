@@ -17,11 +17,7 @@ public class LimelightStdDevCalculations {
 		Matrix<N3, N1> minStdDevs,
 		Matrix<N3, N1> stdDevFactors
 	) {
-		return () -> averageTagDistanceParabola(
-			limelight.getMT1RobotPoseEstimate().avgTagDist,
-			minStdDevs,
-			stdDevFactors
-		);
+		return () -> averageTagDistanceParabola(limelight.getMT1RobotPoseEstimate().avgTagDist, minStdDevs, stdDevFactors);
 	}
 
 	public static Supplier<Matrix<N3, N1>> getMegaTag2StdDevsCalculation(
@@ -29,11 +25,7 @@ public class LimelightStdDevCalculations {
 		Matrix<N3, N1> minStdDevs,
 		Matrix<N3, N1> stdDevFactors
 	) {
-		return () -> averageTagDistanceParabola(
-			limelight.getMT2RobotPoseEstimate().avgTagDist,
-			minStdDevs,
-			stdDevFactors
-		);
+		return () -> averageTagDistanceParabola(limelight.getMT2RobotPoseEstimate().avgTagDist, minStdDevs, stdDevFactors);
 	}
 
 	private static Matrix<N3, N1> averageTagDistanceParabola(

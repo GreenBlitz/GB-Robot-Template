@@ -76,22 +76,16 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 	public void updateMT1() {
 		if (pipeline.equals(LimelightPipeline.APRIL_TAG)) {
 			mt1RobotPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
-			mt1RobotPoseObservation.setObservationValues(
-				getEstimateTimestampSeconds(mt1RobotPoseEstimate),
-				mt1RobotPoseEstimate.pose,
-				calculateMT1StdDevs.get()
-			);
+			mt1RobotPoseObservation
+				.setObservationValues(getEstimateTimestampSeconds(mt1RobotPoseEstimate), mt1RobotPoseEstimate.pose, calculateMT1StdDevs.get());
 		}
 	}
 
 	public void updateMT2() {
 		if (pipeline.equals(LimelightPipeline.APRIL_TAG)) {
 			mt2RobotPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-			mt2RobotPoseObservation.setObservationValues(
-				getEstimateTimestampSeconds(mt2RobotPoseEstimate),
-				mt2RobotPoseEstimate.pose,
-				calculateMT2StdDevs.get()
-			);
+			mt2RobotPoseObservation
+				.setObservationValues(getEstimateTimestampSeconds(mt2RobotPoseEstimate), mt2RobotPoseEstimate.pose, calculateMT2StdDevs.get());
 		}
 	}
 
@@ -105,11 +99,7 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 
 	@Override
 	public Optional<RobotPoseObservation> getIndependentRobotPose() {
-		if (
-			pipeline.equals(LimelightPipeline.APRIL_TAG)
-				&& isObservationPresent(mt1RobotPoseObservation)
-				&& mt1RobotPoseFilter.isPassFilter()
-		) {
+		if (pipeline.equals(LimelightPipeline.APRIL_TAG) && isObservationPresent(mt1RobotPoseObservation) && mt1RobotPoseFilter.isPassFilter()) {
 			return Optional.of(mt1RobotPoseObservation);
 		}
 		return Optional.empty();
@@ -117,11 +107,7 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 
 	@Override
 	public Optional<RobotPoseObservation> getOrientationRequiringRobotPose() {
-		if (
-			pipeline.equals(LimelightPipeline.APRIL_TAG)
-				&& isObservationPresent(mt2RobotPoseObservation)
-				&& mt2RobotPoseFilter.isPassFilter()
-		) {
+		if (pipeline.equals(LimelightPipeline.APRIL_TAG) && isObservationPresent(mt2RobotPoseObservation) && mt2RobotPoseFilter.isPassFilter()) {
 			return Optional.of(mt2RobotPoseObservation);
 		}
 		return Optional.empty();

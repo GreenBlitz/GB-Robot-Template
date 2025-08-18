@@ -2,7 +2,7 @@ package frc.robot.newvision.cameras.limelight;
 
 public enum LimelightPipeline {
 
-	APRIL_TAG(1);
+	APRIL_TAG(0);
 
 	private final int pipelineIndex;
 

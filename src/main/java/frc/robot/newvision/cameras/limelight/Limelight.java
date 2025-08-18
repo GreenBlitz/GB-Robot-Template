@@ -62,11 +62,11 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 			case APRIL_TAG -> {
 				if (isObservationPresent(megaTag1RobotPoseObservation)) {
 					Logger.recordOutput(logPath + "/megaTag1Pose", megaTag1RobotPoseObservation.getRobotPose());
-					Logger.recordOutput(logPath + "/megaTag1StandardDeviations", megaTag1RobotPoseObservation.getStandardDeviations());
+					Logger.recordOutput(logPath + "/megaTag1StandardDeviations", megaTag1RobotPoseObservation.getStandardDeviations().getData());
 				}
 				if (isObservationPresent(megaTag2RobotPoseObservation)) {
 					Logger.recordOutput(logPath + "/megaTag2Pose", megaTag2RobotPoseObservation.getRobotPose());
-					Logger.recordOutput(logPath + "/megaTag2StandardDeviations", megaTag2RobotPoseObservation.getStandardDeviations());
+					Logger.recordOutput(logPath + "/megaTag2StandardDeviations", megaTag2RobotPoseObservation.getStandardDeviations().getData());
 				}
 			}
 			default -> {}
@@ -153,11 +153,11 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 		this.megaTag2RobotPoseFilter = megaTag2RobotPoseFilter;
 	}
 
-	public void setMegaTag1StandardDeviationsCalculationFunction(Supplier<Matrix<N3, N1>> calculateMegaTag1StandardDeviations) {
+	public void setMegaTag1StandardDeviationsCalculation(Supplier<Matrix<N3, N1>> calculateMegaTag1StandardDeviations) {
 		this.calculateMegaTag1StandardDeviations = calculateMegaTag1StandardDeviations;
 	}
 
-	public void setMegaTag2StandardDeviationsCalculationFunction(Supplier<Matrix<N3, N1>> calculateMegaTag2StandardDeviations) {
+	public void setMegaTag2StandardDeviationsCalculation(Supplier<Matrix<N3, N1>> calculateMegaTag2StandardDeviations) {
 		this.calculateMegaTag2StandardDeviations = calculateMegaTag2StandardDeviations;
 	}
 
@@ -182,7 +182,7 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 	}
 
 	private static boolean isObservationPresent(RobotPoseObservation robotPoseObservation) {
-		return !(robotPoseObservation.getTimestampSeconds() == 0 || robotPoseObservation.getRobotPose().equals(Pose2d.kZero));
+		return !robotPoseObservation.getRobotPose().equals(Pose2d.kZero);
 	}
 
 	protected static double getEstimateTimestampSeconds(LimelightHelpers.PoseEstimate poseEstimate) {

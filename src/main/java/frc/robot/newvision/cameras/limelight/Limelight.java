@@ -24,17 +24,17 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 	private final String logPath;
 	private final Pose3d robotRelativeCameraPose;
 
-	private final RobotPoseObservation megaTag1RobotPoseObservation;
-	private final RobotPoseObservation megaTag2RobotPoseObservation;
+	private final RobotPoseObservation mt1RobotPoseObservation;
+	private final RobotPoseObservation mt2RobotPoseObservation;
 
-	private LimelightHelpers.PoseEstimate megaTag1RobotPoseEstimate;
-	private LimelightHelpers.PoseEstimate megaTag2RobotPoseEstimate;
+	private LimelightHelpers.PoseEstimate mt1RobotPoseEstimate;
+	private LimelightHelpers.PoseEstimate mt2RobotPoseEstimate;
 
-	private Filter megaTag1RobotPoseFilter;
-	private Filter megaTag2RobotPoseFilter;
+	private Filter mt1RobotPoseFilter;
+	private Filter mt2RobotPoseFilter;
 
-	private Supplier<Matrix<N3, N1>> calculateMegaTag1StandardDeviations;
-	private Supplier<Matrix<N3, N1>> calculateMegaTag2StandardDeviations;
+	private Supplier<Matrix<N3, N1>> calculateMT1StdDevs;
+	private Supplier<Matrix<N3, N1>> calculateMT2StdDevs;
 
 	private LimelightPipeline pipeline;
 
@@ -45,14 +45,14 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 		this.robotRelativeCameraPose = robotRelativeCameraPose;
 		setRobotRelativeCameraPose(robotRelativeCameraPose);
 
-		this.megaTag1RobotPoseObservation = new RobotPoseObservation();
-		this.megaTag2RobotPoseObservation = new RobotPoseObservation();
+		this.mt1RobotPoseObservation = new RobotPoseObservation();
+		this.mt2RobotPoseObservation = new RobotPoseObservation();
 
-		this.megaTag1RobotPoseFilter = Filter.nonFilteringFilter();
-		this.megaTag2RobotPoseFilter = Filter.nonFilteringFilter();
+		this.mt1RobotPoseFilter = Filter.nonFilteringFilter();
+		this.mt2RobotPoseFilter = Filter.nonFilteringFilter();
 
-		this.calculateMegaTag1StandardDeviations = () -> LimelightStandardDeviationsCalculations.DEFAULT_STANDARD_DEVIATIONS;
-		this.calculateMegaTag2StandardDeviations = () -> LimelightStandardDeviationsCalculations.DEFAULT_STANDARD_DEVIATIONS;
+		this.calculateMT1StdDevs = () -> LimelightStdDevCalculations.DEFAULT_STD_DEVS;
+		this.calculateMT2StdDevs = () -> LimelightStdDevCalculations.DEFAULT_STD_DEVS;
 
 		setPipeline(pipeline);
 	}
@@ -60,38 +60,32 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 	public void log() {
 		switch (pipeline) {
 			case APRIL_TAG -> {
-				if (isObservationPresent(megaTag1RobotPoseObservation)) {
-					Logger.recordOutput(logPath + "/megaTag1Pose", megaTag1RobotPoseObservation.getRobotPose());
-					Logger.recordOutput(logPath + "/megaTag1StandardDeviations", megaTag1RobotPoseObservation.getStandardDeviations());
+				if (isObservationPresent(mt1RobotPoseObservation)) {
+					Logger.recordOutput(logPath + "/mt1Pose", mt1RobotPoseObservation.getRobotPose());
+					Logger.recordOutput(logPath + "/mt1StdDevs", mt1RobotPoseObservation.getStdDevs().getData());
 				}
-				if (isObservationPresent(megaTag2RobotPoseObservation)) {
-					Logger.recordOutput(logPath + "/megaTag2Pose", megaTag2RobotPoseObservation.getRobotPose());
-					Logger.recordOutput(logPath + "/megaTag2StandardDeviations", megaTag2RobotPoseObservation.getStandardDeviations());
+				if (isObservationPresent(mt2RobotPoseObservation)) {
+					Logger.recordOutput(logPath + "/mt2Pose", mt2RobotPoseObservation.getRobotPose());
+					Logger.recordOutput(logPath + "/mt2StdDevs", mt2RobotPoseObservation.getStdDevs().getData());
 				}
 			}
 			default -> {}
 		}
 	}
 
-	public void updateMegaTag1() {
+	public void updateMT1() {
 		if (pipeline.equals(LimelightPipeline.APRIL_TAG)) {
-			megaTag1RobotPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
-			megaTag1RobotPoseObservation.setObservationValues(
-				getEstimateTimestampSeconds(megaTag1RobotPoseEstimate),
-				megaTag1RobotPoseEstimate.pose,
-				calculateMegaTag1StandardDeviations.get()
-			);
+			mt1RobotPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
+			mt1RobotPoseObservation
+				.setObservationValues(getEstimateTimestampSeconds(mt1RobotPoseEstimate), mt1RobotPoseEstimate.pose, calculateMT1StdDevs.get());
 		}
 	}
 
-	public void updateMegaTag2() {
+	public void updateMT2() {
 		if (pipeline.equals(LimelightPipeline.APRIL_TAG)) {
-			megaTag2RobotPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-			megaTag2RobotPoseObservation.setObservationValues(
-				getEstimateTimestampSeconds(megaTag2RobotPoseEstimate),
-				megaTag2RobotPoseEstimate.pose,
-				calculateMegaTag2StandardDeviations.get()
-			);
+			mt2RobotPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
+			mt2RobotPoseObservation
+				.setObservationValues(getEstimateTimestampSeconds(mt2RobotPoseEstimate), mt2RobotPoseEstimate.pose, calculateMT2StdDevs.get());
 		}
 	}
 
@@ -105,24 +99,16 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 
 	@Override
 	public Optional<RobotPoseObservation> getIndependentRobotPose() {
-		if (
-			pipeline.equals(LimelightPipeline.APRIL_TAG)
-				&& isObservationPresent(megaTag1RobotPoseObservation)
-				&& megaTag1RobotPoseFilter.isPassFilter()
-		) {
-			return Optional.of(megaTag1RobotPoseObservation);
+		if (pipeline.equals(LimelightPipeline.APRIL_TAG) && isObservationPresent(mt1RobotPoseObservation) && mt1RobotPoseFilter.isPassFilter()) {
+			return Optional.of(mt1RobotPoseObservation);
 		}
 		return Optional.empty();
 	}
 
 	@Override
 	public Optional<RobotPoseObservation> getOrientationRequiringRobotPose() {
-		if (
-			pipeline.equals(LimelightPipeline.APRIL_TAG)
-				&& isObservationPresent(megaTag2RobotPoseObservation)
-				&& megaTag2RobotPoseFilter.isPassFilter()
-		) {
-			return Optional.of(megaTag2RobotPoseObservation);
+		if (pipeline.equals(LimelightPipeline.APRIL_TAG) && isObservationPresent(mt2RobotPoseObservation) && mt2RobotPoseFilter.isPassFilter()) {
+			return Optional.of(mt2RobotPoseObservation);
 		}
 		return Optional.empty();
 	}
@@ -145,28 +131,28 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 		LimelightHelpers.setPipelineIndex(name, pipeline.getPipelineIndex());
 	}
 
-	public void setMegaTag1RobotPoseFilter(Filter megaTag1RobotPoseFilter) {
-		this.megaTag1RobotPoseFilter = megaTag1RobotPoseFilter;
+	public void setMT1RobotPoseFilter(Filter mt1RobotPoseFilter) {
+		this.mt1RobotPoseFilter = mt1RobotPoseFilter;
 	}
 
-	public void setMegaTag2RobotPoseFilter(Filter megaTag2RobotPoseFilter) {
-		this.megaTag2RobotPoseFilter = megaTag2RobotPoseFilter;
+	public void setMT2RobotPoseFilter(Filter mt2RobotPoseFilter) {
+		this.mt2RobotPoseFilter = mt2RobotPoseFilter;
 	}
 
-	public void setMegaTag1StandardDeviationsCalculationFunction(Supplier<Matrix<N3, N1>> calculateMegaTag1StandardDeviations) {
-		this.calculateMegaTag1StandardDeviations = calculateMegaTag1StandardDeviations;
+	public void setMT1StdDevsCalculation(Supplier<Matrix<N3, N1>> calculateMT1StdDevs) {
+		this.calculateMT1StdDevs = calculateMT1StdDevs;
 	}
 
-	public void setMegaTag2StandardDeviationsCalculationFunction(Supplier<Matrix<N3, N1>> calculateMegaTag2StandardDeviations) {
-		this.calculateMegaTag2StandardDeviations = calculateMegaTag2StandardDeviations;
+	public void setMT2StdDevsCalculation(Supplier<Matrix<N3, N1>> calculateMT2StdDevs) {
+		this.calculateMT2StdDevs = calculateMT2StdDevs;
 	}
 
-	protected LimelightHelpers.PoseEstimate getMegaTag1RobotPoseEstimate() {
-		return megaTag1RobotPoseEstimate;
+	protected LimelightHelpers.PoseEstimate getMT1RobotPoseEstimate() {
+		return mt1RobotPoseEstimate;
 	}
 
-	protected LimelightHelpers.PoseEstimate getMegaTag2RobotPoseEstimate() {
-		return megaTag2RobotPoseEstimate;
+	protected LimelightHelpers.PoseEstimate getMT2RobotPoseEstimate() {
+		return mt2RobotPoseEstimate;
 	}
 
 	private void setRobotRelativeCameraPose(Pose3d robotRelativeCameraPose) {
@@ -182,7 +168,7 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 	}
 
 	private static boolean isObservationPresent(RobotPoseObservation robotPoseObservation) {
-		return !(robotPoseObservation.getTimestampSeconds() == 0 || robotPoseObservation.getRobotPose().equals(Pose2d.kZero));
+		return !robotPoseObservation.getRobotPose().equals(Pose2d.kZero);
 	}
 
 	protected static double getEstimateTimestampSeconds(LimelightHelpers.PoseEstimate poseEstimate) {

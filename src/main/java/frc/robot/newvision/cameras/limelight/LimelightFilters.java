@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 public class LimelightFilters {
 
 	public static Filter megaTag1Filter(Limelight limelight, Translation2d robotInFieldTolerance) {
-		return isRobotInField(() -> limelight.getMegaTag1RobotPoseEstimate().pose.getTranslation(), robotInFieldTolerance);
+		return isRobotInField(() -> limelight.getMT1RobotPoseEstimate().pose.getTranslation(), robotInFieldTolerance);
 	}
 
 	public static Filter megaTag2Filter(
@@ -22,16 +22,16 @@ public class LimelightFilters {
 		Translation2d robotInFieldTolerance,
 		Rotation2d yawAtAngleTolerance
 	) {
-		return isRobotInField(() -> limelight.getMegaTag2RobotPoseEstimate().pose.getTranslation(), robotInFieldTolerance)
+		return isRobotInField(() -> limelight.getMT2RobotPoseEstimate().pose.getTranslation(), robotInFieldTolerance)
 			.and(
 				isYawAtAngle(
-					() -> limelight.getMegaTag2RobotPoseEstimate().pose.getRotation(),
+					() -> limelight.getMT2RobotPoseEstimate().pose.getRotation(),
 					() -> headingEstimator
-						.getEstimatedHeadingAtTimestamp(Limelight.getEstimateTimestampSeconds(limelight.getMegaTag2RobotPoseEstimate())),
+						.getEstimatedHeadingAtTimestamp(Limelight.getEstimateTimestampSeconds(limelight.getMT2RobotPoseEstimate())),
 					yawAtAngleTolerance
 				)
 			)
-			.and(isYawNotZero(() -> limelight.getMegaTag2RobotPoseEstimate().pose.getRotation()));
+			.and(isYawNotZero(() -> limelight.getMT2RobotPoseEstimate().pose.getRotation()));
 	}
 
 	private static Filter isYawAtAngle(Supplier<Rotation2d> robotYaw, Supplier<Optional<Rotation2d>> wantedYawSupplier, Rotation2d yawTolerance) {

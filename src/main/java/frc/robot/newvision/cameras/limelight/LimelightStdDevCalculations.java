@@ -8,31 +8,31 @@ import edu.wpi.first.math.numbers.N3;
 
 import java.util.function.Supplier;
 
-public class LimelightStandardDeviationsCalculations {
+public class LimelightStdDevCalculations {
 
-	public static final Matrix<N3, N1> DEFAULT_STANDARD_DEVIATIONS = MatBuilder.fill(Nat.N3(), Nat.N1(), 0.0003, 0.0003, 0.003);
+	public static final Matrix<N3, N1> DEFAULT_STD_DEVS = MatBuilder.fill(Nat.N3(), Nat.N1(), 0.0003, 0.0003, 0.003);
 
-	public static Supplier<Matrix<N3, N1>> getMegaTag1StandardDeviationsCalculation(
+	public static Supplier<Matrix<N3, N1>> getMegaTag1StdDevsCalculation(
 		Limelight limelight,
-		Matrix<N3, N1> minStandardDeviations,
-		Matrix<N3, N1> standardDeviationFactors
+		Matrix<N3, N1> minStdDevs,
+		Matrix<N3, N1> stdDevFactors
 	) {
 		return () -> averageTagDistanceParabola(
-			limelight.getMegaTag1RobotPoseEstimate().avgTagDist,
-			minStandardDeviations,
-			standardDeviationFactors
+			limelight.getMT1RobotPoseEstimate().avgTagDist,
+			minStdDevs,
+			stdDevFactors
 		);
 	}
 
-	public static Supplier<Matrix<N3, N1>> getMegaTag2StandardDeviationsCalculation(
+	public static Supplier<Matrix<N3, N1>> getMegaTag2StdDevsCalculation(
 		Limelight limelight,
-		Matrix<N3, N1> minStandardDeviations,
-		Matrix<N3, N1> standardDeviationFactors
+		Matrix<N3, N1> minStdDevs,
+		Matrix<N3, N1> stdDevFactors
 	) {
 		return () -> averageTagDistanceParabola(
-			limelight.getMegaTag2RobotPoseEstimate().avgTagDist,
-			minStandardDeviations,
-			standardDeviationFactors
+			limelight.getMT2RobotPoseEstimate().avgTagDist,
+			minStdDevs,
+			stdDevFactors
 		);
 	}
 

@@ -24,30 +24,30 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	private final SwerveDriveKinematics kinematics;
 	private final Odometry<SwerveModulePosition[]> odometryEstimator;
 	private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
-	private RobotPoseObservation lastVisionData;
+	private RobotPoseObservation lastVisionObservation;
 	private OdometryData lastOdometryData;
 	private Rotation2d lastOdometryAngle;
 
 	public WPILibPoseEstimatorWrapper(
-		String logPath,
-		SwerveDriveKinematics kinematics,
-		SwerveModulePosition[] modulePositions,
-		Rotation2d initialGyroAngle
+			String logPath,
+			SwerveDriveKinematics kinematics,
+			SwerveModulePosition[] modulePositions,
+			Rotation2d initialGyroAngle
 	) {
 		super(logPath);
 		this.kinematics = kinematics;
 		this.lastOdometryAngle = initialGyroAngle;
 		this.odometryEstimator = new Odometry<>(
-			kinematics,
-			initialGyroAngle,
-			modulePositions,
-			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
+				kinematics,
+				initialGyroAngle,
+				modulePositions,
+				WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
 		);
 		this.poseEstimator = new PoseEstimator<>(
-			kinematics,
-			odometryEstimator,
-			WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS.asColumnVector(),
-			WPILibPoseEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATIONS.asColumnVector()
+				kinematics,
+				odometryEstimator,
+				WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS.asColumnVector(),
+				WPILibPoseEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATIONS.asColumnVector()
 		);
 		this.lastOdometryData = new OdometryData(modulePositions, Optional.of(initialGyroAngle), TimeUtil.getCurrentTimeSeconds());
 	}
@@ -95,9 +95,9 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	}
 
 	@Override
-	public void updateVision(List<RobotPoseObservation> robotPoseVisionObservations) {
-		for (RobotPoseObservation visionData : robotPoseVisionObservations) {
-			addVisionMeasurement(visionData);
+	public void updateVision(List<Optional<RobotPoseObservation>> visionRobotPoseObservations) {
+		for (Optional<RobotPoseObservation> visionRobotPoseObservation : visionRobotPoseObservations) {
+			visionRobotPoseObservation.ifPresent(this::addVisionMeasurement);
 		}
 	}
 
@@ -120,25 +120,25 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 
 	private void addVisionMeasurement(RobotPoseObservation visionObservation) {
 		poseEstimator.addVisionMeasurement(
-			visionObservation.robotPose(),
-			visionObservation.timestampSeconds(),
-			MatBuilder.fill(
-				Nat.N3(),
-				Nat.N1(),
-				visionObservation.stdDevs().x(),
-				visionObservation.stdDevs().y(),
-				visionObservation.stdDevs().rotation()
-			)
+				visionObservation.robotPose(),
+				visionObservation.timestampSeconds(),
+				MatBuilder.fill(
+						Nat.N3(),
+						Nat.N1(),
+						visionObservation.stdDevs().x(),
+						visionObservation.stdDevs().y(),
+						visionObservation.stdDevs().rotation()
+				)
 		);
-		this.lastVisionData = visionObservation;
+		this.lastVisionObservation = visionObservation;
 	}
 
 	private void log() {
 		Logger.recordOutput(getLogPath() + "estimatedPose", getEstimatedPose());
 		Logger.recordOutput(getLogPath() + "odometryPose", getOdometryPose());
 		Logger.recordOutput(getLogPath() + "lastOdometryUpdate", lastOdometryData.getTimestamp());
-		if (lastVisionData != null) {
-			Logger.recordOutput(getLogPath() + "lastVisionUpdate", lastVisionData.timestampSeconds());
+		if (lastVisionObservation != null) {
+			Logger.recordOutput(getLogPath() + "lastVisionUpdate", lastVisionObservation.timestampSeconds());
 		}
 	}
 

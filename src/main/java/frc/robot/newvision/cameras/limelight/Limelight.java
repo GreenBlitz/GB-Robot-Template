@@ -61,12 +61,12 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 		switch (pipeline) {
 			case APRIL_TAG -> {
 				if (isObservationPresent(mt1RobotPoseObservation)) {
-					Logger.recordOutput(logPath + "/mt1Pose", mt1RobotPoseObservation.getRobotPose());
-					Logger.recordOutput(logPath + "/mt1StdDevs", mt1RobotPoseObservation.getStdDevs().getData());
+					Logger.recordOutput(logPath + "/megaTag1Pose", mt1RobotPoseObservation.getRobotPose());
+					Logger.recordOutput(logPath + "/megaTag1StdDevs", mt1RobotPoseObservation.getStdDevs().getData());
 				}
 				if (isObservationPresent(mt2RobotPoseObservation)) {
-					Logger.recordOutput(logPath + "/mt2Pose", mt2RobotPoseObservation.getRobotPose());
-					Logger.recordOutput(logPath + "/mt2StdDevs", mt2RobotPoseObservation.getStdDevs().getData());
+					Logger.recordOutput(logPath + "/megaTag2Pose", mt2RobotPoseObservation.getRobotPose());
+					Logger.recordOutput(logPath + "/megaTag2StdDevs", mt2RobotPoseObservation.getStdDevs().getData());
 				}
 			}
 			default -> {}

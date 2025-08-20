@@ -27,8 +27,4 @@ public class WPILibPoseEstimatorConstants {
 
 	public static final Pose2d STARTING_ODOMETRY_POSE = new Pose2d();
 
-	public static final double VISION_STANDARD_DEVIATION_FACTOR = 0.001;
-
-	public static final double MINIMUM_STANDARD_DEVIATION = 0.0001;
-
 }

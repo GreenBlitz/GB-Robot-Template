@@ -1,7 +1,5 @@
 package frc.robot.poseestimator.WPILibPoseEstimator;
 
-import edu.wpi.first.math.MatBuilder;
-import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -122,13 +120,7 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 		poseEstimator.addVisionMeasurement(
 			visionObservation.robotPose(),
 			visionObservation.timestampSeconds(),
-			MatBuilder.fill(
-				Nat.N3(),
-				Nat.N1(),
-				visionObservation.stdDevs().x(),
-				visionObservation.stdDevs().y(),
-				visionObservation.stdDevs().rotation()
-			)
+			visionObservation.stdDevs().asColumnVector()
 		);
 		this.lastVisionObservation = visionObservation;
 	}

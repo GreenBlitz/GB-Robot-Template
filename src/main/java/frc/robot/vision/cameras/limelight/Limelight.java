@@ -4,12 +4,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import frc.robot.vision.RobotPoseObservation;
-import frc.robot.vision.StdDevs;
 import frc.robot.vision.interfaces.OrientationRequiringRobotPoseSupplier;
 import frc.robot.vision.interfaces.IndependentRobotPoseSupplier;
 import frc.utils.Conversions;
 import frc.utils.LimelightHelpers;
 import frc.utils.filter.Filter;
+import frc.utils.math.StandardDeviations2D;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -31,8 +31,8 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 	private Filter mt1PoseFilter;
 	private Filter mt2PoseFilter;
 
-	private Supplier<StdDevs> calculateMT1StdDevs;
-	private Supplier<StdDevs> calculateMT2StdDevs;
+	private Supplier<StandardDeviations2D> calculateMT1StdDevs;
+	private Supplier<StandardDeviations2D> calculateMT2StdDevs;
 
 	private LimelightPipeline pipeline;
 
@@ -141,11 +141,11 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 		this.mt2PoseFilter = mt2RobotPoseFilter;
 	}
 
-	public void setMT1StdDevsCalculation(Supplier<StdDevs> calculateMT1StdDevs) {
+	public void setMT1StdDevsCalculation(Supplier<StandardDeviations2D> calculateMT1StdDevs) {
 		this.calculateMT1StdDevs = calculateMT1StdDevs;
 	}
 
-	public void setMT2StdDevsCalculation(Supplier<StdDevs> calculateMT2StdDevs) {
+	public void setMT2StdDevsCalculation(Supplier<StandardDeviations2D> calculateMT2StdDevs) {
 		this.calculateMT2StdDevs = calculateMT2StdDevs;
 	}
 

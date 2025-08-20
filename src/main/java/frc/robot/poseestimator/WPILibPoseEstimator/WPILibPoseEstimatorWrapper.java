@@ -29,25 +29,25 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	private Rotation2d lastOdometryAngle;
 
 	public WPILibPoseEstimatorWrapper(
-			String logPath,
-			SwerveDriveKinematics kinematics,
-			SwerveModulePosition[] modulePositions,
-			Rotation2d initialGyroAngle
+		String logPath,
+		SwerveDriveKinematics kinematics,
+		SwerveModulePosition[] modulePositions,
+		Rotation2d initialGyroAngle
 	) {
 		super(logPath);
 		this.kinematics = kinematics;
 		this.lastOdometryAngle = initialGyroAngle;
 		this.odometryEstimator = new Odometry<>(
-				kinematics,
-				initialGyroAngle,
-				modulePositions,
-				WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
+			kinematics,
+			initialGyroAngle,
+			modulePositions,
+			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
 		);
 		this.poseEstimator = new PoseEstimator<>(
-				kinematics,
-				odometryEstimator,
-				WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS.asColumnVector(),
-				WPILibPoseEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATIONS.asColumnVector()
+			kinematics,
+			odometryEstimator,
+			WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS.asColumnVector(),
+			WPILibPoseEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATIONS.asColumnVector()
 		);
 		this.lastOdometryData = new OdometryData(modulePositions, Optional.of(initialGyroAngle), TimeUtil.getCurrentTimeSeconds());
 	}
@@ -120,15 +120,15 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 
 	private void addVisionMeasurement(RobotPoseObservation visionObservation) {
 		poseEstimator.addVisionMeasurement(
-				visionObservation.robotPose(),
-				visionObservation.timestampSeconds(),
-				MatBuilder.fill(
-						Nat.N3(),
-						Nat.N1(),
-						visionObservation.stdDevs().x(),
-						visionObservation.stdDevs().y(),
-						visionObservation.stdDevs().rotation()
-				)
+			visionObservation.robotPose(),
+			visionObservation.timestampSeconds(),
+			MatBuilder.fill(
+				Nat.N3(),
+				Nat.N1(),
+				visionObservation.stdDevs().x(),
+				visionObservation.stdDevs().y(),
+				visionObservation.stdDevs().rotation()
+			)
 		);
 		this.lastVisionObservation = visionObservation;
 	}

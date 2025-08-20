@@ -1,6 +1,6 @@
-package frc.robot.newvision.interfaces;
+package frc.robot.vision.interfaces;
 
-import frc.robot.newvision.RobotPoseObservation;
+import frc.robot.vision.RobotPoseObservation;
 
 import java.util.Optional;
 

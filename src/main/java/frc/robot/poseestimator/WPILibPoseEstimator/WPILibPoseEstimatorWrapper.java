@@ -1,5 +1,7 @@
 package frc.robot.poseestimator.WPILibPoseEstimator;
 
+import edu.wpi.first.math.MatBuilder;
+import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -7,11 +9,10 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.Odometry;
+import frc.robot.vision.RobotPoseObservation;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.OdometryData;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.vision.data.AprilTagVisionData;
-import frc.robot.vision.data.VisionData;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -23,7 +24,7 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	private final SwerveDriveKinematics kinematics;
 	private final Odometry<SwerveModulePosition[]> odometryEstimator;
 	private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
-	private VisionData lastVisionData;
+	private RobotPoseObservation lastVisionData;
 	private OdometryData lastOdometryData;
 	private Rotation2d lastOdometryAngle;
 
@@ -94,8 +95,8 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	}
 
 	@Override
-	public void updateVision(List<AprilTagVisionData> robotPoseVisionData) {
-		for (AprilTagVisionData visionData : robotPoseVisionData) {
+	public void updateVision(List<RobotPoseObservation> robotPoseVisionObservations) {
+		for (RobotPoseObservation visionData : robotPoseVisionObservations) {
 			addVisionMeasurement(visionData);
 		}
 	}
@@ -117,13 +118,13 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 		poseEstimator.resetRotation(newHeading);
 	}
 
-	private void addVisionMeasurement(AprilTagVisionData visionData) {
+	private void addVisionMeasurement(RobotPoseObservation visionObservation) {
 		poseEstimator.addVisionMeasurement(
-			visionData.getEstimatedPose().toPose2d(),
-			visionData.getTimestamp(),
-			WPILibPoseEstimatorConstants.VISION_STANDARD_DEVIATIONS_TRANSFORM.apply(visionData).asColumnVector()
+			visionObservation.robotPose(),
+			visionObservation.timestampSeconds(),
+				MatBuilder.fill(Nat.N3(), Nat.N1(), visionObservation.stdDevs().x(), visionObservation.stdDevs().y(), visionObservation.stdDevs().rotation())
 		);
-		this.lastVisionData = visionData;
+		this.lastVisionData = visionObservation;
 	}
 
 	private void log() {
@@ -131,7 +132,7 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 		Logger.recordOutput(getLogPath() + "odometryPose", getOdometryPose());
 		Logger.recordOutput(getLogPath() + "lastOdometryUpdate", lastOdometryData.getTimestamp());
 		if (lastVisionData != null) {
-			Logger.recordOutput(getLogPath() + "lastVisionUpdate", lastVisionData.getTimestamp());
+			Logger.recordOutput(getLogPath() + "lastVisionUpdate", lastVisionData.timestampSeconds());
 		}
 	}
 

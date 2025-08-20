@@ -1,4 +1,4 @@
-package frc.robot.newvision.cameras.limelight;
+package frc.robot.vision.cameras.limelight;
 
 public enum LimelightPipeline {
 

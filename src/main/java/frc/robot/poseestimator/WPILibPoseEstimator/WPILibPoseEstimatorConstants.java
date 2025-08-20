@@ -3,7 +3,6 @@ package frc.robot.poseestimator.WPILibPoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.math.StandardDeviations2D;
-import frc.robot.vision.data.AprilTagVisionData;
 
 import java.util.function.Function;
 
@@ -32,13 +31,5 @@ public class WPILibPoseEstimatorConstants {
 	public static final double VISION_STANDARD_DEVIATION_FACTOR = 0.001;
 
 	public static final double MINIMUM_STANDARD_DEVIATION = 0.0001;
-
-	public static final Function<AprilTagVisionData, StandardDeviations2D> VISION_STANDARD_DEVIATIONS_TRANSFORM = aprilTagVisionData ->
-		new StandardDeviations2D(
-			Math.max(
-				Math.pow(aprilTagVisionData.getDistanceFromAprilTagMeters(), 2) * VISION_STANDARD_DEVIATION_FACTOR,
-				MINIMUM_STANDARD_DEVIATION
-			)
-		);
 
 }

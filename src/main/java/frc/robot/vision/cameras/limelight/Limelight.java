@@ -1,12 +1,12 @@
-package frc.robot.newvision.cameras.limelight;
+package frc.robot.vision.cameras.limelight;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import frc.robot.newvision.RobotPoseObservation;
-import frc.robot.newvision.StdDevs;
-import frc.robot.newvision.interfaces.OrientationRequiringRobotPoseSupplier;
-import frc.robot.newvision.interfaces.IndependentRobotPoseSupplier;
+import frc.robot.vision.RobotPoseObservation;
+import frc.robot.vision.StdDevs;
+import frc.robot.vision.interfaces.OrientationRequiringRobotPoseSupplier;
+import frc.robot.vision.interfaces.IndependentRobotPoseSupplier;
 import frc.utils.Conversions;
 import frc.utils.LimelightHelpers;
 import frc.utils.filter.Filter;

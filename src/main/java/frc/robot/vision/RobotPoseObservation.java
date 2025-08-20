@@ -1,4 +1,4 @@
-package frc.robot.newvision;
+package frc.robot.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
 

@@ -1,6 +1,6 @@
-package frc.robot.newvision.cameras.limelight;
+package frc.robot.vision.cameras.limelight;
 
-import frc.robot.newvision.StdDevs;
+import frc.robot.vision.StdDevs;
 
 import java.util.function.Supplier;
 

@@ -42,9 +42,7 @@ public class VisionFilters {
 		return isDataFromMegaTag2().implies(isYawAtAngle(wantedYawSupplier, yawTolerance));
 	}
 
-	/**
-	 * A Filter that filters the random noise in MegaTag2 that causes the yaw angle to be exactly 0.
-	 */
+
 	public static Filter<VisionData> isYawAngleNotZero() {
 		return (visionData) -> visionData.getEstimatedPose().getRotation().getZ() != 0.0;
 	}

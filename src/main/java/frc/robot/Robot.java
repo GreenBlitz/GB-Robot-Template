@@ -50,6 +50,24 @@ import frc.robot.vision.data.AprilTagVisionData;
 import frc.robot.vision.objectdetection.LimeLightObjectDetector;
 import frc.utils.TimedValue;
 import frc.utils.auto.AutonomousChooser;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.RobotManager;
+import frc.robot.hardware.interfaces.IGyro;
+import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.poseestimator.IPoseEstimator;
+import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
+import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
+import frc.robot.poseestimator.helpers.robotheadingestimator.RobotHeadingEstimator;
+import frc.robot.poseestimator.helpers.robotheadingestimator.RobotHeadingEstimatorConstants;
+import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
+import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
+import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
+import frc.robot.vision.VisionConstants;
+import frc.robot.vision.VisionFilters;
+import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
+import frc.utils.TimedValue;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.auto.PathPlannerUtil;
 import frc.robot.vision.multivisionsources.MultiAprilTagVisionSources;
@@ -61,6 +79,7 @@ import org.littletonrobotics.junction.Logger;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+import frc.utils.time.TimeUtil;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -71,12 +90,8 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
-	private final IPoseEstimator poseEstimator;
-	private final RobotHeadingEstimator headingEstimator;
-	private final MultiAprilTagVisionSources multiAprilTagVisionSources;
 	private final LimeLightObjectDetector objectDetector;
 
-	private final Swerve swerve;
 	private final Elevator elevator;
 	private final Arm arm;
 	private final EndEffector endEffector;
@@ -96,6 +111,11 @@ public class Robot {
 	private AutonomousChooser thirdObjectScoringLocationChooser;
 	private AutonomousChooser fourthObjectIntakingLocationChooser;
 	private AutonomousChooser fourthObjectScoringLocationChooser;
+
+	private final Swerve swerve;
+	private final IPoseEstimator poseEstimator;
+	private final MultiAprilTagVisionSources visionSources;
+	private final RobotHeadingEstimator headingEstimator;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -122,15 +142,15 @@ public class Robot {
 			RobotHeadingEstimatorConstants.DEFAULT_GYRO_STANDARD_DEVIATION
 		);
 
-		this.multiAprilTagVisionSources = new MultiAprilTagVisionSources(
+		this.visionSources = new MultiAprilTagVisionSources(
 			VisionConstants.MULTI_VISION_SOURCES_LOGPATH,
 			headingEstimator::getEstimatedHeading,
 			true,
 			VisionConstants.VISION_SOURCES
 		);
 
-		multiAprilTagVisionSources.applyFunctionOnAllFilters(
-			filters -> filters.and(
+		visionSources.applyFunctionOnAllFilters(
+			filter -> filter.and(
 				data -> VisionFilters
 					.isYawAtAngleForMegaTag2(
 						() -> headingEstimator.getEstimatedHeadingAtTimestamp(data.getTimestamp()),
@@ -308,14 +328,14 @@ public class Robot {
 		double poseTime = TimeUtil.getCurrentTimeSeconds();
 		poseEstimator.updateOdometry(swerve.getLatestOdometryData());
 		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
-		for (TimedValue<Rotation2d> headingData : multiAprilTagVisionSources.getFilteredRobotHeading()) {
+		for (TimedValue<Rotation2d> headingData : visionSources.getFilteredRobotHeading()) {
 			headingEstimator.updateVisionIfGyroOffsetIsNotCalibrated(
 				headingData,
 				RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION,
 				RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE
 			);
 		}
-		List<AprilTagVisionData> visionData = multiAprilTagVisionSources.getFilteredVisionData();
+		List<AprilTagVisionData> visionData = visionSources.getFilteredVisionData();
 		poseEstimator.updateVision(visionData);
 //		multiAprilTagVisionSources.log();
 		headingEstimator.log();
@@ -368,10 +388,6 @@ public class Robot {
 		return poseEstimator;
 	}
 
-	public Swerve getSwerve() {
-		return swerve;
-	}
-
 	public Elevator getElevator() {
 		return elevator;
 	}
@@ -419,6 +435,10 @@ public class Robot {
 			),
 			swerve.getModules().getModulePositionsFromCenterMeters()
 		);
+	}
+
+	public Swerve getSwerve() {
+		return swerve;
 	}
 
 }

@@ -12,7 +12,6 @@ import frc.robot.subsystems.swerve.GyroSignals;
 import frc.utils.alerts.Alert;
 import frc.utils.AngleUnit;
 
-
 class Pigeon2GyroBuilder {
 
 	private static final int APPLY_CONFIG_RETRIES = 5;
@@ -27,8 +26,8 @@ class Pigeon2GyroBuilder {
 
 	static IGyro buildGyro(String logPath) {
 		Pigeon2Wrapper pigeon2Wrapper = new Pigeon2Wrapper(IDs.Pigeon2IDs.SWERVE);
-
 		Pigeon2Configuration pigeon2Configuration = buildGyroConfig();
+
 		if (!pigeon2Wrapper.applyConfiguration(pigeon2Configuration, APPLY_CONFIG_RETRIES).isOK()) {
 			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
 		}

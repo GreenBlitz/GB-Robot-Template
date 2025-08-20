@@ -69,7 +69,7 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 	}
 
 	public void updateMT1() {
-		if (pipeline.equals(LimelightPipeline.APRIL_TAG)) {
+		if (pipeline.isUsingMT()) {
 			mt1RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
 			mt1PoseObservation = new RobotPoseObservation(
 				getEstimateTimestampSeconds(mt1RawData),
@@ -80,7 +80,7 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 	}
 
 	public void updateMT2() {
-		if (pipeline.equals(LimelightPipeline.APRIL_TAG)) {
+		if (pipeline.isUsingMT()) {
 			mt2RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
 			mt2PoseObservation = new RobotPoseObservation(
 				getEstimateTimestampSeconds(mt2RawData),
@@ -100,7 +100,7 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 
 	@Override
 	public Optional<RobotPoseObservation> getIndependentRobotPose() {
-		if (pipeline.equals(LimelightPipeline.APRIL_TAG) && doesObservationExist(mt1PoseObservation) && mt1PoseFilter.passesFilter()) {
+		if (pipeline.isUsingMT() && doesObservationExist(mt1PoseObservation) && mt1PoseFilter.passesFilter()) {
 			return Optional.of(mt1PoseObservation);
 		}
 		return Optional.empty();
@@ -108,7 +108,7 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 
 	@Override
 	public Optional<RobotPoseObservation> getOrientationRequiringRobotPose() {
-		if (pipeline.equals(LimelightPipeline.APRIL_TAG) && doesObservationExist(mt2PoseObservation) && mt2PoseFilter.passesFilter()) {
+		if (pipeline.isUsingMT() && doesObservationExist(mt2PoseObservation) && mt2PoseFilter.passesFilter()) {
 			return Optional.of(mt2PoseObservation);
 		}
 		return Optional.empty();

@@ -2,22 +2,22 @@ package frc.utils.filter;
 
 public interface Filter {
 
-	boolean isPassFilter();
+	boolean passesFilter();
 
 	default Filter not() {
-		return () -> !isPassFilter();
+		return () -> !passesFilter();
 	}
 
 	default Filter and(Filter other) {
-		return () -> isPassFilter() && other.isPassFilter();
+		return () -> passesFilter() && other.passesFilter();
 	}
 
 	default Filter or(Filter other) {
-		return () -> isPassFilter() || other.isPassFilter();
+		return () -> passesFilter() || other.passesFilter();
 	}
 
 	default Filter xor(Filter other) {
-		return () -> isPassFilter() ^ other.isPassFilter();
+		return () -> passesFilter() ^ other.passesFilter();
 	}
 
 	default Filter nand(Filter other) {

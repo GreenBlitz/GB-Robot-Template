@@ -1,11 +1,8 @@
 package frc.robot.newvision.cameras.limelight;
 
-import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
 import frc.robot.newvision.RobotPoseObservation;
 import frc.robot.newvision.interfaces.OrientationRequiringRobotPoseSupplier;
 import frc.robot.newvision.interfaces.IndependentRobotPoseSupplier;
@@ -24,8 +21,8 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 	private final String logPath;
 	private final Pose3d robotRelativeCameraPose;
 
-	private final RobotPoseObservation mt1RobotPoseObservation;
-	private final RobotPoseObservation mt2RobotPoseObservation;
+	private RobotPoseObservation mt1RobotPoseObservation;
+	private RobotPoseObservation mt2RobotPoseObservation;
 
 	private LimelightHelpers.PoseEstimate mt1RobotPoseEstimate;
 	private LimelightHelpers.PoseEstimate mt2RobotPoseEstimate;
@@ -33,8 +30,8 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 	private Filter mt1RobotPoseFilter;
 	private Filter mt2RobotPoseFilter;
 
-	private Supplier<Matrix<N3, N1>> calculateMT1StdDevs;
-	private Supplier<Matrix<N3, N1>> calculateMT2StdDevs;
+	private Supplier<double[]> calculateMT1StdDevs;
+	private Supplier<double[]> calculateMT2StdDevs;
 
 	private LimelightPipeline pipeline;
 
@@ -61,12 +58,10 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 		switch (pipeline) {
 			case APRIL_TAG -> {
 				if (isObservationPresent(mt1RobotPoseObservation)) {
-					Logger.recordOutput(logPath + "/megaTag1Pose", mt1RobotPoseObservation.getRobotPose());
-					Logger.recordOutput(logPath + "/megaTag1StdDevs", mt1RobotPoseObservation.getStdDevs().getData());
+					Logger.recordOutput(logPath + "/megaTag1PoseObservation", mt1RobotPoseObservation);
 				}
 				if (isObservationPresent(mt2RobotPoseObservation)) {
-					Logger.recordOutput(logPath + "/megaTag2Pose", mt2RobotPoseObservation.getRobotPose());
-					Logger.recordOutput(logPath + "/megaTag2StdDevs", mt2RobotPoseObservation.getStdDevs().getData());
+					Logger.recordOutput(logPath + "/megaTag2PoseObservation", mt2RobotPoseObservation);
 				}
 			}
 			default -> {}
@@ -76,16 +71,22 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 	public void updateMT1() {
 		if (pipeline.equals(LimelightPipeline.APRIL_TAG)) {
 			mt1RobotPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
-			mt1RobotPoseObservation
-				.setObservationValues(getEstimateTimestampSeconds(mt1RobotPoseEstimate), mt1RobotPoseEstimate.pose, calculateMT1StdDevs.get());
+			mt1RobotPoseObservation = new RobotPoseObservation(
+				getEstimateTimestampSeconds(mt1RobotPoseEstimate),
+				mt1RobotPoseEstimate.pose,
+				calculateMT1StdDevs.get()
+			);
 		}
 	}
 
 	public void updateMT2() {
 		if (pipeline.equals(LimelightPipeline.APRIL_TAG)) {
 			mt2RobotPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-			mt2RobotPoseObservation
-				.setObservationValues(getEstimateTimestampSeconds(mt2RobotPoseEstimate), mt2RobotPoseEstimate.pose, calculateMT2StdDevs.get());
+			mt2RobotPoseObservation = new RobotPoseObservation(
+				getEstimateTimestampSeconds(mt2RobotPoseEstimate),
+				mt2RobotPoseEstimate.pose,
+				calculateMT2StdDevs.get()
+			);
 		}
 	}
 
@@ -139,11 +140,11 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 		this.mt2RobotPoseFilter = mt2RobotPoseFilter;
 	}
 
-	public void setMT1StdDevsCalculation(Supplier<Matrix<N3, N1>> calculateMT1StdDevs) {
+	public void setMT1StdDevsCalculation(Supplier<double[]> calculateMT1StdDevs) {
 		this.calculateMT1StdDevs = calculateMT1StdDevs;
 	}
 
-	public void setMT2StdDevsCalculation(Supplier<Matrix<N3, N1>> calculateMT2StdDevs) {
+	public void setMT2StdDevsCalculation(Supplier<double[]> calculateMT2StdDevs) {
 		this.calculateMT2StdDevs = calculateMT2StdDevs;
 	}
 
@@ -168,7 +169,7 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 	}
 
 	private static boolean isObservationPresent(RobotPoseObservation robotPoseObservation) {
-		return !robotPoseObservation.getRobotPose().equals(Pose2d.kZero);
+		return !robotPoseObservation.robotPose().equals(Pose2d.kZero);
 	}
 
 	protected static double getEstimateTimestampSeconds(LimelightHelpers.PoseEstimate poseEstimate) {

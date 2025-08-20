@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.MatBuilder;
-import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -89,22 +87,22 @@ public class Robot {
 			),
 			LimelightPipeline.APRIL_TAG
 		);
-		limelightFour.setMT1RobotPoseFilter(LimelightFilters.megaTag1Filter(limelightFour, new Translation2d(0.1, 0.1)));
-		limelightFour.setMT2RobotPoseFilter(
-			LimelightFilters.megaTag2Filter(limelightFour, headingEstimator, new Translation2d(0.1, 0.1), Rotation2d.fromDegrees(2))
+		limelightFour.setMT1PoseFilter(LimelightFilters.megaTag1Filter(limelightFour, new Translation2d(0.1, 0.1)));
+		limelightFour.setMT2PoseFilter(
+			LimelightFilters.megaTag2Filter(limelightFour, headingEstimator::getEstimatedHeadingAtTimestamp, new Translation2d(0.1, 0.1), Rotation2d.fromDegrees(2))
 		);
 		limelightFour.setMT1StdDevsCalculation(
 			LimelightStdDevCalculations.getMT1StdDevsCalculation(
 				limelightFour,
-				MatBuilder.fill(Nat.N3(), Nat.N1(), 0.0001, 0.0001, 0.0001),
-				MatBuilder.fill(Nat.N3(), Nat.N1(), 0.001, 0.001, 0.001)
+				new double[]{0.0001, 0.0001, 0.0001},
+				new double[]{0.001, 0.001, 0.001}
 			)
 		);
 		limelightFour.setMT2StdDevsCalculation(
 			LimelightStdDevCalculations.getMT2StdDevsCalculation(
 				limelightFour,
-				MatBuilder.fill(Nat.N3(), Nat.N1(), 0.0001, 0.0001, 0.9999),
-				MatBuilder.fill(Nat.N3(), Nat.N1(), 0.001, 0.001, 0.9999)
+				new double[]{0.0001, 0.0001, 0.9999},
+				new double[]{0.001, 0.001, 0.9999}
 			)
 		);
 
@@ -117,22 +115,22 @@ public class Robot {
 			),
 			LimelightPipeline.APRIL_TAG
 		);
-		limelightThreeGB.setMT1RobotPoseFilter(LimelightFilters.megaTag1Filter(limelightThreeGB, new Translation2d(0.1, 0.1)));
-		limelightThreeGB.setMT2RobotPoseFilter(
-			LimelightFilters.megaTag2Filter(limelightThreeGB, headingEstimator, new Translation2d(0.1, 0.1), Rotation2d.fromDegrees(2))
+		limelightThreeGB.setMT1PoseFilter(LimelightFilters.megaTag1Filter(limelightThreeGB, new Translation2d(0.1, 0.1)));
+		limelightThreeGB.setMT2PoseFilter(
+			LimelightFilters.megaTag2Filter(limelightThreeGB, headingEstimator::getEstimatedHeadingAtTimestamp, new Translation2d(0.1, 0.1), Rotation2d.fromDegrees(2))
 		);
 		limelightThreeGB.setMT1StdDevsCalculation(
 			LimelightStdDevCalculations.getMT1StdDevsCalculation(
 				limelightThreeGB,
-				MatBuilder.fill(Nat.N3(), Nat.N1(), 0.0001, 0.0001, 0.0001),
-				MatBuilder.fill(Nat.N3(), Nat.N1(), 0.001, 0.001, 0.001)
+					new double[]{0.0001, 0.0001, 0.0001},
+					new double[]{0.001, 0.001, 0.001}
 			)
 		);
 		limelightThreeGB.setMT2StdDevsCalculation(
 			LimelightStdDevCalculations.getMT2StdDevsCalculation(
 				limelightThreeGB,
-				MatBuilder.fill(Nat.N3(), Nat.N1(), 0.0001, 0.0001, 0.9999),
-				MatBuilder.fill(Nat.N3(), Nat.N1(), 0.001, 0.001, 0.9999)
+					new double[]{0.0001, 0.0001, 0.9999},
+					new double[]{0.001, 0.001, 0.9999}
 			)
 		);
 

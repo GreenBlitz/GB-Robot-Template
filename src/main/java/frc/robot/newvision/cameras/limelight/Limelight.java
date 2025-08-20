@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import frc.robot.newvision.RobotPoseObservation;
+import frc.robot.newvision.StdDevs;
 import frc.robot.newvision.interfaces.OrientationRequiringRobotPoseSupplier;
 import frc.robot.newvision.interfaces.IndependentRobotPoseSupplier;
 import frc.utils.Conversions;
@@ -30,8 +31,8 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 	private Filter mt1PoseFilter;
 	private Filter mt2PoseFilter;
 
-	private Supplier<double[]> calculateMT1StdDevs;
-	private Supplier<double[]> calculateMT2StdDevs;
+	private Supplier<StdDevs> calculateMT1StdDevs;
+	private Supplier<StdDevs> calculateMT2StdDevs;
 
 	private LimelightPipeline pipeline;
 
@@ -148,11 +149,11 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 		this.mt2PoseFilter = mt2RobotPoseFilter;
 	}
 
-	public void setMT1StdDevsCalculation(Supplier<double[]> calculateMT1StdDevs) {
+	public void setMT1StdDevsCalculation(Supplier<StdDevs> calculateMT1StdDevs) {
 		this.calculateMT1StdDevs = calculateMT1StdDevs;
 	}
 
-	public void setMT2StdDevsCalculation(Supplier<double[]> calculateMT2StdDevs) {
+	public void setMT2StdDevsCalculation(Supplier<StdDevs> calculateMT2StdDevs) {
 		this.calculateMT2StdDevs = calculateMT2StdDevs;
 	}
 

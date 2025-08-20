@@ -1,5 +1,7 @@
 package frc.robot.poseestimator.WPILibPoseEstimator;
 
+import edu.wpi.first.math.MatBuilder;
+import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -118,7 +120,7 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 
 	private void addVisionMeasurement(RobotPoseObservation visionObservation) {
 		poseEstimator
-			.addVisionMeasurement(visionObservation.getRobotPose(), visionObservation.getTimestampSeconds(), visionObservation.getStdDevs());
+			.addVisionMeasurement(visionObservation.robotPose(), visionObservation.timestampSeconds(), MatBuilder.fill(Nat.N3(), Nat.N1(), visionObservation.stdDevs()));
 		this.lastVisionObservation = visionObservation;
 	}
 
@@ -127,7 +129,7 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 		Logger.recordOutput(getLogPath() + "odometryPose", getOdometryPose());
 		Logger.recordOutput(getLogPath() + "lastOdometryUpdate", lastOdometryData.getTimestamp());
 		if (lastVisionObservation != null) {
-			Logger.recordOutput(getLogPath() + "lastVisionUpdate", lastVisionObservation.getTimestampSeconds());
+			Logger.recordOutput(getLogPath() + "lastVisionUpdate", lastVisionObservation.timestampSeconds());
 		}
 	}
 

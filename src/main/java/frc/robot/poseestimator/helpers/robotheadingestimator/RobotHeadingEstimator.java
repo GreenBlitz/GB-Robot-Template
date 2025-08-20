@@ -89,16 +89,16 @@ public class RobotHeadingEstimator {
 	public void updateVisionHeading(RobotPoseObservation visionPoseObservation, double visionStandardDeviation) {
 		if (!hasFirstVisionUpdateArrived) {
 			hasFirstVisionUpdateArrived = true;
-			estimatedHeading = visionPoseObservation.getRobotPose().getRotation();
+			estimatedHeading = visionPoseObservation.robotPose().getRotation();
 		}
 		Logger.recordOutput(
 			logPath + RobotHeadingEstimatorConstants.VISION_HEADING_INPUT_LOGPATH_ADDITION,
-			visionPoseObservation.getRobotPose().getRotation()
+			visionPoseObservation.robotPose().getRotation()
 		);
-		Optional<Rotation2d> gyroAtTimestamp = unOffsetedGyroAngleInterpolator.getSample(visionPoseObservation.getTimestampSeconds());
+		Optional<Rotation2d> gyroAtTimestamp = unOffsetedGyroAngleInterpolator.getSample(visionPoseObservation.timestampSeconds());
 		gyroAtTimestamp.ifPresent(
 			gyroSampleAtTimestamp -> estimatedHeading = PoseEstimationMath.combineVisionHeadingAndGyro(
-				visionPoseObservation.getRobotPose().getRotation(),
+				visionPoseObservation.robotPose().getRotation(),
 				gyroSampleAtTimestamp,
 				lastGyroAngle,
 				estimatedHeading,

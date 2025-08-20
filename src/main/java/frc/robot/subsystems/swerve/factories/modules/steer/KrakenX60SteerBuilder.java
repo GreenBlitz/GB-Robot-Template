@@ -28,7 +28,6 @@ import frc.robot.subsystems.swerve.module.records.SteerRequests;
 import frc.robot.subsystems.swerve.module.records.SteerSignals;
 import frc.utils.AngleUnit;
 
-
 class KrakenX60SteerBuilder {
 
 	private static final double GEAR_RATIO = 12.8;

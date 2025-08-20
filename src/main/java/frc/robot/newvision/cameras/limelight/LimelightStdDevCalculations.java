@@ -7,11 +7,11 @@ public class LimelightStdDevCalculations {
 	public static final double[] DEFAULT_STD_DEVS = new double[] {0.0003, 0.0003, 0.003};
 
 	public static Supplier<double[]> getMT1StdDevsCalculation(Limelight limelight, double[] minStdDevs, double[] stdDevFactors) {
-		return () -> averageTagDistanceParabola(limelight.getMT1RobotPoseEstimate().avgTagDist, minStdDevs, stdDevFactors);
+		return () -> averageTagDistanceParabola(limelight.getMT1RawData().avgTagDist, minStdDevs, stdDevFactors);
 	}
 
 	public static Supplier<double[]> getMT2StdDevsCalculation(Limelight limelight, double[] minStdDevs, double[] stdDevFactors) {
-		return () -> averageTagDistanceParabola(limelight.getMT2RobotPoseEstimate().avgTagDist, minStdDevs, stdDevFactors);
+		return () -> averageTagDistanceParabola(limelight.getMT2RawData().avgTagDist, minStdDevs, stdDevFactors);
 	}
 
 	private static double[] averageTagDistanceParabola(

@@ -12,26 +12,12 @@ import java.util.function.Supplier;
 
 public class LimelightFilters {
 
-	public static Filter megaTag1Filter(Limelight limelight, Translation2d robotInFieldTolerance) {
-		return isRobotInField(() -> limelight.getMT1RobotPoseEstimate().pose.getTranslation(), robotInFieldTolerance);
+	public static Filter megaTag1Filter(Limelight limelight) {
+		return Filter.nonFilteringFilter();
 	}
 
-	public static Filter megaTag2Filter(
-		Limelight limelight,
-		RobotHeadingEstimator headingEstimator,
-		Translation2d robotInFieldTolerance,
-		Rotation2d yawAtAngleTolerance
-	) {
-		return isRobotInField(() -> limelight.getMT2RobotPoseEstimate().pose.getTranslation(), robotInFieldTolerance)
-			.and(
-				isYawAtAngle(
-					() -> limelight.getMT2RobotPoseEstimate().pose.getRotation(),
-					() -> headingEstimator
-						.getEstimatedHeadingAtTimestamp(Limelight.getEstimateTimestampSeconds(limelight.getMT2RobotPoseEstimate())),
-					yawAtAngleTolerance
-				)
-			)
-			.and(isYawNotZero(() -> limelight.getMT2RobotPoseEstimate().pose.getRotation()));
+	public static Filter megaTag2Filter(Limelight limelight) {
+		return Filter.nonFilteringFilter();
 	}
 
 	private static Filter isYawAtAngle(

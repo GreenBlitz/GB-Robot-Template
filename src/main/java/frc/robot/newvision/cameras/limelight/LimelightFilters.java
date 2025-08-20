@@ -17,30 +17,30 @@ public class LimelightFilters {
 	}
 
 	public static Filter megaTag2Filter(
-			Limelight limelight,
-			Function<Double, Optional<Rotation2d>> wantedYawAtTimestamp,
-			Translation2d robotInFieldTolerance,
-			Rotation2d yawAtAngleTolerance
+		Limelight limelight,
+		Function<Double, Optional<Rotation2d>> wantedYawAtTimestamp,
+		Translation2d robotInFieldTolerance,
+		Rotation2d yawAtAngleTolerance
 	) {
 		return isRobotInField(() -> limelight.getMT2RawData().pose.getTranslation(), robotInFieldTolerance)
-				.and(
-						isYawAtAngle(
-								() -> limelight.getMT2RawData().pose.getRotation(),
-								() -> wantedYawAtTimestamp.apply(Limelight.getEstimateTimestampSeconds(limelight.getMT2RawData())),
-								yawAtAngleTolerance
-						)
+			.and(
+				isYawAtAngle(
+					() -> limelight.getMT2RawData().pose.getRotation(),
+					() -> wantedYawAtTimestamp.apply(Limelight.getEstimateTimestampSeconds(limelight.getMT2RawData())),
+					yawAtAngleTolerance
 				)
-				.and(isYawNotZero(() -> limelight.getMT2RawData().pose.getRotation()));
+			)
+			.and(isYawNotZero(() -> limelight.getMT2RawData().pose.getRotation()));
 	}
 
 	private static Filter isYawAtAngle(
-			Supplier<Rotation2d> robotYaw,
-			Supplier<Optional<Rotation2d>> wantedYawSupplier,
-			Rotation2d yawTolerance
+		Supplier<Rotation2d> robotYaw,
+		Supplier<Optional<Rotation2d>> wantedYawSupplier,
+		Rotation2d yawTolerance
 	) {
 		return () -> wantedYawSupplier.get()
-				.map(wantedAngle -> ToleranceMath.isNearWrapped(wantedAngle, robotYaw.get(), yawTolerance))
-				.orElse(false);
+			.map(wantedAngle -> ToleranceMath.isNearWrapped(wantedAngle, robotYaw.get(), yawTolerance))
+			.orElse(false);
 	}
 
 	private static Filter isYawNotZero(Supplier<Rotation2d> robotYaw) {
@@ -57,7 +57,7 @@ public class LimelightFilters {
 
 	private static Filter isRobotInField(Supplier<Translation2d> robotTranslation, Translation2d tolerance) {
 		return isXInField(() -> robotTranslation.get().getX(), tolerance.getX())
-				.and(isYInField(() -> robotTranslation.get().getY(), tolerance.getY()));
+			.and(isYInField(() -> robotTranslation.get().getY(), tolerance.getY()));
 	}
 
 }

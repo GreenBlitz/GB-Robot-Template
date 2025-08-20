@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.newvision.StdDevs;
 import frc.robot.newvision.cameras.limelight.Limelight;
 import frc.robot.newvision.cameras.limelight.LimelightFilters;
 import frc.robot.newvision.cameras.limelight.LimelightPipeline;
@@ -89,21 +90,20 @@ public class Robot {
 		);
 		limelightFour.setMT1PoseFilter(LimelightFilters.megaTag1Filter(limelightFour, new Translation2d(0.1, 0.1)));
 		limelightFour.setMT2PoseFilter(
-			LimelightFilters.megaTag2Filter(limelightFour, headingEstimator::getEstimatedHeadingAtTimestamp, new Translation2d(0.1, 0.1), Rotation2d.fromDegrees(2))
+			LimelightFilters.megaTag2Filter(
+				limelightFour,
+				headingEstimator::getEstimatedHeadingAtTimestamp,
+				new Translation2d(0.1, 0.1),
+				Rotation2d.fromDegrees(2)
+			)
 		);
 		limelightFour.setMT1StdDevsCalculation(
-			LimelightStdDevCalculations.getMT1StdDevsCalculation(
-				limelightFour,
-				new double[]{0.0001, 0.0001, 0.0001},
-				new double[]{0.001, 0.001, 0.001}
-			)
+			LimelightStdDevCalculations
+				.getMT1StdDevsCalculation(limelightFour, new StdDevs(0.0001, 0.0001, 0.0001), new StdDevs(0.001, 0.001, 0.001))
 		);
 		limelightFour.setMT2StdDevsCalculation(
-			LimelightStdDevCalculations.getMT2StdDevsCalculation(
-				limelightFour,
-				new double[]{0.0001, 0.0001, 0.9999},
-				new double[]{0.001, 0.001, 0.9999}
-			)
+			LimelightStdDevCalculations
+				.getMT2StdDevsCalculation(limelightFour, new StdDevs(0.0001, 0.0001, 0.9999), new StdDevs(0.001, 0.001, 0.9999))
 		);
 
 		this.limelightThreeGB = new Limelight(
@@ -117,21 +117,20 @@ public class Robot {
 		);
 		limelightThreeGB.setMT1PoseFilter(LimelightFilters.megaTag1Filter(limelightThreeGB, new Translation2d(0.1, 0.1)));
 		limelightThreeGB.setMT2PoseFilter(
-			LimelightFilters.megaTag2Filter(limelightThreeGB, headingEstimator::getEstimatedHeadingAtTimestamp, new Translation2d(0.1, 0.1), Rotation2d.fromDegrees(2))
+			LimelightFilters.megaTag2Filter(
+				limelightThreeGB,
+				headingEstimator::getEstimatedHeadingAtTimestamp,
+				new Translation2d(0.1, 0.1),
+				Rotation2d.fromDegrees(2)
+			)
 		);
 		limelightThreeGB.setMT1StdDevsCalculation(
-			LimelightStdDevCalculations.getMT1StdDevsCalculation(
-				limelightThreeGB,
-					new double[]{0.0001, 0.0001, 0.0001},
-					new double[]{0.001, 0.001, 0.001}
-			)
+			LimelightStdDevCalculations
+				.getMT1StdDevsCalculation(limelightThreeGB, new StdDevs(0.0001, 0.0001, 0.0001), new StdDevs(0.001, 0.001, 0.001))
 		);
 		limelightThreeGB.setMT2StdDevsCalculation(
-			LimelightStdDevCalculations.getMT2StdDevsCalculation(
-				limelightThreeGB,
-					new double[]{0.0001, 0.0001, 0.9999},
-					new double[]{0.001, 0.001, 0.9999}
-			)
+			LimelightStdDevCalculations
+				.getMT2StdDevsCalculation(limelightThreeGB, new StdDevs(0.0001, 0.0001, 0.9999), new StdDevs(0.001, 0.001, 0.9999))
 		);
 
 //		this.visionSources = new MultiAprilTagVisionSources(

@@ -31,8 +31,6 @@ public class RobotManager extends LoggedRobot {
 	private int roborioCycles;
 
 	public RobotManager() {
-		Threads.setCurrentThreadPriority(true, 10);
-
 		LoggerFactory.initializeLogger();
 		PathPlannerUtil.startPathfinder();
 		PathPlannerUtil.setupPathPlannerLogging();
@@ -42,6 +40,8 @@ public class RobotManager extends LoggedRobot {
 
 		createAutoReadyForConstructionChooser();
 		JoysticksBindings.configureBindings(robot);
+
+		Threads.setCurrentThreadPriority(true, 10);
 	}
 
 	@Override

@@ -119,8 +119,17 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	}
 
 	private void addVisionMeasurement(RobotPoseObservation visionObservation) {
-		poseEstimator
-			.addVisionMeasurement(visionObservation.robotPose(), visionObservation.timestampSeconds(), MatBuilder.fill(Nat.N3(), Nat.N1(), visionObservation.stdDevs()));
+		poseEstimator.addVisionMeasurement(
+			visionObservation.robotPose(),
+			visionObservation.timestampSeconds(),
+			MatBuilder.fill(
+				Nat.N3(),
+				Nat.N1(),
+				visionObservation.stdDevs().x(),
+				visionObservation.stdDevs().y(),
+				visionObservation.stdDevs().rotation()
+			)
+		);
 		this.lastVisionObservation = visionObservation;
 	}
 

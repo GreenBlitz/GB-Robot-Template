@@ -13,8 +13,8 @@ public class RobotPoseObservation {
 	private Pose2d robotPose;
 	private Matrix<N3, N1> stdDevs;
 
-	public RobotPoseObservation(double timestampSeconds, Pose2d robotPose, Matrix<N3, N1> standardDeviations) {
-		setObservationValues(timestampSeconds, robotPose, standardDeviations);
+	public RobotPoseObservation(double timestampSeconds, Pose2d robotPose, Matrix<N3, N1> stdDevs) {
+		setObservationValues(timestampSeconds, robotPose, stdDevs);
 	}
 
 	public RobotPoseObservation() {

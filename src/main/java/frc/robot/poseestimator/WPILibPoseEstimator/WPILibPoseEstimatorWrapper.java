@@ -120,7 +120,7 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 		poseEstimator.addVisionMeasurement(
 			visionObservation.getRobotPose(),
 			visionObservation.getTimestampSeconds(),
-			visionObservation.getStandardDeviations()
+			visionObservation.getStdDevs()
 		);
 		this.lastVisionObservation = visionObservation;
 	}

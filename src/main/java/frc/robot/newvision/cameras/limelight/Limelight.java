@@ -72,22 +72,14 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 	public void updateMT1() {
 		if (pipeline.isUsingMT()) {
 			mt1RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
-			mt1PoseObservation = new RobotPoseObservation(
-				getEstimateTimestampSeconds(mt1RawData),
-				mt1RawData.pose,
-				calculateMT1StdDevs.get()
-			);
+			mt1PoseObservation = new RobotPoseObservation(getEstimateTimestampSeconds(mt1RawData), mt1RawData.pose, calculateMT1StdDevs.get());
 		}
 	}
 
 	public void updateMT2() {
 		if (pipeline.isUsingMT()) {
 			mt2RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-			mt2PoseObservation = new RobotPoseObservation(
-				getEstimateTimestampSeconds(mt2RawData),
-				mt2RawData.pose,
-				calculateMT2StdDevs.get()
-			);
+			mt2PoseObservation = new RobotPoseObservation(getEstimateTimestampSeconds(mt2RawData), mt2RawData.pose, calculateMT2StdDevs.get());
 		}
 	}
 

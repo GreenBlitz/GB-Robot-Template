@@ -3,7 +3,6 @@ package frc.robot.newvision.cameras.limelight;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.constants.field.Field;
-import frc.robot.poseestimator.helpers.robotheadingestimator.RobotHeadingEstimator;
 import frc.utils.filter.Filter;
 import frc.utils.math.ToleranceMath;
 

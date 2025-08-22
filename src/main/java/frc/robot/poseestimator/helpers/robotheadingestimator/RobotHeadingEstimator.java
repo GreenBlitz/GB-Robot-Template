@@ -3,7 +3,7 @@ package frc.robot.poseestimator.helpers.robotheadingestimator;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
-import frc.robot.newvision.RobotPoseObservation;
+import frc.robot.vision.RobotPoseObservation;
 import frc.utils.math.StatisticsMath;
 import frc.utils.math.PoseEstimationMath;
 import frc.utils.buffers.RingBuffer.RingBuffer;
@@ -75,12 +75,12 @@ public class RobotHeadingEstimator {
 	}
 
 	public void updateVisionIfGyroOffsetIsNotCalibrated(
-		Optional<RobotPoseObservation> visionPoseObservation,
+		RobotPoseObservation visionPoseObservation,
 		double visionStandardDeviation,
 		double maximumStandardDeviationTolerance
 	) {
-		if (visionPoseObservation.isPresent() && !isGyroOffsetCalibrated(maximumStandardDeviationTolerance)) {
-			updateVisionHeading(visionPoseObservation.get(), visionStandardDeviation);
+		if (!isGyroOffsetCalibrated(maximumStandardDeviationTolerance)) {
+			updateVisionHeading(visionPoseObservation, visionStandardDeviation);
 			estimationAndGyroBuffer.insert(Pair.of(estimatedHeading, lastGyroAngle));
 		}
 	}

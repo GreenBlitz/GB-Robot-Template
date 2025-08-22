@@ -1,7 +1,5 @@
 package frc.robot.poseestimator.WPILibPoseEstimator;
 
-import edu.wpi.first.math.MatBuilder;
-import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -9,7 +7,7 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.Odometry;
-import frc.robot.newvision.RobotPoseObservation;
+import frc.robot.vision.RobotPoseObservation;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.OdometryData;
 import frc.robot.subsystems.GBSubsystem;
@@ -95,9 +93,9 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	}
 
 	@Override
-	public void updateVision(List<Optional<RobotPoseObservation>> visionRobotPoseObservations) {
-		for (Optional<RobotPoseObservation> visionRobotPoseObservation : visionRobotPoseObservations) {
-			visionRobotPoseObservation.ifPresent(this::addVisionMeasurement);
+	public void updateVision(List<RobotPoseObservation> visionRobotPoseObservations) {
+		for (RobotPoseObservation visionRobotPoseObservation : visionRobotPoseObservations) {
+			addVisionMeasurement(visionRobotPoseObservation);
 		}
 	}
 
@@ -122,13 +120,7 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 		poseEstimator.addVisionMeasurement(
 			visionObservation.robotPose(),
 			visionObservation.timestampSeconds(),
-			MatBuilder.fill(
-				Nat.N3(),
-				Nat.N1(),
-				visionObservation.stdDevs().x(),
-				visionObservation.stdDevs().y(),
-				visionObservation.stdDevs().rotation()
-			)
+			visionObservation.stdDevs().asColumnVector()
 		);
 		this.lastVisionObservation = visionObservation;
 	}

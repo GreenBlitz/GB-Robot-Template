@@ -14,7 +14,6 @@ import frc.robot.subsystems.GBSubsystem;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
-import java.util.List;
 import java.util.Optional;
 
 public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEstimator {
@@ -93,7 +92,7 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	}
 
 	@Override
-	public void updateVision(List<RobotPoseObservation> visionRobotPoseObservations) {
+	public void updateVision(RobotPoseObservation... visionRobotPoseObservations) {
 		for (RobotPoseObservation visionRobotPoseObservation : visionRobotPoseObservations) {
 			addVisionMeasurement(visionRobotPoseObservation);
 		}

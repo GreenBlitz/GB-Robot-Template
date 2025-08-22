@@ -1,5 +1,6 @@
 package frc.utils.filter;
 
+@FunctionalInterface
 public interface Filter {
 
 	boolean passesFilter();

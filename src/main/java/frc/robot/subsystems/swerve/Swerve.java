@@ -28,7 +28,6 @@ import frc.robot.subsystems.swerve.states.heading.HeadingControl;
 import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.auto.PathPlannerUtil;
-import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
@@ -52,13 +51,10 @@ public class Swerve extends GBSubsystem {
 	private SwerveState currentState;
 	private Supplier<Rotation2d> headingSupplier;
 	private ChassisPowers driversPowerInputs;
-	private double lastMagnitudeMetersPerSecond;
-	private OdometryData odometryData;
 
 	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro, GyroSignals gyroSignals) {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
-		this.driversPowerInputs = new ChassisPowers();
 
 		this.constants = constants;
 		this.driveRadiusMeters = SwerveMath.calculateDriveRadiusMeters(modules.getModulePositionsFromCenterMeters());
@@ -71,7 +67,6 @@ public class Swerve extends GBSubsystem {
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
 		this.stateHandler = new SwerveStateHandler(this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
-		this.odometryData = new OdometryData();
 
 		update();
 		setDefaultCommand(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
@@ -138,8 +133,6 @@ public class Swerve extends GBSubsystem {
 
 
 	public void update() {
-		double startingTime = TimeUtil.getCurrentTimeSeconds();
-
 		gyro.updateInputs(gyroSignals.yawSignal());
 		modules.updateInputs();
 
@@ -150,17 +143,9 @@ public class Swerve extends GBSubsystem {
 		Logger.recordOutput(constants.velocityLogPath() + "/X", allianceRelativeSpeeds.vxMetersPerSecond);
 		Logger.recordOutput(constants.velocityLogPath() + "/Y", allianceRelativeSpeeds.vyMetersPerSecond);
 
-		double driveMagnitudeMetersPerSecond = SwerveMath.getDriveMagnitude(allianceRelativeSpeeds);
-		Logger.recordOutput(constants.velocityLogPath() + "/Magnitude", driveMagnitudeMetersPerSecond);
-		Logger.recordOutput(
-			constants.velocityLogPath() + "/Acceleration",
-			(driveMagnitudeMetersPerSecond - lastMagnitudeMetersPerSecond) / TimeUtil.getLatestCycleTimeSeconds()
-		);
-		lastMagnitudeMetersPerSecond = driveMagnitudeMetersPerSecond;
+		Logger.recordOutput(constants.velocityLogPath() + "/Magnitude", SwerveMath.getDriveMagnitude(allianceRelativeSpeeds));
 
 		Logger.recordOutput(getLogPath() + "/OdometrySamples", getNumberOfOdometrySamples());
-
-		Logger.recordOutput("TimeTest/SwerveUpdate", TimeUtil.getCurrentTimeSeconds() - startingTime);
 	}
 
 
@@ -179,13 +164,6 @@ public class Swerve extends GBSubsystem {
 			);
 		}
 
-		return odometryData;
-	}
-
-	public OdometryData getLatestOdometryData() {
-		odometryData.setWheelPositions(modules.getWheelPositions(0));
-		odometryData.setGyroYaw(gyro instanceof EmptyGyro ? Optional.empty() : Optional.of(gyroSignals.yawSignal().getLatestValue()));
-		odometryData.setTimestamp(gyroSignals.yawSignal().getTimestamp());
 		return odometryData;
 	}
 
@@ -210,10 +188,6 @@ public class Swerve extends GBSubsystem {
 
 	public ChassisSpeeds getRobotRelativeVelocity() {
 		return kinematics.toChassisSpeeds(modules.getCurrentStates());
-	}
-
-	public ChassisSpeeds getFieldRelativeVelocity() {
-		return SwerveMath.robotToAllianceRelativeSpeeds(getRobotRelativeVelocity(), headingSupplier.get());
 	}
 
 	public ChassisSpeeds getAllianceRelativeVelocity() {
@@ -247,22 +221,6 @@ public class Swerve extends GBSubsystem {
 			rotationVelocityPerSecond.getRadians()
 		);
 		driveByState(targetAllianceRelativeSpeeds, SwerveState.DEFAULT_DRIVE);
-	}
-
-	protected void moveToPoseByPID(Pose2d currentPose, Pose2d targetPose, SwerveState swerveState) {
-		double xVelocityMetersPerSecond = constants.xMetersPIDController().calculate(currentPose.getX(), targetPose.getX());
-		double yVelocityMetersPerSecond = constants.yMetersPIDController().calculate(currentPose.getY(), targetPose.getY());
-		int direction = Field.isFieldConventionAlliance() ? 1 : -1;
-		Rotation2d rotationVelocityPerSecond = Rotation2d.fromDegrees(
-			constants.rotationDegreesPIDController().calculate(currentPose.getRotation().getDegrees(), targetPose.getRotation().getDegrees())
-		);
-
-		ChassisSpeeds targetAllianceRelativeSpeeds = new ChassisSpeeds(
-			xVelocityMetersPerSecond * direction,
-			yVelocityMetersPerSecond * direction,
-			rotationVelocityPerSecond.getRadians()
-		);
-		driveByState(targetAllianceRelativeSpeeds, swerveState);
 	}
 
 	protected void turnToHeading(Rotation2d targetHeading, SwerveState swerveState) {

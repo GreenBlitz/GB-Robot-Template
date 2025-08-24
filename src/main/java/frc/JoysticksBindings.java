@@ -1,14 +1,17 @@
 package frc;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.utils.time.TimeUtil;
-import frc.utils.utilcommands.InitExecuteCommand;
 import org.littletonrobotics.junction.Logger;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 public class JoysticksBindings {
 
@@ -51,17 +54,19 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+		ChassisPowers powers = new ChassisPowers();
+		powers.xPower = 1;
 
-		usedJoystick.A.onTrue(new InstantCommand(() -> {
-			ChassisPowers powers = new ChassisPowers();
-			powers.xPower = 1;
+		AtomicReference<Double> startTime = new AtomicReference<>(TimeUtil.getCurrentTimeSeconds());
 
-			robot.getSwerve().getCommandsBuilder().drive(() -> powers).schedule();
+		usedJoystick.A.onTrue(
+			new ParallelCommandGroup(
+				robot.getSwerve().getCommandsBuilder().drive(() -> powers),
+				new InstantCommand(() -> startTime.set(TimeUtil.getCurrentTimeSeconds())),
+				new RunCommand(() -> Logger.recordOutput("DriveStartTime", TimeUtil.getCurrentTimeSeconds() - startTime.get()))
 
-			double startTime = TimeUtil.getCurrentTimeSeconds();
-			new InitExecuteCommand(() -> {}, () -> Logger.recordOutput("DriveStartTime", TimeUtil.getCurrentTimeSeconds() - startTime))
-				.schedule();
-		}));
+			)
+		);
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

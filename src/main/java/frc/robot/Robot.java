@@ -158,7 +158,7 @@ public class Robot {
 		limelightFour.getIndependentRobotPose()
 			.ifPresent(
 				robotPoseObservation -> headingEstimator.updateVisionIfGyroOffsetIsNotCalibrated(
-					robotPoseObservation,
+					new TimedValue<>(robotPoseObservation.robotPose().getRotation(), robotPoseObservation.timestampSeconds()),
 					RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION,
 					RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE
 				)
@@ -166,7 +166,7 @@ public class Robot {
 		limelightThreeGB.getIndependentRobotPose()
 			.ifPresent(
 				robotPoseObservation -> headingEstimator.updateVisionIfGyroOffsetIsNotCalibrated(
-					robotPoseObservation,
+					new TimedValue<>(robotPoseObservation.robotPose().getRotation(), robotPoseObservation.timestampSeconds()),
 					RobotHeadingEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATION,
 					RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE
 				)

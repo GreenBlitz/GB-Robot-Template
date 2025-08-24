@@ -118,4 +118,11 @@ public class Robot {
 		return swerve;
 	}
 
+	public IPoseEstimator getPoseEstimator() {
+		return poseEstimator;
+	}
+
+	public RobotHeadingEstimator getHeadingEstimator() {
+		return headingEstimator;
+	}
 }

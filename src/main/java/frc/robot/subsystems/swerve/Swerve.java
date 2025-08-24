@@ -200,6 +200,11 @@ public class Swerve extends GBSubsystem {
 		return SwerveMath.allianceToRobotRelativeSpeeds(speeds, getAllianceRelativeHeading());
 	}
 
+	private double getMaxApplicableAcceleration() {
+		return SwerveConstants.getMaxLinearAcceleration()
+			* (1 - (SwerveMath.getDriveMagnitude(getAllianceRelativeVelocity()) / constants.velocityAt12VoltsMetersPerSecond()));
+	}
+
 
 	protected void moveToPoseByPID(Pose2d currentPose, Pose2d targetPose) {
 		double xVelocityMetersPerSecond = constants.xMetersPIDController().calculate(currentPose.getX(), targetPose.getX());
@@ -242,15 +247,16 @@ public class Swerve extends GBSubsystem {
 
 		speeds = stateHandler.applyAimAssistOnChassisSpeeds(speeds, swerveState);
 		speeds = handleHeadingControl(speeds, swerveState);
-		if (SwerveMath.isStill(speeds, SwerveConstants.DEADBANDS)) {
-			modules.stop();
-			return;
-		}
+//		if (SwerveMath.isStill(speeds, SwerveConstants.DEADBANDS)) {
+//			modules.stop();
+//			return;
+//		}
 
 		speeds = SwerveMath.factorSpeeds(speeds, swerveState.getDriveSpeed());
 		speeds = SwerveMath.applyDeadband(speeds, SwerveConstants.DEADBANDS);
 		speeds = getDriveModeRelativeSpeeds(speeds, swerveState);
 		speeds = SwerveMath.discretize(speeds);
+		speeds = SwerveMath.capSpeedsByAcceleration(getAllianceRelativeVelocity(), speeds, getMaxApplicableAcceleration());
 
 		applySpeeds(speeds, swerveState);
 	}

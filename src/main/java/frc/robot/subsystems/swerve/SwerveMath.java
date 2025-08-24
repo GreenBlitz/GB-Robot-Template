@@ -65,4 +65,39 @@ public class SwerveMath {
 		return Math.sqrt(Math.pow(chassisSpeeds.vxMetersPerSecond, 2) + Math.pow(chassisSpeeds.vyMetersPerSecond, 2));
 	}
 
+	public static double capSpeedMagnitudeByAcceleration(
+		double currentMagnitudeMetersPerSecond,
+		double targetMagnitudeMetersPerSecond,
+		double maxApplicableAcceleration
+	) {
+		double wantedAccelerationMetersPerCycleTimeSq = (targetMagnitudeMetersPerSecond - currentMagnitudeMetersPerSecond)
+			/ TimeUtil.getLatestCycleTimeSeconds();
+
+		if (Math.abs(wantedAccelerationMetersPerCycleTimeSq) > Math.abs(maxApplicableAcceleration)) {
+			wantedAccelerationMetersPerCycleTimeSq = wantedAccelerationMetersPerCycleTimeSq < 0
+				? -maxApplicableAcceleration
+				: maxApplicableAcceleration;
+		}
+		return currentMagnitudeMetersPerSecond + wantedAccelerationMetersPerCycleTimeSq * TimeUtil.getLatestCycleTimeSeconds();
+	}
+
+
+	public static ChassisSpeeds capSpeedsByAcceleration(
+		ChassisSpeeds currentSpeeds,
+		ChassisSpeeds targetSpeeds,
+		double maxApplicableAcceleration
+	) {
+		double currentSpeedsMagnitude = getDriveMagnitude(currentSpeeds);
+		double targetSpeedsMagnitude = getDriveMagnitude(targetSpeeds);
+
+		Rotation2d targetAngle = new Rotation2d(targetSpeeds.vxMetersPerSecond, targetSpeeds.vyMetersPerSecond);
+
+		Translation2d targetSpeedsVector = new Translation2d(
+			capSpeedMagnitudeByAcceleration(currentSpeedsMagnitude, targetSpeedsMagnitude, maxApplicableAcceleration),
+			targetAngle
+		);
+
+		return new ChassisSpeeds(targetSpeedsVector.getX(), targetSpeedsVector.getY(), targetSpeeds.omegaRadiansPerSecond);
+	}
+
 }

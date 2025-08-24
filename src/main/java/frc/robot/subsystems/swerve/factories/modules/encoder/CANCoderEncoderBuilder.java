@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve.factories.modules.encoder;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import frc.constants.MathConstants;

@@ -1,10 +1,14 @@
 package frc;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
+import frc.utils.time.TimeUtil;
+import frc.utils.utilcommands.InitExecuteCommand;
+import org.littletonrobotics.junction.Logger;
 
 public class JoysticksBindings {
 
@@ -47,6 +51,17 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+
+		usedJoystick.A.onTrue(new InstantCommand(() -> {
+			ChassisPowers powers = new ChassisPowers();
+			powers.xPower = 1;
+
+			robot.getSwerve().getCommandsBuilder().drive(() -> powers).schedule();
+
+			double startTime = TimeUtil.getCurrentTimeSeconds();
+			new InitExecuteCommand(() -> {}, () -> Logger.recordOutput("DriveStartTime", TimeUtil.getCurrentTimeSeconds() - startTime))
+				.schedule();
+		}));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

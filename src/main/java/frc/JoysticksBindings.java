@@ -1,5 +1,7 @@
 package frc;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -8,6 +10,7 @@ import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
+import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -15,7 +18,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class JoysticksBindings {
 
-	private static final SmartJoystick MAIN_JOYSTICK = new SmartJoystick(JoystickPorts.MAIN);
+	private static final SmartJoystick MAIN_JOYSTICK = new SmartJoystick(JoystickPorts.MAIN, 0.18);
 	private static final SmartJoystick SECOND_JOYSTICK = new SmartJoystick(JoystickPorts.SECOND);
 	private static final SmartJoystick THIRD_JOYSTICK = new SmartJoystick(JoystickPorts.THIRD);
 	private static final SmartJoystick FOURTH_JOYSTICK = new SmartJoystick(JoystickPorts.FOURTH);
@@ -67,6 +70,28 @@ public class JoysticksBindings {
 
 			)
 		);
+
+		usedJoystick.X.onTrue(
+						robot.getSwerve().getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE)
+
+		);
+
+		usedJoystick.B.onTrue(
+				new InstantCommand(
+						() ->{
+							robot.getPoseEstimator().resetPose(
+									new Pose2d(
+											0,
+											robot.getPoseEstimator().getEstimatedPose().getTranslation().getY(),
+											new Rotation2d()
+									)
+							);
+							robot.getHeadingEstimator().reset(new Rotation2d());
+						}
+				)
+		);
+
+		usedJoystick.Y.onTrue(robot.getSwerve().getCommandsBuilder().wheelRadiusCalibration());
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

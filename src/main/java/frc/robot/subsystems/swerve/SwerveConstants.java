@@ -24,9 +24,7 @@ public record SwerveConstants(
 		double velocityAt12VoltsMetersPerSecond,
 		Rotation2d maxRotationalVelocityPerSecond,
 		PIDConstants translationMetersPIDConstants,
-		PIDConstants rotationDegreesPIDConstants,
-		PIDConstants PPTranslationMetersPIDConstants,
-		PIDConstants PPRotationDegreesPIDConstants
+		PIDConstants rotationDegreesPIDConstants
 	) {
 		this(
 			logPath,
@@ -37,12 +35,8 @@ public record SwerveConstants(
 			new PIDController(translationMetersPIDConstants.kP, translationMetersPIDConstants.kI, translationMetersPIDConstants.kD),
 			new PIDController(translationMetersPIDConstants.kP, translationMetersPIDConstants.kI, translationMetersPIDConstants.kD),
 			new PIDController(rotationDegreesPIDConstants.kP, rotationDegreesPIDConstants.kI, rotationDegreesPIDConstants.kD),
-			new PPHolonomicDriveController(PPTranslationMetersPIDConstants, PPRotationDegreesPIDConstants)
+			new PPHolonomicDriveController(translationMetersPIDConstants, rotationDegreesPIDConstants)
 		);
-		this.xMetersPIDController.setIntegratorRange(-SwerveConstants.DEADBANDS.getX(), SwerveConstants.DEADBANDS.getX());
-		this.yMetersPIDController.setIntegratorRange(-SwerveConstants.DEADBANDS.getY(), SwerveConstants.DEADBANDS.getY());
-		this.rotationDegreesPIDController
-			.setIntegratorRange(-SwerveConstants.DEADBANDS.getRotation().getDegrees(), SwerveConstants.DEADBANDS.getRotation().getDegrees());
 
 		this.rotationDegreesPIDController
 			.enableContinuousInput(MathConstants.HALF_CIRCLE.unaryMinus().getDegrees(), MathConstants.HALF_CIRCLE.getDegrees());

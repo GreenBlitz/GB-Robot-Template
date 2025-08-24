@@ -1,4 +1,4 @@
-package frc.robot.newvision.cameras.limelight;
+package frc.robot.vision.cameras.limelight;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;

@@ -5,10 +5,15 @@ import java.util.ArrayList;
 
 public class BrakeStateManager {
 
+	private enum BrakeMode {
+		UNKNOWN,
+		BRAKE,
+		COAST
+	}
+
 	private static final ArrayList<Runnable> brakeRunnables = new ArrayList<>();
 	private static final ArrayList<Runnable> coastRunnables = new ArrayList<>();
-	private static boolean isBrake = false;
-	private static boolean isFirst = true;
+	private static BrakeMode mode = BrakeMode.UNKNOWN;
 
 	public static void add(Runnable brake, Runnable coast) {
 		brakeRunnables.add(brake);
@@ -16,22 +21,20 @@ public class BrakeStateManager {
 	}
 
 	public static void brake() {
-		if (!isFirst && isBrake) {
+		if (mode == BrakeMode.BRAKE) {
 			return;
 		}
-		isFirst = false;
-		isBrake = true;
+		mode = BrakeMode.BRAKE;
 		for (Runnable brake : brakeRunnables) {
 			brake.run();
 		}
 	}
 
 	public static void coast() {
-		if (!isFirst && !isBrake) {
+		if (mode == BrakeMode.COAST) {
 			return;
 		}
-		isFirst = false;
-		isBrake = false;
+		mode = BrakeMode.COAST;
 		for (Runnable coast : coastRunnables) {
 			coast.run();
 		}

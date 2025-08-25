@@ -14,7 +14,7 @@ public class BrakeStateManager {
 
 	private static final ArrayList<Runnable> brakeRunnables = new ArrayList<>();
 	private static final ArrayList<Runnable> coastRunnables = new ArrayList<>();
-	private static BrakeMode mode = BrakeMode.UNKNOWN;
+	private static BrakeMode currentMode = BrakeMode.UNKNOWN;
 
 	public static void add(Runnable brake, Runnable coast) {
 		brakeRunnables.add(brake);
@@ -22,10 +22,10 @@ public class BrakeStateManager {
 	}
 
     private static void setBrakeMode(BrakeMode wantedMode, List<Runnable> setModes) {
-        if (mode == wantedMode) {
+        if (currentMode == wantedMode) {
             return;
         }
-        mode = wantedMode;
+        currentMode = wantedMode;
         for (Runnable setMode : setModes) {
             setMode.run();
         }

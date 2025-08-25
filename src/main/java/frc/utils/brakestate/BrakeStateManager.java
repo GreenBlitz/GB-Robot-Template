@@ -2,6 +2,7 @@ package frc.utils.brakestate;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BrakeStateManager {
 
@@ -20,24 +21,22 @@ public class BrakeStateManager {
 		coastRunnables.add(coast);
 	}
 
+    private static void setBrakeMode(BrakeMode wantedMode, List<Runnable> setModes) {
+        if (mode == wantedMode) {
+            return;
+        }
+        mode = wantedMode;
+        for (Runnable setMode : setModes) {
+            setMode.run();
+        }
+    }
+
 	public static void brake() {
-		if (mode == BrakeMode.BRAKE) {
-			return;
-		}
-		mode = BrakeMode.BRAKE;
-		for (Runnable brake : brakeRunnables) {
-			brake.run();
-		}
+        setBrakeMode(BrakeMode.BRAKE, brakeRunnables);
 	}
 
 	public static void coast() {
-		if (mode == BrakeMode.COAST) {
-			return;
-		}
-		mode = BrakeMode.COAST;
-		for (Runnable coast : coastRunnables) {
-			coast.run();
-		}
+		setBrakeMode(BrakeMode.COAST, coastRunnables);
 	}
 
 }

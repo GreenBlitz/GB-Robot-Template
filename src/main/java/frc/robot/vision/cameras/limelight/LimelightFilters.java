@@ -11,6 +11,10 @@ import java.util.function.Supplier;
 
 public class LimelightFilters {
 
+	public static Filter detectedObjectFilter(Limelight limelight) {
+		return Filter.nonFilteringFilter();
+	}
+
 	public static Filter megaTag1Filter(Limelight limelight) {
 		return Filter.nonFilteringFilter();
 	}

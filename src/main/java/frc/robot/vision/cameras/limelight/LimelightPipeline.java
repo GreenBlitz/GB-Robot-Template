@@ -2,7 +2,8 @@ package frc.robot.vision.cameras.limelight;
 
 public enum LimelightPipeline {
 
-	APRIL_TAG(0, true);
+	APRIL_TAG(0, true),
+	OBJECT_DETECTION(1, false);
 
 	private final int pipelineIndex;
 	private final boolean isUsingMT;

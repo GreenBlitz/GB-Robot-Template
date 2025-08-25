@@ -21,18 +21,18 @@ public class BrakeStateManager {
 		coastRunnables.add(coast);
 	}
 
-    private static void setBrakeMode(BrakeMode wantedMode, List<Runnable> setModes) {
-        if (currentMode == wantedMode) {
-            return;
-        }
-        currentMode = wantedMode;
-        for (Runnable setMode : setModes) {
-            setMode.run();
-        }
-    }
+	private static void setBrakeMode(BrakeMode wantedMode, List<Runnable> setModes) {
+		if (currentMode == wantedMode) {
+			return;
+		}
+		currentMode = wantedMode;
+		for (Runnable setMode : setModes) {
+			setMode.run();
+		}
+	}
 
 	public static void brake() {
-        setBrakeMode(BrakeMode.BRAKE, brakeRunnables);
+		setBrakeMode(BrakeMode.BRAKE, brakeRunnables);
 	}
 
 	public static void coast() {

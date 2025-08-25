@@ -8,6 +8,7 @@ public class BrakeStateManager {
 	private static final ArrayList<Runnable> brakeRunnables = new ArrayList<>();
 	private static final ArrayList<Runnable> coastRunnables = new ArrayList<>();
 	private static boolean isBrake = false;
+	private static boolean isFirst = true;
 
 	public static void add(Runnable brake, Runnable coast) {
 		brakeRunnables.add(brake);
@@ -15,9 +16,10 @@ public class BrakeStateManager {
 	}
 
 	public static void brake() {
-		if (isBrake) {
+		if (!isFirst && isBrake) {
 			return;
 		}
+		isFirst = false;
 		isBrake = true;
 		for (Runnable brake : brakeRunnables) {
 			brake.run();
@@ -25,9 +27,10 @@ public class BrakeStateManager {
 	}
 
 	public static void coast() {
-		if (!isBrake) {
+		if (!isFirst && !isBrake) {
 			return;
 		}
+		isFirst = false;
 		isBrake = false;
 		for (Runnable coast : coastRunnables) {
 			coast.run();

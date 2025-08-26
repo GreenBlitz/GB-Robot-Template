@@ -47,14 +47,6 @@ public class LimelightFilters {
 		);
 	}
 
-	private static Filter onlyTheseTypes(Supplier<Integer> objectClassIndexSupplier, DetectedObjectType... types) {
-		return Filter.orAll(
-				Arrays.stream(types)
-						.map(objectType -> (Filter) () -> objectType.getClassIndex() == objectClassIndexSupplier.get())
-						.toArray(Filter[]::new)
-		);
-	}
-
 	private static Filter isYawAtAngle(
 		Supplier<Rotation2d> robotYaw,
 		Supplier<Optional<Rotation2d>> wantedYawSupplier,

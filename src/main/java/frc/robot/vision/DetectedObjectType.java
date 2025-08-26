@@ -3,7 +3,8 @@ package frc.robot.vision;
 import java.util.Optional;
 
 public enum DetectedObjectType {
-	;
+
+	ALGAE(1, 0.41275);
 
 	private final int classIndex;
 	private final double heightMeters;

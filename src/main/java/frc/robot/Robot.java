@@ -47,6 +47,7 @@ public class Robot {
 	private final IPoseEstimator poseEstimator;
 	private final Limelight limelightFour;
 	private final Limelight limelightThreeGB;
+	private final Limelight limelightObjectDetector;
 	private final RobotHeadingEstimator headingEstimator;
 
 	public Robot() {
@@ -140,6 +141,17 @@ public class Robot {
 			)
 		);
 
+		limelightObjectDetector = new Limelight(
+				"limelight-object",
+				"NewVision",
+				new Pose3d(
+						new Translation3d(-0.08, 0.23, 0.865),
+						new Rotation3d(Units.Degrees.of(0), Units.Degrees.of(-27), Units.Degrees.of(180))
+				),
+				LimelightPipeline.OBJECT_DETECTION
+		);
+		limelightObjectDetector.setDetectedObjectFilter(LimelightFilters.detectedObjectFilter(limelightObjectDetector));
+
 		swerve.setHeadingSupplier(
 			ROBOT_TYPE.isSimulation() ? () -> poseEstimator.getEstimatedPose().getRotation() : () -> headingEstimator.getEstimatedHeading()
 		);
@@ -184,6 +196,9 @@ public class Robot {
 		limelightFour.log();
 		limelightThreeGB.log();
 		headingEstimator.log();
+
+		limelightObjectDetector.updateObjectDetection();
+		limelightObjectDetector.log();
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();

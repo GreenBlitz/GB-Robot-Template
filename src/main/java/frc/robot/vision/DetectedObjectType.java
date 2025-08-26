@@ -1,5 +1,7 @@
 package frc.robot.vision;
 
+import java.util.Optional;
+
 public enum DetectedObjectType {
 	;
 
@@ -19,13 +21,13 @@ public enum DetectedObjectType {
 		return heightMeters;
 	}
 
-	public static DetectedObjectType getByIndex(int classIndex) {
+	public static Optional<DetectedObjectType> getByIndex(int classIndex) {
 		for (DetectedObjectType detectedObjectType : values()) {
 			if (detectedObjectType.classIndex == classIndex) {
-				return detectedObjectType;
+				return Optional.of(detectedObjectType);
 			}
 		}
-		return null;
+		return Optional.empty();
 	}
 
 }

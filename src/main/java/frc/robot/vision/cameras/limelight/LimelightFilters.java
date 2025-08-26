@@ -3,9 +3,11 @@ package frc.robot.vision.cameras.limelight;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.constants.field.Field;
+import frc.robot.vision.DetectedObjectType;
 import frc.utils.filter.Filter;
 import frc.utils.math.ToleranceMath;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -21,6 +23,14 @@ public class LimelightFilters {
 
 	public static Filter megaTag2Filter(Limelight limelight) {
 		return Filter.nonFilteringFilter();
+	}
+
+	private static Filter onlyTheseTypes(Supplier<Integer> objectClassIndexSupplier, DetectedObjectType... types) {
+		return Filter.orAll(
+				Arrays.stream(types)
+						.map(objectType -> (Filter) () -> objectType.getClassIndex() == objectClassIndexSupplier.get())
+						.toArray(Filter[]::new)
+		);
 	}
 
 	private static Filter isYawAtAngle(

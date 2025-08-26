@@ -8,9 +8,9 @@ public enum DetectedObjectType {
 	private final int classIndex;
 	private final double heightMeters;
 
-	DetectedObjectType(int classIndex, double height) {
+	DetectedObjectType(int classIndex, double heightMeters) {
 		this.classIndex = classIndex;
-		this.heightMeters = height;
+		this.heightMeters = heightMeters;
 	}
 
 	public int getClassIndex() {

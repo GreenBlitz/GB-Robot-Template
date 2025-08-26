@@ -3,7 +3,11 @@ package frc.robot.vision.cameras.limelight;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.vision.DetectedObjectObseration;
+import frc.robot.vision.DetectedObjectType;
 import frc.robot.vision.RobotPoseObservation;
+import frc.robot.vision.interfaces.ObjectDetector;
 import frc.robot.vision.interfaces.OrientationRequiringRobotPoseSupplier;
 import frc.robot.vision.interfaces.IndependentRobotPoseSupplier;
 import frc.utils.Conversions;
@@ -16,11 +20,15 @@ import org.littletonrobotics.junction.Logger;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class Limelight implements IndependentRobotPoseSupplier, OrientationRequiringRobotPoseSupplier {
+public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, OrientationRequiringRobotPoseSupplier {
 
 	private final String name;
 	private final String logPath;
 	private final Pose3d robotRelativeCameraPose;
+
+	private DetectedObjectObseration detectedObjectObseration;
+
+	private LimelightTarget2dValues target2dValues;
 
 	private RobotPoseObservation mt1PoseObservation;
 	private RobotPoseObservation mt2PoseObservation;
@@ -28,6 +36,7 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 	private LimelightHelpers.PoseEstimate mt1RawData;
 	private LimelightHelpers.PoseEstimate mt2RawData;
 
+	private Filter detectedObjectFilter;
 	private Filter mt1PoseFilter;
 	private Filter mt2PoseFilter;
 
@@ -43,9 +52,17 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 		this.robotRelativeCameraPose = robotRelativeCameraPose;
 		setRobotRelativeCameraPose(robotRelativeCameraPose);
 
+		this.detectedObjectObseration = new DetectedObjectObseration();
+
+		this.target2dValues = new LimelightTarget2dValues();
+
 		this.mt1PoseObservation = new RobotPoseObservation();
 		this.mt2PoseObservation = new RobotPoseObservation();
 
+		this.mt1RawData = new LimelightHelpers.PoseEstimate();
+		this.mt2RawData = new LimelightHelpers.PoseEstimate();
+
+		this.detectedObjectFilter = Filter.nonFilteringFilter();
 		this.mt1PoseFilter = Filter.nonFilteringFilter();
 		this.mt2PoseFilter = Filter.nonFilteringFilter();
 
@@ -65,7 +82,30 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 					Logger.recordOutput(logPath + "/megaTag2PoseObservation", mt2PoseObservation);
 				}
 			}
+			case OBJECT_DETECTION -> {
+				if (doesObservationExist(detectedObjectObseration)) {
+					Logger.recordOutput(logPath + "/detectedObjectObservation", detectedObjectObseration);
+				}
+			}
 			default -> {}
+		}
+	}
+
+	public void updateObjectDetection() {
+		target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
+		if (target2dValues.isValid()) {
+			DetectedObjectType.getByIndex(target2dValues.targetDetectorClassIndex())
+				.ifPresent(
+					objectType -> detectedObjectObseration = ObjectDetectionHelper.getDetectedObjectObservation(
+						robotRelativeCameraPose,
+						objectType,
+						target2dValues.targetX(),
+						target2dValues.targetY(),
+						getTarget2dTimestampSeconds(target2dValues)
+					)
+				);
+		} else {
+			detectedObjectObseration = new DetectedObjectObseration();
 		}
 	}
 
@@ -92,6 +132,18 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 	}
 
 	@Override
+	public Optional<DetectedObjectObseration> getRobotRelativeObjectTranslation() {
+		if (
+			pipeline.equals(LimelightPipeline.OBJECT_DETECTION)
+				&& doesObservationExist(detectedObjectObseration)
+				&& detectedObjectFilter.passesFilter()
+		) {
+			return Optional.of(detectedObjectObseration);
+		}
+		return Optional.empty();
+	}
+
+	@Override
 	public Optional<RobotPoseObservation> getIndependentRobotPose() {
 		if (pipeline.isUsingMT() && doesObservationExist(mt1PoseObservation) && mt1PoseFilter.passesFilter()) {
 			return Optional.of(mt1PoseObservation);
@@ -105,6 +157,10 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 			return Optional.of(mt2PoseObservation);
 		}
 		return Optional.empty();
+	}
+
+	public Filter getDetectedObjectFilter() {
+		return detectedObjectFilter;
 	}
 
 	public Filter getMt1PoseFilter() {
@@ -133,6 +189,10 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 		LimelightHelpers.setPipelineIndex(name, pipeline.getPipelineIndex());
 	}
 
+	public void setDetectedObjectFilter(Filter detectedObjectFilter) {
+		this.detectedObjectFilter = detectedObjectFilter;
+	}
+
 	public void setMT1PoseFilter(Filter mt1RobotPoseFilter) {
 		this.mt1PoseFilter = mt1RobotPoseFilter;
 	}
@@ -147,6 +207,10 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 
 	public void setMT2StdDevsCalculation(Supplier<StandardDeviations2D> calculateMT2StdDevs) {
 		this.calculateMT2StdDevs = calculateMT2StdDevs;
+	}
+
+	protected LimelightTarget2dValues getTarget2dValues() {
+		return target2dValues;
 	}
 
 	protected LimelightHelpers.PoseEstimate getMT1RawData() {
@@ -169,15 +233,24 @@ public class Limelight implements IndependentRobotPoseSupplier, OrientationRequi
 		);
 	}
 
-	private static boolean doesObservationExist(RobotPoseObservation robotPoseObservation) {
-		return !robotPoseObservation.robotPose().equals(Pose2d.kZero);
-	}
-
 	protected static double getEstimateTimestampSeconds(LimelightHelpers.PoseEstimate poseEstimate) {
 		if (poseEstimate.timestampSeconds == 0) {
 			return 0;
 		}
 		return TimeUtil.getCurrentTimeSeconds() - Conversions.milliSecondsToSeconds(poseEstimate.latency);
+	}
+
+	private static double getTarget2dTimestampSeconds(LimelightTarget2dValues target2dValues) {
+		return TimeUtil.getCurrentTimeSeconds()
+			- Conversions.milliSecondsToSeconds(target2dValues.targetLatencyMilliseconds() + target2dValues.captureLatencyMilliseconds());
+	}
+
+	private static boolean doesObservationExist(DetectedObjectObseration detectedObjectObseration) {
+		return !detectedObjectObseration.robotRelativeObjectTranslation().equals(Translation2d.kZero);
+	}
+
+	private static boolean doesObservationExist(RobotPoseObservation robotPoseObservation) {
+		return !robotPoseObservation.robotPose().equals(Pose2d.kZero);
 	}
 
 }

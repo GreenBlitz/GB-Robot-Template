@@ -55,7 +55,10 @@ public class JoysticksBindings {
 		chassisPowers.xPower = 0.1;
 		chassisPowers2.xPower = 0;
 		usedJoystick.A.whileTrue(
-			robot.getSwerve().getCommandsBuilder().drive(() -> chassisPowers).andThen(robot.getSwerve().getCommandsBuilder().drive(() -> chassisPowers))
+			robot.getSwerve()
+				.getCommandsBuilder()
+				.drive(() -> chassisPowers)
+				.andThen(robot.getSwerve().getCommandsBuilder().drive(() -> chassisPowers))
 		);
 
 		usedJoystick.B.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d())));

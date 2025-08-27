@@ -1,6 +1,5 @@
 package frc.robot.subsystems.swerve.factories.gyro;
 
-import com.ctre.phoenix6.configs.MountPoseConfigs;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import frc.robot.IDs;
 import frc.robot.RobotConstants;
@@ -19,16 +18,15 @@ class Pigeon2GyroBuilder {
 
 	private static Pigeon2Configuration buildGyroConfig() {
 		Pigeon2Configuration gyroConfig = new Pigeon2Configuration();
+		gyroConfig.MountPose.MountPoseYaw = 90.2035903930664;
+		gyroConfig.MountPose.MountPosePitch = 0.6566112637519836;
+		gyroConfig.MountPose.MountPoseRoll = -2.0430026054382324;
 		return gyroConfig;
 	}
 
 	static IGyro buildGyro(String logPath) {
-		Pigeon2Wrapper pigeon2Wrapper = new Pigeon2Wrapper(IDs.Pigeon2IDs.SWERVE_PIGEON_2);
-
-		MountPoseConfigs mountPoseConfigs = new MountPoseConfigs();
-		pigeon2Wrapper.getConfigurator().refresh(mountPoseConfigs);
+		Pigeon2Wrapper pigeon2Wrapper = new Pigeon2Wrapper(IDs.Pigeon2IDs.SWERVE);
 		Pigeon2Configuration pigeon2Configuration = buildGyroConfig();
-		pigeon2Configuration.MountPose = mountPoseConfigs;
 
 		if (!pigeon2Wrapper.applyConfiguration(pigeon2Configuration, APPLY_CONFIG_RETRIES).isOK()) {
 			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();

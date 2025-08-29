@@ -85,13 +85,14 @@ public class SmartJoystick {
 	private static double sigmoidValue(double axisValue, double multiplier) {
 		double sigmoidMid = 0.5;
 
-		double sigMultX = sigmoid(multiplier * (Math.abs(axisValue) - sigmoidMid));
-		double sigMidMult = sigmoid(sigmoidMid * multiplier);
+		double maxValue = sigmoid(sigmoidMid * multiplier);
+		double minValue = 1 - maxValue;
 
-		double sigMinusMidMult = 1 - sigMidMult;
-		double calc = (sigMultX - sigMinusMidMult) / (sigMidMult - sigMinusMidMult);
+		double sigmoidAppliedValue = sigmoid(multiplier * (Math.abs(axisValue) - sigmoidMid));
 
-		return Math.signum(axisValue) * calc;
+		double scaledValue = (sigmoidAppliedValue - minValue) / (maxValue - minValue);
+
+		return Math.signum(axisValue) * scaledValue;
 	}
 
 	private static double sigmoid(double x) {

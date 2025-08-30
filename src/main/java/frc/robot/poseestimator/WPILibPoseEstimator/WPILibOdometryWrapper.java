@@ -69,24 +69,28 @@ public class WPILibOdometryWrapper extends Odometry<SwerveModulePosition[]> {
 		double circleRadiusMeters = wheelPosition.distanceMeters / deltaTheta.getRadians();
 		double chordLengthMeters = 2 * circleRadiusMeters * Math.sin(deltaTheta.getRadians() / 2);
 
-		Rotation2d angleBeta = Rotation2d.fromDegrees((180 - deltaTheta.getDegrees()) / 2);
-		Rotation2d angleGama = new Rotation2d();
+		Rotation2d angleOfShortestPath = previousWheelPose2d.getRotation().plus(deltaTheta.div(2));
 
 		Translation2d currentTranslation = new Translation2d(
-			previousWheelPose2d.getX() + Math.cos(angleGama.getRadians()) * chordLengthMeters,
-			previousWheelPose2d.getY() + Math.sin(angleGama.getRadians()) * chordLengthMeters
+			previousWheelPose2d.getX() + Math.cos(angleOfShortestPath.getRadians()) * chordLengthMeters,
+			previousWheelPose2d.getY() + Math.sin(angleOfShortestPath.getRadians()) * chordLengthMeters
 		);
 		Rotation2d currentWheelHeading = previousWheelPose2d.getRotation().plus(deltaTheta);
 		return new Pose2d(currentTranslation, currentWheelHeading);
 	}
 
-	public Translation2d getRobotTranslation(Pose2d[] wheelPose2ds) {
+	public Translation2d getRobotTranslation(Pose2d[] wheelPose2ds, Pose2d[] robotRelativeOriginalWheelPose2ds, Rotation2d robotOrientation) {
 		Translation2d robotTranslation = new Translation2d();
-		for (Pose2d wheelPose : wheelPose2ds) {
-			robotTranslation.plus(wheelPose.getTranslation());
+		for (int i = 0; i < wheelPose2ds.length; i++) {
+			robotTranslation.plus(getRobotCenterByWheel(wheelPose2ds[i], robotRelativeOriginalWheelPose2ds[i], robotOrientation));
 		}
 		robotTranslation.div(wheelPose2ds.length);
 		return robotTranslation;
+	}
+
+	public Translation2d getRobotCenterByWheel(Pose2d fieldRelativeWheelPose2d, Pose2d robotRelativeOriginalWheelPose2d, Rotation2d robotOrientation) {
+		Translation2d unrotatedRobotCenter = fieldRelativeWheelPose2d.getTranslation().minus(robotRelativeOriginalWheelPose2d.getTranslation());
+		return unrotatedRobotCenter.rotateAround(fieldRelativeWheelPose2d.getTranslation(), robotOrientation);
 	}
 
 	@Override
@@ -98,7 +102,7 @@ public class WPILibOdometryWrapper extends Odometry<SwerveModulePosition[]> {
 		for (int i = 0; i < wheelPositions.length; i++) {
 			currentWheelPose2ds[i] = getWheelPose2d(deltaTheta, wheelPositions[i], m_previousWheelPose2ds[i]);
 		}
-		Translation2d currentTranslation = getRobotTranslation(currentWheelPose2ds);
+		Translation2d currentTranslation = getRobotTranslation(currentWheelPose2ds, injection of constants, currentAngle);
 
 		m_poseMeters = new Pose2d(currentTranslation, currentAngle);
 		m_kinematics.copyInto(wheelPositions, m_previousWheelPositions);

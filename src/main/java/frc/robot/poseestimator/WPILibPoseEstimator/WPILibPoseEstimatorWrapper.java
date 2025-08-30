@@ -7,15 +7,13 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.Odometry;
+import frc.robot.vision.RobotPoseObservation;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.OdometryData;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.vision.data.AprilTagVisionData;
-import frc.robot.vision.data.VisionData;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
-import java.util.List;
 import java.util.Optional;
 
 public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEstimator {
@@ -23,7 +21,7 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	private final SwerveDriveKinematics kinematics;
 	private final Odometry<SwerveModulePosition[]> odometryEstimator;
 	private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
-	private VisionData lastVisionData;
+	private RobotPoseObservation lastVisionObservation;
 	private OdometryData lastOdometryData;
 	private Rotation2d lastOdometryAngle;
 
@@ -94,9 +92,9 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	}
 
 	@Override
-	public void updateVision(List<AprilTagVisionData> robotPoseVisionData) {
-		for (AprilTagVisionData visionData : robotPoseVisionData) {
-			addVisionMeasurement(visionData);
+	public void updateVision(RobotPoseObservation... visionRobotPoseObservations) {
+		for (RobotPoseObservation visionRobotPoseObservation : visionRobotPoseObservations) {
+			addVisionMeasurement(visionRobotPoseObservation);
 		}
 	}
 
@@ -117,21 +115,21 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 		poseEstimator.resetRotation(newHeading);
 	}
 
-	private void addVisionMeasurement(AprilTagVisionData visionData) {
+	private void addVisionMeasurement(RobotPoseObservation visionObservation) {
 		poseEstimator.addVisionMeasurement(
-			visionData.getEstimatedPose().toPose2d(),
-			visionData.getTimestamp(),
-			WPILibPoseEstimatorConstants.VISION_STANDARD_DEVIATIONS_TRANSFORM.apply(visionData).asColumnVector()
+			visionObservation.robotPose(),
+			visionObservation.timestampSeconds(),
+			visionObservation.stdDevs().asColumnVector()
 		);
-		this.lastVisionData = visionData;
+		this.lastVisionObservation = visionObservation;
 	}
 
 	private void log() {
 		Logger.recordOutput(getLogPath() + "estimatedPose", getEstimatedPose());
 		Logger.recordOutput(getLogPath() + "odometryPose", getOdometryPose());
 		Logger.recordOutput(getLogPath() + "lastOdometryUpdate", lastOdometryData.getTimestamp());
-		if (lastVisionData != null) {
-			Logger.recordOutput(getLogPath() + "lastVisionUpdate", lastVisionData.getTimestamp());
+		if (lastVisionObservation != null) {
+			Logger.recordOutput(getLogPath() + "lastVisionUpdate", lastVisionObservation.timestampSeconds());
 		}
 	}
 

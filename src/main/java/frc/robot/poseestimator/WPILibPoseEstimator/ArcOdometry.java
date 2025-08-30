@@ -65,8 +65,8 @@ public class ArcOdometry extends Odometry<SwerveModulePosition[]> {
 		return m_poseMeters;
 	}
 
-	public Pose2d getWheelPose2d(Rotation2d deltaTheta, SwerveModulePosition wheelPosition, Pose2d previousWheelPose2d) {
-		double circleRadiusMeters = wheelPosition.distanceMeters / deltaTheta.getRadians();
+	public Pose2d getWheelPose2d(Rotation2d deltaTheta, SwerveModulePosition wheelPositionDelta, Pose2d previousWheelPose2d) {
+		double circleRadiusMeters = wheelPositionDelta.distanceMeters / deltaTheta.getRadians();
 		double chordLengthMeters = 2 * circleRadiusMeters * Math.sin(deltaTheta.getRadians() / 2);
 
 		Rotation2d angleOfShortestPath = previousWheelPose2d.getRotation().plus(deltaTheta.div(2));
@@ -102,25 +102,36 @@ public class ArcOdometry extends Odometry<SwerveModulePosition[]> {
 	}
 
 	public Rotation2d[] getWheelsDeltaThetas(
-		SwerveModulePosition[] wheelPositions,
+		SwerveModulePosition[] wheelPositionsDeltas,
 		Rotation2d currentRobotOrientation,
 		Rotation2d previousRobotOrientation
 	) {
-		Rotation2d[] wheelsDeltaThetas = new Rotation2d[wheelPositions.length];
-		for (int i = 0; i < wheelPositions.length; i++) {
-			wheelsDeltaThetas[i] = wheelPositions[i].angle.plus(currentRobotOrientation.minus(previousRobotOrientation));
+		Rotation2d[] wheelsDeltaThetas = new Rotation2d[wheelPositionsDeltas.length];
+		for (int i = 0; i < wheelPositionsDeltas.length; i++) {
+			wheelsDeltaThetas[i] = wheelPositionsDeltas[i].angle.plus(currentRobotOrientation.minus(previousRobotOrientation));
 		}
 		return wheelsDeltaThetas;
 	}
 
+	public SwerveModulePosition[] getWheelPositionDeltas(SwerveModulePosition[] currentPositions, SwerveModulePosition[] previousPositions) {
+		for (int i = 0; i < currentPositions.length; i++) {
+			currentPositions[i] = new SwerveModulePosition(
+				currentPositions[i].distanceMeters - previousPositions[i].distanceMeters,
+				currentPositions[i].angle.minus(previousPositions[i].angle)
+			);
+		}
+		return currentPositions;
+	}
+
 	@Override
 	public Pose2d update(Rotation2d gyroAngle, SwerveModulePosition[] wheelPositions) {
+		SwerveModulePosition[] wheelPositionDeltas = getWheelPositionDeltas(wheelPositions, m_previousWheelPositions);
 		Rotation2d currentAngle = gyroAngle.plus(m_gyroOffset);
-		Rotation2d[] wheelsDeltaThetas = getWheelsDeltaThetas(wheelPositions, currentAngle, m_previousAngle);
+		Rotation2d[] wheelsDeltaThetas = getWheelsDeltaThetas(wheelPositionDeltas, currentAngle, m_previousAngle);
 
-		Pose2d[] currentWheelPose2ds = new Pose2d[wheelPositions.length];
-		for (int i = 0; i < wheelPositions.length; i++) {
-			currentWheelPose2ds[i] = getWheelPose2d(wheelsDeltaThetas[i], wheelPositions[i], m_previousWheelFieldRelativePose2ds[i]);
+		Pose2d[] currentWheelPose2ds = new Pose2d[wheelPositionDeltas.length];
+		for (int i = 0; i < wheelPositionDeltas.length; i++) {
+			currentWheelPose2ds[i] = getWheelPose2d(wheelsDeltaThetas[i], wheelPositionDeltas[i], m_previousWheelFieldRelativePose2ds[i]);
 		}
 		Translation2d currentTranslation = getRobotTranslation(currentWheelPose2ds, m_kinematics.getModules(), currentAngle);
 

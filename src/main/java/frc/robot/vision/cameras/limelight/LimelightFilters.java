@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.constants.field.Field;
 import frc.robot.vision.DetectedObjectType;
+import frc.utils.LimelightHelpers;
 import frc.utils.filter.Filter;
 import frc.utils.math.ToleranceMath;
 
@@ -14,12 +15,12 @@ import java.util.function.Supplier;
 
 public class LimelightFilters {
 
-	public static Filter detectedObjectFilter(Limelight limelight) {
-		return onlyTheseTypes(() -> limelight.getTarget2dValues().targetDetectorClassIndex(), DetectedObjectType.ALGAE);
+	public static Filter detectedObjectFilter(Limelight limelight, DetectedObjectType... typesToReturn) {
+		return ObjectDetectionFilters.onlyTheseTypes(() -> LimelightHelpers.getDetectorClass(limelight.getName()), typesToReturn);
 	}
 
 	public static Filter megaTag1Filter(Limelight limelight, Translation2d robotInFieldTolerance) {
-		return isRobotInField(() -> limelight.getMT1RawData().pose.getTranslation(), robotInFieldTolerance);
+		return MegaTagFilters.isRobotInField(() -> limelight.getMT1RawData().pose.getTranslation(), robotInFieldTolerance);
 	}
 
 	public static Filter megaTag2Filter(
@@ -28,15 +29,15 @@ public class LimelightFilters {
 		Translation2d robotInFieldTolerance,
 		Rotation2d yawAtAngleTolerance
 	) {
-		return isRobotInField(() -> limelight.getMT2RawData().pose.getTranslation(), robotInFieldTolerance)
+		return MegaTagFilters.isRobotInField(() -> limelight.getMT2RawData().pose.getTranslation(), robotInFieldTolerance)
 			.and(
-				isYawAtAngle(
+				MegaTagFilters.isYawAtAngle(
 					() -> limelight.getMT2RawData().pose.getRotation(),
 					() -> wantedYawAtTimestamp.apply(Limelight.getEstimateTimestampSeconds(limelight.getMT2RawData())),
 					yawAtAngleTolerance
 				)
 			)
-			.and(isYawNotZero(() -> limelight.getMT2RawData().pose.getRotation()));
+			.and(MegaTagFilters.isYawNotZero(() -> limelight.getMT2RawData().pose.getRotation()));
 	}
 
 	private static class ObjectDetectionFilters {

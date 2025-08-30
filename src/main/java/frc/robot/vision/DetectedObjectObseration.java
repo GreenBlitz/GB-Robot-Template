@@ -2,10 +2,10 @@ package frc.robot.vision;
 
 import edu.wpi.first.math.geometry.Translation2d;
 
-public record DetectedObjectObseration(double timestampSeconds, Translation2d robotRelativeObjectTranslation, DetectedObjectType type) {
+public record DetectedObjectObseration(DetectedObjectType type, Translation2d robotRelativeObjectTranslation, double timestampSeconds) {
 
 	public DetectedObjectObseration() {
-		this(0, Translation2d.kZero, null);
+		this(null, Translation2d.kZero, 0);
 	}
 
 }

@@ -5,25 +5,25 @@ import java.util.Optional;
 public enum DetectedObjectType {
 	;
 
-	private final int classIndex;
+	private final String name;
 	private final double heightMeters;
 
-	DetectedObjectType(int classIndex, double heightMeters) {
-		this.classIndex = classIndex;
+	DetectedObjectType(String name, double heightMeters) {
+		this.name = name;
 		this.heightMeters = heightMeters;
 	}
 
-	public int getClassIndex() {
-		return classIndex;
+	public String getName() {
+		return name;
 	}
 
 	public double getHeightMeters() {
 		return heightMeters;
 	}
 
-	public static Optional<DetectedObjectType> getByIndex(int classIndex) {
+	public static Optional<DetectedObjectType> getByName(String name) {
 		for (DetectedObjectType detectedObjectType : values()) {
-			if (detectedObjectType.classIndex == classIndex) {
+			if (detectedObjectType.name.equals(name)) {
 				return Optional.of(detectedObjectType);
 			}
 		}

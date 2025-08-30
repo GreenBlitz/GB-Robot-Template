@@ -25,39 +25,47 @@ public class LimelightFilters {
 		return Filter.nonFilteringFilter();
 	}
 
-	private static Filter onlyTheseTypes(Supplier<Integer> objectClassIndexSupplier, DetectedObjectType... types) {
-		return Filter.orAll(
+	private static class ObjectDetectionFilters {
+
+		private static Filter onlyTheseTypes(Supplier<String> objectNameSupplier, DetectedObjectType... types) {
+			return Filter.orAll(
 				Arrays.stream(types)
-						.map(objectType -> (Filter) () -> objectType.getClassIndex() == objectClassIndexSupplier.get())
-						.toArray(Filter[]::new)
-		);
+					.map(objectType -> (Filter) () -> objectType.getName().equals(objectNameSupplier.get()))
+					.toArray(Filter[]::new)
+			);
+		}
+
 	}
 
-	private static Filter isYawAtAngle(
-		Supplier<Rotation2d> robotYaw,
-		Supplier<Optional<Rotation2d>> wantedYawSupplier,
-		Rotation2d yawTolerance
-	) {
-		return () -> wantedYawSupplier.get()
-			.map(wantedAngle -> ToleranceMath.isNearWrapped(wantedAngle, robotYaw.get(), yawTolerance))
-			.orElse(false);
-	}
+	private static class MegaTagFilters {
 
-	private static Filter isYawNotZero(Supplier<Rotation2d> robotYaw) {
-		return () -> robotYaw.get().getRotations() != 0.0;
-	}
+		private static Filter isYawAtAngle(
+			Supplier<Rotation2d> robotYaw,
+			Supplier<Optional<Rotation2d>> wantedYawSupplier,
+			Rotation2d yawTolerance
+		) {
+			return () -> wantedYawSupplier.get()
+				.map(wantedAngle -> ToleranceMath.isNearWrapped(wantedAngle, robotYaw.get(), yawTolerance))
+				.orElse(false);
+		}
 
-	private static Filter isXInField(Supplier<Double> robotX, double xToleranceMeters) {
-		return () -> ToleranceMath.isInRange(robotX.get(), 0, Field.LENGTH_METERS, xToleranceMeters);
-	}
+		private static Filter isYawNotZero(Supplier<Rotation2d> robotYaw) {
+			return () -> robotYaw.get().getRotations() != 0.0;
+		}
 
-	private static Filter isYInField(Supplier<Double> robotY, double yToleranceMeters) {
-		return () -> ToleranceMath.isInRange(robotY.get(), 0, Field.WIDTH_METERS, yToleranceMeters);
-	}
+		private static Filter isXInField(Supplier<Double> robotX, double xToleranceMeters) {
+			return () -> ToleranceMath.isInRange(robotX.get(), 0, Field.LENGTH_METERS, xToleranceMeters);
+		}
 
-	private static Filter isRobotInField(Supplier<Translation2d> robotTranslation, Translation2d tolerance) {
-		return isXInField(() -> robotTranslation.get().getX(), tolerance.getX())
-			.and(isYInField(() -> robotTranslation.get().getY(), tolerance.getY()));
+		private static Filter isYInField(Supplier<Double> robotY, double yToleranceMeters) {
+			return () -> ToleranceMath.isInRange(robotY.get(), 0, Field.WIDTH_METERS, yToleranceMeters);
+		}
+
+		private static Filter isRobotInField(Supplier<Translation2d> robotTranslation, Translation2d tolerance) {
+			return isXInField(() -> robotTranslation.get().getX(), tolerance.getX())
+				.and(isYInField(() -> robotTranslation.get().getY(), tolerance.getY()));
+		}
+
 	}
 
 }

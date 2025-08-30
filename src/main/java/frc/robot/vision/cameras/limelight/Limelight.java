@@ -73,30 +73,26 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	public void log() {
-		switch (pipeline) {
-			case APRIL_TAG -> {
-				if (doesObservationExist(mt1PoseObservation)) {
-					Logger.recordOutput(logPath + "/megaTag1PoseObservation", mt1PoseObservation);
-				}
-				if (doesObservationExist(mt2PoseObservation)) {
-					Logger.recordOutput(logPath + "/megaTag2PoseObservation", mt2PoseObservation);
-				}
+		if (pipeline.isUsingMT()) {
+			if (doesObservationExist(mt1PoseObservation)) {
+				Logger.recordOutput(logPath + "/megaTag1PoseObservation", mt1PoseObservation);
 			}
-			case OBJECT_DETECTION -> {
-				if (doesObservationExist(detectedObjectObseration)) {
-					Logger.recordOutput(logPath + "/detectedObjectObservation", detectedObjectObseration);
-				}
+			if (doesObservationExist(mt2PoseObservation)) {
+				Logger.recordOutput(logPath + "/megaTag2PoseObservation", mt2PoseObservation);
 			}
-			default -> {}
+		} else if (pipeline.isDetectingObjects()) {
+			if (doesObservationExist(detectedObjectObseration)) {
+				Logger.recordOutput(logPath + "/detectedObjectObservation", detectedObjectObseration);
+			}
 		}
 	}
 
 	public void updateObjectDetection() {
 		target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
 		if (target2dValues.isValid()) {
-			DetectedObjectType.getByIndex(target2dValues.targetDetectorClassIndex())
+			DetectedObjectType.getByName(LimelightHelpers.getDetectorClass(name))
 				.ifPresent(
-					objectType -> detectedObjectObseration = ObjectDetectionHelper.getDetectedObjectObservation(
+					objectType -> detectedObjectObseration = ObjectDetectionMath.getDetectedObjectObservation(
 						robotRelativeCameraPose,
 						objectType,
 						target2dValues.targetX(),

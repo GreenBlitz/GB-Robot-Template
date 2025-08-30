@@ -129,11 +129,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	@Override
 	public Optional<DetectedObjectObseration> getRobotRelativeObjectTranslation() {
-		if (
-			pipeline.equals(LimelightPipeline.OBJECT_DETECTION)
-				&& doesObservationExist(detectedObjectObseration)
-				&& detectedObjectFilter.passesFilter()
-		) {
+		if (pipeline.isDetectingObjects() && doesObservationExist(detectedObjectObseration) && detectedObjectFilter.passesFilter()) {
 			return Optional.of(detectedObjectObseration);
 		}
 		return Optional.empty();

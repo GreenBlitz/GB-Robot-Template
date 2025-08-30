@@ -3,22 +3,22 @@ package frc.robot.poseestimator.WPILibPoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.Kinematics;
 import edu.wpi.first.math.kinematics.Odometry;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
-public class WPILibOdometryWrapper extends Odometry<SwerveModulePosition[]> {
+public class ArcOdometry extends Odometry<SwerveModulePosition[]> {
 
-	private final Kinematics<?, SwerveModulePosition[]> m_kinematics;
+	private final SwerveDriveKinematics m_kinematics;
 	private Pose2d m_poseMeters;
 
 	private Rotation2d m_gyroOffset;
 	private Rotation2d m_previousAngle;
 	private final SwerveModulePosition[] m_previousWheelPositions;
-	private Pose2d[] m_previousWheelPose2ds;
+	private Pose2d[] m_previousWheelFieldRelativePose2ds;
 
-	public WPILibOdometryWrapper(
-		Kinematics<?, SwerveModulePosition[]> kinematics,
+	public ArcOdometry(
+		SwerveDriveKinematics kinematics,
 		Rotation2d gyroAngle,
 		SwerveModulePosition[] wheelPositions,
 		Pose2d[] wheelPose2ds,
@@ -30,7 +30,7 @@ public class WPILibOdometryWrapper extends Odometry<SwerveModulePosition[]> {
 		m_gyroOffset = m_poseMeters.getRotation().minus(gyroAngle);
 		m_previousAngle = m_poseMeters.getRotation();
 		m_previousWheelPositions = m_kinematics.copy(wheelPositions);
-		m_previousWheelPose2ds = wheelPose2ds;
+		m_previousWheelFieldRelativePose2ds = wheelPose2ds;
 	}
 
 	@Override
@@ -79,17 +79,25 @@ public class WPILibOdometryWrapper extends Odometry<SwerveModulePosition[]> {
 		return new Pose2d(currentTranslation, currentWheelHeading);
 	}
 
-	public Translation2d getRobotTranslation(Pose2d[] wheelPose2ds, Pose2d[] robotRelativeOriginalWheelPose2ds, Rotation2d robotOrientation) {
+	public Translation2d getRobotTranslation(
+		Pose2d[] fieldRelativeWheelPose2ds,
+		Translation2d[] robotRelativeWheelTranslations,
+		Rotation2d robotOrientation
+	) {
 		Translation2d robotTranslation = new Translation2d();
-		for (int i = 0; i < wheelPose2ds.length; i++) {
-			robotTranslation.plus(getRobotCenterByWheel(wheelPose2ds[i], robotRelativeOriginalWheelPose2ds[i], robotOrientation));
+		for (int i = 0; i < fieldRelativeWheelPose2ds.length; i++) {
+			robotTranslation.plus(getRobotCenterByWheel(fieldRelativeWheelPose2ds[i], robotRelativeWheelTranslations[i], robotOrientation));
 		}
-		robotTranslation.div(wheelPose2ds.length);
+		robotTranslation.div(fieldRelativeWheelPose2ds.length);
 		return robotTranslation;
 	}
 
-	public Translation2d getRobotCenterByWheel(Pose2d fieldRelativeWheelPose2d, Pose2d robotRelativeOriginalWheelPose2d, Rotation2d robotOrientation) {
-		Translation2d unrotatedRobotCenter = fieldRelativeWheelPose2d.getTranslation().minus(robotRelativeOriginalWheelPose2d.getTranslation());
+	public Translation2d getRobotCenterByWheel(
+		Pose2d fieldRelativeWheelPose2d,
+		Translation2d robotRelativeWheelTranslation,
+		Rotation2d robotOrientation
+	) {
+		Translation2d unrotatedRobotCenter = fieldRelativeWheelPose2d.getTranslation().minus(robotRelativeWheelTranslation);
 		return unrotatedRobotCenter.rotateAround(fieldRelativeWheelPose2d.getTranslation(), robotOrientation);
 	}
 
@@ -100,14 +108,14 @@ public class WPILibOdometryWrapper extends Odometry<SwerveModulePosition[]> {
 
 		Pose2d[] currentWheelPose2ds = new Pose2d[wheelPositions.length];
 		for (int i = 0; i < wheelPositions.length; i++) {
-			currentWheelPose2ds[i] = getWheelPose2d(deltaTheta, wheelPositions[i], m_previousWheelPose2ds[i]);
+			currentWheelPose2ds[i] = getWheelPose2d(deltaTheta, wheelPositions[i], m_previousWheelFieldRelativePose2ds[i]);
 		}
-		Translation2d currentTranslation = getRobotTranslation(currentWheelPose2ds, injection of constants, currentAngle);
+		Translation2d currentTranslation = getRobotTranslation(currentWheelPose2ds, m_kinematics.getModules(), currentAngle);
 
 		m_poseMeters = new Pose2d(currentTranslation, currentAngle);
 		m_kinematics.copyInto(wheelPositions, m_previousWheelPositions);
 		m_previousAngle = currentAngle;
-		m_previousWheelPose2ds = currentWheelPose2ds;
+		m_previousWheelFieldRelativePose2ds = currentWheelPose2ds;
 
 		return m_poseMeters;
 	}

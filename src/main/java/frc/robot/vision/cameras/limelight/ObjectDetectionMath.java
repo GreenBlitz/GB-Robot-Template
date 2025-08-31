@@ -1,6 +1,5 @@
 package frc.robot.vision.cameras.limelight;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -17,11 +16,11 @@ public class ObjectDetectionMath {
 		Rotation2d objectToCrosshairPitchOffset,
 		double timestampSeconds
 	) {
-		double cameraRelativeObjectXMeters = getCameraRelativeObjectX(cameraPose, objectType.getHeightMeters(), objectToCrosshairPitchOffset);
+		double cameraRelativeObjectXMeters = getCameraRelativeObjectX(cameraPose, objectType.getCenterHeightFromFloorMeters(), objectToCrosshairPitchOffset);
 
 		double cameraRelativeObjectYMeters = getCameraRelativeObjectY(
 			cameraPose,
-			objectType.getHeightMeters(),
+			objectType.getCenterHeightFromFloorMeters(),
 			objectToCrosshairYawOffset,
 			cameraRelativeObjectXMeters
 		);
@@ -35,10 +34,9 @@ public class ObjectDetectionMath {
 
 	private static double getCameraRelativeObjectX(
 		Pose3d cameraPose,
-		double detectedObjectHeightMeters,
+		double objectCenterHeightMeters,
 		Rotation2d objectToCrosshairPitchOffset
 	) {
-		double objectCenterHeightMeters = detectedObjectHeightMeters / 2;
 		double objectAndCameraHeightDifferenceMeters = objectCenterHeightMeters - cameraPose.getZ();
 		Rotation2d objectAndCameraTotalPitch = objectToCrosshairPitchOffset.plus(Rotation2d.fromRadians(cameraPose.getRotation().getY()));
 		return objectAndCameraHeightDifferenceMeters / objectAndCameraTotalPitch.getTan();
@@ -46,11 +44,10 @@ public class ObjectDetectionMath {
 
 	private static double getCameraRelativeObjectY(
 		Pose3d cameraPose,
-		double detectedObjectHeightMeters,
+		double objectCenterHeightMeters,
 		Rotation2d objectToCrosshairYawOffset,
 		double cameraRelativeObjectXMeters
 	) {
-		double objectCenterHeightMeters = detectedObjectHeightMeters / 2;
 		double objectAndCameraHeightDifferenceMeters = objectCenterHeightMeters - cameraPose.getZ();
 		double cameraToObjectXAxisHypotenuseMeters = Math.hypot(cameraRelativeObjectXMeters, objectAndCameraHeightDifferenceMeters);
 		return objectToCrosshairYawOffset.unaryMinus().getTan() * cameraToObjectXAxisHypotenuseMeters;

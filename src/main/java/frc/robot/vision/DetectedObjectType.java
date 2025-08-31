@@ -7,19 +7,19 @@ public enum DetectedObjectType {
 	ALGAE("algae", 0.41275);
 
 	private final String name;
-	private final double heightMeters;
+	private final double centerHeightFromFloorMeters;
 
-	DetectedObjectType(String name, double heightMeters) {
+	DetectedObjectType(String name, double centerHeightFromFloorMeters) {
 		this.name = name;
-		this.heightMeters = heightMeters;
+		this.centerHeightFromFloorMeters = centerHeightFromFloorMeters;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public double getHeightMeters() {
-		return heightMeters;
+	public double getCenterHeightFromFloorMeters() {
+		return centerHeightFromFloorMeters;
 	}
 
 	public static Optional<DetectedObjectType> getByName(String name) {

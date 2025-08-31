@@ -31,15 +31,16 @@ class CANCoderEncoderBuilder {
 
 	static double getCANCoderOffset(int id) {
 		return switch (id) {
-			case 0 -> 0.262939453125;
-			case 1 -> 0.406005859375;
-			case 2 -> 0.319580078125;
-			case 3 -> -0.4931640625;
+			case 0 -> -0.235107421875;
+			case 1 -> 0.40673828125;
+			case 2 -> -0.177978515625;
+			case 3 -> 0.00634765625;
 			default -> 0;
 		};
 	}
 
 	static IAngleEncoder buildEncoder(String logPath, Phoenix6DeviceID encoderDeviceID) {
+
 		CANcoder cancoder = new CANcoder(encoderDeviceID.id(), encoderDeviceID.busChain().getChainName());
 		CANcoderConfiguration caNcoderConfiguration = buildEncoderConfig(encoderDeviceID.id());
 		if (!Phoenix6Util.checkStatusCodeWithRetry(() -> cancoder.getConfigurator().apply(caNcoderConfiguration), APPLY_CONFIG_RETRIES).isOK()) {

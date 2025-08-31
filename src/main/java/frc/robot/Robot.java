@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.vision.DetectedObjectType;
 import frc.robot.vision.cameras.limelight.Limelight;
 import frc.robot.vision.cameras.limelight.LimelightFilters;
 import frc.robot.vision.cameras.limelight.LimelightPipeline;
@@ -47,6 +48,7 @@ public class Robot {
 	private final IPoseEstimator poseEstimator;
 	private final Limelight limelightFour;
 	private final Limelight limelightThreeGB;
+	private final Limelight limelightObjectDetector;
 	private final RobotHeadingEstimator headingEstimator;
 
 	public Robot() {
@@ -140,6 +142,18 @@ public class Robot {
 			)
 		);
 
+		limelightObjectDetector = new Limelight(
+			"limelight-object",
+			"NewVision",
+			new Pose3d(
+				new Translation3d(-0.08, 0.23, 0.865),
+				new Rotation3d(Units.Degrees.of(0), Units.Degrees.of(-27), Units.Degrees.of(-176.67))
+			),
+			LimelightPipeline.OBJECT_DETECTION
+		);
+		limelightObjectDetector
+			.setDetectedObjectFilter(LimelightFilters.detectedObjectFilter(limelightObjectDetector, DetectedObjectType.ALGAE));
+
 		swerve.setHeadingSupplier(
 			ROBOT_TYPE.isSimulation() ? () -> poseEstimator.getEstimatedPose().getRotation() : () -> headingEstimator.getEstimatedHeading()
 		);
@@ -184,6 +198,9 @@ public class Robot {
 		limelightFour.log();
 		limelightThreeGB.log();
 		headingEstimator.log();
+
+		limelightObjectDetector.updateObjectDetection();
+		limelightObjectDetector.log();
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();

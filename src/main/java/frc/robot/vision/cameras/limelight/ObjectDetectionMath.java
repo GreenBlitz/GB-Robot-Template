@@ -16,7 +16,11 @@ public class ObjectDetectionMath {
 		Rotation2d objectToCrosshairPitchOffset,
 		double timestampSeconds
 	) {
-		double cameraRelativeObjectXMeters = getCameraRelativeObjectX(cameraPose, objectType.getCenterHeightFromFloorMeters(), objectToCrosshairPitchOffset);
+		double cameraRelativeObjectXMeters = getCameraRelativeObjectX(
+			cameraPose,
+			objectType.getCenterHeightFromFloorMeters(),
+			objectToCrosshairPitchOffset
+		);
 
 		double cameraRelativeObjectYMeters = getCameraRelativeObjectY(
 			cameraPose,
@@ -27,16 +31,13 @@ public class ObjectDetectionMath {
 
 		Translation2d cameraRelativeObjectTranslation = new Translation2d(cameraRelativeObjectXMeters, cameraRelativeObjectYMeters);
 
-		Translation2d robotRelativeObjectTranslation = FieldMath.getTranslationRelativeToZero(cameraPose.toPose2d(), cameraRelativeObjectTranslation);
+		Translation2d robotRelativeObjectTranslation = FieldMath
+			.getTranslationRelativeToZero(cameraPose.toPose2d(), cameraRelativeObjectTranslation);
 
 		return new DetectedObjectObseration(objectType, robotRelativeObjectTranslation, timestampSeconds);
 	}
 
-	private static double getCameraRelativeObjectX(
-		Pose3d cameraPose,
-		double objectCenterHeightMeters,
-		Rotation2d objectToCrosshairPitchOffset
-	) {
+	private static double getCameraRelativeObjectX(Pose3d cameraPose, double objectCenterHeightMeters, Rotation2d objectToCrosshairPitchOffset) {
 		double objectAndCameraHeightDifferenceMeters = objectCenterHeightMeters - cameraPose.getZ();
 		Rotation2d objectAndCameraTotalPitch = objectToCrosshairPitchOffset.plus(Rotation2d.fromRadians(cameraPose.getRotation().getY()));
 		return objectAndCameraHeightDifferenceMeters / objectAndCameraTotalPitch.getTan();

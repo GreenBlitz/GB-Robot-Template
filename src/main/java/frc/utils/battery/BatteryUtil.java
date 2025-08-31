@@ -11,7 +11,6 @@ public class BatteryUtil {
 
 	private static final Command limiter = new BatteryLimiter().ignoringDisable(true);
 
-
 	public static double getCurrentVoltage() {
 		return RobotController.getBatteryVoltage();
 	}

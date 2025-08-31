@@ -1,5 +1,6 @@
 package frc.robot.vision.cameras.limelight;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -27,7 +28,7 @@ public class ObjectDetectionMath {
 
 		Translation2d cameraRelativeObjectTranslation = new Translation2d(cameraRelativeObjectXMeters, cameraRelativeObjectYMeters);
 
-		Translation2d robotRelativeObjectTranslation = FieldMath.getRelativeTranslation(cameraPose.toPose2d(), cameraRelativeObjectTranslation);
+		Translation2d robotRelativeObjectTranslation = FieldMath.getTranslationRelativeToZero(cameraPose.toPose2d(), cameraRelativeObjectTranslation);
 
 		return new DetectedObjectObseration(objectType, robotRelativeObjectTranslation, timestampSeconds);
 	}

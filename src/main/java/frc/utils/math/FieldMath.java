@@ -20,7 +20,7 @@ public class FieldMath {
 	}
 
 	public static Translation2d getTranslationRelativeToZero(Pose2d relativeTo, Translation2d toRelative) {
-		return toRelative.plus(relativeTo.getTranslation()).rotateBy(relativeTo.getRotation());
+		return toRelative.rotateBy(relativeTo.getRotation()).plus(relativeTo.getTranslation());
 	}
 
 	public static Pose2d rotatePose(Rotation2d rotation, Pose2d toRelative) {

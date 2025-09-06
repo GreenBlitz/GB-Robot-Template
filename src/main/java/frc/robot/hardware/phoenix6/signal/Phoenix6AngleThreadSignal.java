@@ -3,20 +3,22 @@ package frc.robot.hardware.phoenix6.signal;
 import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.signal.AngleArraySignal;
+import frc.robot.subsystems.swerve.OdometryThread;
 import frc.utils.AngleUnit;
 import frc.utils.TimedValue;
 import frc.utils.time.TimeUtil;
 
 import java.util.Queue;
 
-public class Phoenix6AngleArraySignal extends AngleArraySignal {
+public class Phoenix6AngleThreadSignal extends AngleArraySignal {
 
 	private final Queue<?> values;
-	private final Queue<?> timestamp;
+	private final Queue<?> timestamps;
 
-	protected Phoenix6AngleArraySignal(String name, StatusSignal<?> statusSignal, AngleUnit angleUnit) {
+	protected Phoenix6AngleThreadSignal(String name, StatusSignal<?> statusSignal, AngleUnit angleUnit, OdometryThread thread) {
 		super(name, angleUnit);
-		this.statusSignal = statusSignal;
+		this.values = thread.addSignal(statusSignal);
+		this.timestamps = thread.getTimestamps();
 	}
 
 	@Override

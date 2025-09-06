@@ -11,11 +11,11 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class OdometryThread<T> extends Thread {
 
-	private ReentrantLock lock;
-	private ArrayList<StatusSignal<T>> signals;
-	private ArrayList<Queue<T>> signalsValuesQueues;
-	private Queue<Double> timestamps;
-	private double frequencyHertz;
+	private final ReentrantLock lock;
+	private final ArrayList<StatusSignal<T>> signals;
+	private final ArrayList<Queue<T>> signalsValuesQueues;
+	private final Queue<Double> timestamps;
+	private final double frequencyHertz;
 
 	public OdometryThread(double frequencyHertz) {
 		lock = new ReentrantLock();
@@ -44,6 +44,10 @@ public class OdometryThread<T> extends Thread {
 		return queue;
 	}
 
+	public Queue<Double> getTimestamps() {
+		return timestamps;
+	}
+
 	private static void cleanQueue(Queue<?> queue) {
 		for (int i = 0; i < queue.size() / 2; i++) {
 			queue.poll();
@@ -58,7 +62,10 @@ public class OdometryThread<T> extends Thread {
 				queue.offer(signals.get(i).getValue());
 			}
 		}
-		timestamps.offer(timestamp);
+		if (!timestamps.offer(timestamp)) {
+			cleanQueue(timestamps);
+			timestamps.offer(timestamp);
+		}
 	}
 
 	private double calculateLatency() {

@@ -6,25 +6,26 @@ import frc.robot.hardware.signal.AngleArraySignal;
 import frc.robot.subsystems.swerve.OdometryThread;
 import frc.utils.AngleUnit;
 import frc.utils.TimedValue;
-import frc.utils.time.TimeUtil;
 
 import java.util.Queue;
 
 public class Phoenix6AngleThreadSignal extends AngleArraySignal {
 
-	private final Queue<?> values;
-	private final Queue<?> timestamps;
+	private final Queue<TimedValue<Double>> timedValues;
 
 	protected Phoenix6AngleThreadSignal(String name, StatusSignal<?> statusSignal, AngleUnit angleUnit, OdometryThread thread) {
 		super(name, angleUnit);
-		this.values = thread.addSignal(statusSignal);
-		this.timestamps = thread.getTimestamps();
+		this.timedValues = thread.addSignal(statusSignal);
 	}
 
 	@Override
 	protected void updateValues(TimedValue<Rotation2d>[] timedValues) {
-		timedValues.setValue(angleUnit.toRotation2d(statusSignal.getValueAsDouble()));
-		timedValues.setTimestamp(TimeUtil.getCurrentTimeSeconds() - statusSignal.getTimestamp().getLatency());
+		timedValues = new TimedValue[this.timedValues.size()];
+		for (int i = 0; i < timedValues.length; i++) {
+			TimedValue<Double> value = this.timedValues.poll();
+			timedValues[i].setValue(angleUnit.toRotation2d(value.getValue()));
+			timedValues[i].setTimestamp(value.getTimestamp());
+		}
 	}
 
 }

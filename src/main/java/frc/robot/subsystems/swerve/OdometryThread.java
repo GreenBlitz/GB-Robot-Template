@@ -2,7 +2,6 @@ package frc.robot.subsystems.swerve;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.time.TimeUtil;
 
 import java.util.ArrayList;
@@ -10,11 +9,11 @@ import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class OdometryThread extends Thread {
+public class OdometryThread<T> extends Thread {
 
 	private ReentrantLock lock;
-	private ArrayList<StatusSignal<Rotation2d>> signals;
-	private ArrayList<Queue<Rotation2d>> signalsValuesQueues;
+	private ArrayList<StatusSignal<T>> signals;
+	private ArrayList<Queue<T>> signalsValuesQueues;
 	private Queue<Double> timestamps;
 	private double frequencyHertz;
 
@@ -30,8 +29,8 @@ public class OdometryThread extends Thread {
 		start();
 	}
 
-	public Queue<Rotation2d> addSignal(StatusSignal<Rotation2d> signal) {
-		Queue<Rotation2d> queue = new ArrayBlockingQueue<>(50);
+	public Queue<T> addSignal(StatusSignal<T> signal) {
+		Queue<T> queue = new ArrayBlockingQueue<>(50);
 
 		lock.lock();
 		try {
@@ -53,7 +52,7 @@ public class OdometryThread extends Thread {
 
 	private void updateAllQueues(double timestamp) {
 		for (int i = 0; i < signals.size(); i += 1) {
-			Queue<Rotation2d> queue = signalsValuesQueues.get(i);
+			Queue<T> queue = signalsValuesQueues.get(i);
 			if (!queue.offer(signals.get(i).getValue())) {
 				cleanQueue(queue);
 				queue.offer(signals.get(i).getValue());
@@ -64,7 +63,7 @@ public class OdometryThread extends Thread {
 
 	private double calculateLatency() {
 		double latency = 0.0;
-		for (StatusSignal<Rotation2d> signal : signals) {
+		for (StatusSignal<T> signal : signals) {
 			latency += signal.getTimestamp().getLatency();
 		}
 		return latency / signals.size();

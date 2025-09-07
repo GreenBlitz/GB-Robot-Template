@@ -33,6 +33,8 @@ import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.math.StandardDeviations2D;
 import frc.utils.time.TimeUtil;
+import frc.utils.visuallogging.odometryvisualization.GridPlacements;
+import frc.utils.visuallogging.odometryvisualization.OdometryVisualization;
 
 
 /**
@@ -44,6 +46,7 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 
+	private final OdometryVisualization visualizor;
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
 	private final Limelight limelightFour;
@@ -158,7 +161,17 @@ public class Robot {
 //			ROBOT_TYPE.isSimulation() ? () -> poseEstimator.getEstimatedPose().getRotation() : () -> headingEstimator.getEstimatedHeading()
 //		);
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
-	}
+        visualizor = new OdometryVisualization(
+				"OdometryVisualsation",
+				() -> swerve.getModules().getWheelPositions(0),
+				new GridPlacements(
+						new Translation2d(100, 1000),
+						new Translation2d(1000, 1000),
+						new Translation2d(100, 100),
+						new Translation2d(1000, 100)
+				)
+		);
+    }
 
 	public void periodic() {
 		BusChain.refreshAll();
@@ -202,6 +215,8 @@ public class Robot {
 
 		limelightObjectDetector.updateObjectDetection();
 		limelightObjectDetector.log();
+
+		visualizor.drawAll();
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();

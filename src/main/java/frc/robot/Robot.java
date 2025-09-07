@@ -49,7 +49,7 @@ public class Robot {
 	private final Limelight limelightFour;
 	private final Limelight limelightThreeGB;
 	private final Limelight limelightObjectDetector;
-	private final RobotHeadingEstimator headingEstimator;
+	public final RobotHeadingEstimator headingEstimator;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();

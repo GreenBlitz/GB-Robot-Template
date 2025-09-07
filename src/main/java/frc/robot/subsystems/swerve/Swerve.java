@@ -158,7 +158,7 @@ public class Swerve extends GBSubsystem {
 		for (int i = 0; i < odometryData.length; i++) {
 			odometryData[i] = new OdometryData(
 				modules.getWheelPositions(i),
-				gyro instanceof EmptyGyro ? Optional.empty() : Optional.of(gyroSignals.yawSignal().asArray()[i]),
+				gyro instanceof EmptyGyro || true ? Optional.empty() : Optional.of(gyroSignals.yawSignal().asArray()[i]),
 				gyroSignals.yawSignal().getTimestamps()[i]
 			);
 		}

@@ -1,5 +1,9 @@
 package frc;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
@@ -47,6 +51,21 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+		
+		ChassisPowers p = new ChassisPowers();
+		ChassisPowers p2 = new ChassisPowers();
+		ChassisPowers p3 = new ChassisPowers();
+		ChassisPowers p4 = new ChassisPowers();
+		p.yPower = 0.3;
+		p2.yPower = -0.3;
+		p3.xPower = 0.3;
+		p4.xPower = -0.3;
+		usedJoystick.B.whileTrue(robot.getSwerve().getCommandsBuilder().drive(() -> p3));
+		usedJoystick.A.whileTrue(robot.getSwerve().getCommandsBuilder().drive(() -> p4));
+		
+		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d(robot.getPoseEstimator().getEstimatedPose().getTranslation(), new Rotation2d()))));
+//		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d(new Translation2d(6, 0), Rotation2d.fromDegrees(90)))));
+		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.headingEstimator.reset(new Rotation2d())));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

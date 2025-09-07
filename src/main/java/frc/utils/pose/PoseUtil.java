@@ -4,11 +4,9 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import frc.utils.TimedValue;
 import frc.robot.poseestimator.Pose2dComponentsValue;
 import frc.robot.poseestimator.Pose3dComponentsValue;
 import edu.wpi.first.math.geometry.Pose2d;
-import frc.robot.vision.data.VisionData;
 import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
 
@@ -81,10 +79,6 @@ public class PoseUtil {
 					Rotation2d.fromRadians(rotation3d.getY()).getRotations(),
 					Rotation2d.fromRadians(rotation3d.getZ()).getRotations()};
 		};
-	}
-
-	public static TimedValue<Rotation2d> toHeadingData(VisionData visionData) {
-		return new TimedValue<>(visionData.getEstimatedPose().getRotation().toRotation2d(), visionData.getTimestamp());
 	}
 
 }

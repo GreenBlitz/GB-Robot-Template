@@ -4,19 +4,19 @@
 
 package frc;
 
+import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.Threads;
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonomousConstants;
+import frc.utils.DriverStationUtil;
+import frc.utils.alerts.AlertManager;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.auto.PathPlannerUtil;
-import frc.utils.alerts.AlertManager;
-import frc.utils.DriverStationUtil;
-import frc.utils.time.TimeUtil;
-import frc.utils.logger.LoggerFactory;
-import org.littletonrobotics.junction.LoggedRobot;
 import frc.utils.brakestate.BrakeStateManager;
+import frc.utils.logger.LoggerFactory;
+import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 
 /**
@@ -31,8 +31,6 @@ public class RobotManager extends LoggedRobot {
 	private int roborioCycles;
 
 	public RobotManager() {
-		Threads.setCurrentThreadPriority(true, 10);
-
 		LoggerFactory.initializeLogger();
 		PathPlannerUtil.startPathfinder();
 		PathPlannerUtil.setupPathPlannerLogging();
@@ -42,6 +40,8 @@ public class RobotManager extends LoggedRobot {
 
 		createAutoReadyForConstructionChooser();
 		JoysticksBindings.configureBindings(robot);
+
+		Threads.setCurrentThreadPriority(true, 10);
 	}
 
 	@Override
@@ -88,6 +88,9 @@ public class RobotManager extends LoggedRobot {
 		autoReadyForConstructionSendableChooser.onChange(isReady -> {
 			if (isReady) {
 				this.autonomousCommand = robot.getAutonomousCommand();
+				BrakeStateManager.brake();
+			} else {
+				BrakeStateManager.coast();
 			}
 			Logger.recordOutput(AutonomousConstants.LOG_PATH_PREFIX + "/ReadyToConstruct", isReady);
 		});

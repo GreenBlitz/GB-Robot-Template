@@ -12,39 +12,43 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class OdometryThread extends Thread {
 
-	private final ReentrantLock lock;
+	public static final ReentrantLock LOCK = new ReentrantLock();
 	private final ArrayList<StatusSignal<?>> signals;
 	private final ArrayList<Queue<TimedValue<Double>>> signalsValuesQueues;
 	private final double frequencyHertz;
+	private final int maxValueCapacityPerUpdate;
 
-	public OdometryThread(double frequencyHertz) {
-		lock = new ReentrantLock();
-		signals = new ArrayList<>();
-		signalsValuesQueues = new ArrayList<>();
+	public OdometryThread(double frequencyHertz, String name, int maxValueCapacityPerUpdate) {
+		this.signals = new ArrayList<>();
+		this.signalsValuesQueues = new ArrayList<>();
 		this.frequencyHertz = frequencyHertz;
+		this.maxValueCapacityPerUpdate = maxValueCapacityPerUpdate;
 
-		setName("OdometryThread");
+		setName(name);
 		setDaemon(true);
 		start();
 	}
 
-	private static void cleanHalfOfQueue(Queue<?> queue) {
-		for (int i = 0; i < queue.size() / 2; i++) {
-			queue.poll();
-		}
+	@Override
+	public void run() {
+		update();
+	}
+
+	private static double getThreadCycleSeconds(double frequencyHertz) {
+		return 1/frequencyHertz;
 	}
 
 	public Queue<TimedValue<Double>> addSignal(StatusSignal<?> signal) {
-		Queue<TimedValue<Double>> queue = new ArrayBlockingQueue<>(50);
+		Queue<TimedValue<Double>> queue = new ArrayBlockingQueue<>(maxValueCapacityPerUpdate);
 
-		lock.lock();
+		LOCK.lock();
 		try {
 			signals.add(signal);
 			signalsValuesQueues.add(queue);
 			return queue;
 		} catch (Exception e) {
 		} finally {
-			lock.unlock();
+			LOCK.unlock();
 		}
 		return queue;
 	}
@@ -52,10 +56,7 @@ public class OdometryThread extends Thread {
 	private void updateAllQueues(double timestamp) {
 		for (int i = 0; i < signals.size(); i += 1) {
 			Queue<TimedValue<Double>> queue = signalsValuesQueues.get(i);
-			if (!queue.offer(new TimedValue<>(signals.get(i).getValueAsDouble(), timestamp))) {
-				cleanHalfOfQueue(queue);
-				queue.offer(new TimedValue<>(signals.get(i).getValueAsDouble(), timestamp));
-			}
+			queue.offer(new TimedValue<>(signals.get(i).getValueAsDouble(), timestamp));
 		}
 	}
 
@@ -68,17 +69,17 @@ public class OdometryThread extends Thread {
 	}
 
 	private void update() {
-		if (StatusSignal.waitForAll(frequencyHertz, signals.toArray(new StatusSignal[signals.size()])) != StatusCode.OK) {
+		if (StatusSignal.waitForAll(getThreadCycleSeconds(frequencyHertz), signals.toArray(new StatusSignal[signals.size()])) != StatusCode.OK) {
 			return;
 		}
-		final double signalsTimestamp = TimeUtil.getCurrentTimeSeconds() - calculateLatency();
+		double signalsTimestamp = TimeUtil.getCurrentTimeSeconds() - calculateLatency();
 
-		lock.lock();
+		LOCK.lock();
 		try {
 			updateAllQueues(signalsTimestamp);
 		} catch (Exception e) {
 		} finally {
-			lock.unlock();
+			LOCK.unlock();
 		}
 	}
 

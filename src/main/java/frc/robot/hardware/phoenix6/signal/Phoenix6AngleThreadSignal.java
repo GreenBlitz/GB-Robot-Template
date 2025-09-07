@@ -21,10 +21,17 @@ public class Phoenix6AngleThreadSignal extends AngleArraySignal {
 	@Override
 	protected void updateValues(TimedValue<Rotation2d>[] timedValues) {
 		timedValues = new TimedValue[this.timedValues.size()];
+
 		for (int i = 0; i < timedValues.length; i++) {
-			TimedValue<Double> value = this.timedValues.poll();
-			timedValues[i].setValue(angleUnit.toRotation2d(value.getValue()));
-			timedValues[i].setTimestamp(value.getTimestamp());
+			OdometryThread.LOCK.lock();
+			try {
+				TimedValue<Double> value = this.timedValues.poll();
+				timedValues[i].setValue(angleUnit.toRotation2d(value.getValue()));
+				timedValues[i].setTimestamp(value.getTimestamp());
+			} catch (Exception e) {
+			} finally {
+				OdometryThread.LOCK.unlock();
+			}
 		}
 	}
 

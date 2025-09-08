@@ -11,21 +11,21 @@ import java.util.Queue;
 
 public class Phoenix6AngleThreadSignal extends AngleArraySignal {
 
-	private final Queue<TimedValue<Double>> timedValues;
+	private final Queue<TimedValue<Double>> threadTimedValues;
 
-	protected Phoenix6AngleThreadSignal(String name, StatusSignal<?> statusSignal, AngleUnit angleUnit, OdometryThread thread) {
-		super(name, angleUnit);
-		this.timedValues = thread.addSignal(statusSignal);
+	protected Phoenix6AngleThreadSignal(StatusSignal<?> statusSignal, AngleUnit angleUnit, OdometryThread thread) {
+		super(statusSignal.getName(), angleUnit);
+		this.threadTimedValues = thread.addSignal(statusSignal);
 	}
 
 	@Override
 	protected void updateValues(TimedValue<Rotation2d>[] timedValues) {
-		timedValues = new TimedValue[this.timedValues.size()];
+		timedValues = new TimedValue[threadTimedValues.size()];
 
 		for (int i = 0; i < timedValues.length; i++) {
 			OdometryThread.LOCK.lock();
 			try {
-				TimedValue<Double> value = this.timedValues.poll();
+				TimedValue<Double> value = threadTimedValues.poll();
 				timedValues[i].setValue(angleUnit.toRotation2d(value.getValue()));
 				timedValues[i].setTimestamp(value.getTimestamp());
 			} catch (Exception e) {

@@ -16,7 +16,7 @@ public abstract class AngleArraySignal implements InputSignal<Rotation2d> {
 	public AngleArraySignal(String name, AngleUnit angleUnit) {
 		this.name = name;
 		this.angleUnit = angleUnit;
-		this.timedValues = new TimedValue[]{new TimedValue<>(new Rotation2d(), 0.0)};
+		this.timedValues = new TimedValue[] {new TimedValue<>(new Rotation2d(), 0.0)};
 	}
 
 	@Override

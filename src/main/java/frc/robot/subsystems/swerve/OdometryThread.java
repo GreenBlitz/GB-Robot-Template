@@ -35,7 +35,7 @@ public class OdometryThread extends Thread {
 	}
 
 	private static double getThreadCycleSeconds(double frequencyHertz) {
-		return 1/frequencyHertz;
+		return 1 / frequencyHertz;
 	}
 
 	public Queue<TimedValue<Double>> addSignal(StatusSignal<?> signal) {

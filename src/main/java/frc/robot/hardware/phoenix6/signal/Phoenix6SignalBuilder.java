@@ -61,13 +61,19 @@ public class Phoenix6SignalBuilder {
 		return new Phoenix6LatencyAndSlopeSignal(signalClone.getName(), signalClone, signalSlopeClone, angleUnit);
 	}
 
-	public static Phoenix6AngleThreadSignal build(StatusSignal<?> signal, double frequency, AngleUnit angleUnit, BusChain busChain, OdometryThread thread) {
+	public static Phoenix6AngleThreadSignal build(
+		StatusSignal<?> signal,
+		double frequency,
+		AngleUnit angleUnit,
+		BusChain busChain,
+		OdometryThread thread
+	) {
 		if (Robot.ROBOT_TYPE.isSimulation()) {
 			frequency = RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ;
 		}
 
 		StatusSignal<?> signalClone = cloneWithFrequency(signal, frequency, busChain);
-		return new Phoenix6AngleThreadSignal(signalClone.getName(), signalClone, angleUnit, thread);
+		return new Phoenix6AngleThreadSignal(signalClone, angleUnit, thread);
 	}
 
 }

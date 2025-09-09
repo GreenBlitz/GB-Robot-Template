@@ -13,13 +13,13 @@ import java.util.concurrent.locks.ReentrantLock;
 public class OdometryThread extends Thread {
 
 	public static final ReentrantLock LOCK = new ReentrantLock();
-	private final ArrayList<StatusSignal<?>> signals;
+	private final StatusSignal<?>[] signals;
 	private final ArrayList<Queue<TimedValue<Double>>> signalsValuesQueues;
 	private final double frequencyHertz;
 	private final int maxValueCapacityPerUpdate;
 
 	public OdometryThread(double frequencyHertz, String name, int maxValueCapacityPerUpdate) {
-		this.signals = new ArrayList<>();
+		this.signals = new StatusSignal[0];
 		this.signalsValuesQueues = new ArrayList<>();
 		this.frequencyHertz = frequencyHertz;
 		this.maxValueCapacityPerUpdate = maxValueCapacityPerUpdate;
@@ -38,12 +38,21 @@ public class OdometryThread extends Thread {
 		return 1 / frequencyHertz;
 	}
 
+	private static void addSignalToArray(StatusSignal<?> signal, StatusSignal<?>[] signals) {
+		StatusSignal<?>[] newSignals = new StatusSignal[signals.length + 1];
+		for (int i = 0; i < signals.length; i++) {
+			newSignals[i] = signals[i];
+		}
+		newSignals[signals.length] = signal;
+		signals = newSignals;
+	}
+
 	public Queue<TimedValue<Double>> addSignal(StatusSignal<?> signal) {
 		Queue<TimedValue<Double>> queue = new ArrayBlockingQueue<>(maxValueCapacityPerUpdate);
 
 		LOCK.lock();
 		try {
-			signals.add(signal);
+			addSignalToArray(signal, signals);
 			signalsValuesQueues.add(queue);
 			return queue;
 		} catch (Exception e) {
@@ -53,23 +62,30 @@ public class OdometryThread extends Thread {
 		return queue;
 	}
 
+	public double getFrequencyHertz() {
+		return frequencyHertz;
+	}
+
 	private void updateAllQueues(double timestamp) {
-		for (int i = 0; i < signals.size(); i += 1) {
+		for (int i = 0; i < signals.length; i += 1) {
 			Queue<TimedValue<Double>> queue = signalsValuesQueues.get(i);
-			queue.offer(new TimedValue<>(signals.get(i).getValueAsDouble(), timestamp));
+			queue.offer(new TimedValue<>(signals[i].getValueAsDouble(), timestamp));
 		}
 	}
 
 	private double calculateLatency() {
+		if (signals.length == 0) {
+			return 0;
+		}
 		double latency = 0.0;
 		for (StatusSignal<?> signal : signals) {
 			latency += signal.getTimestamp().getLatency();
 		}
-		return latency / signals.size();
+		return latency / signals.length;
 	}
 
 	private void update() {
-		if (StatusSignal.waitForAll(getThreadCycleSeconds(frequencyHertz), signals.toArray(new StatusSignal[signals.size()])) != StatusCode.OK) {
+		if (StatusSignal.waitForAll(getThreadCycleSeconds(frequencyHertz), signals) != StatusCode.OK) {
 			return;
 		}
 		double signalsTimestamp = TimeUtil.getCurrentTimeSeconds() - calculateLatency();

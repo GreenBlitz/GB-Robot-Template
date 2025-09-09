@@ -8,4 +8,6 @@ public class OdometryThreadConstants {
 
 	public static final int MAX_VALUE_CAPACITY_PER_UPDATE = 50;
 
+	public static final int THREAD_PRIORITY = 2;
+
 }

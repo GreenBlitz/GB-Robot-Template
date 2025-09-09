@@ -2,6 +2,8 @@ package frc.robot.subsystems.swerve;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
+import edu.wpi.first.wpilibj.Threads;
+import edu.wpi.first.wpilibj.Timer;
 import frc.utils.TimedValue;
 import frc.utils.time.TimeUtil;
 
@@ -17,12 +19,15 @@ public class OdometryThread extends Thread {
 	private final ArrayList<Queue<TimedValue<Double>>> signalsValuesQueues;
 	private final double frequencyHertz;
 	private final int maxValueCapacityPerUpdate;
+	private final boolean isBusChainCanFD;
 
-	public OdometryThread(double frequencyHertz, String name, int maxValueCapacityPerUpdate) {
+	public OdometryThread(double frequencyHertz, String name, int maxValueCapacityPerUpdate, boolean isBusChainCanFD, int threadPriority) {
 		this.signals = new StatusSignal[0];
 		this.signalsValuesQueues = new ArrayList<>();
 		this.frequencyHertz = frequencyHertz;
 		this.maxValueCapacityPerUpdate = maxValueCapacityPerUpdate;
+		this.isBusChainCanFD = isBusChainCanFD;
+		Threads.setCurrentThreadPriority(true, threadPriority);
 
 		setName(name);
 		setDaemon(true);
@@ -55,11 +60,9 @@ public class OdometryThread extends Thread {
 			addSignalToArray(signal, signals);
 			signalsValuesQueues.add(queue);
 			return queue;
-		} catch (Exception e) {
 		} finally {
 			LOCK.unlock();
 		}
-		return queue;
 	}
 
 	public double getFrequencyHertz() {
@@ -85,15 +88,21 @@ public class OdometryThread extends Thread {
 	}
 
 	private void update() {
-		if (StatusSignal.waitForAll(getThreadCycleSeconds(frequencyHertz), signals) != StatusCode.OK) {
+		StatusCode statusCode;
+		if (isBusChainCanFD) {
+			statusCode = StatusSignal.waitForAll(getThreadCycleSeconds(frequencyHertz), signals);
+		} else {
+			Timer.delay(getThreadCycleSeconds(frequencyHertz));
+			statusCode = StatusSignal.refreshAll(signals);
+		}
+		if (statusCode != StatusCode.OK) {
 			return;
 		}
-		double signalsTimestamp = TimeUtil.getCurrentTimeSeconds() - calculateLatency();
 
+		double signalsTimestamp = TimeUtil.getCurrentTimeSeconds() - calculateLatency();
 		LOCK.lock();
 		try {
 			updateAllQueues(signalsTimestamp);
-		} catch (Exception e) {
 		} finally {
 			LOCK.unlock();
 		}

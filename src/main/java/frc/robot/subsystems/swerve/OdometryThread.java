@@ -4,6 +4,9 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.Robot;
+import frc.robot.RobotConstants;
+import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.utils.TimedValue;
 import frc.utils.time.TimeUtil;
 
@@ -54,21 +57,26 @@ public class OdometryThread extends Thread {
 		signals = newSignals;
 	}
 
+	private static StatusSignal<?> getSignalWithCorrectFrequency(StatusSignal<?> signal, double threadFrequencyHertz) {
+		if (Robot.ROBOT_TYPE.isSimulation()) {
+			threadFrequencyHertz = RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ;
+		}
+		StatusSignal<?> signalClone = signal.clone();
+		Phoenix6SignalBuilder.setFrequencyWithRetry(signalClone, threadFrequencyHertz);
+		return signalClone;
+	}
+
 	public Queue<TimedValue<Double>> addSignal(StatusSignal<?> signal) {
 		Queue<TimedValue<Double>> queue = new ArrayBlockingQueue<>(maxValueCapacityPerUpdate);
 
 		LOCK.lock();
 		try {
-			addSignalToArray(signal, signals);
+			addSignalToArray(getSignalWithCorrectFrequency(signal, frequencyHertz), signals);
 			signalValuesQueues.add(queue);
 			return queue;
 		} finally {
 			LOCK.unlock();
 		}
-	}
-
-	public double getFrequencyHertz() {
-		return frequencyHertz;
 	}
 
 	private void updateAllQueues(double timestamp) {

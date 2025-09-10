@@ -3,9 +3,7 @@ package frc.robot.subsystems.swerve;
 import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -41,7 +39,7 @@ public class Swerve extends GBSubsystem {
 	private final double driveRadiusMeters;
 	private final Modules modules;
 	private final IGyro gyro;
-	private final GyroSignals gyroSignals;
+	private final IMUSignals IMUSignals;
 
 	private final SwerveDriveKinematics kinematics;
 	private final HeadingStabilizer headingStabilizer;
@@ -52,7 +50,7 @@ public class Swerve extends GBSubsystem {
 	private Supplier<Rotation2d> headingSupplier;
 	private ChassisPowers driversPowerInputs;
 
-	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro, GyroSignals gyroSignals) {
+	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro, IMUSignals IMUSignals) {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 
@@ -60,7 +58,7 @@ public class Swerve extends GBSubsystem {
 		this.driveRadiusMeters = SwerveMath.calculateDriveRadiusMeters(modules.getModulePositionsFromCenterMeters());
 		this.modules = modules;
 		this.gyro = gyro;
-		this.gyroSignals = gyroSignals;
+		this.IMUSignals = IMUSignals;
 
 		this.kinematics = new SwerveDriveKinematics(modules.getModulePositionsFromCenterMeters());
 		this.headingSupplier = this::getGyroAbsoluteYaw;
@@ -120,7 +118,17 @@ public class Swerve extends GBSubsystem {
 
 	public void setHeading(Rotation2d heading) {
 		gyro.setYaw(heading);
-		gyro.updateInputs(gyroSignals.yawSignal());
+		gyro.updateInputs(
+				IMUSignals.yawSignal(),
+				IMUSignals.pitchSignal(),
+				IMUSignals.rollSignal(),
+				IMUSignals.angularVelocityXSignal(),
+				IMUSignals.angularVelocityYSignal(),
+				IMUSignals.angularVelocityZSignal(),
+				IMUSignals.accelerationXSignal(),
+				IMUSignals.accelerationYSignal(),
+				IMUSignals.accelerationZSignal()
+		);
 		headingStabilizer.unlockTarget();
 		headingStabilizer.setTargetHeading(heading);
 	}
@@ -133,7 +141,7 @@ public class Swerve extends GBSubsystem {
 
 
 	public void update() {
-		gyro.updateInputs(gyroSignals.yawSignal());
+		gyro.updateInputs(IMUSignals.yawSignal());
 		modules.updateInputs();
 
 		currentState.log(constants.stateLogPath());
@@ -149,7 +157,7 @@ public class Swerve extends GBSubsystem {
 
 
 	public int getNumberOfOdometrySamples() {
-		return Math.min(gyroSignals.yawSignal().asArray().length, modules.getNumberOfOdometrySamples());
+		return Math.min(IMUSignals.yawSignal().asArray().length, modules.getNumberOfOdometrySamples());
 	}
 
 	public OdometryData[] getAllOdometryData() {
@@ -158,8 +166,8 @@ public class Swerve extends GBSubsystem {
 		for (int i = 0; i < odometryData.length; i++) {
 			odometryData[i] = new OdometryData(
 				modules.getWheelPositions(i),
-				gyro instanceof EmptyGyro ? Optional.empty() : Optional.of(gyroSignals.yawSignal().asArray()[i]),
-				gyroSignals.yawSignal().getTimestamps()[i]
+				gyro instanceof EmptyGyro ? Optional.empty() : Optional.of(IMUSignals.yawSignal().asArray()[i]),
+				IMUSignals.yawSignal().getTimestamps()[i]
 			);
 		}
 
@@ -171,7 +179,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public Rotation2d getGyroAbsoluteYaw() {
-		double inputtedHeadingRadians = MathUtil.angleModulus(gyroSignals.yawSignal().getLatestValue().getRadians());
+		double inputtedHeadingRadians = MathUtil.angleModulus(IMUSignals.yawSignal().getLatestValue().getRadians());
 		return Rotation2d.fromRadians(inputtedHeadingRadians);
 	}
 
@@ -354,5 +362,31 @@ public class Swerve extends GBSubsystem {
 				)
 			);
 	}
+
+	public Rotation3d getMeasuredAngularVelocity() {
+		return new Rotation3d(
+				IMUSignals.angularVelocityXSignal().getLatestValue().getRadians(),
+				IMUSignals.angularVelocityYSignal().getLatestValue().getRadians(),
+				IMUSignals.angularVelocityZSignal().getLatestValue().getRadians()
+		);
+	}
+
+	public Rotation3d getMeasuredOrientation() {
+		return new Rotation3d(
+				IMUSignals.yawSignal().getLatestValue().getRadians(),
+				IMUSignals.angularVelocityYSignal().getLatestValue().getRadians(),
+				IMUSignals.angularVelocityZSignal().getLatestValue().getRadians()
+		);
+	}
+
+	public Translation3d getMeasuredAcceleration() {
+		return new Translation3d(
+				IMUSignals.accelerationXSignal().getAndUpdateValue(),
+				IMUSignals.accelerationYSignal().getAndUpdateValue(),
+				IMUSignals.accelerationZSignal().getAndUpdateValue()
+		);
+	}
+
+
 
 }

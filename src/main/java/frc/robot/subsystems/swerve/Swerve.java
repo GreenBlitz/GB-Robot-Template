@@ -53,6 +53,7 @@ public class Swerve extends GBSubsystem {
 	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro, IMUSignals IMUSignals) {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
+		this.driversPowerInputs = new ChassisPowers();
 
 		this.constants = constants;
 		this.driveRadiusMeters = SwerveMath.calculateDriveRadiusMeters(modules.getModulePositionsFromCenterMeters());
@@ -153,6 +154,16 @@ public class Swerve extends GBSubsystem {
 		Logger.recordOutput(constants.velocityLogPath() + "/Magnitude", SwerveMath.getDriveMagnitude(allianceRelativeSpeeds));
 
 		Logger.recordOutput(getLogPath() + "/OdometrySamples", getNumberOfOdometrySamples());
+
+		Logger.recordOutput(getLogPath() + "/MeasuredAcceleration", getMeasuredAcceleration());
+		Logger.recordOutput(
+			getLogPath() + "/MeasuredAngularVelocity",
+			new double[] {getMeasuredAngularVelocity().getX(), getMeasuredAngularVelocity().getY(), getMeasuredAngularVelocity().getZ()}
+		);
+		Logger.recordOutput(
+			getLogPath() + "/MeasuredOrientation",
+			new double[] {getMeasuredOrientation().getX(), getMeasuredOrientation().getY(), getMeasuredOrientation().getZ()}
+		);
 	}
 
 
@@ -304,7 +315,6 @@ public class Swerve extends GBSubsystem {
 		return isAtHeading && isStopping;
 	}
 
-
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {
 		// Calibrate steer ks with phoenix tuner x
 		// Calibrate steer pid with phoenix tuner x
@@ -365,17 +375,17 @@ public class Swerve extends GBSubsystem {
 
 	public Rotation3d getMeasuredAngularVelocity() {
 		return new Rotation3d(
-			IMUSignals.angularVelocityXSignal().getLatestValue().getRadians(),
-			IMUSignals.angularVelocityYSignal().getLatestValue().getRadians(),
-			IMUSignals.angularVelocityZSignal().getLatestValue().getRadians()
+			IMUSignals.angularVelocityXSignal().getAndUpdateValue().getRadians(),
+			IMUSignals.angularVelocityYSignal().getAndUpdateValue().getRadians(),
+			IMUSignals.angularVelocityZSignal().getAndUpdateValue().getRadians()
 		);
 	}
 
 	public Rotation3d getMeasuredOrientation() {
 		return new Rotation3d(
-			IMUSignals.yawSignal().getLatestValue().getRadians(),
-			IMUSignals.angularVelocityYSignal().getLatestValue().getRadians(),
-			IMUSignals.angularVelocityZSignal().getLatestValue().getRadians()
+			IMUSignals.rollSignal().getAndUpdateValue().getRadians(),
+			IMUSignals.pitchSignal().getAndUpdateValue().getRadians(),
+			IMUSignals.yawSignal().getAndUpdateValue().getRadians()
 		);
 	}
 
@@ -386,6 +396,5 @@ public class Swerve extends GBSubsystem {
 			IMUSignals.accelerationZSignal().getAndUpdateValue()
 		);
 	}
-
 
 }

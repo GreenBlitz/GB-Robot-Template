@@ -50,40 +50,6 @@ public class OdometryThread extends Thread {
 		}
 	}
 
-	private static double getThreadCycleSeconds(double frequencyHertz) {
-		return 1 / frequencyHertz;
-	}
-
-	private static void addSignalToArray(StatusSignal<?> signal, StatusSignal<?>[] signals) {
-		StatusSignal<?>[] newSignals = new StatusSignal[signals.length + 1];
-		for (int i = 0; i < signals.length; i++) {
-			newSignals[i] = signals[i];
-		}
-		newSignals[signals.length] = signal;
-		signals = newSignals;
-	}
-
-	private static void addSignalsToArray(
-		Pair<StatusSignal<?>, StatusSignal<?>> signals,
-		Pair<StatusSignal<?>, StatusSignal<?>>[] signalsArray
-	) {
-		Pair<StatusSignal<?>, StatusSignal<?>>[] newSignals = new Pair[signalsArray.length + 1];
-		for (int i = 0; i < signalsArray.length; i++) {
-			newSignals[i] = signalsArray[i];
-		}
-		newSignals[signalsArray.length] = signals;
-		signalsArray = newSignals;
-	}
-
-	private static StatusSignal<?> getSignalWithCorrectFrequency(StatusSignal<?> signal, double threadFrequencyHertz) {
-		if (Robot.ROBOT_TYPE.isSimulation()) {
-			threadFrequencyHertz = RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ;
-		}
-		StatusSignal<?> signalClone = signal.clone();
-		Phoenix6SignalBuilder.setFrequencyWithRetry(signalClone, threadFrequencyHertz);
-		return signalClone;
-	}
-
 	public Queue<TimedValue<Double>> addSignal(StatusSignal<?> signal) {
 		Queue<TimedValue<Double>> queue = new ArrayBlockingQueue<>(maxValueCapacityPerUpdate);
 
@@ -127,9 +93,10 @@ public class OdometryThread extends Thread {
 	}
 
 	private void updateAllQueues(double timestamp) {
+		double latencyCompensatedTimestamp = timestamp - calculateLatency();
 		for (int i = 0; i < signals.length; i++) {
 			Queue<TimedValue<Double>> queue = signalValuesQueues.get(i);
-			queue.offer(new TimedValue<>(signals[i].getValueAsDouble(), timestamp));
+			queue.offer(new TimedValue<>(signals[i].getValueAsDouble(), latencyCompensatedTimestamp));
 		}
 
 		for (int i = 0; i < latencyAndSlopeSignals.length; i++) {
@@ -168,13 +135,47 @@ public class OdometryThread extends Thread {
 			return;
 		}
 
-		double signalsTimestamp = TimeUtil.getCurrentTimeSeconds() - calculateLatency();
+		double currentTimestamp = TimeUtil.getCurrentTimeSeconds();
 		LOCK.lock();
 		try {
-			updateAllQueues(signalsTimestamp);
+			updateAllQueues(currentTimestamp);
 		} finally {
 			LOCK.unlock();
 		}
+	}
+
+	private static double getThreadCycleSeconds(double frequencyHertz) {
+		return 1 / frequencyHertz;
+	}
+
+	private static void addSignalToArray(StatusSignal<?> signal, StatusSignal<?>[] signals) {
+		StatusSignal<?>[] newSignals = new StatusSignal[signals.length + 1];
+		for (int i = 0; i < signals.length; i++) {
+			newSignals[i] = signals[i];
+		}
+		newSignals[signals.length] = signal;
+		signals = newSignals;
+	}
+
+	private static void addSignalsToArray(
+		Pair<StatusSignal<?>, StatusSignal<?>> signals,
+		Pair<StatusSignal<?>, StatusSignal<?>>[] signalsArray
+	) {
+		Pair<StatusSignal<?>, StatusSignal<?>>[] newSignals = new Pair[signalsArray.length + 1];
+		for (int i = 0; i < signalsArray.length; i++) {
+			newSignals[i] = signalsArray[i];
+		}
+		newSignals[signalsArray.length] = signals;
+		signalsArray = newSignals;
+	}
+
+	private static StatusSignal<?> getSignalWithCorrectFrequency(StatusSignal<?> signal, double threadFrequencyHertz) {
+		if (Robot.ROBOT_TYPE.isSimulation()) {
+			threadFrequencyHertz = RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ;
+		}
+		StatusSignal<?> signalClone = signal.clone();
+		Phoenix6SignalBuilder.setFrequencyWithRetry(signalClone, threadFrequencyHertz);
+		return signalClone;
 	}
 
 }

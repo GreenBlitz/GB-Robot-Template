@@ -63,7 +63,10 @@ public class OdometryThread extends Thread {
 		signals = newSignals;
 	}
 
-	private static void addSignalsToArray(Pair<StatusSignal<?>, StatusSignal<?>> signals, Pair<StatusSignal<?>, StatusSignal<?>>[] signalsArray) {
+	private static void addSignalsToArray(
+		Pair<StatusSignal<?>, StatusSignal<?>> signals,
+		Pair<StatusSignal<?>, StatusSignal<?>>[] signalsArray
+	) {
 		Pair<StatusSignal<?>, StatusSignal<?>>[] newSignals = new Pair[signalsArray.length + 1];
 		for (int i = 0; i < signalsArray.length; i++) {
 			newSignals[i] = signalsArray[i];
@@ -94,12 +97,21 @@ public class OdometryThread extends Thread {
 		}
 	}
 
-	public Pair<Queue<TimedValue<Double>>, Queue<TimedValue<Double>>> addLatencyAndSlopeSignals(StatusSignal<?> latencySignal, StatusSignal<?> slopeSignal) {
-		Pair<Queue<TimedValue<Double>>, Queue<TimedValue<Double>>> queues = new Pair<>(new ArrayBlockingQueue<>(maxValueCapacityPerUpdate), new ArrayBlockingQueue<>(maxValueCapacityPerUpdate));
+	public Pair<Queue<TimedValue<Double>>, Queue<TimedValue<Double>>> addLatencyAndSlopeSignals(
+		StatusSignal<?> latencySignal,
+		StatusSignal<?> slopeSignal
+	) {
+		Pair<Queue<TimedValue<Double>>, Queue<TimedValue<Double>>> queues = new Pair<>(
+			new ArrayBlockingQueue<>(maxValueCapacityPerUpdate),
+			new ArrayBlockingQueue<>(maxValueCapacityPerUpdate)
+		);
 
 		LOCK.lock();
 		try {
-			Pair<StatusSignal<?>, StatusSignal<?>> correctFrequencySignals = new Pair<>(getSignalWithCorrectFrequency(latencySignal, frequencyHertz), getSignalWithCorrectFrequency(slopeSignal, frequencyHertz));
+			Pair<StatusSignal<?>, StatusSignal<?>> correctFrequencySignals = new Pair<>(
+				getSignalWithCorrectFrequency(latencySignal, frequencyHertz),
+				getSignalWithCorrectFrequency(slopeSignal, frequencyHertz)
+			);
 			addSignalToArray(correctFrequencySignals.getFirst(), signals);
 			addSignalToArray(correctFrequencySignals.getSecond(), signals);
 			addSignalsToArray(correctFrequencySignals, latencyAndSlopeSignals);
@@ -122,7 +134,14 @@ public class OdometryThread extends Thread {
 
 		for (int i = 0; i < latencyAndSlopeSignals.length; i++) {
 			Pair<Queue<TimedValue<Double>>, Queue<TimedValue<Double>>> queues = latencyAndSlopeSignalValuesQueues.get(i);
-			queues.getFirst().offer(new TimedValue<>(BaseStatusSignal.getLatencyCompensatedValueAsDouble(latencyAndSlopeSignals[i].getFirst(), latencyAndSlopeSignals[i].getSecond()), timestamp));
+			queues.getFirst()
+				.offer(
+					new TimedValue<>(
+						BaseStatusSignal
+							.getLatencyCompensatedValueAsDouble(latencyAndSlopeSignals[i].getFirst(), latencyAndSlopeSignals[i].getSecond()),
+						timestamp
+					)
+				);
 		}
 	}
 

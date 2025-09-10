@@ -2,6 +2,7 @@ package frc.robot.hardware.phoenix6.signal;
 
 import com.ctre.phoenix6.StatusSignal;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.subsystems.swerve.OdometryThread;
 import frc.utils.AngleUnit;
 import frc.robot.hardware.phoenix6.Phoenix6Util;
 
@@ -9,7 +10,7 @@ public class Phoenix6SignalBuilder {
 
 	private static final int UPDATE_FREQUENCY_RETRIES = 5;
 
-	private static void setFrequencyWithRetry(StatusSignal<?> signal, double frequency) {
+	public static void setFrequencyWithRetry(StatusSignal<?> signal, double frequency) {
 		Phoenix6Util.checkStatusCodeWithRetry(() -> signal.setUpdateFrequency(frequency), UPDATE_FREQUENCY_RETRIES);
 	}
 
@@ -56,6 +57,10 @@ public class Phoenix6SignalBuilder {
 		StatusSignal<?> signalClone = cloneWithFrequency(signal, frequency, busChain);
 		StatusSignal<?> signalSlopeClone = cloneWithFrequency(signalSlope, frequency, busChain);
 		return new Phoenix6LatencyAndSlopeSignal(signalClone.getName(), signalClone, signalSlopeClone, angleUnit);
+	}
+
+	public static Phoenix6AngleThreadSignal build(StatusSignal<?> signal, AngleUnit angleUnit, BusChain busChain, OdometryThread thread) {
+		return new Phoenix6AngleThreadSignal(signal, angleUnit, thread);
 	}
 
 }

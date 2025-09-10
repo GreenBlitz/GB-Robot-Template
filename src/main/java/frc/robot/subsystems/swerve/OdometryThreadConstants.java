@@ -10,4 +10,6 @@ public class OdometryThreadConstants {
 
 	public static final int THREAD_PRIORITY = 2;
 
+	public static final boolean IS_BUS_CHAIN_CANFD = true;
+
 }

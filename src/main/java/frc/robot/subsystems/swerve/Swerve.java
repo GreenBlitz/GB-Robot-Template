@@ -119,15 +119,15 @@ public class Swerve extends GBSubsystem {
 	public void setHeading(Rotation2d heading) {
 		gyro.setYaw(heading);
 		gyro.updateInputs(
-				IMUSignals.yawSignal(),
-				IMUSignals.pitchSignal(),
-				IMUSignals.rollSignal(),
-				IMUSignals.angularVelocityXSignal(),
-				IMUSignals.angularVelocityYSignal(),
-				IMUSignals.angularVelocityZSignal(),
-				IMUSignals.accelerationXSignal(),
-				IMUSignals.accelerationYSignal(),
-				IMUSignals.accelerationZSignal()
+			IMUSignals.yawSignal(),
+			IMUSignals.pitchSignal(),
+			IMUSignals.rollSignal(),
+			IMUSignals.angularVelocityXSignal(),
+			IMUSignals.angularVelocityYSignal(),
+			IMUSignals.angularVelocityZSignal(),
+			IMUSignals.accelerationXSignal(),
+			IMUSignals.accelerationYSignal(),
+			IMUSignals.accelerationZSignal()
 		);
 		headingStabilizer.unlockTarget();
 		headingStabilizer.setTargetHeading(heading);
@@ -365,28 +365,27 @@ public class Swerve extends GBSubsystem {
 
 	public Rotation3d getMeasuredAngularVelocity() {
 		return new Rotation3d(
-				IMUSignals.angularVelocityXSignal().getLatestValue().getRadians(),
-				IMUSignals.angularVelocityYSignal().getLatestValue().getRadians(),
-				IMUSignals.angularVelocityZSignal().getLatestValue().getRadians()
+			IMUSignals.angularVelocityXSignal().getLatestValue().getRadians(),
+			IMUSignals.angularVelocityYSignal().getLatestValue().getRadians(),
+			IMUSignals.angularVelocityZSignal().getLatestValue().getRadians()
 		);
 	}
 
 	public Rotation3d getMeasuredOrientation() {
 		return new Rotation3d(
-				IMUSignals.yawSignal().getLatestValue().getRadians(),
-				IMUSignals.angularVelocityYSignal().getLatestValue().getRadians(),
-				IMUSignals.angularVelocityZSignal().getLatestValue().getRadians()
+			IMUSignals.yawSignal().getLatestValue().getRadians(),
+			IMUSignals.angularVelocityYSignal().getLatestValue().getRadians(),
+			IMUSignals.angularVelocityZSignal().getLatestValue().getRadians()
 		);
 	}
 
 	public Translation3d getMeasuredAcceleration() {
 		return new Translation3d(
-				IMUSignals.accelerationXSignal().getAndUpdateValue(),
-				IMUSignals.accelerationYSignal().getAndUpdateValue(),
-				IMUSignals.accelerationZSignal().getAndUpdateValue()
+			IMUSignals.accelerationXSignal().getAndUpdateValue(),
+			IMUSignals.accelerationYSignal().getAndUpdateValue(),
+			IMUSignals.accelerationZSignal().getAndUpdateValue()
 		);
 	}
-
 
 
 }

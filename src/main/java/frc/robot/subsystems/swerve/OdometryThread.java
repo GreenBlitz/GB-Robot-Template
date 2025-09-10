@@ -16,14 +16,14 @@ public class OdometryThread extends Thread {
 
 	public static final ReentrantLock LOCK = new ReentrantLock();
 	private final StatusSignal<?>[] signals;
-	private final ArrayList<Queue<TimedValue<Double>>> signalsValuesQueues;
+	private final ArrayList<Queue<TimedValue<Double>>> signalValuesQueues;
 	private final double frequencyHertz;
 	private final int maxValueCapacityPerUpdate;
 	private final boolean isBusChainCanFD;
 
 	public OdometryThread(double frequencyHertz, String name, int maxValueCapacityPerUpdate, boolean isBusChainCanFD, int threadPriority) {
 		this.signals = new StatusSignal[0];
-		this.signalsValuesQueues = new ArrayList<>();
+		this.signalValuesQueues = new ArrayList<>();
 		this.frequencyHertz = frequencyHertz;
 		this.maxValueCapacityPerUpdate = maxValueCapacityPerUpdate;
 		this.isBusChainCanFD = isBusChainCanFD;
@@ -36,7 +36,9 @@ public class OdometryThread extends Thread {
 
 	@Override
 	public void run() {
-		update();
+		while (true) {
+			update();
+		}
 	}
 
 	private static double getThreadCycleSeconds(double frequencyHertz) {
@@ -58,7 +60,7 @@ public class OdometryThread extends Thread {
 		LOCK.lock();
 		try {
 			addSignalToArray(signal, signals);
-			signalsValuesQueues.add(queue);
+			signalValuesQueues.add(queue);
 			return queue;
 		} finally {
 			LOCK.unlock();
@@ -70,8 +72,8 @@ public class OdometryThread extends Thread {
 	}
 
 	private void updateAllQueues(double timestamp) {
-		for (int i = 0; i < signals.length; i += 1) {
-			Queue<TimedValue<Double>> queue = signalsValuesQueues.get(i);
+		for (int i = 0; i < signals.length; i++) {
+			Queue<TimedValue<Double>> queue = signalValuesQueues.get(i);
 			queue.offer(new TimedValue<>(signals[i].getValueAsDouble(), timestamp));
 		}
 	}

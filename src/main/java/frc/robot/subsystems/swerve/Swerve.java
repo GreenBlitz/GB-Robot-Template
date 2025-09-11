@@ -119,17 +119,7 @@ public class Swerve extends GBSubsystem {
 
 	public void setHeading(Rotation2d heading) {
 		gyro.setYaw(heading);
-		gyro.updateInputs(
-			imuSignals.pitchSignal(),
-			imuSignals.rollSignal(),
-			imuSignals.yawSignal(),
-			imuSignals.angularVelocityRollSignal(),
-			imuSignals.angularVelocityPitchSignal(),
-			imuSignals.angularVelocityYawSignal(),
-			imuSignals.accelerationXSignal(),
-			imuSignals.accelerationYSignal(),
-			imuSignals.accelerationZSignal()
-		);
+		updateIMU();
 		headingStabilizer.unlockTarget();
 		headingStabilizer.setTargetHeading(heading);
 	}
@@ -140,9 +130,22 @@ public class Swerve extends GBSubsystem {
 		constants.rotationDegreesPIDController().reset();
 	}
 
+	private void updateIMU() {
+		gyro.updateInputs(
+				imuSignals.pitchSignal(),
+				imuSignals.rollSignal(),
+				imuSignals.yawSignal(),
+				imuSignals.angularVelocityRollSignal(),
+				imuSignals.angularVelocityPitchSignal(),
+				imuSignals.angularVelocityYawSignal(),
+				imuSignals.accelerationXSignal(),
+				imuSignals.accelerationYSignal(),
+				imuSignals.accelerationZSignal()
+		);
+	}
 
 	public void update() {
-		gyro.updateInputs(imuSignals.yawSignal());
+		updateIMU();
 		modules.updateInputs();
 
 		currentState.log(constants.stateLogPath());

@@ -34,13 +34,10 @@ public class OdometryThread extends Thread {
 		Threads.setCurrentThreadPriority(true, threadPriority);
 		setName(name);
 		setDaemon(true);
-		start();
 	}
 
 	@Override
 	public void run() {
-		Timer.delay(5);
-
 		while (true) {
 			update();
 		}

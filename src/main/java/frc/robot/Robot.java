@@ -53,7 +53,7 @@ public class Robot {
 	private final Limelight limelightThreeGB;
 	private final Limelight limelightObjectDetector;
 	private final RobotHeadingEstimator headingEstimator;
-	public OdometryThread odometryThread;
+	public final OdometryThread odometryThread;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -73,8 +73,11 @@ public class Robot {
 			gyro,
 			GyroFactory.createSignals(gyro, odometryThread)
 		);
-		Timer.delay(10);
+
+		odometryThread.start();
+		Timer.delay(TimeUtil.DEFAULT_CYCLE_TIME_SECONDS);
 		swerve.update();
+
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
 			swerve.getKinematics(),

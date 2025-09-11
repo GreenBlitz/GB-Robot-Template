@@ -115,31 +115,13 @@ public class KrakenX60DriveBuilder {
 		);
 	}
 
-	static DriveSignals buildSignals(TalonFXMotor drive) {
-		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
-			.build(drive.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
-		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder
-			.build(drive.getDevice().getTorqueCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
-		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder
-			.build(drive.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
-		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder.build(
-			drive.getDevice().getPosition(),
-			velocitySignal,
-			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-			AngleUnit.ROTATIONS,
-			BusChain.ROBORIO
-		);
-
-		return new DriveSignals(positionSignal, velocitySignal, currentSignal, voltageSignal);
-	}
-
 	static DriveSignals buildThreadSignals(TalonFXMotor drive, OdometryThread thread) {
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
 			.build(drive.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
 		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder
 			.build(drive.getDevice().getTorqueCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
-		Phoenix6AngleThreadSignal velocitySignal = Phoenix6SignalBuilder.build(drive.getDevice().getVelocity(), AngleUnit.ROTATIONS, thread);
-		Phoenix6AngleThreadSignal positionSignal = Phoenix6SignalBuilder.build(drive.getDevice().getPosition(), AngleUnit.ROTATIONS, thread);
+		Phoenix6AngleThreadSignal velocitySignal = Phoenix6SignalBuilder.build("Drive: vel " + drive.getDevice().getDeviceID(), drive.getDevice().getVelocity(), AngleUnit.ROTATIONS, thread);
+		Phoenix6AngleThreadSignal positionSignal = Phoenix6SignalBuilder.build("Drive: pos " + drive.getDevice().getDeviceID(), drive.getDevice().getPosition(), AngleUnit.ROTATIONS, thread);
 
 		return new DriveSignals(positionSignal, velocitySignal, currentSignal, voltageSignal);
 	}

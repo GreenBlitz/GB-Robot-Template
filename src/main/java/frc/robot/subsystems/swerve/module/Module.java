@@ -82,8 +82,8 @@ public class Module {
 		this.driveInputs = new DriveInputsAutoLogged();
 		this.driveCouplingInputs = new DriveCouplingInputsAutoLogged();
 
-		updateInputs();
-		resetSteerByEncoder();
+//		updateInputs();
+//		resetSteerByEncoder();
 	}
 
 	public SysIdCalibrator.SysIdConfigInfo getSteerSysIdConfigInfo() {

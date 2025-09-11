@@ -59,8 +59,8 @@ public class Phoenix6SignalBuilder {
 		return new Phoenix6LatencyAndSlopeSignal(signalClone.getName(), signalClone, signalSlopeClone, angleUnit);
 	}
 
-	public static Phoenix6AngleThreadSignal build(StatusSignal<?> signal, AngleUnit angleUnit, OdometryThread thread) {
-		return new Phoenix6AngleThreadSignal(signal, angleUnit, thread);
+	public static Phoenix6AngleThreadSignal build(String name, StatusSignal<?> signal, AngleUnit angleUnit, OdometryThread thread) {
+		return new Phoenix6AngleThreadSignal(name, signal, angleUnit, thread);
 	}
 
 }

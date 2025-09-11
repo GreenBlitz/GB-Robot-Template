@@ -29,10 +29,6 @@ public class SteerFactory {
 		return KrakenX60SteerBuilder.buildRequests();
 	}
 
-	public static SteerSignals createSignals(ControllableMotor steer) {
-		return KrakenX60SteerBuilder.buildSignals((TalonFXMotor) steer);
-	}
-
 	public static SteerSignals createThreadSignals(ControllableMotor steer, OdometryThread thread) {
 		return KrakenX60SteerBuilder.buildThreadSignals((TalonFXMotor) steer, thread);
 	}

@@ -4,6 +4,7 @@ import frc.robot.Robot;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.gyro.Pigeon2Gyro;
 import frc.robot.subsystems.swerve.GyroSignals;
+import frc.robot.subsystems.swerve.OdometryThread;
 
 public class GyroFactory {
 
@@ -14,10 +15,11 @@ public class GyroFactory {
 			case SIMULATION -> SimulationGyroBuilder.buildGyro(logPath);
 		};
 	}
-
-	public static GyroSignals createSignals(IGyro gyro) {
+	
+	
+	public static GyroSignals createThreadSignals(IGyro gyro, OdometryThread thread) {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> Pigeon2GyroBuilder.buildSignals((Pigeon2Gyro) gyro);
+			case REAL -> Pigeon2GyroBuilder.buildThreadSignals((Pigeon2Gyro) gyro, thread);
 			case SIMULATION -> SimulationGyroBuilder.buildSignals();
 		};
 	}

@@ -16,6 +16,7 @@ import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.subsystems.swerve.OdometryThread;
 import frc.robot.subsystems.swerve.OdometryThreadConstants;
+import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.vision.DetectedObjectType;
 import frc.robot.vision.cameras.limelight.Limelight;
 import frc.robot.vision.cameras.limelight.LimelightFilters;
@@ -35,6 +36,7 @@ import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.math.StandardDeviations2D;
 import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.Logger;
 
 
 /**
@@ -68,8 +70,10 @@ public class Robot {
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
 			ModulesFactory.createThreadModules(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve", odometryThread),
+//			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
 			gyro,
-			GyroFactory.createSignals(gyro)
+//			GyroFactory.createSignals(gyro)
+			GyroFactory.createThreadSignals(gyro, odometryThread)
 		);
 
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
@@ -175,7 +179,16 @@ public class Robot {
 		swerve.update();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
-
+		
+		Logger.recordOutput("AAAAAAA", swerve.getModules().getModule(ModuleUtil.ModulePosition.FRONT_RIGHT).getOdometryPosition(0));
+		OdometryThread.THREAD_LOCK.lock();
+		try {
+			Logger.recordOutput("AAAAAAATIME", OdometryThread.TIMER);
+			OdometryThread.TIMER = 0;
+		} finally {
+			OdometryThread.THREAD_LOCK.unlock();
+		}
+		
 		limelightFour.updateMT1();
 		limelightThreeGB.updateMT1();
 

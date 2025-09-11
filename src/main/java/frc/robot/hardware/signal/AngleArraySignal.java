@@ -11,7 +11,7 @@ public abstract class AngleArraySignal implements InputSignal<Rotation2d> {
 
 	private final String name;
 	protected final AngleUnit angleUnit;
-	private final TimedValue<Rotation2d>[] timedValues;
+	private TimedValue<Rotation2d>[] timedValues;
 
 	public AngleArraySignal(String name, AngleUnit angleUnit) {
 		this.name = name;
@@ -26,8 +26,11 @@ public abstract class AngleArraySignal implements InputSignal<Rotation2d> {
 
 	@Override
 	public Rotation2d getLatestValue() {
-		return timedValues[timedValues.length - 1].getValue();
+			print();
+			return timedValues[timedValues.length - 1].getValue();
 	}
+	
+	abstract public void print();
 
 	@Override
 	public Rotation2d[] asArray() {
@@ -74,7 +77,7 @@ public abstract class AngleArraySignal implements InputSignal<Rotation2d> {
 
 	@Override
 	public void toLog(LogTable table) {
-		updateValues(timedValues);
+		timedValues = updateValues(timedValues);
 		table.put(name, asArray());
 	}
 
@@ -82,10 +85,10 @@ public abstract class AngleArraySignal implements InputSignal<Rotation2d> {
 	public void fromLog(LogTable table) {}
 
 	public Rotation2d getAndUpdateValue() {
-		updateValues(timedValues);
+		timedValues = updateValues(timedValues);
 		return getLatestValue();
 	}
 
-	protected abstract void updateValues(TimedValue<Rotation2d>[] timedValues);
+	protected abstract TimedValue<Rotation2d>[] updateValues(TimedValue<Rotation2d>[] timedValues);
 
 }

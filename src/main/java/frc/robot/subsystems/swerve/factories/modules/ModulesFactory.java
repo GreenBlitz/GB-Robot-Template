@@ -13,24 +13,6 @@ import frc.robot.subsystems.swerve.module.Modules;
 
 public class ModulesFactory {
 
-	private static Module createModule(String logPath, ModuleUtil.ModulePosition modulePosition) {
-		IAngleEncoder angleEncoder = EncoderFactory.createEncoder(logPath, modulePosition);
-		ControllableMotor steer = SteerFactory.createSteer(logPath, modulePosition);
-		ControllableMotor drive = DriveFactory.createDrive(logPath, modulePosition);
-
-		return new Module(
-			ModuleSpecificConstantsFactory.create(logPath, modulePosition),
-			angleEncoder,
-			EncoderFactory.createSignals(angleEncoder),
-			steer,
-			SteerFactory.createRequests(),
-			SteerFactory.createSignals(steer),
-			drive,
-			DriveFactory.createRequests(),
-			DriveFactory.createSignals(drive)
-		);
-	}
-
 	private static Module createThreadModule(String logPath, ModuleUtil.ModulePosition modulePosition, OdometryThread thread) {
 		IAngleEncoder angleEncoder = EncoderFactory.createEncoder(logPath, modulePosition);
 		ControllableMotor steer = SteerFactory.createSteer(logPath, modulePosition);
@@ -49,20 +31,10 @@ public class ModulesFactory {
 		);
 	}
 
-	public static Modules create(String logPath) {
-		return new Modules(
-			logPath,
-			createModule(logPath, ModuleUtil.ModulePosition.FRONT_LEFT),
-			createModule(logPath, ModuleUtil.ModulePosition.FRONT_RIGHT),
-			createModule(logPath, ModuleUtil.ModulePosition.BACK_LEFT),
-			createModule(logPath, ModuleUtil.ModulePosition.BACK_RIGHT)
-		);
-	}
-
 	public static Modules createThreadModules(String logPath, OdometryThread thread) {
 		return new Modules(
 			logPath,
-			createThreadModule(logPath, ModuleUtil.ModulePosition.FRONT_LEFT, thread),
+//			createThreadModule(logPath, ModuleUtil.ModulePosition.FRONT_LEFT, thread),
 			createThreadModule(logPath, ModuleUtil.ModulePosition.FRONT_RIGHT, thread),
 			createThreadModule(logPath, ModuleUtil.ModulePosition.BACK_LEFT, thread),
 			createThreadModule(logPath, ModuleUtil.ModulePosition.BACK_RIGHT, thread)

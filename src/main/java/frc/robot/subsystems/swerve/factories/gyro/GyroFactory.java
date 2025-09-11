@@ -15,9 +15,9 @@ public class GyroFactory {
 			case SIMULATION -> SimulationGyroBuilder.buildGyro(logPath);
 		};
 	}
-	
-	
-	public static GyroSignals createThreadSignals(IGyro gyro, OdometryThread thread) {
+
+
+	public static GyroSignals createSignals(IGyro gyro, OdometryThread thread) {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL -> Pigeon2GyroBuilder.buildThreadSignals((Pigeon2Gyro) gyro, thread);
 			case SIMULATION -> SimulationGyroBuilder.buildSignals();

@@ -102,8 +102,8 @@ class KrakenX60SteerBuilder {
 			.build(steer.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
 		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder
 			.build(steer.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
-		Phoenix6AngleThreadSignal velocitySignal = Phoenix6SignalBuilder.build("Steer: vel" + steer.getDevice().getDeviceID(),steer.getDevice().getVelocity(), AngleUnit.ROTATIONS, thread);
-		Phoenix6AngleThreadSignal positionSignal = Phoenix6SignalBuilder.build("Steer: pos" + steer.getDevice().getDeviceID(),steer.getDevice().getPosition(), AngleUnit.ROTATIONS, thread);
+		Phoenix6AngleThreadSignal velocitySignal = Phoenix6SignalBuilder.build(steer.getDevice().getVelocity(), AngleUnit.ROTATIONS, thread);
+		Phoenix6AngleThreadSignal positionSignal = Phoenix6SignalBuilder.build(steer.getDevice().getPosition(), AngleUnit.ROTATIONS, thread);
 
 		return new SteerSignals(positionSignal, velocitySignal, currentSignal, voltageSignal);
 	}

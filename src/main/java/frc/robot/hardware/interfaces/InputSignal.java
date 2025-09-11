@@ -10,6 +10,8 @@ public interface InputSignal<T> extends LoggableInputs {
 
 	T getAndUpdateValue();
 
+	void update();
+
 	T[] asArray();
 
 	double getTimestamp();

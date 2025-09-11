@@ -26,11 +26,11 @@ public abstract class AngleArraySignal implements InputSignal<Rotation2d> {
 
 	@Override
 	public Rotation2d getLatestValue() {
-			print();
-			return timedValues[timedValues.length - 1].getValue();
+		if (timedValues.length == 0) {
+			return new Rotation2d();
+		}
+		return timedValues[timedValues.length - 1].getValue();
 	}
-	
-	abstract public void print();
 
 	@Override
 	public Rotation2d[] asArray() {
@@ -85,8 +85,13 @@ public abstract class AngleArraySignal implements InputSignal<Rotation2d> {
 	public void fromLog(LogTable table) {}
 
 	public Rotation2d getAndUpdateValue() {
-		timedValues = updateValues(timedValues);
+		update();
 		return getLatestValue();
+	}
+
+	@Override
+	public void update() {
+		timedValues = updateValues(timedValues);
 	}
 
 	protected abstract TimedValue<Rotation2d>[] updateValues(TimedValue<Rotation2d>[] timedValues);

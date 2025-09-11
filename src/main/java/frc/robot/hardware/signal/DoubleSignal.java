@@ -76,6 +76,11 @@ public abstract class DoubleSignal implements InputSignal<Double> {
 		return timedValue.getValue();
 	}
 
+	@Override
+	public void update() {
+		updateValue(timedValue);
+	}
+
 	protected abstract void updateValue(TimedValue<Double> timedValue);
 
 }

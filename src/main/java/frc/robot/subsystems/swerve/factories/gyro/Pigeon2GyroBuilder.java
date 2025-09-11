@@ -2,9 +2,7 @@ package frc.robot.subsystems.swerve.factories.gyro;
 
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import frc.robot.IDs;
-import frc.robot.RobotConstants;
 import frc.robot.hardware.interfaces.IGyro;
-import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.gyro.Pigeon2Gyro;
 import frc.robot.hardware.phoenix6.gyro.Pigeon2Wrapper;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
@@ -35,12 +33,9 @@ class Pigeon2GyroBuilder {
 
 		return new Pigeon2Gyro(logPath, pigeon2Wrapper);
 	}
-	
+
 	static GyroSignals buildThreadSignals(Pigeon2Gyro pigeon2Gyro, OdometryThread thread) {
-		return new GyroSignals(
-			Phoenix6SignalBuilder
-				.build("Pigeon", pigeon2Gyro.getDevice().getYaw(), AngleUnit.DEGREES, thread)
-		);
+		return new GyroSignals(Phoenix6SignalBuilder.build(pigeon2Gyro.getDevice().getYaw(), AngleUnit.DEGREES, thread));
 	}
 
 }

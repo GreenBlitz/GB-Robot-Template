@@ -68,7 +68,7 @@ public class Swerve extends GBSubsystem {
 		this.stateHandler = new SwerveStateHandler(this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 
-		update();
+//		update();
 		setDefaultCommand(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
 	}
 
@@ -133,8 +133,13 @@ public class Swerve extends GBSubsystem {
 
 
 	public void update() {
-		gyro.updateInputs(gyroSignals.yawSignal());
-		modules.updateInputs();
+		try {
+			OdometryThread.THREAD_LOCK.lock();
+			gyro.updateInputs(gyroSignals.yawSignal());
+			modules.updateInputs();
+		} finally {
+			OdometryThread.THREAD_LOCK.unlock();
+		}
 
 		currentState.log(constants.stateLogPath());
 

@@ -6,19 +6,16 @@ import frc.robot.hardware.signal.AngleArraySignal;
 import frc.robot.subsystems.swerve.OdometryThread;
 import frc.utils.AngleUnit;
 import frc.utils.TimedValue;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Queue;
 
 public class Phoenix6AngleThreadSignal extends AngleArraySignal {
 
 	private final Queue<TimedValue<Double>> threadTimedValues;
-	private final String name;
 
-	protected Phoenix6AngleThreadSignal(String name, StatusSignal<?> statusSignal, AngleUnit angleUnit, OdometryThread thread) {
+	protected Phoenix6AngleThreadSignal(StatusSignal<?> statusSignal, AngleUnit angleUnit, OdometryThread thread) {
 		super(statusSignal.getName(), angleUnit);
 		this.threadTimedValues = thread.addSignal(statusSignal);
-		this.name = name;
 	}
 
 	@Override
@@ -26,20 +23,10 @@ public class Phoenix6AngleThreadSignal extends AngleArraySignal {
 		timedValues = new TimedValue[threadTimedValues.size()];
 
 		for (int i = 0; i < timedValues.length; i++) {
-			OdometryThread.THREAD_LOCK.lock();
-			try {
-				TimedValue<Double> value = threadTimedValues.poll();
-				timedValues[i] = new TimedValue<>(angleUnit.toRotation2d(value.getValue()), value.getTimestamp());
-				System.out.println(name);
-			} finally {
-				OdometryThread.THREAD_LOCK.unlock();
-			}
+			TimedValue<Double> value = threadTimedValues.poll();
+			timedValues[i] = new TimedValue<>(angleUnit.toRotation2d(value.getValue()), value.getTimestamp());
 		}
 		return timedValues;
 	}
-	
-	@Override
-	public void print() {
-		System.out.println(name+ "THIS ONE");
-	}
+
 }

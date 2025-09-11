@@ -19,23 +19,23 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class OdometryThread extends Thread {
 
-	public static final ReentrantLock LOCK = new ReentrantLock();
-	private final StatusSignal<?>[] signals;
-	private final Pair<StatusSignal<?>, StatusSignal<?>>[] latencyAndSlopeSignals;
+	public static final ReentrantLock THREAD_LOCK = new ReentrantLock();
 	private final ArrayList<Queue<TimedValue<Double>>> signalValuesQueues;
 	private final ArrayList<Pair<Queue<TimedValue<Double>>, Queue<TimedValue<Double>>>> latencyAndSlopeSignalValuesQueues;
 	private final double frequencyHertz;
 	private final int maxValueCapacityPerUpdate;
 	private final boolean isBusChainCanFD;
+	private StatusSignal<?>[] signals;
+	private Pair<StatusSignal<?>, StatusSignal<?>>[] latencyAndSlopeSignals;
 
 	public OdometryThread(double frequencyHertz, String name, int maxValueCapacityPerUpdate, boolean isBusChainCanFD, int threadPriority) {
-		this.signals = new StatusSignal[0];
-		this.latencyAndSlopeSignals = new Pair[0];
 		this.signalValuesQueues = new ArrayList<>();
 		this.latencyAndSlopeSignalValuesQueues = new ArrayList<>();
 		this.frequencyHertz = frequencyHertz;
 		this.maxValueCapacityPerUpdate = maxValueCapacityPerUpdate;
 		this.isBusChainCanFD = isBusChainCanFD;
+		this.signals = new StatusSignal[0];
+		this.latencyAndSlopeSignals = new Pair[0];
 		Threads.setCurrentThreadPriority(true, threadPriority);
 
 		setName(name);
@@ -53,13 +53,13 @@ public class OdometryThread extends Thread {
 	public Queue<TimedValue<Double>> addSignal(StatusSignal<?> signal) {
 		Queue<TimedValue<Double>> queue = new ArrayBlockingQueue<>(maxValueCapacityPerUpdate);
 
-		LOCK.lock();
+		THREAD_LOCK.lock();
 		try {
-			addSignalToArray(getSignalWithCorrectFrequency(signal, frequencyHertz), signals);
+			signals = addSignalToArray(getSignalWithCorrectFrequency(signal, frequencyHertz), signals);
 			signalValuesQueues.add(queue);
 			return queue;
 		} finally {
-			LOCK.unlock();
+			THREAD_LOCK.unlock();
 		}
 	}
 
@@ -72,15 +72,15 @@ public class OdometryThread extends Thread {
 			new ArrayBlockingQueue<>(maxValueCapacityPerUpdate)
 		);
 
-		LOCK.lock();
+		THREAD_LOCK.lock();
 		try {
 			Pair<StatusSignal<?>, StatusSignal<?>> correctFrequencySignals = new Pair<>(
 				getSignalWithCorrectFrequency(latencySignal, frequencyHertz),
 				getSignalWithCorrectFrequency(slopeSignal, frequencyHertz)
 			);
-			addSignalToArray(correctFrequencySignals.getFirst(), signals);
-			addSignalToArray(correctFrequencySignals.getSecond(), signals);
-			addSignalsToArray(correctFrequencySignals, latencyAndSlopeSignals);
+			signals = addSignalToArray(correctFrequencySignals.getFirst(), signals);
+			signals = addSignalToArray(correctFrequencySignals.getSecond(), signals);
+			latencyAndSlopeSignals = addSignalsToArray(correctFrequencySignals, latencyAndSlopeSignals);
 
 			signalValuesQueues.add(queues.getFirst());
 			signalValuesQueues.add(queues.getSecond());
@@ -88,7 +88,7 @@ public class OdometryThread extends Thread {
 
 			return queues;
 		} finally {
-			LOCK.unlock();
+			THREAD_LOCK.unlock();
 		}
 	}
 
@@ -136,11 +136,11 @@ public class OdometryThread extends Thread {
 		}
 
 		double currentTimestamp = TimeUtil.getCurrentTimeSeconds();
-		LOCK.lock();
+		THREAD_LOCK.lock();
 		try {
 			updateAllQueues(currentTimestamp);
 		} finally {
-			LOCK.unlock();
+			THREAD_LOCK.unlock();
 		}
 	}
 
@@ -148,25 +148,21 @@ public class OdometryThread extends Thread {
 		return 1 / frequencyHertz;
 	}
 
-	private static void addSignalToArray(StatusSignal<?> signal, StatusSignal<?>[] signals) {
+	private static StatusSignal<?>[] addSignalToArray(StatusSignal<?> signal, StatusSignal<?>[] signals) {
 		StatusSignal<?>[] newSignals = new StatusSignal[signals.length + 1];
-		for (int i = 0; i < signals.length; i++) {
-			newSignals[i] = signals[i];
-		}
+		System.arraycopy(signals, 0, newSignals, 0, signals.length);
 		newSignals[signals.length] = signal;
-		signals = newSignals;
+		return newSignals;
 	}
 
-	private static void addSignalsToArray(
+	private static Pair<StatusSignal<?>, StatusSignal<?>>[] addSignalsToArray(
 		Pair<StatusSignal<?>, StatusSignal<?>> signals,
 		Pair<StatusSignal<?>, StatusSignal<?>>[] signalsArray
 	) {
 		Pair<StatusSignal<?>, StatusSignal<?>>[] newSignals = new Pair[signalsArray.length + 1];
-		for (int i = 0; i < signalsArray.length; i++) {
-			newSignals[i] = signalsArray[i];
-		}
+		System.arraycopy(signalsArray, 0, newSignals, 0, signalsArray.length);
 		newSignals[signalsArray.length] = signals;
-		signalsArray = newSignals;
+		return newSignals;
 	}
 
 	private static StatusSignal<?> getSignalWithCorrectFrequency(StatusSignal<?> signal, double threadFrequencyHertz) {

@@ -4,9 +4,7 @@ import frc.robot.hardware.interfaces.InputSignal;
 import frc.utils.TimedValue;
 import frc.utils.math.ToleranceMath;
 import frc.utils.time.TimeConstants;
-import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.LogTable;
-import org.littletonrobotics.junction.Logger;
 
 public abstract class DoubleSignal implements InputSignal<Double> {
 

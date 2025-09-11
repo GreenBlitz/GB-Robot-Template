@@ -31,7 +31,12 @@ public class RobotManager extends LoggedRobot {
 	private int roborioCycles;
 
 	public RobotManager() {
-		LoggerFactory.initializeLogger();
+		if (Robot.ROBOT_TYPE.isReplay()) {
+			setUseTiming(false);
+			LoggerFactory.startReplayLogger();
+		} else {
+			LoggerFactory.initializeLogger();
+		}
 		PathPlannerUtil.startPathfinder();
 		PathPlannerUtil.setupPathPlannerLogging();
 

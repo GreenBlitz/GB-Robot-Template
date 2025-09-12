@@ -26,6 +26,7 @@ public class LoggerFactory {
 		String logPath = LogFileUtil.findReplayLog();
 		Logger.setReplaySource(new WPILOGReader(logPath));
 		Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_replay")));
+		Logger.start();
 	}
 
 	private static void startRealLogger() {

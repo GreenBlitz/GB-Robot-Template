@@ -120,18 +120,22 @@ public class Module {
 		steer.updateSimulation();
 		drive.updateSimulation();
 
-		inputs.data = new ModuleIOInputs.ModuleIOData(
-			driveSignals.position().getAndUpdateValue().getRadians(),
-			driveSignals.velocity().getAndUpdateValue().getRadians(),
-			driveSignals.current().getAndUpdateValue(),
-			driveSignals.voltage().getAndUpdateValue(),
-			encoderSignals.position().getAndUpdateValue().getRadians(),
-			steerSignals.position().getAndUpdateValue().getRadians(),
-			steerSignals.velocity().getAndUpdateValue().getRadians(),
-			steerSignals.current().getAndUpdateValue(),
-			steerSignals.voltage().getAndUpdateValue()
-		);
-		Logger.processInputs(constants.logPath(), inputs);
+//		inputs.data = new ModuleIOInputs.ModuleIOData(
+//			driveSignals.position().getAndUpdateValue().getRadians(),
+//			driveSignals.velocity().getAndUpdateValue().getRadians(),
+//			driveSignals.current().getAndUpdateValue(),
+//			driveSignals.voltage().getAndUpdateValue(),
+//			encoderSignals.position().getAndUpdateValue().getRadians(),
+//			steerSignals.position().getAndUpdateValue().getRadians(),
+//			steerSignals.velocity().getAndUpdateValue().getRadians(),
+//			steerSignals.current().getAndUpdateValue(),
+//			steerSignals.voltage().getAndUpdateValue()
+//		);
+//		Logger.processInputs(constants.logPath(), inputs);
+
+		steer.updateInputs(steerSignals.position(), steerSignals.velocity(), steerSignals.voltage(), steerSignals.current());
+		drive.updateInputs(driveSignals.position(), driveSignals.velocity(), driveSignals.voltage(), driveSignals.current());
+		encoder.updateInputs(encoderSignals.position());
 
 		fixDriveInputsCoupling();
 

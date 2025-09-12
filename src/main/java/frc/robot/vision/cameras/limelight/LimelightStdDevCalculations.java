@@ -40,4 +40,46 @@ public class LimelightStdDevCalculations {
 		);
 	}
 
+	private static StandardDeviations2D averageTagDistanceDividedByVisibleTagParabola(
+		double numberOfVisibleTags,
+		double averageTagDistance,
+		StandardDeviations2D minStandardDeviations,
+		StandardDeviations2D standardDeviationFactors
+	) {
+		double averageTagDistanceSquaredDividedByVisibleTags = Math.pow(averageTagDistance, 2) / numberOfVisibleTags;
+		return new StandardDeviations2D(
+			Math.max(
+				minStandardDeviations.xStandardDeviations(),
+				standardDeviationFactors.xStandardDeviations() * averageTagDistanceSquaredDividedByVisibleTags
+			),
+			Math.max(
+				minStandardDeviations.yStandardDeviations(),
+				standardDeviationFactors.yStandardDeviations() * averageTagDistanceSquaredDividedByVisibleTags
+			),
+			Math.max(
+				minStandardDeviations.angleStandardDeviations(),
+				standardDeviationFactors.angleStandardDeviations() * averageTagDistanceSquaredDividedByVisibleTags
+			)
+		);
+	}
+
+	private static StandardDeviations2D exponentialTagDistanceDividedByVisibleTags(
+		double numberOfVisibleTags,
+		double averageTagDistance,
+		StandardDeviations2D standardDeviationFactorials,
+		StandardDeviations2D standardDeviationFactors
+	) {
+		return new StandardDeviations2D(
+			Math.pow(Math.E, standardDeviationFactorials.xStandardDeviations() * averageTagDistance)
+				* standardDeviationFactors.xStandardDeviations()
+				/ numberOfVisibleTags,
+			Math.pow(Math.E, standardDeviationFactorials.yStandardDeviations() * averageTagDistance)
+				* standardDeviationFactors.yStandardDeviations()
+				/ numberOfVisibleTags,
+			Math.pow(Math.E, standardDeviationFactorials.angleStandardDeviations() * averageTagDistance)
+				* standardDeviationFactors.angleStandardDeviations()
+				/ numberOfVisibleTags
+		);
+	}
+
 }

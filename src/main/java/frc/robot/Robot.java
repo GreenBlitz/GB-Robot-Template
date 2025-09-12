@@ -192,8 +192,8 @@ public class Robot {
 		limelightFour.updateMT2();
 		limelightThreeGB.updateMT2();
 
-//		limelightFour.getOrientationRequiringRobotPose().ifPresent(poseEstimator::updateVision);
-//		limelightThreeGB.getOrientationRequiringRobotPose().ifPresent(poseEstimator::updateVision);
+		limelightFour.getOrientationRequiringRobotPose().ifPresent(poseEstimator::updateVision);
+		limelightThreeGB.getOrientationRequiringRobotPose().ifPresent(poseEstimator::updateVision);
 
 		limelightFour.log();
 		limelightThreeGB.log();

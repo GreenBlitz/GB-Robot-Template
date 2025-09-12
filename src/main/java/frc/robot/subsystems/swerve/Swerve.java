@@ -163,7 +163,6 @@ public class Swerve extends GBSubsystem {
 				Optional.of(gyroSignals.yawSignal().asArray()[i]),
 				gyroSignals.yawSignal().getTimestamps()[i]
 			);
-			Logger.recordOutput("Test/gyro", odometryData[i].getGyroYaw().get());
 		}
 
 		return odometryData;

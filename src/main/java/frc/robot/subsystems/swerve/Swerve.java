@@ -132,15 +132,15 @@ public class Swerve extends GBSubsystem {
 
 	private void updateIMU() {
 		gyro.updateInputs(
-				imuSignals.pitchSignal(),
-				imuSignals.rollSignal(),
-				imuSignals.yawSignal(),
-				imuSignals.angularVelocityRollSignal(),
-				imuSignals.angularVelocityPitchSignal(),
-				imuSignals.angularVelocityYawSignal(),
-				imuSignals.accelerationXSignal(),
-				imuSignals.accelerationYSignal(),
-				imuSignals.accelerationZSignal()
+			imuSignals.pitchSignal(),
+			imuSignals.rollSignal(),
+			imuSignals.yawSignal(),
+			imuSignals.angularVelocityRollSignal(),
+			imuSignals.angularVelocityPitchSignal(),
+			imuSignals.angularVelocityYawSignal(),
+			imuSignals.accelerationXSignal(),
+			imuSignals.accelerationYSignal(),
+			imuSignals.accelerationZSignal()
 		);
 	}
 

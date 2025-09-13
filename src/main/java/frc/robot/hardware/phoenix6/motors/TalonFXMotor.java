@@ -1,6 +1,8 @@
 package frc.robot.hardware.phoenix6.motors;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -10,6 +12,7 @@ import frc.robot.hardware.interfaces.IMotionMagicRequest;
 import frc.robot.hardware.phoenix6.Phoenix6Device;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
+import frc.robot.hardware.phoenix6.TalonFXFollowerConfig;
 import frc.robot.hardware.phoenix6.motors.simulation.TalonFXSimulation;
 import frc.robot.hardware.mechanisms.MechanismSimulation;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
@@ -23,19 +26,30 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 	private static final int APPLY_CONFIG_RETRIES = 5;
 
 	private final TalonFXWrapper motor;
+	private final TalonFXMotor[] followers;
 	private final Optional<TalonFXSimulation> talonFXSimulationOptional;
 	private final SysIdCalibrator.SysIdConfigInfo sysidConfigInfo;
 
-	public TalonFXMotor(String logPath, Phoenix6DeviceID deviceID, SysIdRoutine.Config sysidConfig, MechanismSimulation simulation) {
+	public TalonFXMotor(String logPath, Phoenix6DeviceID deviceID, TalonFXFollowerConfig followerConfig, SysIdRoutine.Config sysidConfig, MechanismSimulation simulation) {
 		super(logPath);
 		this.motor = new TalonFXWrapper(deviceID);
 		this.talonFXSimulationOptional = createSimulation(simulation);
 		this.sysidConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysidConfig, true);
+
+		if (followerConfig != null) {
+			followers = new TalonFXMotor[followerConfig.followerIDs.length];
+			for (int i = 0; i < followerConfig.followerIDs.length; i++) {
+				followers[i] = new TalonFXMotor(logPath + "/follower" + i, followerConfig.followerIDs[i], null, new SysIdRoutine.Config(), followerConfig.mechanismSimulations[i]);
+				followers[i].getDevice().setControl(new Follower(deviceID.id(), followerConfig.followerOpposeMain[i]));
+			}
+		} else {
+			followers = new TalonFXMotor[0];
+		}
 		motor.optimizeBusUtilization();
 	}
 
 	public TalonFXMotor(String logPath, Phoenix6DeviceID deviceID, SysIdRoutine.Config sysidConfig) {
-		this(logPath, deviceID, sysidConfig, null);
+		this(logPath, deviceID, null, sysidConfig, null);
 	}
 
 	public void applyConfiguration(TalonFXConfiguration configuration) {

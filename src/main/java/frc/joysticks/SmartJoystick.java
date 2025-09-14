@@ -96,7 +96,7 @@ public class SmartJoystick {
 	}
 
 	private static double sigmoid(double x) {
-		return 1 / (1 + Math.pow(Math.E, -x));
+		return 1 / (1 + Math.exp(-x));
 	}
 
 	public double getAxisValue(Axis axis) {

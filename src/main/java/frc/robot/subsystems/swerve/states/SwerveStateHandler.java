@@ -17,7 +17,7 @@ import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssistMath;
-import frc.robot.vision.data.ObjectData;
+import frc.robot.vision.DetectedObjectObseration;
 import frc.utils.alerts.Alert;
 
 import java.util.Optional;
@@ -34,7 +34,7 @@ public class SwerveStateHandler {
 	private Supplier<Optional<Branch>> branchSupplier;
 	private Supplier<Optional<CoralStationSlot>> coralStationSlotSupplier;
 	private Supplier<Optional<Cage>> cageSupplier;
-	private Supplier<Optional<ObjectData>> closestAlgaeSupplier;
+	private Supplier<Optional<DetectedObjectObseration>> closestAlgaeSupplier;
 
 	public SwerveStateHandler(Swerve swerve) {
 		this.swerve = swerve;
@@ -73,7 +73,7 @@ public class SwerveStateHandler {
 		this.cageSupplier = cageSupplier;
 	}
 
-	public void setClosestAlgaeSupplier(Supplier<Optional<ObjectData>> closestAlgaeSupplier) {
+	public void setClosestAlgaeSupplier(Supplier<Optional<DetectedObjectObseration>> closestAlgaeSupplier) {
 		this.closestAlgaeSupplier = closestAlgaeSupplier;
 	}
 
@@ -128,12 +128,12 @@ public class SwerveStateHandler {
 		}
 
 		if (swerveState.getAimAssist() == AimAssist.ALGAE_INTAKE) {
-			Optional<ObjectData> closestAlgae = closestAlgaeSupplier.get();
+			Optional<DetectedObjectObseration> closestAlgae = closestAlgaeSupplier.get();
 			if (closestAlgae.isPresent()) {
 				return handleAlgaeIntakeAimAssist(
 					speeds,
 					robotPoseSupplier.get().get(),
-					closestAlgae.get().getRobotRelativeEstimatedTranslation(),
+					closestAlgae.get().robotRelativeObjectTranslation(),
 					swerveState
 				);
 			} else {

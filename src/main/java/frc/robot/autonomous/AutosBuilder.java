@@ -24,7 +24,7 @@ import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.vision.data.ObjectData;
+import frc.robot.vision.DetectedObjectObseration;
 import frc.utils.auto.PathHelper;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.auto.PathPlannerUtil;
@@ -62,7 +62,7 @@ public class AutosBuilder {
 
 	public static List<Supplier<PathPlannerAutoWrapper>> getAllPreBuiltAutos(
 		Robot robot,
-		Supplier<Optional<ObjectData>> algaeTranslationSupplier,
+		Supplier<Optional<DetectedObjectObseration>> algaeTranslationSupplier,
 		Supplier<Command> intakingCommand,
 		Supplier<Command> scoringCommand,
 		Supplier<Command> algaeRemoveCommand,
@@ -371,7 +371,7 @@ public class AutosBuilder {
 
 	private static PathPlannerAutoWrapper floorAutoBalls(
 		Robot robot,
-		Supplier<Optional<ObjectData>> algaeTranslationSupplier,
+		Supplier<Optional<DetectedObjectObseration>> algaeTranslationSupplier,
 		Supplier<Command> algaeRemoveCommand,
 		Supplier<Command> netCommand,
 		Pose2d tolerance,
@@ -519,7 +519,7 @@ public class AutosBuilder {
 
 	private static Command getFloorAlgaeToNetCommand(
 		Robot robot,
-		Supplier<Optional<ObjectData>> algaeTranslationSupplier,
+		Supplier<Optional<DetectedObjectObseration>> algaeTranslationSupplier,
 		Supplier<Command> algaeRemoveCommand,
 		Supplier<Command> netCommand,
 		Pose2d tolerance,
@@ -529,7 +529,7 @@ public class AutosBuilder {
 			? Optional.of(
 				algaeTranslationSupplier.get()
 					.get()
-					.getRobotRelativeEstimatedTranslation()
+					.robotRelativeObjectTranslation()
 					.rotateBy(robot.getPoseEstimator().getEstimatedPose().getRotation())
 					.plus(robot.getPoseEstimator().getEstimatedPose().getTranslation())
 			)

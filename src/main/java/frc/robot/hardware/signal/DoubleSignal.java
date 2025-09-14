@@ -8,7 +8,7 @@ import org.littletonrobotics.junction.LogTable;
 public abstract class DoubleSignal implements InputSignal<Double> {
 
 	private final String name;
-	private TimedValue<Double> timedValue;
+	private final TimedValue<Double> timedValue;
 
 	public DoubleSignal(String name) {
 		this.name = name;

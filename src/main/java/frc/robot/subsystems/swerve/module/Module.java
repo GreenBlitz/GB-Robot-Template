@@ -134,11 +134,11 @@ public class Module {
 		);
 		Logger.processInputs(constants.logPath(), inputs);
 
-		Logger.recordOutput(constants.logPath(), driveSignals.position().asArray());
-		Logger.recordOutput(constants.logPath(), driveSignals.velocity().asArray());
+		Logger.recordOutput(constants.logPath() + "drivePos", driveSignals.position().asArray());
+		Logger.recordOutput(constants.logPath() + "driveVel", driveSignals.velocity().asArray());
 
-		Logger.recordOutput(constants.logPath(), steerSignals.position().asArray());
-		Logger.recordOutput(constants.logPath(), steerSignals.velocity().asArray());
+		Logger.recordOutput(constants.logPath() + "steerPos", steerSignals.position().asArray());
+		Logger.recordOutput(constants.logPath() + "steerVel", steerSignals.velocity().asArray());
 
 		fixDriveInputsCoupling();
 

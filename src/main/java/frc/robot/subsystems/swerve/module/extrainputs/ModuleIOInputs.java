@@ -5,13 +5,7 @@ import org.littletonrobotics.junction.AutoLog;
 @AutoLog
 public class ModuleIOInputs {
 
-	public ModuleIOData data = new ModuleIOData(
-		0,
-		0,
-		0,
-		0,
-		0
-	);
+	public ModuleIOData data = new ModuleIOData(0, 0, 0, 0, 0);
 
 	public record ModuleIOData(
 		double driveTorqueCurrentAmps,

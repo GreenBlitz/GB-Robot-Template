@@ -49,7 +49,7 @@ public class Robot {
 	private final Limelight limelightFour;
 	private final Limelight limelightThreeGB;
 	private final Limelight limelightObjectDetector;
-	public final RobotHeadingEstimator headingEstimator;
+	private final RobotHeadingEstimator headingEstimator;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -154,10 +154,9 @@ public class Robot {
 		limelightObjectDetector
 			.setDetectedObjectFilter(LimelightFilters.detectedObjectFilter(limelightObjectDetector, DetectedObjectType.ALGAE));
 
-//		swerve.setHeadingSupplier(
-//			ROBOT_TYPE.isSimulation() ? () -> poseEstimator.getEstimatedPose().getRotation() : () -> headingEstimator.getEstimatedHeading()
-//		);
-		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+		swerve.setHeadingSupplier(
+			ROBOT_TYPE.isSimulation() ? () -> poseEstimator.getEstimatedPose().getRotation() : () -> headingEstimator.getEstimatedHeading()
+		);
 	}
 
 	public void periodic() {

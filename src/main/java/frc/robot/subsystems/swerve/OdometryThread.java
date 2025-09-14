@@ -67,12 +67,12 @@ public class OdometryThread extends Thread {
 		}
 	}
 
-	public void addLatencyAndSlopeSignals(StatusSignal<?> latencySignal, StatusSignal<?> slopeSignal) {
-		Pair<Queue<TimedValue<Double>>, Queue<TimedValue<Double>>> queues = new Pair<>(
-			new ArrayBlockingQueue<>(maxValueCapacityPerUpdate),
-			new ArrayBlockingQueue<>(maxValueCapacityPerUpdate)
-		);
-
+	public void addLatencyAndSlopeSignals(
+		StatusSignal<?> latencySignal,
+		Queue<TimedValue<Double>> latencySignalQueue,
+		StatusSignal<?> slopeSignal,
+		Queue<TimedValue<Double>> slopeSignalQueue
+	) {
 		THREAD_LOCK.lock();
 		try {
 			Pair<StatusSignal<?>, StatusSignal<?>> correctFrequencySignals = new Pair<>(
@@ -80,6 +80,8 @@ public class OdometryThread extends Thread {
 				getSignalWithCorrectFrequency(slopeSignal, frequencyHertz)
 			);
 			latencyAndSlopeSignals = addSignalsToArray(correctFrequencySignals, latencyAndSlopeSignals);
+
+			Pair<Queue<TimedValue<Double>>, Queue<TimedValue<Double>>> queues = new Pair<>(latencySignalQueue, slopeSignalQueue);
 			latencyAndSlopeSignalValuesQueues.add(queues);
 		} finally {
 			THREAD_LOCK.unlock();

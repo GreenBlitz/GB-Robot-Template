@@ -23,15 +23,11 @@ public class Phoenix6AngleThreadSignal extends AngleArraySignal {
 	}
 
 	public void addWithLatencyCompensation(Phoenix6AngleThreadSignal slopeSignal) {
-		thread.addLatencyAndSlopeSignals(statusSignal, threadTimedValues, slopeSignal.getStatusSignal(), slopeSignal.getThreadTimedValues());
+		thread.addLatencyAndSlopeSignals(statusSignal, threadTimedValues, slopeSignal.getStatusSignal());
 	}
 
 	public StatusSignal<?> getStatusSignal() {
 		return statusSignal;
-	}
-
-	public Queue<TimedValue<Double>> getThreadTimedValues() {
-		return threadTimedValues;
 	}
 
 	@Override

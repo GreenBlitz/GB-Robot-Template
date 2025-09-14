@@ -12,10 +12,22 @@ import java.util.Queue;
 public class Phoenix6AngleThreadSignal extends AngleArraySignal {
 
 	private final Queue<TimedValue<Double>> threadTimedValues;
+	private final OdometryThread thread;
+	private final StatusSignal<?> statusSignal;
 
 	protected Phoenix6AngleThreadSignal(StatusSignal<?> statusSignal, AngleUnit angleUnit, OdometryThread thread) {
 		super(statusSignal.getName(), angleUnit);
-		this.threadTimedValues = thread.addSignal(statusSignal);
+		this.thread = thread;
+		this.statusSignal = statusSignal;
+		this.threadTimedValues = this.thread.addSignal(this.statusSignal);
+	}
+
+	public void addWithLatencyCompensation(Phoenix6AngleThreadSignal slopeSignal) {
+		thread.addLatencyAndSlopeSignals(statusSignal, slopeSignal.getStatusSignal());
+	}
+
+	public StatusSignal<?> getStatusSignal() {
+		return statusSignal;
 	}
 
 	@Override

@@ -122,6 +122,7 @@ public class KrakenX60DriveBuilder {
 			.build(drive.getDevice().getTorqueCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
 		Phoenix6AngleThreadSignal velocitySignal = Phoenix6SignalBuilder.build(drive.getDevice().getVelocity(), AngleUnit.ROTATIONS, thread);
 		Phoenix6AngleThreadSignal positionSignal = Phoenix6SignalBuilder.build(drive.getDevice().getPosition(), AngleUnit.ROTATIONS, thread);
+		positionSignal.addWithLatencyCompensation(velocitySignal);
 
 		return new DriveSignals(positionSignal, velocitySignal, currentSignal, voltageSignal);
 	}

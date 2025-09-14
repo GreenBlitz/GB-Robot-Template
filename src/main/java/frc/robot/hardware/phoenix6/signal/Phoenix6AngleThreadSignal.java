@@ -19,7 +19,7 @@ public class Phoenix6AngleThreadSignal extends AngleArraySignal {
 		super(statusSignal.getName(), angleUnit);
 		this.thread = thread;
 		this.statusSignal = statusSignal;
-		this.threadTimedValues = this.thread.addSignal(this.statusSignal);
+		this.threadTimedValues = thread.addSignal(statusSignal);
 	}
 
 	public void addWithLatencyCompensation(Phoenix6AngleThreadSignal slopeSignal) {

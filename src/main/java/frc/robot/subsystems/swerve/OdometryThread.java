@@ -12,6 +12,7 @@ import frc.utils.TimedValue;
 import frc.utils.time.TimeUtil;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.locks.ReentrantLock;
@@ -49,12 +50,16 @@ public class OdometryThread extends Thread {
 	}
 
 	public Queue<TimedValue<Double>> addSignal(StatusSignal<?> signal) {
+		clearAllQueues();
+
 		Queue<TimedValue<Double>> queue = new ArrayBlockingQueue<>(maxValueCapacityPerUpdate);
 
 		THREAD_LOCK.lock();
 		try {
 			signals = addSignalToArray(getSignalWithCorrectFrequency(signal, frequencyHertz), signals);
 			signalValuesQueues.add(queue);
+
+			update();
 			return queue;
 		} finally {
 			THREAD_LOCK.unlock();
@@ -80,6 +85,21 @@ public class OdometryThread extends Thread {
 		}
 	}
 
+	private double calculateLatency() {
+		if (signals.length == 0) {
+			return 0;
+		}
+		double latency = 0.0;
+		for (StatusSignal<?> signal : signals) {
+			latency += signal.getTimestamp().getLatency();
+		}
+		return latency / signals.length;
+	}
+
+	private void clearAllQueues() {
+		signalValuesQueues.forEach(Collection::clear);
+	}
+
 	private void updateAllQueues(double timestamp) {
 		double latencyCompensatedTimestamp = timestamp - calculateLatency();
 		for (int i = 0; i < signals.length; i++) {
@@ -98,17 +118,6 @@ public class OdometryThread extends Thread {
 					)
 				);
 		}
-	}
-
-	private double calculateLatency() {
-		if (signals.length == 0) {
-			return 0;
-		}
-		double latency = 0.0;
-		for (StatusSignal<?> signal : signals) {
-			latency += signal.getTimestamp().getLatency();
-		}
-		return latency / signals.length;
 	}
 
 	private void update() {

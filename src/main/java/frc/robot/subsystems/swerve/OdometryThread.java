@@ -40,6 +40,7 @@ public class OdometryThread extends Thread {
 		Threads.setCurrentThreadPriority(true, threadPriority);
 		setName(name);
 		setDaemon(true);
+		start();
 	}
 
 	@Override

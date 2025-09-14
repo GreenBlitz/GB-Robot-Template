@@ -69,6 +69,7 @@ public class Swerve extends GBSubsystem {
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 
 		setDefaultCommand(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
+		update();
 	}
 
 	public String getLogPath() {

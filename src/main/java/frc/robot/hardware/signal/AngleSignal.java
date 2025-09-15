@@ -80,6 +80,11 @@ public abstract class AngleSignal implements InputSignal<Rotation2d> {
 		return timedValue.getValue();
 	}
 
+	@Override
+	public void update() {
+		updateValue(timedValue);
+	}
+
 	protected abstract void updateValue(TimedValue<Rotation2d> timedValue);
 
 }

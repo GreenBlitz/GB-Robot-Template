@@ -1,6 +1,5 @@
 package frc.robot.subsystems.swerve;
 
-import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.math.Pair;
@@ -17,11 +16,12 @@ import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.locks.ReentrantLock;
 
+
 public class OdometryThread extends Thread {
 
 	public static final ReentrantLock THREAD_LOCK = new ReentrantLock();
 	private final ArrayList<Queue<TimedValue<Double>>> signalValuesQueues;
-	private final ArrayList<Pair<Queue<TimedValue<Double>>, Queue<TimedValue<Double>>>> latencyAndSlopeSignalValuesQueues;
+	private final ArrayList<Queue<TimedValue<Double>>> latencySignalValuesQueues;
 	private final double frequencyHertz;
 	private final int maxValueCapacityPerUpdate;
 	private final boolean isBusChainCanFD;
@@ -30,14 +30,14 @@ public class OdometryThread extends Thread {
 
 	public OdometryThread(double frequencyHertz, String name, int maxValueCapacityPerUpdate, boolean isBusChainCanFD, int threadPriority) {
 		this.signalValuesQueues = new ArrayList<>();
-		this.latencyAndSlopeSignalValuesQueues = new ArrayList<>();
+		this.latencySignalValuesQueues = new ArrayList<>();
 		this.frequencyHertz = frequencyHertz;
 		this.maxValueCapacityPerUpdate = maxValueCapacityPerUpdate;
 		this.isBusChainCanFD = isBusChainCanFD;
 		this.signals = new StatusSignal[0];
 		this.latencyAndSlopeSignals = new Pair[0];
-		Threads.setCurrentThreadPriority(true, threadPriority);
 
+		Threads.setCurrentThreadPriority(true, threadPriority);
 		setName(name);
 		setDaemon(true);
 		start();
@@ -51,64 +51,35 @@ public class OdometryThread extends Thread {
 	}
 
 	public Queue<TimedValue<Double>> addSignal(StatusSignal<?> signal) {
+		clearAllQueues();
+
 		Queue<TimedValue<Double>> queue = new ArrayBlockingQueue<>(maxValueCapacityPerUpdate);
 
 		THREAD_LOCK.lock();
 		try {
 			signals = addSignalToArray(getSignalWithCorrectFrequency(signal, frequencyHertz), signals);
 			signalValuesQueues.add(queue);
+
+			update();
 			return queue;
 		} finally {
 			THREAD_LOCK.unlock();
 		}
 	}
 
-	public Pair<Queue<TimedValue<Double>>, Queue<TimedValue<Double>>> addLatencyAndSlopeSignals(
+	public void addLatencyAndSlopeSignals(
 		StatusSignal<?> latencySignal,
+		Queue<TimedValue<Double>> latencySignalQueue,
 		StatusSignal<?> slopeSignal
 	) {
-		Pair<Queue<TimedValue<Double>>, Queue<TimedValue<Double>>> queues = new Pair<>(
-			new ArrayBlockingQueue<>(maxValueCapacityPerUpdate),
-			new ArrayBlockingQueue<>(maxValueCapacityPerUpdate)
-		);
-
 		THREAD_LOCK.lock();
 		try {
-			Pair<StatusSignal<?>, StatusSignal<?>> correctFrequencySignals = new Pair<>(
-				getSignalWithCorrectFrequency(latencySignal, frequencyHertz),
-				getSignalWithCorrectFrequency(slopeSignal, frequencyHertz)
-			);
-			signals = addSignalToArray(correctFrequencySignals.getFirst(), signals);
-			signals = addSignalToArray(correctFrequencySignals.getSecond(), signals);
-			latencyAndSlopeSignals = addSignalsToArray(correctFrequencySignals, latencyAndSlopeSignals);
+			Pair<StatusSignal<?>, StatusSignal<?>> signals = new Pair<>(latencySignal, slopeSignal);
+			latencyAndSlopeSignals = addSignalsToArray(signals, latencyAndSlopeSignals);
 
-			signalValuesQueues.add(queues.getFirst());
-			signalValuesQueues.add(queues.getSecond());
-			latencyAndSlopeSignalValuesQueues.add(queues);
-
-			return queues;
+			latencySignalValuesQueues.add(latencySignalQueue);
 		} finally {
 			THREAD_LOCK.unlock();
-		}
-	}
-
-	private void updateAllQueues(double timestamp) {
-		double latencyCompensatedTimestamp = timestamp - calculateLatency();
-		for (int i = 0; i < signals.length; i++) {
-			Queue<TimedValue<Double>> queue = signalValuesQueues.get(i);
-			queue.offer(new TimedValue<>(signals[i].getValueAsDouble(), latencyCompensatedTimestamp));
-		}
-
-		for (int i = 0; i < latencyAndSlopeSignals.length; i++) {
-			Pair<Queue<TimedValue<Double>>, Queue<TimedValue<Double>>> queues = latencyAndSlopeSignalValuesQueues.get(i);
-			queues.getFirst()
-				.offer(
-					new TimedValue<>(
-						BaseStatusSignal
-							.getLatencyCompensatedValueAsDouble(latencyAndSlopeSignals[i].getFirst(), latencyAndSlopeSignals[i].getSecond()),
-						timestamp
-					)
-				);
 		}
 	}
 
@@ -123,6 +94,31 @@ public class OdometryThread extends Thread {
 		return latency / signals.length;
 	}
 
+	private void clearAllQueues() {
+		signalValuesQueues.forEach(java.util.Collection::clear);
+	}
+
+	private void updateAllQueues(double timestamp) {
+		double latencyCompensatedTimestamp = timestamp - calculateLatency();
+		for (int i = 0; i < signals.length; i++) {
+			Queue<TimedValue<Double>> queue = signalValuesQueues.get(i);
+			queue.offer(new TimedValue<>(signals[i].getValueAsDouble(), latencyCompensatedTimestamp));
+		}
+
+		for (int i = 0; i < latencyAndSlopeSignals.length; i++) {
+			Queue<TimedValue<Double>> queue = latencySignalValuesQueues.get(i);
+			queue.poll();
+			queue
+				.offer(
+					new TimedValue<>(
+						StatusSignal
+							.getLatencyCompensatedValueAsDouble(latencyAndSlopeSignals[i].getFirst(), latencyAndSlopeSignals[i].getSecond()),
+						timestamp
+					)
+				);
+		}
+	}
+
 	private void update() {
 		StatusCode statusCode;
 		if (isBusChainCanFD) {
@@ -135,10 +131,9 @@ public class OdometryThread extends Thread {
 			return;
 		}
 
-		double currentTimestamp = TimeUtil.getCurrentTimeSeconds();
 		THREAD_LOCK.lock();
 		try {
-			updateAllQueues(currentTimestamp);
+			updateAllQueues(TimeUtil.getCurrentTimeSeconds());
 		} finally {
 			THREAD_LOCK.unlock();
 		}

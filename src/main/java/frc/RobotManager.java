@@ -4,11 +4,18 @@
 
 package frc;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonomousConstants;
+import frc.robot.hardware.mechanisms.MechanismSimulation;
+import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
+import frc.robot.hardware.phoenix6.TalonFXFollowerConfig;
+import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.utils.DriverStationUtil;
 import frc.utils.alerts.AlertManager;
 import frc.utils.auto.PathPlannerAutoWrapper;
@@ -38,7 +45,21 @@ public class RobotManager extends LoggedRobot {
 		this.roborioCycles = 0;
 		this.robot = new Robot();
 
-		createAutoReadyForConstructionChooser();
+		TalonFXFollowerConfig followerConfig = new TalonFXFollowerConfig();
+		followerConfig.followerIDs = new Phoenix6DeviceID[]{new Phoenix6DeviceID(1)};
+		followerConfig.followerBuses = new BusChain[]{BusChain.ROBORIO};
+		followerConfig.followerConfig = new TalonFXConfiguration();
+		followerConfig.followerOpposeMain = new boolean[]{false};
+
+		TalonFXMotor motor = new TalonFXMotor(
+				"tester/",
+				new Phoenix6DeviceID(2),
+				followerConfig,
+				new SysIdRoutine.Config(),
+				null
+		);
+
+        createAutoReadyForConstructionChooser();
 		JoysticksBindings.configureBindings(robot);
 
 		Threads.setCurrentThreadPriority(true, 10);

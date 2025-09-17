@@ -48,11 +48,13 @@ public class Swerve extends GBSubsystem {
 	private final SwerveCommandsBuilder commandsBuilder;
 	private final SwerveStateHandler stateHandler;
 
+	private final OdometryThread odometryThread;
+
 	private SwerveState currentState;
 	private Supplier<Rotation2d> headingSupplier;
 	private ChassisPowers driversPowerInputs;
 
-	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro, GyroSignals gyroSignals) {
+	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro, GyroSignals gyroSignals, OdometryThread odometryThread) {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 
@@ -65,8 +67,10 @@ public class Swerve extends GBSubsystem {
 		this.kinematics = new SwerveDriveKinematics(modules.getModulePositionsFromCenterMeters());
 		this.headingSupplier = this::getGyroAbsoluteYaw;
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
-		this.stateHandler = new SwerveStateHandler(this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
+		this.stateHandler = new SwerveStateHandler(this);
+
+		this.odometryThread = odometryThread;
 
 		update();
 		setDefaultCommand(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
@@ -133,12 +137,12 @@ public class Swerve extends GBSubsystem {
 
 
 	public void update() {
-		OdometryThread.THREAD_LOCK.lock();
+		odometryThread.THREAD_QUEUES_LOCK.lock();
 		try {
 			gyro.updateInputs(gyroSignals.yawSignal());
 			modules.updateInputs();
 		} finally {
-			OdometryThread.THREAD_LOCK.unlock();
+			odometryThread.THREAD_QUEUES_LOCK.unlock();
 		}
 
 		currentState.log(constants.stateLogPath());

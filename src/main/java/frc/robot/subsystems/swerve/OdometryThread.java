@@ -17,7 +17,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class OdometryThread extends Thread {
 
-	public static final ReentrantLock THREAD_LOCK = new ReentrantLock();
+	public final ReentrantLock THREAD_QUEUES_LOCK = new ReentrantLock();
 	private final ArrayList<Queue<TimedValue<Double>>> signalValuesQueues;
 	private final ArrayList<Queue<TimedValue<Double>>> latencySignalValuesQueues;
 	private final double frequencyHertz;
@@ -58,13 +58,13 @@ public class OdometryThread extends Thread {
 
 		Queue<TimedValue<Double>> queue = new ArrayBlockingQueue<>(maxValueCapacityPerUpdate);
 
-		THREAD_LOCK.lock();
+		THREAD_QUEUES_LOCK.lock();
 		try {
 			signals = OdometryUtil.addSignalToArray(OdometryUtil.getSignalWithCorrectFrequency(signal, frequencyHertz), signals);
 			signalValuesQueues.add(queue);
 			update();
 		} finally {
-			THREAD_LOCK.unlock();
+			THREAD_QUEUES_LOCK.unlock();
 		}
 		return queue;
 	}
@@ -74,14 +74,14 @@ public class OdometryThread extends Thread {
 		Queue<TimedValue<Double>> latencySignalQueue,
 		StatusSignal<?> slopeSignal
 	) {
-		THREAD_LOCK.lock();
+		THREAD_QUEUES_LOCK.lock();
 		try {
 			Pair<StatusSignal<?>, StatusSignal<?>> signals = new Pair<>(latencySignal, slopeSignal);
 			latencyAndSlopeSignals = OdometryUtil.addSignalsToArray(signals, latencyAndSlopeSignals);
 
 			latencySignalValuesQueues.add(latencySignalQueue);
 		} finally {
-			THREAD_LOCK.unlock();
+			THREAD_QUEUES_LOCK.unlock();
 		}
 	}
 
@@ -128,11 +128,11 @@ public class OdometryThread extends Thread {
 			return;
 		}
 
-		THREAD_LOCK.lock();
+		THREAD_QUEUES_LOCK.lock();
 		try {
 			updateAllQueues(TimeUtil.getCurrentTimeSeconds());
 		} finally {
-			THREAD_LOCK.unlock();
+			THREAD_QUEUES_LOCK.unlock();
 		}
 	}
 

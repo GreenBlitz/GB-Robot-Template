@@ -77,7 +77,7 @@ public abstract class AngleArraySignal implements InputSignal<Rotation2d> {
 
 	@Override
 	public void toLog(LogTable table) {
-		timedValues = updateValues(timedValues);
+		update();
 		table.put(name, asArray());
 	}
 

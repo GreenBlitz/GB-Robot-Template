@@ -120,10 +120,10 @@ public class Module {
 		steer.updateSimulation();
 		drive.updateSimulation();
 
-		driveSignals.position().update();
-		driveSignals.velocity().update();
-		steerSignals.position().update();
-		steerSignals.velocity().update();
+		drive.updateInputs(driveSignals.position());
+		drive.updateInputs(driveSignals.velocity());
+		steer.updateInputs(driveSignals.position());
+		steer.updateInputs(driveSignals.velocity());
 
 		inputs.data = new ModuleIOInputs.ModuleIOData(
 			driveSignals.current().getAndUpdateValue(),

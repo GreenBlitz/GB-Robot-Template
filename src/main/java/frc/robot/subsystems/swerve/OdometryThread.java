@@ -5,9 +5,10 @@ import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.Timer;
-import frc.utils.OdometryUtil;
+import frc.utils.OdometryThreadUtil;
 import frc.utils.TimedValue;
 import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
 import java.util.Queue;
@@ -17,29 +18,47 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class OdometryThread extends Thread {
 
-	public final ReentrantLock THREAD_QUEUES_LOCK = new ReentrantLock();
+	public final ReentrantLock ThreadQueuesLock;
+
+	private final ArrayList<Pair<StatusSignal<?>, StatusSignal<?>>> latencyAndSlopeSignals;
 	private final ArrayList<Queue<TimedValue<Double>>> signalValuesQueues;
 	private final ArrayList<Queue<TimedValue<Double>>> latencySignalValuesQueues;
+
 	private final double frequencyHertz;
 	private final int maxValueCapacityPerUpdate;
 	private final boolean isBusChainCanFD;
 	private final int threadPriority;
 	private final double cycleSeconds;
-	private boolean isThreadPrioritySet;
-	private StatusSignal<?>[] signals;
-	private Pair<StatusSignal<?>, StatusSignal<?>>[] latencyAndSlopeSignals;
+	private final String logPath;
 
-	public OdometryThread(double frequencyHertz, String name, int maxValueCapacityPerUpdate, boolean isBusChainCanFD, int threadPriority) {
+	private StatusSignal<?>[] signals;
+	private boolean isThreadPrioritySet;
+	private double lastUpdateTimestamp;
+
+	public OdometryThread(
+		double frequencyHertz,
+		String name,
+		int maxValueCapacityPerUpdate,
+		boolean isBusChainCanFD,
+		int threadPriority,
+		String logPath
+	) {
+		this.ThreadQueuesLock = new ReentrantLock();
+
+		this.latencyAndSlopeSignals = new ArrayList<>();
 		this.signalValuesQueues = new ArrayList<>();
 		this.latencySignalValuesQueues = new ArrayList<>();
+
 		this.frequencyHertz = frequencyHertz;
 		this.maxValueCapacityPerUpdate = maxValueCapacityPerUpdate;
 		this.isBusChainCanFD = isBusChainCanFD;
 		this.threadPriority = threadPriority;
-		this.cycleSeconds = OdometryUtil.getThreadCycleSeconds(frequencyHertz);
-		this.isThreadPrioritySet = false;
+		this.cycleSeconds = OdometryThreadUtil.getThreadCycleSeconds(frequencyHertz);
+		this.logPath = logPath;
+
 		this.signals = new StatusSignal[0];
-		this.latencyAndSlopeSignals = new Pair[0];
+		this.isThreadPrioritySet = false;
+		this.lastUpdateTimestamp = 0;
 
 		setName(name);
 		setDaemon(true);
@@ -58,13 +77,13 @@ public class OdometryThread extends Thread {
 
 		Queue<TimedValue<Double>> queue = new ArrayBlockingQueue<>(maxValueCapacityPerUpdate);
 
-		THREAD_QUEUES_LOCK.lock();
+		ThreadQueuesLock.lock();
 		try {
-			signals = OdometryUtil.addSignalToArray(OdometryUtil.getSignalWithCorrectFrequency(signal, frequencyHertz), signals);
+			signals = OdometryThreadUtil.addSignalToArray(OdometryThreadUtil.getSignalWithCorrectFrequency(signal, frequencyHertz), signals);
 			signalValuesQueues.add(queue);
 			update();
 		} finally {
-			THREAD_QUEUES_LOCK.unlock();
+			ThreadQueuesLock.unlock();
 		}
 		return queue;
 	}
@@ -74,14 +93,14 @@ public class OdometryThread extends Thread {
 		Queue<TimedValue<Double>> latencySignalQueue,
 		StatusSignal<?> slopeSignal
 	) {
-		THREAD_QUEUES_LOCK.lock();
+		ThreadQueuesLock.lock();
 		try {
 			Pair<StatusSignal<?>, StatusSignal<?>> signals = new Pair<>(latencySignal, slopeSignal);
-			latencyAndSlopeSignals = OdometryUtil.addSignalsToArray(signals, latencyAndSlopeSignals);
+			latencyAndSlopeSignals.add(signals);
 
 			latencySignalValuesQueues.add(latencySignalQueue);
 		} finally {
-			THREAD_QUEUES_LOCK.unlock();
+			ThreadQueuesLock.unlock();
 		}
 	}
 
@@ -90,27 +109,30 @@ public class OdometryThread extends Thread {
 	}
 
 	private void updateAllQueues(double timestamp) {
-		double latencyCompensatedTimestamp = timestamp - OdometryUtil.calculateLatency(signals);
+		double latencyCompensatedTimestamp = timestamp - OdometryThreadUtil.calculateLatency(signals);
 		for (int i = 0; i < signals.length; i++) {
 			Queue<TimedValue<Double>> queue = signalValuesQueues.get(i);
 			queue.offer(new TimedValue<>(signals[i].getValueAsDouble(), latencyCompensatedTimestamp));
 		}
 
-		for (int i = 0; i < latencyAndSlopeSignals.length; i++) {
+		for (int i = 0; i < latencyAndSlopeSignals.size(); i++) {
 			Queue<TimedValue<Double>> queue = latencySignalValuesQueues.get(i);
 			queue.poll();
-			queue
-				.offer(
-					new TimedValue<>(
-						StatusSignal
-							.getLatencyCompensatedValueAsDouble(latencyAndSlopeSignals[i].getFirst(), latencyAndSlopeSignals[i].getSecond()),
-						timestamp
-					)
-				);
+			queue.offer(
+				new TimedValue<>(
+					StatusSignal
+						.getLatencyCompensatedValueAsDouble(latencyAndSlopeSignals.get(i).getFirst(), latencyAndSlopeSignals.get(i).getSecond()),
+					timestamp
+				)
+			);
 		}
 	}
 
 	private void update() {
+		double currentTime = TimeUtil.getCurrentTimeSeconds();
+		Logger.recordOutput(logPath + "/CycleTimeSeconds", lastUpdateTimestamp - currentTime);
+		lastUpdateTimestamp = currentTime;
+
 		if (!isThreadPrioritySet) {
 			if (Threads.setCurrentThreadPriority(true, threadPriority)) {
 				isThreadPrioritySet = true;
@@ -128,11 +150,11 @@ public class OdometryThread extends Thread {
 			return;
 		}
 
-		THREAD_QUEUES_LOCK.lock();
+		ThreadQueuesLock.lock();
 		try {
 			updateAllQueues(TimeUtil.getCurrentTimeSeconds());
 		} finally {
-			THREAD_QUEUES_LOCK.unlock();
+			ThreadQueuesLock.unlock();
 		}
 	}
 

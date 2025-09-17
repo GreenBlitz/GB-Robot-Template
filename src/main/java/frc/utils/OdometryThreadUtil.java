@@ -1,12 +1,11 @@
 package frc.utils;
 
 import com.ctre.phoenix6.StatusSignal;
-import edu.wpi.first.math.Pair;
 import frc.robot.Robot;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 
-public class OdometryUtil {
+public class OdometryThreadUtil {
 
 	public static double calculateLatency(StatusSignal<?>[] signals) {
 		if (signals.length == 0) {
@@ -30,16 +29,6 @@ public class OdometryUtil {
 		return newSignals;
 	}
 
-	public static Pair<StatusSignal<?>, StatusSignal<?>>[] addSignalsToArray(
-		Pair<StatusSignal<?>, StatusSignal<?>> signals,
-		Pair<StatusSignal<?>, StatusSignal<?>>[] signalsArray
-	) {
-		Pair<StatusSignal<?>, StatusSignal<?>>[] newSignals = new Pair[signalsArray.length + 1];
-		System.arraycopy(signalsArray, 0, newSignals, 0, signalsArray.length);
-		newSignals[signalsArray.length] = signals;
-		return newSignals;
-	}
-
 	public static StatusSignal<?> getSignalWithCorrectFrequency(StatusSignal<?> signal, double threadFrequencyHertz) {
 		if (Robot.ROBOT_TYPE.isSimulation()) {
 			threadFrequencyHertz = RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ;
@@ -47,6 +36,10 @@ public class OdometryUtil {
 		StatusSignal<?> signalClone = signal.clone();
 		Phoenix6SignalBuilder.setFrequencyWithRetry(signalClone, threadFrequencyHertz);
 		return signalClone;
+	}
+
+	public static double logLatestCycleSeconds(double lastUpdateTimeStamp, double currentUpdateTimeStamp) {
+		return currentUpdateTimeStamp - lastUpdateTimeStamp;
 	}
 
 }

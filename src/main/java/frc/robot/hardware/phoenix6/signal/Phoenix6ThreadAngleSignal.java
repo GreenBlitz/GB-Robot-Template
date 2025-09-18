@@ -2,27 +2,27 @@ package frc.robot.hardware.phoenix6.signal;
 
 import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.hardware.signal.AngleArraySignal;
+import frc.robot.hardware.signal.ArrayAngleSignal;
 import frc.robot.subsystems.swerve.OdometryThread;
 import frc.utils.AngleUnit;
 import frc.utils.TimedValue;
 
 import java.util.Queue;
 
-public class Phoenix6AngleThreadSignal extends AngleArraySignal {
+public class Phoenix6ThreadAngleSignal extends ArrayAngleSignal {
 
 	private final Queue<TimedValue<Double>> threadTimedValues;
 	private final OdometryThread thread;
 	private final StatusSignal<?> statusSignal;
 
-	protected Phoenix6AngleThreadSignal(StatusSignal<?> statusSignal, AngleUnit angleUnit, OdometryThread thread) {
+	protected Phoenix6ThreadAngleSignal(StatusSignal<?> statusSignal, AngleUnit angleUnit, OdometryThread thread) {
 		super(statusSignal.getName(), angleUnit);
 		this.thread = thread;
 		this.statusSignal = statusSignal;
 		this.threadTimedValues = thread.addSignal(statusSignal);
 	}
 
-	public void addWithLatencyCompensation(Phoenix6AngleThreadSignal slopeSignal) {
+	public void addWithLatencyCompensation(Phoenix6ThreadAngleSignal slopeSignal) {
 		thread.addLatencyAndSlopeSignals(statusSignal, threadTimedValues, slopeSignal.getStatusSignal());
 	}
 
@@ -32,21 +32,19 @@ public class Phoenix6AngleThreadSignal extends AngleArraySignal {
 
 	@Override
 	protected TimedValue<Rotation2d>[] updateValues(TimedValue<Rotation2d>[] timedValues) {
+		timedValues = new TimedValue[] {new TimedValue<>(new Rotation2d(), 0)};
+
 		thread.ThreadQueuesLock.lock();
 		try {
 			timedValues = new TimedValue[threadTimedValues.size()];
-		} finally {
-			thread.ThreadQueuesLock.unlock();
-		}
 
-		for (int i = 0; i < timedValues.length; i++) {
-			thread.ThreadQueuesLock.lock();
-			try {
+			for (int i = 0; i < timedValues.length; i++) {
+				thread.ThreadQueuesLock.lock();
 				TimedValue<Double> value = threadTimedValues.poll();
 				timedValues[i] = new TimedValue<>(angleUnit.toRotation2d(value.getValue()), value.getTimestamp());
-			} finally {
-				thread.ThreadQueuesLock.unlock();
 			}
+		} finally {
+			thread.ThreadQueuesLock.unlock();
 		}
 		return timedValues;
 	}

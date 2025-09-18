@@ -7,13 +7,15 @@ import frc.utils.TimedValue;
 import frc.utils.math.ToleranceMath;
 import org.littletonrobotics.junction.LogTable;
 
-public abstract class AngleArraySignal implements InputSignal<Rotation2d> {
+import java.util.Arrays;
+
+public abstract class ArrayAngleSignal implements InputSignal<Rotation2d> {
 
 	private final String name;
 	protected final AngleUnit angleUnit;
 	private TimedValue<Rotation2d>[] timedValues;
 
-	public AngleArraySignal(String name, AngleUnit angleUnit) {
+	public ArrayAngleSignal(String name, AngleUnit angleUnit) {
 		this.name = name;
 		this.angleUnit = angleUnit;
 		this.timedValues = new TimedValue[] {new TimedValue<>(new Rotation2d(), 0.0)};
@@ -40,9 +42,7 @@ public abstract class AngleArraySignal implements InputSignal<Rotation2d> {
 	@Override
 	public Rotation2d[] asArray() {
 		Rotation2d[] values = new Rotation2d[timedValues.length];
-		for (int i = 0; i < timedValues.length; i++) {
-			values[i] = timedValues[i].getValue();
-		}
+		Arrays.setAll(values, index -> timedValues[index].getValue());
 		return values;
 	}
 
@@ -54,9 +54,7 @@ public abstract class AngleArraySignal implements InputSignal<Rotation2d> {
 	@Override
 	public double[] getTimestamps() {
 		double[] timestamps = new double[timedValues.length];
-		for (int i = 0; i < timedValues.length; i++) {
-			timestamps[i] = timedValues[i].getTimestamp();
-		}
+		Arrays.setAll(timestamps, index -> timedValues[index].getTimestamp());
 		return timestamps;
 	}
 
@@ -89,6 +87,7 @@ public abstract class AngleArraySignal implements InputSignal<Rotation2d> {
 	@Override
 	public void fromLog(LogTable table) {}
 
+	@Override
 	public Rotation2d getAndUpdateValue() {
 		update();
 		return getLatestValue();

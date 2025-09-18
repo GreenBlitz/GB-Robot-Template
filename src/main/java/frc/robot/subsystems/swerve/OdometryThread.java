@@ -73,6 +73,10 @@ public class OdometryThread extends Thread {
 		}
 	}
 
+	public double getFrequencyHertz() {
+		return frequencyHertz;
+	}
+
 	public Queue<TimedValue<Double>> addSignal(StatusSignal<?> signal) {
 		clearAllQueues();
 
@@ -80,7 +84,7 @@ public class OdometryThread extends Thread {
 
 		ThreadQueuesLock.lock();
 		try {
-			signals = OdometryThreadUtil.addSignalToArray(OdometryThreadUtil.getSignalWithCorrectFrequency(signal, frequencyHertz), signals);
+			signals = OdometryThreadUtil.addSignalToArray(signal, signals);
 			signalValuesQueues.add(queue);
 			update();
 		} finally {
@@ -110,7 +114,7 @@ public class OdometryThread extends Thread {
 	}
 
 	private void updateAllQueues(double timestamp) {
-		double latencyCompensatedTimestamp = timestamp - OdometryThreadUtil.calculateLatency(signals);
+		double latencyCompensatedTimestamp = timestamp - OdometryThreadUtil.calculateAverageLatency(signals);
 		for (int i = 0; i < signals.length; i++) {
 			Queue<TimedValue<Double>> queue = signalValuesQueues.get(i);
 			queue.offer(new TimedValue<>(signals[i].getValueAsDouble(), latencyCompensatedTimestamp));

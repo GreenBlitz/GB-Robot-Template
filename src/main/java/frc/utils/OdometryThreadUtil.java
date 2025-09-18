@@ -5,17 +5,16 @@ import frc.robot.Robot;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 
+import java.util.Arrays;
+
 public class OdometryThreadUtil {
 
-	public static double calculateLatency(StatusSignal<?>[] signals) {
+	public static double calculateAverageLatency(StatusSignal<?>[] signals) {
 		if (signals.length == 0) {
 			return 0;
 		}
-		double latency = 0.0;
-		for (StatusSignal<?> signal : signals) {
-			latency += signal.getTimestamp().getLatency();
-		}
-		return latency / signals.length;
+		double latencySum = Arrays.stream(signals).mapToDouble(signal -> signal.getTimestamp().getLatency()).sum();
+		return latencySum / signals.length;
 	}
 
 	public static StatusSignal<?>[] addSignalToArray(StatusSignal<?> signal, StatusSignal<?>[] signals) {
@@ -25,7 +24,7 @@ public class OdometryThreadUtil {
 		return newSignals;
 	}
 
-	public static StatusSignal<?> getSignalWithCorrectFrequency(StatusSignal<?> signal, double threadFrequencyHertz) {
+	public static StatusSignal<?> cloneSignalWithCorrectFrequency(StatusSignal<?> signal, double threadFrequencyHertz) {
 		if (Robot.ROBOT_TYPE.isSimulation()) {
 			threadFrequencyHertz = RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ;
 		}

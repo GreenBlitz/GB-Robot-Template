@@ -5,6 +5,7 @@ import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.subsystems.swerve.OdometryThread;
 import frc.utils.AngleUnit;
 import frc.robot.hardware.phoenix6.Phoenix6Util;
+import frc.utils.OdometryThreadUtil;
 
 public class Phoenix6SignalBuilder {
 
@@ -59,8 +60,9 @@ public class Phoenix6SignalBuilder {
 		return new Phoenix6LatencyAndSlopeSignal(signalClone.getName(), signalClone, signalSlopeClone, angleUnit);
 	}
 
-	public static Phoenix6AngleThreadSignal build(StatusSignal<?> signal, AngleUnit angleUnit, OdometryThread thread) {
-		return new Phoenix6AngleThreadSignal(signal, angleUnit, thread);
+	public static Phoenix6ThreadAngleSignal build(StatusSignal<?> signal, AngleUnit angleUnit, OdometryThread thread) {
+		StatusSignal<?> signalClone = OdometryThreadUtil.cloneSignalWithCorrectFrequency(signal, thread.getFrequencyHertz());
+		return new Phoenix6ThreadAngleSignal(signalClone, angleUnit, thread);
 	}
 
 }

@@ -18,10 +18,6 @@ public class OdometryThreadUtil {
 		return latency / signals.length;
 	}
 
-	public static double getThreadCycleSeconds(double frequencyHertz) {
-		return 1 / frequencyHertz;
-	}
-
 	public static StatusSignal<?>[] addSignalToArray(StatusSignal<?> signal, StatusSignal<?>[] signals) {
 		StatusSignal<?>[] newSignals = new StatusSignal[signals.length + 1];
 		System.arraycopy(signals, 0, newSignals, 0, signals.length);
@@ -36,10 +32,6 @@ public class OdometryThreadUtil {
 		StatusSignal<?> signalClone = signal.clone();
 		Phoenix6SignalBuilder.setFrequencyWithRetry(signalClone, threadFrequencyHertz);
 		return signalClone;
-	}
-
-	public static double logLatestCycleSeconds(double lastUpdateTimeStamp, double currentUpdateTimeStamp) {
-		return currentUpdateTimeStamp - lastUpdateTimeStamp;
 	}
 
 }

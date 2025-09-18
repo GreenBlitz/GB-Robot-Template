@@ -25,6 +25,11 @@ public abstract class AngleArraySignal implements InputSignal<Rotation2d> {
 	}
 
 	@Override
+	public int getLength() {
+		return timedValues.length;
+	}
+
+	@Override
 	public Rotation2d getLatestValue() {
 		if (timedValues.length == 0) {
 			return new Rotation2d();

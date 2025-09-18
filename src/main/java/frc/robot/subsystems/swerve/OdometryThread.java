@@ -5,6 +5,7 @@ import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.Timer;
+import frc.utils.Conversions;
 import frc.utils.OdometryThreadUtil;
 import frc.utils.TimedValue;
 import frc.utils.time.TimeUtil;
@@ -53,7 +54,7 @@ public class OdometryThread extends Thread {
 		this.maxValueCapacityPerUpdate = maxValueCapacityPerUpdate;
 		this.isBusChainCanFD = isBusChainCanFD;
 		this.threadPriority = threadPriority;
-		this.cycleSeconds = OdometryThreadUtil.getThreadCycleSeconds(frequencyHertz);
+		this.cycleSeconds = Conversions.frequencyHertzToCycleSeconds(frequencyHertz);
 		this.logPath = logPath;
 
 		this.signals = new StatusSignal[0];

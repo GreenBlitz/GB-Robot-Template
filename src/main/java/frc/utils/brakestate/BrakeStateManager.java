@@ -12,8 +12,8 @@ public class BrakeStateManager {
 		COAST
 	}
 
-	private static final ArrayList<Runnable> brakeRunnables = new ArrayList<>();
-	private static final ArrayList<Runnable> coastRunnables = new ArrayList<>();
+	private static final List<Runnable> brakeRunnables = new ArrayList<>();
+	private static final List<Runnable> coastRunnables = new ArrayList<>();
 	private static BrakeMode currentMode = BrakeMode.UNKNOWN;
 
 	public static void add(Runnable brake, Runnable coast) {
@@ -21,7 +21,7 @@ public class BrakeStateManager {
 		coastRunnables.add(coast);
 	}
 
-	private static void setBrakeMode(BrakeMode wantedMode, List<Runnable> setModes) {
+	private static void setBrakeMode(BrakeMode wantedMode, Iterable<Runnable> setModes) {
 		if (currentMode == wantedMode) {
 			return;
 		}

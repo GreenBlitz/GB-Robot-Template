@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import frc.utils.math.StatisticsMath;
 import frc.utils.math.PoseEstimationMath;
-import frc.utils.buffers.RingBuffer.RingBuffer;
+import frc.utils.buffers.ringbuffer.RingBuffer;
 import frc.utils.TimedValue;
 import frc.utils.math.AngleMath;
 import org.littletonrobotics.junction.Logger;

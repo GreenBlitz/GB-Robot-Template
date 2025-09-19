@@ -1,16 +1,16 @@
-package frc.utils.buffers.RingBuffer;
+package frc.utils.buffers.ringbuffer;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class RingBufferIterator<T> implements Iterator<T> {
 
-	private final RingBuffer<T> ringBuffer;
+	private final RingBuffer<? extends T> ringBuffer;
 	private final int endIndex;
 	private int currentIndex;
 	private boolean used;
 
-	protected RingBufferIterator(RingBuffer<T> ringBuffer) {
+	protected RingBufferIterator(RingBuffer<? extends T> ringBuffer) {
 		int insertions = ringBuffer.getInsertions();
 
 		this.ringBuffer = ringBuffer;
@@ -31,7 +31,7 @@ public class RingBufferIterator<T> implements Iterator<T> {
 		if (!hasNext()) {
 			throw new NoSuchElementException("Ring buffer iterator exhausted");
 		}
-		T value = ringBuffer.get(currentIndex).get(); // the get operation is safe because we check if the value exists in hasNext()
+		@SuppressWarnings("OptionalGetWithoutIsPresent") T value = ringBuffer.get(currentIndex).get(); // the get operation is safe because we check if the value exists in hasNext()
 		currentIndex = ringBuffer.wrapIndex(currentIndex + 1);
 		this.used = true;
 		return value;

@@ -23,7 +23,7 @@ public class PathFollowingCommandsBuilder {
 		Supplier<Pose2d> currentPose,
 		PathPlannerPath path,
 		PathConstraints pathfindingConstraints,
-		Supplier<Command> commandSupplier,
+		Supplier<? extends Command> commandSupplier,
 		Pose2d tolerance
 	) {
 		return new ParallelCommandGroup(
@@ -37,7 +37,7 @@ public class PathFollowingCommandsBuilder {
 		Supplier<Pose2d> currentPose,
 		PathPlannerPath path,
 		PathConstraints pathfindingConstraints,
-		Supplier<Command> commandSupplier
+		Supplier<? extends Command> commandSupplier
 	) {
 		return new ParallelDeadlineGroup(commandSupplier.get(), followAdjustedPath(swerve, currentPose, path, pathfindingConstraints));
 	}
@@ -47,7 +47,7 @@ public class PathFollowingCommandsBuilder {
 		Supplier<Pose2d> currentPose,
 		PathPlannerPath path,
 		PathConstraints pathfindingConstraints,
-		Supplier<Command> commandSupplier,
+		Supplier<? extends Command> commandSupplier,
 		Pose2d tolerance
 	) {
 		return new SequentialCommandGroup(

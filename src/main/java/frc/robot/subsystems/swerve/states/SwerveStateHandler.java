@@ -8,7 +8,6 @@ import frc.constants.MathConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
-import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -30,9 +29,6 @@ public class SwerveStateHandler {
 	}
 
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
-		if (swerveState.getAimAssist() == AimAssist.NONE) {
-			return speeds;
-		}
 		return speeds;
 	}
 

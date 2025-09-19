@@ -8,7 +8,7 @@ public class Alert {
 	public enum AlertType {
 
 		ERROR,
-		WARNING;
+		WARNING
 
 	}
 

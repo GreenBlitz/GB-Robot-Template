@@ -10,6 +10,7 @@ import frc.robot.hardware.phoenix6.Phoenix6Util;
 
 import static edu.wpi.first.units.Units.Degrees;
 
+@SuppressWarnings("ALL")
 public class Pigeon2Wrapper extends Pigeon2 {
 
 	//@formatter:off

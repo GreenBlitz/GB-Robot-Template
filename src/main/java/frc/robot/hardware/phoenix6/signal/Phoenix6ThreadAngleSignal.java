@@ -7,6 +7,7 @@ import frc.robot.subsystems.swerve.OdometryThread;
 import frc.utils.AngleUnit;
 import frc.utils.TimedValue;
 
+import java.util.ArrayList;
 import java.util.Queue;
 
 public class Phoenix6ThreadAngleSignal extends ArrayAngleSignal {
@@ -31,16 +32,13 @@ public class Phoenix6ThreadAngleSignal extends ArrayAngleSignal {
 	}
 
 	@Override
-	protected TimedValue<Rotation2d>[] updateValues(TimedValue<Rotation2d>[] timedValues) {
+	protected ArrayList<TimedValue<Rotation2d>> updateValues(ArrayList<TimedValue<Rotation2d>> timedValues) {
 		thread.ThreadQueuesLock.lock();
 		try {
-			timedValues = new TimedValue[threadTimedValues.size()];
-
-			for (int i = 0; i < timedValues.length; i++) {
-				thread.ThreadQueuesLock.lock();
-				TimedValue<Double> value = threadTimedValues.poll();
-				timedValues[i] = new TimedValue<>(angleUnit.toRotation2d(value.getValue()), value.getTimestamp());
-			}
+			timedValues.clear();
+			threadTimedValues.forEach(
+				(timedValue) -> timedValues.add(new TimedValue<>(angleUnit.toRotation2d(timedValue.getValue()), timedValue.getTimestamp()))
+			);
 		} finally {
 			thread.ThreadQueuesLock.unlock();
 		}

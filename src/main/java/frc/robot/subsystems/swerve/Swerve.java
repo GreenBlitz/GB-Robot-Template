@@ -158,7 +158,7 @@ public class Swerve extends GBSubsystem {
 
 
 	public int getNumberOfOdometrySamples() {
-		return Math.min(gyroSignals.yawSignal().asArray().length, modules.getNumberOfOdometrySamples());
+		return Math.min(gyroSignals.yawSignal().getNumberOfValues(), modules.getNumberOfOdometrySamples());
 	}
 
 	public OdometryData[] getAllOdometryData() {

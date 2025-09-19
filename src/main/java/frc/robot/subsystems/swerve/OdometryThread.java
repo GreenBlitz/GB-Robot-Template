@@ -9,7 +9,6 @@ import frc.utils.Conversions;
 import frc.utils.OdometryThreadUtil;
 import frc.utils.TimedValue;
 import frc.utils.time.TimeUtil;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
 import java.util.Queue;
@@ -30,20 +29,13 @@ public class OdometryThread extends Thread {
 	private final boolean isBusChainCanFD;
 	private final int threadPriority;
 	private final double cycleSeconds;
-	private final String logPath;
 
 	private StatusSignal<?>[] signals;
 	private boolean isThreadPrioritySet;
 	private double lastUpdateTimestamp;
+	private double lastCycleLengthSeconds;
 
-	public OdometryThread(
-		double frequencyHertz,
-		String name,
-		int maxValueCapacityPerUpdate,
-		boolean isBusChainCanFD,
-		int threadPriority,
-		String logPath
-	) {
+	public OdometryThread(double frequencyHertz, String name, int maxValueCapacityPerUpdate, boolean isBusChainCanFD, int threadPriority) {
 		this.ThreadQueuesLock = new ReentrantLock();
 
 		this.latencyAndSlopeSignals = new ArrayList<>();
@@ -55,11 +47,11 @@ public class OdometryThread extends Thread {
 		this.isBusChainCanFD = isBusChainCanFD;
 		this.threadPriority = threadPriority;
 		this.cycleSeconds = Conversions.frequencyHertzToCycleSeconds(frequencyHertz);
-		this.logPath = logPath;
 
 		this.signals = new StatusSignal[0];
 		this.isThreadPrioritySet = false;
 		this.lastUpdateTimestamp = 0;
+		this.lastCycleLengthSeconds = 0;
 
 		setName(name);
 		setDaemon(true);
@@ -75,6 +67,10 @@ public class OdometryThread extends Thread {
 
 	public double getFrequencyHertz() {
 		return frequencyHertz;
+	}
+
+	public double getLastCycleLengthSeconds() {
+		return lastCycleLengthSeconds;
 	}
 
 	public Queue<TimedValue<Double>> addSignal(StatusSignal<?> signal) {
@@ -134,15 +130,15 @@ public class OdometryThread extends Thread {
 	}
 
 	private void update() {
-		double currentTime = TimeUtil.getCurrentTimeSeconds();
-		Logger.recordOutput(logPath + "/CycleTimeSeconds", lastUpdateTimestamp - currentTime);
-		lastUpdateTimestamp = currentTime;
-
 		if (!isThreadPrioritySet) {
 			if (Threads.setCurrentThreadPriority(true, threadPriority)) {
 				isThreadPrioritySet = true;
 			}
 		}
+
+		double currentTime = TimeUtil.getCurrentTimeSeconds();
+		lastCycleLengthSeconds = lastUpdateTimestamp - currentTime;
+		lastUpdateTimestamp = currentTime;
 
 		StatusCode statusCode;
 		if (isBusChainCanFD) {

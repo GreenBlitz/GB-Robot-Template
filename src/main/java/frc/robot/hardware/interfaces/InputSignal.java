@@ -6,13 +6,11 @@ public interface InputSignal<T> extends LoggableInputs {
 
 	String getName();
 
-	int getLength();
+	int getNumberOfValues();
 
 	T getLatestValue();
 
 	T getAndUpdateValue();
-
-	void update();
 
 	T[] asArray();
 

@@ -27,7 +27,7 @@ public abstract class ArrayAngleSignal implements InputSignal<Rotation2d> {
 	}
 
 	@Override
-	public int getLength() {
+	public int getNumberOfValues() {
 		return timedValues.length;
 	}
 
@@ -93,7 +93,6 @@ public abstract class ArrayAngleSignal implements InputSignal<Rotation2d> {
 		return getLatestValue();
 	}
 
-	@Override
 	public void update() {
 		timedValues = updateValues(timedValues);
 	}

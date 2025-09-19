@@ -2,8 +2,8 @@ package frc.utils;
 
 import com.ctre.phoenix6.StatusSignal;
 import frc.robot.Robot;
-import frc.robot.RobotConstants;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
+import frc.robot.subsystems.swerve.OdometryThreadConstants;
 
 import java.util.Arrays;
 
@@ -26,7 +26,7 @@ public class OdometryThreadUtil {
 
 	public static StatusSignal<?> cloneSignalWithCorrectFrequency(StatusSignal<?> signal, double threadFrequencyHertz) {
 		if (Robot.ROBOT_TYPE.isSimulation()) {
-			threadFrequencyHertz = RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ;
+			threadFrequencyHertz = OdometryThreadConstants.SIMULATION_FREQUENCY_HERTZ;
 		}
 		StatusSignal<?> signalClone = signal.clone();
 		Phoenix6SignalBuilder.setFrequencyWithRetry(signalClone, threadFrequencyHertz);

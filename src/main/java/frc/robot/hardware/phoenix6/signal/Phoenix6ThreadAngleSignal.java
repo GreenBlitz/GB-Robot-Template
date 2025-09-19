@@ -32,8 +32,6 @@ public class Phoenix6ThreadAngleSignal extends ArrayAngleSignal {
 
 	@Override
 	protected TimedValue<Rotation2d>[] updateValues(TimedValue<Rotation2d>[] timedValues) {
-		timedValues = new TimedValue[] {new TimedValue<>(new Rotation2d(), 0)};
-
 		thread.ThreadQueuesLock.lock();
 		try {
 			timedValues = new TimedValue[threadTimedValues.size()];

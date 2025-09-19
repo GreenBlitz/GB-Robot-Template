@@ -10,6 +10,7 @@ import frc.utils.TimedValue;
 import frc.utils.time.TimeUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.locks.ReentrantLock;
@@ -64,6 +65,14 @@ public class OdometryThread extends Thread {
 		}
 	}
 
+	private static double calculateAverageLatency(StatusSignal<?>[] signals) {
+		if (signals.length == 0) {
+			return 0;
+		}
+		double latencySum = Arrays.stream(signals).mapToDouble(signal -> signal.getTimestamp().getLatency()).sum();
+		return latencySum / signals.length;
+	}
+
 	public double getFrequencyHertz() {
 		return frequencyHertz;
 	}
@@ -109,7 +118,7 @@ public class OdometryThread extends Thread {
 	}
 
 	private void updateAllQueues(double timestamp) {
-		double latencyCompensatedTimestamp = timestamp - OdometryThreadUtil.calculateAverageLatency(signals);
+		double latencyCompensatedTimestamp = timestamp - calculateAverageLatency(signals);
 		for (int i = 0; i < signals.length; i++) {
 			Queue<TimedValue<Double>> queue = signalValuesQueues.get(i);
 			queue.offer(new TimedValue<>(signals[i].getValueAsDouble(), latencyCompensatedTimestamp));

@@ -79,7 +79,7 @@ public class OdometryThread extends Thread {
 
 		ThreadQueuesLock.lock();
 		try {
-			signals = OdometryThreadUtil.addToArray(signal, signals, capacity -> new StatusSignal<?>[capacity]);
+			signals = OdometryThreadUtil.addToFullArray(signal, signals, capacity -> new StatusSignal<?>[capacity]);
 			signalValuesQueues.add(queue);
 		} finally {
 			ThreadQueuesLock.unlock();

@@ -15,7 +15,7 @@ public class OdometryThreadUtil {
 		return latencySum / signals.length;
 	}
 
-	public static <T> T[] addToArray(T toAdd, T[] array, Function<Integer, T[]> arrayConstructor) {
+	public static <T> T[] addToFullArray(T toAdd, T[] array, Function<Integer, T[]> arrayConstructor) {
 		T[] newArray = arrayConstructor.apply(array.length + 1);
 		System.arraycopy(array, 0, newArray, 0, array.length);
 		newArray[array.length] = toAdd;

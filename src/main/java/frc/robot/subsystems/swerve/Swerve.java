@@ -26,6 +26,7 @@ import frc.robot.subsystems.swerve.states.heading.HeadingControl;
 import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.auto.PathPlannerUtil;
+import frc.utils.pose.PoseUtil;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
@@ -159,14 +160,8 @@ public class Swerve extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/OdometrySamples", getNumberOfOdometrySamples());
 
 		Logger.recordOutput(getLogPath() + "/MeasuredAcceleration", getMeasuredAcceleration());
-		Logger.recordOutput(
-			getLogPath() + "/MeasuredAngularVelocity",
-			new double[] {getMeasuredAngularVelocity().getX(), getMeasuredAngularVelocity().getY(), getMeasuredAngularVelocity().getZ()}
-		);
-		Logger.recordOutput(
-			getLogPath() + "/MeasuredOrientation",
-			new double[] {getMeasuredOrientation().getX(), getMeasuredOrientation().getY(), getMeasuredOrientation().getZ()}
-		);
+		PoseUtil.logRotation3d(getLogPath() + "/MeasuredAngularVelocity", getMeasuredAngularVelocity());
+		PoseUtil.logRotation3d(getLogPath() + "/MeasuredOrientation", getMeasuredOrientation());
 	}
 
 
@@ -377,27 +372,15 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public Rotation3d getMeasuredAngularVelocity() {
-		return new Rotation3d(
-			imuSignals.angularVelocityRollSignal().getLatestValue().getRadians(),
-			imuSignals.angularVelocityPitchSignal().getLatestValue().getRadians(),
-			imuSignals.angularVelocityYawSignal().getLatestValue().getRadians()
-		);
+		return imuSignals.getMeasuredAngularVelocity();
 	}
 
 	public Rotation3d getMeasuredOrientation() {
-		return new Rotation3d(
-			imuSignals.rollSignal().getLatestValue().getRadians(),
-			imuSignals.pitchSignal().getLatestValue().getRadians(),
-			imuSignals.yawSignal().getLatestValue().getRadians()
-		);
+		return imuSignals.getMeasuredOrientation();
 	}
 
 	public Translation3d getMeasuredAcceleration() {
-		return new Translation3d(
-			imuSignals.accelerationXSignal().getLatestValue(),
-			imuSignals.accelerationYSignal().getLatestValue(),
-			imuSignals.accelerationZSignal().getLatestValue()
-		);
+		return imuSignals.getMeasuredAcceleration();
 	}
 
 }

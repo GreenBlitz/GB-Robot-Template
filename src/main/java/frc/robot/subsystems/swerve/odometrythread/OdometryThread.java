@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve;
+package frc.robot.subsystems.swerve.odometrythread;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
@@ -6,7 +6,6 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.Timer;
 import frc.utils.Conversions;
-import frc.utils.OdometryThreadUtil;
 import frc.utils.TimedValue;
 import frc.utils.time.TimeUtil;
 
@@ -46,7 +45,7 @@ public class OdometryThread extends Thread {
 		this.maxValueCapacityPerUpdate = maxValueCapacityPerUpdate;
 		this.isBusChainCanFD = isBusChainCanFD;
 		this.threadPriority = threadPriority;
-		this.cycleSeconds = Conversions.frequencyHertzToCycleSeconds(frequencyHertz);
+		this.cycleSeconds = Conversions.frequencyHertzToCycleTimeSeconds(frequencyHertz);
 
 		this.signals = new StatusSignal[0];
 		this.isThreadPrioritySet = false;
@@ -80,12 +79,12 @@ public class OdometryThread extends Thread {
 
 		ThreadQueuesLock.lock();
 		try {
-			signals = OdometryThreadUtil.addSignalToArray(signal, signals);
+			signals = OdometryThreadUtil.addToArray(signal, signals, capacity -> new StatusSignal<?>[capacity]);
 			signalValuesQueues.add(queue);
-			update();
 		} finally {
 			ThreadQueuesLock.unlock();
 		}
+		update();
 		return queue;
 	}
 
@@ -147,7 +146,7 @@ public class OdometryThread extends Thread {
 			Timer.delay(cycleSeconds);
 			statusCode = StatusSignal.refreshAll(signals);
 		}
-		if (statusCode != StatusCode.OK) {
+		if (!statusCode.isOK()) {
 			return;
 		}
 

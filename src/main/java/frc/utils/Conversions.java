@@ -111,7 +111,7 @@ public class Conversions {
 	 * @param frequency the frequency in hertz
 	 * @return the cycle time in seconds
 	 */
-	public static double frequencyHertzToCycleSeconds(double frequency) {
+	public static double frequencyHertzToCycleTimeSeconds(double frequency) {
 		return 1 / frequency;
 	}
 

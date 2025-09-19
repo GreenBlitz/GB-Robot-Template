@@ -1,17 +1,18 @@
 package frc.robot.hardware.phoenix6.signal;
 
 import com.ctre.phoenix6.StatusSignal;
+import frc.robot.Robot;
+import frc.robot.RobotConstants;
 import frc.robot.hardware.phoenix6.BusChain;
-import frc.robot.subsystems.swerve.OdometryThread;
+import frc.robot.subsystems.swerve.odometrythread.OdometryThread;
 import frc.utils.AngleUnit;
 import frc.robot.hardware.phoenix6.Phoenix6Util;
-import frc.utils.OdometryThreadUtil;
 
 public class Phoenix6SignalBuilder {
 
 	private static final int UPDATE_FREQUENCY_RETRIES = 5;
 
-	public static void setFrequencyWithRetry(StatusSignal<?> signal, double frequency) {
+	private static void setFrequencyWithRetry(StatusSignal<?> signal, double frequency) {
 		Phoenix6Util.checkStatusCodeWithRetry(() -> signal.setUpdateFrequency(frequency), UPDATE_FREQUENCY_RETRIES);
 	}
 
@@ -19,6 +20,19 @@ public class Phoenix6SignalBuilder {
 		StatusSignal<?> signalClone = signal.clone();
 		setFrequencyWithRetry(signalClone, frequency);
 		busChain.registerSignal(signalClone);
+		return signalClone;
+	}
+
+	private static StatusSignal<?> cloneWithCorrectFrequency(
+		StatusSignal<?> signal,
+		double wantedFrequencyHertz,
+		double simulationFrequencyHertz
+	) {
+		if (Robot.ROBOT_TYPE.isSimulation()) {
+			wantedFrequencyHertz = simulationFrequencyHertz;
+		}
+		StatusSignal<?> signalClone = signal.clone();
+		Phoenix6SignalBuilder.setFrequencyWithRetry(signalClone, wantedFrequencyHertz);
 		return signalClone;
 	}
 
@@ -61,7 +75,11 @@ public class Phoenix6SignalBuilder {
 	}
 
 	public static Phoenix6ThreadAngleSignal build(StatusSignal<?> signal, AngleUnit angleUnit, OdometryThread thread) {
-		StatusSignal<?> signalClone = OdometryThreadUtil.cloneSignalWithCorrectFrequency(signal, thread.getFrequencyHertz());
+		StatusSignal<?> signalClone = cloneWithCorrectFrequency(
+			signal,
+			thread.getFrequencyHertz(),
+			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ
+		);
 		return new Phoenix6ThreadAngleSignal(signalClone, angleUnit, thread);
 	}
 

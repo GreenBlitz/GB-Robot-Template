@@ -3,14 +3,14 @@ package frc.robot.hardware.phoenix6.signal;
 import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.signal.ArrayAngleSignal;
-import frc.robot.subsystems.swerve.OdometryThread;
+import frc.robot.subsystems.swerve.odometrythread.OdometryThread;
 import frc.utils.AngleUnit;
 import frc.utils.TimedValue;
 
 import java.util.ArrayList;
 import java.util.Queue;
 
-public class Phoenix6ThreadAngleSignal extends ArrayAngleSignal {
+public class Phoenix6ThreadAngleSignal extends ArrayAngleSignal implements SignalGetter {
 
 	private final Queue<TimedValue<Double>> threadTimedValues;
 	private final OdometryThread thread;
@@ -23,7 +23,7 @@ public class Phoenix6ThreadAngleSignal extends ArrayAngleSignal {
 		this.threadTimedValues = thread.addSignal(statusSignal);
 	}
 
-	public void addWithLatencyCompensation(Phoenix6ThreadAngleSignal slopeSignal) {
+	public void addLatencyCompensation(Phoenix6ThreadAngleSignal slopeSignal) {
 		thread.addLatencyAndSlopeSignals(statusSignal, threadTimedValues, slopeSignal.getStatusSignal());
 	}
 
@@ -32,17 +32,24 @@ public class Phoenix6ThreadAngleSignal extends ArrayAngleSignal {
 	}
 
 	@Override
-	protected ArrayList<TimedValue<Rotation2d>> updateValues(ArrayList<TimedValue<Rotation2d>> timedValues) {
+	protected void updateValues(ArrayList<TimedValue<Rotation2d>> timedValues) {
 		thread.ThreadQueuesLock.lock();
 		try {
 			timedValues.clear();
-			threadTimedValues.forEach(
-				(timedValue) -> timedValues.add(new TimedValue<>(angleUnit.toRotation2d(timedValue.getValue()), timedValue.getTimestamp()))
+			timedValues.addAll(
+				threadTimedValues.stream()
+					.map(timedValue -> new TimedValue<>(angleUnit.toRotation2d(timedValue.getValue()), timedValue.getTimestamp()))
+					.toList()
 			);
+			threadTimedValues.forEach(timedValue -> threadTimedValues.poll());
 		} finally {
 			thread.ThreadQueuesLock.unlock();
 		}
-		return timedValues;
+	}
+
+	@Override
+	public StatusSignal<?> getSignal() {
+		return statusSignal;
 	}
 
 }

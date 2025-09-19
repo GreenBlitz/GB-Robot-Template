@@ -8,18 +8,24 @@ import frc.utils.math.ToleranceMath;
 import org.littletonrobotics.junction.LogTable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public abstract class ArrayAngleSignal implements InputSignal<Rotation2d> {
 
 	private final String name;
 	protected final AngleUnit angleUnit;
-	private ArrayList<TimedValue<Rotation2d>> timedValues;
+	private final ArrayList<TimedValue<Rotation2d>> timedValues;
 
 	public ArrayAngleSignal(String name, AngleUnit angleUnit) {
 		this.name = name;
 		this.angleUnit = angleUnit;
 		this.timedValues = new ArrayList<>();
+	}
+
+	private TimedValue<Rotation2d> getLatestTimedValue() {
+		if (timedValues.isEmpty()) {
+			return new TimedValue<>(new Rotation2d(), 0);
+		}
+		return timedValues.get(timedValues.size() - 1);
 	}
 
 	@Override
@@ -34,29 +40,22 @@ public abstract class ArrayAngleSignal implements InputSignal<Rotation2d> {
 
 	@Override
 	public Rotation2d getLatestValue() {
-		if (timedValues.isEmpty()) {
-			return new Rotation2d();
-		}
-		return timedValues.get(timedValues.size() - 1).getValue();
+		return getLatestTimedValue().getValue();
 	}
 
 	@Override
 	public Rotation2d[] asArray() {
-		Rotation2d[] values = new Rotation2d[timedValues.size()];
-		Arrays.setAll(values, index -> timedValues.get(index).getValue());
-		return values;
+		return timedValues.stream().map(TimedValue::getValue).toArray(Rotation2d[]::new);
 	}
 
 	@Override
 	public double getTimestamp() {
-		return timedValues.get(timedValues.size() - 1).getTimestamp();
+		return getLatestTimedValue().getTimestamp();
 	}
 
 	@Override
 	public double[] getTimestamps() {
-		double[] timestamps = new double[timedValues.size()];
-		Arrays.setAll(timestamps, index -> timedValues.get(index).getTimestamp());
-		return timestamps;
+		return timedValues.stream().mapToDouble(TimedValue::getTimestamp).toArray();
 	}
 
 	@Override
@@ -81,7 +80,7 @@ public abstract class ArrayAngleSignal implements InputSignal<Rotation2d> {
 
 	@Override
 	public void toLog(LogTable table) {
-		update();
+		updateValues(timedValues);
 		table.put(name, asArray());
 	}
 
@@ -90,14 +89,10 @@ public abstract class ArrayAngleSignal implements InputSignal<Rotation2d> {
 
 	@Override
 	public Rotation2d getAndUpdateValue() {
-		update();
+		updateValues(timedValues);
 		return getLatestValue();
 	}
 
-	public void update() {
-		timedValues = updateValues(timedValues);
-	}
-
-	protected abstract ArrayList<TimedValue<Rotation2d>> updateValues(ArrayList<TimedValue<Rotation2d>> timedValues);
+	protected abstract void updateValues(ArrayList<TimedValue<Rotation2d>> timedValues);
 
 }

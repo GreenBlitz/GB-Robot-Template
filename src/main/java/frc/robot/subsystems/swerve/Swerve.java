@@ -159,9 +159,9 @@ public class Swerve extends GBSubsystem {
 
 		Logger.recordOutput(getLogPath() + "/OdometrySamples", getNumberOfOdometrySamples());
 
-		Logger.recordOutput(getLogPath() + "/MeasuredAcceleration", getAccelerationFromIMU());
-		PoseUtil.logRotation3d(getLogPath() + "/MeasuredAngularVelocity", getAngularVelocityFromIMU());
-		PoseUtil.logRotation3d(getLogPath() + "/MeasuredOrientation", getOrientationFromIMU());
+		Logger.recordOutput(getLogPath() + "/IMU/Acceleration", getAccelerationFromIMU());
+		PoseUtil.logRotation3d(getLogPath() + "/IMU/AngularVelocity", getAngularVelocityFromIMU());
+		PoseUtil.logRotation3d(getLogPath() + "/IMU/Orientation", getOrientationFromIMU());
 	}
 
 

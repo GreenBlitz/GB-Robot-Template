@@ -1,14 +1,14 @@
 package frc.robot.hardware.phoenix6.gyro;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.hardware.interfaces.IGyro;
+import frc.robot.hardware.interfaces.Iimu;
 import frc.robot.hardware.phoenix6.Phoenix6Device;
 
-public class Pigeon2Gyro extends Phoenix6Device implements IGyro {
+public class Pigeon2IMU extends Phoenix6Device implements Iimu {
 
 	private final Pigeon2Wrapper gyro;
 
-	public Pigeon2Gyro(String logPath, Pigeon2Wrapper gyro) {
+	public Pigeon2IMU(String logPath, Pigeon2Wrapper gyro) {
 		super(logPath);
 		this.gyro = gyro;
 		gyro.optimizeBusUtilization();

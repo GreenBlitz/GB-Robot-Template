@@ -11,7 +11,7 @@ public record IMUSignals(
 	InputSignal<Rotation2d> pitchAngularVelocitySignal,
 	InputSignal<Rotation2d> yawAngularVelocitySignal,
 	InputSignal<Double> xAccelerationSignal,
-	InputSignal<Double> yAccelerationYSignal,
+	InputSignal<Double> yAccelerationSignal,
 	InputSignal<Double> zAccelerationSignal
 ) {
 
@@ -34,7 +34,7 @@ public record IMUSignals(
 	public Translation3d getAcceleration() {
 		return new Translation3d(
 			this.xAccelerationSignal().getLatestValue(),
-			this.yAccelerationYSignal().getLatestValue(),
+			this.yAccelerationSignal().getLatestValue(),
 			this.zAccelerationSignal().getLatestValue()
 		);
 	}

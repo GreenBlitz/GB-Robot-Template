@@ -15,7 +15,7 @@ import frc.constants.field.Field;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
 import frc.robot.hardware.empties.EmptyIMU;
-import frc.robot.hardware.interfaces.Iimu;
+import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.poseestimator.OdometryData;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
@@ -39,7 +39,7 @@ public class Swerve extends GBSubsystem {
 	private final SwerveConstants constants;
 	private final double driveRadiusMeters;
 	private final Modules modules;
-	private final Iimu imu;
+	private final IIMU imu;
 	private final IMUSignals imuSignals;
 
 	private final SwerveDriveKinematics kinematics;
@@ -51,7 +51,7 @@ public class Swerve extends GBSubsystem {
 	private Supplier<Rotation2d> headingSupplier;
 	private ChassisPowers driversPowerInputs;
 
-	public Swerve(SwerveConstants constants, Modules modules, Iimu imu, IMUSignals imuSignals) {
+	public Swerve(SwerveConstants constants, Modules modules, IIMU imu, IMUSignals imuSignals) {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 		this.driversPowerInputs = new ChassisPowers();
@@ -94,6 +94,18 @@ public class Swerve extends GBSubsystem {
 
 	public SwerveStateHandler getStateHandler() {
 		return stateHandler;
+	}
+
+	public Rotation3d getAngularVelocityFromIMU() {
+		return imuSignals.getAngularVelocity();
+	}
+
+	public Rotation3d getOrientationFromIMU() {
+		return imuSignals.getOrientation();
+	}
+
+	public Translation3d getAccelerationFromIMU() {
+		return imuSignals.getAcceleration();
 	}
 
 
@@ -140,7 +152,7 @@ public class Swerve extends GBSubsystem {
 			imuSignals.pitchAngularVelocitySignal(),
 			imuSignals.yawAngularVelocitySignal(),
 			imuSignals.xAccelerationSignal(),
-			imuSignals.yAccelerationYSignal(),
+			imuSignals.yAccelerationSignal(),
 			imuSignals.zAccelerationSignal()
 		);
 	}
@@ -369,18 +381,6 @@ public class Swerve extends GBSubsystem {
 					Set.of(this)
 				)
 			);
-	}
-
-	public Rotation3d getAngularVelocityFromIMU() {
-		return imuSignals.getAngularVelocity();
-	}
-
-	public Rotation3d getOrientationFromIMU() {
-		return imuSignals.getOrientation();
-	}
-
-	public Translation3d getAccelerationFromIMU() {
-		return imuSignals.getAcceleration();
 	}
 
 }

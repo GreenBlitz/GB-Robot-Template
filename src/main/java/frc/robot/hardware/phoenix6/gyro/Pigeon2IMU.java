@@ -1,10 +1,10 @@
 package frc.robot.hardware.phoenix6.gyro;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.hardware.interfaces.Iimu;
+import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.phoenix6.Phoenix6Device;
 
-public class Pigeon2IMU extends Phoenix6Device implements Iimu {
+public class Pigeon2IMU extends Phoenix6Device implements IIMU {
 
 	private final Pigeon2Wrapper gyro;
 

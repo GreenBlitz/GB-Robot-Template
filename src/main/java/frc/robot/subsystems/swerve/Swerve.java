@@ -136,12 +136,12 @@ public class Swerve extends GBSubsystem {
 			imuSignals.pitchSignal(),
 			imuSignals.rollSignal(),
 			imuSignals.yawSignal(),
-			imuSignals.angularVelocityRollSignal(),
-			imuSignals.angularVelocityPitchSignal(),
-			imuSignals.angularVelocityYawSignal(),
-			imuSignals.accelerationXSignal(),
-			imuSignals.accelerationYSignal(),
-			imuSignals.accelerationZSignal()
+			imuSignals.rollAngularVelocitySignal(),
+			imuSignals.pitchAngularVelocitySignal(),
+			imuSignals.yawAngularVelocitySignal(),
+			imuSignals.xAccelerationSignal(),
+			imuSignals.yAccelerationYSignal(),
+			imuSignals.zAccelerationSignal()
 		);
 	}
 
@@ -372,15 +372,15 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public Rotation3d getMeasuredAngularVelocity() {
-		return imuSignals.getMeasuredAngularVelocity();
+		return imuSignals.getAngularVelocity();
 	}
 
 	public Rotation3d getMeasuredOrientation() {
-		return imuSignals.getMeasuredOrientation();
+		return imuSignals.getOrientation();
 	}
 
 	public Translation3d getMeasuredAcceleration() {
-		return imuSignals.getMeasuredAcceleration();
+		return imuSignals.getAcceleration();
 	}
 
 }

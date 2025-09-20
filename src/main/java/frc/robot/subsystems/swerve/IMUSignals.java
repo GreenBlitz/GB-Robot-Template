@@ -7,23 +7,23 @@ public record IMUSignals(
 	InputSignal<Rotation2d> pitchSignal,
 	InputSignal<Rotation2d> rollSignal,
 	InputSignal<Rotation2d> yawSignal,
-	InputSignal<Rotation2d> angularVelocityRollSignal,
-	InputSignal<Rotation2d> angularVelocityPitchSignal,
-	InputSignal<Rotation2d> angularVelocityYawSignal,
-	InputSignal<Double> accelerationXSignal,
-	InputSignal<Double> accelerationYSignal,
-	InputSignal<Double> accelerationZSignal
+	InputSignal<Rotation2d> rollAngularVelocitySignal,
+	InputSignal<Rotation2d> pitchAngularVelocitySignal,
+	InputSignal<Rotation2d> yawAngularVelocitySignal,
+	InputSignal<Double> xAccelerationSignal,
+	InputSignal<Double> yAccelerationYSignal,
+	InputSignal<Double> zAccelerationSignal
 ) {
 
-	public Rotation3d getMeasuredAngularVelocity() {
+	public Rotation3d getAngularVelocity() {
 		return new Rotation3d(
-			this.angularVelocityRollSignal().getLatestValue().getRadians(),
-			this.angularVelocityPitchSignal().getLatestValue().getRadians(),
-			this.angularVelocityYawSignal().getLatestValue().getRadians()
+			this.rollAngularVelocitySignal().getLatestValue().getRadians(),
+			this.pitchAngularVelocitySignal().getLatestValue().getRadians(),
+			this.yawAngularVelocitySignal().getLatestValue().getRadians()
 		);
 	}
 
-	public Rotation3d getMeasuredOrientation() {
+	public Rotation3d getOrientation() {
 		return new Rotation3d(
 			this.rollSignal().getLatestValue().getRadians(),
 			this.pitchSignal().getLatestValue().getRadians(),
@@ -31,11 +31,11 @@ public record IMUSignals(
 		);
 	}
 
-	public Translation3d getMeasuredAcceleration() {
+	public Translation3d getAcceleration() {
 		return new Translation3d(
-			this.accelerationXSignal().getLatestValue(),
-			this.accelerationYSignal().getLatestValue(),
-			this.accelerationZSignal().getLatestValue()
+			this.xAccelerationSignal().getLatestValue(),
+			this.yAccelerationYSignal().getLatestValue(),
+			this.zAccelerationSignal().getLatestValue()
 		);
 	}
 

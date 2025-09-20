@@ -8,6 +8,7 @@ import frc.utils.math.ToleranceMath;
 import org.littletonrobotics.junction.LogTable;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public abstract class ArrayAngleSignal implements InputSignal<Rotation2d> {
 
@@ -46,6 +47,10 @@ public abstract class ArrayAngleSignal implements InputSignal<Rotation2d> {
 	@Override
 	public Rotation2d[] asArray() {
 		return timedValues.stream().map(TimedValue::getValue).toArray(Rotation2d[]::new);
+	}
+
+	public Iterator<Rotation2d> iterator() {
+		return timedValues.stream().map(TimedValue::getValue).iterator();
 	}
 
 	@Override

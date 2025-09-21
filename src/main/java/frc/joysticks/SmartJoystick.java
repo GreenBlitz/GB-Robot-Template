@@ -13,7 +13,7 @@ public class SmartJoystick {
 
 	private static final double DEADZONE = 0.07;
 	private static final double DEFAULT_THRESHOLD_FOR_AXIS_BUTTON = 0.1;
-	private static final double SENSITIVE_AXIS_VALUE_POWER = 2;
+	private static final double SIGMOID_MULTIPLIER = 10;
 
 	public final JoystickButton A, B, X, Y, L1, R1, START, BACK, L3, R3;
 	public final POVButton POV_UP, POV_RIGHT, POV_DOWN, POV_LEFT;
@@ -78,12 +78,25 @@ public class SmartJoystick {
 	/**
 	 * Sample axis value with parabolic curve, allowing for finer control for smaller values.
 	 */
-	public double getSensitiveAxisValue(Axis axis) {
-		return sensitiveValue(getAxisValue(axis), SENSITIVE_AXIS_VALUE_POWER);
+	public double getSigmoidAxisValue(Axis axis) {
+		return sigmoidValue(getAxisValue(axis), SIGMOID_MULTIPLIER);
 	}
 
-	private static double sensitiveValue(double axisValue, double power) {
-		return Math.pow(Math.abs(axisValue), power) * Math.signum(axisValue);
+	private static double sigmoidValue(double axisValue, double multiplier) {
+		double sigmoidMid = 0.5;
+
+		double maxValue = sigmoid(sigmoidMid * multiplier);
+		double minValue = 1 - maxValue;
+
+		double sigmoidAppliedValue = sigmoid(multiplier * (Math.abs(axisValue) - sigmoidMid));
+
+		double scaledValue = (sigmoidAppliedValue - minValue) / (maxValue - minValue);
+
+		return Math.signum(axisValue) * scaledValue;
+	}
+
+	private static double sigmoid(double x) {
+		return 1 / (1 + Math.exp(-x));
 	}
 
 	public double getAxisValue(Axis axis) {

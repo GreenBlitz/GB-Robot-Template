@@ -16,33 +16,25 @@ public class Phoenix6SignalBuilder {
 		Phoenix6Util.checkStatusCodeWithRetry(() -> signal.setUpdateFrequency(frequency), UPDATE_FREQUENCY_RETRIES);
 	}
 
-	private static StatusSignal<?> cloneWithFrequency(StatusSignal<?> signal, double frequency, BusChain busChain) {
+	private static StatusSignal<?> cloneWithFrequency(StatusSignal<?> signal, double frequency) {
 		StatusSignal<?> signalClone = signal.clone();
 		setFrequencyWithRetry(signalClone, frequency);
+		return signalClone;
+	}
+
+	private static StatusSignal<?> cloneWithFrequencyAndRegister(StatusSignal<?> signal, double frequency, BusChain busChain) {
+		StatusSignal<?> signalClone = cloneWithFrequency(signal, frequency);
 		busChain.registerSignal(signalClone);
 		return signalClone;
 	}
 
-	private static StatusSignal<?> cloneWithCorrectFrequency(
-		StatusSignal<?> signal,
-		double wantedFrequencyHertz,
-		double simulationFrequencyHertz
-	) {
-		if (Robot.ROBOT_TYPE.isSimulation()) {
-			wantedFrequencyHertz = simulationFrequencyHertz;
-		}
-		StatusSignal<?> signalClone = signal.clone();
-		setFrequencyWithRetry(signalClone, wantedFrequencyHertz);
-		return signalClone;
-	}
-
 	public static Phoenix6DoubleSignal build(StatusSignal<?> signal, double frequency, BusChain busChain) {
-		StatusSignal<?> signalClone = cloneWithFrequency(signal, frequency, busChain);
+		StatusSignal<?> signalClone = cloneWithFrequencyAndRegister(signal, frequency, busChain);
 		return new Phoenix6DoubleSignal(signalClone.getName(), signalClone);
 	}
 
 	public static Phoenix6AngleSignal build(StatusSignal<?> signal, double frequency, AngleUnit angleUnit, BusChain busChain) {
-		StatusSignal<?> signalClone = cloneWithFrequency(signal, frequency, busChain);
+		StatusSignal<?> signalClone = cloneWithFrequencyAndRegister(signal, frequency, busChain);
 		return new Phoenix6AngleSignal(signalClone.getName(), signalClone, angleUnit);
 	}
 
@@ -53,7 +45,7 @@ public class Phoenix6SignalBuilder {
 		AngleUnit angleUnit,
 		BusChain busChain
 	) {
-		StatusSignal<?> signalClone = cloneWithFrequency(signal, frequency, busChain);
+		StatusSignal<?> signalClone = cloneWithFrequencyAndRegister(signal, frequency, busChain);
 		setFrequencyWithRetry(signalSlope.getSignal(), frequency);
 		return new Phoenix6LatencySignal(signalClone.getName(), signalClone, signalSlope.getSignal(), angleUnit);
 	}
@@ -69,16 +61,15 @@ public class Phoenix6SignalBuilder {
 		AngleUnit angleUnit,
 		BusChain busChain
 	) {
-		StatusSignal<?> signalClone = cloneWithFrequency(signal, frequency, busChain);
-		StatusSignal<?> signalSlopeClone = cloneWithFrequency(signalSlope, frequency, busChain);
+		StatusSignal<?> signalClone = cloneWithFrequencyAndRegister(signal, frequency, busChain);
+		StatusSignal<?> signalSlopeClone = cloneWithFrequencyAndRegister(signalSlope, frequency, busChain);
 		return new Phoenix6LatencyAndSlopeSignal(signalClone.getName(), signalClone, signalSlopeClone, angleUnit);
 	}
 
 	public static Phoenix6ThreadAngleSignal build(StatusSignal<?> signal, AngleUnit angleUnit, OdometryThread thread) {
-		StatusSignal<?> signalClone = cloneWithCorrectFrequency(
+		StatusSignal<?> signalClone = cloneWithFrequency(
 			signal,
-			thread.getFrequencyHertz(),
-			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ
+			Robot.ROBOT_TYPE.isSimulation() ? RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ : thread.getFrequencyHertz()
 		);
 		return new Phoenix6ThreadAngleSignal(signalClone, angleUnit, thread);
 	}

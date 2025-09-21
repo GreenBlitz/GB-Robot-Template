@@ -219,4 +219,8 @@ public class Robot {
 		return poseEstimator;
 	}
 
+	public RobotHeadingEstimator getHeadingEstimator() {
+		return headingEstimator;
+	}
+
 }

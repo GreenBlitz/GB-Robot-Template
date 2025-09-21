@@ -61,7 +61,7 @@ public class JoysticksBindings {
 					.resetPose(new Pose2d(robot.getPoseEstimator().getEstimatedPose().getTranslation(), new Rotation2d()))
 			)
 		);
-		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getSwerve().setHeading(new Rotation2d())));
+		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getHeadingEstimator().reset(new Rotation2d())));
 
 		usedJoystick.A.whileTrue(new InstantCommand(() -> robot.getSwerve().getCommandsBuilder().drive(() -> powersX)));
 	}

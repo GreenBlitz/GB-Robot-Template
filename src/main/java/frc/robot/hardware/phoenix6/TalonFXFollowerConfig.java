@@ -5,8 +5,7 @@ import frc.robot.hardware.mechanisms.MechanismSimulation;
 
 public class TalonFXFollowerConfig {
 
-
-
+    public String[] names;
     public Phoenix6DeviceID[] followerIDs;
     public MechanismSimulation[] mechanismSimulations;
     public BusChain[] followerBuses;

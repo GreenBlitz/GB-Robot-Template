@@ -18,6 +18,7 @@ import frc.robot.hardware.mechanisms.MechanismSimulation;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
 import frc.utils.alerts.Alert;
 import frc.utils.calibration.sysid.SysIdCalibrator;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 
@@ -39,7 +40,13 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		if (followerConfig != null) {
 			followers = new TalonFXMotor[followerConfig.followerIDs.length];
 			for (int i = 0; i < followerConfig.followerIDs.length; i++) {
-				followers[i] = new TalonFXMotor(logPath + "/follower" + i, followerConfig.followerIDs[i], null, new SysIdRoutine.Config(), followerConfig.mechanismSimulations[i]);
+				followers[i] = new TalonFXMotor(
+						logPath + followerConfig.names[i],
+						followerConfig.followerIDs[i],
+						null,
+						new SysIdRoutine.Config(),
+						followerConfig.mechanismSimulations != null ? followerConfig.mechanismSimulations[i] : null
+				);
 				followers[i].getDevice().setControl(new Follower(deviceID.id(), followerConfig.followerOpposeMain[i]));
 			}
 		} else {
@@ -72,6 +79,10 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 	@Override
 	public void updateSimulation() {
 		talonFXSimulationOptional.ifPresent(TalonFXSimulation::updateMotor);
+		for (TalonFXMotor follower : followers){
+			follower.updateSimulation();
+			Logger.recordOutput(follower.getLogPath(), follower.getDevice().get());
+		}
 	}
 
 	@Override

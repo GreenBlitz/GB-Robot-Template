@@ -5,6 +5,7 @@ import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.Timer;
+import frc.utils.ArrayUtil;
 import frc.utils.Conversions;
 import frc.utils.TimedValue;
 import frc.utils.time.TimeUtil;
@@ -18,7 +19,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class OdometryThread extends Thread {
 
-	public final ReentrantLock ThreadQueuesLock;
+	public final ReentrantLock threadQueuesLock;
 
 	private final ArrayList<Pair<StatusSignal<?>, StatusSignal<?>>> latencyAndSlopeSignals;
 	private final ArrayList<Queue<TimedValue<Double>>> signalValuesQueues;
@@ -36,7 +37,7 @@ public class OdometryThread extends Thread {
 	private double lastCycleLengthSeconds;
 
 	public OdometryThread(double frequencyHertz, String name, int maxValueCapacityPerUpdate, boolean isBusChainCanFD, int threadPriority) {
-		this.ThreadQueuesLock = new ReentrantLock();
+		this.threadQueuesLock = new ReentrantLock();
 
 		this.latencyAndSlopeSignals = new ArrayList<>();
 		this.signalValuesQueues = new ArrayList<>();
@@ -65,14 +66,6 @@ public class OdometryThread extends Thread {
 		}
 	}
 
-	private static double calculateAverageLatency(StatusSignal<?>[] signals) {
-		if (signals.length == 0) {
-			return 0;
-		}
-		double latencySum = Arrays.stream(signals).mapToDouble(signal -> signal.getTimestamp().getLatency()).sum();
-		return latencySum / signals.length;
-	}
-
 	public double getFrequencyHertz() {
 		return frequencyHertz;
 	}
@@ -82,16 +75,16 @@ public class OdometryThread extends Thread {
 	}
 
 	public Queue<TimedValue<Double>> addSignal(StatusSignal<?> signal) {
-		clearAllQueues();
-
 		Queue<TimedValue<Double>> queue = new ArrayBlockingQueue<>(maxValueCapacityPerUpdate);
 
-		ThreadQueuesLock.lock();
+		threadQueuesLock.lock();
 		try {
-			signals = OdometryThreadUtil.addToFullArray(signal, signals, capacity -> new StatusSignal<?>[capacity]);
+			clearAllQueues();
+
+			signals = ArrayUtil.addToFullArray(signal, signals, StatusSignal[]::new);
 			signalValuesQueues.add(queue);
 		} finally {
-			ThreadQueuesLock.unlock();
+			threadQueuesLock.unlock();
 		}
 		update();
 		return queue;
@@ -102,14 +95,14 @@ public class OdometryThread extends Thread {
 		Queue<TimedValue<Double>> latencySignalQueue,
 		StatusSignal<?> slopeSignal
 	) {
-		ThreadQueuesLock.lock();
+		threadQueuesLock.lock();
 		try {
 			Pair<StatusSignal<?>, StatusSignal<?>> signals = new Pair<>(latencySignal, slopeSignal);
 			latencyAndSlopeSignals.add(signals);
 
 			latencySignalValuesQueues.add(latencySignalQueue);
 		} finally {
-			ThreadQueuesLock.unlock();
+			threadQueuesLock.unlock();
 		}
 	}
 
@@ -159,12 +152,20 @@ public class OdometryThread extends Thread {
 			return;
 		}
 
-		ThreadQueuesLock.lock();
+		threadQueuesLock.lock();
 		try {
 			updateAllQueues(TimeUtil.getCurrentTimeSeconds());
 		} finally {
-			ThreadQueuesLock.unlock();
+			threadQueuesLock.unlock();
 		}
+	}
+
+	private static double calculateAverageLatency(StatusSignal<?>[] signals) {
+		if (signals.length == 0) {
+			return 0;
+		}
+		double latencySum = Arrays.stream(signals).mapToDouble(signal -> signal.getTimestamp().getLatency()).sum();
+		return latencySum / signals.length;
 	}
 
 }

@@ -9,12 +9,13 @@ import org.littletonrobotics.junction.LogTable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public abstract class ArrayAngleSignal implements InputSignal<Rotation2d> {
 
 	private final String name;
 	protected final AngleUnit angleUnit;
-	private final ArrayList<TimedValue<Rotation2d>> timedValues;
+	private final List<TimedValue<Rotation2d>> timedValues;
 
 	public ArrayAngleSignal(String name, AngleUnit angleUnit) {
 		this.name = name;
@@ -98,6 +99,6 @@ public abstract class ArrayAngleSignal implements InputSignal<Rotation2d> {
 		return getLatestValue();
 	}
 
-	protected abstract void updateValues(ArrayList<TimedValue<Rotation2d>> timedValues);
+	protected abstract void updateValues(List<TimedValue<Rotation2d>> timedValues);
 
 }

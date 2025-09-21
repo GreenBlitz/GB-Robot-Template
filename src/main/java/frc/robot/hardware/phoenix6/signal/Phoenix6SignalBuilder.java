@@ -32,7 +32,7 @@ public class Phoenix6SignalBuilder {
 			wantedFrequencyHertz = simulationFrequencyHertz;
 		}
 		StatusSignal<?> signalClone = signal.clone();
-		Phoenix6SignalBuilder.setFrequencyWithRetry(signalClone, wantedFrequencyHertz);
+		setFrequencyWithRetry(signalClone, wantedFrequencyHertz);
 		return signalClone;
 	}
 

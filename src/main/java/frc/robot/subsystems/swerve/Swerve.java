@@ -138,12 +138,12 @@ public class Swerve extends GBSubsystem {
 
 
 	public void update() {
-		odometryThread.ThreadQueuesLock.lock();
+		odometryThread.threadQueuesLock.lock();
 		try {
 			gyro.updateInputs(gyroSignals.yawSignal());
 			modules.updateInputs();
 		} finally {
-			odometryThread.ThreadQueuesLock.unlock();
+			odometryThread.threadQueuesLock.unlock();
 		}
 
 		currentState.log(constants.stateLogPath());

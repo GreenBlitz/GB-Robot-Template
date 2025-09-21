@@ -7,7 +7,7 @@ import frc.robot.subsystems.swerve.odometrythread.OdometryThread;
 import frc.utils.AngleUnit;
 import frc.utils.TimedValue;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 
 public class Phoenix6ThreadAngleSignal extends ArrayAngleSignal implements SignalGetter {
@@ -24,16 +24,12 @@ public class Phoenix6ThreadAngleSignal extends ArrayAngleSignal implements Signa
 	}
 
 	public void addLatencyCompensation(Phoenix6ThreadAngleSignal slopeSignal) {
-		thread.addLatencyAndSlopeSignals(statusSignal, threadTimedValues, slopeSignal.getStatusSignal());
-	}
-
-	public StatusSignal<?> getStatusSignal() {
-		return statusSignal;
+		thread.addLatencyAndSlopeSignals(statusSignal, threadTimedValues, slopeSignal.getSignal());
 	}
 
 	@Override
-	protected void updateValues(ArrayList<TimedValue<Rotation2d>> timedValues) {
-		thread.ThreadQueuesLock.lock();
+	protected void updateValues(List<TimedValue<Rotation2d>> timedValues) {
+		thread.threadQueuesLock.lock();
 		try {
 			timedValues.clear();
 			timedValues.addAll(
@@ -41,9 +37,9 @@ public class Phoenix6ThreadAngleSignal extends ArrayAngleSignal implements Signa
 					.map(timedValue -> new TimedValue<>(angleUnit.toRotation2d(timedValue.getValue()), timedValue.getTimestamp()))
 					.toList()
 			);
-			threadTimedValues.forEach(timedValue -> threadTimedValues.poll());
+			threadTimedValues.clear();
 		} finally {
-			thread.ThreadQueuesLock.unlock();
+			thread.threadQueuesLock.unlock();
 		}
 	}
 

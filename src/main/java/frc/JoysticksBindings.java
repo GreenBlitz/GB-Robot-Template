@@ -15,7 +15,7 @@ public class JoysticksBindings {
 	private static final SmartJoystick FIFTH_JOYSTICK = new SmartJoystick(JoystickPorts.FIFTH);
 	private static final SmartJoystick SIXTH_JOYSTICK = new SmartJoystick(JoystickPorts.SIXTH);
 
-	private static final ChassisPowers chassisDriverInputs = new ChassisPowers();
+	public static final ChassisPowers chassisDriverInputs = new ChassisPowers();
 
 	public static void configureBindings(Robot robot) {
 		// Set 'chassisDriverInputs' to swerve...

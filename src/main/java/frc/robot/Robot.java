@@ -4,9 +4,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.hardware.rev.motors.SparkMaxDeviceID;
+import frc.robot.hardware.rev.motors.SparkMaxWrapper;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 
@@ -18,9 +22,24 @@ import frc.utils.battery.BatteryUtil;
 public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
+    public static final boolean isMecanum = true;
+
+    private MecanumDrive mecanumDrive;
+    private DifferentialDrive tankDrive;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
+        if (isMecanum) {
+            SparkMaxWrapper frontLeft = new SparkMaxWrapper(new SparkMaxDeviceID(0));
+            SparkMaxWrapper rearLeft = new SparkMaxWrapper(new SparkMaxDeviceID(0));
+            SparkMaxWrapper frontRight = new SparkMaxWrapper(new SparkMaxDeviceID(0));
+            SparkMaxWrapper rearRight = new SparkMaxWrapper(new SparkMaxDeviceID(0));
+            mecanumDrive = new MecanumDrive(frontLeft::set, rearLeft::set, frontRight::set, rearRight::set);
+        } else {
+        SparkMaxWrapper leftTank = new SparkMaxWrapper(new SparkMaxDeviceID(0));
+        SparkMaxWrapper rightTank = new SparkMaxWrapper(new SparkMaxDeviceID(0));
+        tankDrive = new DifferentialDrive(leftTank::set, rightTank::set);
+        }
 	}
 
 	public void periodic() {
@@ -34,5 +53,13 @@ public class Robot {
 	public PathPlannerAutoWrapper getAutonomousCommand() {
 		return new PathPlannerAutoWrapper();
 	}
+
+    public MecanumDrive getMecanumDrive() {
+        return mecanumDrive;
+    }
+
+    public DifferentialDrive getTankDrive() {
+        return tankDrive;
+    }
 
 }

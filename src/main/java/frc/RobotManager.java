@@ -78,6 +78,11 @@ public class RobotManager extends LoggedRobot {
 		updateTimeRelatedData(); // Better to be first
 		JoysticksBindings.updateChassisDriverInputs();
 		robot.periodic();
+        if (Robot.isMecanum) {
+            robot.getMecanumDrive().driveCartesian(JoysticksBindings.chassisDriverInputs.xPower, JoysticksBindings.chassisDriverInputs.yPower, JoysticksBindings.chassisDriverInputs.rotationalPower);
+        } else {
+            robot.getTankDrive().arcadeDrive(JoysticksBindings.chassisDriverInputs.xPower, JoysticksBindings.chassisDriverInputs.rotationalPower);
+        }
 		AlertManager.reportAlerts();
 	}
 

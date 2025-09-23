@@ -1,5 +1,7 @@
 package frc;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
@@ -47,6 +49,11 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+
+        usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).whileTrue(new RunCommand(() -> robot.getIntake().set(usedJoystick.getAxisValue(Axis.LEFT_TRIGGER))));
+        usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).whileTrue(new RunCommand(() -> robot.getIntake().set(-usedJoystick.getAxisValue(Axis.RIGHT_TRIGGER))));
+        usedJoystick.X.whileTrue(new RunCommand(() -> robot.getIntake().set(0.5)));
+        usedJoystick.B.whileTrue(new RunCommand(() -> robot.getIntake().set(-0.5)));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

@@ -24,11 +24,13 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
     public static final boolean isMecanum = true;
 
+    private final SparkMaxWrapper intake;
     private MecanumDrive mecanumDrive;
     private DifferentialDrive tankDrive;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
+        intake = new SparkMaxWrapper(new SparkMaxDeviceID(0));
         if (isMecanum) {
             SparkMaxWrapper frontLeft = new SparkMaxWrapper(new SparkMaxDeviceID(0));
             SparkMaxWrapper rearLeft = new SparkMaxWrapper(new SparkMaxDeviceID(0));
@@ -53,6 +55,10 @@ public class Robot {
 	public PathPlannerAutoWrapper getAutonomousCommand() {
 		return new PathPlannerAutoWrapper();
 	}
+
+    public SparkMaxWrapper getIntake() {
+        return intake;
+    }
 
     public MecanumDrive getMecanumDrive() {
         return mecanumDrive;

@@ -76,13 +76,16 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		if (pipeline.isUsingMT()) {
 			if (doesObservationExist(mt1PoseObservation)) {
 				Logger.recordOutput(logPath + "/megaTag1PoseObservation", mt1PoseObservation);
+				Logger.recordOutput(logPath + "/megaTag1RawData", mt1RawData);
 			}
 			if (doesObservationExist(mt2PoseObservation)) {
 				Logger.recordOutput(logPath + "/megaTag2PoseObservation", mt2PoseObservation);
+				Logger.recordOutput(logPath + "/megaTag2RawData", mt2RawData);
 			}
 		} else if (pipeline.isDetectingObjects()) {
 			if (doesObservationExist(detectedObjectObseration)) {
 				Logger.recordOutput(logPath + "/detectedObjectObservation", detectedObjectObseration);
+				Logger.recordOutput(logPath + "/target2dValues", target2dValues);
 			}
 		}
 	}
@@ -108,14 +111,14 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	public void updateMT1() {
 		if (pipeline.isUsingMT()) {
 			mt1RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
-			mt1PoseObservation = new RobotPoseObservation(getEstimateTimestampSeconds(mt1RawData), mt1RawData.pose, calculateMT1StdDevs.get());
+			mt1PoseObservation = new RobotPoseObservation(getEstimateTimestampSeconds(mt1RawData), mt1RawData.pose(), calculateMT1StdDevs.get());
 		}
 	}
 
 	public void updateMT2() {
 		if (pipeline.isUsingMT()) {
 			mt2RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-			mt2PoseObservation = new RobotPoseObservation(getEstimateTimestampSeconds(mt2RawData), mt2RawData.pose, calculateMT2StdDevs.get());
+			mt2PoseObservation = new RobotPoseObservation(getEstimateTimestampSeconds(mt2RawData), mt2RawData.pose(), calculateMT2StdDevs.get());
 		}
 	}
 
@@ -226,10 +229,10 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	protected static double getEstimateTimestampSeconds(LimelightHelpers.PoseEstimate poseEstimate) {
-		if (poseEstimate.timestampSeconds == 0) {
+		if (poseEstimate.timestampSeconds() == 0) {
 			return 0;
 		}
-		return TimeUtil.getCurrentTimeSeconds() - Conversions.milliSecondsToSeconds(poseEstimate.latency);
+		return TimeUtil.getCurrentTimeSeconds() - Conversions.milliSecondsToSeconds(poseEstimate.latency());
 	}
 
 	private static double getTarget2dTimestampSeconds(LimelightTarget2dValues target2dValues) {

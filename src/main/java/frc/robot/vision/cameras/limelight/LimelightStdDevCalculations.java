@@ -13,7 +13,7 @@ public class LimelightStdDevCalculations {
 		StandardDeviations2D minStdDevs,
 		StandardDeviations2D stdDevFactors
 	) {
-		return () -> averageTagDistanceParabola(limelight.getMT1RawData().avgTagDist, minStdDevs, stdDevFactors);
+		return () -> averageTagDistanceParabola(limelight.getMT1RawData().avgTagDist(), minStdDevs, stdDevFactors);
 	}
 
 	public static Supplier<StandardDeviations2D> getMT2StdDevsCalculation(
@@ -21,7 +21,7 @@ public class LimelightStdDevCalculations {
 		StandardDeviations2D minStdDevs,
 		StandardDeviations2D stdDevFactors
 	) {
-		return () -> averageTagDistanceParabola(limelight.getMT2RawData().avgTagDist, minStdDevs, stdDevFactors);
+		return () -> averageTagDistanceParabola(limelight.getMT2RawData().avgTagDist(), minStdDevs, stdDevFactors);
 	}
 
 	private static StandardDeviations2D averageTagDistanceParabola(

@@ -8,14 +8,14 @@ import frc.utils.math.ToleranceMath;
 import org.littletonrobotics.junction.LogTable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 public abstract class ArrayAngleSignal implements InputSignal<Rotation2d> {
 
 	private final String name;
 	protected final AngleUnit angleUnit;
-	private final List<TimedValue<Rotation2d>> timedValues;
+	private final Collection<TimedValue<Rotation2d>> timedValues;
 
 	public ArrayAngleSignal(String name, AngleUnit angleUnit) {
 		this.name = name;
@@ -27,7 +27,7 @@ public abstract class ArrayAngleSignal implements InputSignal<Rotation2d> {
 		if (timedValues.isEmpty()) {
 			return new TimedValue<>(new Rotation2d(), 0);
 		}
-		return timedValues.get(timedValues.size() - 1);
+		return (TimedValue<Rotation2d>) timedValues.toArray()[timedValues.size() - 1];
 	}
 
 	@Override
@@ -99,6 +99,6 @@ public abstract class ArrayAngleSignal implements InputSignal<Rotation2d> {
 		return getLatestValue();
 	}
 
-	protected abstract void updateValues(List<TimedValue<Rotation2d>> timedValues);
+	protected abstract void updateValues(Collection<TimedValue<Rotation2d>> timedValues);
 
 }

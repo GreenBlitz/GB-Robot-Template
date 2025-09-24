@@ -7,7 +7,7 @@ import frc.robot.subsystems.swerve.odometrythread.OdometryThread;
 import frc.utils.AngleUnit;
 import frc.utils.TimedValue;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Queue;
 
 public class Phoenix6ThreadAngleSignal extends ArrayAngleSignal implements SignalGetter {
@@ -28,7 +28,7 @@ public class Phoenix6ThreadAngleSignal extends ArrayAngleSignal implements Signa
 	}
 
 	@Override
-	protected void updateValues(List<TimedValue<Rotation2d>> timedValues) {
+	protected void updateValues(Collection<TimedValue<Rotation2d>> timedValues) {
 		thread.threadQueuesLock.lock();
 		try {
 			timedValues.clear();

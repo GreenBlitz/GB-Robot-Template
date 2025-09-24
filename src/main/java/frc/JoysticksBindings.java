@@ -50,6 +50,7 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 
+		Rotation2d angle = Rotation2d.fromDegrees(90);
 		ChassisPowers powersX = new ChassisPowers();
 		ChassisPowers powersY = new ChassisPowers();
 		powersX.xPower = 0.2;
@@ -64,6 +65,8 @@ public class JoysticksBindings {
 		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getHeadingEstimator().reset(new Rotation2d())));
 
 		usedJoystick.A.whileTrue(new InstantCommand(() -> robot.getSwerve().getCommandsBuilder().drive(() -> powersX)));
+
+		usedJoystick.B.onTrue(robot.getSwerve().getCommandsBuilder().pointWheels(angle, false));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

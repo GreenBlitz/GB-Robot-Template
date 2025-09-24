@@ -64,9 +64,10 @@ public class JoysticksBindings {
 		);
 		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getHeadingEstimator().reset(new Rotation2d())));
 
-		usedJoystick.A.whileTrue(new InstantCommand(() -> robot.getSwerve().getCommandsBuilder().drive(() -> powersX)));
+//		usedJoystick.A.whileTrue(new InstantCommand(() -> robot.getSwerve().getCommandsBuilder().drive(() -> powersX)));
 
 		usedJoystick.B.onTrue(robot.getSwerve().getCommandsBuilder().pointWheels(angle, false));
+//		usedJoystick.X.onTrue(robot.getSwerve().getCommandsBuilder().wheelRadiusCalibration());
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

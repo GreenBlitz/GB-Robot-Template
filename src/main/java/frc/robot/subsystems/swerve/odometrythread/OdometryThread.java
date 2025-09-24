@@ -99,7 +99,6 @@ public class OdometryThread extends Thread {
 		try {
 			Pair<StatusSignal<?>, StatusSignal<?>> signals = new Pair<>(latencySignal, slopeSignal);
 			latencyAndSlopeSignals.add(signals);
-
 			latencySignalValuesQueues.add(latencySignalQueue);
 		} finally {
 			threadQueuesLock.unlock();

@@ -209,7 +209,7 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-//		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(closeReefActionChooser(robot));
+		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(closeReefActionChooser(robot));
 
 		usedJoystick.L3.onTrue(new InstantCommand(() -> robot.getSwerve().rotateAxis = robot.getAxis(true))).onFalse(new InstantCommand(() -> robot.getSwerve().rotateAxis = RotateAxis.MIDDLE_OF_CHASSIS));
 		usedJoystick.R3.onTrue(new InstantCommand(() -> robot.getSwerve().rotateAxis = robot.getAxis(false))).onFalse(new InstantCommand(() -> robot.getSwerve().rotateAxis = RotateAxis.MIDDLE_OF_CHASSIS));
@@ -220,7 +220,7 @@ public class JoysticksBindings {
 //		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE_WITH_AIM_ASSIST));
 		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_INTAKE));
 
-//		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(intakeActionChooser(robot));
+		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(intakeActionChooser(robot));
 
 		usedJoystick.R1.onTrue(netActionChooser(robot));
 

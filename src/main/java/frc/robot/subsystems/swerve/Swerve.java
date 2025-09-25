@@ -21,12 +21,9 @@ import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimator.OdometryData;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
-import frc.robot.subsystems.swerve.states.DriveRelative;
-import frc.robot.subsystems.swerve.states.LoopMode;
-import frc.robot.subsystems.swerve.states.SwerveStateHandler;
+import frc.robot.subsystems.swerve.states.*;
 import frc.robot.subsystems.swerve.states.heading.HeadingControl;
 import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
-import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
@@ -54,6 +51,8 @@ public class Swerve extends GBSubsystem {
 	private ChassisPowers driversPowerInputs;
 	private double lastMagnitudeMetersPerSecond;
 	private OdometryData odometryData;
+
+	public RotateAxis rotateAxis = RotateAxis.MIDDLE_OF_CHASSIS;
 
 	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro, GyroSignals gyroSignals) {
 		super(constants.logPath());
@@ -144,6 +143,8 @@ public class Swerve extends GBSubsystem {
 		modules.updateInputs();
 
 		currentState.log(constants.stateLogPath());
+
+		Logger.recordOutput(constants.logPath() + "/rotate axis", rotateAxis);
 
 		ChassisSpeeds allianceRelativeSpeeds = getAllianceRelativeVelocity();
 		Logger.recordOutput(constants.velocityLogPath() + "/Rotation", allianceRelativeSpeeds.omegaRadiansPerSecond);
@@ -319,7 +320,7 @@ public class Swerve extends GBSubsystem {
 
 	private void applySpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
 		SwerveModuleState[] swerveModuleStates = kinematics
-			.toSwerveModuleStates(speeds, stateHandler.getRotationAxis(swerveState.getRotateAxis()));
+			.toSwerveModuleStates(speeds, stateHandler.getRotationAxis(rotateAxis));
 		setTargetModuleStates(swerveModuleStates, swerveState.getLoopMode().isClosedLoop());
 	}
 

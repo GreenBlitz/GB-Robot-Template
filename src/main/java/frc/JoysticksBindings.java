@@ -17,6 +17,7 @@ import frc.robot.statemachine.RobotCommander;
 import frc.robot.statemachine.RobotState;
 import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.subsystems.swerve.ChassisPowers;
+import frc.robot.subsystems.swerve.states.RotateAxis;
 import frc.utils.utilcommands.ExecuteEndCommand;
 import java.util.Set;
 
@@ -209,6 +210,9 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(closeReefActionChooser(robot));
+
+		usedJoystick.L3.onTrue(new InstantCommand(() -> robot.getSwerve().rotateAxis = robot.getAxis(true))).onFalse(new InstantCommand(() -> robot.getSwerve().rotateAxis = RotateAxis.MIDDLE_OF_CHASSIS));
+		usedJoystick.R3.onTrue(new InstantCommand(() -> robot.getSwerve().rotateAxis = robot.getAxis(false))).onFalse(new InstantCommand(() -> robot.getSwerve().rotateAxis = RotateAxis.MIDDLE_OF_CHASSIS));
 
 //		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE_WITH_AIM_ASSIST));
 		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_INTAKE));

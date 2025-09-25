@@ -8,9 +8,11 @@ import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.events.EventTrigger;
 import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.RobotManager;
+import frc.constants.MathConstants;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.AutosBuilder;
 import frc.robot.hardware.interfaces.IGyro;
@@ -44,6 +46,7 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.endeffector.EndEffector;
 import frc.robot.subsystems.climb.solenoid.Solenoid;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.states.RotateAxis;
 import frc.utils.TimedValue;
 import frc.utils.auto.AutonomousChooser;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -241,6 +244,28 @@ public class Robot {
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
 
 		configureAuto();
+	}
+
+	public RotateAxis getAxis(boolean isLeft) {
+		ChassisSpeeds speeds = swerve.getFieldRelativeVelocity();
+		Rotation2d movingDirection = Rotation2d.fromRadians(Math.atan2(speeds.vyMetersPerSecond, speeds.vxMetersPerSecond));
+		Rotation2d heading = poseEstimator.getEstimatedPose().getRotation();
+
+		Rotation2d currentAllianceRelativeHeading = heading.minus(movingDirection);
+		// -45 <= x <= 45
+		if (Math.abs(currentAllianceRelativeHeading.getDegrees()) <= MathConstants.EIGHTH_CIRCLE.getDegrees()) {
+			return isLeft ? RotateAxis.FRONT_LEFT_MODULE : RotateAxis.FRONT_RIGHT_MODULE;
+		}
+		// -180 <= x <= -135 || 135 <= x <= 180
+		if (Math.abs(currentAllianceRelativeHeading.getDegrees()) >= MathConstants.EIGHTH_CIRCLE.getDegrees() * 3) {
+			return isLeft ? RotateAxis.BACK_LEFT_MODULE : RotateAxis.BACK_RIGHT_MODULE;
+		}
+		// 45 <= x <= 135
+		if (currentAllianceRelativeHeading.getDegrees() > 0) {
+			return isLeft ? RotateAxis.FRONT_RIGHT_MODULE : RotateAxis.BACK_RIGHT_MODULE;
+		}
+		// -45 >= x >= -135
+		return isLeft ? RotateAxis.BACK_LEFT_MODULE : RotateAxis.FRONT_LEFT_MODULE;
 	}
 
 	private void configureAuto() {

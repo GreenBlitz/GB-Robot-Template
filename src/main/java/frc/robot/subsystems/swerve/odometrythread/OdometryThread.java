@@ -5,6 +5,8 @@ import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.Robot;
+import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.utils.ArrayUtil;
 import frc.utils.Conversions;
 import frc.utils.TimedValue;
@@ -66,10 +68,6 @@ public class OdometryThread extends Thread {
 		}
 	}
 
-	public double getFrequencyHertz() {
-		return frequencyHertz;
-	}
-
 	public double getLastCycleLengthSeconds() {
 		return lastCycleLengthSeconds;
 	}
@@ -81,6 +79,10 @@ public class OdometryThread extends Thread {
 		try {
 			clearAllQueues();
 
+			Phoenix6SignalBuilder.setFrequencyWithRetry(
+				signal,
+				Robot.ROBOT_TYPE.isSimulation() ? OdometryThreadConstants.SIMULATION_FREQUENCY_HERTZ : frequencyHertz
+			);
 			signals = ArrayUtil.addToFullArray(signal, signals, StatusSignal[]::new);
 			signalValuesQueues.add(queue);
 		} finally {

@@ -7,16 +7,27 @@ import frc.utils.TimedValue;
 import frc.utils.math.ToleranceMath;
 import org.littletonrobotics.junction.LogTable;
 
-public abstract class AngleSignal implements InputSignal<Rotation2d> {
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public abstract class ArrayAngleSignal implements InputSignal<Rotation2d> {
 
 	private final String name;
 	protected final AngleUnit angleUnit;
-	private final TimedValue<Rotation2d> timedValue;
+	private final List<TimedValue<Rotation2d>> timedValues;
 
-	public AngleSignal(String name, AngleUnit angleUnit) {
+	public ArrayAngleSignal(String name, AngleUnit angleUnit) {
 		this.name = name;
 		this.angleUnit = angleUnit;
-		this.timedValue = new TimedValue<>(new Rotation2d(), 0);
+		this.timedValues = new ArrayList<>();
+	}
+
+	private TimedValue<Rotation2d> getLatestTimedValue() {
+		if (timedValues.isEmpty()) {
+			return new TimedValue<>(new Rotation2d(), 0);
+		}
+		return timedValues.get(timedValues.size() - 1);
 	}
 
 	@Override
@@ -26,27 +37,31 @@ public abstract class AngleSignal implements InputSignal<Rotation2d> {
 
 	@Override
 	public int getNumberOfValues() {
-		return 1;
+		return timedValues.size();
 	}
 
 	@Override
 	public Rotation2d getLatestValue() {
-		return timedValue.getValue();
+		return getLatestTimedValue().getValue();
 	}
 
 	@Override
 	public Rotation2d[] asArray() {
-		return new Rotation2d[] {timedValue.getValue()};
+		return timedValues.stream().map(TimedValue::getValue).toArray(Rotation2d[]::new);
+	}
+
+	public Iterator<Rotation2d> iterator() {
+		return timedValues.stream().map(TimedValue::getValue).iterator();
 	}
 
 	@Override
 	public double getTimestamp() {
-		return timedValue.getTimestamp();
+		return getLatestTimedValue().getTimestamp();
 	}
 
 	@Override
 	public double[] getTimestamps() {
-		return new double[] {timedValue.getTimestamp()};
+		return timedValues.stream().mapToDouble(TimedValue::getTimestamp).toArray();
 	}
 
 	@Override
@@ -71,20 +86,19 @@ public abstract class AngleSignal implements InputSignal<Rotation2d> {
 
 	@Override
 	public void toLog(LogTable table) {
-		updateValue(timedValue);
-		table.put(name, timedValue.getValue());
+		updateValues(timedValues);
+		table.put(name, asArray());
 	}
 
 	@Override
-	public void fromLog(LogTable table) {
-		timedValue.setValue(table.get(name, new Rotation2d()));
-	}
+	public void fromLog(LogTable table) {}
 
+	@Override
 	public Rotation2d getAndUpdateValue() {
-		updateValue(timedValue);
-		return timedValue.getValue();
+		updateValues(timedValues);
+		return getLatestValue();
 	}
 
-	protected abstract void updateValue(TimedValue<Rotation2d> timedValue);
+	protected abstract void updateValues(List<TimedValue<Rotation2d>> timedValues);
 
 }

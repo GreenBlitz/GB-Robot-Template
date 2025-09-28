@@ -181,7 +181,7 @@ public class Robot {
 		swerve.update();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
-		Logger.recordOutput("LastOdoThreadCycleTime", odometryThread.getLastCycleLengthSeconds());
+		Logger.recordOutput("LastOdometryThreadCycleTime", odometryThread.getLastCycleLengthSeconds());
 
 		limelightFour.updateMT1();
 		limelightThreeGB.updateMT1();

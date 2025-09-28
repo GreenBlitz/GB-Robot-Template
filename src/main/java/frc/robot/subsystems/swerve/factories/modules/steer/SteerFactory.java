@@ -7,6 +7,7 @@ import frc.robot.subsystems.swerve.module.ModuleConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.records.SteerRequests;
 import frc.robot.subsystems.swerve.module.records.SteerSignals;
+import frc.robot.subsystems.swerve.odometrythread.OdometryThread;
 
 public class SteerFactory {
 
@@ -28,8 +29,8 @@ public class SteerFactory {
 		return KrakenX60SteerBuilder.buildRequests();
 	}
 
-	public static SteerSignals createSignals(ControllableMotor steer) {
-		return KrakenX60SteerBuilder.buildSignals((TalonFXMotor) steer);
+	public static SteerSignals createSignals(ControllableMotor steer, OdometryThread odometryThread) {
+		return KrakenX60SteerBuilder.buildSignals((TalonFXMotor) steer, odometryThread);
 	}
 
 }

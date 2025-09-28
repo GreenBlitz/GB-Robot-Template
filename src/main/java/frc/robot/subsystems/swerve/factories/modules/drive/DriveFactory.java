@@ -7,6 +7,7 @@ import frc.robot.subsystems.swerve.module.ModuleConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.records.DriveRequests;
 import frc.robot.subsystems.swerve.module.records.DriveSignals;
+import frc.robot.subsystems.swerve.odometrythread.OdometryThread;
 
 public class DriveFactory {
 
@@ -24,8 +25,8 @@ public class DriveFactory {
 		return KrakenX60DriveBuilder.buildRequests();
 	}
 
-	public static DriveSignals createSignals(ControllableMotor drive) {
-		return KrakenX60DriveBuilder.buildSignals((TalonFXMotor) drive);
+	public static DriveSignals createSignals(ControllableMotor drive, OdometryThread odometryThread) {
+		return KrakenX60DriveBuilder.buildSignals((TalonFXMotor) drive, odometryThread);
 	}
 
 }

@@ -20,12 +20,10 @@ import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
-import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
-import frc.robot.hardware.phoenix6.signal.Phoenix6DoubleSignal;
-import frc.robot.hardware.phoenix6.signal.Phoenix6LatencySignal;
-import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
+import frc.robot.hardware.phoenix6.signal.*;
 import frc.robot.subsystems.swerve.module.records.SteerRequests;
 import frc.robot.subsystems.swerve.module.records.SteerSignals;
+import frc.robot.subsystems.swerve.odometrythread.OdometryThread;
 import frc.utils.AngleUnit;
 
 class KrakenX60SteerBuilder {
@@ -99,20 +97,16 @@ class KrakenX60SteerBuilder {
 		);
 	}
 
-	static SteerSignals buildSignals(TalonFXMotor steer) {
+	static SteerSignals buildSignals(TalonFXMotor steer, OdometryThread odometryThread) {
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
 			.build(steer.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
 		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder
 			.build(steer.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
-		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder
-			.build(steer.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
-		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder.build(
-			steer.getDevice().getPosition(),
-			velocitySignal,
-			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-			AngleUnit.ROTATIONS,
-			BusChain.ROBORIO
-		);
+		Phoenix6ThreadAngleSignal velocitySignal = Phoenix6SignalBuilder
+			.build(steer.getDevice().getVelocity(), AngleUnit.ROTATIONS, odometryThread);
+		Phoenix6ThreadAngleSignal positionSignal = Phoenix6SignalBuilder
+			.build(steer.getDevice().getPosition(), AngleUnit.ROTATIONS, odometryThread);
+		positionSignal.addLatencyCompensation(velocitySignal);
 
 		return new SteerSignals(positionSignal, velocitySignal, currentSignal, voltageSignal);
 	}

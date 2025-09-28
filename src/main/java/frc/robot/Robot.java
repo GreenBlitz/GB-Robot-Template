@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.subsystems.swerve.odometrythread.OdometryThread;
+import frc.robot.subsystems.swerve.odometrythread.OdometryThreadConstants;
 import frc.robot.vision.DetectedObjectType;
 import frc.robot.vision.cameras.limelight.Limelight;
 import frc.robot.vision.cameras.limelight.LimelightFilters;
@@ -50,16 +52,29 @@ public class Robot {
 	private final Limelight limelightThreeGB;
 	private final Limelight limelightObjectDetector;
 	private final RobotHeadingEstimator headingEstimator;
+	private final OdometryThread odometryThread;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 
+		odometryThread = new OdometryThread(
+			OdometryThreadConstants.FREQUENCY_HERTZ,
+			OdometryThreadConstants.NAME,
+			OdometryThreadConstants.getQueuesSize(
+				OdometryThreadConstants.FREQUENCY_HERTZ,
+				RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+				OdometryThreadConstants.QUEUES_SIZE_OFFSET
+			),
+			OdometryThreadConstants.IS_BUS_CHAIN_CANFD,
+			OdometryThreadConstants.THREAD_PRIORITY
+		);
 		IGyro gyro = GyroFactory.createGyro(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
-			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
+			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve", odometryThread),
 			gyro,
-			GyroFactory.createSignals(gyro)
+			GyroFactory.createSignals(gyro, odometryThread),
+			odometryThread
 		);
 
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
@@ -217,6 +232,10 @@ public class Robot {
 
 	public IPoseEstimator getPoseEstimator() {
 		return poseEstimator;
+	}
+
+	public RobotHeadingEstimator getHeadingEstimator() {
+		return headingEstimator;
 	}
 
 }

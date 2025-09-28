@@ -124,6 +124,7 @@ public class KrakenX60DriveBuilder {
 			.build(drive.getDevice().getVelocity(), AngleUnit.ROTATIONS, odometryThread);
 		Phoenix6ThreadAngleSignal positionSignal = Phoenix6SignalBuilder
 			.build(drive.getDevice().getPosition(), AngleUnit.ROTATIONS, odometryThread);
+		positionSignal.addLatencyCompensation(velocitySignal);
 
 		return new DriveSignals(positionSignal, velocitySignal, currentSignal, voltageSignal);
 	}

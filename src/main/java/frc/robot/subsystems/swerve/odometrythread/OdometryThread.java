@@ -11,6 +11,7 @@ import frc.utils.ArrayUtil;
 import frc.utils.Conversions;
 import frc.utils.TimedValue;
 import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -131,7 +132,7 @@ public class OdometryThread extends Thread {
 		}
 	}
 
-	private void update() {
+	public void update() {
 		if (!isThreadPrioritySet) {
 			if (Threads.setCurrentThreadPriority(true, threadPriority)) {
 				isThreadPrioritySet = true;

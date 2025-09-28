@@ -268,8 +268,12 @@ public class Module {
 	 * @return the position of the module at the given odometry update index
 	 */
 	public SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
+//		return new SwerveModulePosition(
+//			driveInputs.positionsMeters[odometryUpdateIndex],
+//			steerSignals.position().asArray()[odometryUpdateIndex]
+//		);
 		return new SwerveModulePosition(
-			driveInputs.positionsMeters[odometryUpdateIndex],
+			toDriveMeters(steerSignals.position().asArray()[odometryUpdateIndex]),
 			steerSignals.position().asArray()[odometryUpdateIndex]
 		);
 	}

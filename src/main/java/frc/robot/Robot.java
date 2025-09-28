@@ -4,14 +4,18 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
+import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.rev.motors.SparkMaxDeviceID;
 import frc.robot.hardware.rev.motors.SparkMaxWrapper;
-import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 
 /**
@@ -22,26 +26,55 @@ import frc.utils.battery.BatteryUtil;
 public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
-    public static final boolean isMecanum = true;
+	public static final int TEAM_NUMBER = 1;
 
-    private final SparkMaxWrapper intake;
-    private MecanumDrive mecanumDrive;
-    private DifferentialDrive tankDrive;
+	private final SparkMaxWrapper intake;
+	private MecanumDrive mecanumDrive;
+	private DifferentialDrive tankDrive;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
-        intake = new SparkMaxWrapper(new SparkMaxDeviceID(0));
-        if (isMecanum) {
-            SparkMaxWrapper frontLeft = new SparkMaxWrapper(new SparkMaxDeviceID(0));
-            SparkMaxWrapper rearLeft = new SparkMaxWrapper(new SparkMaxDeviceID(0));
-            SparkMaxWrapper frontRight = new SparkMaxWrapper(new SparkMaxDeviceID(0));
-            SparkMaxWrapper rearRight = new SparkMaxWrapper(new SparkMaxDeviceID(0));
-            mecanumDrive = new MecanumDrive(frontLeft::set, rearLeft::set, frontRight::set, rearRight::set);
-        } else {
-        SparkMaxWrapper leftTank = new SparkMaxWrapper(new SparkMaxDeviceID(0));
-        SparkMaxWrapper rightTank = new SparkMaxWrapper(new SparkMaxDeviceID(0));
-        tankDrive = new DifferentialDrive(leftTank::set, rightTank::set);
-        }
+		intake = new SparkMaxWrapper(new SparkMaxDeviceID(0));
+		switch (TEAM_NUMBER) {
+			case 0 -> {
+				TalonSRX frontLeft = new TalonSRX(0);
+				TalonSRX rearLeft = new TalonSRX(0);
+				TalonSRX frontRight = new TalonSRX(0);
+				TalonSRX rearRight = new TalonSRX(0);
+				mecanumDrive = new MecanumDrive(
+					power -> frontLeft.set(ControlMode.PercentOutput, power),
+					power -> rearLeft.set(ControlMode.PercentOutput, power),
+					power -> frontRight.set(ControlMode.PercentOutput, power),
+					power -> rearRight.set(ControlMode.PercentOutput, power)
+				);
+			}
+			case 1 -> {
+				TalonSRX frontLeft = new TalonSRX(3);
+				TalonSRX rearLeft = new TalonSRX(4);
+				TalonSRX frontRight = new TalonSRX(1);
+				TalonSRX rearRight = new TalonSRX(2);
+				tankDrive = new DifferentialDrive(power -> {
+					frontLeft.set(ControlMode.PercentOutput, power);
+					rearLeft.set(ControlMode.PercentOutput, power);
+				}, power -> {
+					frontRight.set(ControlMode.PercentOutput, -power);
+					rearRight.set(ControlMode.PercentOutput, -power);
+				});
+			}
+			case 2 -> {
+				PWMSparkMax frontLeft = new PWMSparkMax(0);
+				PWMSparkMax rearLeft = new PWMSparkMax(0);
+				PWMSparkMax frontRight = new PWMSparkMax(0);
+				PWMSparkMax rearRight = new PWMSparkMax(0);
+				tankDrive = new DifferentialDrive(power -> {
+					frontLeft.set(power);
+					rearLeft.set(power);
+				}, power -> {
+					frontRight.set(power);
+					rearRight.set(power);
+				});
+			}
+		}
 	}
 
 	public void periodic() {
@@ -52,20 +85,20 @@ public class Robot {
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 
-	public PathPlannerAutoWrapper getAutonomousCommand() {
-		return new PathPlannerAutoWrapper();
+	public Command getAutonomousCommand() {
+		return new InstantCommand();
 	}
 
-    public SparkMaxWrapper getIntake() {
-        return intake;
-    }
+	public SparkMaxWrapper getIntake() {
+		return intake;
+	}
 
-    public MecanumDrive getMecanumDrive() {
-        return mecanumDrive;
-    }
+	public MecanumDrive getMecanumDrive() {
+		return mecanumDrive;
+	}
 
-    public DifferentialDrive getTankDrive() {
-        return tankDrive;
-    }
+	public DifferentialDrive getTankDrive() {
+		return tankDrive;
+	}
 
 }

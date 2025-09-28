@@ -7,12 +7,11 @@ package frc;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.utils.DriverStationUtil;
 import frc.utils.alerts.AlertManager;
-import frc.utils.auto.PathPlannerAutoWrapper;
-import frc.utils.auto.PathPlannerUtil;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.logger.LoggerFactory;
 import frc.utils.time.TimeUtil;
@@ -27,18 +26,18 @@ import org.littletonrobotics.junction.Logger;
 public class RobotManager extends LoggedRobot {
 
 	private final Robot robot;
-	private PathPlannerAutoWrapper autonomousCommand;
+	private Command autonomousCommand;
 	private int roborioCycles;
 
 	public RobotManager() {
 		LoggerFactory.initializeLogger();
-		PathPlannerUtil.startPathfinder();
-		PathPlannerUtil.setupPathPlannerLogging();
+//		PathPlannerUtil.startPathfinder();
+//		PathPlannerUtil.setupPathPlannerLogging();
 
 		this.roborioCycles = 0;
 		this.robot = new Robot();
 
-		createAutoReadyForConstructionChooser();
+//		createAutoReadyForConstructionChooser();
 		JoysticksBindings.configureBindings(robot);
 
 		Threads.setCurrentThreadPriority(true, 10);
@@ -78,11 +77,18 @@ public class RobotManager extends LoggedRobot {
 		updateTimeRelatedData(); // Better to be first
 		JoysticksBindings.updateChassisDriverInputs();
 		robot.periodic();
-        if (Robot.isMecanum) {
-            robot.getMecanumDrive().driveCartesian(JoysticksBindings.chassisDriverInputs.xPower, JoysticksBindings.chassisDriverInputs.yPower, JoysticksBindings.chassisDriverInputs.rotationalPower);
-        } else {
-            robot.getTankDrive().arcadeDrive(JoysticksBindings.chassisDriverInputs.xPower, JoysticksBindings.chassisDriverInputs.rotationalPower);
-        }
+		switch (Robot.TEAM_NUMBER) {
+			case 0 ->
+				robot.getMecanumDrive()
+					.driveCartesian(
+						JoysticksBindings.chassisDriverInputs.xPower,
+						JoysticksBindings.chassisDriverInputs.yPower,
+						JoysticksBindings.chassisDriverInputs.rotationalPower
+					);
+			case 1, 2 ->
+				robot.getTankDrive()
+					.arcadeDrive(JoysticksBindings.chassisDriverInputs.xPower, JoysticksBindings.chassisDriverInputs.rotationalPower);
+		}
 		AlertManager.reportAlerts();
 	}
 

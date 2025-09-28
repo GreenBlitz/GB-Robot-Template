@@ -35,6 +35,7 @@ import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.math.StandardDeviations2D;
 import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.Logger;
 
 
 /**
@@ -180,6 +181,7 @@ public class Robot {
 		swerve.update();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
+		Logger.recordOutput("LastOdoThreadCycleTime", odometryThread.getLastCycleLengthSeconds());
 
 		limelightFour.updateMT1();
 		limelightThreeGB.updateMT1();

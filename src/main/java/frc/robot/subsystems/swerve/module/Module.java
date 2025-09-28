@@ -131,6 +131,10 @@ public class Module {
 			steerSignals.voltage().getAndUpdateValue()
 		);
 		Logger.processInputs(constants.logPath(), inputs);
+		Logger.processInputs(constants.logPath() + "/DrivePos", driveSignals.position());
+		Logger.processInputs(constants.logPath() + "/DriveVel", driveSignals.velocity());
+		Logger.processInputs(constants.logPath() + "/SteerPos", steerSignals.position());
+		Logger.processInputs(constants.logPath() + "/SteerVel", steerSignals.velocity());
 
 		fixDriveInputsCoupling();
 

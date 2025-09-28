@@ -10,7 +10,7 @@ public class OdometryThreadConstants {
 		return (int) (frequencyHertz / mainThreadFrequencyHertz) + offset;
 	}
 
-	public static final double FREQUENCY_HERTZ = 250.0;
+	public static final double FREQUENCY_HERTZ = 150.0;
 
 	public static final String NAME = "OdometryThread";
 

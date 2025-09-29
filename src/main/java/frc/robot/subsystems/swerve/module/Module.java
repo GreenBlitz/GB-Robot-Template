@@ -102,7 +102,6 @@ public class Module {
 		return Conversions.angleToDistance(angle, constants.wheelDiameterMeters());
 	}
 
-
 	private void fixDriveInputsCoupling() {
 		driveCouplingInputs.uncoupledVelocityAnglesPerSecond = ModuleUtil
 			.uncoupleDriveAngle(driveSignals.velocity().getLatestValue(), steerSignals.velocity().getLatestValue(), constants.couplingRatio());

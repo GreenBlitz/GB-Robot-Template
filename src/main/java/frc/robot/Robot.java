@@ -58,16 +58,13 @@ public class Robot {
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 
+		double odometryThreadFrequencyHertz = 150.0;
 		odometryThread = new OdometryThread(
-			OdometryThreadConstants.FREQUENCY_HERTZ,
-			OdometryThreadConstants.NAME,
-			OdometryThreadConstants.getQueuesSize(
-				OdometryThreadConstants.FREQUENCY_HERTZ,
-				RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-				OdometryThreadConstants.QUEUES_SIZE_OFFSET
-			),
-			OdometryThreadConstants.IS_BUS_CHAIN_CANFD,
-			OdometryThreadConstants.THREAD_PRIORITY
+			odometryThreadFrequencyHertz,
+			"OdometryThread",
+			OdometryThreadConstants.getQueuesSize(odometryThreadFrequencyHertz, RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, 5),
+			false,
+			2
 		);
 		IGyro gyro = GyroFactory.createGyro(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(

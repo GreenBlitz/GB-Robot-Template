@@ -77,18 +77,7 @@ public class RobotManager extends LoggedRobot {
 		updateTimeRelatedData(); // Better to be first
 		JoysticksBindings.updateChassisDriverInputs();
 		robot.periodic();
-		switch (Robot.TEAM_NUMBER) {
-			case 0 ->
-				robot.getMecanumDrive()
-					.driveCartesian(
-						JoysticksBindings.chassisDriverInputs.xPower,
-						JoysticksBindings.chassisDriverInputs.yPower,
-						JoysticksBindings.chassisDriverInputs.rotationalPower
-					);
-			case 1, 2 ->
-				robot.getTankDrive()
-					.arcadeDrive(JoysticksBindings.chassisDriverInputs.xPower, JoysticksBindings.chassisDriverInputs.rotationalPower);
-		}
+		robot.getTankDrive().arcadeDrive(JoysticksBindings.chassisDriverInputs.xPower, JoysticksBindings.chassisDriverInputs.rotationalPower);
 		AlertManager.reportAlerts();
 	}
 

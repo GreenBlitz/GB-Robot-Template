@@ -1,5 +1,7 @@
 package frc;
 
+import com.revrobotics.spark.SparkBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
@@ -8,6 +10,8 @@ import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
 
 public class JoysticksBindings {
+
+	private static final double POWER_SCALING = 0.5;
 
 	private static final SmartJoystick MAIN_JOYSTICK = new SmartJoystick(JoystickPorts.MAIN);
 	private static final SmartJoystick SECOND_JOYSTICK = new SmartJoystick(JoystickPorts.SECOND);
@@ -31,13 +35,13 @@ public class JoysticksBindings {
 
 	public static void updateChassisDriverInputs() {
 		if (MAIN_JOYSTICK.isConnected()) {
-			chassisDriverInputs.xPower = MAIN_JOYSTICK.getAxisValue(Axis.LEFT_Y);
-			chassisDriverInputs.yPower = MAIN_JOYSTICK.getAxisValue(Axis.LEFT_X);
-			chassisDriverInputs.rotationalPower = MAIN_JOYSTICK.getAxisValue(Axis.RIGHT_X);
+			chassisDriverInputs.xPower = MAIN_JOYSTICK.getAxisValue(Axis.LEFT_Y) * POWER_SCALING;
+			chassisDriverInputs.yPower = MAIN_JOYSTICK.getAxisValue(Axis.LEFT_X) * POWER_SCALING;
+			chassisDriverInputs.rotationalPower = MAIN_JOYSTICK.getAxisValue(Axis.RIGHT_X) * POWER_SCALING;
 		} else if (THIRD_JOYSTICK.isConnected()) {
-			chassisDriverInputs.xPower = THIRD_JOYSTICK.getAxisValue(Axis.LEFT_Y);
-			chassisDriverInputs.yPower = THIRD_JOYSTICK.getAxisValue(Axis.LEFT_X);
-			chassisDriverInputs.rotationalPower = THIRD_JOYSTICK.getAxisValue(Axis.RIGHT_X);
+			chassisDriverInputs.xPower = THIRD_JOYSTICK.getAxisValue(Axis.LEFT_Y) * POWER_SCALING;
+			chassisDriverInputs.yPower = THIRD_JOYSTICK.getAxisValue(Axis.LEFT_X) * POWER_SCALING;
+			chassisDriverInputs.rotationalPower = THIRD_JOYSTICK.getAxisValue(Axis.RIGHT_X) * POWER_SCALING;
 		} else {
 			chassisDriverInputs.xPower = 0;
 			chassisDriverInputs.yPower = 0;
@@ -48,13 +52,34 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-
-		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER)
-			.whileTrue(new RunCommand(() -> robot.getIntake().set(usedJoystick.getAxisValue(Axis.LEFT_TRIGGER))));
-		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER)
-			.whileTrue(new RunCommand(() -> robot.getIntake().set(-usedJoystick.getAxisValue(Axis.RIGHT_TRIGGER))));
-		usedJoystick.X.whileTrue(new RunCommand(() -> robot.getIntake().set(0.5)));
-		usedJoystick.B.whileTrue(new RunCommand(() -> robot.getIntake().set(-0.5)));
+		switch (Robot.TEAM_NUMBER) {
+			case 0, 1, 3 -> {
+				usedJoystick.R1
+					.whileTrue(
+						new RunCommand(
+							() -> robot.getEndEffector()
+								.getClosedLoopController()
+								.setReference(10, SparkBase.ControlType.kPosition),
+								robot.getSubsystem()
+						)
+					);
+				usedJoystick.L1
+					.whileTrue(
+						new RunCommand(
+							() -> robot.getEndEffector()
+								.getClosedLoopController()
+								.setReference(0, SparkBase.ControlType.kPosition),
+								robot.getSubsystem()
+						)
+					);
+			}
+			case 2 -> {
+				usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER)
+					.onTrue(new RunCommand(() -> robot.getEndEffector().set(usedJoystick.getAxisValue(Axis.LEFT_TRIGGER)), robot.getSubsystem()));
+				usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER)
+					.onTrue(new RunCommand(() -> robot.getEndEffector().set(-usedJoystick.getAxisValue(Axis.RIGHT_TRIGGER)), robot.getSubsystem()));
+			}
+		}
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

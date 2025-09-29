@@ -106,6 +106,16 @@ public class Conversions {
 	}
 
 	/**
+	 * Converts a frequency from hertz (cycles per second) to cycle time in seconds.
+	 *
+	 * @param frequency the frequency in hertz
+	 * @return the cycle time in seconds
+	 */
+	public static double frequencyHertzToCycleTimeSeconds(double frequency) {
+		return 1 / frequency;
+	}
+
+	/**
 	 * Converts a frequency from per second to per 100 milliseconds.
 	 *
 	 * @param frequency the frequency per second

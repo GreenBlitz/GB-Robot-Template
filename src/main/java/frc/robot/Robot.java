@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.subsystems.swerve.odometrythread.OdometryThread;
+import frc.robot.subsystems.swerve.odometrythread.OdometryThreadConstants;
 import frc.robot.vision.DetectedObjectType;
 import frc.robot.vision.cameras.limelight.Limelight;
 import frc.robot.vision.cameras.limelight.LimelightFilters;
@@ -33,6 +35,7 @@ import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.math.StandardDeviations2D;
 import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.Logger;
 
 
 /**
@@ -50,16 +53,26 @@ public class Robot {
 	private final Limelight limelightThreeGB;
 	private final Limelight limelightObjectDetector;
 	private final RobotHeadingEstimator headingEstimator;
+	private final OdometryThread odometryThread;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 
+		double odometryThreadFrequencyHertz = 150.0;
+		odometryThread = new OdometryThread(
+			odometryThreadFrequencyHertz,
+			"OdometryThread",
+			OdometryThreadConstants.getQueuesSize(odometryThreadFrequencyHertz, RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, 5),
+			false,
+			2
+		);
 		IGyro gyro = GyroFactory.createGyro(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
-			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
+			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve", odometryThread),
 			gyro,
-			GyroFactory.createSignals(gyro)
+			GyroFactory.createSignals(gyro, odometryThread),
+			odometryThread
 		);
 
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
@@ -165,6 +178,7 @@ public class Robot {
 		swerve.update();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
+		Logger.recordOutput("LastOdometryThreadCycleTime", odometryThread.getLastCycleLengthSeconds());
 
 		limelightFour.updateMT1();
 		limelightThreeGB.updateMT1();
@@ -217,6 +231,10 @@ public class Robot {
 
 	public IPoseEstimator getPoseEstimator() {
 		return poseEstimator;
+	}
+
+	public RobotHeadingEstimator getHeadingEstimator() {
+		return headingEstimator;
 	}
 
 }

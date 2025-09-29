@@ -21,6 +21,7 @@ import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimator.OdometryData;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
+import frc.robot.subsystems.swerve.odometrythread.OdometryThread;
 import frc.robot.subsystems.swerve.states.DriveRelative;
 import frc.robot.subsystems.swerve.states.LoopMode;
 import frc.robot.subsystems.swerve.states.SwerveStateHandler;
@@ -48,11 +49,13 @@ public class Swerve extends GBSubsystem {
 	private final SwerveCommandsBuilder commandsBuilder;
 	private final SwerveStateHandler stateHandler;
 
+	private final OdometryThread odometryThread;
+
 	private SwerveState currentState;
 	private Supplier<Rotation2d> headingSupplier;
 	private ChassisPowers driversPowerInputs;
 
-	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro, GyroSignals gyroSignals) {
+	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro, GyroSignals gyroSignals, OdometryThread odometryThread) {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 
@@ -65,8 +68,10 @@ public class Swerve extends GBSubsystem {
 		this.kinematics = new SwerveDriveKinematics(modules.getModulePositionsFromCenterMeters());
 		this.headingSupplier = this::getGyroAbsoluteYaw;
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
-		this.stateHandler = new SwerveStateHandler(this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
+		this.stateHandler = new SwerveStateHandler(this);
+
+		this.odometryThread = odometryThread;
 
 		update();
 		setDefaultCommand(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
@@ -133,8 +138,13 @@ public class Swerve extends GBSubsystem {
 
 
 	public void update() {
-		gyro.updateInputs(gyroSignals.yawSignal());
-		modules.updateInputs();
+		odometryThread.threadQueuesLock.lock();
+		try {
+			gyro.updateInputs(gyroSignals.yawSignal());
+			modules.updateInputs();
+		} finally {
+			odometryThread.threadQueuesLock.unlock();
+		}
 
 		currentState.log(constants.stateLogPath());
 
@@ -149,7 +159,7 @@ public class Swerve extends GBSubsystem {
 
 
 	public int getNumberOfOdometrySamples() {
-		return Math.min(gyroSignals.yawSignal().asArray().length, modules.getNumberOfOdometrySamples());
+		return Math.min(gyroSignals.yawSignal().getNumberOfValues(), modules.getNumberOfOdometrySamples());
 	}
 
 	public OdometryData[] getAllOdometryData() {

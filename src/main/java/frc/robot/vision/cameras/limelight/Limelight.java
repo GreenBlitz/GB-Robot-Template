@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.Robot;
 import frc.robot.vision.DetectedObjectObseration;
 import frc.robot.vision.DetectedObjectType;
 import frc.robot.vision.RobotPoseObservation;
@@ -15,6 +16,7 @@ import frc.utils.LimelightHelpers;
 import frc.utils.filter.Filter;
 import frc.utils.math.StandardDeviations2D;
 import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
@@ -107,7 +109,22 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	public void updateMT1() {
 		if (pipeline.isUsingMT()) {
-			mt1RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
+            if (Robot.ROBOT_TYPE.isReplay()) {
+                LogTable logTable = new LogTable(0L);
+                logTable = logTable.getSubtable("AdvantageKit/RealOutputs/" + logPath);
+                mt1RawData = new LimelightHelpers.PoseEstimate(
+                        logTable.get("megaTag1RawData/pose", new Pose2d()),
+                        logTable.get("megaTag1RawData/timestampSeconds", 0),
+                        logTable.get("megaTag1RawData/latency", 0),
+                        logTable.get("megaTag1RawData/tagCount", 0),
+                        logTable.get("megaTag1RawData/tagSpan", 0),
+                        logTable.get("megaTag1RawData/avgTagDist", 0),
+                        logTable.get("megaTag1RawData/avgTagArea", 0),
+                        new LimelightHelpers.RawFiducial[]{}, false
+                );
+            } else {
+                mt1RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
+            }
 			mt1PoseObservation = new RobotPoseObservation(getEstimateTimestampSeconds(mt1RawData), mt1RawData.pose, calculateMT1StdDevs.get());
 		}
 	}

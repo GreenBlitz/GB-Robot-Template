@@ -102,18 +102,16 @@ public class Module {
 		return Conversions.angleToDistance(angle, constants.wheelDiameterMeters());
 	}
 
-
 	private void fixDriveInputsCoupling() {
 		driveCouplingInputs.uncoupledVelocityAnglesPerSecond = ModuleUtil
-			.uncoupleDriveAngle(driveSignals.velocity().getLatestValue(), steerSignals.velocity().getLatestValue(), constants.couplingRatio());
+				.uncoupleDriveAngle(driveSignals.velocity().getLatestValue(), steerSignals.velocity().getLatestValue(), constants.couplingRatio());
 
-		int min = Math.min(driveSignals.position().getNumberOfValues(), steerSignals.position().getNumberOfValues());
-		driveCouplingInputs.uncoupledPositions = new Rotation2d[min];
-		for (int i = 0; i < min; i++) {
+		driveCouplingInputs.uncoupledPositions = new Rotation2d[getNumberOfOdometrySamples()];
+		for (int i = 0; i < driveCouplingInputs.uncoupledPositions.length; i++) {
 			Rotation2d steerDelta = Rotation2d
-				.fromRotations(steerSignals.position().asArray()[i].getRotations() - startingSteerPosition.getRotations());
+					.fromRotations(steerSignals.position().asArray()[i].getRotations() - startingSteerPosition.getRotations());
 			driveCouplingInputs.uncoupledPositions[i] = ModuleUtil
-				.uncoupleDriveAngle(driveSignals.position().asArray()[i], steerDelta, constants.couplingRatio());
+					.uncoupleDriveAngle(driveSignals.position().asArray()[i], steerDelta, constants.couplingRatio());
 		}
 	}
 
@@ -272,7 +270,7 @@ public class Module {
 	}
 
 	public int getNumberOfOdometrySamples() {
-		return Math.min(driveInputs.positionsMeters.length, steerSignals.position().getNumberOfValues());
+		return Math.min(driveSignals.position().getNumberOfValues(), steerSignals.position().getNumberOfValues());
 	}
 
 	public SwerveModuleState getTargetState() {

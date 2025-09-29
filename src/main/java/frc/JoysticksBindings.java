@@ -1,7 +1,6 @@
 package frc;
 
 import com.revrobotics.spark.SparkBase;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
@@ -53,31 +52,57 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 		switch (Robot.TEAM_NUMBER) {
-			case 0, 1, 3 -> {
-				usedJoystick.R1
-					.whileTrue(
-						new RunCommand(
-							() -> robot.getEndEffector()
-								.getClosedLoopController()
-								.setReference(10, SparkBase.ControlType.kPosition),
-								robot.getSubsystem()
-						)
-					);
-				usedJoystick.L1
-					.whileTrue(
-						new RunCommand(
-							() -> robot.getEndEffector()
-								.getClosedLoopController()
-								.setReference(0, SparkBase.ControlType.kPosition),
-								robot.getSubsystem()
-						)
-					);
+			case 0 -> {
+				usedJoystick.R1.whileTrue(
+					new RunCommand(
+						() -> robot.getEndEffector().getClosedLoopController().setReference(10, SparkBase.ControlType.kPosition),
+						robot.getSubsystem()
+					)
+				);
+				usedJoystick.L1.whileTrue(
+					new RunCommand(
+						() -> robot.getEndEffector().getClosedLoopController().setReference(0, SparkBase.ControlType.kPosition),
+						robot.getSubsystem()
+					)
+				);
+			}
+			case 1 -> {
+				usedJoystick.R1.whileTrue(
+					new RunCommand(
+						() -> robot.getEndEffector().getClosedLoopController().setReference(0.1, SparkBase.ControlType.kPosition),
+						robot.getSubsystem()
+					)
+				);
+				usedJoystick.L1.whileTrue(
+					new RunCommand(
+						() -> robot.getEndEffector().getClosedLoopController().setReference(2.5, SparkBase.ControlType.kPosition),
+						robot.getSubsystem()
+					)
+				);
 			}
 			case 2 -> {
 				usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER)
-					.onTrue(new RunCommand(() -> robot.getEndEffector().set(usedJoystick.getAxisValue(Axis.LEFT_TRIGGER)), robot.getSubsystem()));
+					.onTrue(
+						new RunCommand(() -> robot.getEndEffector().set(usedJoystick.getAxisValue(Axis.LEFT_TRIGGER)), robot.getSubsystem())
+					);
 				usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER)
-					.onTrue(new RunCommand(() -> robot.getEndEffector().set(-usedJoystick.getAxisValue(Axis.RIGHT_TRIGGER)), robot.getSubsystem()));
+					.onTrue(
+						new RunCommand(() -> robot.getEndEffector().set(-usedJoystick.getAxisValue(Axis.RIGHT_TRIGGER)), robot.getSubsystem())
+					);
+			}
+			case 3 -> {
+				usedJoystick.R1.whileTrue(
+					new RunCommand(
+						() -> robot.getEndEffector().getClosedLoopController().setReference(0, SparkBase.ControlType.kPosition),
+						robot.getSubsystem()
+					)
+				);
+				usedJoystick.L1.whileTrue(
+					new RunCommand(
+						() -> robot.getEndEffector().getClosedLoopController().setReference(5.1, SparkBase.ControlType.kPosition),
+						robot.getSubsystem()
+					)
+				);
 			}
 		}
 	}

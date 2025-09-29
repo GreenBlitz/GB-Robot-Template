@@ -30,7 +30,7 @@ import org.littletonrobotics.junction.Logger;
 public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
-	public static final int TEAM_NUMBER = 0;
+	public static final int TEAM_NUMBER = 1;
 
 	private final GBSubsystem subsystem;
 	private final SparkMaxWrapper endEffector;
@@ -41,10 +41,11 @@ public class Robot {
 		subsystem = new GBSubsystem("EndEffector") {};
 		endEffector = new SparkMaxWrapper(new SparkMaxDeviceID(4));
 		SparkMaxConfig config = new SparkMaxConfig();
-		config.closedLoop.p(1);
+		config.closedLoop.p(0.5);
 		endEffector.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig(config));
+		endEffector.getEncoder().setPosition(0);
 		switch (TEAM_NUMBER) {
-			case 0, 1 -> {
+			case 0 -> {
 				TalonSRX frontLeft = new TalonSRX(3);
 				TalonSRX rearLeft = new TalonSRX(4);
 				TalonSRX frontRight = new TalonSRX(1);
@@ -56,6 +57,22 @@ public class Robot {
 					frontRight.set(ControlMode.PercentOutput, -power);
 					rearRight.set(ControlMode.PercentOutput, -power);
 				});
+			}
+			case 1 -> {
+				TalonSRX frontLeft = new TalonSRX(3);
+				TalonSRX rearLeft = new TalonSRX(4);
+				TalonSRX frontRight = new TalonSRX(1);
+				TalonSRX rearRight = new TalonSRX(2);
+				tankDrive = new DifferentialDrive(power -> {
+					frontLeft.set(ControlMode.PercentOutput, power * 1.5);
+					rearLeft.set(ControlMode.PercentOutput, power * 1.5);
+				}, power -> {
+					frontRight.set(ControlMode.PercentOutput, -power * 1.5);
+					rearRight.set(ControlMode.PercentOutput, -power * 1.5);
+				});
+				config = new SparkMaxConfig();
+				config.closedLoop.p(0.1);
+				endEffector.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig(config));
 			}
 			case 2 -> {
 				PWMSparkMax frontLeft = new PWMSparkMax(0);
@@ -82,6 +99,9 @@ public class Robot {
 					frontRight.set(-power);
 					rearRight.set(-power);
 				});
+				config = new SparkMaxConfig();
+				config.closedLoop.p(0.2);
+				endEffector.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig(config));
 			}
 		}
 	}
@@ -102,7 +122,7 @@ public class Robot {
 	public SparkMaxWrapper getEndEffector() {
 		return endEffector;
 	}
-	
+
 	public GBSubsystem getSubsystem() {
 		return subsystem;
 	}

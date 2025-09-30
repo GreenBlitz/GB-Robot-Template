@@ -21,13 +21,15 @@ import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.poseestimator.OdometryData;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
-import frc.robot.subsystems.swerve.states.*;
+import frc.robot.subsystems.swerve.states.DriveRelative;
+import frc.robot.subsystems.swerve.states.LoopMode;
+import frc.robot.subsystems.swerve.states.SwerveStateHandler;
 import frc.robot.subsystems.swerve.states.heading.HeadingControl;
 import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
+import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
-
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -40,38 +42,31 @@ public class Swerve extends GBSubsystem {
 	private final Modules modules;
 	private final IGyro gyro;
 	private final GyroSignals gyroSignals;
-
 	private final SwerveDriveKinematics kinematics;
 	private final HeadingStabilizer headingStabilizer;
 	private final SwerveCommandsBuilder commandsBuilder;
 	private final SwerveStateHandler stateHandler;
-
 	private SwerveState currentState;
 	private Supplier<Rotation2d> headingSupplier;
 	private ChassisPowers driversPowerInputs;
 	private double lastMagnitudeMetersPerSecond;
 	private OdometryData odometryData;
 
-	public RotateAxis rotateAxis = RotateAxis.MIDDLE_OF_CHASSIS;
-
 	public Swerve(SwerveConstants constants, Modules modules, IGyro gyro, GyroSignals gyroSignals) {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 		this.driversPowerInputs = new ChassisPowers();
-
 		this.constants = constants;
 		this.driveRadiusMeters = SwerveMath.calculateDriveRadiusMeters(modules.getModulePositionsFromCenterMeters());
 		this.modules = modules;
 		this.gyro = gyro;
 		this.gyroSignals = gyroSignals;
-
 		this.kinematics = new SwerveDriveKinematics(modules.getModulePositionsFromCenterMeters());
 		this.headingSupplier = this::getGyroAbsoluteYaw;
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
 		this.stateHandler = new SwerveStateHandler(this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 		this.odometryData = new OdometryData();
-
 		update();
 		setDefaultCommand(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
 	}
@@ -99,7 +94,6 @@ public class Swerve extends GBSubsystem {
 	public SwerveStateHandler getStateHandler() {
 		return stateHandler;
 	}
-
 
 	public void configPathPlanner(Supplier<Pose2d> currentPoseSupplier, Consumer<Pose2d> resetPoseConsumer, RobotConfig robotConfig) {
 		PathPlannerUtil.configPathPlanner(
@@ -135,22 +129,17 @@ public class Swerve extends GBSubsystem {
 		constants.rotationDegreesPIDController().reset();
 	}
 
-
 	public void update() {
 		double startingTime = TimeUtil.getCurrentTimeSeconds();
-
 		gyro.updateInputs(gyroSignals.yawSignal());
 		modules.updateInputs();
 
 		currentState.log(constants.stateLogPath());
 
-		Logger.recordOutput(constants.logPath() + "/rotate axis", rotateAxis);
-
 		ChassisSpeeds allianceRelativeSpeeds = getAllianceRelativeVelocity();
 		Logger.recordOutput(constants.velocityLogPath() + "/Rotation", allianceRelativeSpeeds.omegaRadiansPerSecond);
 		Logger.recordOutput(constants.velocityLogPath() + "/X", allianceRelativeSpeeds.vxMetersPerSecond);
 		Logger.recordOutput(constants.velocityLogPath() + "/Y", allianceRelativeSpeeds.vyMetersPerSecond);
-
 		double driveMagnitudeMetersPerSecond = SwerveMath.getDriveMagnitude(allianceRelativeSpeeds);
 		Logger.recordOutput(constants.velocityLogPath() + "/Magnitude", driveMagnitudeMetersPerSecond);
 		Logger.recordOutput(
@@ -158,12 +147,9 @@ public class Swerve extends GBSubsystem {
 			(driveMagnitudeMetersPerSecond - lastMagnitudeMetersPerSecond) / TimeUtil.getLatestCycleTimeSeconds()
 		);
 		lastMagnitudeMetersPerSecond = driveMagnitudeMetersPerSecond;
-
 		Logger.recordOutput(getLogPath() + "/OdometrySamples", getNumberOfOdometrySamples());
-
 		Logger.recordOutput("TimeTest/SwerveUpdate", TimeUtil.getCurrentTimeSeconds() - startingTime);
 	}
-
 
 	public int getNumberOfOdometrySamples() {
 		return Math.min(gyroSignals.yawSignal().asArray().length, modules.getNumberOfOdometrySamples());
@@ -171,7 +157,6 @@ public class Swerve extends GBSubsystem {
 
 	public OdometryData[] getAllOdometryData() {
 		OdometryData[] odometryData = new OdometryData[getNumberOfOdometrySamples()];
-
 		for (int i = 0; i < odometryData.length; i++) {
 			odometryData[i] = new OdometryData(
 				modules.getWheelPositions(i),
@@ -179,7 +164,6 @@ public class Swerve extends GBSubsystem {
 				gyroSignals.yawSignal().getTimestamps()[i]
 			);
 		}
-
 		return odometryData;
 	}
 
@@ -228,7 +212,6 @@ public class Swerve extends GBSubsystem {
 		return SwerveMath.allianceToRobotRelativeSpeeds(speeds, getAllianceRelativeHeading());
 	}
 
-
 	protected void moveToPoseByPID(Pose2d currentPose, Pose2d targetPose) {
 		double xVelocityMetersPerSecond = constants.xMetersPIDController().calculate(currentPose.getX(), targetPose.getX());
 		double yVelocityMetersPerSecond = constants.yMetersPIDController().calculate(currentPose.getY(), targetPose.getY());
@@ -236,7 +219,6 @@ public class Swerve extends GBSubsystem {
 		Rotation2d rotationVelocityPerSecond = Rotation2d.fromDegrees(
 			constants.rotationDegreesPIDController().calculate(currentPose.getRotation().getDegrees(), targetPose.getRotation().getDegrees())
 		);
-
 		ChassisSpeeds targetAllianceRelativeSpeeds = new ChassisSpeeds(
 			xVelocityMetersPerSecond * direction,
 			yVelocityMetersPerSecond * direction,
@@ -252,7 +234,6 @@ public class Swerve extends GBSubsystem {
 		Rotation2d rotationVelocityPerSecond = Rotation2d.fromDegrees(
 			constants.rotationDegreesPIDController().calculate(currentPose.getRotation().getDegrees(), targetPose.getRotation().getDegrees())
 		);
-
 		ChassisSpeeds targetAllianceRelativeSpeeds = new ChassisSpeeds(
 			xVelocityMetersPerSecond * direction,
 			yVelocityMetersPerSecond * direction,
@@ -283,19 +264,16 @@ public class Swerve extends GBSubsystem {
 
 	protected void driveByState(ChassisSpeeds speeds, SwerveState swerveState) {
 		this.currentState = swerveState;
-
 		speeds = stateHandler.applyAimAssistOnChassisSpeeds(speeds, swerveState);
 		speeds = handleHeadingControl(speeds, swerveState);
 		if (SwerveMath.isStill(speeds, SwerveConstants.DEADBANDS)) {
 			modules.stop();
 			return;
 		}
-
 		speeds = SwerveMath.factorSpeeds(speeds, swerveState.getDriveSpeed());
 		speeds = SwerveMath.applyDeadband(speeds, SwerveConstants.DEADBANDS);
 		speeds = getDriveModeRelativeSpeeds(speeds, swerveState);
 		speeds = SwerveMath.discretize(speeds);
-
 		applySpeeds(speeds, swerveState);
 	}
 
@@ -303,12 +281,10 @@ public class Swerve extends GBSubsystem {
 		if (swerveState.getHeadingControl() == HeadingControl.NONE) {
 			return speeds;
 		}
-
 		if (Math.abs(speeds.omegaRadiansPerSecond) > SwerveConstants.DEADBANDS.getRotation().getRadians()) {
 			headingStabilizer.unlockTarget();
 			return speeds;
 		}
-
 		headingStabilizer.setTargetHeading(headingSupplier.get());
 		headingStabilizer.lockTarget();
 		return new ChassisSpeeds(
@@ -319,7 +295,8 @@ public class Swerve extends GBSubsystem {
 	}
 
 	private void applySpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
-		SwerveModuleState[] swerveModuleStates = kinematics.toSwerveModuleStates(speeds, stateHandler.getRotationAxis(rotateAxis));
+		SwerveModuleState[] swerveModuleStates = kinematics
+			.toSwerveModuleStates(speeds, stateHandler.getRotationAxis(swerveState.getRotateAxis()));
 		setTargetModuleStates(swerveModuleStates, swerveState.getLoopMode().isClosedLoop());
 	}
 
@@ -328,28 +305,22 @@ public class Swerve extends GBSubsystem {
 		modules.setTargetStates(moduleStates, isClosedLoop);
 	}
 
-
 	public boolean isAtHeading(Rotation2d targetHeading, Rotation2d tolerance, Rotation2d velocityDeadbandAnglesPerSecond) {
 		double headingDeltaDegrees = Math.abs(targetHeading.minus(headingSupplier.get()).getDegrees());
 		boolean isAtHeading = headingDeltaDegrees < tolerance.getDegrees();
-
 		double rotationVelocityRadiansPerSecond = getRobotRelativeVelocity().omegaRadiansPerSecond;
 		boolean isStopping = Math.abs(rotationVelocityRadiansPerSecond) < velocityDeadbandAnglesPerSecond.getRadians();
-
 		return isAtHeading && isStopping;
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {
 		// Calibrate steer ks with phoenix tuner x
 		// Calibrate steer pid with phoenix tuner x
-
 		// Let it rotate some rotations then output will be in log under Calibrations/.
 		joystick.POV_DOWN.whileTrue(getCommandsBuilder().wheelRadiusCalibration());
-
 		// ROBOT RELATIVE DRIVE - FOR GYRO TEST
 		joystick.POV_UP
 			.whileTrue(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE)));
-
 		// Test the swerve returns real velocities (measure distance and time in real life and compare to swerve velocity logs).
 		// REMEMBER after drive calibrations use these for pid testing - Remove OPEN LOOP for that
 		ChassisPowers slowCalibrationPowers = new ChassisPowers();
@@ -360,7 +331,6 @@ public class Swerve extends GBSubsystem {
 		fastCalibrationPowers.xPower = 0.5;
 		joystick.POV_RIGHT
 			.whileTrue(getCommandsBuilder().driveByState(() -> fastCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)));
-
 		// The sysid outputs will be logged to the "CTRE Signal Logger".
 		// Use phoenix tuner x to extract the position, velocity, motorVoltage, state signals into wpilog.
 		// Then enter the wpilog into wpilib sysid app and make sure you enter all info in the correct places.
@@ -371,13 +341,10 @@ public class Swerve extends GBSubsystem {
 		joystick.B.whileTrue(getCommandsBuilder().driveCalibration(false, SysIdRoutine.Direction.kReverse));
 		// MAKE SURE TO PRESS IT ON THE END OF THE SYSID ROUTINE SO YOU CAN READ THE DATA FROM SIGNAL LOGGER.
 		joystick.L3.onTrue(new InstantCommand(SignalLogger::stop));
-
 		// Remember to test the drive pid ff calib with the POVS commands
-
 		// Rotational pid tests
 		joystick.R1.whileTrue(getCommandsBuilder().turnToHeading(MathConstants.HALF_CIRCLE));
 		joystick.L1.whileTrue(getCommandsBuilder().turnToHeading(new Rotation2d()));
-
 		// Translation pid tests
 		joystick.getAxisAsButton(Axis.LEFT_TRIGGER)
 			.onTrue(

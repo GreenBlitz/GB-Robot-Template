@@ -4,16 +4,20 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.subsystems.swerve.factories.modules.drive.KrakenX60DriveBuilder;
 import frc.robot.vision.DetectedObjectType;
 import frc.robot.vision.cameras.limelight.Limelight;
 import frc.robot.vision.cameras.limelight.LimelightFilters;
@@ -157,6 +161,8 @@ public class Robot {
 		swerve.setHeadingSupplier(
 			ROBOT_TYPE.isSimulation() ? () -> poseEstimator.getEstimatedPose().getRotation() : () -> headingEstimator.getEstimatedHeading()
 		);
+
+        swerve.configPathPlanner(() -> poseEstimator.getEstimatedPose(), pose2d -> {}, getRobotConfig());
 	}
 
 	public void periodic() {
@@ -218,5 +224,22 @@ public class Robot {
 	public IPoseEstimator getPoseEstimator() {
 		return poseEstimator;
 	}
+
+    public RobotConfig getRobotConfig() {
+        return new RobotConfig(
+                68,
+                6.375,
+                new ModuleConfig(
+                        0.0474588,
+                        swerve.getConstants().velocityAt12VoltsMetersPerSecond(),
+                        0.96,
+                        DCMotor.getKrakenX60Foc(1),
+                        KrakenX60DriveBuilder.GEAR_RATIO,
+                        KrakenX60DriveBuilder.SLIP_CURRENT,
+                        1
+                ),
+                swerve.getModules().getModulePositionsFromCenterMeters()
+        );
+    }
 
 }

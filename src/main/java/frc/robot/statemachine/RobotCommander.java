@@ -478,12 +478,10 @@ public class RobotCommander extends GBSubsystem {
 		return asSubsystemCommand(
 			new ParallelDeadlineGroup(
 				superstructure.intake(),
-				new SequentialCommandGroup(
-					swerve.getCommandsBuilder()
-						.driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CORAL_STATION))
-						.until(this::isReadyToActivateCoralStationAimAssist),
-					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CORAL_STATION_SLOT))
-				)
+				swerve.getCommandsBuilder().driveToPose(
+						() -> robot.getPoseEstimator().getEstimatedPose(),
+						() -> ScoringHelpers.getIntakePose2d(robot),
+						AutonomousConstants.getRealTimeConstraints(swerve))
 			),
 			RobotState.INTAKE_WITH_AIM_ASSIST
 		);
@@ -721,7 +719,7 @@ public class RobotCommander extends GBSubsystem {
 		return asSubsystemCommand(
 			new ParallelCommandGroup(
 				superstructure.preClimb(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CAGE_ROTATION))
+				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.CAGE))
 			),
 			RobotState.PRE_CLIMB_WITH_AIM_ASSIST
 		);

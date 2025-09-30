@@ -319,8 +319,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	private void applySpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
-		SwerveModuleState[] swerveModuleStates = kinematics
-			.toSwerveModuleStates(speeds, stateHandler.getRotationAxis(rotateAxis));
+		SwerveModuleState[] swerveModuleStates = kinematics.toSwerveModuleStates(speeds, stateHandler.getRotationAxis(rotateAxis));
 		setTargetModuleStates(swerveModuleStates, swerveState.getLoopMode().isClosedLoop());
 	}
 

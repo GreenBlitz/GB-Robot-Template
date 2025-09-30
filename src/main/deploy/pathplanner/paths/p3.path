@@ -50,7 +50,7 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Thread",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 52.52382043863873

@@ -109,22 +109,23 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	public void updateMT1() {
 		if (pipeline.isUsingMT()) {
-            if (Robot.ROBOT_TYPE.isReplay()) {
-                LogTable logTable = new LogTable(0L);
-                logTable = logTable.getSubtable("AdvantageKit/RealOutputs/" + logPath);
-                mt1RawData = new LimelightHelpers.PoseEstimate(
-                        logTable.get("megaTag1RawData/pose", new Pose2d()),
-                        logTable.get("megaTag1RawData/timestampSeconds", 0),
-                        logTable.get("megaTag1RawData/latency", 0),
-                        logTable.get("megaTag1RawData/tagCount", 0),
-                        logTable.get("megaTag1RawData/tagSpan", 0),
-                        logTable.get("megaTag1RawData/avgTagDist", 0),
-                        logTable.get("megaTag1RawData/avgTagArea", 0),
-                        new LimelightHelpers.RawFiducial[]{}, false
-                );
-            } else {
-                mt1RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
-            }
+			if (Robot.ROBOT_TYPE.isReplay()) {
+				LogTable logTable = new LogTable(0L);
+				logTable = logTable.getSubtable("AdvantageKit/RealOutputs/" + logPath);
+				mt1RawData = new LimelightHelpers.PoseEstimate(
+					logTable.get("megaTag1RawData/pose", new Pose2d()),
+					logTable.get("megaTag1RawData/timestampSeconds", 0),
+					logTable.get("megaTag1RawData/latency", 0),
+					logTable.get("megaTag1RawData/tagCount", 0),
+					logTable.get("megaTag1RawData/tagSpan", 0),
+					logTable.get("megaTag1RawData/avgTagDist", 0),
+					logTable.get("megaTag1RawData/avgTagArea", 0),
+					new LimelightHelpers.RawFiducial[] {},
+					false
+				);
+			} else {
+				mt1RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
+			}
 			mt1PoseObservation = new RobotPoseObservation(getEstimateTimestampSeconds(mt1RawData), mt1RawData.pose, calculateMT1StdDevs.get());
 		}
 	}

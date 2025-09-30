@@ -10,7 +10,6 @@ import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.subsystems.swerve.module.extrainputs.DriveCouplingInputsAutoLogged;
 import frc.robot.subsystems.swerve.module.extrainputs.DriveInputsAutoLogged;
 import frc.robot.subsystems.swerve.module.extrainputs.ModuleInputsAutoLogged;
-import frc.robot.subsystems.swerve.module.extrainputs.ModuleIOInputs;
 import frc.robot.subsystems.swerve.module.extrainputs.ModuleIOInputsAutoLogged;
 import frc.robot.subsystems.swerve.module.records.DriveRequests;
 import frc.robot.subsystems.swerve.module.records.DriveSignals;

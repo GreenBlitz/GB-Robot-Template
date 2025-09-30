@@ -42,7 +42,7 @@ import frc.utils.time.TimeUtil;
  */
 public class Robot {
 
-	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(true);
+	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);
 
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
@@ -95,11 +95,7 @@ public class Robot {
 			)
 		);
 		limelightFour.setMT1StdDevsCalculation(
-			LimelightStdDevCalculations.getMT1StdDevsCalculation(
-				limelightFour,
-				new StandardDeviations2D(0.6),
-				new StandardDeviations2D(0.05)
-			)
+			LimelightStdDevCalculations.getMT1StdDevsCalculation(limelightFour, new StandardDeviations2D(0.6), new StandardDeviations2D(0.05))
 		);
 		limelightFour.setMT2StdDevsCalculation(
 			LimelightStdDevCalculations.getMT2StdDevsCalculation(
@@ -128,11 +124,7 @@ public class Robot {
 			)
 		);
 		limelightThreeGB.setMT1StdDevsCalculation(
-			LimelightStdDevCalculations.getMT1StdDevsCalculation(
-				limelightThreeGB,
-                    new StandardDeviations2D(0.6),
-                    new StandardDeviations2D(0.05)
-			)
+			LimelightStdDevCalculations.getMT1StdDevsCalculation(limelightThreeGB, new StandardDeviations2D(0.6), new StandardDeviations2D(0.05))
 		);
 		limelightThreeGB.setMT2StdDevsCalculation(
 			LimelightStdDevCalculations.getMT2StdDevsCalculation(

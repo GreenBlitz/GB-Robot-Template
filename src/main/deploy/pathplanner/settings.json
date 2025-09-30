@@ -3,9 +3,11 @@
   "robotLength": 0.767,
   "holonomicMode": true,
   "pathFolders": [
+    "Thread",
     "test"
   ],
   "autoFolders": [
+    "New Folder",
     "test"
   ],
   "defaultMaxVel": 4.2,

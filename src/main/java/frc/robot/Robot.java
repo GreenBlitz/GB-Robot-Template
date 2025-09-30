@@ -208,7 +208,7 @@ public class Robot {
 	}
 
 	public PathPlannerAutoWrapper getAutonomousCommand() {
-		return new PathPlannerAutoWrapper();
+		return new PathPlannerAutoWrapper("Thread");
 	}
 
 	public Swerve getSwerve() {

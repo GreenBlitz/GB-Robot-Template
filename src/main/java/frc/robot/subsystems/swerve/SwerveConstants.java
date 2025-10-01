@@ -50,4 +50,10 @@ public record SwerveConstants(
 	static final Rotation2d CALIBRATION_MODULE_ANGLE_TOLERANCE = Rotation2d.fromDegrees(3);
 	static final Rotation2d CALIBRATION_MODULE_ANGULAR_VELOCITY_PER_SECOND_DEADBAND = Rotation2d.fromDegrees(3);
 
+	private static final double SKID_ACCELERATION_LIMIT = 9;
+	private static final double TILT_ACCELERATION_LIMIT = 15;
+	private static final double MAX_ACCELERATION_LIMIT = 20;
+
+	public static final double ACCELERATION_LIMIT = Math.min(Math.min(SKID_ACCELERATION_LIMIT, TILT_ACCELERATION_LIMIT), MAX_ACCELERATION_LIMIT);
+
 }

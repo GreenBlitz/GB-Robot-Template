@@ -10,6 +10,24 @@ import frc.utils.time.TimeUtil;
 
 public class SwerveMath {
 
+	public static ChassisSpeeds accelerationLimit(ChassisSpeeds currentSpeeds, ChassisSpeeds targetSpeeds, double maxAcceleration) {
+		double dx = targetSpeeds.vxMetersPerSecond - currentSpeeds.vxMetersPerSecond;
+		double dy = targetSpeeds.vyMetersPerSecond - currentSpeeds.vyMetersPerSecond;
+
+		double cycleTime = TimeUtil.getLatestCycleTimeSeconds();
+
+		double maxDeltaV = maxAcceleration * cycleTime;
+
+		double deltaMag = Math.hypot(dx, dy);
+		if (deltaMag > maxDeltaV) {
+			double scale = maxDeltaV / deltaMag;
+			dx *= scale;
+			dy *= scale;
+		}
+
+		return new ChassisSpeeds(currentSpeeds.vxMetersPerSecond + dx, currentSpeeds.vyMetersPerSecond + dy, targetSpeeds.omegaRadiansPerSecond);
+	}
+
 	public static double calculateDriveRadiusMeters(Translation2d[] modulePositionsFromCenterMeters) {
 		double sum = 0;
 		for (Translation2d modulePositionFromCenterMeters : modulePositionsFromCenterMeters) {

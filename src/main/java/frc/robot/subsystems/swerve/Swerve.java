@@ -23,10 +23,10 @@ import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.states.DriveRelative;
 import frc.robot.subsystems.swerve.states.LoopMode;
+import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.SwerveStateHandler;
 import frc.robot.subsystems.swerve.states.heading.HeadingControl;
 import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
-import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.auto.PathPlannerUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -143,10 +143,16 @@ public class Swerve extends GBSubsystem {
 		Logger.recordOutput(constants.velocityLogPath() + "/X", allianceRelativeSpeeds.vxMetersPerSecond);
 		Logger.recordOutput(constants.velocityLogPath() + "/Y", allianceRelativeSpeeds.vyMetersPerSecond);
 		Logger.recordOutput(constants.velocityLogPath() + "/Magnitude", SwerveMath.getDriveMagnitude(allianceRelativeSpeeds));
+		Logger.recordOutput(constants.velocityLogPath() + "/Acceleration Limit", getForwardAccelerationLimit());
+		Logger.recordOutput(constants.velocityLogPath() + "/Test", SwerveMath.getDriveMagnitude(allianceRelativeSpeeds) > 4.13);
 
 		Logger.recordOutput(getLogPath() + "/OdometrySamples", getNumberOfOdometrySamples());
 	}
 
+	public double getForwardAccelerationLimit() {
+		return SwerveConstants.ACCELERATION_LIMIT;// * (1 - (SwerveMath.getDriveMagnitude(getRobotRelativeVelocity()) /
+													// constants.velocityAt12VoltsMetersPerSecond()));
+	}
 
 	public int getNumberOfOdometrySamples() {
 		return Math.min(gyroSignals.yawSignal().asArray().length, modules.getNumberOfOdometrySamples());
@@ -193,7 +199,7 @@ public class Swerve extends GBSubsystem {
 		return SwerveMath.robotToAllianceRelativeSpeeds(getRobotRelativeVelocity(), getAllianceRelativeHeading());
 	}
 
-	private ChassisSpeeds getDriveModeRelativeSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
+	private ChassisSpeeds getRobotRelativeSpeedsByDriveMode(ChassisSpeeds speeds, SwerveState swerveState) {
 		if (swerveState.getDriveRelative() == DriveRelative.ROBOT_RELATIVE) {
 			return speeds;
 		}
@@ -242,14 +248,15 @@ public class Swerve extends GBSubsystem {
 
 		speeds = stateHandler.applyAimAssistOnChassisSpeeds(speeds, swerveState);
 		speeds = handleHeadingControl(speeds, swerveState);
-		if (SwerveMath.isStill(speeds, SwerveConstants.DEADBANDS)) {
-			modules.stop();
-			return;
-		}
+//        if (SwerveMath.isStill(speeds, SwerveConstants.DEADBANDS)) {
+//            modules.stop();
+//            return;
+//        }
 
 		speeds = SwerveMath.factorSpeeds(speeds, swerveState.getDriveSpeed());
 		speeds = SwerveMath.applyDeadband(speeds, SwerveConstants.DEADBANDS);
-		speeds = getDriveModeRelativeSpeeds(speeds, swerveState);
+		speeds = getRobotRelativeSpeedsByDriveMode(speeds, swerveState);
+		speeds = SwerveMath.accelerationLimit(getRobotRelativeVelocity(), speeds, getForwardAccelerationLimit());
 		speeds = SwerveMath.discretize(speeds);
 
 		applySpeeds(speeds, swerveState);

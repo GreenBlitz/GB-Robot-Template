@@ -146,11 +146,7 @@ public class Robot {
 			)
 		);
 		limelightFour.setMT1StdDevsCalculation(
-			LimelightStdDevCalculations.getMT1StdDevsCalculation(
-				limelightFour,
-				new StandardDeviations2D(0.0001, 0.0001, 0.0001),
-				new StandardDeviations2D(0.001, 0.001, 0.001)
-			)
+			LimelightStdDevCalculations.getMT1StdDevsCalculation(limelightFour, new StandardDeviations2D(0.6), new StandardDeviations2D(0.05))
 		);
 		limelightFour.setMT2StdDevsCalculation(
 			LimelightStdDevCalculations.getMT2StdDevsCalculation(
@@ -179,11 +175,7 @@ public class Robot {
 			)
 		);
 		limelightThreeGB.setMT1StdDevsCalculation(
-			LimelightStdDevCalculations.getMT1StdDevsCalculation(
-				limelightThreeGB,
-				new StandardDeviations2D(0.0001, 0.0001, 0.0001),
-				new StandardDeviations2D(0.001, 0.001, 0.001)
-			)
+			LimelightStdDevCalculations.getMT1StdDevsCalculation(limelightThreeGB, new StandardDeviations2D(0.6), new StandardDeviations2D(0.05))
 		);
 		limelightThreeGB.setMT2StdDevsCalculation(
 			LimelightStdDevCalculations.getMT2StdDevsCalculation(
@@ -397,8 +389,8 @@ public class Robot {
 		limelightFour.updateMT2();
 		limelightThreeGB.updateMT2();
 
-		limelightFour.getOrientationRequiringRobotPose().ifPresent(poseEstimator::updateVision);
-		limelightThreeGB.getOrientationRequiringRobotPose().ifPresent(poseEstimator::updateVision);
+		limelightFour.getIndependentRobotPose().ifPresent(poseEstimator::updateVision);
+		limelightThreeGB.getIndependentRobotPose().ifPresent(poseEstimator::updateVision);
 
 		limelightFour.log();
 		limelightThreeGB.log();

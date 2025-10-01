@@ -124,6 +124,9 @@ public class Module {
 		steer.updateSimulation();
 		drive.updateSimulation();
 
+		steer.updateInputs();
+		drive.updateInputs();
+
 		inputs.data = new ModuleIOInputs.ModuleIOData(
 			driveSignals.position().getAndUpdateValue().getRadians(),
 			driveSignals.velocity().getAndUpdateValue().getRadians(),

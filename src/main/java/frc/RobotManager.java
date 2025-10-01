@@ -4,22 +4,11 @@
 
 package frc;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.Threads;
-import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonomousConstants;
-import frc.robot.hardware.mechanisms.MechanismSimulation;
-import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
-import frc.robot.hardware.phoenix6.BusChain;
-import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
-import frc.robot.hardware.phoenix6.TalonFXFollowerConfig;
-import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.utils.DriverStationUtil;
 import frc.utils.alerts.AlertManager;
 import frc.utils.auto.PathPlannerAutoWrapper;
@@ -40,7 +29,6 @@ public class RobotManager extends LoggedRobot {
 	private final Robot robot;
 	private PathPlannerAutoWrapper autonomousCommand;
 	private int roborioCycles;
-	private TalonFXMotor motor;
 
 	public RobotManager() {
 		LoggerFactory.initializeLogger();
@@ -49,42 +37,6 @@ public class RobotManager extends LoggedRobot {
 
 		this.roborioCycles = 0;
 		this.robot = new Robot();
-
-		TalonFXFollowerConfig followerConfig = new TalonFXFollowerConfig();
-		followerConfig.names = new String[]{"67"};
-		followerConfig.followerIDs = new Phoenix6DeviceID[]{new Phoenix6DeviceID(1)};
-		followerConfig.followerBuses = new BusChain[]{BusChain.ROBORIO};
-		followerConfig.mechanismSimulations = new MechanismSimulation[]{
-				new SimpleMotorSimulation(
-						new DCMotorSim(
-								LinearSystemId.createDCMotorSystem(
-										DCMotor.getKrakenX60(1),
-										0.001,
-										1
-								),
-								DCMotor.getKrakenX60(1)
-						)
-				)
-		};
-		followerConfig.followerConfig = new TalonFXConfiguration();
-		followerConfig.followerOpposeMain = new boolean[]{false};
-
-		motor = new TalonFXMotor(
-				"tester/",
-				new Phoenix6DeviceID(2),
-				followerConfig,
-				new SysIdRoutine.Config(),
-				new SimpleMotorSimulation(
-						new DCMotorSim(
-								LinearSystemId.createDCMotorSystem(
-										DCMotor.getKrakenX60(1),
-										0.001,
-										1
-								),
-								DCMotor.getKrakenX60(1)
-						)
-				)
-		);
 
         createAutoReadyForConstructionChooser();
 		JoysticksBindings.configureBindings(robot);
@@ -104,11 +56,6 @@ public class RobotManager extends LoggedRobot {
 		if (!DriverStationUtil.isMatch()) {
 			BrakeStateManager.brake();
 		}
-	}
-
-	@Override
-	public void teleopInit() {
-		motor.setPower(1);
 	}
 
 	@Override
@@ -132,9 +79,6 @@ public class RobotManager extends LoggedRobot {
 		JoysticksBindings.updateChassisDriverInputs();
 		robot.periodic();
 		AlertManager.reportAlerts();
-
-		motor.updateSimulation();
-		Logger.recordOutput(motor.getLogPath(), motor.getDevice().get());
 	}
 
 	private void createAutoReadyForConstructionChooser() {

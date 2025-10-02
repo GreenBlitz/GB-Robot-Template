@@ -50,9 +50,9 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		motor.optimizeBusUtilization();
 
 		if (followerConfig == null) {
-			followers = new TalonFXWrapper[0];
+			this.followers = new TalonFXWrapper[0];
 		} else {
-			followers = new TalonFXWrapper[followerConfig.followerIDs.length];
+			this.followers = new TalonFXWrapper[followerConfig.followerIDs.length];
 		}
 
 		initializeFollowers();

@@ -50,9 +50,9 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		if (followerConfig == null) {
 			followers = new TalonFXWrapper[0];
 		} else {
-			followers = new TalonFXWrapper[followerConfig.followerIDS.length];
+			followers = new TalonFXWrapper[followerConfig.followerIDs.length];
 			for (int i = 0; i < followers.length; i++) {
-				followers[i] = new TalonFXWrapper(followerConfig.followerIDS[i]);
+				followers[i] = new TalonFXWrapper(followerConfig.followerIDs[i]);
 				applyConfiguration(followers[i], followerConfig.followerConfig);
 				followers[i].setControl(new Follower(deviceID.id(), followerConfig.followerInvertedToMain[i]));
 				BaseStatusSignal.setUpdateFrequencyForAll(

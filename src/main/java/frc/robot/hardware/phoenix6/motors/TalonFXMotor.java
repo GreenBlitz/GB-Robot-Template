@@ -54,7 +54,7 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
             followers = new TalonFXWrapper[motorConfig.followerIDS.length];
             for (int i = 0; i < followers.length; i++) {
                 followers[i] = new TalonFXWrapper(motorConfig.followerIDS[i]);
-                followers[i].applyConfiguration(motorConfig.followerConfig);
+                applyConfiguration(followers[i], motorConfig.followerConfig);
                 followers[i].setControl(new Follower(deviceID.id(), motorConfig.followerInvertedToMain[i]));
                 BaseStatusSignal.setUpdateFrequencyForAll(
                     RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
@@ -77,13 +77,17 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
         this(logPath, deviceID, null, sysidConfig, null);
     }
 
-    public void applyConfiguration(TalonFXConfiguration configuration) {
+    private void applyConfiguration(TalonFXWrapper motor, TalonFXConfiguration configuration) {
         if (talonFXSimulationOptional.isPresent()) {
             talonFXSimulationOptional.get().applyConfig(motor, configuration);
         }
         else if (!motor.applyConfiguration(configuration, APPLY_CONFIG_RETRIES).isOK()) {
             new Alert(Alert.AlertType.ERROR, getLogPath() + "ConfigurationFailed").report();
         }
+    }
+
+    public void applyConfiguration(TalonFXConfiguration configuration) {
+        applyConfiguration(motor, configuration);
     }
 
     private Optional<TalonFXSimulation> createSimulation(MechanismSimulation simulation) {
@@ -104,8 +108,6 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 
     @Override
     public void updateInputs(InputSignal<?>... inputSignals) {
-        updateSimulation();
-
         super.updateInputs(inputSignals);
         for (int i = 0; i < followers.length; i++) {
             String followerLogPath = getLogPath() + "/followers/" + followerConfig.names[i];

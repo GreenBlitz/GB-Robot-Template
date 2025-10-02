@@ -25,6 +25,7 @@ import frc.robot.hardware.digitalinput.channeled.ChanneledDigitalInput;
 import frc.robot.hardware.digitalinput.chooser.ChooserDigitalInput;
 import frc.robot.hardware.mechanisms.wpilib.ElevatorSimulation;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.request.Phoenix6DynamicMotionMagicRequest;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
@@ -35,173 +36,171 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.records.ElevatorMotorSignals;
 import frc.utils.AngleUnit;
 
-
+import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
-import static edu.wpi.first.units.Units.Second;
 
 public class KrakenX60ElevatorBuilder {
 
-	private static final int LIMIT_SWITCH_CHANNEL = 0;
-	private static final double LIMIT_SWITCH_DEBOUNCE_TIME = 0.04;
-	private static final double CURRENT_LIMIT = 40;
-	private static final boolean CURRENT_LIMIT_ENABLE = true;
-	private static final boolean SOFT_LIMIT_ENABLE = true;
-	private static final boolean IS_FIRST_MOTOR_INVERTED = true;
-	private static final boolean IS_SECOND_MOTOR_INVERTED = true;
-	public static final double kG = 0;
+    private static final int LIMIT_SWITCH_CHANNEL = 0;
+    private static final double LIMIT_SWITCH_DEBOUNCE_TIME = 0.04;
+    private static final boolean SECOND_MOTOR_OPPOSE_MAIN = true;
+    public static final double kG = 0;
 
-	private static final int NUMBER_OF_MOTORS = 2;
-	private static final double STARTING_HEIGHT_METERS = 0;
+    private static final int NUMBER_OF_MOTORS = 2;
+    private static final double STARTING_HEIGHT_METERS = 0;
 
-	private static final Velocity<VoltageUnit> CONFIG_RAMP_RATE = Volts.of(0.5).per(Second);
-	private static final Voltage CONFIG_STEP_VOLTAGE = Volts.of(3);
-	private static final Time CONFIG_TIMEOUT = Seconds.of(10);
+    private static final Velocity<VoltageUnit> CONFIG_RAMP_RATE = Volts.of(0.5).per(Second);
+    private static final Voltage CONFIG_STEP_VOLTAGE = Volts.of(3);
+    private static final Time CONFIG_TIMEOUT = Seconds.of(10);
 
-	private static SysIdRoutine.Config generateSysidConfig(String name) {
-		return new SysIdRoutine.Config(
-			CONFIG_RAMP_RATE,
-			CONFIG_STEP_VOLTAGE,
-			CONFIG_TIMEOUT,
-			state -> SignalLogger.writeString("Elevator/" + name + "/state", state.toString())
-		);
-	}
+    private static SysIdRoutine.Config createSysidConfig() {
+        return new SysIdRoutine.Config(
+            CONFIG_RAMP_RATE,
+            CONFIG_STEP_VOLTAGE,
+            CONFIG_TIMEOUT,
+            state -> SignalLogger.writeString("Elevator/state", state.toString())
+        );
+    }
 
-	private static TalonFXConfiguration generateConfiguration(boolean inverted) {
-		TalonFXConfiguration configuration = new TalonFXConfiguration();
-		if (Robot.ROBOT_TYPE.isReal()) {
-			// Motion Magic
-			configuration.Slot0.kP = 15;
-			configuration.Slot0.kI = 0;
-			configuration.Slot0.kD = 0;
-			configuration.Slot0.kG = kG;
-			configuration.Slot0.kS = 0;
-			configuration.Slot0.kV = 0.49307;
-			configuration.Slot0.kA = 0.032026;
+    private static TalonFXConfiguration limitsConfiguration() {
+        TalonFXConfiguration configuration = new TalonFXConfiguration();
 
-			// PID
-			configuration.Slot1.kP = 10;
-			configuration.Slot1.kI = 0;
-			configuration.Slot1.kD = 0.5;
-			configuration.Slot1.kG = kG;
-			configuration.Slot1.kS = 0;
-		} else {
-			configuration.Slot0.kP = 1;
-			configuration.Slot0.kI = 0;
-			configuration.Slot0.kD = 0.05;
+        configuration.CurrentLimits.StatorCurrentLimit = 40;
+        configuration.CurrentLimits.StatorCurrentLimitEnable = true;
 
-			configuration.Slot1.kP = 1;
-			configuration.Slot1.kI = 0;
-			configuration.Slot1.kD = 0.05;
-		}
-		configuration.Slot0.GravityType = GravityTypeValue.Elevator_Static;
-		configuration.Slot1.GravityType = GravityTypeValue.Elevator_Static;
-		configuration.Slot2.GravityType = GravityTypeValue.Elevator_Static;
+        configuration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Elevator
+            .convertMetersToRotations(ElevatorConstants.REVERSE_SOFT_LIMIT_VALUE_METERS)
+            .getRotations();
+        configuration.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
 
-		configuration.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT;
-		configuration.CurrentLimits.StatorCurrentLimitEnable = CURRENT_LIMIT_ENABLE;
-		configuration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Elevator
-			.convertMetersToRotations(ElevatorConstants.REVERSE_SOFT_LIMIT_VALUE_METERS)
-			.getRotations();
-		configuration.SoftwareLimitSwitch.ReverseSoftLimitEnable = SOFT_LIMIT_ENABLE;
-		configuration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Elevator
-			.convertMetersToRotations(ElevatorConstants.FORWARD_SOFT_LIMIT_VALUE_METERS)
-			.getRotations();
-		configuration.SoftwareLimitSwitch.ForwardSoftLimitEnable = SOFT_LIMIT_ENABLE;
-		configuration.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
-		configuration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-		configuration.Feedback.SensorToMechanismRatio = ElevatorConstants.GEAR_RATIO;
-		configuration.MotionMagic.MotionMagicAcceleration = Elevator
-			.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
-			.getRotations();
-		configuration.MotionMagic.MotionMagicCruiseVelocity = Elevator
-			.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND)
-			.getRotations();
+        configuration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Elevator
+            .convertMetersToRotations(ElevatorConstants.FORWARD_SOFT_LIMIT_VALUE_METERS)
+            .getRotations();
+        configuration.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
 
-		return configuration;
-	}
+        configuration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+        configuration.Feedback.SensorToMechanismRatio = ElevatorConstants.GEAR_RATIO;
 
-	private static IDigitalInput generateDigitalInput() {
-		return Robot.ROBOT_TYPE.isSimulation()
-			? new ChooserDigitalInput("ElevatorLimitSwitch")
-			: new ChanneledDigitalInput(new DigitalInput(LIMIT_SWITCH_CHANNEL), new Debouncer(LIMIT_SWITCH_DEBOUNCE_TIME), true);
-	}
+        return configuration;
+    }
 
-	private static ElevatorMotorSignals createSignals(TalonFXMotor motor) {
-		return new ElevatorMotorSignals(
-			Phoenix6SignalBuilder.build(
-				motor.getDevice().getPosition(),
-				RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ,
-				AngleUnit.ROTATIONS,
-				BusChain.SUPERSTRUCTURE_CANIVORE
-			),
-			Phoenix6SignalBuilder.build(
-				motor.getDevice().getMotorVoltage(),
-				RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ,
-				BusChain.SUPERSTRUCTURE_CANIVORE
-			)
-		);
-	}
+    private static TalonFXConfiguration mainConfiguration() {
+        TalonFXConfiguration configuration = limitsConfiguration();
+        if (Robot.ROBOT_TYPE.isReal()) {
+            // Motion Magic
+            configuration.Slot0.kP = 15;
+            configuration.Slot0.kI = 0;
+            configuration.Slot0.kD = 0;
+            configuration.Slot0.kG = kG;
+            configuration.Slot0.kS = 0;
+            configuration.Slot0.kV = 0.49307;
+            configuration.Slot0.kA = 0.032026;
 
-	private static ElevatorSimulation generateSimulation() {
-		return new ElevatorSimulation(
-			new ElevatorSim(
-				LinearSystemId.createElevatorSystem(
-					DCMotor.getKrakenX60Foc(NUMBER_OF_MOTORS),
-					ElevatorConstants.MASS_KG,
-					ElevatorConstants.DRUM_RADIUS_METERS,
-					ElevatorConstants.GEAR_RATIO
-				),
-				DCMotor.getKrakenX60Foc(NUMBER_OF_MOTORS),
-				ElevatorConstants.MINIMUM_HEIGHT_METERS,
-				ElevatorConstants.MAXIMUM_HEIGHT_METERS,
-				false,
-				STARTING_HEIGHT_METERS
-			),
-			ElevatorConstants.DRUM_DIAMETER_METERS,
-			ElevatorConstants.GEAR_RATIO
-		);
-	}
+            // PID
+            configuration.Slot1.kP = 10;
+            configuration.Slot1.kI = 0;
+            configuration.Slot1.kD = 0.5;
+            configuration.Slot1.kG = kG;
+            configuration.Slot1.kS = 0;
+        }
+        else {
+            configuration.Slot0.kP = 1;
+            configuration.Slot0.kI = 0;
+            configuration.Slot0.kD = 0.05;
 
-	public static Elevator createRealElevator(String logPath) {
-		TalonFXMotor rightMotor = new TalonFXMotor(logPath + "/right", IDs.TalonFXIDs.ELEVATOR_RIGHT, generateSysidConfig("right"));
-		rightMotor.applyConfiguration(generateConfiguration(IS_FIRST_MOTOR_INVERTED));
+            configuration.Slot1.kP = 1;
+            configuration.Slot1.kI = 0;
+            configuration.Slot1.kD = 0.05;
+        }
+        configuration.Slot0.GravityType = GravityTypeValue.Elevator_Static;
+        configuration.Slot1.GravityType = GravityTypeValue.Elevator_Static;
+        configuration.Slot2.GravityType = GravityTypeValue.Elevator_Static;
 
-		TalonFXMotor leftMotor = new TalonFXMotor(logPath + "/left", IDs.TalonFXIDs.ELEVATOR_LEFT, generateSysidConfig("left"));
-		leftMotor.applyConfiguration(generateConfiguration(IS_SECOND_MOTOR_INVERTED));
+        configuration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-		return create(logPath, rightMotor, leftMotor);
-	}
+        configuration.MotionMagic.MotionMagicCruiseVelocity = Elevator
+            .convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND)
+            .getRotations();
 
-	public static Elevator createSimulationElevator(String logPath) {
-		TalonFXMotor rightMotor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_RIGHT, generateSysidConfig(""), generateSimulation());
-		rightMotor.applyConfiguration(generateConfiguration(IS_FIRST_MOTOR_INVERTED));
+        return configuration;
+    }
 
-		return create(logPath, rightMotor, rightMotor);
-	}
+    private static IDigitalInput createLimitSwitch() {
+        return Robot.ROBOT_TYPE.isSimulation()
+            ? new ChooserDigitalInput("ElevatorLimitSwitch")
+            : new ChanneledDigitalInput(new DigitalInput(LIMIT_SWITCH_CHANNEL), new Debouncer(LIMIT_SWITCH_DEBOUNCE_TIME), true);
+    }
 
-	private static Elevator create(String logPath, TalonFXMotor rightMotor, TalonFXMotor leftMotor) {
-		IDigitalInput digitalInput = generateDigitalInput();
+    private static ElevatorMotorSignals createSignals(TalonFXMotor motor) {
+        return new ElevatorMotorSignals(
+            Phoenix6SignalBuilder.build(
+                motor.getDevice().getPosition(),
+                RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ,
+                AngleUnit.ROTATIONS,
+                BusChain.SUPERSTRUCTURE_CANIVORE
+            ),
+            Phoenix6SignalBuilder.build(
+                motor.getDevice().getMotorVoltage(),
+                RobotConstants.DEFAULT_CANIVORE_SIGNALS_FREQUENCY_HERTZ,
+                BusChain.SUPERSTRUCTURE_CANIVORE
+            )
+        );
+    }
 
-		Phoenix6DynamicMotionMagicRequest positionRequest = Robot.ROBOT_TYPE.isReal()
-			? Phoenix6RequestBuilder.build(
-				new DynamicMotionMagicVoltage(0, 0, 0, 0).withSlot(0).withUpdateFreqHz(RobotConstants.DEFAULT_CANIVORE_REQUEST_FREQUENCY_HERTZ),
-				0,
-				true
-			)
-			: Phoenix6RequestBuilder.build(new DynamicMotionMagicVoltage(0, 0, 0, 0).withSlot(1), 0, true);
-		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), true);
+    private static ElevatorSimulation createSimulation() {
+        return new ElevatorSimulation(
+            new ElevatorSim(
+                LinearSystemId.createElevatorSystem(
+                    DCMotor.getKrakenX60Foc(NUMBER_OF_MOTORS),
+                    ElevatorConstants.MASS_KG,
+                    ElevatorConstants.DRUM_RADIUS_METERS,
+                    ElevatorConstants.GEAR_RATIO
+                ),
+                DCMotor.getKrakenX60Foc(NUMBER_OF_MOTORS),
+                ElevatorConstants.MINIMUM_HEIGHT_METERS,
+                ElevatorConstants.MAXIMUM_HEIGHT_METERS,
+                false,
+                STARTING_HEIGHT_METERS
+            ),
+            ElevatorConstants.DRUM_DIAMETER_METERS,
+            ElevatorConstants.GEAR_RATIO
+        );
+    }
 
-		return new Elevator(
-			logPath,
-			rightMotor,
-			createSignals(rightMotor),
-			leftMotor,
-			createSignals(leftMotor),
-			positionRequest,
-			voltageRequest,
-			digitalInput
-		);
-	}
+    public static Elevator create(String logPath) {
+        // Followers...
+        TalonFXFollowerConfig followerConfig = new TalonFXFollowerConfig();
+        followerConfig.followerIDs = new TalonFXFollowerConfig.TalonFXFollowerID[]{
+            new TalonFXFollowerConfig.TalonFXFollowerID("LEFT", IDs.TalonFXIDs.ELEVATOR_LEFT, SECOND_MOTOR_OPPOSE_MAIN)
+        };
+        followerConfig.motorConfig = limitsConfiguration();
+
+        // Motor...
+        TalonFXMotor motor = new TalonFXMotor(
+            logPath,
+            IDs.TalonFXIDs.ELEVATOR_RIGHT,
+            followerConfig,
+            createSysidConfig(),
+            createSimulation()
+        );
+        motor.applyConfiguration(mainConfiguration());
+
+        // Sensors...
+        IDigitalInput digitalInput = createLimitSwitch();
+
+        // Requests...
+        Phoenix6DynamicMotionMagicRequest positionRequest = Robot.ROBOT_TYPE.isReal()
+            ? Phoenix6RequestBuilder.build(
+            new DynamicMotionMagicVoltage(0, 0, 0, 0).withSlot(0)
+                                                     .withUpdateFreqHz(RobotConstants.DEFAULT_CANIVORE_REQUEST_FREQUENCY_HERTZ),
+            0,
+            true
+        )
+            : Phoenix6RequestBuilder.build(new DynamicMotionMagicVoltage(0, 0, 0, 0).withSlot(1), 0, true);
+        Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), true);
+
+        return new Elevator(logPath, motor, createSignals(motor), positionRequest, voltageRequest, digitalInput);
+    }
 
 }

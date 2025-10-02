@@ -1,6 +1,5 @@
 package frc.robot.subsystems.elevator.factory;
 
-import frc.robot.Robot;
 import frc.robot.subsystems.elevator.Elevator;
 
 public class ElevatorFactory {

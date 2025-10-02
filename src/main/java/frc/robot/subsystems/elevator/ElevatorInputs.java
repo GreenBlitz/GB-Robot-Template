@@ -7,11 +7,6 @@ public class ElevatorInputs {
 
 	public ElevatorData data = new ElevatorData(0, 0, 0, 0);
 
-	public record ElevatorData(
-		double positionRads,
-		double voltage,
-		double positionMeters,
-		double targetPositionMeters
-	) {}
+	public record ElevatorData(double positionRads, double voltage, double positionMeters, double targetPositionMeters) {}
 
 }

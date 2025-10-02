@@ -139,7 +139,7 @@ public class OdometryThread extends Thread {
 		}
 
 		double currentTime = TimeUtil.getCurrentTimeSeconds();
-		lastCycleLengthSeconds = lastUpdateTimestamp - currentTime;
+		lastCycleLengthSeconds = currentTime - lastUpdateTimestamp;
 		lastUpdateTimestamp = currentTime;
 
 		StatusCode statusCode;

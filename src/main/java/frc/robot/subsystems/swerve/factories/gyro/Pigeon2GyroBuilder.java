@@ -6,6 +6,7 @@ import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.gyro.Pigeon2Gyro;
 import frc.robot.hardware.phoenix6.gyro.Pigeon2Wrapper;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
+import frc.robot.hardware.phoenix6.signal.Phoenix6ThreadAngleSignal;
 import frc.robot.subsystems.swerve.GyroSignals;
 import frc.robot.subsystems.swerve.odometrythread.OdometryThread;
 import frc.utils.alerts.Alert;
@@ -35,7 +36,11 @@ class Pigeon2GyroBuilder {
 	}
 
 	static GyroSignals buildSignals(Pigeon2Gyro pigeon2Gyro, OdometryThread odometryThread) {
-		return new GyroSignals(Phoenix6SignalBuilder.build(pigeon2Gyro.getDevice().getYaw(), AngleUnit.DEGREES, odometryThread));
+		Phoenix6ThreadAngleSignal yawSignal = Phoenix6SignalBuilder.build(pigeon2Gyro.getDevice().getYaw(), AngleUnit.DEGREES, odometryThread);
+		yawSignal.addLatencyCompensation(
+			Phoenix6SignalBuilder.build(pigeon2Gyro.getDevice().getAngularVelocityZWorld(), AngleUnit.DEGREES, odometryThread)
+		);
+		return new GyroSignals(yawSignal);
 	}
 
 }

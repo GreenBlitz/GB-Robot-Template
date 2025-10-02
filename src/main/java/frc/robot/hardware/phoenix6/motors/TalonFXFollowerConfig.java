@@ -7,7 +7,7 @@ public class TalonFXFollowerConfig {
 
 	public record TalonFXFollowerID(String name, Phoenix6DeviceID id, boolean opposeMain){}
 
-	public TalonFXFollowerID[] followerIDs;
-	public TalonFXConfiguration motorConfig;
+	public TalonFXFollowerID[] followerIDs = new TalonFXFollowerID[0];
+	public TalonFXConfiguration motorConfig = new TalonFXConfiguration();
 
 }

@@ -40,7 +40,7 @@ public class RobotManager extends LoggedRobot {
 		this.roborioCycles = 0;
 		this.robot = new Robot();
 
-        createAutoReadyForConstructionChooser();
+		createAutoReadyForConstructionChooser();
 		JoysticksBindings.configureBindings(robot);
 
 		Threads.setCurrentThreadPriority(true, 10);

@@ -5,9 +5,9 @@ import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 
 public class TalonFXMotorConfig {
 
-    public String[] names;
-    public Phoenix6DeviceID[] followerIDS;
-    public boolean[] followerInvertedToMain;
-    public TalonFXConfiguration followerConfig;
+	public String[] names;
+	public Phoenix6DeviceID[] followerIDS;
+	public boolean[] followerInvertedToMain;
+	public TalonFXConfiguration followerConfig;
 
 }

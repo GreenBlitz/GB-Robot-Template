@@ -26,141 +26,134 @@ import java.util.Optional;
 
 public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 
-    private static final int APPLY_CONFIG_RETRIES = 5;
+	private static final int APPLY_CONFIG_RETRIES = 5;
 
-    private final TalonFXWrapper motor;
-    private final TalonFXWrapper[] followers;
-    private final TalonFXMotorConfig followerConfig;
-    private final Optional<TalonFXSimulation> talonFXSimulationOptional;
-    private final SysIdCalibrator.SysIdConfigInfo sysidConfigInfo;
+	private final TalonFXWrapper motor;
+	private final TalonFXWrapper[] followers;
+	private final TalonFXMotorConfig followerConfig;
+	private final Optional<TalonFXSimulation> talonFXSimulationOptional;
+	private final SysIdCalibrator.SysIdConfigInfo sysidConfigInfo;
 
-    public TalonFXMotor(
-        String logPath,
-        Phoenix6DeviceID deviceID,
-        TalonFXMotorConfig motorConfig,
-        SysIdRoutine.Config sysidConfig,
-        MechanismSimulation simulation
-    ) {
-        super(logPath);
-        this.motor = new TalonFXWrapper(deviceID);
-        this.talonFXSimulationOptional = createSimulation(simulation);
-        this.sysidConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysidConfig, true);
-        this.followerConfig = motorConfig;
+	public TalonFXMotor(
+		String logPath,
+		Phoenix6DeviceID deviceID,
+		TalonFXMotorConfig motorConfig,
+		SysIdRoutine.Config sysidConfig,
+		MechanismSimulation simulation
+	) {
+		super(logPath);
+		this.motor = new TalonFXWrapper(deviceID);
+		this.talonFXSimulationOptional = createSimulation(simulation);
+		this.sysidConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysidConfig, true);
+		this.followerConfig = motorConfig;
 
-        if (motorConfig == null) {
-            followers = new TalonFXWrapper[0];
-        }
-        else {
-            followers = new TalonFXWrapper[motorConfig.followerIDS.length];
-            for (int i = 0; i < followers.length; i++) {
-                followers[i] = new TalonFXWrapper(motorConfig.followerIDS[i]);
-                applyConfiguration(followers[i], motorConfig.followerConfig);
-                followers[i].setControl(new Follower(deviceID.id(), motorConfig.followerInvertedToMain[i]));
-                BaseStatusSignal.setUpdateFrequencyForAll(
-                    RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-                    followers[i].getPosition(),
-                    followers[i].getMotorVoltage()
-                );
-                followers[i].optimizeBusUtilization();
-            }
-        }
+		if (motorConfig == null) {
+			followers = new TalonFXWrapper[0];
+		} else {
+			followers = new TalonFXWrapper[motorConfig.followerIDS.length];
+			for (int i = 0; i < followers.length; i++) {
+				followers[i] = new TalonFXWrapper(motorConfig.followerIDS[i]);
+				applyConfiguration(followers[i], motorConfig.followerConfig);
+				followers[i].setControl(new Follower(deviceID.id(), motorConfig.followerInvertedToMain[i]));
+				BaseStatusSignal.setUpdateFrequencyForAll(
+					RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+					followers[i].getPosition(),
+					followers[i].getMotorVoltage()
+				);
+				followers[i].optimizeBusUtilization();
+			}
+		}
 
-        motor.optimizeBusUtilization();
-    }
+		motor.optimizeBusUtilization();
+	}
 
-    public TalonFXMotor(String logPath, Phoenix6DeviceID deviceID, SysIdRoutine.Config sysidConfig,
-        MechanismSimulation mechanismSimulation) {
-        this(logPath, deviceID, null, sysidConfig, mechanismSimulation);
-    }
+	public TalonFXMotor(String logPath, Phoenix6DeviceID deviceID, SysIdRoutine.Config sysidConfig, MechanismSimulation mechanismSimulation) {
+		this(logPath, deviceID, null, sysidConfig, mechanismSimulation);
+	}
 
-    public TalonFXMotor(String logPath, Phoenix6DeviceID deviceID, SysIdRoutine.Config sysidConfig) {
-        this(logPath, deviceID, null, sysidConfig, null);
-    }
+	public TalonFXMotor(String logPath, Phoenix6DeviceID deviceID, SysIdRoutine.Config sysidConfig) {
+		this(logPath, deviceID, null, sysidConfig, null);
+	}
 
-    private void applyConfiguration(TalonFXWrapper motor, TalonFXConfiguration configuration) {
-        if (talonFXSimulationOptional.isPresent()) {
-            talonFXSimulationOptional.get().applyConfig(motor, configuration);
-        }
-        else if (!motor.applyConfiguration(configuration, APPLY_CONFIG_RETRIES).isOK()) {
-            new Alert(Alert.AlertType.ERROR, getLogPath() + "ConfigurationFailed").report();
-        }
-    }
+	private void applyConfiguration(TalonFXWrapper motor, TalonFXConfiguration configuration) {
+		if (talonFXSimulationOptional.isPresent()) {
+			talonFXSimulationOptional.get().applyConfig(motor, configuration);
+		} else if (!motor.applyConfiguration(configuration, APPLY_CONFIG_RETRIES).isOK()) {
+			new Alert(Alert.AlertType.ERROR, getLogPath() + "ConfigurationFailed").report();
+		}
+	}
 
-    public void applyConfiguration(TalonFXConfiguration configuration) {
-        applyConfiguration(motor, configuration);
-    }
+	public void applyConfiguration(TalonFXConfiguration configuration) {
+		applyConfiguration(motor, configuration);
+	}
 
-    private Optional<TalonFXSimulation> createSimulation(MechanismSimulation simulation) {
-        return Robot.ROBOT_TYPE.isSimulation() && simulation != null
-            ? Optional.of(new TalonFXSimulation(motor, simulation, followers))
-            : Optional.empty();
-    }
+	private Optional<TalonFXSimulation> createSimulation(MechanismSimulation simulation) {
+		return Robot.ROBOT_TYPE.isSimulation() && simulation != null
+			? Optional.of(new TalonFXSimulation(motor, simulation, followers))
+			: Optional.empty();
+	}
 
-    @Override
-    public TalonFXWrapper getDevice() {
-        return motor;
-    }
+	@Override
+	public TalonFXWrapper getDevice() {
+		return motor;
+	}
 
-    @Override
-    public void updateSimulation() {
-        talonFXSimulationOptional.ifPresent(TalonFXSimulation::updateMotor);
-    }
+	@Override
+	public void updateSimulation() {
+		talonFXSimulationOptional.ifPresent(TalonFXSimulation::updateMotor);
+	}
 
-    @Override
-    public void updateInputs(InputSignal<?>... inputSignals) {
-        super.updateInputs(inputSignals);
-        for (int i = 0; i < followers.length; i++) {
-            String followerLogPath = getLogPath() + "/followers/" + followerConfig.names[i];
-            Logger.recordOutput(followerLogPath + "/position", followers[i].getPosition().getValue().in(Units.Radians));
-            Logger.recordOutput(followerLogPath + "/voltage", followers[i].getMotorVoltage().getValueAsDouble());
-            Logger.recordOutput(followerLogPath + "/connected", followers[i].isConnected());
-        }
-    }
+	@Override
+	public void updateInputs(InputSignal<?>... inputSignals) {
+		super.updateInputs(inputSignals);
+		for (int i = 0; i < followers.length; i++) {
+			String followerLogPath = getLogPath() + "/followers/" + followerConfig.names[i];
+			Logger.recordOutput(followerLogPath + "/position", followers[i].getPosition().getValue().in(Units.Radians));
+			Logger.recordOutput(followerLogPath + "/voltage", followers[i].getMotorVoltage().getValueAsDouble());
+			Logger.recordOutput(followerLogPath + "/connected", followers[i].isConnected());
+		}
+	}
 
-    @Override
-    public SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo() {
-        return sysidConfigInfo;
-    }
+	@Override
+	public SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo() {
+		return sysidConfigInfo;
+	}
 
-    @Override
-    public void setBrake(boolean brake) {
-        NeutralModeValue neutralModeValue = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
-        motor.setNeutralMode(neutralModeValue);
-        for (TalonFXWrapper follower : followers) {
-            follower.setNeutralMode(neutralModeValue);
-        }
-    }
+	@Override
+	public void setBrake(boolean brake) {
+		NeutralModeValue neutralModeValue = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
+		motor.setNeutralMode(neutralModeValue);
+		for (TalonFXWrapper follower : followers) {
+			follower.setNeutralMode(neutralModeValue);
+		}
+	}
 
-    @Override
-    public void resetPosition(Rotation2d position) {
-        motor.setPosition(position.getRotations());
-    }
+	@Override
+	public void resetPosition(Rotation2d position) {
+		motor.setPosition(position.getRotations());
+	}
 
 
-    @Override
-    public void stop() {
-        motor.stopMotor();
-    }
+	@Override
+	public void stop() {
+		motor.stopMotor();
+	}
 
-    @Override
-    public void setPower(double power) {
-        motor.set(power);
-    }
+	@Override
+	public void setPower(double power) {
+		motor.set(power);
+	}
 
-    @Override
-    public void applyRequest(IRequest<?> request) {
-        if (request instanceof Phoenix6Request<?> phoenix6Request) {
-            if (phoenix6Request instanceof IMotionMagicRequest) {
-                motor.stopMotor();
-            }
-            motor.setControl(phoenix6Request.getControlRequest());
-        }
-        else {
-            new Alert(
-                Alert.AlertType.WARNING,
-                getLogPath() + "Got invalid type of request " + request.getClass().getSimpleName()
-            ).report();
-        }
-    }
+	@Override
+	public void applyRequest(IRequest<?> request) {
+		if (request instanceof Phoenix6Request<?> phoenix6Request) {
+			if (phoenix6Request instanceof IMotionMagicRequest) {
+				motor.stopMotor();
+			}
+			motor.setControl(phoenix6Request.getControlRequest());
+		} else {
+			new Alert(Alert.AlertType.WARNING, getLogPath() + "Got invalid type of request " + request.getClass().getSimpleName()).report();
+		}
+	}
 
 }

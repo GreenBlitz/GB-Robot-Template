@@ -30,14 +30,14 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 
 	private final TalonFXWrapper motor;
 	private final TalonFXWrapper[] followers;
-	private final TalonFXMotorConfig followerConfig;
+	private final TalonFXFollowerConfig followerConfig;
 	private final Optional<TalonFXSimulation> talonFXSimulationOptional;
 	private final SysIdCalibrator.SysIdConfigInfo sysidConfigInfo;
 
 	public TalonFXMotor(
 		String logPath,
 		Phoenix6DeviceID deviceID,
-		TalonFXMotorConfig motorConfig,
+		TalonFXFollowerConfig followerConfig,
 		SysIdRoutine.Config sysidConfig,
 		MechanismSimulation simulation
 	) {
@@ -45,16 +45,16 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		this.motor = new TalonFXWrapper(deviceID);
 		this.talonFXSimulationOptional = createSimulation(simulation);
 		this.sysidConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysidConfig, true);
-		this.followerConfig = motorConfig;
+		this.followerConfig = followerConfig;
 
-		if (motorConfig == null) {
+		if (followerConfig == null) {
 			followers = new TalonFXWrapper[0];
 		} else {
-			followers = new TalonFXWrapper[motorConfig.followerIDS.length];
+			followers = new TalonFXWrapper[followerConfig.followerIDS.length];
 			for (int i = 0; i < followers.length; i++) {
-				followers[i] = new TalonFXWrapper(motorConfig.followerIDS[i]);
-				applyConfiguration(followers[i], motorConfig.followerConfig);
-				followers[i].setControl(new Follower(deviceID.id(), motorConfig.followerInvertedToMain[i]));
+				followers[i] = new TalonFXWrapper(followerConfig.followerIDS[i]);
+				applyConfiguration(followers[i], followerConfig.followerConfig);
+				followers[i].setControl(new Follower(deviceID.id(), followerConfig.followerInvertedToMain[i]));
 				BaseStatusSignal.setUpdateFrequencyForAll(
 					RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 					followers[i].getPosition(),

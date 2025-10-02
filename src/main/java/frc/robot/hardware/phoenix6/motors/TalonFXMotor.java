@@ -58,6 +58,14 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		initializeFollowers();
 	}
 
+	public TalonFXMotor(String logPath, Phoenix6DeviceID deviceID, SysIdRoutine.Config sysidConfig, MechanismSimulation mechanismSimulation) {
+		this(logPath, deviceID, null, sysidConfig, mechanismSimulation);
+	}
+
+	public TalonFXMotor(String logPath, Phoenix6DeviceID deviceID, SysIdRoutine.Config sysidConfig) {
+		this(logPath, deviceID, null, sysidConfig, null);
+	}
+
 	private void initializeFollowers() {
 		for (int i = 0; i < followers.length; i++) {
 			followers[i] = new TalonFXWrapper(followerConfig.followerIDs[i].id());
@@ -72,12 +80,8 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		}
 	}
 
-	public TalonFXMotor(String logPath, Phoenix6DeviceID deviceID, SysIdRoutine.Config sysidConfig, MechanismSimulation mechanismSimulation) {
-		this(logPath, deviceID, null, sysidConfig, mechanismSimulation);
-	}
-
-	public TalonFXMotor(String logPath, Phoenix6DeviceID deviceID, SysIdRoutine.Config sysidConfig) {
-		this(logPath, deviceID, null, sysidConfig, null);
+	public void applyConfiguration(TalonFXConfiguration configuration) {
+		applyConfiguration(motor, configuration);
 	}
 
 	private void applyConfiguration(TalonFXWrapper motor, TalonFXConfiguration configuration) {
@@ -86,10 +90,6 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		} else if (!motor.applyConfiguration(configuration, APPLY_CONFIG_RETRIES).isOK()) {
 			new Alert(Alert.AlertType.ERROR, getLogPath() + "ConfigurationFailed").report();
 		}
-	}
-
-	public void applyConfiguration(TalonFXConfiguration configuration) {
-		applyConfiguration(motor, configuration);
 	}
 
 	private Optional<TalonFXSimulation> createSimulation(MechanismSimulation simulation) {

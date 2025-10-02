@@ -11,12 +11,12 @@ import frc.robot.Robot;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IMotionMagicRequest;
-import frc.robot.hardware.interfaces.InputSignal;
-import frc.robot.hardware.phoenix6.Phoenix6Device;
 import frc.robot.hardware.interfaces.IRequest;
+import frc.robot.hardware.interfaces.InputSignal;
+import frc.robot.hardware.mechanisms.MechanismSimulation;
+import frc.robot.hardware.phoenix6.Phoenix6Device;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.simulation.TalonFXSimulation;
-import frc.robot.hardware.mechanisms.MechanismSimulation;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
 import frc.utils.alerts.Alert;
 import frc.utils.calibration.sysid.SysIdCalibrator;
@@ -47,24 +47,29 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		this.sysidConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysidConfig, true);
 		this.followerConfig = followerConfig;
 
-		if (followerConfig == null) {
+        motor.optimizeBusUtilization();
+
+        if (followerConfig == null) {
 			followers = new TalonFXWrapper[0];
 		} else {
 			followers = new TalonFXWrapper[followerConfig.followerIDs.length];
-			for (int i = 0; i < followers.length; i++) {
-				followers[i] = new TalonFXWrapper(followerConfig.followerIDs[i]);
-				applyConfiguration(followers[i], followerConfig.followerConfig);
-				followers[i].setControl(new Follower(deviceID.id(), followerConfig.followerInvertedToMain[i]));
-				BaseStatusSignal.setUpdateFrequencyForAll(
-					RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-					followers[i].getPosition(),
-					followers[i].getMotorVoltage()
-				);
-				followers[i].optimizeBusUtilization();
-			}
 		}
 
-		motor.optimizeBusUtilization();
+		initializeFollowers();
+	}
+
+	private void initializeFollowers() {
+		for (int i = 0; i < followers.length; i++) {
+			followers[i] = new TalonFXWrapper(followerConfig.followerIDs[i].id());
+			applyConfiguration(followers[i], followerConfig.motorConfig);
+			followers[i].setControl(new Follower(motor.getDeviceID(), followerConfig.followerIDs[i].opposeMain()));
+			BaseStatusSignal.setUpdateFrequencyForAll(
+				RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+				followers[i].getPosition(),
+				followers[i].getMotorVoltage()
+			);
+			followers[i].optimizeBusUtilization();
+		}
 	}
 
 	public TalonFXMotor(String logPath, Phoenix6DeviceID deviceID, SysIdRoutine.Config sysidConfig, MechanismSimulation mechanismSimulation) {
@@ -107,7 +112,7 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 	public void updateInputs(InputSignal<?>... inputSignals) {
 		super.updateInputs(inputSignals);
 		for (int i = 0; i < followers.length; i++) {
-			String followerLogPath = getLogPath() + "/followers/" + followerConfig.names[i];
+			String followerLogPath = getLogPath() + "/followers/" + followerConfig.followerIDs[i].name();
 			Logger.recordOutput(followerLogPath + "/position", followers[i].getPosition().getValue().in(Units.Radians));
 			Logger.recordOutput(followerLogPath + "/voltage", followers[i].getMotorVoltage().getValueAsDouble());
 			Logger.recordOutput(followerLogPath + "/connected", followers[i].isConnected());

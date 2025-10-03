@@ -43,19 +43,15 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 	) {
 		super(logPath);
 		this.motor = new TalonFXWrapper(deviceID);
+		this.followers = initializeFollowers(motor, followerConfig);
+		this.followerConfig = followerConfig;
 		this.talonFXSimulationOptional = createSimulation(simulation);
 		this.sysidConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysidConfig, true);
-		this.followerConfig = followerConfig;
 
-		motor.optimizeBusUtilization();
-
-		if (followerConfig == null) {
-			this.followers = new TalonFXWrapper[0];
-		} else {
-			this.followers = new TalonFXWrapper[followerConfig.followerIDs.length];
+		for (TalonFXWrapper follower : followers) {
+			applyConfiguration(follower, followerConfig.motorConfig);
 		}
-
-		initializeFollowers();
+		motor.optimizeBusUtilization();
 	}
 
 	public TalonFXMotor(String logPath, Phoenix6DeviceID deviceID, SysIdRoutine.Config sysidConfig, MechanismSimulation mechanismSimulation) {
@@ -66,11 +62,12 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		this(logPath, deviceID, null, sysidConfig, null);
 	}
 
-	private void initializeFollowers() {
+	private static TalonFXWrapper[] initializeFollowers(TalonFXWrapper main, TalonFXFollowerConfig followerConfig) {
+		TalonFXWrapper[] followers = new TalonFXWrapper[followerConfig == null ? 0 : followerConfig.followerIDs.length];
+
 		for (int i = 0; i < followers.length; i++) {
 			followers[i] = new TalonFXWrapper(followerConfig.followerIDs[i].id());
-			applyConfiguration(followers[i], followerConfig.motorConfig);
-			followers[i].setControl(new Follower(motor.getDeviceID(), followerConfig.followerIDs[i].opposeMain()));
+			followers[i].setControl(new Follower(main.getDeviceID(), followerConfig.followerIDs[i].opposeMain()));
 			BaseStatusSignal.setUpdateFrequencyForAll(
 				RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 				followers[i].getPosition(),
@@ -78,6 +75,8 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 			);
 			followers[i].optimizeBusUtilization();
 		}
+
+		return followers;
 	}
 
 	public void applyConfiguration(TalonFXConfiguration configuration) {

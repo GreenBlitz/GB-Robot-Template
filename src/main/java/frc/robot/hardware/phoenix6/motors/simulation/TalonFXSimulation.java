@@ -19,12 +19,7 @@ public class TalonFXSimulation {
 	public TalonFXSimulation(TalonFXWrapper talonFXWrapper, MechanismSimulation simulation, TalonFXWrapper[] followers) {
 		this.mechanismSimulation = simulation;
 		this.motorSimState = talonFXWrapper.getSimState();
-
-		if (followers == null) {
-			this.followerSimStates = new TalonFXSimState[0];
-		} else {
-			this.followerSimStates = new TalonFXSimState[followers.length];
-		}
+		this.followerSimStates = new TalonFXSimState[followers.length];
 
 		for (int i = 0; i < followerSimStates.length; i++) {
 			followerSimStates[i] = followers[i].getSimState();

@@ -146,7 +146,7 @@ public class Robot {
 			)
 		);
 		limelightFour.setMT1StdDevsCalculation(
-			LimelightStdDevCalculations.getMT1StdDevsCalculation(limelightFour, new StandardDeviations2D(0.6), new StandardDeviations2D(0.05))
+			LimelightStdDevCalculations.getMT1StdDevsCalculation(limelightFour, new StandardDeviations2D(0.5), new StandardDeviations2D(0.05))
 		);
 		limelightFour.setMT2StdDevsCalculation(
 			LimelightStdDevCalculations.getMT2StdDevsCalculation(
@@ -175,7 +175,8 @@ public class Robot {
 			)
 		);
 		limelightThreeGB.setMT1StdDevsCalculation(
-			LimelightStdDevCalculations.getMT1StdDevsCalculation(limelightThreeGB, new StandardDeviations2D(0.6), new StandardDeviations2D(0.05))
+			LimelightStdDevCalculations.getMT1StdDevsCalculation(limelightThreeGB, new StandardDeviations2D(0.5
+			), new StandardDeviations2D(0.05))
 		);
 		limelightThreeGB.setMT2StdDevsCalculation(
 			LimelightStdDevCalculations.getMT2StdDevsCalculation(

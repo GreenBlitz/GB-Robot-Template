@@ -291,7 +291,7 @@ public class JoysticksBindings {
 				.getCommandsBuilder()
 				.driveToPose(
 					robot.getPoseEstimator()::getEstimatedPose,
-					() -> new Pose2d(1, 7, Rotation2d.fromDegrees(-55)),
+					() -> Field.getAllianceRelative(new Pose2d(1.2, 6.8, Rotation2d.fromDegrees(-55))),
 					AutonomousConstants.getRealTimeConstraints(robot.getSwerve())
 				) // distance to tag 19 is 3.36
 		);

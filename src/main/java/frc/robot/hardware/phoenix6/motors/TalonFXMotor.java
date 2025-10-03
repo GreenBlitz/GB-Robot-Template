@@ -9,6 +9,7 @@ import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Robot;
 import frc.robot.RobotConstants;
+import frc.robot.hardware.FollowerInputsAutoLogged;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IMotionMagicRequest;
 import frc.robot.hardware.interfaces.IRequest;
@@ -19,6 +20,8 @@ import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.simulation.TalonFXSimulation;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
 import frc.utils.alerts.Alert;
+import frc.utils.alerts.AlertManager;
+import frc.utils.alerts.PeriodicAlert;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
 
@@ -30,6 +33,7 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 
 	private final TalonFXWrapper motor;
 	private final TalonFXWrapper[] followers;
+	private final FollowerInputsAutoLogged[] followerInputs;
 	private final TalonFXFollowerConfig followerConfig;
 	private final Optional<TalonFXSimulation> talonFXSimulationOptional;
 	private final SysIdCalibrator.SysIdConfigInfo sysidConfigInfo;
@@ -44,6 +48,7 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		super(logPath);
 		this.motor = new TalonFXWrapper(deviceID);
 		this.followers = initializeFollowers(motor, followerConfig);
+		this.followerInputs = initializeFollowerInputs(getLogPath(), followerConfig, followers.length);
 		this.followerConfig = followerConfig;
 		this.talonFXSimulationOptional = createSimulation(simulation);
 		this.sysidConfigInfo = new SysIdCalibrator.SysIdConfigInfo(sysidConfig, true);
@@ -79,6 +84,21 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		return followers;
 	}
 
+	private static FollowerInputsAutoLogged[] initializeFollowerInputs(String logPath, TalonFXFollowerConfig followerConfig, int followersNum) {
+		FollowerInputsAutoLogged[] followerInputs = new FollowerInputsAutoLogged[followersNum];
+
+		for (int i = 0; i < followerInputs.length; i++) {
+			String followerLogPath = logPath + "/followers/" + followerConfig.followerIDs[i].name();
+			FollowerInputsAutoLogged followerInputsAutoLogged = new FollowerInputsAutoLogged();
+			followerInputs[i] = followerInputsAutoLogged;
+			AlertManager.addAlert(
+				new PeriodicAlert(Alert.AlertType.ERROR, followerLogPath + "disconnectedAt", () -> !followerInputsAutoLogged.connected)
+			);
+		}
+
+		return followerInputs;
+	}
+
 	public void applyConfiguration(TalonFXConfiguration configuration) {
 		applyConfiguration(motor, configuration);
 	}
@@ -112,9 +132,10 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		super.updateInputs(inputSignals);
 		for (int i = 0; i < followers.length; i++) {
 			String followerLogPath = getLogPath() + "/followers/" + followerConfig.followerIDs[i].name();
-			Logger.recordOutput(followerLogPath + "/position", followers[i].getPosition().getValue().in(Units.Radians));
-			Logger.recordOutput(followerLogPath + "/voltage", followers[i].getMotorVoltage().getValueAsDouble());
-			Logger.recordOutput(followerLogPath + "/connected", followers[i].isConnected());
+			followerInputs[i].connected = followers[i].isConnected();
+			followerInputs[i].position = new Rotation2d(followers[i].getPosition().getValue().in(Units.Radians));
+			followerInputs[i].voltage = followers[i].getMotorVoltage().getValueAsDouble();
+			Logger.processInputs(followerLogPath, followerInputs[i]);
 		}
 	}
 

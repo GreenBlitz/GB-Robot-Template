@@ -6,8 +6,8 @@ import org.littletonrobotics.junction.AutoLog;
 @AutoLog
 public class FollowerInputs {
 
-	public boolean connected = true;
-	public Rotation2d position = new Rotation2d();
-	public double voltage = 0;
+	public FollowerData followerData = new FollowerData(true, new Rotation2d(), 0);
+
+	public record FollowerData(boolean connected, Rotation2d position, double voltage) {}
 
 }

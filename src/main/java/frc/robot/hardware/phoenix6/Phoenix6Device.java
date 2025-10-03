@@ -64,12 +64,13 @@ public abstract class Phoenix6Device implements IDevice {
 
 	@Override
 	public void updateInputs(InputSignal<?>... inputSignals) {
+		connectedInput.connected = getDevice().isConnected();
+		Logger.processInputs(logPath, connectedInput);
+
 		if (inputSignals.length == 0) {
 			return;
 		}
 		InputSignal<?>[] validSignals = getValidSignals(inputSignals);
-		connectedInput.connected = getDevice().isConnected();
-		Logger.processInputs(logPath, connectedInput);
 		logSignals(validSignals);
 	}
 

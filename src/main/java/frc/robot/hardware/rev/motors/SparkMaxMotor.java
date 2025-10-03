@@ -225,7 +225,7 @@ public abstract class SparkMaxMotor implements IMotor {
 		warnings = motor.getWarnings();
 		faults = motor.getFaults();
 
-        for (InputSignal<?> signal : inputSignals) {
+		for (InputSignal<?> signal : inputSignals) {
 			if (isValid(signal)) {
 				Logger.processInputs(logPath, signal);
 			} else {

@@ -106,6 +106,8 @@ public class Elevator extends GBSubsystem {
 	}
 
 	private void updateInputs() {
+		motor.updateInputs();
+
 		inputs.data = new ElevatorInputs.ElevatorData(
 			signals.positionSignal().getAndUpdateValue().getRadians(),
 			signals.voltageSignal().getAndUpdateValue(),

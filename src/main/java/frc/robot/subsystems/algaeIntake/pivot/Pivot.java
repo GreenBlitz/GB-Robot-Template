@@ -57,7 +57,7 @@ public class Pivot extends GBSubsystem {
 	}
 
 	public Rotation2d getPosition() {
-		return positionSignal.getLatestValue();
+		return positionSignal.getLatestValue().plus(Rotation2d.fromDegrees(offset * 5));
 	}
 
 //	public Rotation2d getAbsolutePosition() {
@@ -76,11 +76,21 @@ public class Pivot extends GBSubsystem {
 		return positionSignal.isNear(targetPosition, tolerance);
 	}
 
+	double offset = 0;
+	boolean last = false;
+
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
 		if (getPosition().getDegrees() > PivotConstants.MAX_POSITION.getDegrees()) {
 			pivot.resetPosition(PivotConstants.MAX_POSITION);
+		}
+		if (getPosition().getDegrees() < -4 && !last) {
+			offset++;
+			last = true;
+		}
+		if (getPosition().getDegrees() > -1) {
+			last = false;
 		}
 	}
 

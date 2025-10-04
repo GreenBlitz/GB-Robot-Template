@@ -478,10 +478,12 @@ public class RobotCommander extends GBSubsystem {
 		return asSubsystemCommand(
 			new ParallelDeadlineGroup(
 				superstructure.intake(),
-				swerve.getCommandsBuilder().driveToPose(
+				swerve.getCommandsBuilder()
+					.driveToPose(
 						() -> robot.getPoseEstimator().getEstimatedPose(),
 						() -> ScoringHelpers.getIntakePose2d(robot),
-						AutonomousConstants.getRealTimeConstraints(swerve))
+						AutonomousConstants.getRealTimeConstraints(swerve)
+					)
 			),
 			RobotState.INTAKE_WITH_AIM_ASSIST
 		);

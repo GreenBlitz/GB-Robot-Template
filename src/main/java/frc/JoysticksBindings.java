@@ -169,23 +169,21 @@ public class JoysticksBindings {
 		RobotCommander robotCommander = robot.getRobotCommander();
 
 		return new DeferredCommand(
-				() -> robotCommander.setState(
-						robotCommander.getSuperstructure().isAlgaeInAlgaeIntake()
-								? RobotState.ALGAE_OUTTAKE_FROM_INTAKE
-								: RobotState.PROCESSOR_SCORE
-				),
-				Set.of(
-						robotCommander,
-						robotCommander.getSuperstructure(),
-						robot.getSwerve(),
-						robot.getElevator(),
-						robot.getArm(),
-						robot.getEndEffector(),
-						robot.getLifter(),
-						robot.getSolenoid(),
-						robot.getPivot(),
-						robot.getRollers()
-				)
+			() -> robotCommander.setState(
+				robotCommander.getSuperstructure().isAlgaeInAlgaeIntake() ? RobotState.ALGAE_OUTTAKE_FROM_INTAKE : RobotState.PROCESSOR_SCORE
+			),
+			Set.of(
+				robotCommander,
+				robotCommander.getSuperstructure(),
+				robot.getSwerve(),
+				robot.getElevator(),
+				robot.getArm(),
+				robot.getEndEffector(),
+				robot.getLifter(),
+				robot.getSolenoid(),
+				robot.getPivot(),
+				robot.getRollers()
+			)
 		);
 	}
 

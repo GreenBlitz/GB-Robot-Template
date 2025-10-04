@@ -6,6 +6,8 @@ import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
+import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.Logger;
 
 public class Pivot extends GBSubsystem {
 
@@ -85,13 +87,14 @@ public class Pivot extends GBSubsystem {
 		if (getPosition().getDegrees() > PivotConstants.MAX_POSITION.getDegrees()) {
 			pivot.resetPosition(PivotConstants.MAX_POSITION);
 		}
-		if (getPosition().getDegrees() < -4 && !last) {
-			offset++;
-			last = true;
-		}
-		if (getPosition().getDegrees() > -1) {
-			last = false;
-		}
+//		if (getPosition().getDegrees() < -4 && !last) {
+//			Logger.recordOutput("ststs", TimeUtil.getCurrentTimeSeconds());
+//			offset++;
+//			last = true;
+//		}
+//		if (getPosition().getDegrees() > -1) {
+//			last = false;
+//		}
 	}
 
 	private void updateInputs() {

@@ -286,7 +286,7 @@ public class JoysticksBindings {
 				.getCommandsBuilder()
 				.driveToPose(
 					robot.getPoseEstimator()::getEstimatedPose,
-					() -> new Pose2d(7.55, 5, new Rotation2d()),
+					() -> Field.getAllianceRelative(new Pose2d(7.55, 5, new Rotation2d())),
 					AutonomousConstants.getRealTimeConstraints(robot.getSwerve())
 				) // distance to tag 9 is 4.65
 		);
@@ -295,7 +295,7 @@ public class JoysticksBindings {
 				.getCommandsBuilder()
 				.driveToPose(
 					robot.getPoseEstimator()::getEstimatedPose,
-					() -> new Pose2d(10, 5, Rotation2d.k180deg),
+					() -> Field.getAllianceRelative(new Pose2d(10, 5, Rotation2d.k180deg)),
 					AutonomousConstants.getRealTimeConstraints(robot.getSwerve())
 				) // distance to tag 20 is 4.65
 		);
@@ -304,7 +304,7 @@ public class JoysticksBindings {
 				.getCommandsBuilder()
 				.driveToPose(
 					robot.getPoseEstimator()::getEstimatedPose,
-					() -> new Pose2d(7.55, 5, Rotation2d.k180deg),
+					() -> Field.getAllianceRelative(new Pose2d(7.55, 5, Rotation2d.k180deg)),
 					AutonomousConstants.getRealTimeConstraints(robot.getSwerve())
 				) // distance to tag 20 is 2.21
 		);
@@ -322,7 +322,7 @@ public class JoysticksBindings {
 				.getCommandsBuilder()
 				.driveToPose(
 					robot.getPoseEstimator()::getEstimatedPose,
-					() -> new Pose2d(3.2, 4, new Rotation2d()),
+					() -> Field.getAllianceRelative(new Pose2d(3.2, 4, new Rotation2d())),
 					AutonomousConstants.getRealTimeConstraints(robot.getSwerve())
 				) // should be on middle of reef side
 		);
@@ -331,7 +331,7 @@ public class JoysticksBindings {
 				.getCommandsBuilder()
 				.driveToPose(
 					robot.getPoseEstimator()::getEstimatedPose,
-					() -> new Pose2d(6, 0.45, Rotation2d.fromDegrees(90)),
+					() -> Field.getAllianceRelative(new Pose2d(6, 0.45, Rotation2d.fromDegrees(90))),
 					AutonomousConstants.getRealTimeConstraints(robot.getSwerve())
 				) // distance from tag 22 is 2.64
 		);

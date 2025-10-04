@@ -19,13 +19,28 @@ public class LimelightFilters {
 		return ObjectDetectionFilters.onlyTheseTypes(() -> LimelightHelpers.getDetectorClass(limelight.getName()), typesToReturn);
 	}
 
-	public static Filter megaTag1Filter(Limelight limelight, Translation2d robotInFieldTolerance) {
-		return MegaTagFilters.isRobotInField(() -> limelight.getMT1RawData().pose().getTranslation(), robotInFieldTolerance);
+	public static Filter megaTag1Filter(
+		Limelight limelight,
+		Translation2d robotInFieldTolerance,
+		Function<Double, Optional<Rotation2d>> wantedYawAtTimestamp,
+		Supplier<Boolean> isYawCalibrated,
+		Rotation2d yawAtAngleTolerance
+	) {
+		return MegaTagFilters.isRobotInField(() -> limelight.getMT1RawData().pose().getTranslation(), robotInFieldTolerance)
+			.and(
+				MegaTagFilters.isYawAtAngle(
+					() -> limelight.getMT2RawData().pose().getRotation(),
+					() -> wantedYawAtTimestamp.apply(Limelight.getEstimateTimestampSeconds(limelight.getMT1RawData())),
+					isYawCalibrated,
+					yawAtAngleTolerance
+				)
+			);
 	}
 
 	public static Filter megaTag2Filter(
 		Limelight limelight,
 		Function<Double, Optional<Rotation2d>> wantedYawAtTimestamp,
+		Supplier<Boolean> isYawCalibrated,
 		Translation2d robotInFieldTolerance,
 		Rotation2d yawAtAngleTolerance
 	) {
@@ -34,6 +49,7 @@ public class LimelightFilters {
 				MegaTagFilters.isYawAtAngle(
 					() -> limelight.getMT2RawData().pose().getRotation(),
 					() -> wantedYawAtTimestamp.apply(Limelight.getEstimateTimestampSeconds(limelight.getMT2RawData())),
+					isYawCalibrated,
 					yawAtAngleTolerance
 				)
 			)
@@ -57,11 +73,14 @@ public class LimelightFilters {
 		private static Filter isYawAtAngle(
 			Supplier<Rotation2d> robotYaw,
 			Supplier<Optional<Rotation2d>> wantedYawSupplier,
+			Supplier<Boolean> isYawCalibrated,
 			Rotation2d yawTolerance
 		) {
-			return () -> wantedYawSupplier.get()
-				.map(wantedAngle -> ToleranceMath.isNearWrapped(wantedAngle, robotYaw.get(), yawTolerance))
-				.orElse(false);
+			return () -> isYawCalibrated.get()
+				? wantedYawSupplier.get()
+					.map(wantedAngle -> ToleranceMath.isNearWrapped(wantedAngle, robotYaw.get(), yawTolerance))
+					.orElse(false)
+				: true;
 		}
 
 		private static Filter isYawNotZero(Supplier<Rotation2d> robotYaw) {

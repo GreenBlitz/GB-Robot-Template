@@ -11,9 +11,9 @@ public class RealSwerveConstants {
 	public static final double MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND = 4;
 	public static final Rotation2d MAX_ROTATIONAL_VELOCITY_PER_SECOND = Rotation2d.fromRadians(7.9);
 
-	private static final PIDConstants TRANSLATION_METERS_PID_CONSTANTS = new PIDConstants(2, 7.9, 0, 0.03);
+	private static final PIDConstants TRANSLATION_METERS_PID_CONSTANTS = new PIDConstants(5, 0, 0);
 	private static final PIDConstants PP_TRANSLATION_METERS_PID_CONSTANTS = new PIDConstants(2, 0, 0);
-	private static final PIDConstants ROTATION_DEGREES_PID_CONSTANTS = new PIDConstants(2.7, 0.5, 0, 2);
+	private static final PIDConstants ROTATION_DEGREES_PID_CONSTANTS = new PIDConstants(2.7, 0, 0, 0);
 	private static final PIDConstants PP_ROTATION_DEGREES_PID_CONSTANTS = new PIDConstants(3.5, 0, 0);
 
 	static SwerveConstants getSwerveConstants(String logPath) {

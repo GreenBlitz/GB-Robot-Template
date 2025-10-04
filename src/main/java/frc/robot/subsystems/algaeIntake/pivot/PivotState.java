@@ -5,13 +5,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public enum PivotState {
 
 	CLOSED(Rotation2d.fromDegrees(115)),
-	INTAKE(Rotation2d.fromDegrees(-7)),
+	INTAKE(Rotation2d.fromDegrees(-10)),
 	TRANSFER_TO_END_EFFECTOR(Rotation2d.fromDegrees(100)),
 	OUTTAKE(Rotation2d.fromDegrees(-10)),
 	HOLD_ALGAE(Rotation2d.fromDegrees(20)),
 	STAY_IN_PLACE(null);
 
-	private Rotation2d position;
+	private final Rotation2d position;
 
 	PivotState(Rotation2d position) {
 		this.position = position;
@@ -20,10 +20,5 @@ public enum PivotState {
 	public Rotation2d getPosition() {
 		return position;
 	}
-
-	public void add(Rotation2d rotation2d) {
-		position = position.plus(rotation2d);
-	}
-
 
 }

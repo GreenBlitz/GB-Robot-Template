@@ -6,8 +6,6 @@ import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
-import frc.utils.time.TimeUtil;
-import org.littletonrobotics.junction.Logger;
 
 public class Pivot extends GBSubsystem {
 
@@ -59,7 +57,7 @@ public class Pivot extends GBSubsystem {
 	}
 
 	public Rotation2d getPosition() {
-		return positionSignal.getLatestValue().plus(Rotation2d.fromDegrees(offset * 5));
+		return positionSignal.getLatestValue();
 	}
 
 //	public Rotation2d getAbsolutePosition() {
@@ -78,23 +76,12 @@ public class Pivot extends GBSubsystem {
 		return positionSignal.isNear(targetPosition, tolerance);
 	}
 
-	double offset = 0;
-	boolean last = false;
-
 	@Override
 	protected void subsystemPeriodic() {
 		updateInputs();
 		if (getPosition().getDegrees() > PivotConstants.MAX_POSITION.getDegrees()) {
 			pivot.resetPosition(PivotConstants.MAX_POSITION);
 		}
-//		if (getPosition().getDegrees() < -4 && !last) {
-//			Logger.recordOutput("ststs", TimeUtil.getCurrentTimeSeconds());
-//			offset++;
-//			last = true;
-//		}
-//		if (getPosition().getDegrees() > -1) {
-//			last = false;
-//		}
 	}
 
 	private void updateInputs() {

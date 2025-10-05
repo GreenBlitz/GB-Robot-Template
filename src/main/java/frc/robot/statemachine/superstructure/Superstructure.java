@@ -648,6 +648,16 @@ public class Superstructure extends GBSubsystem {
 			SuperstructureState.ALGAE_OUTTAKE_FROM_INTAKE
 		);
 	}
+	
+	public boolean func() {
+		boolean arm = armStateHandler.isAtState(ArmState.TRANSFER_ALGAE_FROM_INTAKE, Rotation2d.fromDegrees(5));
+		boolean elevator = elevatorStateHandler.isAtState(ElevatorState.TRANSFER_ALGAE_FROM_INTAKE);
+		boolean algaeIntake = algaeIntakeStateHandler.getCurrentState() == AlgaeIntakeState.HOLD_ALGAE;
+		Logger.recordOutput("Test/arm", arm);
+		Logger.recordOutput("Test/elevator", elevator);
+		Logger.recordOutput("Test/algaeIntake", algaeIntake);
+		return arm && elevator && algaeIntake;
+	}
 
 	public Command transferAlgaeFromIntakeToEndEffector() {
 		return asSubsystemCommand(
@@ -661,9 +671,7 @@ public class Superstructure extends GBSubsystem {
 						.withTimeout(StateMachineConstants.PUSH_ALGAE_OUT_TIME_SECONDS)
 						.andThen(algaeIntakeStateHandler.setState(AlgaeIntakeState.HOLD_ALGAE))
 				).until(
-					() -> armStateHandler.isAtState(ArmState.TRANSFER_ALGAE_FROM_INTAKE)
-						&& elevatorStateHandler.isAtState(ElevatorState.TRANSFER_ALGAE_FROM_INTAKE)
-						&& algaeIntakeStateHandler.getCurrentState() == AlgaeIntakeState.HOLD_ALGAE
+					() -> func()
 				).withTimeout(3),
 				new ParallelCommandGroup(
 					new SequentialCommandGroup(

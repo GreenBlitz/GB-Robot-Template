@@ -60,7 +60,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 		this.target2dValues = new LimelightTarget2dValues();
 
-        this.mt1Pose3d = new Pose3d();
+		this.mt1Pose3d = new Pose3d();
 
 		this.mt1PoseObservation = new RobotPoseObservation();
 		this.mt2PoseObservation = new RobotPoseObservation();

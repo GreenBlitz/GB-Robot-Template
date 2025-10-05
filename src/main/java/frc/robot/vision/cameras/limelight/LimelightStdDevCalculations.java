@@ -14,8 +14,8 @@ public class LimelightStdDevCalculations {
 		StandardDeviations2D stdDevFactors
 	) {
 		return () -> exponentialTagDistanceDividedByVisibleTags(
-			limelight.getMT1RawData().tagCount,
-			limelight.getMT1RawData().avgTagDist,
+			limelight.getMT1RawData().tagCount(),
+			limelight.getMT1RawData().avgTagDist(),
 			stdDevFactorials,
 			stdDevFactors
 		);
@@ -26,7 +26,7 @@ public class LimelightStdDevCalculations {
 		StandardDeviations2D minStdDevs,
 		StandardDeviations2D stdDevFactors
 	) {
-		return () -> averageTagDistanceParabola(limelight.getMT2RawData().avgTagDist, minStdDevs, stdDevFactors);
+		return () -> averageTagDistanceParabola(limelight.getMT2RawData().avgTagDist(), minStdDevs, stdDevFactors);
 	}
 
 	private static StandardDeviations2D averageTagDistanceParabola(

@@ -2,6 +2,7 @@ package frc.robot.scoringhelpers;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.constants.field.Field;
@@ -70,13 +71,20 @@ public class ScoringHelpers {
 	}
 
 	public static CoralStationSlot getTargetCoralStationSlot(Robot robot) {
-		Translation2d robotTranslation = getRobotTranslationWithSpeedsHandle(robot);
+		Translation2d robotTranslation = robot.getPoseEstimator().getEstimatedPose().getTranslation();
 		if (getTargetCoralStation(robot) == CoralStation.RIGHT) {
 			latestWantedCoralStationSlot = getClosestCoralStationSlot(robotTranslation, CoralStationSlot.R2, CoralStationSlot.R8);
 		} else {
 			latestWantedCoralStationSlot = getClosestCoralStationSlot(robotTranslation, CoralStationSlot.L2, CoralStationSlot.L8);
 		}
 		return latestWantedCoralStationSlot;
+	}
+
+	public static Pose2d getIntakePose2d(Robot robot) {
+		Pose2d pose = Field.getCoralStationSlot(ScoringHelpers.getTargetCoralStationSlot(robot));
+		double distanceInFeederAxis = 0.48;
+		pose = pose.plus(new Transform2d(distanceInFeederAxis, 0, new Rotation2d()));
+		return pose;
 	}
 
 	public static Cage getTargetCage(Robot robot) {

@@ -165,6 +165,28 @@ public class JoysticksBindings {
 		});
 	}
 
+	private static Command processorActionChooser(Robot robot) {
+		RobotCommander robotCommander = robot.getRobotCommander();
+
+		return new DeferredCommand(
+			() -> robotCommander.setState(
+				robotCommander.getSuperstructure().isAlgaeInAlgaeIntake() ? RobotState.ALGAE_OUTTAKE_FROM_INTAKE : RobotState.PROCESSOR_SCORE
+			),
+			Set.of(
+				robotCommander,
+				robotCommander.getSuperstructure(),
+				robot.getSwerve(),
+				robot.getElevator(),
+				robot.getArm(),
+				robot.getEndEffector(),
+				robot.getLifter(),
+				robot.getSolenoid(),
+				robot.getPivot(),
+				robot.getRollers()
+			)
+		);
+	}
+
 	private static Command algaeOuttakeActionChooser(Robot robot) {
 		RobotCommander robotCommander = robot.getRobotCommander();
 
@@ -210,7 +232,7 @@ public class JoysticksBindings {
 		// bindings...
 		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(closeReefActionChooser(robot));
 
-//		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE_WITH_AIM_ASSIST));
+		usedJoystick.X.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE_WITH_AIM_ASSIST));
 		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_INTAKE));
 
 		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(intakeActionChooser(robot));
@@ -218,11 +240,11 @@ public class JoysticksBindings {
 		usedJoystick.R1.onTrue(netActionChooser(robot));
 
 		usedJoystick.Y.onTrue(robot.getRobotCommander().setState(RobotState.CORAL_OUTTAKE));
-		usedJoystick.X.onTrue(algaeOuttakeActionChooser(robot));
-		usedJoystick.B.onTrue(robot.getRobotCommander().setState(RobotState.PROCESSOR_SCORE));
+//		usedJoystick.X.onTrue(algaeOuttakeActionChooser(robot));
+		usedJoystick.B.onTrue(processorActionChooser(robot));
 
 
-//		usedJoystick.POV_LEFT.onTrue(robot.getRobotCommander().setState(RobotState.PRE_CLIMB_WITH_AIM_ASSIST));
+		usedJoystick.POV_LEFT.onTrue(robot.getRobotCommander().setState(RobotState.PRE_CLIMB_WITH_AIM_ASSIST));
 		usedJoystick.POV_UP.onTrue(robot.getRobotCommander().setState(RobotState.PRE_CLIMB_WITHOUT_AIM_ASSIST));
 		usedJoystick.POV_DOWN.onTrue(robot.getRobotCommander().setState(RobotState.CLIMB_WITH_LIMIT_SWITCH));
 		usedJoystick.A.onTrue(driveActionChooser(robot));

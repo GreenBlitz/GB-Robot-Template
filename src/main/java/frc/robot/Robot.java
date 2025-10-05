@@ -142,7 +142,7 @@ public class Robot {
 				new Translation2d(0.1, 0.1),
 				headingEstimator::getEstimatedHeadingAtTimestamp,
 				() -> headingEstimator.isGyroOffsetCalibrated(RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE),
-				Rotation2d.fromDegrees(15)
+				Rotation2d.fromDegrees(10)
 			)
 		);
 		limelightFour.setMT2PoseFilter(
@@ -180,7 +180,7 @@ public class Robot {
 				new Translation2d(0.1, 0.1),
 				headingEstimator::getEstimatedHeadingAtTimestamp,
 				() -> headingEstimator.isGyroOffsetCalibrated(RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE),
-				Rotation2d.fromDegrees(15)
+				Rotation2d.fromDegrees(10)
 			)
 		);
 		limelightThreeGB.setMT2PoseFilter(

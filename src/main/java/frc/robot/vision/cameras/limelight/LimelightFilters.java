@@ -34,7 +34,7 @@ public class LimelightFilters {
 			.and(MegaTagFilters.isRobotOnFloor(limelight::getMt1Pose3d, robotInFieldOnFloorTolerance))
 			.and(
 				MegaTagFilters.isYawAtAngle(
-					() -> limelight.getMT2RawData().pose.getRotation(),
+					() -> limelight.getMT1RawData().pose.getRotation(),
 					() -> wantedYawAtTimestamp.apply(Limelight.getEstimateTimestampSeconds(limelight.getMT1RawData())),
 					isYawCalibrated,
 					Rotation2d.fromRadians(robotInFieldOnFloorTolerance.getRotation().getZ())

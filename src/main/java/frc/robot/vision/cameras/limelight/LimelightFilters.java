@@ -1,5 +1,6 @@
 package frc.robot.vision.cameras.limelight;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.constants.field.Field;
@@ -21,18 +22,22 @@ public class LimelightFilters {
 
 	public static Filter megaTag1Filter(
 		Limelight limelight,
-		Translation2d robotInFieldTolerance,
+		Pose3d robotInFieldOnFloorTolerance,
 		Function<Double, Optional<Rotation2d>> wantedYawAtTimestamp,
-		Supplier<Boolean> isYawCalibrated,
-		Rotation2d yawAtAngleTolerance
+		Supplier<Boolean> isYawCalibrated
 	) {
-		return MegaTagFilters.isRobotInField(() -> limelight.getMT1RawData().pose().getTranslation(), robotInFieldTolerance)
+		return MegaTagFilters
+			.isRobotInField(
+				() -> limelight.getMT1RawData().pose().getTranslation(),
+				robotInFieldOnFloorTolerance.getTranslation().toTranslation2d()
+			)
+			.and(MegaTagFilters.isRobotOnFloor(limelight::getMt1Pose3d, robotInFieldOnFloorTolerance))
 			.and(
 				MegaTagFilters.isYawAtAngle(
 					() -> limelight.getMT2RawData().pose().getRotation(),
 					() -> wantedYawAtTimestamp.apply(Limelight.getEstimateTimestampSeconds(limelight.getMT1RawData())),
 					isYawCalibrated,
-					yawAtAngleTolerance
+					Rotation2d.fromRadians(robotInFieldOnFloorTolerance.getRotation().getZ())
 				)
 			);
 	}
@@ -84,6 +89,34 @@ public class LimelightFilters {
 
 		private static Filter isYawNotZero(Supplier<Rotation2d> robotYaw) {
 			return () -> robotYaw.get().getRotations() != 0.0;
+		}
+
+		private static Filter isZOnFloor(Supplier<Double> robotZ, double zToleranceMeters) {
+			return () -> ToleranceMath.isNear(0, robotZ.get(), zToleranceMeters);
+		}
+
+		private static Filter isPitchOnFloor(Supplier<Rotation2d> robotPitch, Rotation2d pitchTolerance) {
+			return () -> ToleranceMath.isNearWrapped(Rotation2d.kZero, robotPitch.get(), pitchTolerance);
+		}
+
+		private static Filter isRollOnFloor(Supplier<Rotation2d> robotRoll, Rotation2d rollTolerance) {
+			return () -> ToleranceMath.isNearWrapped(Rotation2d.kZero, robotRoll.get(), rollTolerance);
+		}
+
+		private static Filter isRobotOnFloor(Supplier<Pose3d> robotPose, Pose3d tolerance) {
+			return isZOnFloor(() -> robotPose.get().getZ(), tolerance.getZ())
+				.and(
+					isPitchOnFloor(
+						() -> Rotation2d.fromRadians(robotPose.get().getRotation().getX()),
+						Rotation2d.fromRadians(tolerance.getRotation().getX())
+					)
+				)
+				.and(
+					isPitchOnFloor(
+						() -> Rotation2d.fromRadians(robotPose.get().getRotation().getY()),
+						Rotation2d.fromRadians(tolerance.getRotation().getY())
+					)
+				);
 		}
 
 		private static Filter isXInField(Supplier<Double> robotX, double xToleranceMeters) {

@@ -250,7 +250,11 @@ public class Robot {
 
 		configureAuto();
 	}
-
+	
+	public RobotHeadingEstimator getHeadingEstimator() {
+		return headingEstimator;
+	}
+	
 	private void configureAuto() {
 		Supplier<Command> scoringCommand = () -> new WaitUntilCommand(robotCommander::isReadyToScore).andThen(
 			robotCommander.getSuperstructure()

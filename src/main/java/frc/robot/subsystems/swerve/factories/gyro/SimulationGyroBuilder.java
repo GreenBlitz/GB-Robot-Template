@@ -16,7 +16,7 @@ class SimulationGyroBuilder {
 	}
 
 	static GyroSignals buildSignals() {
-		return new GyroSignals(new AngleSignal("", "yaw", AngleUnit.DEGREES) {
+		return new GyroSignals(new AngleSignal("yaw", AngleUnit.DEGREES) {
 
 			@Override
 			protected void updateValue(TimedValue<Rotation2d> timedValue) {

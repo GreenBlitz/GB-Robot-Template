@@ -99,22 +99,14 @@ class KrakenX60SteerBuilder {
 		);
 	}
 
-	static SteerSignals buildSignals(TalonFXMotor steer, String logPath) {
+	static SteerSignals buildSignals(TalonFXMotor steer) {
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
 			.build(steer.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
 		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder
 			.build(steer.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
-		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder.build(
-			logPath,
-			"steerVelocityRadPerSec",
-			steer.getDevice().getVelocity(),
-			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-			AngleUnit.ROTATIONS,
-			BusChain.ROBORIO
-		);
+		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder
+			.build(steer.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder.build(
-			logPath,
-			"steerPositionRads",
 			steer.getDevice().getPosition(),
 			velocitySignal,
 			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,

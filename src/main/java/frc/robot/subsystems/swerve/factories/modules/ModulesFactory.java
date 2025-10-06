@@ -23,10 +23,10 @@ public class ModulesFactory {
 			EncoderFactory.createSignals(angleEncoder),
 			steer,
 			SteerFactory.createRequests(),
-			SteerFactory.createSignals(steer, modulePosition),
+			SteerFactory.createSignals(steer),
 			drive,
 			DriveFactory.createRequests(),
-			DriveFactory.createSignals(drive, modulePosition)
+			DriveFactory.createSignals(drive)
 		);
 	}
 

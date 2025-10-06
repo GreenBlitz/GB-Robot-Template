@@ -8,19 +8,16 @@ import frc.utils.TimedValue;
 import frc.utils.math.ToleranceMath;
 import frc.utils.time.TimeConstants;
 import org.littletonrobotics.junction.LogTable;
-import org.littletonrobotics.junction.Logger;
 
 public abstract class AngleSignal implements InputSignal<Rotation2d> {
 
 	private final String name;
-	private final String logPath;
 	protected final AngleUnit angleUnit;
 	private final TimedValue<Rotation2d> timedValue;
 
-	public AngleSignal(String logPath, String name, AngleUnit angleUnit) {
+	public AngleSignal(String name, AngleUnit angleUnit) {
 		this.name = name;
 		this.angleUnit = angleUnit;
-		this.logPath = logPath;
 		this.timedValue = new TimedValue<>(new Rotation2d(), 0);
 	}
 
@@ -80,13 +77,7 @@ public abstract class AngleSignal implements InputSignal<Rotation2d> {
 		LogTable logTable = RobotManager.replayLogsTable.getSubtable("RealOutputs/" + TimeConstants.LOG_PATH);
 		timedValue.setTimestamp(logTable.get("CurrentTimeSeconds", 0.0));
 
-		logTable = RobotManager.replayLogsTable.getSubtable(logPath);
-		timedValue.setValue(Rotation2d.fromRadians(logTable.get(name, 0.0)));
-
-		Logger.recordOutput("Code/" + logPath + "/v", timedValue.getValue());
-		Logger.recordOutput("Code/" + logPath + "/t", timedValue.getTimestamp());
-		Logger.recordOutput("Code/" + logPath + "/p", logPath);
-		Logger.recordOutput("Code/" + logPath + "/n", name);
+		timedValue.setValue(Rotation2d.fromRadians(table.get(name, 0.0)));
 	}
 
 	public Rotation2d getAndUpdateValue() {

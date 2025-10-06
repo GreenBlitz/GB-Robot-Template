@@ -5,8 +5,8 @@ import frc.utils.AngleUnit;
 
 public class Phoenix6LatencyAndSlopeSignal extends Phoenix6LatencySignal {
 
-	protected Phoenix6LatencyAndSlopeSignal(String logPath, String name, StatusSignal<?> signal, StatusSignal<?> slope, AngleUnit angleUnit) {
-		super(logPath, name, signal, slope, angleUnit);
+	protected Phoenix6LatencyAndSlopeSignal(String name, StatusSignal<?> signal, StatusSignal<?> slope, AngleUnit angleUnit) {
+		super(name, signal, slope, angleUnit);
 	}
 
 	/**

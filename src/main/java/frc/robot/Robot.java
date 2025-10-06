@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.poseestimator.OdometryData;
 import frc.robot.subsystems.swerve.odometrythread.OdometryThread;
 import frc.robot.subsystems.swerve.odometrythread.OdometryThreadConstants;
 import frc.robot.vision.DetectedObjectType;
@@ -46,6 +47,7 @@ import org.littletonrobotics.junction.Logger;
 public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
+	public static final OdometryDebugMode DEBUG_MODE = OdometryDebugMode.FIRST_SIGNAL;
 
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
@@ -168,7 +170,7 @@ public class Robot {
 			.setDetectedObjectFilter(LimelightFilters.detectedObjectFilter(limelightObjectDetector, DetectedObjectType.ALGAE));
 
 		swerve.setHeadingSupplier(
-			ROBOT_TYPE.isSimulation() ? () -> poseEstimator.getEstimatedPose().getRotation() : () -> headingEstimator.getEstimatedHeading()
+			ROBOT_TYPE.isSimulation() ? () -> poseEstimator.getEstimatedPose().getRotation() : headingEstimator::getEstimatedHeading
 		);
 	}
 
@@ -176,7 +178,23 @@ public class Robot {
 		BusChain.refreshAll();
 
 		swerve.update();
-		poseEstimator.updateOdometry(swerve.getAllOdometryData());
+		OdometryData[] allOdometryData = swerve.getAllOdometryData();
+		OdometryData lastData = allOdometryData[allOdometryData.length - 1];
+		OdometryData firstData = allOdometryData[1];
+		switch (DEBUG_MODE) {
+			case NO_DEBUG -> {
+				poseEstimator.updateOdometry(allOdometryData);
+			}
+			case FIRST_SIGNAL -> {
+				poseEstimator.updateOdometry(firstData);
+			}
+			case LAST_SIGNAL -> {
+				poseEstimator.updateOdometry(lastData);
+			}
+			case MULTIPLY_SIGNALS -> {
+				poseEstimator.updateOdometry(new OdometryData[] {firstData, firstData, firstData});
+			}
+		}
 		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
 		Logger.recordOutput("LastOdometryThreadCycleTime", odometryThread.getLastCycleLengthSeconds());
 

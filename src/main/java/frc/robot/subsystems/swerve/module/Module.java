@@ -122,8 +122,8 @@ public class Module {
 		steer.updateSimulation();
 		drive.updateSimulation();
 
-		drive.updateInputs(driveSignals.positionThread(), driveSignals.velocityThread());
-		steer.updateInputs(steerSignals.positionThread(), steerSignals.velocityThread());
+		drive.updateInputs(driveSignals.positionThread(), driveSignals.velocityThread(), driveSignals.position(), driveSignals.velocity(), driveSignals.current(), driveSignals.voltage());
+		steer.updateInputs(steerSignals.positionThread(), steerSignals.velocityThread(), steerSignals.position(), steerSignals.velocity(), steerSignals.current(), steerSignals.voltage());
 
 		inputs.data = new ModuleIOInputs.ModuleIOData(
 			driveSignals.current().getAndUpdateValue(),

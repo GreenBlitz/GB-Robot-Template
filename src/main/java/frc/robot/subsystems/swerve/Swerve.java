@@ -125,9 +125,13 @@ public class Swerve extends GBSubsystem {
 
 	public void setHeading(Rotation2d heading) {
 		gyro.setYaw(heading);
-		gyro.updateInputs(gyroSignals.yawSignalThread());
+		updateGyro();
 		headingStabilizer.unlockTarget();
 		headingStabilizer.setTargetHeading(heading);
+	}
+
+	private void updateGyro() {
+		gyro.updateInputs(gyroSignals.yawSignalThread(), gyroSignals.yawSignal());
 	}
 
 	protected void resetPIDControllers() {
@@ -140,7 +144,7 @@ public class Swerve extends GBSubsystem {
 	public void update() {
 		odometryThread.threadQueuesLock.lock();
 		try {
-			gyro.updateInputs(gyroSignals.yawSignalThread());
+			updateGyro();
 			modules.updateInputs();
 		} finally {
 			odometryThread.threadQueuesLock.unlock();

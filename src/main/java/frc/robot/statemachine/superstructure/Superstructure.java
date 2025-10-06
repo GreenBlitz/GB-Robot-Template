@@ -3,10 +3,10 @@ package frc.robot.statemachine.superstructure;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.constants.field.Field;
 import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
@@ -649,6 +649,18 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
+	public boolean isReadyToTransferAlgae() {
+		boolean arm = armStateHandler.isAtState(ArmState.TRANSFER_ALGAE_FROM_INTAKE, Tolerances.ARM_ALGAE_TRANSFER_POSITION);
+		boolean elevator = elevatorStateHandler.isAtState(ElevatorState.TRANSFER_ALGAE_FROM_INTAKE);
+		boolean algaeIntake = algaeIntakeStateHandler.getCurrentState() == AlgaeIntakeState.HOLD_ALGAE;
+
+		Logger.recordOutput("isReadyToTransferAlgae/armInStateAndPos", arm);
+		Logger.recordOutput("isReadyToTransferAlgae/elevatorInStateAndPos", elevator);
+		Logger.recordOutput("isReadyToTransferAlgae/algaeIntakeInState", algaeIntake);
+
+		return arm && elevator && algaeIntake;
+	}
+
 	public Command transferAlgaeFromIntakeToEndEffector() {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
@@ -660,11 +672,7 @@ public class Superstructure extends GBSubsystem {
 					algaeIntakeStateHandler.setState(AlgaeIntakeState.PUSH_ALGAE_OUT)
 						.withTimeout(StateMachineConstants.PUSH_ALGAE_OUT_TIME_SECONDS)
 						.andThen(algaeIntakeStateHandler.setState(AlgaeIntakeState.HOLD_ALGAE))
-				).until(
-					() -> armStateHandler.isAtState(ArmState.TRANSFER_ALGAE_FROM_INTAKE)
-						&& elevatorStateHandler.isAtState(ElevatorState.TRANSFER_ALGAE_FROM_INTAKE)
-						&& algaeIntakeStateHandler.getCurrentState() == AlgaeIntakeState.HOLD_ALGAE
-				).withTimeout(3),
+				).until(this::isReadyToTransferAlgae).withTimeout(3),
 				new ParallelCommandGroup(
 					new SequentialCommandGroup(
 						endEffectorStateHandler.setState(EndEffectorState.TRANSFER_ALGAE_FROM_INTAKE).withTimeout(0.8),

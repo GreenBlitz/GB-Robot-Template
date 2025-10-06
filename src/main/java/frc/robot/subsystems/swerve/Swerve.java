@@ -125,7 +125,7 @@ public class Swerve extends GBSubsystem {
 
 	public void setHeading(Rotation2d heading) {
 		gyro.setYaw(heading);
-		gyro.updateInputs(gyroSignals.yawSignal());
+		gyro.updateInputs(gyroSignals.yawSignalThread());
 		headingStabilizer.unlockTarget();
 		headingStabilizer.setTargetHeading(heading);
 	}
@@ -140,7 +140,7 @@ public class Swerve extends GBSubsystem {
 	public void update() {
 		odometryThread.threadQueuesLock.lock();
 		try {
-			gyro.updateInputs(gyroSignals.yawSignal());
+			gyro.updateInputs(gyroSignals.yawSignalThread());
 			modules.updateInputs();
 		} finally {
 			odometryThread.threadQueuesLock.unlock();
@@ -159,7 +159,7 @@ public class Swerve extends GBSubsystem {
 
 
 	public int getNumberOfOdometrySamples() {
-		return Math.min(gyroSignals.yawSignal().getNumberOfValues(), modules.getNumberOfOdometrySamples());
+		return Math.min(gyroSignals.yawSignalThread().getNumberOfValues(), modules.getNumberOfOdometrySamples());
 	}
 
 	public OdometryData[] getAllOdometryData() {
@@ -168,8 +168,8 @@ public class Swerve extends GBSubsystem {
 		for (int i = 0; i < odometryData.length; i++) {
 			odometryData[i] = new OdometryData(
 				modules.getWheelPositions(i),
-				gyro instanceof EmptyGyro ? Optional.empty() : Optional.of(gyroSignals.yawSignal().asArray()[i]),
-				gyroSignals.yawSignal().getTimestamps()[i]
+				gyro instanceof EmptyGyro ? Optional.empty() : Optional.of(gyroSignals.yawSignalThread().asArray()[i]),
+				gyroSignals.yawSignalThread().getTimestamps()[i]
 			);
 		}
 
@@ -181,7 +181,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public Rotation2d getGyroAbsoluteYaw() {
-		double inputtedHeadingRadians = MathUtil.angleModulus(gyroSignals.yawSignal().getLatestValue().getRadians());
+		double inputtedHeadingRadians = MathUtil.angleModulus(gyroSignals.yawSignalThread().getLatestValue().getRadians());
 		return Rotation2d.fromRadians(inputtedHeadingRadians);
 	}
 
@@ -318,7 +318,7 @@ public class Swerve extends GBSubsystem {
 		joystick.POV_UP
 			.whileTrue(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE)));
 
-		// Test the swerve returns real velocities (measure distance and time in real life and compare to swerve velocity logs).
+		// Test the swerve returns real velocities (measure distance and time in real life and compare to swerve velocityThread logs).
 		// REMEMBER after drive calibrations use these for pid testing - Remove OPEN LOOP for that
 		ChassisPowers slowCalibrationPowers = new ChassisPowers();
 		slowCalibrationPowers.xPower = 0.2;
@@ -330,7 +330,7 @@ public class Swerve extends GBSubsystem {
 			.whileTrue(getCommandsBuilder().driveByState(() -> fastCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)));
 
 		// The sysid outputs will be logged to the "CTRE Signal Logger".
-		// Use phoenix tuner x to extract the position, velocity, motorVoltage, state signals into wpilog.
+		// Use phoenix tuner x to extract the positionThread, velocityThread, motorVoltage, state signals into wpilog.
 		// Then enter the wpilog into wpilib sysid app and make sure you enter all info in the correct places.
 		// (see wpilib sysid in google)
 		joystick.Y.whileTrue(getCommandsBuilder().driveCalibration(true, SysIdRoutine.Direction.kForward));

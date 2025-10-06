@@ -34,7 +34,7 @@ public class Conversions {
 	}
 
 	/**
-	 * Converts motor data to system data. This can be velocity, position, acceleration, etc.
+	 * Converts motor data to system data. This can be velocityThread, positionThread, acceleration, etc.
 	 *
 	 * @param motorData the motor data
 	 * @param gearRatio the gear ratio between the motor and the system. 2 means that 2 motor rotations are 1 system rotation.
@@ -45,7 +45,7 @@ public class Conversions {
 	}
 
 	/**
-	 * Converts system data to motor data. This can be velocity, position, acceleration, etc.
+	 * Converts system data to motor data. This can be velocityThread, positionThread, acceleration, etc.
 	 *
 	 * @param systemData the system data
 	 * @param gearRatio  the gear ratio between the motor and the system. 2 means that 2 motor rotations are 1 system rotation.

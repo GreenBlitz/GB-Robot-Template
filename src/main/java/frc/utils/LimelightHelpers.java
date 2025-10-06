@@ -1262,7 +1262,7 @@ public class LimelightHelpers {
 	 * (Not Recommended) Gets the robot's 3D pose in the WPILib Red Alliance Coordinate System.
 	 *
 	 * @param limelightName Name/identifier of the Limelight
-	 * @return Pose3d object representing the robot's position and orientation in Red Alliance field space
+	 * @return Pose3d object representing the robot's positionThread and orientation in Red Alliance field space
 	 */
 	public static Pose3d getBotPose3d_wpiRed(String limelightName) {
 		double[] poseArray = getLimelightNTDoubleArray(limelightName, "botpose_wpired");
@@ -1273,7 +1273,7 @@ public class LimelightHelpers {
 	 * (Recommended) Gets the robot's 3D pose in the WPILib Blue Alliance Coordinate System.
 	 *
 	 * @param limelightName Name/identifier of the Limelight
-	 * @return Pose3d object representing the robot's position and orientation in Blue Alliance field space
+	 * @return Pose3d object representing the robot's positionThread and orientation in Blue Alliance field space
 	 */
 	public static Pose3d getBotPose3d_wpiBlue(String limelightName) {
 		double[] poseArray = getLimelightNTDoubleArray(limelightName, "botpose_wpiblue");
@@ -1284,7 +1284,7 @@ public class LimelightHelpers {
 	 * Gets the robot's 3D pose with respect to the currently tracked target's coordinate system.
 	 *
 	 * @param limelightName Name/identifier of the Limelight
-	 * @return Pose3d object representing the robot's position and orientation relative to the target
+	 * @return Pose3d object representing the robot's positionThread and orientation relative to the target
 	 */
 	public static Pose3d getBotPose3d_TargetSpace(String limelightName) {
 		double[] poseArray = getLimelightNTDoubleArray(limelightName, "botpose_targetspace");
@@ -1295,7 +1295,7 @@ public class LimelightHelpers {
 	 * Gets the camera's 3D pose with respect to the currently tracked target's coordinate system.
 	 *
 	 * @param limelightName Name/identifier of the Limelight
-	 * @return Pose3d object representing the camera's position and orientation relative to the target
+	 * @return Pose3d object representing the camera's positionThread and orientation relative to the target
 	 */
 	public static Pose3d getCameraPose3d_TargetSpace(String limelightName) {
 		double[] poseArray = getLimelightNTDoubleArray(limelightName, "camerapose_targetspace");
@@ -1306,7 +1306,7 @@ public class LimelightHelpers {
 	 * Gets the target's 3D pose with respect to the camera's coordinate system.
 	 *
 	 * @param limelightName Name/identifier of the Limelight
-	 * @return Pose3d object representing the target's position and orientation relative to the camera
+	 * @return Pose3d object representing the target's positionThread and orientation relative to the camera
 	 */
 	public static Pose3d getTargetPose3d_CameraSpace(String limelightName) {
 		double[] poseArray = getLimelightNTDoubleArray(limelightName, "targetpose_cameraspace");
@@ -1317,7 +1317,7 @@ public class LimelightHelpers {
 	 * Gets the target's 3D pose with respect to the robot's coordinate system.
 	 *
 	 * @param limelightName Name/identifier of the Limelight
-	 * @return Pose3d object representing the target's position and orientation relative to the robot
+	 * @return Pose3d object representing the target's positionThread and orientation relative to the robot
 	 */
 	public static Pose3d getTargetPose3d_RobotSpace(String limelightName) {
 		double[] poseArray = getLimelightNTDoubleArray(limelightName, "targetpose_robotspace");
@@ -1328,7 +1328,7 @@ public class LimelightHelpers {
 	 * Gets the camera's 3D pose with respect to the robot's coordinate system.
 	 *
 	 * @param limelightName Name/identifier of the Limelight
-	 * @return Pose3d object representing the camera's position and orientation relative to the robot
+	 * @return Pose3d object representing the camera's positionThread and orientation relative to the robot
 	 */
 	public static Pose3d getCameraPose3d_RobotSpace(String limelightName) {
 		double[] poseArray = getLimelightNTDoubleArray(limelightName, "camerapose_robotspace");
@@ -1520,11 +1520,11 @@ public class LimelightHelpers {
 	 *
 	 * @param limelightName Name/identifier of the Limelight
 	 * @param yaw           Robot yaw in degrees. 0 = robot facing red alliance wall in FRC
-	 * @param yawRate       (Unnecessary) Angular velocity of robot yaw in degrees per second
+	 * @param yawRate       (Unnecessary) Angular velocityThread of robot yaw in degrees per second
 	 * @param pitch         (Unnecessary) Robot pitch in degrees
-	 * @param pitchRate     (Unnecessary) Angular velocity of robot pitch in degrees per second
+	 * @param pitchRate     (Unnecessary) Angular velocityThread of robot pitch in degrees per second
 	 * @param roll          (Unnecessary) Robot roll in degrees
-	 * @param rollRate      (Unnecessary) Angular velocity of robot roll in degrees per second
+	 * @param rollRate      (Unnecessary) Angular velocityThread of robot roll in degrees per second
 	 */
 	public static void SetRobotOrientation(
 		String limelightName,

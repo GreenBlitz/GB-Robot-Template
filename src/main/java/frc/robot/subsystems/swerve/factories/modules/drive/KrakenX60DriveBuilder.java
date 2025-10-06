@@ -20,9 +20,7 @@ import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
-import frc.robot.hardware.phoenix6.signal.Phoenix6DoubleSignal;
-import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
-import frc.robot.hardware.phoenix6.signal.Phoenix6ThreadAngleSignal;
+import frc.robot.hardware.phoenix6.signal.*;
 import frc.robot.subsystems.swerve.module.records.DriveRequests;
 import frc.robot.subsystems.swerve.module.records.DriveSignals;
 import frc.robot.subsystems.swerve.odometrythread.OdometryThread;
@@ -122,13 +120,23 @@ public class KrakenX60DriveBuilder {
 			.build(drive.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
 		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder
 			.build(drive.getDevice().getTorqueCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
-		Phoenix6ThreadAngleSignal velocitySignal = Phoenix6SignalBuilder
+		Phoenix6ThreadAngleSignal velocitySignalThread = Phoenix6SignalBuilder
 			.build(drive.getDevice().getVelocity(), AngleUnit.ROTATIONS, odometryThread);
-		Phoenix6ThreadAngleSignal positionSignal = Phoenix6SignalBuilder
+		Phoenix6ThreadAngleSignal positionSignalThread = Phoenix6SignalBuilder
 			.build(drive.getDevice().getPosition(), AngleUnit.ROTATIONS, odometryThread);
-		positionSignal.addLatencyCompensation(velocitySignal);
+		positionSignalThread.addLatencyCompensation(velocitySignalThread);
 
-		return new DriveSignals(positionSignal, velocitySignal, currentSignal, voltageSignal);
+		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder
+			.build(drive.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
+		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder.build(
+			drive.getDevice().getPosition(),
+			velocitySignal,
+			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+			AngleUnit.ROTATIONS,
+			BusChain.ROBORIO
+		);
+
+		return new DriveSignals(positionSignalThread, velocitySignalThread, positionSignal, velocitySignal, currentSignal, voltageSignal);
 	}
 
 }

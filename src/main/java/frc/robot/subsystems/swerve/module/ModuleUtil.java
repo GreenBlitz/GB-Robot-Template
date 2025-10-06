@@ -63,8 +63,8 @@ public class ModuleUtil {
 
 
 	/**
-	 * When the steer motor moves, the drive motor moves as well due to the coupling. This will affect the current position of the drive motor,
-	 * so we need to remove the coupling from the velocity or the position.
+	 * When the steer motor moves, the drive motor moves as well due to the coupling. This will affect the current positionThread of the drive
+	 * motor, so we need to remove the coupling from the velocityThread or the positionThread.
 	 */
 	public static Rotation2d uncoupleDriveAngle(Rotation2d coupledDriveAngle, Rotation2d steerAngle, double couplingRatio) {
 		Rotation2d steerCoupledAngle = coupleSteerAngle(steerAngle, couplingRatio);

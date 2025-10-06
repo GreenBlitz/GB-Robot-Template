@@ -4,6 +4,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.InputSignal;
 
 public record SteerSignals(
+	InputSignal<Rotation2d> positionThread,
+	InputSignal<Rotation2d> velocityThread,
 	InputSignal<Rotation2d> position,
 	InputSignal<Rotation2d> velocity,
 	InputSignal<Double> current,

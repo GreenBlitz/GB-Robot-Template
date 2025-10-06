@@ -2,9 +2,12 @@ package frc.robot.subsystems.swerve.factories.gyro;
 
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import frc.robot.IDs;
+import frc.robot.RobotConstants;
 import frc.robot.hardware.interfaces.IGyro;
+import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.gyro.Pigeon2Gyro;
 import frc.robot.hardware.phoenix6.gyro.Pigeon2Wrapper;
+import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.hardware.phoenix6.signal.Phoenix6ThreadAngleSignal;
 import frc.robot.subsystems.swerve.GyroSignals;
@@ -40,7 +43,10 @@ class Pigeon2GyroBuilder {
 		yawSignal.addLatencyCompensation(
 			Phoenix6SignalBuilder.build(pigeon2Gyro.getDevice().getAngularVelocityZWorld(), AngleUnit.DEGREES, odometryThread)
 		);
-		return new GyroSignals(yawSignal);
+
+		Phoenix6AngleSignal signal = Phoenix6SignalBuilder
+			.build(pigeon2Gyro.getDevice().getYaw(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.DEGREES, BusChain.ROBORIO);
+		return new GyroSignals(yawSignal, signal);
 	}
 
 }

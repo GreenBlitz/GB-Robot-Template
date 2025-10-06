@@ -19,6 +19,7 @@ import java.util.Optional;
 public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEstimator {
 
 	private final SwerveDriveKinematics kinematics;
+	private final Odometry<SwerveModulePosition[]> odometryEstimatorThread;
 	private final Odometry<SwerveModulePosition[]> odometryEstimator;
 	private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
 	private RobotPoseObservation lastVisionObservation;
@@ -34,15 +35,23 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 		super(logPath);
 		this.kinematics = kinematics;
 		this.lastOdometryAngle = initialGyroAngle;
+		this.odometryEstimatorThread = new Odometry<>(
+			kinematics,
+			initialGyroAngle,
+			modulePositions,
+			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
+		);
+
 		this.odometryEstimator = new Odometry<>(
 			kinematics,
 			initialGyroAngle,
 			modulePositions,
 			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
 		);
+
 		this.poseEstimator = new PoseEstimator<>(
 			kinematics,
-			odometryEstimator,
+			odometryEstimatorThread,
 			WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS.asColumnVector(),
 			WPILibPoseEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATIONS.asColumnVector()
 		);
@@ -69,7 +78,7 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 
 	@Override
 	public Pose2d getOdometryPose() {
-		return odometryEstimator.getPoseMeters();
+		return odometryEstimatorThread.getPoseMeters();
 	}
 
 	@Override

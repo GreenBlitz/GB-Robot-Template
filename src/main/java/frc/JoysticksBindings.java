@@ -1,7 +1,5 @@
 package frc;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -14,7 +12,6 @@ import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
-import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.statemachine.RobotCommander;
 import frc.robot.statemachine.RobotState;
@@ -242,8 +239,7 @@ public class JoysticksBindings {
 
 		usedJoystick.R1.onTrue(netActionChooser(robot));
 
-//		usedJoystick.Y.onTrue(robot.getRobotCommander().setState(RobotState.CORAL_OUTTAKE));
-		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getHeadingEstimator().reset(new Rotation2d())));
+		usedJoystick.Y.onTrue(robot.getRobotCommander().setState(RobotState.CORAL_OUTTAKE));
 //		usedJoystick.X.onTrue(algaeOuttakeActionChooser(robot));
 		usedJoystick.B.onTrue(processorActionChooser(robot));
 
@@ -279,63 +275,10 @@ public class JoysticksBindings {
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = THIRD_JOYSTICK;
+//		SmartJoystick usedJoystick = THIRD_JOYSTICK;
 		// bindings...
 
-		usedJoystick.A.whileTrue(
-			robot.getSwerve()
-				.getCommandsBuilder()
-				.driveToPose(
-					robot.getPoseEstimator()::getEstimatedPose,
-					() -> Field.getAllianceRelative(new Pose2d(7.55, 5, new Rotation2d())),
-					AutonomousConstants.getRealTimeConstraints(robot.getSwerve())
-				) // distance to tag 9 is 4.65
-		);
-		usedJoystick.B.whileTrue(
-			robot.getSwerve()
-				.getCommandsBuilder()
-				.driveToPose(
-					robot.getPoseEstimator()::getEstimatedPose,
-					() -> Field.getAllianceRelative(new Pose2d(10, 5, Rotation2d.k180deg)),
-					AutonomousConstants.getRealTimeConstraints(robot.getSwerve())
-				) // distance to tag 20 is 4.65
-		);
-		usedJoystick.X.whileTrue(
-			robot.getSwerve()
-				.getCommandsBuilder()
-				.driveToPose(
-					robot.getPoseEstimator()::getEstimatedPose,
-					() -> Field.getAllianceRelative(new Pose2d(7.55, 5, Rotation2d.k180deg)),
-					AutonomousConstants.getRealTimeConstraints(robot.getSwerve())
-				) // distance to tag 20 is 2.21
-		);
-		usedJoystick.Y.whileTrue(
-			robot.getSwerve()
-				.getCommandsBuilder()
-				.driveToPose(
-					robot.getPoseEstimator()::getEstimatedPose,
-					() -> Field.getAllianceRelative(new Pose2d(1.2, 6.8, Rotation2d.fromDegrees(-55))),
-					AutonomousConstants.getRealTimeConstraints(robot.getSwerve())
-				) // distance to tag 19 is 3.36
-		);
-		usedJoystick.POV_UP.whileTrue(
-			robot.getSwerve()
-				.getCommandsBuilder()
-				.driveToPose(
-					robot.getPoseEstimator()::getEstimatedPose,
-					() -> Field.getAllianceRelative(new Pose2d(3.2, 4, new Rotation2d())),
-					AutonomousConstants.getRealTimeConstraints(robot.getSwerve())
-				) // should be on middle of reef side
-		);
-		usedJoystick.POV_DOWN.whileTrue(
-			robot.getSwerve()
-				.getCommandsBuilder()
-				.driveToPose(
-					robot.getPoseEstimator()::getEstimatedPose,
-					() -> Field.getAllianceRelative(new Pose2d(6, 0.45, Rotation2d.fromDegrees(90))),
-					AutonomousConstants.getRealTimeConstraints(robot.getSwerve())
-				) // distance from tag 22 is 2.64
-		);
+        //		robot.getSwerve().applyCalibrationBindings(usedJoystick, () -> robot.getPoseEstimator().getEstimatedPose());
 	}
 
 	private static void fourthJoystickButtons(Robot robot) {

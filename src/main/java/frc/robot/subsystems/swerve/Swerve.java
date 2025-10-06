@@ -160,13 +160,7 @@ public class Swerve extends GBSubsystem {
 				Optional.of(gyroSignals.yawSignal().asArray()[i]),
 				gyroSignals.yawSignal().getTimestamps()[i]
 			);
-			Logger.recordOutput("OdO/len", getNumberOfOdometrySamples());
-			Logger.recordOutput("OdO/wh", odometryData[i].getWheelPositions());
-			Logger.recordOutput("OdO/gy", odometryData[i].getGyroYaw().orElse(new Rotation2d()));
-			Logger.recordOutput("OdO/t", odometryData[i].getTimestamp());
 		}
-
-
 
 		return odometryData;
 	}

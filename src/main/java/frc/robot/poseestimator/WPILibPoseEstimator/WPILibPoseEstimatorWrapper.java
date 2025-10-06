@@ -94,9 +94,6 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	@Override
 	public void updateVision(RobotPoseObservation... visionRobotPoseObservations) {
 		for (RobotPoseObservation visionRobotPoseObservation : visionRobotPoseObservations) {
-			Logger.recordOutput("UpdateVision/p", visionRobotPoseObservation.robotPose());
-			Logger.recordOutput("UpdateVision/s", visionRobotPoseObservation.stdDevs());
-			Logger.recordOutput("UpdateVision/t", visionRobotPoseObservation.timestampSeconds());
 			addVisionMeasurement(visionRobotPoseObservation);
 		}
 	}

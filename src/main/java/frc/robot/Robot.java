@@ -58,7 +58,7 @@ public class Robot {
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 
-		double odometryThreadFrequencyHertz = 150.0;
+		double odometryThreadFrequencyHertz = 250.0;
 		odometryThread = new OdometryThread(
 			odometryThreadFrequencyHertz,
 			"OdometryThread",

@@ -14,6 +14,7 @@ import frc.robot.subsystems.GBSubsystem;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
+import javax.naming.NamingEnumeration;
 import java.util.Optional;
 
 public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEstimator {
@@ -61,6 +62,9 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 		);
 		this.lastOdometryDataThread = new OdometryData(modulePositions, Optional.of(initialGyroAngle), TimeUtil.getCurrentTimeSeconds());
 		this.lastOdometryData = new OdometryData(modulePositions, Optional.of(initialGyroAngle), TimeUtil.getCurrentTimeSeconds());
+	
+		odometryEstimator.resetPose(new Pose2d(5,5, new Rotation2d()));
+		odometryEstimatorThread.resetPose(new Pose2d(5,5, new Rotation2d()));
 	}
 
 
@@ -93,10 +97,10 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	@Override
 	public void updateAllOdometry(OdometryData[] odometryDataThread, OdometryData odometryData) {
 		for (int i = 0; i < odometryDataThread.length; i++) {
-			Logger.recordOutput(getLogPath() + "latencyThread" + i, odometryDataThread[i].getTimestamp());
+			Logger.recordOutput(getLogPath() + "timestampThread" + i, odometryDataThread[i].getTimestamp());
 			updateOdometryThread(odometryDataThread[i]);
 		}
-		Logger.recordOutput(getLogPath() + "latencyNonThread", odometryData.getTimestamp());
+		Logger.recordOutput(getLogPath() + "timestampNonThread", odometryData.getTimestamp());
 		updateOdometry(odometryData);
 	}
 
@@ -139,8 +143,11 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 
 	@Override
 	public void resetPose(Pose2d newPose) {
-		Logger.recordOutput(getLogPath() + "lastPoseResetTo", newPose);
-		poseEstimator.resetPosition(lastOdometryAngleThread, lastOdometryDataThread.getWheelPositions(), newPose);
+//		Logger.recordOutput(getLogPath() + "lastPoseResetTo", newPose);
+		Pose2d prevPose = getEstimatedPose();
+		odometryEstimator.resetPose(prevPose);
+		odometryEstimatorThread.resetPose(prevPose);
+		poseEstimator.resetPosition(lastOdometryAngleThread, lastOdometryDataThread.getWheelPositions(), prevPose);
 	}
 
 	@Override

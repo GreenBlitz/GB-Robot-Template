@@ -112,10 +112,10 @@ public class OdometryThread extends Thread {
 	}
 
 	private void updateAllQueues(double timestamp) {
-		double latencyCompensatedTimestamp = timestamp - calculateAverageLatency(signals);
+		double latencyCompensatedTimestamp = timestamp;
 		for (int i = 0; i < signals.length; i++) {
 			Queue<TimedValue<Double>> queue = signalValuesQueues.get(i);
-			queue.offer(new TimedValue<>(signals[i].getValueAsDouble(), latencyCompensatedTimestamp));
+			queue.offer(new TimedValue<>(signals[i].getValueAsDouble(), latencyCompensatedTimestamp - signals[i].getTimestamp().getLatency()));
 		}
 
 		for (int i = 0; i < latencyAndSlopeSignals.size(); i++) {

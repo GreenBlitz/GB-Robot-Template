@@ -8,5 +8,6 @@ public class DriveCouplingInputs {
 
 	public Rotation2d uncoupledVelocityAnglesPerSecond = new Rotation2d();
 	public Rotation2d[] uncoupledPositions = new Rotation2d[0];
+	public Rotation2d[] uncoupledPositionsThread = new Rotation2d[0];
 
 }

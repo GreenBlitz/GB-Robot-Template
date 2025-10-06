@@ -122,8 +122,8 @@ public class Module {
 		steer.updateSimulation();
 		drive.updateSimulation();
 
-		drive.updateInputs(driveSignals.positionThread(), driveSignals.velocityThread(), driveSignals.position(), driveSignals.velocity(), driveSignals.current(), driveSignals.voltage());
-		steer.updateInputs(steerSignals.positionThread(), steerSignals.velocityThread(), steerSignals.position(), steerSignals.velocity(), steerSignals.current(), steerSignals.voltage());
+		drive.updateInputs(driveSignals.positionThread(), driveSignals.velocityThread(), driveSignals.position(), driveSignals.velocity());
+		steer.updateInputs(steerSignals.positionThread(), steerSignals.velocityThread(), steerSignals.position(), steerSignals.velocity());
 
 		inputs.data = new ModuleIOInputs.ModuleIOData(
 			driveSignals.current().getAndUpdateValue(),
@@ -147,6 +147,11 @@ public class Module {
 		Logger.processInputs(constants.logPath() + "/Drive", driveCouplingInputs);
 	}
 
+	public SwerveModulePosition getNonThread(){
+		Rotation2d posRads = ModuleUtil.uncoupleDriveAngle(driveSignals.position().getLatestValue(), steerSignals.position().getLatestValue(), constants.couplingRatio());
+		double posmeters = toDriveMeters(posRads);
+		return new SwerveModulePosition(posmeters, steerSignals.position().getLatestValue());
+	}
 
 	public void setClosedLoop(boolean closedLoop) {
 		isClosedLoop = closedLoop;

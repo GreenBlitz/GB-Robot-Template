@@ -166,18 +166,26 @@ public class Swerve extends GBSubsystem {
 		return Math.min(gyroSignals.yawSignalThread().getNumberOfValues(), modules.getNumberOfOdometrySamples());
 	}
 
-	public OdometryData[] getAllOdometryData() {
+	public OdometryData[] getAllThreadOdometryData() {
 		OdometryData[] odometryData = new OdometryData[getNumberOfOdometrySamples()];
 
 		for (int i = 0; i < odometryData.length; i++) {
 			odometryData[i] = new OdometryData(
-				modules.getWheelPositions(i),
+				modules.getWheelPositionsThread(i),
 				gyro instanceof EmptyGyro ? Optional.empty() : Optional.of(gyroSignals.yawSignalThread().asArray()[i]),
 				gyroSignals.yawSignalThread().getTimestamps()[i]
 			);
 		}
 
 		return odometryData;
+	}
+
+	public OdometryData getAllNonThreadOdometryData() {
+		return new OdometryData(
+			modules.getWheelPositionNonThread(),
+			gyro instanceof EmptyGyro ? Optional.empty() : Optional.of(gyroSignals.yawSignal().getLatestValue()),
+			gyroSignals.yawSignal().getTimestamp()
+		);
 	}
 
 	public double getDriveRadiusMeters() {

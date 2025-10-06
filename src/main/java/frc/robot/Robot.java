@@ -78,7 +78,7 @@ public class Robot {
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
 			swerve.getKinematics(),
-			swerve.getModules().getWheelPositions(0),
+			swerve.getModules().getWheelPositionsThread(0),
 			swerve.getGyroAbsoluteYaw()
 		);
 
@@ -176,7 +176,7 @@ public class Robot {
 		BusChain.refreshAll();
 
 		swerve.update();
-		poseEstimator.updateOdometry(swerve.getAllOdometryData());
+		poseEstimator.updateOdometry(swerve.getAllThreadOdometryData());
 		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
 		Logger.recordOutput("LastOdometryThreadCycleTime", odometryThread.getLastCycleLengthSeconds());
 

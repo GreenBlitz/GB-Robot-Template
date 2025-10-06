@@ -24,11 +24,8 @@ public class Elevator extends GBSubsystem {
 
 	private static double MAX_CALIBRATION_POWER = 0.1;
 
-	private final ControllableMotor rightMotor;
-	private final ElevatorMotorSignals rightMotorSignals;
-
-	private final ControllableMotor leftMotor;
-	private final ElevatorMotorSignals leftMotorSignals;
+	private final ControllableMotor motor;
+	private final ElevatorMotorSignals signals;
 
 	private final IDynamicMotionMagicRequest positionRequest;
 	private final IRequest<Double> voltageRequest;
@@ -46,21 +43,17 @@ public class Elevator extends GBSubsystem {
 
 	public Elevator(
 		String logPath,
-		ControllableMotor rightMotor,
-		ElevatorMotorSignals rightMotorSignals,
-		ControllableMotor leftMotor,
-		ElevatorMotorSignals leftMotorSignals,
+		ControllableMotor motor,
+		ElevatorMotorSignals signals,
 		IDynamicMotionMagicRequest positionRequest,
 		IRequest<Double> voltageRequest,
 		IDigitalInput limitSwitch
 	) {
 		super(logPath);
 
-		this.rightMotor = rightMotor;
-		this.rightMotorSignals = rightMotorSignals;
+		this.motor = motor;
+		this.signals = signals;
 		this.inputs = new ElevatorInputsAutoLogged();
-		this.leftMotor = leftMotor;
-		this.leftMotorSignals = leftMotorSignals;
 
 		this.positionRequest = positionRequest;
 		this.voltageRequest = voltageRequest;
@@ -70,7 +63,7 @@ public class Elevator extends GBSubsystem {
 		this.ffCalibrationVoltage = 0;
 
 		this.commandsBuilder = new ElevatorCommandsBuilder(this);
-		this.sysIdCalibrator = new SysIdCalibrator(rightMotor.getSysidConfigInfo(), this, (voltage) -> setVoltage(voltage + getKgVoltage()));
+		this.sysIdCalibrator = new SysIdCalibrator(motor.getSysidConfigInfo(), this, (voltage) -> setVoltage(voltage + getKgVoltage()));
 
 		resetMotors(ElevatorConstants.MINIMUM_HEIGHT_METERS);
 		periodic();
@@ -90,7 +83,7 @@ public class Elevator extends GBSubsystem {
 	}
 
 	public double getElevatorPositionMeters() {
-		return convertRotationsToMeters(rightMotorSignals.positionSignal().getLatestValue());
+		return convertRotationsToMeters(signals.positionSignal().getLatestValue());
 	}
 
 	public boolean hasBeenResetBySwitch() {
@@ -104,8 +97,7 @@ public class Elevator extends GBSubsystem {
 	@Override
 	protected void subsystemPeriodic() {
 		// Update Simulation checks if ROBOT_TYPE.isSimulation() inside the function and acts accordingly.
-		rightMotor.updateSimulation();
-		leftMotor.updateSimulation();
+		motor.updateSimulation();
 		updateInputs();
 		if (handleReset()) {
 			updateInputs();
@@ -114,11 +106,11 @@ public class Elevator extends GBSubsystem {
 	}
 
 	private void updateInputs() {
+		motor.updateInputs();
+
 		inputs.data = new ElevatorInputs.ElevatorData(
-			leftMotorSignals.positionSignal().getAndUpdateValue().getRadians(),
-			leftMotorSignals.voltageSignal().getAndUpdateValue(),
-			rightMotorSignals.positionSignal().getAndUpdateValue().getRadians(),
-			rightMotorSignals.voltageSignal().getAndUpdateValue(),
+			signals.positionSignal().getAndUpdateValue().getRadians(),
+			signals.voltageSignal().getAndUpdateValue(),
 			getElevatorPositionMeters(),
 			targetPositionMeters
 		);
@@ -136,28 +128,23 @@ public class Elevator extends GBSubsystem {
 
 	public void resetMotors(double positionMeters) {
 		Rotation2d convertedPosition = convertMetersToRotations(positionMeters);
-		rightMotor.resetPosition(convertedPosition);
-		leftMotor.resetPosition(convertedPosition);
+		motor.resetPosition(convertedPosition);
 	}
 
 	public void setBrake(boolean brake) {
-		rightMotor.setBrake(brake);
-		leftMotor.setBrake(brake);
+		motor.setBrake(brake);
 	}
 
 	protected void stop() {
-		rightMotor.stop();
-		leftMotor.stop();
+		motor.stop();
 	}
 
 	protected void setPower(double power) {
-		rightMotor.setPower(power);
-		leftMotor.setPower(power);
+		motor.setPower(power);
 	}
 
 	protected void setVoltage(double voltage) {
-		rightMotor.applyRequest(voltageRequest.withSetPoint(voltage));
-		leftMotor.applyRequest(voltageRequest.withSetPoint(voltage));
+		motor.applyRequest(voltageRequest.withSetPoint(voltage));
 	}
 
 	protected void setTargetPositionMeters(double targetPositionMeters) {
@@ -178,14 +165,9 @@ public class Elevator extends GBSubsystem {
 		Rotation2d maxVelocityRotation2dPerSecond = convertMetersToRotations(maxVelocityMetersPerSecond);
 		Rotation2d maxAccelerationRotation2dPerSecond = convertMetersToRotations(maxAccelerationMetersPerSecondSquared);
 
-		rightMotor.applyRequest(
+		motor.applyRequest(
 			positionRequest.withSetPoint(targetPosition)
 				.withMaxVelocityRotation2dPerSecond(maxVelocityRotation2dPerSecond)
-				.withMaxAccelerationRotation2dPerSecondSquared(maxAccelerationRotation2dPerSecond)
-		);
-		leftMotor.applyRequest(
-			positionRequest.withSetPoint(targetPosition)
-				.withMaxVelocityRotation2dPerSecond(convertMetersToRotations(maxVelocityMetersPerSecond))
 				.withMaxAccelerationRotation2dPerSecondSquared(maxAccelerationRotation2dPerSecond)
 		);
 	}

@@ -25,6 +25,7 @@ import frc.robot.hardware.digitalinput.channeled.ChanneledDigitalInput;
 import frc.robot.hardware.digitalinput.chooser.ChooserDigitalInput;
 import frc.robot.hardware.mechanisms.wpilib.ElevatorSimulation;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.request.Phoenix6DynamicMotionMagicRequest;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
@@ -35,20 +36,15 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.records.ElevatorMotorSignals;
 import frc.utils.AngleUnit;
 
-
+import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
-import static edu.wpi.first.units.Units.Second;
 
 public class KrakenX60ElevatorBuilder {
 
 	private static final int LIMIT_SWITCH_CHANNEL = 0;
 	private static final double LIMIT_SWITCH_DEBOUNCE_TIME = 0.04;
-	private static final double CURRENT_LIMIT = 40;
-	private static final boolean CURRENT_LIMIT_ENABLE = true;
-	private static final boolean SOFT_LIMIT_ENABLE = true;
-	private static final boolean IS_FIRST_MOTOR_INVERTED = true;
-	private static final boolean IS_SECOND_MOTOR_INVERTED = true;
+	private static final boolean SECOND_MOTOR_OPPOSE_MAIN = false;
 	public static final double kG = 0;
 
 	private static final int NUMBER_OF_MOTORS = 2;
@@ -58,17 +54,39 @@ public class KrakenX60ElevatorBuilder {
 	private static final Voltage CONFIG_STEP_VOLTAGE = Volts.of(3);
 	private static final Time CONFIG_TIMEOUT = Seconds.of(10);
 
-	private static SysIdRoutine.Config generateSysidConfig(String name) {
+	private static SysIdRoutine.Config createSysidConfig() {
 		return new SysIdRoutine.Config(
 			CONFIG_RAMP_RATE,
 			CONFIG_STEP_VOLTAGE,
 			CONFIG_TIMEOUT,
-			state -> SignalLogger.writeString("Elevator/" + name + "/state", state.toString())
+			state -> SignalLogger.writeString("Elevator/state", state.toString())
 		);
 	}
 
-	private static TalonFXConfiguration generateConfiguration(boolean inverted) {
+	private static TalonFXConfiguration limitsConfiguration() {
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
+
+		configuration.CurrentLimits.StatorCurrentLimit = 40;
+		configuration.CurrentLimits.StatorCurrentLimitEnable = true;
+
+		configuration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Elevator
+			.convertMetersToRotations(ElevatorConstants.REVERSE_SOFT_LIMIT_VALUE_METERS)
+			.getRotations();
+		configuration.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+
+		configuration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Elevator
+			.convertMetersToRotations(ElevatorConstants.FORWARD_SOFT_LIMIT_VALUE_METERS)
+			.getRotations();
+		configuration.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+
+		configuration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+		configuration.Feedback.SensorToMechanismRatio = ElevatorConstants.GEAR_RATIO;
+
+		return configuration;
+	}
+
+	private static TalonFXConfiguration mainConfiguration() {
+		TalonFXConfiguration configuration = limitsConfiguration();
 		if (Robot.ROBOT_TYPE.isReal()) {
 			// Motion Magic
 			configuration.Slot0.kP = 15;
@@ -86,11 +104,11 @@ public class KrakenX60ElevatorBuilder {
 			configuration.Slot1.kG = kG;
 			configuration.Slot1.kS = 0;
 		} else {
-			configuration.Slot0.kP = 1;
+			configuration.Slot0.kP = 3;
 			configuration.Slot0.kI = 0;
 			configuration.Slot0.kD = 0.05;
 
-			configuration.Slot1.kP = 1;
+			configuration.Slot1.kP = 3;
 			configuration.Slot1.kI = 0;
 			configuration.Slot1.kD = 0.05;
 		}
@@ -98,22 +116,8 @@ public class KrakenX60ElevatorBuilder {
 		configuration.Slot1.GravityType = GravityTypeValue.Elevator_Static;
 		configuration.Slot2.GravityType = GravityTypeValue.Elevator_Static;
 
-		configuration.CurrentLimits.StatorCurrentLimit = CURRENT_LIMIT;
-		configuration.CurrentLimits.StatorCurrentLimitEnable = CURRENT_LIMIT_ENABLE;
-		configuration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Elevator
-			.convertMetersToRotations(ElevatorConstants.REVERSE_SOFT_LIMIT_VALUE_METERS)
-			.getRotations();
-		configuration.SoftwareLimitSwitch.ReverseSoftLimitEnable = SOFT_LIMIT_ENABLE;
-		configuration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Elevator
-			.convertMetersToRotations(ElevatorConstants.FORWARD_SOFT_LIMIT_VALUE_METERS)
-			.getRotations();
-		configuration.SoftwareLimitSwitch.ForwardSoftLimitEnable = SOFT_LIMIT_ENABLE;
-		configuration.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
-		configuration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-		configuration.Feedback.SensorToMechanismRatio = ElevatorConstants.GEAR_RATIO;
-		configuration.MotionMagic.MotionMagicAcceleration = Elevator
-			.convertMetersToRotations(ElevatorConstants.ACCELERATION_METERS_PER_SECOND_SQUARED)
-			.getRotations();
+		configuration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+
 		configuration.MotionMagic.MotionMagicCruiseVelocity = Elevator
 			.convertMetersToRotations(ElevatorConstants.CRUISE_VELOCITY_METERS_PER_SECOND)
 			.getRotations();
@@ -121,7 +125,7 @@ public class KrakenX60ElevatorBuilder {
 		return configuration;
 	}
 
-	private static IDigitalInput generateDigitalInput() {
+	private static IDigitalInput createLimitSwitch() {
 		return Robot.ROBOT_TYPE.isSimulation()
 			? new ChooserDigitalInput("ElevatorLimitSwitch")
 			: new ChanneledDigitalInput(new DigitalInput(LIMIT_SWITCH_CHANNEL), new Debouncer(LIMIT_SWITCH_DEBOUNCE_TIME), true);
@@ -143,7 +147,7 @@ public class KrakenX60ElevatorBuilder {
 		);
 	}
 
-	private static ElevatorSimulation generateSimulation() {
+	private static ElevatorSimulation createSimulation() {
 		return new ElevatorSimulation(
 			new ElevatorSim(
 				LinearSystemId.createElevatorSystem(
@@ -163,26 +167,21 @@ public class KrakenX60ElevatorBuilder {
 		);
 	}
 
-	public static Elevator createRealElevator(String logPath) {
-		TalonFXMotor rightMotor = new TalonFXMotor(logPath + "/right", IDs.TalonFXIDs.ELEVATOR_RIGHT, generateSysidConfig("right"));
-		rightMotor.applyConfiguration(generateConfiguration(IS_FIRST_MOTOR_INVERTED));
+	public static Elevator create(String logPath) {
+		// Followers...
+		TalonFXFollowerConfig followerConfig = new TalonFXFollowerConfig();
+		followerConfig.followerIDs = new TalonFXFollowerConfig.TalonFXFollowerID[] {
+			new TalonFXFollowerConfig.TalonFXFollowerID("LEFT", IDs.TalonFXIDs.ELEVATOR_LEFT, SECOND_MOTOR_OPPOSE_MAIN)};
+		followerConfig.motorConfig = limitsConfiguration();
 
-		TalonFXMotor leftMotor = new TalonFXMotor(logPath + "/left", IDs.TalonFXIDs.ELEVATOR_LEFT, generateSysidConfig("left"));
-		leftMotor.applyConfiguration(generateConfiguration(IS_SECOND_MOTOR_INVERTED));
+		// Motor...
+		TalonFXMotor motor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_RIGHT, followerConfig, createSysidConfig(), createSimulation());
+		motor.applyConfiguration(mainConfiguration());
 
-		return create(logPath, rightMotor, leftMotor);
-	}
+		// Sensors...
+		IDigitalInput digitalInput = createLimitSwitch();
 
-	public static Elevator createSimulationElevator(String logPath) {
-		TalonFXMotor rightMotor = new TalonFXMotor(logPath, IDs.TalonFXIDs.ELEVATOR_RIGHT, generateSysidConfig(""), generateSimulation());
-		rightMotor.applyConfiguration(generateConfiguration(IS_FIRST_MOTOR_INVERTED));
-
-		return create(logPath, rightMotor, rightMotor);
-	}
-
-	private static Elevator create(String logPath, TalonFXMotor rightMotor, TalonFXMotor leftMotor) {
-		IDigitalInput digitalInput = generateDigitalInput();
-
+		// Requests...
 		Phoenix6DynamicMotionMagicRequest positionRequest = Robot.ROBOT_TYPE.isReal()
 			? Phoenix6RequestBuilder.build(
 				new DynamicMotionMagicVoltage(0, 0, 0, 0).withSlot(0).withUpdateFreqHz(RobotConstants.DEFAULT_CANIVORE_REQUEST_FREQUENCY_HERTZ),
@@ -192,16 +191,7 @@ public class KrakenX60ElevatorBuilder {
 			: Phoenix6RequestBuilder.build(new DynamicMotionMagicVoltage(0, 0, 0, 0).withSlot(1), 0, true);
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), true);
 
-		return new Elevator(
-			logPath,
-			rightMotor,
-			createSignals(rightMotor),
-			leftMotor,
-			createSignals(leftMotor),
-			positionRequest,
-			voltageRequest,
-			digitalInput
-		);
+		return new Elevator(logPath, motor, createSignals(motor), positionRequest, voltageRequest, digitalInput);
 	}
 
 }

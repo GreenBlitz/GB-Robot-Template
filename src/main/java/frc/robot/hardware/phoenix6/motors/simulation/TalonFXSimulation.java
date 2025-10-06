@@ -13,12 +13,18 @@ public class TalonFXSimulation {
 	private final double ROTOR_TO_SENSOR_RATIO = 1.0;
 
 	private final TalonFXSimState motorSimState;
+	private final TalonFXSimState[] followerSimStates;
 	private final MechanismSimulation mechanismSimulation;
 
-	public TalonFXSimulation(TalonFXWrapper talonFXWrapper, MechanismSimulation simulation) {
+	public TalonFXSimulation(TalonFXWrapper talonFXWrapper, MechanismSimulation simulation, TalonFXWrapper[] followers) {
 		this.mechanismSimulation = simulation;
 		this.motorSimState = talonFXWrapper.getSimState();
+		this.followerSimStates = new TalonFXSimState[followers.length];
 
+		for (int i = 0; i < followerSimStates.length; i++) {
+			followerSimStates[i] = followers[i].getSimState();
+			followerSimStates[i].setSupplyVoltage(BatteryUtil.DEFAULT_VOLTAGE);
+		}
 		motorSimState.setSupplyVoltage(BatteryUtil.DEFAULT_VOLTAGE);
 	}
 
@@ -37,6 +43,11 @@ public class TalonFXSimulation {
 		mechanismSimulation.updateMotor();
 		motorSimState.setRawRotorPosition(mechanismSimulation.getRotorPosition().getRotations());
 		motorSimState.setRotorVelocity(mechanismSimulation.getRotorVelocityAnglesPerSecond().getRotations());
+
+		for (TalonFXSimState followerSimState : followerSimStates) {
+			followerSimState.setRotorVelocity(mechanismSimulation.getRotorVelocityAnglesPerSecond().getRotations());
+			followerSimState.setRawRotorPosition(mechanismSimulation.getRotorPosition().getRotations());
+		}
 	}
 
 }

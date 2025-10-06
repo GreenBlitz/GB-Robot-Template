@@ -272,7 +272,7 @@ public class Module {
 	public SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
 		return new SwerveModulePosition(
 			driveInputs.positionsMeters[odometryUpdateIndex],
-			Rotation2d.fromRadians(inputs.data.steerVelocityRadPerSec())
+			getSteerPosition()
 		);
 	}
 
@@ -297,7 +297,7 @@ public class Module {
 	}
 
 	public Rotation2d getSteerPosition() {
-		return Rotation2d.fromRadians(inputs.data.steerVelocityRadPerSec());
+		return Rotation2d.fromRadians(inputs.data.steerPositionRads());
 	}
 
 

@@ -81,11 +81,12 @@ public abstract class AngleSignal implements InputSignal<Rotation2d> {
 		timedValue.setTimestamp(logTable.get("CurrentTimeSeconds", 0.0));
 
 		logTable = RobotManager.replayLogsTable.getSubtable(logPath);
-		timedValue.setValue(logTable.get(name, new Rotation2d()));
+		timedValue.setValue(Rotation2d.fromRadians(logTable.get(name, 0.0)));
 
-		Logger.recordOutput("Code/v", timedValue.getValue());
-		Logger.recordOutput("Code/t", timedValue.getTimestamp());
-		Logger.recordOutput("Code/p", logPath);
+		Logger.recordOutput("Code/" + logPath + "/v", timedValue.getValue());
+		Logger.recordOutput("Code/" + logPath + "/t", timedValue.getTimestamp());
+		Logger.recordOutput("Code/" + logPath + "/p", logPath);
+		Logger.recordOutput("Code/" + logPath + "/n", name);
 	}
 
 	public Rotation2d getAndUpdateValue() {

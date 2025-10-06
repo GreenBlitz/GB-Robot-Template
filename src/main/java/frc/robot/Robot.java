@@ -176,7 +176,7 @@ public class Robot {
 		BusChain.refreshAll();
 
 		swerve.update();
-		poseEstimator.updateOdometry(swerve.getAllThreadOdometryData());
+		poseEstimator.updateAllOdometry(swerve.getAllThreadOdometryData(), swerve.getAllNonThreadOdometryData());
 		headingEstimator.updateGyroAngle(new TimedValue<>(swerve.getGyroAbsoluteYaw(), TimeUtil.getCurrentTimeSeconds()));
 		Logger.recordOutput("LastOdometryThreadCycleTime", odometryThread.getLastCycleLengthSeconds());
 

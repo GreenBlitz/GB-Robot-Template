@@ -6,13 +6,13 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 public interface IOdometryEstimator {
 
-	void updateOdometry(OdometryData[] odometryData);
+	void updateAllOdometry(OdometryData[] odometryDataThread, OdometryData odometryData);
 
-	void updateOdometry(OdometryData odometryData);
+	void updateOdometryThread(OdometryData odometryDataThread);
 
 	void resetOdometry(SwerveModulePosition[] wheelPositions, Rotation2d gyroAngle, Pose2d robotPose);
 
-	Pose2d getOdometryPose();
+	Pose2d getOdometryPoseThread();
 
 	void setHeading(Rotation2d newHeading);
 

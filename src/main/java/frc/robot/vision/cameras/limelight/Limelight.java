@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.RobotManager;
 import frc.robot.Robot;
 import frc.robot.vision.DetectedObjectObservation;
 import frc.robot.vision.DetectedObjectType;
@@ -16,6 +17,7 @@ import frc.utils.LimelightHelpers;
 import frc.utils.filter.Filter;
 import frc.utils.logger.LoggerFactory;
 import frc.utils.math.StandardDeviations2D;
+import frc.utils.time.TimeConstants;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.Logger;
@@ -115,10 +117,8 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	public void updateMT1() {
 		if (pipeline.isUsingMT()) {
 			if (Robot.ROBOT_TYPE.isReplay()) {
-				LogTable logTable = new LogTable(0L);
-				LoggerFactory.logReplaySource.updateTable(logTable);
-                logTable = logTable.getSubtable("RealOutputs/" + logPath);
-                mt1RawData = logTable.get("megaTag1RawData", new LimelightHelpers.PoseEstimate());
+				LogTable logTable = RobotManager.replayLogsTable.getSubtable("RealOutputs/" + logPath);
+				mt1RawData = logTable.get("megaTag1RawData", new LimelightHelpers.PoseEstimate());
 			} else {
 				mt1RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
 				mt1Pose3d = LimelightHelpers.getBotPose3d_wpiBlue(name);

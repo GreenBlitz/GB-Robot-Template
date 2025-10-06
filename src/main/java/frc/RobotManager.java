@@ -17,97 +17,106 @@ import frc.utils.auto.PathPlannerUtil;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.logger.LoggerFactory;
 import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the TimedRobot
- * documentation. If you change the name of this class or the package after creating this project, you must also update the build.gradle file in
+ * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the
+ * TimedRobot
+ * documentation. If you change the name of this class or the package after creating this project, you must also update the build
+ * .gradle file in
  * the project.
  */
 public class RobotManager extends LoggedRobot {
 
-	private final Robot robot;
-	private PathPlannerAutoWrapper autonomousCommand;
-	private int roborioCycles;
+    public static final LogTable replayLogsTable = new LogTable(0);
+    private final Robot robot;
+    private PathPlannerAutoWrapper autonomousCommand;
+    private int roborioCycles;
 
-	public RobotManager() {
-		if (Robot.ROBOT_TYPE.isReplay()) {
-			setUseTiming(false);
-			LoggerFactory.startReplayLogger();
-		} else {
-			LoggerFactory.initializeLogger();
-		}
-		DriverStation.silenceJoystickConnectionWarning(true);
-		PathPlannerUtil.startPathfinder();
-		PathPlannerUtil.setupPathPlannerLogging();
+    public RobotManager() {
+        if (Robot.ROBOT_TYPE.isReplay()) {
+            setUseTiming(false);
+            LoggerFactory.startReplayLogger();
+        }
+        else {
+            LoggerFactory.initializeLogger();
+        }
+        DriverStation.silenceJoystickConnectionWarning(true);
+        PathPlannerUtil.startPathfinder();
+        PathPlannerUtil.setupPathPlannerLogging();
 
-		this.roborioCycles = 0;
-		this.robot = new Robot();
+        this.roborioCycles = 0;
+        this.robot = new Robot();
 
-		createAutoReadyForConstructionChooser();
-		JoysticksBindings.configureBindings(robot);
+        createAutoReadyForConstructionChooser();
+        JoysticksBindings.configureBindings(robot);
 
-		Threads.setCurrentThreadPriority(true, 10);
-	}
+        Threads.setCurrentThreadPriority(true, 10);
+    }
 
-	@Override
-	public void disabledInit() {
-		if (!DriverStationUtil.isMatch()) {
-			BrakeStateManager.coast();
-		}
-	}
+    @Override
+    public void disabledInit() {
+        if (!DriverStationUtil.isMatch()) {
+            BrakeStateManager.coast();
+        }
+    }
 
-	@Override
-	public void disabledExit() {
-		if (!DriverStationUtil.isMatch()) {
-			BrakeStateManager.brake();
-		}
-	}
+    @Override
+    public void disabledExit() {
+        if (!DriverStationUtil.isMatch()) {
+            BrakeStateManager.brake();
+        }
+    }
 
-	@Override
-	public void autonomousInit() {
-		if (autonomousCommand == null) {
-			this.autonomousCommand = robot.getAutonomousCommand();
-		}
-		autonomousCommand.schedule();
-	}
+    @Override
+    public void autonomousInit() {
+        if (autonomousCommand == null) {
+            this.autonomousCommand = robot.getAutonomousCommand();
+        }
+        autonomousCommand.schedule();
+    }
 
-	@Override
-	public void autonomousExit() {
-		if (autonomousCommand != null) {
-			autonomousCommand.cancel();
-		}
-	}
+    @Override
+    public void autonomousExit() {
+        if (autonomousCommand != null) {
+            autonomousCommand.cancel();
+        }
+    }
 
-	@Override
-	public void robotPeriodic() {
-		updateTimeRelatedData(); // Better to be first
-		JoysticksBindings.updateChassisDriverInputs();
-		robot.periodic();
-		AlertManager.reportAlerts();
-	}
+    @Override
+    public void robotPeriodic() {
+        if (Robot.ROBOT_TYPE.isReplay()) {
+            LoggerFactory.logReplaySource.updateTable(replayLogsTable);
+        }
+        updateTimeRelatedData(); // Better to be first
+        JoysticksBindings.updateChassisDriverInputs();
+        robot.periodic();
+        AlertManager.reportAlerts();
+    }
 
-	private void createAutoReadyForConstructionChooser() {
-		SendableChooser<Boolean> autoReadyForConstructionSendableChooser = new SendableChooser<>();
-		autoReadyForConstructionSendableChooser.setDefaultOption("false", false);
-		autoReadyForConstructionSendableChooser.addOption("true", true);
-		autoReadyForConstructionSendableChooser.onChange(isReady -> {
-			if (isReady) {
-				this.autonomousCommand = robot.getAutonomousCommand();
-				BrakeStateManager.brake();
-			} else {
-				BrakeStateManager.coast();
-			}
-			Logger.recordOutput(AutonomousConstants.LOG_PATH_PREFIX + "/ReadyToConstruct", isReady);
-		});
-		SmartDashboard.putData("AutoReadyForConstruction", autoReadyForConstructionSendableChooser);
-	}
+    private void createAutoReadyForConstructionChooser() {
+        SendableChooser<Boolean> autoReadyForConstructionSendableChooser = new SendableChooser<>();
+        autoReadyForConstructionSendableChooser.setDefaultOption("false", false);
+        autoReadyForConstructionSendableChooser.addOption("true", true);
+        autoReadyForConstructionSendableChooser.onChange(isReady -> {
+            if (isReady) {
+                this.autonomousCommand = robot.getAutonomousCommand();
+                BrakeStateManager.brake();
+            }
+            else {
+                BrakeStateManager.coast();
+            }
+            Logger.recordOutput(AutonomousConstants.LOG_PATH_PREFIX + "/ReadyToConstruct", isReady);
+        });
+        SmartDashboard.putData("AutoReadyForConstruction", autoReadyForConstructionSendableChooser);
+    }
 
-	private void updateTimeRelatedData() {
-		roborioCycles++;
-		Logger.recordOutput("RoborioCycles", roborioCycles);
-		TimeUtil.updateCycleTime(roborioCycles);
-	}
+    private void updateTimeRelatedData() {
+        roborioCycles++;
+        Logger.recordOutput("RoborioCycles", roborioCycles);
+        TimeUtil.updateCycleTime(roborioCycles);
+    }
 
 }

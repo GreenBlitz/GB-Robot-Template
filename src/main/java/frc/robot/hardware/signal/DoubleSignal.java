@@ -1,5 +1,6 @@
 package frc.robot.hardware.signal;
 
+import frc.RobotManager;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.utils.TimedValue;
 import frc.utils.logger.LoggerFactory;
@@ -71,9 +72,7 @@ public abstract class DoubleSignal implements InputSignal<Double> {
 	@Override
 	public void fromLog(LogTable table) {
 		timedValue.setValue(table.get(name, 0.0));
-		LogTable logTable = new LogTable(0L);
-        LoggerFactory.logReplaySource.updateTable(logTable);
-		logTable = logTable.getSubtable("RealOutputs/" + TimeConstants.LOG_PATH);
+		LogTable logTable = RobotManager.replayLogsTable.getSubtable("RealOutputs/" + TimeConstants.LOG_PATH);
 		timedValue.setTimestamp(logTable.get("CurrentTimeSeconds", 0.0));
 	}
 

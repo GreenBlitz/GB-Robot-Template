@@ -92,9 +92,11 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 
 	@Override
 	public void updateAllOdometry(OdometryData[] odometryDataThread, OdometryData odometryData) {
-		for (OdometryData data : odometryDataThread) {
-			updateOdometryThread(data);
+		for (int i = 0; i < odometryDataThread.length; i++) {
+			Logger.recordOutput(getLogPath() + "latencyThread" + i, odometryDataThread[i].getTimestamp());
+			updateOdometryThread(odometryDataThread[i]);
 		}
+		Logger.recordOutput(getLogPath() + "latencyNonThread", odometryData.getTimestamp());
 		updateOdometry(odometryData);
 	}
 

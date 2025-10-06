@@ -64,7 +64,7 @@ public class Robot {
 			"OdometryThread",
 			OdometryThreadConstants.getQueuesSize(odometryThreadFrequencyHertz, RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, 5),
 			false,
-			2
+			1000
 		);
 		IGyro gyro = GyroFactory.createGyro(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(

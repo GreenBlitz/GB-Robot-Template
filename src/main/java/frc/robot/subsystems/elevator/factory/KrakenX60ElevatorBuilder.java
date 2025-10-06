@@ -44,7 +44,7 @@ public class KrakenX60ElevatorBuilder {
 
 	private static final int LIMIT_SWITCH_CHANNEL = 0;
 	private static final double LIMIT_SWITCH_DEBOUNCE_TIME = 0.04;
-	private static final boolean SECOND_MOTOR_OPPOSE_MAIN = true;
+	private static final boolean SECOND_MOTOR_OPPOSE_MAIN = false;
 	public static final double kG = 0;
 
 	private static final int NUMBER_OF_MOTORS = 2;

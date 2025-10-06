@@ -15,7 +15,7 @@ import java.nio.file.Path;
 public class LoggerFactory {
 
 	private static final String LOG_PATH = "Logger";
-    public static LogReplaySource logReplaySource;
+	public static LogReplaySource logReplaySource;
 
 	public static void initializeLogger() {
 		switch (Robot.ROBOT_TYPE) {
@@ -26,7 +26,7 @@ public class LoggerFactory {
 
 	public static void startReplayLogger() {
 		String logPath = LogFileUtil.findReplayLog();
-        logReplaySource = new WPILOGReader(logPath);
+		logReplaySource = new WPILOGReader(logPath);
 		Logger.setReplaySource(logReplaySource);
 		Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_replay")));
 		Logger.start();

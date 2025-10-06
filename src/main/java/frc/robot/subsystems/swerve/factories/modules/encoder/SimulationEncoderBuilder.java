@@ -16,7 +16,7 @@ class SimulationEncoderBuilder {
 	}
 
 	static EncoderSignals buildSignals() {
-		return new EncoderSignals(new AngleSignal("yaw", AngleUnit.DEGREES) {
+		return new EncoderSignals(new AngleSignal("", "yaw", AngleUnit.DEGREES) {
 
 			@Override
 			protected void updateValue(TimedValue<Rotation2d> timedValue) {

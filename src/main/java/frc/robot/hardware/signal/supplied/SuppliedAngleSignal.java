@@ -13,7 +13,7 @@ public class SuppliedAngleSignal extends AngleSignal {
 	private final Supplier<Double> angleSupplier;
 
 	public SuppliedAngleSignal(String name, Supplier<Double> angleSupplier, AngleUnit angleUnit) {
-		super(name, angleUnit);
+		super("", name, angleUnit);
 		this.angleSupplier = angleSupplier;
 	}
 

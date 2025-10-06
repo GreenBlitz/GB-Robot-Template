@@ -28,8 +28,9 @@ public class SteerFactory {
 		return KrakenX60SteerBuilder.buildRequests();
 	}
 
-	public static SteerSignals createSignals(ControllableMotor steer) {
-		return KrakenX60SteerBuilder.buildSignals((TalonFXMotor) steer);
+	public static SteerSignals createSignals(ControllableMotor steer, ModuleUtil.ModulePosition modulePosition) {
+		String logPath = "Subsystems/Swerve/Modules/" + modulePosition + "/Data";
+		return KrakenX60SteerBuilder.buildSignals((TalonFXMotor) steer, logPath);
 	}
 
 }

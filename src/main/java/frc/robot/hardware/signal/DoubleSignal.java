@@ -3,7 +3,6 @@ package frc.robot.hardware.signal;
 import frc.RobotManager;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.utils.TimedValue;
-import frc.utils.logger.LoggerFactory;
 import frc.utils.math.ToleranceMath;
 import frc.utils.time.TimeConstants;
 import org.littletonrobotics.junction.LogTable;

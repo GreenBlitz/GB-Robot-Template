@@ -24,8 +24,9 @@ public class DriveFactory {
 		return KrakenX60DriveBuilder.buildRequests();
 	}
 
-	public static DriveSignals createSignals(ControllableMotor drive) {
-		return KrakenX60DriveBuilder.buildSignals((TalonFXMotor) drive);
+	public static DriveSignals createSignals(ControllableMotor drive, ModuleUtil.ModulePosition modulePosition) {
+		String logPath = "Subsystems/Swerve/Modules/" + modulePosition + "/Data";
+		return KrakenX60DriveBuilder.buildSignals((TalonFXMotor) drive, logPath);
 	}
 
 }

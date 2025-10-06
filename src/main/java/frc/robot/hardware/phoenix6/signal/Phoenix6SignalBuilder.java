@@ -27,7 +27,19 @@ public class Phoenix6SignalBuilder {
 
 	public static Phoenix6AngleSignal build(StatusSignal<?> signal, double frequency, AngleUnit angleUnit, BusChain busChain) {
 		StatusSignal<?> signalClone = cloneWithFrequency(signal, frequency, busChain);
-		return new Phoenix6AngleSignal(signalClone.getName(), signalClone, angleUnit);
+		return new Phoenix6AngleSignal("", signalClone.getName(), signalClone, angleUnit);
+	}
+
+	public static Phoenix6AngleSignal build(
+		String logPath,
+		String name,
+		StatusSignal<?> signal,
+		double frequency,
+		AngleUnit angleUnit,
+		BusChain busChain
+	) {
+		StatusSignal<?> signalClone = cloneWithFrequency(signal, frequency, busChain);
+		return new Phoenix6AngleSignal(logPath, name, signalClone, angleUnit);
 	}
 
 	public static Phoenix6LatencySignal build(
@@ -39,7 +51,21 @@ public class Phoenix6SignalBuilder {
 	) {
 		StatusSignal<?> signalClone = cloneWithFrequency(signal, frequency, busChain);
 		setFrequencyWithRetry(signalSlope.getSignal(), frequency);
-		return new Phoenix6LatencySignal(signalClone.getName(), signalClone, signalSlope.getSignal(), angleUnit);
+		return new Phoenix6LatencySignal("", signalClone.getName(), signalClone, signalSlope.getSignal(), angleUnit);
+	}
+
+	public static Phoenix6LatencySignal build(
+		String logPath,
+		String name,
+		StatusSignal<?> signal,
+		SignalGetter signalSlope,
+		double frequency,
+		AngleUnit angleUnit,
+		BusChain busChain
+	) {
+		StatusSignal<?> signalClone = cloneWithFrequency(signal, frequency, busChain);
+		setFrequencyWithRetry(signalSlope.getSignal(), frequency);
+		return new Phoenix6LatencySignal(logPath, name, signalClone, signalSlope.getSignal(), angleUnit);
 	}
 
 	/**
@@ -55,7 +81,7 @@ public class Phoenix6SignalBuilder {
 	) {
 		StatusSignal<?> signalClone = cloneWithFrequency(signal, frequency, busChain);
 		StatusSignal<?> signalSlopeClone = cloneWithFrequency(signalSlope, frequency, busChain);
-		return new Phoenix6LatencyAndSlopeSignal(signalClone.getName(), signalClone, signalSlopeClone, angleUnit);
+		return new Phoenix6LatencyAndSlopeSignal("", signalClone.getName(), signalClone, signalSlopeClone, angleUnit);
 	}
 
 }

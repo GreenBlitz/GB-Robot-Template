@@ -463,25 +463,25 @@ public class LimelightHelpers {
 	/**
 	 * Represents a Limelight Raw Fiducial result from Limelight's NetworkTables output.
 	 */
-    public record RawFiducial(int id, double txnc, double tync, double ta, double distToCamera, double distToRobot, double ambiguity) {
+	public record RawFiducial(int id, double txnc, double tync, double ta, double distToCamera, double distToRobot, double ambiguity) {
 
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null || getClass() != obj.getClass())
-                return false;
-            RawFiducial other = (RawFiducial) obj;
-            return id == other.id
-                    && Double.compare(txnc, other.txnc) == 0
-                    && Double.compare(tync, other.tync) == 0
-                    && Double.compare(ta, other.ta) == 0
-                    && Double.compare(distToCamera, other.distToCamera) == 0
-                    && Double.compare(distToRobot, other.distToRobot) == 0
-                    && Double.compare(ambiguity, other.ambiguity) == 0;
-        }
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null || getClass() != obj.getClass())
+				return false;
+			RawFiducial other = (RawFiducial) obj;
+			return id == other.id
+				&& Double.compare(txnc, other.txnc) == 0
+				&& Double.compare(tync, other.tync) == 0
+				&& Double.compare(ta, other.ta) == 0
+				&& Double.compare(distToCamera, other.distToCamera) == 0
+				&& Double.compare(distToRobot, other.distToRobot) == 0
+				&& Double.compare(ambiguity, other.ambiguity) == 0;
+		}
 
-    }
+	}
 
 	/**
 	 * Represents a Limelight Raw Neural Detector result from Limelight's NetworkTables output.
@@ -535,44 +535,44 @@ public class LimelightHelpers {
 	/**
 	 * Represents a 3D Pose Estimate.
 	 */
-    public record PoseEstimate(
-            Pose2d pose,
-            double timestampSeconds,
-            double latency,
-            int tagCount,
-            double tagSpan,
-            double avgTagDist,
-            double avgTagArea,
-            RawFiducial[] rawFiducials,
-            boolean isMegaTag2
-    ) {
+	public record PoseEstimate(
+		Pose2d pose,
+		double timestampSeconds,
+		double latency,
+		int tagCount,
+		double tagSpan,
+		double avgTagDist,
+		double avgTagArea,
+		RawFiducial[] rawFiducials,
+		boolean isMegaTag2
+	) {
 
-        /**
-         * Instantiates a PoseEstimate object with default values
-         */
-        public PoseEstimate() {
-            this(new Pose2d(), 0, 0, 0, 0, 0, 0, new RawFiducial[] {}, false);
-        }
+		/**
+		 * Instantiates a PoseEstimate object with default values
+		 */
+		public PoseEstimate() {
+			this(new Pose2d(), 0, 0, 0, 0, 0, 0, new RawFiducial[] {}, false);
+		}
 
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null || getClass() != obj.getClass())
-                return false;
-            PoseEstimate that = (PoseEstimate) obj;
-            // We don't compare the timestampSeconds as it isn't relevant for equality and makes
-            // unit testing harder
-            return Double.compare(that.latency, latency) == 0
-                    && tagCount == that.tagCount
-                    && Double.compare(that.tagSpan, tagSpan) == 0
-                    && Double.compare(that.avgTagDist, avgTagDist) == 0
-                    && Double.compare(that.avgTagArea, avgTagArea) == 0
-                    && pose.equals(that.pose)
-                    && Arrays.equals(rawFiducials, that.rawFiducials);
-        }
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null || getClass() != obj.getClass())
+				return false;
+			PoseEstimate that = (PoseEstimate) obj;
+			// We don't compare the timestampSeconds as it isn't relevant for equality and makes
+			// unit testing harder
+			return Double.compare(that.latency, latency) == 0
+				&& tagCount == that.tagCount
+				&& Double.compare(that.tagSpan, tagSpan) == 0
+				&& Double.compare(that.avgTagDist, avgTagDist) == 0
+				&& Double.compare(that.avgTagArea, avgTagArea) == 0
+				&& pose.equals(that.pose)
+				&& Arrays.equals(rawFiducials, that.rawFiducials);
+		}
 
-    }
+	}
 
 	/**
 	 * Encapsulates the state of an internal Limelight IMU.

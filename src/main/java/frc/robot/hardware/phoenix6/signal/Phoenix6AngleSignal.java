@@ -11,8 +11,8 @@ public class Phoenix6AngleSignal extends AngleSignal implements SignalGetter {
 
 	private final StatusSignal<?> statusSignal;
 
-	protected Phoenix6AngleSignal(String name, StatusSignal<?> statusSignal, AngleUnit angleUnit) {
-		super(name, angleUnit);
+	protected Phoenix6AngleSignal(String logPath, String name, StatusSignal<?> statusSignal, AngleUnit angleUnit) {
+		super(logPath, name, angleUnit);
 		this.statusSignal = statusSignal;
 	}
 

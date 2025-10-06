@@ -4,6 +4,7 @@
 
 package frc;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -37,6 +38,7 @@ public class RobotManager extends LoggedRobot {
 		} else {
 			LoggerFactory.initializeLogger();
 		}
+		DriverStation.silenceJoystickConnectionWarning(true);
 		PathPlannerUtil.startPathfinder();
 		PathPlannerUtil.setupPathPlannerLogging();
 

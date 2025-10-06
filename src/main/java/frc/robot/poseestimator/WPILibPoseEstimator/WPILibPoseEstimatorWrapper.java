@@ -111,10 +111,11 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	}
 
 	public void updateOdometry(OdometryData data) {
-		Twist2d changeInPose = kinematics.toTwist2d(lastOdometryDataThread.getWheelPositions(), data.getWheelPositions());
+		Twist2d changeInPose = kinematics.toTwist2d(lastOdometryData.getWheelPositions(), data.getWheelPositions());
 		Rotation2d odometryAngle = getOdometryAngle(data, changeInPose);
-		poseEstimator.updateWithTime(data.getTimestamp(), odometryAngle, data.getWheelPositions());
 
+		odometryEstimator.update(odometryAngle, data.getWheelPositions());
+		
 		lastOdometryAngle = odometryAngle;
 		lastOdometryData.setWheelPositions(data.getWheelPositions());
 		lastOdometryData.setGyroYaw(data.getGyroYaw());

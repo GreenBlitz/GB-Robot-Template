@@ -128,6 +128,7 @@ public class Modules {
 		for (int i = 0; i < modules.length; i++) {
 			swerveModulePositions[i] = modules[i].getNonThread();
 		}
+		Logger.recordOutput("MyTests/modulePositionsNon", swerveModulePositions);
 		return swerveModulePositions;
 	}
 

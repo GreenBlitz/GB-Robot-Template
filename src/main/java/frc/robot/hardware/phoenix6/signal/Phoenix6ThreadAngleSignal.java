@@ -17,7 +17,7 @@ public class Phoenix6ThreadAngleSignal extends ArrayAngleSignal implements Signa
 	private final StatusSignal<?> statusSignal;
 
 	protected Phoenix6ThreadAngleSignal(StatusSignal<?> statusSignal, AngleUnit angleUnit, OdometryThread thread) {
-		super(statusSignal.getName(), angleUnit);
+		super(statusSignal.getName() + " thread", angleUnit);
 		this.thread = thread;
 		this.statusSignal = statusSignal;
 		this.threadTimedValues = thread.addSignal(statusSignal);

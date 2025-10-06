@@ -147,8 +147,9 @@ public class Module {
 		Logger.processInputs(constants.logPath() + "/Drive", driveCouplingInputs);
 	}
 
-	public SwerveModulePosition getNonThread(){
-		Rotation2d posRads = ModuleUtil.uncoupleDriveAngle(driveSignals.position().getLatestValue(), steerSignals.position().getLatestValue(), constants.couplingRatio());
+	public SwerveModulePosition getNonThread() {
+		Rotation2d posRads = ModuleUtil
+			.uncoupleDriveAngle(driveSignals.position().getLatestValue(), steerSignals.position().getLatestValue(), constants.couplingRatio());
 		double posmeters = toDriveMeters(posRads);
 		return new SwerveModulePosition(posmeters, steerSignals.position().getLatestValue());
 	}

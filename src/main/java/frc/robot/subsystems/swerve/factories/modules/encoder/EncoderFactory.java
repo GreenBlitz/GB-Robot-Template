@@ -19,14 +19,14 @@ public class EncoderFactory {
 				case BACK_LEFT -> CANCoderEncoderBuilder.buildEncoder(logPath, IDs.CANCoderIDs.SWERVE_BACK_LEFT);
 				case BACK_RIGHT -> CANCoderEncoderBuilder.buildEncoder(logPath, IDs.CANCoderIDs.SWERVE_BACK_RIGHT);
 			};
-			case SIMULATION -> SimulationEncoderBuilder.buildEncoder(logPath);
+			case REPLAY, SIMULATION -> SimulationEncoderBuilder.buildEncoder(logPath);
 		};
 	}
 
 	public static EncoderSignals createSignals(IAngleEncoder angleEncoder) {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL -> CANCoderEncoderBuilder.buildSignals((CANCoderEncoder) angleEncoder);
-			case SIMULATION -> SimulationEncoderBuilder.buildSignals();
+			case REPLAY, SIMULATION -> SimulationEncoderBuilder.buildSignals();
 		};
 	}
 

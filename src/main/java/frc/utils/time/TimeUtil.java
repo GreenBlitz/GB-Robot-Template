@@ -1,6 +1,9 @@
 package frc.utils.time;
 
 import edu.wpi.first.hal.HALUtil;
+import edu.wpi.first.wpilibj.Timer;
+import frc.RobotManager;
+import frc.robot.Robot;
 import frc.utils.Conversions;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
@@ -38,7 +41,7 @@ public class TimeUtil {
 	}
 
 	public static double getCurrentTimeSeconds() {
-		return Conversions.microSecondsToSeconds(HALUtil.getFPGATime());
+		return Timer.getTimestamp();
 	}
 
 	public static double getLatestCycleTimeSeconds() {

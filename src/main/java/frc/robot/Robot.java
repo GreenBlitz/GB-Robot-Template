@@ -14,11 +14,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.interfaces.IGyro;
 import frc.robot.hardware.phoenix6.BusChain;
-import frc.robot.vision.DetectedObjectType;
-import frc.robot.vision.cameras.limelight.Limelight;
-import frc.robot.vision.cameras.limelight.LimelightFilters;
-import frc.robot.vision.cameras.limelight.LimelightPipeline;
-import frc.robot.vision.cameras.limelight.LimelightStdDevCalculations;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
@@ -28,6 +23,11 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
+import frc.robot.vision.DetectedObjectType;
+import frc.robot.vision.cameras.limelight.Limelight;
+import frc.robot.vision.cameras.limelight.LimelightFilters;
+import frc.robot.vision.cameras.limelight.LimelightPipeline;
+import frc.robot.vision.cameras.limelight.LimelightStdDevCalculations;
 import frc.utils.TimedValue;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
@@ -42,7 +42,7 @@ import frc.utils.time.TimeUtil;
  */
 public class Robot {
 
-	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
+	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(true);
 
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
@@ -85,21 +85,25 @@ public class Robot {
 			),
 			LimelightPipeline.APRIL_TAG
 		);
-		limelightFour.setMT1PoseFilter(LimelightFilters.megaTag1Filter(limelightFour, new Translation2d(0.1, 0.1)));
+		limelightFour.setMT1PoseFilter(
+			LimelightFilters.megaTag1Filter(
+				limelightFour,
+				new Pose3d(0.1, 0.1, 0.1, new Rotation3d(Math.toRadians(3), Math.toRadians(3), Math.toRadians(10))),
+				headingEstimator::getEstimatedHeadingAtTimestamp,
+				() -> headingEstimator.isGyroOffsetCalibrated(RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE)
+			)
+		);
 		limelightFour.setMT2PoseFilter(
 			LimelightFilters.megaTag2Filter(
 				limelightFour,
 				headingEstimator::getEstimatedHeadingAtTimestamp,
+				() -> headingEstimator.isGyroOffsetCalibrated(RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE),
 				new Translation2d(0.1, 0.1),
 				Rotation2d.fromDegrees(2)
 			)
 		);
 		limelightFour.setMT1StdDevsCalculation(
-			LimelightStdDevCalculations.getMT1StdDevsCalculation(
-				limelightFour,
-				new StandardDeviations2D(0.0001, 0.0001, 0.0001),
-				new StandardDeviations2D(0.001, 0.001, 0.001)
-			)
+			LimelightStdDevCalculations.getMT1StdDevsCalculation(limelightFour, new StandardDeviations2D(-0.02), new StandardDeviations2D(0.5), new StandardDeviations2D(0.05))
 		);
 		limelightFour.setMT2StdDevsCalculation(
 			LimelightStdDevCalculations.getMT2StdDevsCalculation(
@@ -118,21 +122,25 @@ public class Robot {
 			),
 			LimelightPipeline.APRIL_TAG
 		);
-		limelightThreeGB.setMT1PoseFilter(LimelightFilters.megaTag1Filter(limelightThreeGB, new Translation2d(0.1, 0.1)));
+		limelightThreeGB.setMT1PoseFilter(
+			LimelightFilters.megaTag1Filter(
+				limelightThreeGB,
+				new Pose3d(0.1, 0.1, 0.1, new Rotation3d(Math.toRadians(3), Math.toRadians(3), Math.toRadians(10))),
+				headingEstimator::getEstimatedHeadingAtTimestamp,
+				() -> headingEstimator.isGyroOffsetCalibrated(RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE)
+			)
+		);
 		limelightThreeGB.setMT2PoseFilter(
 			LimelightFilters.megaTag2Filter(
 				limelightThreeGB,
 				headingEstimator::getEstimatedHeadingAtTimestamp,
+				() -> headingEstimator.isGyroOffsetCalibrated(RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE),
 				new Translation2d(0.1, 0.1),
 				Rotation2d.fromDegrees(2)
 			)
 		);
 		limelightThreeGB.setMT1StdDevsCalculation(
-			LimelightStdDevCalculations.getMT1StdDevsCalculation(
-				limelightThreeGB,
-				new StandardDeviations2D(0.0001, 0.0001, 0.0001),
-				new StandardDeviations2D(0.001, 0.001, 0.001)
-			)
+			LimelightStdDevCalculations.getMT1StdDevsCalculation(limelightThreeGB, new StandardDeviations2D(-0.02), new StandardDeviations2D(0.5), new StandardDeviations2D(0.05))
 		);
 		limelightThreeGB.setMT2StdDevsCalculation(
 			LimelightStdDevCalculations.getMT2StdDevsCalculation(
@@ -155,7 +163,7 @@ public class Robot {
 			.setDetectedObjectFilter(LimelightFilters.detectedObjectFilter(limelightObjectDetector, DetectedObjectType.ALGAE));
 
 		swerve.setHeadingSupplier(
-			ROBOT_TYPE.isSimulation() ? () -> poseEstimator.getEstimatedPose().getRotation() : () -> headingEstimator.getEstimatedHeading()
+			!ROBOT_TYPE.isReal() ? () -> poseEstimator.getEstimatedPose().getRotation() : () -> headingEstimator.getEstimatedHeading()
 		);
 	}
 
@@ -192,8 +200,8 @@ public class Robot {
 		limelightFour.updateMT2();
 		limelightThreeGB.updateMT2();
 
-		limelightFour.getOrientationRequiringRobotPose().ifPresent(poseEstimator::updateVision);
-		limelightThreeGB.getOrientationRequiringRobotPose().ifPresent(poseEstimator::updateVision);
+		limelightFour.getIndependentRobotPose().ifPresent(poseEstimator::updateVision);
+		limelightThreeGB.getIndependentRobotPose().ifPresent(poseEstimator::updateVision);
 
 		limelightFour.log();
 		limelightThreeGB.log();

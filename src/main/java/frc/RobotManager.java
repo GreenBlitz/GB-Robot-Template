@@ -38,7 +38,6 @@ public class RobotManager extends LoggedRobot {
 	public RobotManager() {
 		DriverStation.silenceJoystickConnectionWarning(true);
 		LoggerFactory.initializeLogger();
-		DriverStation.silenceJoystickConnectionWarning(true);
 		PathPlannerUtil.startPathfinder();
 		PathPlannerUtil.setupPathPlannerLogging();
 

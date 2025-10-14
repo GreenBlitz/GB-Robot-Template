@@ -165,7 +165,7 @@ public class JoysticksBindings {
 				command = robotCommander.setState(RobotState.NET);
 			} else {
 				robotCommander.netAssist = true;
-				command = robotCommander.autoNet();
+				command = robotCommander.netSequence();
 			}
 			command.schedule();
 		});

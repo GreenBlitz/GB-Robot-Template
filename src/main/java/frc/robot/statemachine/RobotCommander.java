@@ -54,7 +54,6 @@ public class RobotCommander extends GBSubsystem {
 	private RobotState currentState;
 	public boolean keepAlgaeInIntake;
 
-	public boolean reefAssist = true;
 	public boolean netAssist = true;
 	public boolean algaeIntakeAssist = true;
 	public boolean algaeRemoveAssist = true;
@@ -478,7 +477,7 @@ public class RobotCommander extends GBSubsystem {
 		);
 	}
 
-	public Command autoNet() {
+	public Command netSequence() {
 		return new SequentialCommandGroup(driveToPreNet(), setState(RobotState.NET));
 	}
 

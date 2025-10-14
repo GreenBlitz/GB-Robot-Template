@@ -18,6 +18,7 @@ import frc.robot.statemachine.RobotState;
 import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.utils.utilcommands.ExecuteEndCommand;
+
 import java.util.Set;
 
 public class JoysticksBindings {
@@ -116,12 +117,12 @@ public class JoysticksBindings {
 				robotCommander.setState(RobotState.HOLD_ALGAE).schedule();
 				return;
 			} else if (state == RobotState.NET) {
-				command = robotCommander.driveWith("Soft close net", robotCommander.getSuperstructure().softCloseNet(), true);
+				command = robotCommander.driveWith("Soft close net", robotCommander.getSuperstructure().softCloseNet());
 			} else if (
 				(state == RobotState.SCORE || state == RobotState.SCORE_WITHOUT_RELEASE || state == RobotState.PRE_SCORE)
 					&& ScoringHelpers.targetScoreLevel == ScoreLevel.L4
 			) {
-				command = robotCommander.driveWith("Soft close l4", robotCommander.getSuperstructure().softCloseL4(), true);
+				command = robotCommander.driveWith("Soft close l4", robotCommander.getSuperstructure().softCloseL4());
 			} else {
 				command = Commands.none();
 			}
@@ -135,16 +136,16 @@ public class JoysticksBindings {
 			RobotState state = robotCommander.getCurrentState();
 			Command command;
 			if (state == RobotState.NET) {
-				command = robotCommander.driveWith("Soft close net", robotCommander.getSuperstructure().softCloseNet(), true);
+				command = robotCommander.driveWith("Soft close net", robotCommander.getSuperstructure().softCloseNet());
 			} else if (
 				(state == RobotState.SCORE || state == RobotState.SCORE_WITHOUT_RELEASE || state == RobotState.PRE_SCORE)
 					&& ScoringHelpers.targetScoreLevel == ScoreLevel.L4
 			) {
-				command = robotCommander.driveWith("Soft close l4", robotCommander.getSuperstructure().softCloseL4(), true);
+				command = robotCommander.driveWith("Soft close l4", robotCommander.getSuperstructure().softCloseL4());
 			} else {
 				command = Commands.none();
 			}
-			command.andThen(robot.getRobotCommander().setState(RobotState.INTAKE_WITHOUT_AIM_ASSIST)).schedule();
+			command.andThen(robot.getRobotCommander().setState(RobotState.INTAKE)).schedule();
 		});
 	}
 
@@ -154,10 +155,11 @@ public class JoysticksBindings {
 			RobotState state = robotCommander.getCurrentState();
 			Command command;
 
-			if (state == RobotState.NET || state == RobotState.PRE_NET) {
-				command = robotCommander.setState(RobotState.NET);
-			} else if (state == RobotState.AUTO_PRE_NET) {
+			if (state == RobotState.PRE_NET && robotCommander.netAssist) {
+				robotCommander.netAssist = false;
 				command = robotCommander.setState(RobotState.PRE_NET);
+			} else if (state == RobotState.NET || state == RobotState.PRE_NET) {
+				command = robotCommander.setState(RobotState.NET);
 			} else {
 				command = robotCommander.autoNet();
 			}
@@ -244,8 +246,14 @@ public class JoysticksBindings {
 		usedJoystick.B.onTrue(processorActionChooser(robot));
 
 
-		usedJoystick.POV_LEFT.onTrue(robot.getRobotCommander().setState(RobotState.PRE_CLIMB));
-		usedJoystick.POV_UP.onTrue(robot.getRobotCommander().setState(RobotState.PRE_CLIMB_WITHOUT_AIM_ASSIST));
+		usedJoystick.POV_LEFT.onTrue(
+			new InstantCommand(() -> robot.getRobotCommander().cageAssist = true)
+				.andThen(robot.getRobotCommander().setState(RobotState.PRE_CLIMB))
+		);
+		usedJoystick.POV_UP.onTrue(
+			new InstantCommand(() -> robot.getRobotCommander().cageAssist = false)
+				.andThen(robot.getRobotCommander().setState(RobotState.PRE_CLIMB))
+		);
 		usedJoystick.POV_DOWN.onTrue(robot.getRobotCommander().setState(RobotState.CLIMB_WITH_LIMIT_SWITCH));
 		usedJoystick.A.onTrue(driveActionChooser(robot));
 
@@ -268,10 +276,13 @@ public class JoysticksBindings {
 		usedJoystick.R1.onTrue(new InstantCommand(() -> ScoringHelpers.isLeftBranch = false));
 		usedJoystick.L1.onTrue(new InstantCommand(() -> ScoringHelpers.isLeftBranch = true));
 
-		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getRobotCommander().setState(RobotState.INTAKE_WITHOUT_AIM_ASSIST));
+		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
 		usedJoystick.POV_UP.onTrue(new InstantCommand(() -> ScoringHelpers.isAutoAlgaeRemoveActivated = true));
 
-		usedJoystick.L3.onTrue(robot.getRobotCommander().setState(RobotState.PRE_CLIMB_WITHOUT_AIM_ASSIST));
+		usedJoystick.L3.onTrue(
+			new InstantCommand(() -> robot.getRobotCommander().cageAssist = false)
+				.andThen(robot.getRobotCommander().setState(RobotState.PRE_CLIMB))
+		);
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {

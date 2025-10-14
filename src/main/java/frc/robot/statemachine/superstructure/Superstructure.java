@@ -172,6 +172,37 @@ public class Superstructure extends GBSubsystem {
 		log();
 	}
 
+	public Command setState(RobotState robotState) {
+		return switch (robotState) {
+			case NET -> netWithRelease();
+			case DRIVE -> idle();
+			case SCORE -> scoreWithRelease();
+			case INTAKE -> intake();
+			case PRE_NET -> preNet();
+			case PRE_CLIMB -> preClimb();
+			case PRE_SCORE -> preScore();
+			case EXIT_CLIMB -> exitClimb();
+			case HOLD_ALGAE -> holdAlgae();
+			case STOP_CLIMB -> stopClimb();
+			case CLOSE_CLIMB -> closeClimb();
+			case ALGAE_INTAKE -> algaeIntake();
+			case ALGAE_REMOVE -> algaeRemove();
+			case MANUAL_CLIMB -> manualClimb();
+			case ARM_PRE_SCORE -> armPreScore();
+			case CORAL_OUTTAKE -> outtake();
+			case STAY_IN_PLACE -> stayInPlace();
+			case PROCESSOR_SCORE -> processorScore();
+			case PROCESSOR_NO_SCORE -> processorWithoutRelease();
+			case ELEVATOR_OPENING -> elevatorOpening();
+			case SCORE_WITHOUT_RELEASE -> scoreWithoutRelease();
+			case CLIMB_WITH_LIMIT_SWITCH -> climbWithLimitSwitch();
+			case ALGAE_OUTTAKE_FROM_INTAKE -> algaeOuttakeFromIntake();
+			case CLIMB_WITHOUT_LIMIT_SWITCH -> climbWithoutLimitSwitch();
+			case TRANSFER_ALGAE_TO_END_EFFECTOR -> transferAlgaeFromIntakeToEndEffector();
+			case ALGAE_OUTTAKE_FROM_END_EFFECTOR -> algaeOuttakeFromEndEffector();
+		};
+	}
+
 	private void log() {
 		Logger.recordOutput(getLogPath() + "/ElevatorState", elevatorStateHandler.getCurrentState());
 		Logger.recordOutput(getLogPath() + "/ArmState", armStateHandler.getCurrentState());

@@ -53,6 +53,13 @@ public class RobotCommander extends GBSubsystem {
 	private RobotState currentState;
 	public boolean keepAlgaeInIntake;
 
+	public boolean reefAssist = true;
+	public boolean netAssist = true;
+	public boolean algaeIntakeAssist = true;
+	public boolean algaeRemoveAssist = true;
+	public boolean feederAssist = true;
+	public boolean cageAssist = true;
+
 	private CANdleWrapper caNdleWrapper;
 	private LEDStateHandler ledStateHandler;
 
@@ -295,53 +302,51 @@ public class RobotCommander extends GBSubsystem {
 		return driveWith(name, command, () -> SwerveState.DEFAULT_DRIVE);
 	}
 
-    public Command driveWith(String name, Command command, Supplier<SwerveState> state) {
-        Command swerveDriveCommand = swerve.getCommandsBuilder().driveByDriversInputs(state);
-        Command wantedCommand = command.deadlineFor(swerveDriveCommand);
-        return asSubsystemCommand(wantedCommand, name);
-    }
+	public Command driveWith(String name, Command command, Supplier<SwerveState> state) {
+		Command swerveDriveCommand = swerve.getCommandsBuilder().driveByDriversInputsLoop(state);
+		Command wantedCommand = command.deadlineFor(swerveDriveCommand);
+		return asSubsystemCommand(wantedCommand, name);
+	}
 
-	public AimAssist getAA(RobotState state) {
-		if (state == RobotState.ALIGN_REEF) {
-            if (ALIGN_REEF)
-			    return AimAssist.REEF;
-            else
-                return AimAssist.NONE;
+	public AimAssist getAimAssistByState(RobotState state) {
+		if (state == RobotState.ALGAE_REMOVE) {
+			if (algaeRemoveAssist) {
+				return AimAssist.ALGAE_REMOVE;
+			} else {
+				return AimAssist.NONE;
+			}
+		} else if (state == RobotState.ALGAE_INTAKE) {
+			if (algaeIntakeAssist) {
+				return AimAssist.ALGAE_INTAKE;
+			} else {
+				return AimAssist.NONE;
+			}
+		} else if (state == RobotState.PRE_CLIMB) {
+			if (cageAssist) {
+				return AimAssist.CAGE;
+			} else {
+				return AimAssist.NONE;
+			}
 		}
-        if (state == RobotState.SCORE) {
-            if (SCORE)
-                return AimAssist.BRANCH;
-            else
-                return AimAssist.NONE;
-        }
-        if (state == RobotState.ALGAE_REMOVE) {
-            if (ALGAE_REMOVE)
-                return AimAssist.ALGAE_REMOVE;
-            else
-                return AimAssist.NONE;
-        }
-        if (state == RobotState.ALGAE_INTAKE) {
-            if (ALGAE_INTAKE)
-                return AimAssist.ALGAE_INTAKE;
-            else
-                return AimAssist.NONE;
-        }
-        return AimAssist.NONE;
+		return AimAssist.NONE;
 	}
 
 	public Command setState(RobotState state) {
 		return switch (state) {
-			case AUTO_PRE_NET -> driveToPreNet();
 			case PROCESSOR_SCORE -> fullyProcessorScore();
 			case INTAKE -> intakeWithAimAssist();
 			case ALGAE_REMOVE -> algaeRemove();
-			case ALIGN_REEF, ARM_PRE_SCORE, PRE_SCORE, SCORE_WITHOUT_RELEASE, SCORE, ALGAE_INTAKE, PRE_CLIMB ->
-				driveWith(state.name(), superstructure.setState(state), () -> SwerveState.DEFAULT_DRIVE.withAimAssist(getAA(state)));
+			case ARM_PRE_SCORE, PRE_SCORE, SCORE_WITHOUT_RELEASE, SCORE, ALGAE_INTAKE, PRE_CLIMB ->
+				driveWith(
+					state.name(),
+					superstructure.setState(state),
+					() -> SwerveState.DEFAULT_DRIVE.withAimAssist(getAimAssistByState(state))
+				);
 			case
 				MANUAL_CLIMB,
 				EXIT_CLIMB,
 				STOP_CLIMB,
-                ELEVATOR_OPENING,
+				ELEVATOR_OPENING,
 				CLOSE_CLIMB,
 				HOLD_ALGAE,
 				CLIMB_WITH_LIMIT_SWITCH,
@@ -353,8 +358,10 @@ public class RobotCommander extends GBSubsystem {
 				ALGAE_OUTTAKE_FROM_END_EFFECTOR,
 				CORAL_OUTTAKE,
 				STAY_IN_PLACE,
+				PROCESSOR_NO_SCORE,
 				DRIVE ->
-				driveWith(state.name(), superstructure.setState(state));
+				driveWith(state.name(), superstructure.setState(state))
+					.andThen(new InstantCommand(() -> netAssist = state == RobotState.NET || netAssist));
 		};
 	}
 
@@ -585,7 +592,7 @@ public class RobotCommander extends GBSubsystem {
 					superstructure.preNet().until(superstructure::isPreNetReady)
 				)
 			),
-			RobotState.AUTO_PRE_NET
+			RobotState.PRE_NET
 		);
 	}
 
@@ -639,16 +646,16 @@ public class RobotCommander extends GBSubsystem {
 		return switch (state) {
 			case STAY_IN_PLACE, CORAL_OUTTAKE -> setState(RobotState.STAY_IN_PLACE);
 			case
-                INTAKE,
-                DRIVE,
-                ALIGN_REEF,
-                ALGAE_OUTTAKE_FROM_END_EFFECTOR,
-                PROCESSOR_SCORE,
-                ALGAE_OUTTAKE_FROM_INTAKE,
-                ELEVATOR_OPENING,
-                ALGAE_INTAKE ->
+				INTAKE,
+				DRIVE,
+				ALGAE_OUTTAKE_FROM_END_EFFECTOR,
+				PROCESSOR_SCORE,
+				ALGAE_OUTTAKE_FROM_INTAKE,
+				ELEVATOR_OPENING,
+				PROCESSOR_NO_SCORE,
+				ALGAE_INTAKE ->
 				setState(RobotState.DRIVE);
-			case AUTO_PRE_NET, PRE_NET, NET -> afterNet();
+			case PRE_NET, NET -> afterNet();
 			case ALGAE_REMOVE, HOLD_ALGAE, TRANSFER_ALGAE_TO_END_EFFECTOR -> setState(RobotState.HOLD_ALGAE);
 			case ARM_PRE_SCORE, CLOSE_CLIMB -> setState(RobotState.ARM_PRE_SCORE);
 			case PRE_SCORE -> setState(RobotState.PRE_SCORE);

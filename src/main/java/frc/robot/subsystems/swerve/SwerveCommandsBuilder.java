@@ -204,6 +204,13 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
+	public Command driveByDriversInputsLoop(Supplier<SwerveState> state) {
+		return swerve.asSubsystemCommand(
+			new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.driveByDriversTargetsPowers(state.get())),
+			"Drive by drivers inputs with state Loop"
+		);
+	}
+
 	public Command resetTargetSpeeds() {
 		return swerve.asSubsystemCommand(
 			new InstantCommand(() -> swerve.driveByState(new ChassisSpeeds(), SwerveState.DEFAULT_DRIVE)),

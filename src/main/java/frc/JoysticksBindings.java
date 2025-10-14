@@ -112,17 +112,18 @@ public class JoysticksBindings {
 		return new InstantCommand(() -> {
 			RobotCommander robotCommander = robot.getRobotCommander();
 			RobotState state = robotCommander.getCurrentState();
+			System.out.println(state);
 			Command command;
 			if (state == RobotState.ALGAE_REMOVE || state == RobotState.PRE_NET) {
 				robotCommander.setState(RobotState.HOLD_ALGAE).schedule();
 				return;
 			} else if (state == RobotState.NET) {
-				command = robotCommander.driveWith("Soft close net", robotCommander.getSuperstructure().softCloseNet());
+				command = robotCommander.driveWith(RobotState.NET, robotCommander.getSuperstructure().softCloseNet());
 			} else if (
 				(state == RobotState.SCORE || state == RobotState.SCORE_WITHOUT_RELEASE || state == RobotState.PRE_SCORE)
 					&& ScoringHelpers.targetScoreLevel == ScoreLevel.L4
 			) {
-				command = robotCommander.driveWith("Soft close l4", robotCommander.getSuperstructure().softCloseL4());
+				command = robotCommander.driveWith(RobotState.PRE_SCORE, robotCommander.getSuperstructure().softCloseL4());
 			} else {
 				command = Commands.none();
 			}
@@ -136,16 +137,18 @@ public class JoysticksBindings {
 			RobotState state = robotCommander.getCurrentState();
 			Command command;
 			if (state == RobotState.NET) {
-				command = robotCommander.driveWith("Soft close net", robotCommander.getSuperstructure().softCloseNet());
+				command = robotCommander.driveWith(RobotState.NET, robotCommander.getSuperstructure().softCloseNet());
 			} else if (
 				(state == RobotState.SCORE || state == RobotState.SCORE_WITHOUT_RELEASE || state == RobotState.PRE_SCORE)
 					&& ScoringHelpers.targetScoreLevel == ScoreLevel.L4
 			) {
-				command = robotCommander.driveWith("Soft close l4", robotCommander.getSuperstructure().softCloseL4());
+				command = robotCommander.driveWith(RobotState.PRE_SCORE, robotCommander.getSuperstructure().softCloseL4());
 			} else {
 				command = Commands.none();
 			}
-			command.andThen(robot.getRobotCommander().setState(RobotState.INTAKE)).schedule();
+			command.andThen(new InstantCommand(() -> robot.getRobotCommander().feederAssist = false))
+				.andThen(robot.getRobotCommander().setState(RobotState.INTAKE))
+				.schedule();
 		});
 	}
 
@@ -161,6 +164,7 @@ public class JoysticksBindings {
 			} else if (state == RobotState.NET || state == RobotState.PRE_NET) {
 				command = robotCommander.setState(RobotState.NET);
 			} else {
+				robotCommander.netAssist = true;
 				command = robotCommander.autoNet();
 			}
 			command.schedule();
@@ -234,7 +238,10 @@ public class JoysticksBindings {
 		// bindings...
 		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(closeReefActionChooser(robot));
 
-		usedJoystick.X.onTrue(robot.getRobotCommander().setState(RobotState.INTAKE));
+		usedJoystick.X.onTrue(
+			new InstantCommand(() -> robot.getRobotCommander().feederAssist = true)
+				.andThen(robot.getRobotCommander().setState(RobotState.INTAKE))
+		);
 		usedJoystick.L1.onTrue(robot.getRobotCommander().setState(RobotState.ALGAE_INTAKE));
 
 		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(intakeActionChooser(robot));

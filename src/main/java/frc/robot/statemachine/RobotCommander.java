@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -298,14 +299,14 @@ public class RobotCommander extends GBSubsystem {
 		return isCloseToNet();
 	}
 
-	public Command driveWith(String name, Command command) {
-		return driveWith(name, command, () -> SwerveState.DEFAULT_DRIVE);
+	public Command driveWith(RobotState state, Command command) {
+		return driveWith(state, command, () -> SwerveState.DEFAULT_DRIVE);
 	}
 
-	public Command driveWith(String name, Command command, Supplier<SwerveState> state) {
+	public Command driveWith(RobotState robotState, Command command, Supplier<SwerveState> state) {
 		Command swerveDriveCommand = swerve.getCommandsBuilder().driveByDriversInputsLoop(state);
 		Command wantedCommand = command.deadlineFor(swerveDriveCommand);
-		return asSubsystemCommand(wantedCommand, name);
+		return asSubsystemCommand(wantedCommand, robotState);
 	}
 
 	public AimAssist getAimAssistByState(RobotState state) {
@@ -334,11 +335,11 @@ public class RobotCommander extends GBSubsystem {
 	public Command setState(RobotState state) {
 		return switch (state) {
 			case PROCESSOR_SCORE -> fullyProcessorScore();
-			case INTAKE -> intakeWithAimAssist();
+			case INTAKE -> intake();
 			case ALGAE_REMOVE -> algaeRemove();
 			case ARM_PRE_SCORE, PRE_SCORE, SCORE_WITHOUT_RELEASE, SCORE, ALGAE_INTAKE, PRE_CLIMB ->
 				driveWith(
-					state.name(),
+					state,
 					superstructure.setState(state),
 					() -> SwerveState.DEFAULT_DRIVE.withAimAssist(getAimAssistByState(state))
 				);
@@ -360,8 +361,7 @@ public class RobotCommander extends GBSubsystem {
 				STAY_IN_PLACE,
 				PROCESSOR_NO_SCORE,
 				DRIVE ->
-				driveWith(state.name(), superstructure.setState(state))
-					.andThen(new InstantCommand(() -> netAssist = state == RobotState.NET || netAssist));
+				driveWith(state, superstructure.setState(state));
 		};
 	}
 
@@ -482,16 +482,21 @@ public class RobotCommander extends GBSubsystem {
 		return new SequentialCommandGroup(driveToPreNet(), setState(RobotState.NET));
 	}
 
-	private Command intakeWithAimAssist() {
+	private Command intake() {
 		return asSubsystemCommand(
 			new ParallelDeadlineGroup(
 				superstructure.intake(),
-				swerve.getCommandsBuilder()
-					.driveToPose(
-						() -> robot.getPoseEstimator().getEstimatedPose(),
-						() -> ScoringHelpers.getIntakePose2d(robot),
-						AutonomousConstants.getRealTimeConstraints(swerve)
-					)
+				new ConditionalCommand(
+					swerve.getCommandsBuilder()
+						.driveToPose(
+							() -> robot.getPoseEstimator().getEstimatedPose(),
+							() -> ScoringHelpers.getIntakePose2d(robot),
+							AutonomousConstants.getRealTimeConstraints(swerve)
+						),
+					swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE),
+					() -> feederAssist
+				)
+
 			),
 			RobotState.INTAKE
 		);
@@ -601,8 +606,8 @@ public class RobotCommander extends GBSubsystem {
 		return new DeferredCommand(
 			() -> new SequentialCommandGroup(
 				(ScoringHelpers.targetScoreLevel == ScoreLevel.L4
-					? driveWith("Soft close l4", superstructure.softCloseL4())
-					: driveWith("pre score hold l2 l3", superstructure.preScore()).until(this::isReadyToCloseSuperstructure)),
+					? driveWith(RobotState.PRE_SCORE, superstructure.softCloseL4())
+					: driveWith(RobotState.PRE_SCORE, superstructure.preScore()).until(this::isReadyToCloseSuperstructure)),
 				setState(RobotState.DRIVE)
 			),
 			Set.of(
@@ -622,7 +627,7 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command afterNet() {
 		return new DeferredCommand(
-			() -> new SequentialCommandGroup(driveWith("Soft close net", getSuperstructure().softCloseNet()), setState(RobotState.DRIVE)),
+			() -> new SequentialCommandGroup(driveWith(RobotState.NET, getSuperstructure().softCloseNet()), setState(RobotState.DRIVE)),
 			Set.of(
 				this,
 				superstructure,

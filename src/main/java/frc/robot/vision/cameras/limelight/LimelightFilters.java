@@ -42,11 +42,13 @@ public class LimelightFilters {
 		private static Filter isYawAtAngle(
 			Supplier<Rotation2d> robotYaw,
 			Supplier<Optional<Rotation2d>> wantedYawSupplier,
+			Supplier<Boolean> isYawCalibrated,
 			Rotation2d yawTolerance
 		) {
-			return () -> wantedYawSupplier.get()
-				.map(wantedAngle -> ToleranceMath.isNearWrapped(wantedAngle, robotYaw.get(), yawTolerance))
-				.orElse(false);
+			return () -> !isYawCalibrated.get()
+				|| wantedYawSupplier.get()
+					.map(wantedAngle -> ToleranceMath.isNearWrapped(wantedAngle, robotYaw.get(), yawTolerance))
+					.orElse(false);
 		}
 
 		private static Filter isYawNotZero(Supplier<Rotation2d> robotYaw) {

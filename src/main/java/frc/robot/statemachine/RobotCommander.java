@@ -24,8 +24,6 @@ import frc.robot.led.LEDState;
 import frc.robot.led.LEDStateHandler;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.scoringhelpers.ScoringPathsHelper;
-import frc.robot.statemachine.superstructure.ScoreLevel;
-import frc.robot.statemachine.superstructure.Superstructure;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.states.SwerveState;
@@ -44,7 +42,7 @@ public class RobotCommander extends GBSubsystem {
 	private final Swerve swerve;
 	private final Superstructure superstructure;
 	private final LEDStateHandler ledStateHandler;
-	private final Targets targets;
+	private final PositionTargets positionTargets;
 
 	private RobotState currentState;
 	public boolean keepAlgaeInIntake;
@@ -59,12 +57,21 @@ public class RobotCommander extends GBSubsystem {
 		super(logPath);
 		this.robot = robot;
 		this.swerve = robot.getSwerve();
-		this.superstructure = new Superstructure("StateMachine/Superstructure", robot);
-
-		this.targets = new Targets(robot);
-
+		this.positionTargets = new PositionTargets(robot);
+		this.superstructure = new Superstructure("StateMachine/Superstructure", robot, positionTargets::getDistanceToReef);
 		this.currentState = RobotState.STAY_IN_PLACE;
+
 		this.keepAlgaeInIntake = false;
+		Trigger resetKeepAlgaeInIntake = new Trigger(
+			() -> currentState == RobotState.ALGAE_OUTTAKE_FROM_END_EFFECTOR
+				|| currentState == RobotState.ALGAE_OUTTAKE_FROM_INTAKE
+				|| currentState == RobotState.NET
+				|| currentState == RobotState.PROCESSOR_SCORE
+		);
+		resetKeepAlgaeInIntake.onTrue(new InstantCommand(() -> keepAlgaeInIntake = false));
+
+		Trigger resetAutoAlgaeRemove = new Trigger(() -> currentState == RobotState.ALGAE_REMOVE);
+		resetAutoAlgaeRemove.onTrue(new InstantCommand(() -> ScoringHelpers.isAutoAlgaeRemoveActivated = false));
 
 		Trigger handleBalls = new Trigger(
 			() -> superstructure.isAlgaeInAlgaeIntake()
@@ -74,14 +81,6 @@ public class RobotCommander extends GBSubsystem {
 				&& !keepAlgaeInIntake
 		);
 		handleBalls.onTrue(setState(RobotState.TRANSFER_ALGAE_TO_END_EFFECTOR));
-
-		Trigger resetKeepAlgaeInIntake = new Trigger(
-			() -> currentState == RobotState.ALGAE_OUTTAKE_FROM_END_EFFECTOR
-				|| currentState == RobotState.ALGAE_OUTTAKE_FROM_INTAKE
-				|| currentState == RobotState.NET
-				|| currentState == RobotState.PROCESSOR_SCORE
-		);
-		resetKeepAlgaeInIntake.onTrue(new InstantCommand(() -> keepAlgaeInIntake = false));
 
 		CANdleWrapper caNdleWrapper = new CANdleWrapper(IDs.CANdleIDs.CANDLE, LEDConstants.NUMBER_OF_LEDS, "candle");
 		this.ledStateHandler = new LEDStateHandler("CANdle", caNdleWrapper);
@@ -122,11 +121,11 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public boolean isReadyToScore() {
-		return superstructure.isReadyToScore() && targets.isReadyToScoreReef();
+		return superstructure.isReadyToScore() && positionTargets.isReadyToScoreReef();
 	}
 
 	public boolean isReadyForNetForAuto() {
-		return targets.isReadyToScoreNet();
+		return positionTargets.isReadyToScoreNet();
 	}
 
 
@@ -167,8 +166,7 @@ public class RobotCommander extends GBSubsystem {
 		return switch (state) {
 			case PROCESSOR_SCORE -> fullyProcessorScore();
 			case INTAKE -> intake();
-			case ALGAE_REMOVE -> algaeRemove();
-			case ARM_PRE_SCORE, PRE_SCORE, SCORE_WITHOUT_RELEASE, SCORE, ALGAE_INTAKE, PRE_CLIMB ->
+			case ALGAE_REMOVE, ARM_PRE_SCORE, PRE_SCORE, SCORE_WITHOUT_RELEASE, SCORE, ALGAE_INTAKE, PRE_CLIMB ->
 				driveWith(state, superstructure.setState(state), () -> SwerveState.DEFAULT_DRIVE.withAimAssist(getAimAssistByState(state)));
 			case
 				MANUAL_CLIMB,
@@ -194,7 +192,9 @@ public class RobotCommander extends GBSubsystem {
 
 	public Command autoScore() {
 		Supplier<Command> fullySuperstructureScore = () -> new SequentialCommandGroup(
-			superstructure.armPreScore().alongWith(ledStateHandler.setState(LEDState.MOVE_TO_POSE)).until(targets::isReadyToOpenSuperstructure),
+			superstructure.armPreScore()
+				.alongWith(ledStateHandler.setState(LEDState.MOVE_TO_POSE))
+				.until(positionTargets::isReadyToOpenSuperstructure),
 			superstructure.preScore()
 				.alongWith(ledStateHandler.setState(LEDState.IN_POSITION_TO_OPEN_ELEVATOR))
 				.until(superstructure::isPreScoreReady),
@@ -234,7 +234,9 @@ public class RobotCommander extends GBSubsystem {
 	public Command autoScoreForAutonomous(PathPlannerPath path) {
 		Command fullySuperstructureScore = new SequentialCommandGroup(
 			superstructure.elevatorOpening(),
-			superstructure.armPreScore().alongWith(ledStateHandler.setState(LEDState.MOVE_TO_POSE)).until(targets::isReadyToOpenSuperstructure),
+			superstructure.armPreScore()
+				.alongWith(ledStateHandler.setState(LEDState.MOVE_TO_POSE))
+				.until(positionTargets::isReadyToOpenSuperstructure),
 			superstructure.preScore()
 				.alongWith(ledStateHandler.setState(LEDState.IN_POSITION_TO_OPEN_ELEVATOR))
 				.until(superstructure::isPreScoreReady),
@@ -266,8 +268,8 @@ public class RobotCommander extends GBSubsystem {
 		return new DeferredCommand(
 			() -> new SequentialCommandGroup(
 				autoScore(),
-				setState(RobotState.HOLD_ALGAE).until(targets::isReadyToCloseSuperstructure),
-				algaeRemove()
+				setState(RobotState.HOLD_ALGAE).until(positionTargets::isReadyToCloseSuperstructure),
+				setState(RobotState.ALGAE_REMOVE)
 			),
 			Set.of(
 				this,
@@ -295,7 +297,7 @@ public class RobotCommander extends GBSubsystem {
 							ScoringHelpers::getAllianceRelativeProcessorScoringPose,
 							AutonomousConstants.getRealTimeConstraints(swerve)
 						)
-				).until(targets::isReadyToScoreProcessor),
+				).until(positionTargets::isReadyToScoreProcessor),
 				new ParallelCommandGroup(
 					superstructure.processorScore(),
 					swerve.getCommandsBuilder().drive(() -> StateMachineConstants.SWERVE_POWERS_TO_PROCESSOR)
@@ -326,17 +328,6 @@ public class RobotCommander extends GBSubsystem {
 
 			),
 			RobotState.INTAKE
-		);
-	}
-
-	private Command algaeRemove() {
-		return asSubsystemCommand(
-			new ParallelDeadlineGroup(
-				superstructure.algaeRemove(),
-				swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.ALGAE_REMOVE)),
-				new StartEndCommand(() -> {}, () -> ScoringHelpers.isAutoAlgaeRemoveActivated = false)
-			),
-			RobotState.ALGAE_REMOVE
 		);
 	}
 
@@ -434,7 +425,7 @@ public class RobotCommander extends GBSubsystem {
 			() -> new SequentialCommandGroup(
 				(ScoringHelpers.targetScoreLevel == ScoreLevel.L4
 					? driveWith(RobotState.PRE_SCORE, superstructure.softCloseL4())
-					: driveWith(RobotState.PRE_SCORE, superstructure.preScore()).until(targets::isReadyToCloseSuperstructure)),
+					: driveWith(RobotState.PRE_SCORE, superstructure.preScore()).until(positionTargets::isReadyToCloseSuperstructure)),
 				setState(RobotState.DRIVE)
 			),
 			Set.of(
@@ -469,6 +460,7 @@ public class RobotCommander extends GBSubsystem {
 			)
 		);
 	}
+
 
 	private Command asSubsystemCommand(Command command, RobotState state) {
 		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));

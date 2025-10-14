@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.constants.field.Field;
 import frc.constants.field.enums.Branch;
 import frc.constants.field.enums.ReefSide;
-import frc.robot.statemachine.superstructure.ScoreLevel;
+import frc.robot.statemachine.ScoreLevel;
 import frc.utils.math.AngleTransform;
 import frc.utils.math.FieldMath;
 import org.littletonrobotics.junction.Logger;

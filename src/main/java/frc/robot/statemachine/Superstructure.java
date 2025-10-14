@@ -1,4 +1,4 @@
-package frc.robot.statemachine.superstructure;
+package frc.robot.statemachine;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -8,12 +8,8 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.constants.field.Field;
 import frc.robot.Robot;
 import frc.robot.scoringhelpers.ScoringHelpers;
-import frc.robot.statemachine.RobotState;
-import frc.robot.statemachine.StateMachineConstants;
-import frc.robot.statemachine.Tolerances;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.algaeIntake.AlgaeIntakeState;
 import frc.robot.subsystems.algaeIntake.AlgaeIntakeStateHandler;
@@ -34,6 +30,7 @@ import frc.robot.subsystems.endeffector.EndEffectorStateHandler;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
+import java.util.function.Supplier;
 
 public class Superstructure extends GBSubsystem {
 
@@ -47,14 +44,13 @@ public class Superstructure extends GBSubsystem {
 
 	private RobotState currentState;
 	public boolean driverIsCoralInOverride;
-	public boolean driverIsAlgaeInEndEffectorOverride;
 	public boolean driverIsAlgaeInAlgaeIntakeOverride;
 
-	public Superstructure(String logPath, Robot robot) {
+	public Superstructure(String logPath, Robot robot, Supplier<Double> distanceFromReef) {
 		super(logPath);
 		this.robot = robot;
 		this.elevatorStateHandler = new ElevatorStateHandler(robot.getElevator());
-		this.armStateHandler = new ArmStateHandler(robot.getArm(), this::getDistanceToReef);
+		this.armStateHandler = new ArmStateHandler(robot.getArm(), distanceFromReef);
 		this.endEffectorStateHandler = new EndEffectorStateHandler(robot.getEndEffector(), this);
 		this.climbStateHandler = new ClimbStateHandler(new SolenoidStateHandler(robot.getSolenoid()), new LifterStateHandler(robot.getLifter()));
 		this.algaeIntakeStateHandler = new AlgaeIntakeStateHandler(
@@ -75,28 +71,7 @@ public class Superstructure extends GBSubsystem {
 
 		this.currentState = RobotState.STAY_IN_PLACE;
 		this.driverIsCoralInOverride = false;
-		this.driverIsAlgaeInEndEffectorOverride = false;
 		this.driverIsAlgaeInAlgaeIntakeOverride = false;
-	}
-
-	public ElevatorStateHandler getElevatorStateHandler() {
-		return elevatorStateHandler;
-	}
-
-	public ArmStateHandler getArmStateHandler() {
-		return armStateHandler;
-	}
-
-	public EndEffectorStateHandler getEndEffectorStateHandler() {
-		return endEffectorStateHandler;
-	}
-
-	public ClimbStateHandler getClimbStateHandler() {
-		return climbStateHandler;
-	}
-
-	public AlgaeIntakeStateHandler getAlgaeIntakeStateHandler() {
-		return algaeIntakeStateHandler;
 	}
 
 	public RobotState getCurrentState() {
@@ -109,74 +84,37 @@ public class Superstructure extends GBSubsystem {
 			: ArmConstants.ELEVATOR_CLOSED_REVERSED_SOFTWARE_LIMIT;
 	}
 
-	public double getDistanceToReef() {
-		return robot.getPoseEstimator()
-			.getEstimatedPose()
-			.getTranslation()
-			.getDistance(Field.getCoralPlacement(ScoringHelpers.getTargetBranch(), true));
-	}
-
 	public boolean isCoralIn() {
 		return robot.getEndEffector().isCoralIn() || driverIsCoralInOverride;
-	}
-
-	public boolean isAlgaeInEndEffector() {
-		return robot.getEndEffector().isAlgaeIn() || driverIsAlgaeInEndEffectorOverride;
 	}
 
 	public boolean isAlgaeInAlgaeIntake() {
 		return algaeIntakeStateHandler.isAlgaeIn() || driverIsAlgaeInAlgaeIntakeOverride;
 	}
 
-	public boolean isClosed() {
-		return robot.getElevator().isAtPosition(ElevatorState.CLOSED.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
-			&& elevatorStateHandler.getCurrentState() == ElevatorState.CLOSED
-			&& armStateHandler.isAtState(ArmState.CLOSED)
-			&& armStateHandler.getCurrentState() == ArmState.CLOSED;
-	}
-
 	public boolean isPreNetReady() {
-		return robot.getElevator().isPastPosition(StateMachineConstants.ELEVATOR_POSITION_TO_START_THROW_NET)
-			&& elevatorStateHandler.getCurrentState() == ElevatorState.NET
-			&& armStateHandler.isAtState(ArmState.PRE_NET, Tolerances.ALGAE_RELEASE_ARM_POSITION);
+		return elevatorStateHandler.isAtState(ElevatorState.NET) && armStateHandler.isAtState(ArmState.PRE_NET);
 	}
 
 	public boolean isPreScoreReady() {
 		ScoreLevel targetScoreLevel = ScoringHelpers.targetScoreLevel;
 		ArmState targetArmState = targetScoreLevel == ScoreLevel.L4 ? targetScoreLevel.getArmScore() : targetScoreLevel.getArmPreScore();
-
-		return robot.getElevator().isAtPosition(targetScoreLevel.getElevatorPreScore().getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
-			&& elevatorStateHandler.getCurrentState() == targetScoreLevel.getElevatorPreScore()
-			&& armStateHandler.isAtState(targetArmState)
-			&& armStateHandler.getCurrentState() == targetArmState;
+		return elevatorStateHandler.isAtState(targetScoreLevel.getElevatorPreScore()) && armStateHandler.isAtState(targetArmState);
 	}
 
 	public boolean isReadyToScore() {
 		ScoreLevel targetScoreLevel = ScoringHelpers.targetScoreLevel;
-		return robot.getElevator().isAtPosition(targetScoreLevel.getElevatorScore().getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
-			&& elevatorStateHandler.getCurrentState() == targetScoreLevel.getElevatorScore()
-			&& armStateHandler.isAtState(targetScoreLevel.getArmScore())
-			&& armStateHandler.getCurrentState() == targetScoreLevel.getArmScore();
+		return elevatorStateHandler.isAtState(targetScoreLevel.getElevatorScore()) && armStateHandler.isAtState(targetScoreLevel.getArmScore());
 	}
 
 	public boolean isReadyToOuttakeAlgae() {
-		return robot.getElevator().isAtPosition(ElevatorState.ALGAE_OUTTAKE.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
-			&& elevatorStateHandler.getCurrentState() == ElevatorState.ALGAE_OUTTAKE
+		return elevatorStateHandler.isAtState(ElevatorState.ALGAE_OUTTAKE)
 			&& armStateHandler.isAtState(ArmState.ALGAE_OUTTAKE, Tolerances.ALGAE_RELEASE_ARM_POSITION);
 	}
 
-
 	public boolean isReadyToProcessor() {
-		return robot.getElevator().isAtPosition(ElevatorState.PROCESSOR_OUTTAKE.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
-			&& elevatorStateHandler.getCurrentState() == ElevatorState.PROCESSOR_OUTTAKE
+		return elevatorStateHandler.isAtState(ElevatorState.PROCESSOR_OUTTAKE)
 			&& armStateHandler.isAtState(ArmState.PROCESSOR_OUTTAKE, Tolerances.ALGAE_RELEASE_ARM_POSITION);
-	}
-
-	public boolean isReadyForNetRelease() {
-		return robot.getElevator().isPastPosition(StateMachineConstants.ELEVATOR_POSITION_TO_RELEASE_NET)
-			&& elevatorStateHandler.getCurrentState() == ElevatorState.NET
-			&& robot.getArm().isBehindPosition(StateMachineConstants.ARM_POSITION_TO_RELEASE_NET)
-			&& armStateHandler.getCurrentState() == ArmState.NET;
 	}
 
 	@Override
@@ -386,67 +324,6 @@ public class Superstructure extends GBSubsystem {
 		);
 	}
 
-	public Command softCloseL4() {
-		return softClose("L4", ArmState.MID_WAY_CLOSE, ArmState.CLOSED, ElevatorState.L4, ElevatorState.CLOSED, 0.8, Rotation2d.fromDegrees(45));
-	}
-
-	public Command softCloseNet() {
-		return softClose(
-			"Net",
-			ArmState.MID_WAY_CLOSE,
-			ArmState.CLOSED,
-			ElevatorState.NET,
-			ElevatorState.CLOSED,
-			0.6,
-			Rotation2d.fromDegrees(45)
-		);
-	}
-
-	public Command softCloseNetToAlgaeRemove() {
-		return new DeferredCommand(
-			() -> softClose(
-				"Net",
-				ArmState.MID_WAY_CLOSE,
-				ScoringHelpers.getAlgaeRemoveLevel().getArmState(),
-				ElevatorState.NET,
-				ScoringHelpers.getAlgaeRemoveLevel().getElevatorState(),
-				0.6,
-				Rotation2d.fromDegrees(45)
-			),
-			subsystems
-
-		);
-	}
-
-	private Command softClose(
-		String name,
-		ArmState notTouchingField,
-		ArmState closed,
-		ElevatorState starting,
-		ElevatorState ending,
-		double elevatorHeightToCloseArm,
-		Rotation2d armPositionToCloseElevator
-	) {
-		return asSubsystemCommand(
-			new ParallelDeadlineGroup(
-				new SequentialCommandGroup(
-					new ParallelCommandGroup(armStateHandler.setState(notTouchingField), elevatorStateHandler.setState(starting))
-						.until(() -> robot.getArm().isPastPosition(armPositionToCloseElevator)),
-					new ParallelCommandGroup(armStateHandler.setState(notTouchingField), elevatorStateHandler.setState(ending))
-						.until(() -> !robot.getElevator().isPastPosition(elevatorHeightToCloseArm)),
-					new ParallelDeadlineGroup(armStateHandler.setState(closed), elevatorStateHandler.setState(ending)).until(
-						() -> armStateHandler.isAtState(closed, Tolerances.ARM_POSITION)
-							&& elevatorStateHandler.isAtState(ending, Tolerances.ELEVATOR_HEIGHT_METERS)
-					)
-				),
-				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
-				climbStateHandler.setState(ClimbState.STOP),
-				algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
-			),
-			"Soft Close " + name
-		);
-	}
-
 	public Command algaeRemove() {
 		return asSubsystemCommand(
 			new DeferredCommand(
@@ -546,17 +423,15 @@ public class Superstructure extends GBSubsystem {
 			new DeferredCommand(
 				() -> new SequentialCommandGroup(
 					new ParallelCommandGroup(
-						elevatorStateHandler
-							.setState(robot.getEndEffector().isCoralIn() ? ElevatorState.CLOSED : ElevatorState.TRANSFER_ALGAE_FROM_INTAKE),
-						armStateHandler.setState(robot.getEndEffector().isCoralIn() ? ArmState.CLOSED : ArmState.TRANSFER_ALGAE_FROM_INTAKE),
+						elevatorStateHandler.setState(isCoralIn() ? ElevatorState.CLOSED : ElevatorState.TRANSFER_ALGAE_FROM_INTAKE),
+						armStateHandler.setState(isCoralIn() ? ArmState.CLOSED : ArmState.TRANSFER_ALGAE_FROM_INTAKE),
 						endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 						climbStateHandler.setState(ClimbState.STOP),
 						algaeIntakeStateHandler.setState(AlgaeIntakeState.INTAKE)
 					).until(this::isAlgaeInAlgaeIntake),
 					new ParallelCommandGroup(
-						elevatorStateHandler
-							.setState(robot.getEndEffector().isCoralIn() ? ElevatorState.CLOSED : ElevatorState.TRANSFER_ALGAE_FROM_INTAKE),
-						armStateHandler.setState(robot.getEndEffector().isCoralIn() ? ArmState.CLOSED : ArmState.TRANSFER_ALGAE_FROM_INTAKE),
+						elevatorStateHandler.setState(isCoralIn() ? ElevatorState.CLOSED : ElevatorState.TRANSFER_ALGAE_FROM_INTAKE),
+						armStateHandler.setState(isCoralIn() ? ArmState.CLOSED : ArmState.TRANSFER_ALGAE_FROM_INTAKE),
 						endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
 						climbStateHandler.setState(ClimbState.STOP),
 						algaeIntakeStateHandler.setState(AlgaeIntakeState.INTAKE)
@@ -797,6 +672,67 @@ public class Superstructure extends GBSubsystem {
 
 	private Command asSubsystemCommand(Command command, RobotState state) {
 		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
+	}
+
+	public Command softCloseL4() {
+		return softClose("L4", ArmState.MID_WAY_CLOSE, ArmState.CLOSED, ElevatorState.L4, ElevatorState.CLOSED, 0.8, Rotation2d.fromDegrees(45));
+	}
+
+	public Command softCloseNet() {
+		return softClose(
+			"Net",
+			ArmState.MID_WAY_CLOSE,
+			ArmState.CLOSED,
+			ElevatorState.NET,
+			ElevatorState.CLOSED,
+			0.6,
+			Rotation2d.fromDegrees(45)
+		);
+	}
+
+	public Command softCloseNetToAlgaeRemove() {
+		return new DeferredCommand(
+			() -> softClose(
+				"Net",
+				ArmState.MID_WAY_CLOSE,
+				ScoringHelpers.getAlgaeRemoveLevel().getArmState(),
+				ElevatorState.NET,
+				ScoringHelpers.getAlgaeRemoveLevel().getElevatorState(),
+				0.6,
+				Rotation2d.fromDegrees(45)
+			),
+			subsystems
+
+		);
+	}
+
+	private Command softClose(
+		String name,
+		ArmState notTouchingField,
+		ArmState closed,
+		ElevatorState starting,
+		ElevatorState ending,
+		double elevatorHeightToCloseArm,
+		Rotation2d armPositionToCloseElevator
+	) {
+		return asSubsystemCommand(
+			new ParallelDeadlineGroup(
+				new SequentialCommandGroup(
+					new ParallelCommandGroup(armStateHandler.setState(notTouchingField), elevatorStateHandler.setState(starting))
+						.until(() -> robot.getArm().isPastPosition(armPositionToCloseElevator)),
+					new ParallelCommandGroup(armStateHandler.setState(notTouchingField), elevatorStateHandler.setState(ending))
+						.until(() -> !robot.getElevator().isPastPosition(elevatorHeightToCloseArm)),
+					new ParallelDeadlineGroup(armStateHandler.setState(closed), elevatorStateHandler.setState(ending)).until(
+						() -> armStateHandler.isAtState(closed, Tolerances.ARM_POSITION)
+							&& elevatorStateHandler.isAtState(ending, Tolerances.ELEVATOR_HEIGHT_METERS)
+					)
+				),
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
+				climbStateHandler.setState(ClimbState.STOP),
+				algaeIntakeStateHandler.handleIdle(driverIsAlgaeInAlgaeIntakeOverride)
+			),
+			"Soft Close " + name
+		);
 	}
 
 }

@@ -11,12 +11,12 @@ import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.utils.pose.PoseUtil;
 
-public class Targets {
+public class PositionTargets {
 
 	private final IPoseEstimator poseEstimator;
 	private final Swerve swerve;
 
-	public Targets(Robot robot) {
+	public PositionTargets(Robot robot) {
 		this.poseEstimator = robot.getPoseEstimator();
 		this.swerve = robot.getSwerve();
 	}

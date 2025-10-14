@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import frc.constants.field.Field;
 import frc.robot.poseestimator.Pose2dComponentsValue;
 import frc.robot.poseestimator.Pose3dComponentsValue;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -22,6 +23,23 @@ public class PoseUtil {
 	private static final String IS_AT_POSE_LOG_PATH_PREFIX = "isAtPoses";
 
 	public static Pose2d EMPTY_POSE2D = new Pose2d(Double.NaN, Double.NaN, Rotation2d.fromDegrees(Double.NaN));
+
+	public static boolean isAtPoseWithAngleOffset(
+		Rotation2d xAxisOffset,
+		Pose2d targetPoseFieldRelative,
+		Pose2d currentPoseFieldRelative,
+		ChassisSpeeds allianceRelativeSpeeds,
+		Pose2d positionTolerance,
+		Pose2d velocityDeadband,
+		String name
+	) {
+		Pose2d offsetCurrentPose = currentPoseFieldRelative.rotateBy(xAxisOffset.unaryMinus());
+		Pose2d offsetTargetPose = targetPoseFieldRelative.rotateBy(xAxisOffset.unaryMinus());
+		ChassisSpeeds offsetSpeeds = SwerveMath
+			.robotToAllianceRelativeSpeeds(allianceRelativeSpeeds, Field.getAllianceRelative(xAxisOffset.unaryMinus()));
+
+		return PoseUtil.isAtPose(offsetCurrentPose, offsetTargetPose, offsetSpeeds, positionTolerance, velocityDeadband, "/" + name);
+	}
 
 	public static boolean isAtPose(
 		Pose2d currentPose,

@@ -861,27 +861,4 @@ public class Superstructure extends GBSubsystem {
 		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
 	}
 
-	private Command endState(SuperstructureState state) {
-		return switch (state) {
-			case STAY_IN_PLACE, OUTTAKE -> stayInPlace();
-			case TRANSFER_ALGAE_TO_END_EFFECTOR, HOLD_ALGAE -> holdAlgae();
-			case
-				INTAKE,
-				IDLE,
-				ALGAE_REMOVE,
-				ALGAE_OUTTAKE_FROM_END_EFFECTOR,
-				PROCESSOR_OUTTAKE,
-				PRE_NET,
-				ALGAE_FLOOR_INTAKE,
-				ALGAE_OUTTAKE_FROM_INTAKE ->
-				idle();
-			case NET -> softCloseNet().andThen(idle());
-			case ARM_PRE_SCORE, CLOSE_CLIMB -> armPreScore();
-			case PRE_SCORE, SCORE, SCORE_WITHOUT_RELEASE -> preScore();
-			case PRE_CLIMB -> preClimb();
-			case CLIMB_WITHOUT_LIMIT_SWITCH, CLIMB_WITH_LIMIT_SWITCH, MANUAL_CLIMB, EXIT_CLIMB, STOP_CLIMB -> stopClimb();
-			case ELEVATOR_OPENING -> elevatorOpening();
-		};
-	}
-
 }

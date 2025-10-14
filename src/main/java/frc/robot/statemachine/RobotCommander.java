@@ -341,6 +341,7 @@ public class RobotCommander extends GBSubsystem {
 				MANUAL_CLIMB,
 				EXIT_CLIMB,
 				STOP_CLIMB,
+                ELEVATOR_OPENING,
 				CLOSE_CLIMB,
 				HOLD_ALGAE,
 				CLIMB_WITH_LIMIT_SWITCH,
@@ -644,6 +645,7 @@ public class RobotCommander extends GBSubsystem {
                 ALGAE_OUTTAKE_FROM_END_EFFECTOR,
                 PROCESSOR_SCORE,
                 ALGAE_OUTTAKE_FROM_INTAKE,
+                ELEVATOR_OPENING,
                 ALGAE_INTAKE ->
 				setState(RobotState.DRIVE);
 			case AUTO_PRE_NET, PRE_NET, NET -> afterNet();

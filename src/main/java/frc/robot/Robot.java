@@ -54,12 +54,12 @@ public class Robot {
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 
-		IIMU gyro = IMUFactory.createIMU(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
+		IIMU imu = IMUFactory.createIMU(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
 			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
-			gyro,
-			IMUFactory.createSignals(gyro)
+			imu,
+			IMUFactory.createSignals(imu)
 		);
 
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(

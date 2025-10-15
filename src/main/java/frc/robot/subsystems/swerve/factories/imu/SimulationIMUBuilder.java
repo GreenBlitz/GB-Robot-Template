@@ -12,7 +12,7 @@ import frc.utils.time.TimeUtil;
 
 class SimulationIMUBuilder {
 
-	static IIMU buildGyro(String logPath) {
+	static IIMU buildIMU(String logPath) {
 		return new EmptyIMU(logPath);
 	}
 

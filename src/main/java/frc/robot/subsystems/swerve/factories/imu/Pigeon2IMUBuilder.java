@@ -19,17 +19,17 @@ class Pigeon2IMUBuilder {
 
 	private static final int APPLY_CONFIG_RETRIES = 5;
 
-	private static Pigeon2Configuration buildGyroConfig() {
-		Pigeon2Configuration gyroConfig = new Pigeon2Configuration();
-		gyroConfig.MountPose.MountPoseYaw = 90.2035903930664;
-		gyroConfig.MountPose.MountPosePitch = 0.6566112637519836;
-		gyroConfig.MountPose.MountPoseRoll = -2.0430026054382324;
-		return gyroConfig;
+	private static Pigeon2Configuration buildIMUConfig() {
+		Pigeon2Configuration imuConfig = new Pigeon2Configuration();
+		imuConfig.MountPose.MountPoseYaw = 90.2035903930664;
+		imuConfig.MountPose.MountPosePitch = 0.6566112637519836;
+		imuConfig.MountPose.MountPoseRoll = -2.0430026054382324;
+		return imuConfig;
 	}
 
-	static IIMU buildGyro(String logPath) {
+	static IIMU buildIMU(String logPath) {
 		Pigeon2Wrapper pigeon2Wrapper = new Pigeon2Wrapper(IDs.Pigeon2IDs.SWERVE);
-		Pigeon2Configuration pigeon2Configuration = buildGyroConfig();
+		Pigeon2Configuration pigeon2Configuration = buildIMUConfig();
 
 		if (!pigeon2Wrapper.applyConfiguration(pigeon2Configuration, APPLY_CONFIG_RETRIES).isOK()) {
 			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();

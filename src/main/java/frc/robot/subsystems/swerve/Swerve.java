@@ -105,7 +105,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public Translation3d getAccelerationFromIMU() {
-		return imuSignals.getAcceleration();
+		return imuSignals.getAccelerationG().times(SwerveConstants.GRAVITATIONAL_ACCELERATION_METERS_PER_SECOND_SQUARED);
 	}
 
 
@@ -151,9 +151,9 @@ public class Swerve extends GBSubsystem {
 			imuSignals.rollAngularVelocitySignal(),
 			imuSignals.pitchAngularVelocitySignal(),
 			imuSignals.yawAngularVelocitySignal(),
-			imuSignals.xAccelerationSignal(),
-			imuSignals.yAccelerationSignal(),
-			imuSignals.zAccelerationSignal()
+			imuSignals.xAccelerationSignalG(),
+			imuSignals.yAccelerationSignalG(),
+			imuSignals.zAccelerationSignalG()
 		);
 	}
 

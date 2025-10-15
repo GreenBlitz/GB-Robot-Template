@@ -27,7 +27,6 @@ import frc.robot.subsystems.swerve.states.heading.HeadingControl;
 import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.auto.PathPlannerUtil;
-import frc.utils.pose.PoseUtil;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
@@ -174,8 +173,6 @@ public class Swerve extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/OdometrySamples", getNumberOfOdometrySamples());
 
 		Logger.recordOutput(getLogPath() + "/IMU/Acceleration", getAccelerationFromIMUMetersPerSecondSquared());
-		PoseUtil.logRotation3d(getLogPath() + "/IMU/AngularVelocity", getAngularVelocityFromIMURotation2dPerSecond());
-		PoseUtil.logRotation3d(getLogPath() + "/IMU/Orientation", getOrientationFromIMU());
 	}
 
 

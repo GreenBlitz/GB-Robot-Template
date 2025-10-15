@@ -9,7 +9,6 @@ import frc.robot.poseestimator.Pose3dComponentsValue;
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
-import org.littletonrobotics.junction.Logger;
 
 public class PoseUtil {
 
@@ -80,10 +79,6 @@ public class PoseUtil {
 					Rotation2d.fromRadians(rotation3d.getY()).getRotations(),
 					Rotation2d.fromRadians(rotation3d.getZ()).getRotations()};
 		};
-	}
-
-	public static void logRotation3d(String logPath, Rotation3d rotation3d) {
-		Logger.recordOutput(logPath, new double[] {rotation3d.getX(), rotation3d.getY(), rotation3d.getZ()});
 	}
 
 }

@@ -40,13 +40,15 @@ public class LimelightFilters {
 	private static class MegaTagFilters {
 
 		private static Filter isYawAtAngle(
-			Supplier<Rotation2d> robotYaw,
-			Supplier<Optional<Rotation2d>> wantedYawSupplier,
+			Supplier<Rotation2d> cameraSuppliedRobotYaw,
+			Supplier<Optional<Rotation2d>> expectedYawSupplier,
+			Supplier<Boolean> isYawCalibrated,
 			Rotation2d yawTolerance
 		) {
-			return () -> wantedYawSupplier.get()
-				.map(wantedAngle -> ToleranceMath.isNearWrapped(wantedAngle, robotYaw.get(), yawTolerance))
-				.orElse(false);
+			return () -> !isYawCalibrated.get()
+				|| expectedYawSupplier.get()
+					.map(wantedAngle -> ToleranceMath.isNearWrapped(wantedAngle, cameraSuppliedRobotYaw.get(), yawTolerance))
+					.orElse(false);
 		}
 
 		private static Filter isYawNotZero(Supplier<Rotation2d> robotYaw) {

@@ -434,7 +434,9 @@ public class AutosBuilder {
 	public static PathPlannerAutoWrapper autoScoreToBranch(Robot robot, Branch branch, ScoreLevel scoreLevel) {
 		return new PathPlannerAutoWrapper(
 			robot.getRobotCommander()
-				.reefAutomationForAutonomous(getAutoScorePath(robot.getSwerve(), robot.getPoseEstimator()::getEstimatedPose, branch, scoreLevel)),
+				.reefAutomationForAutonomous(
+					getAutoScorePath(robot.getSwerve(), robot.getPoseEstimator()::getEstimatedPose, branch, scoreLevel)
+				),
 			Pose2d.kZero,
 			branch.name() + " Auto Score"
 		);

@@ -237,14 +237,8 @@ public class JoysticksBindings {
 		usedJoystick.B.onTrue(processorActionChooser(robot));
 
 
-		usedJoystick.POV_LEFT.onTrue(
-			new InstantCommand(() -> robot.getRobotCommander().cageAssist = true)
-				.andThen(robot.getRobotCommander().driveWith(RobotState.PRE_CLIMB))
-		);
-		usedJoystick.POV_UP.onTrue(
-			new InstantCommand(() -> robot.getRobotCommander().cageAssist = false)
-				.andThen(robot.getRobotCommander().driveWith(RobotState.PRE_CLIMB))
-		);
+		usedJoystick.POV_LEFT.onTrue(robot.getRobotCommander().driveWith(RobotState.PRE_CLIMB.activateSwerve(true)));
+		usedJoystick.POV_UP.onTrue(robot.getRobotCommander().driveWith(RobotState.PRE_CLIMB.activateSwerve(false)));
 		usedJoystick.POV_DOWN.onTrue(robot.getRobotCommander().driveWith(RobotState.CLIMB_WITH_LIMIT_SWITCH));
 		usedJoystick.A.onTrue(driveActionChooser(robot));
 
@@ -270,10 +264,7 @@ public class JoysticksBindings {
 		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getRobotCommander().driveWith(RobotState.INTAKE));
 		usedJoystick.POV_UP.onTrue(new InstantCommand(() -> ScoringHelpers.isAutoAlgaeRemoveActivated = true));
 
-		usedJoystick.L3.onTrue(
-			new InstantCommand(() -> robot.getRobotCommander().cageAssist = false)
-				.andThen(robot.getRobotCommander().driveWith(RobotState.PRE_CLIMB))
-		);
+		usedJoystick.L3.onTrue(robot.getRobotCommander().driveWith(RobotState.PRE_CLIMB));
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {

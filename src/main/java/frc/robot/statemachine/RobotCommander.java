@@ -24,8 +24,6 @@ import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.scoringhelpers.ScoringPathsHelper;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.subsystems.swerve.states.SwerveState;
-import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.DriverStationUtil;
 import frc.utils.math.AngleTransform;
 import frc.utils.math.FieldMath;
@@ -125,37 +123,16 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 
-	public Command driveWith(RobotState robotState, Command command, Supplier<SwerveState> state) {
-		Command swerveDriveCommand = swerve.getCommandsBuilder().driveByDriversInputsLoop(state);
-		Command wantedCommand = command.deadlineFor(swerveDriveCommand);
-		return asSubsystemCommand(wantedCommand, robotState);
-	}
-
 	public Command driveWith(RobotState state, Command command) {
-		return driveWith(state, command, () -> SwerveState.DEFAULT_DRIVE);
+		Command swerveDriveCommand = swerve.getCommandsBuilder().driveByDriversInputs(state.getSwerveState());
+		Command wantedCommand = command.deadlineFor(swerveDriveCommand);
+		return asSubsystemCommand(wantedCommand, state);
 	}
 
 	public Command driveWith(RobotState state) {
 		return driveWith(state, superstructure.setState(state));
 	}
 
-
-	public AimAssist getAimAssistByState(RobotState state) {
-		if (state == RobotState.ALGAE_INTAKE) {
-			if (algaeIntakeAssist) {
-				return AimAssist.ALGAE_INTAKE;
-			} else {
-				return AimAssist.NONE;
-			}
-		} else if (state == RobotState.PRE_CLIMB) {
-			if (cageAssist) {
-				return AimAssist.CAGE;
-			} else {
-				return AimAssist.NONE;
-			}
-		}
-		return AimAssist.NONE;
-	}
 
 	public Command reefAutomation() {
 		Supplier<Command> fullySuperstructureScore = () -> new SequentialCommandGroup(
@@ -202,29 +179,29 @@ public class RobotCommander extends GBSubsystem {
 		Command fullySuperstructureScore = new SequentialCommandGroup(
 			superstructure.elevatorOpening(),
 			superstructure.armPreScore()
-						  .alongWith(ledStateHandler.setState(LEDState.MOVE_TO_POSE))
-						  .until(positionTargets::isReadyToOpenSuperstructure),
+				.alongWith(ledStateHandler.setState(LEDState.MOVE_TO_POSE))
+				.until(positionTargets::isReadyToOpenSuperstructure),
 			superstructure.preScore()
-						  .alongWith(ledStateHandler.setState(LEDState.IN_POSITION_TO_OPEN_ELEVATOR))
-						  .until(superstructure::isPreScoreReady),
+				.alongWith(ledStateHandler.setState(LEDState.IN_POSITION_TO_OPEN_ELEVATOR))
+				.until(superstructure::isPreScoreReady),
 			superstructure.scoreWithoutRelease()
-						  .alongWith(ledStateHandler.setState(LEDState.OPENING_SUPERSTRUCTURE))
-						  .until(this::isReadyToScore),
+				.alongWith(ledStateHandler.setState(LEDState.OPENING_SUPERSTRUCTURE))
+				.until(this::isReadyToScore),
 			superstructure.scoreWithRelease().deadlineFor(ledStateHandler.setState(LEDState.IN_POSITION_TO_SCORE))
 		);
 
 		Command driveToPath = swerve.asSubsystemCommand(
 			PathFollowingCommandsBuilder.followPath(path)
-										.andThen(
-											swerve.getCommandsBuilder()
-												  .moveToPoseByPID(
-													  () -> robot.getPoseEstimator().getEstimatedPose(),
-													  ScoringHelpers.getRobotBranchScoringPose(
-														  ScoringHelpers.getTargetBranch(),
-														  StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS
-													  )
-												  )
-										),
+				.andThen(
+					swerve.getCommandsBuilder()
+						.moveToPoseByPID(
+							() -> robot.getPoseEstimator().getEstimatedPose(),
+							ScoringHelpers.getRobotBranchScoringPose(
+								ScoringHelpers.getTargetBranch(),
+								StateMachineConstants.ROBOT_SCORING_DISTANCE_FROM_REEF_METERS
+							)
+						)
+				),
 			"Auto Score Autonomous"
 		);
 
@@ -265,11 +242,11 @@ public class RobotCommander extends GBSubsystem {
 			new ParallelDeadlineGroup(
 				superstructure.intake(),
 				swerve.getCommandsBuilder()
-					  .driveToPose(
-						  () -> robot.getPoseEstimator().getEstimatedPose(),
-						  () -> ScoringHelpers.getIntakePose2d(robot),
-						  AutonomousConstants.getRealTimeConstraints(swerve)
-					  )
+					.driveToPose(
+						() -> robot.getPoseEstimator().getEstimatedPose(),
+						() -> ScoringHelpers.getIntakePose2d(robot),
+						AutonomousConstants.getRealTimeConstraints(swerve)
+					)
 			),
 			RobotState.INTAKE
 		);
@@ -306,23 +283,23 @@ public class RobotCommander extends GBSubsystem {
 		return asSubsystemCommand(
 			new SequentialCommandGroup(
 				swerve.getCommandsBuilder()
-					  .driveToPose(
-						  robot.getPoseEstimator()::getEstimatedPose,
-						  () -> netEdgeOpenSuperstructurePosition,
-						  AutonomousConstants.getRealTimeConstraints(swerve)
-					  )
-					  .until(
-						  () -> ToleranceMath.isNear(
-							  netEdgeOpenSuperstructurePosition,
-							  robot.getPoseEstimator().getEstimatedPose(),
-							  Tolerances.NET_OPENING_SUPERSTRUCTURE_POSITION_METERS
-						  )
-					  )
-					  .onlyIf(
-						  () -> Field.isFieldConventionAlliance()
-							  ? robot.getPoseEstimator().getEstimatedPose().getY() < StateMachineConstants.MIN_NET_SCORING_Y_POSITION
-							  : robot.getPoseEstimator().getEstimatedPose().getY() > StateMachineConstants.MIN_NET_SCORING_Y_POSITION
-					  ),
+					.driveToPose(
+						robot.getPoseEstimator()::getEstimatedPose,
+						() -> netEdgeOpenSuperstructurePosition,
+						AutonomousConstants.getRealTimeConstraints(swerve)
+					)
+					.until(
+						() -> ToleranceMath.isNear(
+							netEdgeOpenSuperstructurePosition,
+							robot.getPoseEstimator().getEstimatedPose(),
+							Tolerances.NET_OPENING_SUPERSTRUCTURE_POSITION_METERS
+						)
+					)
+					.onlyIf(
+						() -> Field.isFieldConventionAlliance()
+							? robot.getPoseEstimator().getEstimatedPose().getY() < StateMachineConstants.MIN_NET_SCORING_Y_POSITION
+							: robot.getPoseEstimator().getEstimatedPose().getY() > StateMachineConstants.MIN_NET_SCORING_Y_POSITION
+					),
 				PathFollowingCommandsBuilder
 					.pathfindToPose(
 						openSuperstructurePosition.get(),
@@ -338,24 +315,24 @@ public class RobotCommander extends GBSubsystem {
 					),
 				new ParallelCommandGroup(
 					swerve.getCommandsBuilder()
-						  .driveToPose(
-							  robot.getPoseEstimator()::getEstimatedPose,
-							  scoringPosition,
-							  new PathConstraints(
-								  StateMachineConstants.MAX_VELOCITY_WHILE_ELEVATOR_L4_METERS_PER_SECOND,
-								  StateMachineConstants.MAX_ACCELERATION_WHILE_ELEVATOR_L4_METERS_PER_SECOND_SQUARED,
-								  StateMachineConstants.MAX_VELOCITY_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND.getRadians(),
-								  StateMachineConstants.MAX_ACCELERATION_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND_SQUARED.getRadians()
-							  )
-						  )
-						  .until(
-							  () -> ToleranceMath.isNear(
-								  scoringPosition.get(),
-								  robot.getPoseEstimator().getEstimatedPose(),
-								  Tolerances.NET_SCORING_POSITION_METERS
-							  )
-						  )
-						  .andThen(swerve.getCommandsBuilder().resetTargetSpeeds()),
+						.driveToPose(
+							robot.getPoseEstimator()::getEstimatedPose,
+							scoringPosition,
+							new PathConstraints(
+								StateMachineConstants.MAX_VELOCITY_WHILE_ELEVATOR_L4_METERS_PER_SECOND,
+								StateMachineConstants.MAX_ACCELERATION_WHILE_ELEVATOR_L4_METERS_PER_SECOND_SQUARED,
+								StateMachineConstants.MAX_VELOCITY_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND.getRadians(),
+								StateMachineConstants.MAX_ACCELERATION_WHILE_ELEVATOR_L4_ROTATION2D_PER_SECOND_SQUARED.getRadians()
+							)
+						)
+						.until(
+							() -> ToleranceMath.isNear(
+								scoringPosition.get(),
+								robot.getPoseEstimator().getEstimatedPose(),
+								Tolerances.NET_SCORING_POSITION_METERS
+							)
+						)
+						.andThen(swerve.getCommandsBuilder().resetTargetSpeeds()),
 					superstructure.preNet().until(superstructure::isPreNetReady)
 				)
 			),

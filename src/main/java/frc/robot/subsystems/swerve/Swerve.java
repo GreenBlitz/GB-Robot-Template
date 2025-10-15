@@ -14,6 +14,7 @@ import frc.constants.MathConstants;
 import frc.constants.field.Field;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
+import frc.robot.RobotConstants;
 import frc.robot.hardware.empties.EmptyIMU;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.poseestimator.OdometryData;
@@ -105,7 +106,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public Translation3d getAccelerationFromIMUMetersPerSecondSquared() {
-		return imuSignals.getAccelerationG().times(SwerveConstants.GRAVITATIONAL_ACCELERATION_METERS_PER_SECOND_SQUARED);
+		return imuSignals.getAccelerationG().times(RobotConstants.GRAVITATIONAL_ACCELERATION_METERS_PER_SECOND_SQUARED_ISRAEL);
 	}
 
 

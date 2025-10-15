@@ -12,8 +12,9 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
-import frc.robot.hardware.interfaces.IGyro;
+import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.subsystems.swerve.factories.imu.IMUFactory;
 import frc.robot.vision.DetectedObjectType;
 import frc.robot.vision.cameras.limelight.Limelight;
 import frc.robot.vision.cameras.limelight.LimelightFilters;
@@ -26,7 +27,6 @@ import frc.robot.poseestimator.helpers.robotheadingestimator.RobotHeadingEstimat
 import frc.robot.poseestimator.helpers.robotheadingestimator.RobotHeadingEstimatorConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
-import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.utils.TimedValue;
 import frc.utils.auto.PathPlannerAutoWrapper;
@@ -54,12 +54,12 @@ public class Robot {
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 
-		IGyro gyro = GyroFactory.createGyro(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
+		IIMU gyro = IMUFactory.createIMU(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
 			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
 			gyro,
-			GyroFactory.createSignals(gyro)
+			IMUFactory.createSignals(gyro)
 		);
 
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(

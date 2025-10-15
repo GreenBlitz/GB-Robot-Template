@@ -96,7 +96,7 @@ public class Swerve extends GBSubsystem {
 		return stateHandler;
 	}
 
-	public Rotation3d getAngularVelocityFromIMU() {
+	public Rotation3d getAngularVelocityFromIMURotation2dPerSecond() {
 		return imuSignals.getAngularVelocity();
 	}
 
@@ -104,7 +104,7 @@ public class Swerve extends GBSubsystem {
 		return imuSignals.getOrientation();
 	}
 
-	public Translation3d getAccelerationFromIMU() {
+	public Translation3d getAccelerationFromIMUMetersPerSecondSquared() {
 		return imuSignals.getAccelerationG().times(SwerveConstants.GRAVITATIONAL_ACCELERATION_METERS_PER_SECOND_SQUARED);
 	}
 
@@ -171,8 +171,8 @@ public class Swerve extends GBSubsystem {
 
 		Logger.recordOutput(getLogPath() + "/OdometrySamples", getNumberOfOdometrySamples());
 
-		Logger.recordOutput(getLogPath() + "/IMU/Acceleration", getAccelerationFromIMU());
-		PoseUtil.logRotation3d(getLogPath() + "/IMU/AngularVelocity", getAngularVelocityFromIMU());
+		Logger.recordOutput(getLogPath() + "/IMU/Acceleration", getAccelerationFromIMUMetersPerSecondSquared());
+		PoseUtil.logRotation3d(getLogPath() + "/IMU/AngularVelocity", getAngularVelocityFromIMURotation2dPerSecond());
 		PoseUtil.logRotation3d(getLogPath() + "/IMU/Orientation", getOrientationFromIMU());
 	}
 

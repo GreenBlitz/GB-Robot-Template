@@ -15,6 +15,7 @@ import frc.robot.subsystems.swerve.SwerveMath;
 import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
 
+import frc.utils.math.FieldMath;
 import frc.utils.math.ToleranceMath;
 import org.littletonrobotics.junction.Logger;
 
@@ -33,12 +34,13 @@ public class PoseUtil {
 		Pose2d velocityDeadband,
 		String name
 	) {
-		Pose2d offsetCurrentPose = currentPoseFieldRelative.rotateBy(xAxisOffset.unaryMinus());
-		Pose2d offsetTargetPose = targetPoseFieldRelative.rotateBy(xAxisOffset.unaryMinus());
+		Pose2d offsetCurrentPose = FieldMath.rotatePose(xAxisOffset, currentPoseFieldRelative);
+		Pose2d offsetTargetPose = FieldMath.rotatePose(xAxisOffset, targetPoseFieldRelative);
+
 		ChassisSpeeds offsetSpeeds = SwerveMath
 			.robotToAllianceRelativeSpeeds(allianceRelativeSpeeds, Field.getAllianceRelative(xAxisOffset.unaryMinus()));
 
-		return PoseUtil.isAtPose(offsetCurrentPose, offsetTargetPose, offsetSpeeds, positionTolerance, velocityDeadband, "/" + name);
+		return isAtPose(offsetCurrentPose, offsetTargetPose, offsetSpeeds, positionTolerance, velocityDeadband, "/" + name);
 	}
 
 	public static boolean isAtPose(

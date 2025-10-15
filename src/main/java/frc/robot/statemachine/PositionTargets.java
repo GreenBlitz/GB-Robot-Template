@@ -53,7 +53,7 @@ public class PositionTargets {
 	}
 
 
-	public static final Translation2d CLOSE_SUPERSTRUCTURE_LENGTH_AND_WIDTH = new Translation2d(0.6, 1.03);
+	public static final Translation2d CLOSE_SUPERSTRUCTURE_ZONE_LENGTH_AND_WIDTH = new Translation2d(0.6, 1.03);
 
 	public boolean isReadyToCloseSuperstructure() {
 		Rotation2d reefAngle = Field.getReefSideMiddle(ScoringHelpers.getTargetReefSide()).getRotation();
@@ -62,7 +62,7 @@ public class PositionTargets {
 			.rotateBy(reefAngle.unaryMinus())
 			.getTranslation();
 		Translation2d reefRelativeRobotPose = poseEstimator.getEstimatedPose().rotateBy(reefAngle.unaryMinus()).getTranslation();
-		return !PoseUtil.isAtTranslation(reefRelativeRobotPose, reefRelativeReefSideMiddle, CLOSE_SUPERSTRUCTURE_LENGTH_AND_WIDTH);
+		return !PoseUtil.isAtTranslation(reefRelativeRobotPose, reefRelativeReefSideMiddle, CLOSE_SUPERSTRUCTURE_ZONE_LENGTH_AND_WIDTH);
 	}
 
 
@@ -113,7 +113,7 @@ public class PositionTargets {
 			currentAllianceRelativeSpeeds,
 			tolerance,
 			deadband,
-			"/isAtReefScoringPose"
+			"isAtReefScoringPose"
 		);
 	}
 

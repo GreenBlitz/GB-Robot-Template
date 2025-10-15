@@ -113,7 +113,6 @@ public class JoysticksBindings {
 		return new InstantCommand(() -> {
 			RobotCommander robotCommander = robot.getRobotCommander();
 			RobotState state = robotCommander.getCurrentState();
-			System.out.println(state);
 			Command command;
 			if (state == RobotState.ALGAE_REMOVE || state == RobotState.PRE_NET) {
 				robotCommander.driveWith(RobotState.HOLD_ALGAE).schedule();

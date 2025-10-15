@@ -33,7 +33,7 @@ public enum RobotState {
 	CLOSE_CLIMB;
 
 	private final SwerveState swerveState;
-	public boolean swerveStateActive;
+	private boolean swerveStateActive;
 
 	RobotState() {
 		this(SwerveState.DEFAULT_DRIVE);

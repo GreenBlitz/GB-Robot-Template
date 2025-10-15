@@ -1,5 +1,4 @@
 import edu.wpi.first.gradlerio.GradleRIOPlugin
-import groovy.json.JsonSlurper
 
 plugins {
 	id "java"

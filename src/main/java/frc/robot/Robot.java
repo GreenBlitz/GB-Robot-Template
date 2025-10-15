@@ -85,11 +85,20 @@ public class Robot {
 			),
 			LimelightPipeline.APRIL_TAG
 		);
-		limelightFour.setMT1PoseFilter(LimelightFilters.megaTag1Filter(limelightFour, new Translation2d(0.1, 0.1)));
+		limelightFour.setMT1PoseFilter(
+			LimelightFilters.megaTag1Filter(
+				limelightFour,
+				headingEstimator::getEstimatedHeadingAtTimestamp,
+				() -> headingEstimator.isGyroOffsetCalibrated(RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE),
+				new Translation2d(0.1, 0.1),
+				Rotation2d.fromDegrees(10)
+			)
+		);
 		limelightFour.setMT2PoseFilter(
 			LimelightFilters.megaTag2Filter(
 				limelightFour,
 				headingEstimator::getEstimatedHeadingAtTimestamp,
+				() -> headingEstimator.isGyroOffsetCalibrated(RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE),
 				new Translation2d(0.1, 0.1),
 				Rotation2d.fromDegrees(2)
 			)
@@ -97,8 +106,9 @@ public class Robot {
 		limelightFour.setMT1StdDevsCalculation(
 			LimelightStdDevCalculations.getMT1StdDevsCalculation(
 				limelightFour,
-				new StandardDeviations2D(0.0001, 0.0001, 0.0001),
-				new StandardDeviations2D(0.001, 0.001, 0.001)
+				new StandardDeviations2D(0.5),
+				new StandardDeviations2D(0.05),
+				new StandardDeviations2D(-0.02)
 			)
 		);
 		limelightFour.setMT2StdDevsCalculation(
@@ -118,11 +128,20 @@ public class Robot {
 			),
 			LimelightPipeline.APRIL_TAG
 		);
-		limelightThreeGB.setMT1PoseFilter(LimelightFilters.megaTag1Filter(limelightThreeGB, new Translation2d(0.1, 0.1)));
+		limelightThreeGB.setMT1PoseFilter(
+			LimelightFilters.megaTag1Filter(
+				limelightThreeGB,
+				headingEstimator::getEstimatedHeadingAtTimestamp,
+				() -> headingEstimator.isGyroOffsetCalibrated(RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE),
+				new Translation2d(0.1, 0.1),
+				Rotation2d.fromDegrees(10)
+			)
+		);
 		limelightThreeGB.setMT2PoseFilter(
 			LimelightFilters.megaTag2Filter(
 				limelightThreeGB,
 				headingEstimator::getEstimatedHeadingAtTimestamp,
+				() -> headingEstimator.isGyroOffsetCalibrated(RobotHeadingEstimatorConstants.MAXIMUM_STANDARD_DEVIATION_TOLERANCE),
 				new Translation2d(0.1, 0.1),
 				Rotation2d.fromDegrees(2)
 			)
@@ -130,8 +149,9 @@ public class Robot {
 		limelightThreeGB.setMT1StdDevsCalculation(
 			LimelightStdDevCalculations.getMT1StdDevsCalculation(
 				limelightThreeGB,
-				new StandardDeviations2D(0.0001, 0.0001, 0.0001),
-				new StandardDeviations2D(0.001, 0.001, 0.001)
+				new StandardDeviations2D(0.5),
+				new StandardDeviations2D(0.05),
+				new StandardDeviations2D(-0.02)
 			)
 		);
 		limelightThreeGB.setMT2StdDevsCalculation(
@@ -192,8 +212,8 @@ public class Robot {
 		limelightFour.updateMT2();
 		limelightThreeGB.updateMT2();
 
-		limelightFour.getOrientationRequiringRobotPose().ifPresent(poseEstimator::updateVision);
-		limelightThreeGB.getOrientationRequiringRobotPose().ifPresent(poseEstimator::updateVision);
+		limelightFour.getIndependentRobotPose().ifPresent(poseEstimator::updateVision);
+		limelightThreeGB.getIndependentRobotPose().ifPresent(poseEstimator::updateVision);
 
 		limelightFour.log();
 		limelightThreeGB.log();

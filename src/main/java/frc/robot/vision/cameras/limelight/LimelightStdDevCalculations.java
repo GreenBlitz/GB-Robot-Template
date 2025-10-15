@@ -10,10 +10,17 @@ public class LimelightStdDevCalculations {
 
 	public static Supplier<StandardDeviations2D> getMT1StdDevsCalculation(
 		Limelight limelight,
-		StandardDeviations2D minStdDevs,
-		StandardDeviations2D stdDevFactors
+		StandardDeviations2D stdDevExponents,
+		StandardDeviations2D stdDevFactors,
+		StandardDeviations2D stdDevAdditions
 	) {
-		return () -> averageTagDistanceParabola(limelight.getMT1RawData().avgTagDist, minStdDevs, stdDevFactors);
+		return () -> exponentialTagDistanceDividedByVisibleTags(
+			limelight.getMT1RawData().tagCount,
+			limelight.getMT1RawData().avgTagDist,
+			stdDevExponents,
+			stdDevFactors,
+			stdDevAdditions
+		);
 	}
 
 	public static Supplier<StandardDeviations2D> getMT2StdDevsCalculation(
@@ -37,6 +44,29 @@ public class LimelightStdDevCalculations {
 				minStandardDeviations.angleStandardDeviations(),
 				standardDeviationFactors.angleStandardDeviations() * averageTagDistanceSquared
 			)
+		);
+	}
+
+	private static StandardDeviations2D exponentialTagDistanceDividedByVisibleTags(
+		double numberOfVisibleTags,
+		double averageTagDistance,
+		StandardDeviations2D standardDeviationExponents,
+		StandardDeviations2D standardDeviationFactors,
+		StandardDeviations2D standardDeviationAdditions
+	) {
+		return new StandardDeviations2D(
+			Math.exp(standardDeviationExponents.xStandardDeviations() * averageTagDistance)
+				* standardDeviationFactors.xStandardDeviations()
+				/ numberOfVisibleTags
+				+ standardDeviationAdditions.xStandardDeviations(),
+			Math.exp(standardDeviationExponents.yStandardDeviations() * averageTagDistance)
+				* standardDeviationFactors.yStandardDeviations()
+				/ numberOfVisibleTags
+				+ standardDeviationAdditions.yStandardDeviations(),
+			Math.exp(standardDeviationExponents.angleStandardDeviations() * averageTagDistance)
+				* standardDeviationFactors.angleStandardDeviations()
+				/ numberOfVisibleTags
+				+ standardDeviationAdditions.angleStandardDeviations()
 		);
 	}
 

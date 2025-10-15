@@ -86,5 +86,4 @@ public class PoseUtil {
 		Logger.recordOutput(logPath, new double[] {rotation3d.getX(), rotation3d.getY(), rotation3d.getZ()});
 	}
 
-
 }

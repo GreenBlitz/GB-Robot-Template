@@ -14,6 +14,7 @@ import frc.constants.MathConstants;
 import frc.constants.field.Field;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
+import frc.robot.RobotConstants;
 import frc.robot.hardware.empties.EmptyIMU;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.poseestimator.OdometryData;
@@ -26,7 +27,6 @@ import frc.robot.subsystems.swerve.states.heading.HeadingControl;
 import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.auto.PathPlannerUtil;
-import frc.utils.pose.PoseUtil;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
@@ -96,7 +96,7 @@ public class Swerve extends GBSubsystem {
 		return stateHandler;
 	}
 
-	public Rotation3d getAngularVelocityFromIMU() {
+	public Rotation3d getAngularVelocityFromIMURotation2dPerSecond() {
 		return imuSignals.getAngularVelocity();
 	}
 
@@ -104,8 +104,9 @@ public class Swerve extends GBSubsystem {
 		return imuSignals.getOrientation();
 	}
 
-	public Translation3d getAccelerationFromIMU() {
-		return imuSignals.getAccelerationG().times(SwerveConstants.GRAVITATIONAL_ACCELERATION_METERS_PER_SECOND_SQUARED);
+	public Translation3d getAccelerationFromIMUMetersPerSecondSquared() {
+		return imuSignals.getAccelerationEarthGravitationalAcceleration()
+			.times(RobotConstants.GRAVITATIONAL_ACCELERATION_METERS_PER_SECOND_SQUARED_ISRAEL);
 	}
 
 
@@ -151,9 +152,9 @@ public class Swerve extends GBSubsystem {
 			imuSignals.rollAngularVelocitySignal(),
 			imuSignals.pitchAngularVelocitySignal(),
 			imuSignals.yawAngularVelocitySignal(),
-			imuSignals.xAccelerationSignalG(),
-			imuSignals.yAccelerationSignalG(),
-			imuSignals.zAccelerationSignalG()
+			imuSignals.xAccelerationSignalEarthGravitationalAcceleration(),
+			imuSignals.yAccelerationSignalEarthGravitationalAcceleration(),
+			imuSignals.zAccelerationSignalEarthGravitationalAcceleration()
 		);
 	}
 
@@ -171,9 +172,7 @@ public class Swerve extends GBSubsystem {
 
 		Logger.recordOutput(getLogPath() + "/OdometrySamples", getNumberOfOdometrySamples());
 
-		Logger.recordOutput(getLogPath() + "/IMU/Acceleration", getAccelerationFromIMU());
-		PoseUtil.logRotation3d(getLogPath() + "/IMU/AngularVelocity", getAngularVelocityFromIMU());
-		PoseUtil.logRotation3d(getLogPath() + "/IMU/Orientation", getOrientationFromIMU());
+		Logger.recordOutput(getLogPath() + "/IMU/Acceleration", getAccelerationFromIMUMetersPerSecondSquared());
 	}
 
 

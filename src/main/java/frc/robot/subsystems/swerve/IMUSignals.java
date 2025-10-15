@@ -10,9 +10,9 @@ public record IMUSignals(
 	InputSignal<Rotation2d> rollAngularVelocitySignal,
 	InputSignal<Rotation2d> pitchAngularVelocitySignal,
 	InputSignal<Rotation2d> yawAngularVelocitySignal,
-	InputSignal<Double> xAccelerationSignalG,
-	InputSignal<Double> yAccelerationSignalG,
-	InputSignal<Double> zAccelerationSignalG
+	InputSignal<Double> xAccelerationSignalEarthGravitationalAcceleration,
+	InputSignal<Double> yAccelerationSignalEarthGravitationalAcceleration,
+	InputSignal<Double> zAccelerationSignalEarthGravitationalAcceleration
 ) {
 
 	public Rotation3d getAngularVelocity() {
@@ -31,11 +31,11 @@ public record IMUSignals(
 		);
 	}
 
-	public Translation3d getAccelerationG() {
+	public Translation3d getAccelerationEarthGravitationalAcceleration() {
 		return new Translation3d(
-			this.xAccelerationSignalG().getLatestValue(),
-			this.yAccelerationSignalG().getLatestValue(),
-			this.zAccelerationSignalG().getLatestValue()
+			this.xAccelerationSignalEarthGravitationalAcceleration().getLatestValue(),
+			this.yAccelerationSignalEarthGravitationalAcceleration().getLatestValue(),
+			this.zAccelerationSignalEarthGravitationalAcceleration().getLatestValue()
 		);
 	}
 

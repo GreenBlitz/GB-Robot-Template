@@ -2,7 +2,7 @@ package frc.robot.subsystems.swerve.factories.imu;
 
 import frc.robot.Robot;
 import frc.robot.hardware.interfaces.IIMU;
-import frc.robot.hardware.phoenix6.gyro.Pigeon2IMU;
+import frc.robot.hardware.phoenix6.imu.Pigeon2IMU;
 import frc.robot.subsystems.swerve.IMUSignals;
 
 public class IMUFactory {

@@ -1,7 +1,7 @@
 package frc.utils.utilcommands;
 
 import frc.robot.subsystems.GBSubsystem;
-import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 import java.util.function.Consumer;
 
@@ -17,10 +17,10 @@ public class LoggedDashboardCommand extends InitExecuteCommand {
 	}
 
 	public LoggedDashboardCommand(double startingValue, String widgetName, Consumer<Double> methodToRun, GBSubsystem... subsystems) {
-		this(new LoggedDashboardNumber(widgetName, startingValue), methodToRun, subsystems);
+		this(new LoggedNetworkNumber(widgetName, startingValue), methodToRun, subsystems);
 	}
 
-	public LoggedDashboardCommand(LoggedDashboardNumber logDashboardNumber, Consumer<Double> methodToRun, GBSubsystem... subsystems) {
+	public LoggedDashboardCommand(LoggedNetworkNumber logDashboardNumber, Consumer<Double> methodToRun, GBSubsystem... subsystems) {
 		super(() -> {}, () -> methodToRun.accept(logDashboardNumber.get()), subsystems);
 	}
 

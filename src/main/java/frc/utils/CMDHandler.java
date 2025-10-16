@@ -40,7 +40,7 @@ public class CMDHandler {
 	}
 
 	/**
-	 * @param javaPath  The path from the java package to the class. example: "directory/to/my/Example".
+	 * @param javaPath  The path from the java package to the class. Example: "directory/to/my/Example".
 	 * @param arguments The arguments given to the java file.
 	 */
 	public static void runJavaClass(Path javaPath, String... arguments) {
@@ -55,7 +55,7 @@ public class CMDHandler {
 	}
 
 	/**
-	 * @param classToRun The class to run. example: Example.class .
+	 * @param classToRun The class to run. Example: Example.class .
 	 * @param arguments  The arguments given to the java file.
 	 */
 	public static void runJavaClass(Class<?> classToRun, String... arguments) {
@@ -70,7 +70,7 @@ public class CMDHandler {
 	}
 
 	/**
-	 * @param pythonPath The path from the java package to the class. example: "directory/example_class".
+	 * @param pythonPath The path from the java package to the class. Example: "directory/example_class".
 	 * @param arguments  The arguments given to the python file.
 	 */
 	public static void runPythonClass(Path pythonPath, String... arguments) {

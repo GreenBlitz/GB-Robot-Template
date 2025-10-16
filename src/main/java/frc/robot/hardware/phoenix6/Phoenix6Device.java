@@ -10,7 +10,8 @@ import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
 import org.littletonrobotics.junction.Logger;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public abstract class Phoenix6Device implements IDevice {
 
@@ -45,7 +46,7 @@ public abstract class Phoenix6Device implements IDevice {
 	}
 
 	private InputSignal<?>[] getValidSignals(InputSignal<?>... signals) {
-		LinkedList<InputSignal<?>> validSignals = new LinkedList<>();
+		Collection<InputSignal<?>> validSignals = new ArrayList<>();
 		for (InputSignal<?> signal : signals) {
 			if (isValid(signal)) {
 				validSignals.add(signal);

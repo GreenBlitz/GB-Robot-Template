@@ -11,16 +11,16 @@ public class SparkMaxRequest<T> implements IRequest<T> {
 
 	private final SparkBase.ControlType controlType;
 	private final int pidSlot;
-	private final Function<T, Double> feedforwardCalculator;
-	private final Function<T, Double> setPointToDoubleConverter;
+	private final Function<? super T, Double> feedforwardCalculator;
+	private final Function<? super T, Double> setPointToDoubleConverter;
 	private T setPoint;
 
 	SparkMaxRequest(
 		T setPoint,
 		SparkBase.ControlType controlType,
 		int pidSlot,
-		Function<T, Double> feedforwardCalculator,
-		Function<T, Double> setPointToDoubleConverter
+		Function<? super T, Double> feedforwardCalculator,
+		Function<? super T, Double> setPointToDoubleConverter
 	) {
 		this.setPoint = setPoint;
 		this.controlType = controlType;
@@ -29,7 +29,7 @@ public class SparkMaxRequest<T> implements IRequest<T> {
 		this.setPointToDoubleConverter = setPointToDoubleConverter;
 	}
 
-	SparkMaxRequest(T setPoint, SparkBase.ControlType controlType, int pidSlot, Function<T, Double> setPointToDoubleConverter) {
+	SparkMaxRequest(T setPoint, SparkBase.ControlType controlType, int pidSlot, Function<? super T, Double> setPointToDoubleConverter) {
 		this(setPoint, controlType, pidSlot, CANSparkMAX -> 0.0, setPointToDoubleConverter);
 	}
 

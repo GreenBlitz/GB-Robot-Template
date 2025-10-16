@@ -29,8 +29,8 @@ public class AimAssistMath {
 		return new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, clampedAngularVelocityPerSecond.getRadians());
 	}
 
+	// @formatter:off
 	/**
-	 * @formatter:off
 	 * Returns {@link ChassisSpeeds} that aligns you to the object.
 	 * The returned chassis speeds will move you horizontally to the object so your current heading will point to it.
 	 * Example (0 is object, R is robot, > is heading):
@@ -39,8 +39,8 @@ public class AimAssistMath {
 	 * |                       |   |                       |
 	 * |   R>                  |   |                       |
 	 * |                       |   |                       |
-	 * @formatter:on
 	 */
+	// @formatter:on
 	public static ChassisSpeeds getObjectAssistedSpeeds(
 		ChassisSpeeds speeds,
 		Pose2d robotPose,

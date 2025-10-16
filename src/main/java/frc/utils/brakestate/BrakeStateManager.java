@@ -21,7 +21,7 @@ public class BrakeStateManager {
 		coastRunnables.add(coast);
 	}
 
-	private static void setBrakeMode(BrakeMode wantedMode, Iterable<Runnable> setModes) {
+	private static void setBrakeMode(BrakeMode wantedMode, Iterable<? extends Runnable> setModes) {
 		if (currentMode == wantedMode) {
 			return;
 		}

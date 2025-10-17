@@ -6,7 +6,7 @@ public enum ElevatorState {
 	STAY_IN_PLACE(Double.NaN),
 	CLOSED(0.07, 6, 6),
 	HOLD_ALGAE(0.12, 5, 5),
-	INTAKE(0.05),
+	INTAKE(0.07),
 	ALGAE_OUTTAKE(0.02),
 	PRE_L1(0),
 	L1(0.02),

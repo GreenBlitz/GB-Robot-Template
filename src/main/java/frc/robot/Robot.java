@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.RobotManager;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.AutosBuilder;
-import frc.robot.hardware.interfaces.IGyro;
+import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.led.LEDState;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
@@ -31,7 +31,7 @@ import frc.robot.subsystems.climb.solenoid.factory.SolenoidFactory;
 import frc.robot.subsystems.elevator.factory.ElevatorFactory;
 import frc.robot.subsystems.endeffector.factory.EndEffectorFactory;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
-import frc.robot.subsystems.swerve.factories.gyro.GyroFactory;
+import frc.robot.subsystems.swerve.factories.gyro.IMUFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.subsystems.swerve.factories.modules.drive.KrakenX60DriveBuilder;
 import frc.robot.subsystems.swerve.module.ModuleConstants;
@@ -105,12 +105,12 @@ public class Robot {
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 
-		IGyro gyro = GyroFactory.createGyro(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
+		IIMU imu = IMUFactory.createIMU(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
 			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
-			gyro,
-			GyroFactory.createSignals(gyro)
+			imu,
+			IMUFactory.createSignals(imu)
 		);
 
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
@@ -155,7 +155,12 @@ public class Robot {
 			)
 		);
 		limelightFour.setMT1StdDevsCalculation(
-			LimelightStdDevCalculations.getMT1StdDevsCalculation(limelightFour, new StandardDeviations2D(0.5), new StandardDeviations2D(0.05))
+			LimelightStdDevCalculations.getMT1StdDevsCalculation(
+				limelightFour,
+				new StandardDeviations2D(0.5),
+				new StandardDeviations2D(0.05),
+				new StandardDeviations2D(-0.02)
+			)
 		);
 		limelightFour.setMT2StdDevsCalculation(
 			LimelightStdDevCalculations.getMT2StdDevsCalculation(
@@ -193,7 +198,12 @@ public class Robot {
 			)
 		);
 		limelightThreeGB.setMT1StdDevsCalculation(
-			LimelightStdDevCalculations.getMT1StdDevsCalculation(limelightThreeGB, new StandardDeviations2D(0.5), new StandardDeviations2D(0.05))
+			LimelightStdDevCalculations.getMT1StdDevsCalculation(
+				limelightThreeGB,
+				new StandardDeviations2D(0.5),
+				new StandardDeviations2D(0.05),
+				new StandardDeviations2D(-0.02)
+			)
 		);
 		limelightThreeGB.setMT2StdDevsCalculation(
 			LimelightStdDevCalculations.getMT2StdDevsCalculation(

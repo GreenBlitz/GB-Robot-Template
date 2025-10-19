@@ -110,17 +110,13 @@ public class ArcOdometry extends SwerveDriveOdometry {
 		SwerveModulePosition currentWheelPosition,
 		SwerveModulePosition previousWheelPosition
 	) {
-		Pose2d currentFieldRelativeWheelPose;
-
 		Pose2d previousFieldRelativeWheelPose = previousFieldRelativeRobotPose
 			.plus(new Transform2d(robotCenterRelativeWheelPose, new Rotation2d()))
 			.rotateBy(previousWheelPosition.angle);
 
 		Pose2d deltaWheelPose = calculateDeltaWheelPose(currentWheelPosition, previousWheelPosition);
-		currentFieldRelativeWheelPose = previousFieldRelativeWheelPose.plus(new Transform2d(deltaWheelPose.getTranslation(), new Rotation2d()))
+		return previousFieldRelativeWheelPose.plus(new Transform2d(deltaWheelPose.getTranslation(), new Rotation2d()))
 			.rotateBy(deltaWheelPose.getRotation());
-
-		return currentFieldRelativeWheelPose;
 	}
 
 	public static Pose2d[] getCurrentFieldRelativeWheelPoses(

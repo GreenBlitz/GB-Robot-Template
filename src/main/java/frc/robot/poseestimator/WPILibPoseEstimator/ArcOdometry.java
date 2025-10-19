@@ -11,9 +11,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 public class ArcOdometry extends SwerveDriveOdometry {
 
 	private final SwerveDriveKinematics kinematics;
-	private Pose2d currentRobotPoseMeters;
-
 	private final SwerveModulePosition[] previousWheelPositions;
+	private Pose2d currentRobotPoseMeters;
 	private Rotation2d gyroOffset;
 
 	public ArcOdometry(

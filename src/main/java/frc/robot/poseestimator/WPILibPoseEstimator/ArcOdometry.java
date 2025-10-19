@@ -20,7 +20,6 @@ public class ArcOdometry extends SwerveDriveOdometry {
 		SwerveDriveKinematics kinematics,
 		Rotation2d gyroAngle,
 		SwerveModulePosition[] wheelPositions,
-		Pose2d[] fieldRelativeWheelPoses,
 		Pose2d initialRobotPoseMeters
 	) {
 		super(kinematics, gyroAngle, wheelPositions, initialRobotPoseMeters);

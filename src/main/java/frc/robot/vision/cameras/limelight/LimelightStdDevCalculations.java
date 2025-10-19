@@ -28,14 +28,14 @@ public class LimelightStdDevCalculations {
 		StandardDeviations2D minStdDevs,
 		StandardDeviations2D stdDevFactors
 	) {
-		return () -> averageTagDistanceParabola(
+		return () -> closestTagDistanceParabola(
 			limelight.getClosestTagPoseInCameraSpace().getTranslation().getNorm(),
 			minStdDevs,
 			stdDevFactors
 		);
 	}
 
-	private static StandardDeviations2D averageTagDistanceParabola(
+	private static StandardDeviations2D closestTagDistanceParabola(
 		double closestTagDistanceFromCamera,
 		StandardDeviations2D minStandardDeviations,
 		StandardDeviations2D standardDeviationFactors

@@ -15,8 +15,6 @@ public class ArcOdometry extends SwerveDriveOdometry {
 
 	private final SwerveModulePosition[] previousWheelPositions;
 	private Rotation2d gyroOffset;
-	private Rotation2d previousRobotOrientation;
-	private Pose2d[] previousFieldRelativeWheelPoses;
 
 	public ArcOdometry(
 		SwerveDriveKinematics kinematics,
@@ -29,15 +27,12 @@ public class ArcOdometry extends SwerveDriveOdometry {
 		this.kinematics = kinematics;
 		currentRobotPoseMeters = initialRobotPoseMeters;
 		gyroOffset = currentRobotPoseMeters.getRotation().minus(gyroAngle);
-		previousRobotOrientation = currentRobotPoseMeters.getRotation();
 		previousWheelPositions = this.kinematics.copy(wheelPositions);
-		previousFieldRelativeWheelPoses = fieldRelativeWheelPoses;
 	}
 
 	@Override
 	public void resetPosition(Rotation2d gyroAngle, SwerveModulePosition[] wheelPositions, Pose2d poseMeters) {
 		currentRobotPoseMeters = poseMeters;
-		previousRobotOrientation = currentRobotPoseMeters.getRotation();
 		gyroOffset = currentRobotPoseMeters.getRotation().minus(gyroAngle);
 		kinematics.copyInto(wheelPositions, previousWheelPositions);
 	}
@@ -46,7 +41,6 @@ public class ArcOdometry extends SwerveDriveOdometry {
 	public void resetPose(Pose2d poseMeters) {
 		gyroOffset = gyroOffset.plus(poseMeters.getRotation().minus(currentRobotPoseMeters.getRotation()));
 		currentRobotPoseMeters = poseMeters;
-		previousRobotOrientation = currentRobotPoseMeters.getRotation();
 	}
 
 	@Override
@@ -58,7 +52,6 @@ public class ArcOdometry extends SwerveDriveOdometry {
 	public void resetRotation(Rotation2d rotation) {
 		gyroOffset = gyroOffset.plus(rotation.minus(currentRobotPoseMeters.getRotation()));
 		currentRobotPoseMeters = new Pose2d(currentRobotPoseMeters.getTranslation(), rotation);
-		previousRobotOrientation = currentRobotPoseMeters.getRotation();
 	}
 
 	@Override
@@ -70,8 +63,9 @@ public class ArcOdometry extends SwerveDriveOdometry {
 	public Pose2d update(Rotation2d gyroAngle, SwerveModulePosition[] wheelPositions) {
 		Rotation2d currentRobotAngle = gyroAngle.plus(gyroOffset);
 
-		Pose2d[] currentFieldRelativeWheelPoses = getNewFieldRelativeWheelPoses(
-			previousFieldRelativeWheelPoses,
+		Pose2d[] currentFieldRelativeWheelPoses = getCurrentFieldRelativeWheelPoses(
+			currentRobotPoseMeters,
+			kinematics,
 			wheelPositions,
 			previousWheelPositions
 		);
@@ -84,61 +78,88 @@ public class ArcOdometry extends SwerveDriveOdometry {
 
 		currentRobotPoseMeters = new Pose2d(currentRobotTranslation, currentRobotAngle);
 		kinematics.copyInto(wheelPositions, previousWheelPositions);
-		previousRobotOrientation = currentRobotAngle;
-		previousFieldRelativeWheelPoses = currentFieldRelativeWheelPoses;
 
 		return currentRobotPoseMeters;
 	}
 
-	public static SwerveModulePosition getDeltaWheelPosition(SwerveModulePosition previousWheelPosition, SwerveModulePosition newWheelPosition) {
+	public static SwerveModulePosition getDeltaWheelPosition(
+		SwerveModulePosition previousWheelPosition,
+		SwerveModulePosition currentWheelPosition
+	) {
 		return new SwerveModulePosition(
-				newWheelPosition.distanceMeters - previousWheelPosition.distanceMeters,
-				newWheelPosition.angle.minus(previousWheelPosition.angle)
+			currentWheelPosition.distanceMeters - previousWheelPosition.distanceMeters,
+			currentWheelPosition.angle.minus(previousWheelPosition.angle)
 		);
 	}
 
-	public static Transform2d calculateDeltaWheelPose(SwerveModulePosition previousWheelPosition, SwerveModulePosition newWheelPosition) {
-		SwerveModulePosition deltaWheelPosition = getDeltaWheelPosition(previousWheelPosition, newWheelPosition);
+	public static Pose2d calculateDeltaWheelPose(SwerveModulePosition previousWheelPosition, SwerveModulePosition currentWheelPosition) {
+		SwerveModulePosition deltaWheelPosition = getDeltaWheelPosition(previousWheelPosition, currentWheelPosition);
 		Rotation2d deltaWheelOrientation = deltaWheelPosition.angle;
 
 		double circleRadiusMeters = deltaWheelPosition.distanceMeters / deltaWheelOrientation.getRadians();
 		Translation2d deltaWheelTranslation = new Translation2d(
-				circleRadiusMeters * deltaWheelOrientation.getCos() - circleRadiusMeters,
-				circleRadiusMeters * deltaWheelOrientation.getSin()
+			circleRadiusMeters * deltaWheelOrientation.getCos() - circleRadiusMeters,
+			circleRadiusMeters * deltaWheelOrientation.getSin()
 		);
-		return new Transform2d(deltaWheelTranslation, deltaWheelOrientation);
+		return new Pose2d(deltaWheelTranslation, deltaWheelOrientation);
 	}
 
-	public static Pose2d[] getNewFieldRelativeWheelPoses(
-			Pose2d[] previousFieldRelativeWheelPoses,
-			SwerveModulePosition[] newWheelPositions,
-			SwerveModulePosition[] previousWheelPositions
+	public static Pose2d getCurrentFieldRelativeWheelPose(
+		Pose2d previousFieldRelativeRobotPose,
+		Translation2d robotCenterRelativeWheelPose,
+		SwerveModulePosition currentWheelPosition,
+		SwerveModulePosition previousWheelPosition
 	) {
-		for (int i = 0; i < previousFieldRelativeWheelPoses.length; i++) {
-			previousFieldRelativeWheelPoses[i] = previousFieldRelativeWheelPoses[i]
-					.plus(calculateDeltaWheelPose(newWheelPositions[i], previousWheelPositions[i]));
+		Pose2d currentFieldRelativeWheelPose;
+
+		Pose2d previousFieldRelativeWheelPose = previousFieldRelativeRobotPose
+			.plus(new Transform2d(robotCenterRelativeWheelPose, new Rotation2d()))
+			.rotateBy(previousWheelPosition.angle);
+
+		Pose2d deltaWheelPose = calculateDeltaWheelPose(currentWheelPosition, previousWheelPosition);
+		currentFieldRelativeWheelPose = previousFieldRelativeWheelPose.plus(new Transform2d(deltaWheelPose.getTranslation(), new Rotation2d()))
+			.rotateBy(deltaWheelPose.getRotation());
+
+		return currentFieldRelativeWheelPose;
+	}
+
+	public static Pose2d[] getCurrentFieldRelativeWheelPoses(
+		Pose2d previousFieldRelativeRobotPose,
+		SwerveDriveKinematics kinematics,
+		SwerveModulePosition[] currentWheelPositions,
+		SwerveModulePosition[] previousWheelPositions
+	) {
+		Pose2d[] currentFieldRelativeWheelPoses = new Pose2d[currentWheelPositions.length];
+
+		for (int i = 0; i < currentWheelPositions.length; i++) {
+			currentFieldRelativeWheelPoses[i] = getCurrentFieldRelativeWheelPose(
+				previousFieldRelativeRobotPose,
+				kinematics.getModules()[i],
+				currentWheelPositions[i],
+				previousWheelPositions[i]
+			);
 		}
-		return previousFieldRelativeWheelPoses;
+		return currentFieldRelativeWheelPoses;
 	}
 
 	public static Translation2d calculateFieldRelativeRobotCenterByWheel(
-			Pose2d fieldRelativeWheelPose,
-			Translation2d robotRelativeWheelTranslation,
-			Rotation2d robotOrientation
+		Pose2d fieldRelativeWheelPose,
+		Translation2d robotRelativeWheelTranslation,
+		Rotation2d robotOrientation
 	) {
 		Translation2d unrotatedRobotCenter = fieldRelativeWheelPose.getTranslation().minus(robotRelativeWheelTranslation);
 		return unrotatedRobotCenter.rotateAround(fieldRelativeWheelPose.getTranslation(), robotOrientation.unaryMinus());
 	}
 
 	public static Translation2d calculateFieldRelativeRobotCenterByWheels(
-			Pose2d[] fieldRelativeWheelPoses,
-			Translation2d[] robotRelativeWheelTranslations,
-			Rotation2d robotOrientation
+		Pose2d[] fieldRelativeWheelPoses,
+		Translation2d[] robotRelativeWheelTranslations,
+		Rotation2d robotOrientation
 	) {
 		Translation2d robotTranslation = new Translation2d();
 		for (int i = 0; i < fieldRelativeWheelPoses.length; i++) {
 			robotTranslation
-					.plus(calculateFieldRelativeRobotCenterByWheel(fieldRelativeWheelPoses[i], robotRelativeWheelTranslations[i], robotOrientation));
+				.plus(calculateFieldRelativeRobotCenterByWheel(fieldRelativeWheelPoses[i], robotRelativeWheelTranslations[i], robotOrientation));
 		}
 		robotTranslation.div(fieldRelativeWheelPoses.length);
 		return robotTranslation;

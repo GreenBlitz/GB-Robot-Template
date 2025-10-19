@@ -13,9 +13,9 @@ public class ArcOdometry extends SwerveDriveOdometry {
 	private final SwerveDriveKinematics kinematics;
 	private Pose2d currentRobotPoseMeters;
 
+	private final SwerveModulePosition[] previousWheelPositions;
 	private Rotation2d gyroOffset;
 	private Rotation2d previousRobotOrientation;
-	private final SwerveModulePosition[] previousWheelPositions;
 	private Pose2d[] previousFieldRelativeWheelPoses;
 
 	public ArcOdometry(

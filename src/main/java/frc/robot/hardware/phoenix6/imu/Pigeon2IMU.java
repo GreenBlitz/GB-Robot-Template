@@ -1,4 +1,4 @@
-package frc.robot.hardware.phoenix6.gyro;
+package frc.robot.hardware.phoenix6.imu;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.IIMU;

@@ -6,22 +6,22 @@ import frc.robot.hardware.phoenix6.Phoenix6Device;
 
 public class Pigeon2IMU extends Phoenix6Device implements IIMU {
 
-	private final Pigeon2Wrapper gyro;
+	private final Pigeon2Wrapper imu;
 
-	public Pigeon2IMU(String logPath, Pigeon2Wrapper gyro) {
+	public Pigeon2IMU(String logPath, Pigeon2Wrapper imu) {
 		super(logPath);
-		this.gyro = gyro;
-		gyro.optimizeBusUtilization();
+		this.imu = imu;
+		imu.optimizeBusUtilization();
 	}
 
 	@Override
 	public void setYaw(Rotation2d yaw) {
-		gyro.setYaw(yaw);
+		imu.setYaw(yaw);
 	}
 
 	@Override
 	public Pigeon2Wrapper getDevice() {
-		return gyro;
+		return imu;
 	}
 
 }

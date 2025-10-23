@@ -48,9 +48,9 @@ class Pigeon2IMUBuilder {
 
 	static IMUSignals buildSignals(Pigeon2IMU pigeon2imu) {
 		return new IMUSignals(
+			buildAnglePigeonSignal(pigeon2imu.getDevice().getYaw()),
 			buildAnglePigeonSignal(pigeon2imu.getDevice().getPitch()),
 			buildAnglePigeonSignal(pigeon2imu.getDevice().getRoll()),
-			buildAnglePigeonSignal(pigeon2imu.getDevice().getYaw()),
 			buildAnglePigeonSignal(pigeon2imu.getDevice().getAngularVelocityXWorld()),
 			buildAnglePigeonSignal(pigeon2imu.getDevice().getAngularVelocityYWorld()),
 			buildAnglePigeonSignal(pigeon2imu.getDevice().getAngularVelocityZWorld()),

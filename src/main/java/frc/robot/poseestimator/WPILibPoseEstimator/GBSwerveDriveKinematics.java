@@ -144,9 +144,9 @@ public class GBSwerveDriveKinematics extends SwerveDriveKinematics {
 		var moduleDeltaMatrix = new SimpleMatrix(modulesNum * 2, 1);
 
 		for (int i = 0; i < modulesNum; i++) {
-			Pose2d poseDelta = calculateDeltaWheelPose(moduleDeltas[i]);
-			moduleDeltaMatrix.set(i * 2, 0, poseDelta.getX());
-			moduleDeltaMatrix.set(i * 2 + 1, poseDelta.getY());
+			Pose2d modulePoseDelta = calculateDeltaWheelPose(moduleDeltas[i]);
+			moduleDeltaMatrix.set(i * 2, modulePoseDelta.getX());
+			moduleDeltaMatrix.set(i * 2 + 1, modulePoseDelta.getY());
 		}
 
 		var chassisDeltaVector = forwardKinematics.mult(moduleDeltaMatrix);
@@ -168,7 +168,7 @@ public class GBSwerveDriveKinematics extends SwerveDriveKinematics {
 	public static Pose2d calculateDeltaWheelPose(SwerveModulePosition deltaWheelPosition) {
 		Rotation2d deltaWheelOrientation = deltaWheelPosition.angle;
 		if (deltaWheelOrientation.getRadians() == 0) {
-			return new Pose2d(new Translation2d(deltaWheelPosition.distanceMeters, 0), deltaWheelOrientation);
+			return new Pose2d(deltaWheelPosition.distanceMeters, 0, deltaWheelOrientation);
 		}
 		
 		double circleRadiusMeters = deltaWheelPosition.distanceMeters / deltaWheelOrientation.getRadians();

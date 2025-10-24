@@ -164,17 +164,19 @@ public class GBSwerveDriveKinematics extends SwerveDriveKinematics {
 		}
 		return toTwist2d(newPositions);
 	}
-	
+
 	public static Pose2d calculateDeltaWheelPose(SwerveModulePosition deltaWheelPosition) {
 		Rotation2d deltaWheelOrientation = deltaWheelPosition.angle;
 		if (deltaWheelOrientation.getRadians() == 0) {
 			return new Pose2d(deltaWheelPosition.distanceMeters, 0, deltaWheelOrientation);
 		}
-		
+
 		double circleRadiusMeters = deltaWheelPosition.distanceMeters / deltaWheelOrientation.getRadians();
 		Translation2d deltaWheelTranslation = new Translation2d(
-				circleRadiusMeters * (deltaWheelOrientation.getCos() - 1),
-				circleRadiusMeters * deltaWheelOrientation.getSin()
+			circleRadiusMeters * deltaWheelOrientation.getSin(),
+			deltaWheelOrientation.getRadians() > 0
+				? circleRadiusMeters * (1 - deltaWheelOrientation.getCos())
+				: circleRadiusMeters * (deltaWheelOrientation.getCos() - 1)
 		);
 		return new Pose2d(deltaWheelTranslation, deltaWheelOrientation);
 	}

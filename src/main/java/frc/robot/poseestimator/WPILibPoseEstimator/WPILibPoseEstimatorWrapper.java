@@ -34,7 +34,7 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 		super(logPath);
 		this.kinematics = kinematics;
 		this.lastOdometryAngle = initialGyroAngle;
-		this.odometryEstimator = new ArcOdometry(
+		this.odometryEstimator = new Odometry<>(
 			kinematics,
 			initialGyroAngle,
 			modulePositions,

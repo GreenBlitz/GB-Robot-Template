@@ -9,9 +9,9 @@ import frc.robot.Robot;
 import frc.robot.vision.DetectedObjectObservation;
 import frc.robot.vision.DetectedObjectType;
 import frc.robot.vision.RobotPoseObservation;
+import frc.robot.vision.interfaces.IndependentRobotPoseSupplier;
 import frc.robot.vision.interfaces.ObjectDetector;
 import frc.robot.vision.interfaces.OrientationRequiringRobotPoseSupplier;
-import frc.robot.vision.interfaces.IndependentRobotPoseSupplier;
 import frc.utils.Conversions;
 import frc.utils.LimelightHelpers;
 import frc.utils.filter.Filter;
@@ -116,11 +116,27 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		if (pipeline.isUsingMT()) {
 			if (Robot.ROBOT_TYPE.isReplay()) {
 				LogTable logTable = RobotManager.replayLogsTable.getSubtable("RealOutputs/" + logPath);
-				mt1RawData = logTable.get("megaTag1RawData", new LimelightHelpers.PoseEstimate());
+				LimelightHelpers.PoseEstimate rawLogData = logTable.get("megaTag1RawData", new LimelightHelpers.PoseEstimate());
+				if (mt1RawData.timestampSeconds() == rawLogData.timestampSeconds()) {
+					mt1RawData = new LimelightHelpers.PoseEstimate(
+						new Pose2d(),
+						mt1RawData.timestampSeconds(),
+						mt1RawData.latency(),
+						mt1RawData.tagCount(),
+						mt1RawData.tagSpan(),
+						mt1RawData.avgTagDist(),
+						mt1RawData.avgTagArea(),
+						mt1RawData.rawFiducials(),
+						mt1RawData.isMegaTag2()
+					);
+				} else {
+					mt1RawData = rawLogData;
+				}
 			} else {
 				mt1RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
 				mt1Pose3d = LimelightHelpers.getBotPose3d_wpiBlue(name);
 			}
+
 			mt1PoseObservation = new RobotPoseObservation(getEstimateTimestampSeconds(mt1RawData), mt1RawData.pose(), calculateMT1StdDevs.get());
 		}
 	}

@@ -21,6 +21,7 @@ public class LoggerFactory {
 		switch (Robot.ROBOT_TYPE) {
 			case REAL -> startRealLogger();
 			case SIMULATION -> startSimulationLogger();
+			case REPLAY -> LoggerFactory.startReplayLogger();
 		}
 	}
 

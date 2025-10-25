@@ -22,22 +22,18 @@ public class LimelightFilters {
 
 	public static Filter megaTag1Filter(
 		Limelight limelight,
-		Pose3d robotInFieldOnFloorTolerance,
 		Function<Double, Optional<Rotation2d>> wantedYawAtTimestamp,
-		Supplier<Boolean> isYawCalibrated
+		Supplier<Boolean> isYawCalibrated,
+		Translation2d robotInFieldTolerance,
+		Rotation2d yawAtAngleTolerance
 	) {
-		return MegaTagFilters
-			.isRobotInField(
-				() -> limelight.getMT1RawData().pose().getTranslation(),
-				robotInFieldOnFloorTolerance.getTranslation().toTranslation2d()
-			)
-			.and(MegaTagFilters.isRobotOnFloor(limelight::getMt1Pose3d, robotInFieldOnFloorTolerance))
+		return MegaTagFilters.isRobotInField(() -> limelight.getMT1RawData().pose().getTranslation(), robotInFieldTolerance)
 			.and(
 				MegaTagFilters.isYawAtAngle(
 					() -> limelight.getMT1RawData().pose().getRotation(),
 					() -> wantedYawAtTimestamp.apply(Limelight.getEstimateTimestampSeconds(limelight.getMT1RawData())),
 					isYawCalibrated,
-					Rotation2d.fromRadians(robotInFieldOnFloorTolerance.getRotation().getZ())
+					yawAtAngleTolerance
 				)
 			);
 	}
@@ -112,7 +108,7 @@ public class LimelightFilters {
 					)
 				)
 				.and(
-					isPitchOnFloor(
+					isRollOnFloor(
 						() -> Rotation2d.fromRadians(robotPose.get().getRotation().getY()),
 						Rotation2d.fromRadians(tolerance.getRotation().getY())
 					)

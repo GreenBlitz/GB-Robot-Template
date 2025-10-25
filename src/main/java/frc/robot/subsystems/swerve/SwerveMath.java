@@ -65,4 +65,16 @@ public class SwerveMath {
 		return Math.sqrt(Math.pow(chassisSpeeds.vxMetersPerSecond, 2) + Math.pow(chassisSpeeds.vyMetersPerSecond, 2));
 	}
 
+	public static double getSqrtPIDSetPoint(double current, double target) {
+		double error = target - current;
+		double sqrtError = Math.sqrt(error) * Math.signum(error);
+		return current + sqrtError;
+	}
+
+	public static Rotation2d getSqrtPIDSetPoint(Rotation2d current, Rotation2d target) {
+		Rotation2d error = target.minus(current);
+		Rotation2d sqrtError = Rotation2d.fromRadians(Math.sqrt(error.getRadians())).times(Math.signum(error.getRadians()));
+		return current.plus(sqrtError);
+	}
+
 }

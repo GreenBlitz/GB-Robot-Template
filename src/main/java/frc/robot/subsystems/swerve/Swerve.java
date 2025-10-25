@@ -3,7 +3,11 @@ package frc.robot.subsystems.swerve;
 import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -22,10 +26,10 @@ import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.states.DriveRelative;
 import frc.robot.subsystems.swerve.states.LoopMode;
+import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.SwerveStateHandler;
 import frc.robot.subsystems.swerve.states.heading.HeadingControl;
 import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
-import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.auto.PathPlannerUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -228,6 +232,29 @@ public class Swerve extends GBSubsystem {
 		return SwerveMath.allianceToRobotRelativeSpeeds(speeds, getAllianceRelativeHeading());
 	}
 
+
+	protected void moveToPoseByPIDSqrt(Pose2d currentPose, Pose2d targetPose) {
+		double xVelocityMetersPerSecond = constants.xMetersPIDController()
+			.calculate(currentPose.getX(), SwerveMath.getSqrtPIDSetPoint(currentPose.getX(), targetPose.getX()));
+		double yVelocityMetersPerSecond = constants.yMetersPIDController()
+			.calculate(currentPose.getY(), SwerveMath.getSqrtPIDSetPoint(currentPose.getY(), targetPose.getY()));
+		int fieldDirection = Field.isFieldConventionAlliance() ? 1 : -1;
+
+		Rotation2d rotationVelocityPerSecond = Rotation2d.fromDegrees(
+			constants.rotationDegreesPIDController()
+				.calculate(
+					currentPose.getRotation().getDegrees(),
+					SwerveMath.getSqrtPIDSetPoint(currentPose.getRotation(), targetPose.getRotation()).getDegrees()
+				)
+		);
+
+		ChassisSpeeds targetAllianceRelativeSpeeds = new ChassisSpeeds(
+			xVelocityMetersPerSecond * fieldDirection,
+			yVelocityMetersPerSecond * fieldDirection,
+			rotationVelocityPerSecond.getRadians()
+		);
+		driveByState(targetAllianceRelativeSpeeds, SwerveState.DEFAULT_DRIVE);
+	}
 
 	protected void moveToPoseByPID(Pose2d currentPose, Pose2d targetPose) {
 		double xVelocityMetersPerSecond = constants.xMetersPIDController().calculate(currentPose.getX(), targetPose.getX());

@@ -82,10 +82,10 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void robotPeriodic() {
-		if (Robot.ROBOT_TYPE.isReplay()) {
-			LoggerFactory.logReplaySource.updateTable(RobotManager.replayLogsTable);
-		}
 		updateTimeRelatedData(); // Better to be first
+        if (Robot.ROBOT_TYPE.isReplay()) {
+            LoggerFactory.logReplaySource.updateTable(RobotManager.replayLogsTable);
+        }
 		JoysticksBindings.updateChassisDriverInputs();
 		robot.periodic();
 		AlertManager.reportAlerts();

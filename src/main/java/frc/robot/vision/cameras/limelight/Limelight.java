@@ -16,6 +16,7 @@ import frc.utils.Conversions;
 import frc.utils.LimelightHelpers;
 import frc.utils.filter.Filter;
 import frc.utils.math.StandardDeviations2D;
+import frc.utils.math.ToleranceMath;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.Logger;
@@ -121,7 +122,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 			if (Robot.ROBOT_TYPE.isReplay()) {
 				LogTable logTable = RobotManager.replayLogsTable.getSubtable("RealOutputs/" + logPath);
 				LimelightHelpers.PoseEstimate logRawData = logTable.get("megaTag1RawData", new LimelightHelpers.PoseEstimate());
-				if (mt1RawData.timestampSeconds() == logRawData.timestampSeconds()) {
+				if (ToleranceMath.isNear(mt1RawData.timestampSeconds(), logRawData.timestampSeconds(), 0.005)) {
 					mt1RawData = new LimelightHelpers.PoseEstimate(
 						new Pose2d(),
 						mt1RawData.timestampSeconds(),

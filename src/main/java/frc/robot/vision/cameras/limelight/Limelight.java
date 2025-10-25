@@ -30,6 +30,8 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	private LimelightTarget2dValues target2dValues;
 
+	private Pose3d primaryTagPoseInCameraSpace;
+
 	private RobotPoseObservation mt1PoseObservation;
 	private RobotPoseObservation mt2PoseObservation;
 
@@ -55,6 +57,8 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		this.detectedObjectObservation = new DetectedObjectObservation();
 
 		this.target2dValues = new LimelightTarget2dValues();
+
+		this.primaryTagPoseInCameraSpace = new Pose3d();
 
 		this.mt1PoseObservation = new RobotPoseObservation();
 		this.mt2PoseObservation = new RobotPoseObservation();
@@ -107,6 +111,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	public void updateMT1() {
 		if (pipeline.isUsingMT()) {
+			primaryTagPoseInCameraSpace = LimelightHelpers.getTargetPose3d_CameraSpace(name);
 			mt1RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
 			mt1PoseObservation = new RobotPoseObservation(getEstimateTimestampSeconds(mt1RawData), mt1RawData.pose, calculateMT1StdDevs.get());
 		}
@@ -203,6 +208,10 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	protected LimelightTarget2dValues getTarget2dValues() {
 		return target2dValues;
+	}
+
+	protected Pose3d getPrimaryTagPoseInCameraSpace() {
+		return robotRelativeCameraPose;
 	}
 
 	protected LimelightHelpers.PoseEstimate getMT1RawData() {

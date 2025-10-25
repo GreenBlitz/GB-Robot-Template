@@ -19,8 +19,10 @@ public class AimAssistMath {
 		Rotation2d targetHeading,
 		SwerveConstants swerveConstants
 	) {
-		Rotation2d pidOutputVelocityPerSecond = Rotation2d
-			.fromDegrees(swerveConstants.rotationDegreesPIDController().calculate(robotHeading.getDegrees(), targetHeading.getDegrees()));
+		Rotation2d pidOutputVelocityPerSecond = Rotation2d.fromDegrees(
+			swerveConstants.rotationDegreesPIDController()
+				.calculate(robotHeading.getDegrees(), SwerveMath.getSqrtPIDSetPoint(robotHeading, targetHeading).getDegrees())
+		);
 
 		Rotation2d angularVelocityPerSecond = applyMagnitudeCompensation(pidOutputVelocityPerSecond, SwerveMath.getDriveMagnitude(speeds));
 		Rotation2d clampedAngularVelocityPerSecond = ToleranceMath
@@ -30,7 +32,7 @@ public class AimAssistMath {
 	}
 
 	/**
-	 * @formatter:off
+     * @formatter:off
 	 * Returns {@link ChassisSpeeds} that aligns you to the object.
 	 * The returned chassis speeds will move you horizontally to the object so your current heading will point to it.
 	 * Example (0 is object, R is robot, > is heading):
@@ -40,7 +42,7 @@ public class AimAssistMath {
 	 * |   R>                  |   |                       |
 	 * |                       |   |                       |
 	 * @formatter:on
-	 */
+     */
 	public static ChassisSpeeds getObjectAssistedSpeeds(
 		ChassisSpeeds speeds,
 		Pose2d robotPose,
@@ -51,7 +53,8 @@ public class AimAssistMath {
 	) {
 		Pose2d robotPoseWithTargetHeading = new Pose2d(robotPose.getX(), robotPose.getY(), allianceRelativeTargetHeading);
 		Translation2d objectRelativeToRobot = FieldMath.getRelativeTranslation(robotPoseWithTargetHeading, objectTranslation);
-		double neededObjectHorizontalVelocityMetersPerSecond = swerveConstants.yMetersPIDController().calculate(0, objectRelativeToRobot.getY());
+		double neededObjectHorizontalVelocityMetersPerSecond = swerveConstants.yMetersPIDController()
+			.calculate(0, SwerveMath.getSqrtPIDSetPoint(0, objectRelativeToRobot.getY()));
 
 		Rotation2d targetHeadingHingeSystemAngle = switch (swerveState.getDriveRelative()) {
 			case ALLIANCE_RELATIVE -> Field.getAllianceRelative(allianceRelativeTargetHeading);

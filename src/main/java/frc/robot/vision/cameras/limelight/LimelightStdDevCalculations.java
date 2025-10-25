@@ -40,13 +40,13 @@ public class LimelightStdDevCalculations {
 		StandardDeviations2D minStandardDeviations,
 		StandardDeviations2D standardDeviationFactors
 	) {
-		double averageTagDistanceSquared = Math.pow(closestTagDistanceFromCamera, 2);
+		double closestTagDistanceSquared = Math.pow(closestTagDistanceFromCamera, 2);
 		return new StandardDeviations2D(
-			Math.max(minStandardDeviations.xStandardDeviations(), standardDeviationFactors.xStandardDeviations() * averageTagDistanceSquared),
-			Math.max(minStandardDeviations.yStandardDeviations(), standardDeviationFactors.yStandardDeviations() * averageTagDistanceSquared),
+			Math.max(minStandardDeviations.xStandardDeviations(), standardDeviationFactors.xStandardDeviations() * closestTagDistanceSquared),
+			Math.max(minStandardDeviations.yStandardDeviations(), standardDeviationFactors.yStandardDeviations() * closestTagDistanceSquared),
 			Math.max(
 				minStandardDeviations.angleStandardDeviations(),
-				standardDeviationFactors.angleStandardDeviations() * averageTagDistanceSquared
+				standardDeviationFactors.angleStandardDeviations() * closestTagDistanceSquared
 			)
 		);
 	}

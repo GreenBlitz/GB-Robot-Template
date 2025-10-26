@@ -1,9 +1,7 @@
 package frc.robot.vision.cameras.limelight;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.Pair;
+import edu.wpi.first.math.geometry.*;
 import frc.robot.vision.DetectedObjectObservation;
 import frc.robot.vision.DetectedObjectType;
 import frc.robot.vision.RobotPoseObservation;
@@ -25,6 +23,8 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	private final String name;
 	private final String logPath;
 	private final Pose3d robotRelativeCameraPose;
+	private static final double FOV_X = 0.9;
+	private static final double FOV_Y = 1.2;
 
 	private DetectedObjectObservation detectedObjectObservation;
 
@@ -141,6 +141,10 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 			return Optional.of(mt1PoseObservation);
 		}
 		return Optional.empty();
+	}
+
+	private static Pair<Rotation2d, Rotation2d> convertCornerToCrosshair(Rotation2d txnc, Rotation2d tync){
+		return  new Pair<>(new Rotation2d(txnc.getRadians()-(0.5*FOV_X)), new Rotation2d(tync.getRadians()-(0.5*FOV_Y)));
 	}
 
 	@Override

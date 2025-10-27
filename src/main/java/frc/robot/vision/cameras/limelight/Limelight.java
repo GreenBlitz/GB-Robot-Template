@@ -243,7 +243,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	protected Pose3d getClosestTagPoseInCameraSpace() {
-		return robotRelativeCameraPose;
+		return closestTagPoseInCameraSpace;
 	}
 
 	protected Pose3d getMt1Pose3d() {

@@ -117,36 +117,10 @@ public class JoysticksBindings {
 			if (state == RobotState.ALGAE_REMOVE || state == RobotState.PRE_NET) {
 				robotCommander.driveWith(RobotState.HOLD_ALGAE).schedule();
 				return;
-			} else if (state == RobotState.NET) {
-				command = robotCommander.driveWith(RobotState.NET, robotCommander.getSuperstructure().softCloseNet());
-			} else if (
-				(state == RobotState.SCORE || state == RobotState.SCORE_WITHOUT_RELEASE || state == RobotState.PRE_SCORE)
-					&& ScoringHelpers.targetScoreLevel == ScoreLevel.L4
-			) {
-				command = robotCommander.driveWith(RobotState.PRE_SCORE, robotCommander.getSuperstructure().softCloseL4());
 			} else {
 				command = Commands.none();
 			}
 			command.andThen(robotCommander.driveWith(RobotState.DRIVE)).schedule();
-		});
-	}
-
-	private static Command intakeActionChooser(Robot robot) {
-		return new InstantCommand(() -> {
-			RobotCommander robotCommander = robot.getRobotCommander();
-			RobotState state = robotCommander.getCurrentState();
-			Command command;
-			if (state == RobotState.NET) {
-				command = robotCommander.driveWith(RobotState.NET, robotCommander.getSuperstructure().softCloseNet());
-			} else if (
-				(state == RobotState.SCORE || state == RobotState.SCORE_WITHOUT_RELEASE || state == RobotState.PRE_SCORE)
-					&& ScoringHelpers.targetScoreLevel == ScoreLevel.L4
-			) {
-				command = robotCommander.driveWith(RobotState.PRE_SCORE, robotCommander.getSuperstructure().softCloseL4());
-			} else {
-				command = Commands.none();
-			}
-			command.andThen(robot.getRobotCommander().driveWith(RobotState.INTAKE)).schedule();
 		});
 	}
 
@@ -227,7 +201,7 @@ public class JoysticksBindings {
 		usedJoystick.X.onTrue(robot.getRobotCommander().intakeAutomation());
 		usedJoystick.L1.onTrue(robot.getRobotCommander().driveWith(RobotState.ALGAE_INTAKE));
 
-		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(intakeActionChooser(robot));
+		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getRobotCommander().driveWith(RobotState.INTAKE));
 
 		usedJoystick.R1.onTrue(netActionChooser(robot));
 

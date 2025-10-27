@@ -30,8 +30,12 @@ public class EndEffectorStateHandler {
 		return new ParallelCommandGroup(new InstantCommand(() -> currentState = state), stateCommand);
 	}
 
+	public boolean isCoralIn() {
+		return endEffector.isCoralIn();
+	}
+
 	private double defaultStatePower() {
-		return superstructure.isCoralIn() ? EndEffectorState.CORAL_KEEP_POWER : EndEffectorState.ALGAE_KEEP_POWER;
+		return isCoralIn() ? EndEffectorState.CORAL_KEEP_POWER : EndEffectorState.ALGAE_KEEP_POWER;
 	}
 
 

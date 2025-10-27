@@ -5,11 +5,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
-import frc.robot.hardware.interfaces.IDynamicMotionMagicRequest;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
+import frc.robot.hardware.phoenix6.request.Phoenix6DynamicMotionMagicRequest;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.arm.factory.KrakenX60ArmBuilder;
 import frc.utils.alerts.Alert;
@@ -17,10 +17,11 @@ import frc.utils.battery.BatteryUtil;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
 
+
 public class Arm extends GBSubsystem {
 
 	private final ControllableMotor motor;
-	private final IDynamicMotionMagicRequest positionRequest;
+	private final Phoenix6DynamicMotionMagicRequest positionRequest;
 	private final IRequest<Double> voltageRequest;
 	private final InputSignal<Rotation2d> motorPositionSignal;
 	private final InputSignal<Double> motorVoltageSignal;
@@ -34,7 +35,7 @@ public class Arm extends GBSubsystem {
 	public Arm(
 		String logPath,
 		ControllableMotor motor,
-		IDynamicMotionMagicRequest positionRequest,
+		Phoenix6DynamicMotionMagicRequest positionRequest,
 		IRequest<Double> voltageRequest,
 		InputSignal<Rotation2d> motorPositionSignal,
 		InputSignal<Double> motorVoltageSignal,
@@ -115,19 +116,36 @@ public class Arm extends GBSubsystem {
 	}
 
 	protected void setTargetPosition(Rotation2d targetPosition) {
-		setTargetPosition(targetPosition, ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND, ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED);
+		setTargetPosition(
+			targetPosition,
+			ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND,
+			ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED,
+			ArmConstants.DEFAULT_ARBITRARY_FEED_FORWARD
+		);
+	}
+
+	protected void setTargetPosition(Rotation2d targetPosition, double arbitraryFeedForward) {
+		setTargetPosition(
+			targetPosition,
+			ArmConstants.CRUISE_VELOCITY_ANGLES_PER_SECOND,
+			ArmConstants.ACCELERATION_ANGLES_PER_SECOND_SQUARED,
+			arbitraryFeedForward
+		);
 	}
 
 	protected void setTargetPosition(
 		Rotation2d targetPosition,
 		Rotation2d maxVelocityRotation2dPerSecond,
-		Rotation2d maxAccelerationRotation2dPerSecondSquared
+		Rotation2d maxAccelerationRotation2dPerSecondSquared,
+		double arbitraryFeedForward
 	) {
 		if (reversedSoftLimit.getDegrees() <= targetPosition.getDegrees()) {
 			motor.applyRequest(
 				positionRequest.withSetPoint(targetPosition)
+					.withArbitraryFeedForward(arbitraryFeedForward)
 					.withMaxVelocityRotation2dPerSecond(maxVelocityRotation2dPerSecond)
 					.withMaxAccelerationRotation2dPerSecondSquared(maxAccelerationRotation2dPerSecondSquared)
+
 			);
 		} else {
 			new Alert(Alert.AlertType.WARNING, getLogPath() + "/TargetPoseUnderLimit").report();
@@ -172,7 +190,7 @@ public class Arm extends GBSubsystem {
 		// Calibrate feed forward using sys id:
 		sysIdCalibrator.setAllButtonsForCalibration(joystick);
 
-		ArmStateHandler armStateHandler = new ArmStateHandler(this, () -> 0.0);
+		ArmStateHandler armStateHandler = new ArmStateHandler(this, () -> 0.0, () -> 0.0);
 
 		// Calibrate PID using phoenix tuner and these bindings:
 		joystick.POV_UP.onTrue(armStateHandler.setState(ArmState.CLOSED));

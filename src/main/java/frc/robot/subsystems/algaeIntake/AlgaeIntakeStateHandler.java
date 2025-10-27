@@ -62,12 +62,8 @@ public class AlgaeIntakeStateHandler {
 		return isAlgaeInByMin && isPivotDown && Robot.ROBOT_TYPE.isReal();
 	}
 
-	public Command handleIdle(boolean isAlgaeInAlgaeIntakeOverride) {
-		return new ConditionalCommand(
-			setState(AlgaeIntakeState.HOLD_ALGAE),
-			setState(AlgaeIntakeState.CLOSED),
-			() -> isAlgaeIn() || isAlgaeInAlgaeIntakeOverride
-		);
+	public Command handleIdle() {
+		return new ConditionalCommand(setState(AlgaeIntakeState.HOLD_ALGAE), setState(AlgaeIntakeState.CLOSED), this::isAlgaeIn);
 	}
 
 	public void updateAlgaeSensor(Robot robot) {

@@ -69,7 +69,7 @@ public class RobotCommander extends GBSubsystem {
 
 		Trigger handleBalls = new Trigger(
 			() -> superstructure.isAlgaeInAlgaeIntake()
-				&& !robot.getEndEffector().isCoralIn()
+				&& !superstructure.isCoralIn()
 				&& (currentState == RobotState.STAY_IN_PLACE || currentState == RobotState.DRIVE)
 				&& DriverStationUtil.isTeleop()
 				&& !keepAlgaeInIntake
@@ -78,7 +78,6 @@ public class RobotCommander extends GBSubsystem {
 
 		CANdleWrapper caNdleWrapper = new CANdleWrapper(IDs.CANdleIDs.CANDLE, LEDConstants.NUMBER_OF_LEDS, "candle");
 		this.ledStateHandler = new LEDStateHandler("CANdle", caNdleWrapper);
-
 		initializeDefaultCommand();
 	}
 
@@ -115,7 +114,7 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public boolean isReadyToScore() {
-		return superstructure.isReadyToScore() && positionTargets.isReadyToScoreReef();
+		return superstructure.getTargetChecks().isReadyToScore() && positionTargets.isReadyToScoreReef();
 	}
 
 	public boolean isReadyForNetForAuto() {
@@ -141,7 +140,7 @@ public class RobotCommander extends GBSubsystem {
 				.until(positionTargets::isReadyToOpenSuperstructure),
 			superstructure.preScore()
 				.alongWith(ledStateHandler.setState(LEDState.IN_POSITION_TO_OPEN_ELEVATOR))
-				.until(superstructure::isPreScoreReady),
+				.until(superstructure.getTargetChecks()::isPreScoreReady),
 			superstructure.scoreWithoutRelease()
 				.alongWith(ledStateHandler.setState(LEDState.OPENING_SUPERSTRUCTURE))
 				.until(this::isReadyToScore),
@@ -183,7 +182,7 @@ public class RobotCommander extends GBSubsystem {
 				.until(positionTargets::isReadyToOpenSuperstructure),
 			superstructure.preScore()
 				.alongWith(ledStateHandler.setState(LEDState.IN_POSITION_TO_OPEN_ELEVATOR))
-				.until(superstructure::isPreScoreReady),
+				.until(superstructure.getTargetChecks()::isPreScoreReady),
 			superstructure.scoreWithoutRelease()
 				.alongWith(ledStateHandler.setState(LEDState.OPENING_SUPERSTRUCTURE))
 				.until(this::isReadyToScore),
@@ -333,7 +332,7 @@ public class RobotCommander extends GBSubsystem {
 							)
 						)
 						.andThen(swerve.getCommandsBuilder().resetTargetSpeeds()),
-					superstructure.preNet().until(superstructure::isPreNetReady)
+					superstructure.preNet().until(superstructure.getTargetChecks()::isPreNetReady)
 				)
 			),
 			RobotState.PRE_NET
@@ -348,29 +347,9 @@ public class RobotCommander extends GBSubsystem {
 	private Command afterScore() {
 		return new DeferredCommand(
 			() -> new SequentialCommandGroup(
-				(ScoringHelpers.targetScoreLevel == ScoreLevel.L4
-					? driveWith(RobotState.PRE_SCORE, superstructure.softCloseL4())
-					: driveWith(RobotState.PRE_SCORE, superstructure.preScore()).until(positionTargets::isReadyToCloseSuperstructure)),
+				driveWith(RobotState.PRE_SCORE, superstructure.preScore()).until(positionTargets::isReadyToCloseSuperstructure),
 				driveWith(RobotState.DRIVE)
 			),
-			Set.of(
-				this,
-				superstructure,
-				swerve,
-				robot.getElevator(),
-				robot.getArm(),
-				robot.getEndEffector(),
-				robot.getLifter(),
-				robot.getSolenoid(),
-				robot.getPivot(),
-				robot.getRollers()
-			)
-		);
-	}
-
-	private Command afterNet() {
-		return new DeferredCommand(
-			() -> new SequentialCommandGroup(driveWith(RobotState.NET, getSuperstructure().softCloseNet()), driveWith(RobotState.DRIVE)),
 			Set.of(
 				this,
 				superstructure,
@@ -402,9 +381,10 @@ public class RobotCommander extends GBSubsystem {
 				ALGAE_OUTTAKE_FROM_INTAKE,
 				ELEVATOR_OPENING,
 				PROCESSOR_NO_SCORE,
-				ALGAE_INTAKE ->
+				ALGAE_INTAKE,
+				PRE_NET,
+				NET ->
 				driveWith(RobotState.DRIVE);
-			case PRE_NET, NET -> afterNet();
 			case ALGAE_REMOVE, HOLD_ALGAE, TRANSFER_ALGAE_TO_END_EFFECTOR -> driveWith(RobotState.HOLD_ALGAE);
 			case ARM_PRE_SCORE, CLOSE_CLIMB -> driveWith(RobotState.ARM_PRE_SCORE);
 			case PRE_SCORE -> driveWith(RobotState.PRE_SCORE);

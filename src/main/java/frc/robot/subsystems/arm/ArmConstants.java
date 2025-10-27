@@ -21,6 +21,7 @@ public class ArmConstants {
 	public static final Rotation2d CRUISE_VELOCITY_ANGLES_PER_SECOND = Rotation2d.fromRotations(3);
 	public static final Rotation2d ACCELERATION_ANGLES_PER_SECOND_SQUARED = Rotation2d.fromRotations(3);
 
+	public static final double DEFAULT_ARBITRARY_FEED_FORWARD = 0;
 	public static final double CALIBRATION_MAX_POWER = 0.2;
 
 	public static final InterpolationMap<Double, Rotation2d> L4_DISTANCE_ANGLE_MAP = new InterpolationMap<>(

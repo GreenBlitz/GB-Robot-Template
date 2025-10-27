@@ -43,11 +43,17 @@ public class ArmCommandsBuilder {
 	public Command moveToPosition(
 		Supplier<Rotation2d> positionSupplier,
 		Rotation2d maxVelocityRotation2dPerSecond,
-		Rotation2d maxAccelerationRotation2dPerSecondSquared
+		Rotation2d maxAccelerationRotation2dPerSecondSquared,
+		double arbitraryFeedForward
 	) {
 		return arm.asSubsystemCommand(new RunCommand(() -> {
 			if (!ToleranceMath.isNearWrapped(positionSupplier.get(), arm.getPosition(), Tolerances.ARM_INTERPOLATION_POSITION)) {
-				arm.setTargetPosition(positionSupplier.get(), maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared);
+				arm.setTargetPosition(
+					positionSupplier.get(),
+					maxVelocityRotation2dPerSecond,
+					maxAccelerationRotation2dPerSecondSquared,
+					arbitraryFeedForward
+				);
 			}
 		}), "Set target position to supplier");
 	}
@@ -55,11 +61,17 @@ public class ArmCommandsBuilder {
 	public Command moveToPosition(
 		Rotation2d position,
 		Rotation2d maxVelocityRotation2dPerSecond,
-		Rotation2d maxAccelerationRotation2dPerSecondSquared
+		Rotation2d maxAccelerationRotation2dPerSecondSquared,
+		double arbitraryFeedForward
 	) {
 		return arm.asSubsystemCommand(
 			new InitExecuteCommand(
-				() -> arm.setTargetPosition(position, maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared),
+				() -> arm.setTargetPosition(
+					position,
+					maxVelocityRotation2dPerSecond,
+					maxAccelerationRotation2dPerSecondSquared,
+					arbitraryFeedForward
+				),
 				() -> {}
 			),
 			"Set target position to: " + position

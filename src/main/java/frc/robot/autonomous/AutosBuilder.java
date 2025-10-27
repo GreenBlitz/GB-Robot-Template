@@ -385,7 +385,7 @@ public class AutosBuilder {
 			true,
 			AngleTransform.MIRROR_Y
 		);
-		Supplier<Command> softCloseNet = () -> robot.getRobotCommander().getSuperstructure().softCloseNet().asProxy();
+		Supplier<Command> softCloseNet = () -> robot.getRobotCommander().getSuperstructure().idle().asProxy();
 
 		Command bulbulBalls = new SequentialCommandGroup(
 			autoScoreToBranch(robot, firstAutoScoreTargetBranch, firstAutoScoreTargetScoreLevel),
@@ -584,7 +584,7 @@ public class AutosBuilder {
 						.getSuperstructure()
 						.preNet()
 						.asProxy()
-						.until(robot.getRobotCommander().getSuperstructure()::isPreNetReady)
+						.until(robot.getRobotCommander().getSuperstructure().getTargetChecks()::isPreNetReady)
 				)
 			),
 			robot.getRobotCommander().getSuperstructure().netWithRelease().asProxy()

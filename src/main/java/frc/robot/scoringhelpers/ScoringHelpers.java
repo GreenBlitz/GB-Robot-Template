@@ -13,7 +13,7 @@ import frc.constants.field.enums.CoralStation;
 import frc.constants.field.enums.ReefSide;
 import frc.constants.field.enums.*;
 import frc.robot.Robot;
-import frc.robot.statemachine.ScoreLevel;
+import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.utils.pose.Side;
 import org.littletonrobotics.junction.Logger;
 

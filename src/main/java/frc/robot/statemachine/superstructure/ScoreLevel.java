@@ -1,4 +1,4 @@
-package frc.robot.statemachine;
+package frc.robot.statemachine.superstructure;
 
 import frc.robot.subsystems.arm.ArmState;
 import frc.robot.subsystems.elevator.ElevatorState;

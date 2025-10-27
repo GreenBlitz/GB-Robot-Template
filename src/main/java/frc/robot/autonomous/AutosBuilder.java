@@ -22,7 +22,7 @@ import frc.robot.statemachine.Tolerances;
 import frc.robot.subsystems.elevator.ElevatorState;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.scoringhelpers.ScoringHelpers;
-import frc.robot.statemachine.ScoreLevel;
+import frc.robot.statemachine.superstructure.ScoreLevel;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.vision.DetectedObjectObservation;
 import frc.utils.auto.PathHelper;

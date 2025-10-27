@@ -22,6 +22,7 @@ import frc.robot.led.LEDState;
 import frc.robot.led.LEDStateHandler;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.scoringhelpers.ScoringPathsHelper;
+import frc.robot.statemachine.superstructure.Superstructure;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.utils.DriverStationUtil;

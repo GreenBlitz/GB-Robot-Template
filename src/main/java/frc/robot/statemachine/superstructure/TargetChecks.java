@@ -1,6 +1,7 @@
-package frc.robot.statemachine;
+package frc.robot.statemachine.superstructure;
 
 import frc.robot.scoringhelpers.ScoringHelpers;
+import frc.robot.statemachine.Tolerances;
 import frc.robot.subsystems.algaeIntake.AlgaeIntakeState;
 import frc.robot.subsystems.algaeIntake.AlgaeIntakeStateHandler;
 import frc.robot.subsystems.arm.ArmState;

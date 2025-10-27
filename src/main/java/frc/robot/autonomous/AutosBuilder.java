@@ -385,7 +385,7 @@ public class AutosBuilder {
 			true,
 			AngleTransform.MIRROR_Y
 		);
-		Supplier<Command> softCloseNet = () -> robot.getRobotCommander().getSuperstructure().idle().asProxy();
+		Supplier<Command> closeNet = () -> robot.getRobotCommander().getSuperstructure().idle().asProxy();
 
 		Command bulbulBalls = new SequentialCommandGroup(
 			autoScoreToBranch(robot, firstAutoScoreTargetBranch, firstAutoScoreTargetScoreLevel),
@@ -403,7 +403,7 @@ public class AutosBuilder {
 					robot.getPoseEstimator()::getEstimatedPose,
 					PathHelper.PATH_PLANNER_PATHS.get("LN-RFA"),
 					AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
-					softCloseNet,
+					closeNet,
 					tolerance
 				),
 				getFloorAlgaeToNetCommand(robot, algaeTranslationSupplier, algaeRemoveCommand, netCommand, tolerance, true),
@@ -413,7 +413,7 @@ public class AutosBuilder {
 					robot.getPoseEstimator()::getEstimatedPose,
 					PathHelper.PATH_PLANNER_PATHS.get("CLN-LFA"),
 					AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
-					softCloseNet,
+					closeNet,
 					tolerance
 				),
 				getFloorAlgaeToNetCommand(robot, algaeTranslationSupplier, algaeRemoveCommand, netCommand, tolerance, false),

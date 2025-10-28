@@ -15,6 +15,8 @@ import frc.utils.math.StandardDeviations2D;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -25,8 +27,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	private final Pose3d robotRelativeCameraPose;
 	private static final double FOV_X = 0.9;
 	private static final double FOV_Y = 1.2;
-
-	private DetectedObjectObservation detectedObjectObservation;
+	private ArrayList<DetectedObjectObservation> detectedObjectObservation;
 
 	private LimelightTarget2dValues target2dValues;
 
@@ -52,7 +53,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		this.robotRelativeCameraPose = robotRelativeCameraPose;
 		setRobotRelativeCameraPose(robotRelativeCameraPose);
 
-		this.detectedObjectObservation = new DetectedObjectObservation();
+		this.detectedObjectObservation = new ArrayList<>();
 
 		this.target2dValues = new LimelightTarget2dValues();
 
@@ -94,16 +95,6 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	public void updateObjectDetection() {
 		target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
 		if (target2dValues.isValid()) {
-			DetectedObjectType.getByName(LimelightHelpers.getDetectorClass(name))
-				.ifPresent(
-					objectType -> detectedObjectObservation = ObjectDetectionMath.getDetectedObjectObservation(
-						robotRelativeCameraPose,
-						objectType,
-						target2dValues.targetX(),
-						target2dValues.targetY(),
-						getTarget2dTimestampSeconds(target2dValues)
-					)
-				);
 			LimelightHelpers.RawDetection[] rawDetectionsArr = LimelightHelpers.getRawDetections(name);
 			for (int i = 0; i < rawDetectionsArr.length; i++) {
 				Pair<Rotation2d,Rotation2d> xyRotation2d =
@@ -113,12 +104,14 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 						);
 				DetectedObjectType.getByName(LimelightHelpers.getDetectorClass(name))
 						.ifPresent(
-						objectType -> detectedObjectObservation = ObjectDetectionMath.getDetectedObjectObservation(
+						objectType -> detectedObjectObservation.add(
+						ObjectDetectionMath.getDetectedObjectObservation(
 						robotRelativeCameraPose,
 						objectType,
 						xyRotation2d.getFirst(),
 						xyRotation2d.getSecond(),
 						getTarget2dTimestampSeconds(target2dValues)
+						)
 					)
 				);
 			}

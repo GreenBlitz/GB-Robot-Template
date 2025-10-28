@@ -105,16 +105,20 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 					)
 				);
 			LimelightHelpers.RawDetection[] rawDetectionsArr = LimelightHelpers.getRawDetections(name);
-			DetectedObjectType.getByName(LimelightHelpers.getDetectorClass(name))
-					.ifPresent(
-				for (int i = 0; i < rawDetectionsArr.length; i++) {
-					Pair<Rotation2d,Rotation2d> xyRotation2d = convertCornerToCrosshair(Rotation2d.fromRadians(rawDetectionsArr[i].txnc), Rotation2d.fromRadians(rawDetectionsArr[i].tync));
-					objectType -> detectedObjectObservation=ObjectDetectionMath.getDetectedObjectObservation(
-							robotRelativeCameraPose,
-							objectType,
-							xyRotation2d.getFirst(),
-							xyRotation2d.getSecond(),
-							getTarget2dTimestampSeconds(target2dValues)
+			for (int i = 0; i < rawDetectionsArr.length; i++) {
+				Pair<Rotation2d,Rotation2d> xyRotation2d =
+						convertCornerToCrosshair(
+								Rotation2d.fromRadians(rawDetectionsArr[i].txnc),
+								Rotation2d.fromRadians(rawDetectionsArr[i].tync)
+						);
+				DetectedObjectType.getByName(LimelightHelpers.getDetectorClass(name))
+						.ifPresent(
+						objectType -> detectedObjectObservation = ObjectDetectionMath.getDetectedObjectObservation(
+						robotRelativeCameraPose,
+						objectType,
+						xyRotation2d.getFirst(),
+						xyRotation2d.getSecond(),
+						getTarget2dTimestampSeconds(target2dValues)
 					)
 				);
 			}

@@ -13,7 +13,8 @@ public enum LimelightPipeline {
 	private final int pipelineIndex;
 	private final boolean isDetectingObjects;
 	private final boolean isUsingMT;
-	private HashMap<Integer,DetectedObjectType> map = new HashMap<>();
+	private final int numOfObjects = 0;
+	private DetectedObjectType[] detectedObjectTypes = new DetectedObjectType[numOfObjects];
 
 	LimelightPipeline(int pipelineIndex, boolean isDetectingObjects, boolean isUsingMT) {
 
@@ -35,7 +36,11 @@ public enum LimelightPipeline {
 		return isUsingMT;
 	}
 
-	public HashMap<Integer, DetectedObjectType> getMap() {
-		return map;
+	public DetectedObjectType[] getDetectedObjectTypes() {
+		DetectedObjectType[] temp = new DetectedObjectType[numOfObjects];
+		for (int i = 0; i < detectedObjectTypes.length; i++) {
+			temp[i]=detectedObjectTypes[i];
+		}
+		return temp;
 	}
 }

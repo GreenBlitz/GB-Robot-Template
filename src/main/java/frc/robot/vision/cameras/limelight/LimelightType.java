@@ -10,7 +10,6 @@ public enum LimelightType {
 
 	private final Translation2d fieldOfView;
 
-
 	LimelightType(Translation2d fieldOfViewY) {
 		this.fieldOfView = fieldOfViewY;
 	}

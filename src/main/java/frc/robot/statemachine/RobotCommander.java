@@ -93,6 +93,7 @@ public class RobotCommander extends GBSubsystem {
 
 	public void initializeDefaultCommand() {
 		setDefaultCommand(
+				new DeferredCommand(() ->
 			new ConditionalCommand(
 				Commands.none(),
 				new DeferredCommand(
@@ -111,7 +112,7 @@ public class RobotCommander extends GBSubsystem {
 					)
 				),
 				() -> isRunningIndependently()
-			)
+			), Set.of(this))
 		);
 	}
 

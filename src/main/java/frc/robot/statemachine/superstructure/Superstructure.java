@@ -133,7 +133,7 @@ public class Superstructure extends GBSubsystem {
 	public Command setState(RobotState robotState) {
 		return switch (robotState) {
 			case NET -> netWithRelease();
-			case DRIVE -> idle();
+			case DRIVE -> driveActionChooser();
 			case SCORE -> scoreWithRelease();
 			case INTAKE -> intake();
 			case PRE_NET -> preNet();
@@ -168,6 +168,15 @@ public class Superstructure extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/ClimbState", climbStateHandler.getCurrentState());
 		Logger.recordOutput(getLogPath() + "/AlgaeIntakeState", algaeIntakeStateHandler.getCurrentState());
 		Logger.recordOutput(getLogPath() + "/IsAlgaeInIntake", isAlgaeInAlgaeIntake());
+	}
+
+	private Command driveActionChooser(){
+		if (robot.getElevator().isPastPosition(1)){
+			return softClose();
+		}
+		else {
+			return idle().andThen(idle());
+		}
 	}
 
 	public Command idle() {
@@ -664,6 +673,27 @@ public class Superstructure extends GBSubsystem {
 	public Command elevatorOpening() {
 		return asSubsystemCommand(elevatorStateHandler.setState(ElevatorState.OPENING_HEIGHT), RobotState.ELEVATOR_OPENING)
 			.until(() -> robot.getElevator().isPastPosition(StateMachineConstants.ELEVATOR_POSITION_FOR_OPENING));
+	}
+
+	private Command softClose() {
+		return asSubsystemCommand(
+				new ParallelDeadlineGroup(
+						new SequentialCommandGroup(
+								new ParallelCommandGroup(armStateHandler.setState(ArmState.MID_WAY_CLOSE), elevatorStateHandler.setState(elevatorStateHandler.getCurrentState()))
+										.until(() -> robot.getArm().isPastPosition(Rotation2d.fromDegrees(45))),
+								new ParallelCommandGroup(armStateHandler.setState(ArmState.MID_WAY_CLOSE), elevatorStateHandler.setState(ElevatorState.CLOSED))
+										.until(() -> !robot.getElevator().isPastPosition(0.7)),
+								new ParallelDeadlineGroup(armStateHandler.setState(ArmState.CLOSED), elevatorStateHandler.setState(ElevatorState.CLOSED)).until(
+										() -> armStateHandler.isAtState(ArmState.CLOSED, TargetChecks.ARM_POSITION)
+												&& elevatorStateHandler.isAtState(ElevatorState.CLOSED, TargetChecks.ELEVATOR_HEIGHT_METERS)
+								)
+						),
+						endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
+						climbStateHandler.setState(ClimbState.STOP),
+						algaeIntakeStateHandler.handleIdle()
+				),
+				"Soft Close "
+		);
 	}
 
 	private Command asSubsystemCommand(Command command, RobotState state) {

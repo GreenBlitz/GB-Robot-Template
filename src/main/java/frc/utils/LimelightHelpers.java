@@ -548,7 +548,9 @@ public class LimelightHelpers {
 			this.corner3_X = corner3_X;
 			this.corner3_Y = corner3_Y;
 		}
+
 	}
+
 	/**
 	 * Represents a 3D Pose Estimate.
 	 */

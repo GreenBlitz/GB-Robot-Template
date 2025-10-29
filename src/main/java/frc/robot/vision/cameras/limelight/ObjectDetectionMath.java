@@ -1,5 +1,6 @@
 package frc.robot.vision.cameras.limelight;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -41,6 +42,13 @@ public class ObjectDetectionMath {
 		double objectAndCameraHeightDifferenceMeters = objectCenterHeightMeters - cameraPose.getZ();
 		Rotation2d objectAndCameraTotalPitch = objectToCrosshairPitchOffset.plus(Rotation2d.fromRadians(cameraPose.getRotation().getY()));
 		return objectAndCameraHeightDifferenceMeters / objectAndCameraTotalPitch.getTan();
+	}
+
+	public static Pair<Rotation2d, Rotation2d> convertCornerToCrosshair(Rotation2d txnc, Rotation2d tync, double FOVx, double FOVy) {
+		return new Pair<>(
+				new Rotation2d(txnc.getRadians() - (0.5 *FOVx)),
+				new Rotation2d(tync.getRadians() - (0.5 * FOVy))
+		);
 	}
 
 	private static double getCameraRelativeObjectY(

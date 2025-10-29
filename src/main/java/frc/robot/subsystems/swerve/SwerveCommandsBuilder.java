@@ -36,6 +36,7 @@ public class SwerveCommandsBuilder {
 	private final Modules modules;
 	private final SysIdCalibrator steerCalibrator;
 	private final SysIdCalibrator driveCalibrator;
+	private boolean isRunningIndependently;
 
 	public SwerveCommandsBuilder(Swerve swerve) {
 		this.swerve = swerve;
@@ -50,6 +51,15 @@ public class SwerveCommandsBuilder {
 			swerve,
 			ModuleConstants.IS_CURRENT_CONTROL ? modules::setDrivesCurrent : modules::setDrivesVoltage
 		);
+		this.isRunningIndependently = false;
+	}
+
+	public boolean isRunningIndependently() {
+		return isRunningIndependently;
+	}
+
+	public void setIsRunningIndependently(boolean isRunningIndependently) {
+		this.isRunningIndependently = isRunningIndependently;
 	}
 
 	public Command steerCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {

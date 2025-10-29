@@ -14,9 +14,19 @@ import java.util.function.Supplier;
 public class ArmCommandsBuilder {
 
 	private final Arm arm;
+	private boolean isRunningIndependently;
 
 	public ArmCommandsBuilder(Arm arm) {
 		this.arm = arm;
+		this.isRunningIndependently = false;
+	}
+
+	public boolean isRunningIndependently() {
+		return isRunningIndependently;
+	}
+
+	public void setIsRunningIndependently(boolean isRunningIndependently) {
+		this.isRunningIndependently = isRunningIndependently;
 	}
 
 	public Command stop() {

@@ -4,12 +4,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.DeferredCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.constants.field.Field;
 import frc.robot.IDs;
@@ -94,22 +89,30 @@ public class RobotCommander extends GBSubsystem {
 		return ledStateHandler;
 	}
 
+	public boolean isRunningIndependently() {
+		return superstructure.isRunningIndependently() || swerve.getCommandsBuilder().isRunningIndependently();
+	}
+
 	public void initializeDefaultCommand() {
 		setDefaultCommand(
-			new DeferredCommand(
-				() -> endState(currentState),
-				Set.of(
-					this,
-					superstructure,
-					swerve,
-					robot.getElevator(),
-					robot.getArm(),
-					robot.getEndEffector(),
-					robot.getLifter(),
-					robot.getSolenoid(),
-					robot.getPivot(),
-					robot.getRollers()
-				)
+			new ConditionalCommand(
+				Commands.none(),
+				new DeferredCommand(
+					() -> endState(currentState),
+					Set.of(
+						this,
+						superstructure,
+						swerve,
+						robot.getElevator(),
+						robot.getArm(),
+						robot.getEndEffector(),
+						robot.getLifter(),
+						robot.getSolenoid(),
+						robot.getPivot(),
+						robot.getRollers()
+					)
+				),
+				() -> isRunningIndependently()
 			)
 		);
 	}

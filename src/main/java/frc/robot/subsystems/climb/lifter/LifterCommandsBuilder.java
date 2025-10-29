@@ -8,9 +8,19 @@ import java.util.function.DoubleSupplier;
 public class LifterCommandsBuilder {
 
 	private final Lifter lifter;
+	public boolean isRunningIndependently;
 
 	public LifterCommandsBuilder(Lifter lifter) {
 		this.lifter = lifter;
+		this.isRunningIndependently = false;
+	}
+
+	public boolean isRunningIndependently() {
+		return isRunningIndependently;
+	}
+
+	public void setIsRunningIndependently(boolean isRunningIndependently) {
+		this.isRunningIndependently = isRunningIndependently;
 	}
 
 	public Command setPower(double power) {

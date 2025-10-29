@@ -8,9 +8,19 @@ import java.util.function.DoubleSupplier;
 public class EndEffectorCommandsBuilder {
 
 	private final EndEffector endEffector;
+	private boolean isRunningIndependently;
 
 	public EndEffectorCommandsBuilder(EndEffector endEffector) {
 		this.endEffector = endEffector;
+		this.isRunningIndependently = false;
+	}
+
+	public boolean isRunningIndependently() {
+		return isRunningIndependently;
+	}
+
+	public void setIsRunningIndependently(boolean isRunningIndependently) {
+		this.isRunningIndependently = isRunningIndependently;
 	}
 
 	public Command stop() {

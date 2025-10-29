@@ -9,9 +9,19 @@ import java.util.function.DoubleSupplier;
 public class ElevatorCommandsBuilder {
 
 	private final Elevator elevator;
+	private boolean isRunningIndependently;
 
 	public ElevatorCommandsBuilder(Elevator elevator) {
 		this.elevator = elevator;
+		this.isRunningIndependently = false;
+	}
+
+	public boolean isRunningIndependently() {
+		return isRunningIndependently;
+	}
+
+	public void setIsRunningIndependently(boolean isRunningIndependently) {
+		this.isRunningIndependently = isRunningIndependently;
 	}
 
 	public Command setPower(double power) {

@@ -6,9 +6,19 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 public class RollersCommandsBuilder {
 
 	private final Rollers rollers;
+	private boolean isRunningIndependently;
 
 	public RollersCommandsBuilder(Rollers rollers) {
 		this.rollers = rollers;
+		this.isRunningIndependently = false;
+	}
+
+	public boolean isRunningIndependently() {
+		return isRunningIndependently;
+	}
+
+	public void setIsRunningIndependently(boolean isRunningIndependently) {
+		this.isRunningIndependently = isRunningIndependently;
 	}
 
 	public Command setPower(double power) {

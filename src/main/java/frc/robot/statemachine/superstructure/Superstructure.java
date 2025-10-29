@@ -44,6 +44,7 @@ public class Superstructure extends GBSubsystem {
 	private final AlgaeIntakeStateHandler algaeIntakeStateHandler;
 	private final Set<Subsystem> subsystems;
 	private final TargetChecks targetChecks;
+	private boolean isRunningIndependently;
 
 	private RobotState currentState;
 
@@ -79,6 +80,22 @@ public class Superstructure extends GBSubsystem {
 		);
 
 		this.currentState = RobotState.STAY_IN_PLACE;
+		this.isRunningIndependently = false;
+	}
+
+	public boolean isRunningIndependently() {
+		return isRunningIndependently
+			|| robot.getElevator().getCommandsBuilder().isRunningIndependently()
+			|| robot.getArm().getCommandsBuilder().isRunningIndependently()
+			|| robot.getEndEffector().getCommandsBuilder().isRunningIndependently()
+			|| robot.getPivot().getCommandsBuilder().isRunningIndependently()
+			|| robot.getRollers().getCommandsBuilder().isRunningIndependently()
+			|| robot.getSolenoid().getCommandsBuilder().isRunningIndependently()
+			|| robot.getLifter().getCommandsBuilder().isRunningIndependently();
+	}
+
+	public void setIsRunningIndependently(boolean isRunningIndependently) {
+		this.isRunningIndependently = isRunningIndependently;
 	}
 
 	public RobotState getCurrentState() {

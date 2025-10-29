@@ -8,9 +8,19 @@ import java.util.function.DoubleSupplier;
 public class SolenoidCommandsBuilder {
 
 	private final Solenoid solenoid;
+	private boolean isRunningIndependently;
 
 	public SolenoidCommandsBuilder(Solenoid solenoid) {
 		this.solenoid = solenoid;
+		this.isRunningIndependently = false;
+	}
+
+	public boolean isRunningIndependently() {
+		return isRunningIndependently;
+	}
+
+	public void setIsRunningIndependently(boolean isRunningIndependently) {
+		this.isRunningIndependently = isRunningIndependently;
 	}
 
 	public Command setPower(double power) {

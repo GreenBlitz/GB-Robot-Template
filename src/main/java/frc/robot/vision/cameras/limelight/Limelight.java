@@ -95,7 +95,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 			LimelightHelpers.RawDetection[] rawDetections = LimelightHelpers.getRawDetections(name);
 			ArrayList<DetectedObjectObservation> currentlyInView = new ArrayList<>();
 			for (int i = 0; i < rawDetections.length; i++) {
-				Pair<Rotation2d, Rotation2d> xyRotation2d = ObjectDetectionMath.convertCornerToCrosshair(
+				Pair<Rotation2d, Rotation2d> objectRelativeToCrosshair = ObjectDetectionMath.convertCornerToCrosshair(
 					Rotation2d.fromRadians(rawDetections[i].txnc),
 					Rotation2d.fromRadians(rawDetections[i].tync),
 					fov.getFieldOfViewX(),
@@ -108,8 +108,8 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 							ObjectDetectionMath.getDetectedObjectObservation(
 								robotRelativeCameraPose,
 								objectType,
-								xyRotation2d.getFirst(),
-								xyRotation2d.getSecond(),
+								objectRelativeToCrosshair.getFirst(),
+								objectRelativeToCrosshair.getSecond(),
 								getTarget2dTimestampSeconds(target2dValues)
 							)
 						)

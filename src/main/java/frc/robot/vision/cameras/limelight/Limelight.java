@@ -169,7 +169,6 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		return Optional.empty();
 	}
 
-
 	@Override
 	public Optional<RobotPoseObservation> getOrientationRequiringRobotPose() {
 		if (pipeline.isUsingMT() && doesObservationExist(mt2PoseObservation) && mt2PoseFilter.passesFilter()) {

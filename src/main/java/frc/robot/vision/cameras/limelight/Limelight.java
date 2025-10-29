@@ -67,7 +67,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		this.calculateMT1StdDevs = () -> LimelightStdDevCalculations.DEFAULT_STD_DEVS;
 		this.calculateMT2StdDevs = () -> LimelightStdDevCalculations.DEFAULT_STD_DEVS;
 
-		this.fov=fov;
+		this.fov = fov;
 
 		setPipeline(pipeline);
 	}

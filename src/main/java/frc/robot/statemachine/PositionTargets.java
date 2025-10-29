@@ -86,7 +86,7 @@ public class PositionTargets {
 
 	private static final double ROBOT_SCORING_DISTANCE_FROM_REEF_METERS = 0.59;
 	private static final Pose2d REEF_RELATIVE_SCORING_POSITION = new Pose2d(0.15, 0.025, Rotation2d.fromDegrees(3.5));
-	private static final Pose2d REEF_RELATIVE_SCORING_DEADBANDS = new Pose2d(1, 1, Rotation2d.fromRadians(2));
+	private static final Pose2d REEF_RELATIVE_SCORING_DEADBANDS = new Pose2d(0.6, 0.6, Rotation2d.fromRadians(1.5));
 
 	public boolean isReadyToScoreReef() {
 		return isNearReef(

@@ -26,10 +26,10 @@ public class LimelightFilters {
 		Translation2d robotInFieldTolerance,
 		Rotation2d yawAtAngleTolerance
 	) {
-		return MegaTagFilters.isRobotInField(() -> limelight.getMT1RawData().pose().getTranslation(), robotInFieldTolerance)
+		return MegaTagFilters.isRobotInField(() -> limelight.getMT1RawData().pose.getTranslation(), robotInFieldTolerance)
 			.and(
-				MegaTagFilters.isYawAtAngle(
-					() -> limelight.getMT1RawData().pose().getRotation(),
+				MegaTagFilters.isYawAtExpectedAngle(
+					() -> limelight.getMT1RawData().pose.getRotation(),
 					() -> wantedYawAtTimestamp.apply(Limelight.getEstimateTimestampSeconds(limelight.getMT1RawData())),
 					isYawCalibrated,
 					yawAtAngleTolerance
@@ -44,16 +44,16 @@ public class LimelightFilters {
 		Translation2d robotInFieldTolerance,
 		Rotation2d yawAtAngleTolerance
 	) {
-		return MegaTagFilters.isRobotInField(() -> limelight.getMT2RawData().pose().getTranslation(), robotInFieldTolerance)
+		return MegaTagFilters.isRobotInField(() -> limelight.getMT2RawData().pose.getTranslation(), robotInFieldTolerance)
 			.and(
-				MegaTagFilters.isYawAtAngle(
-					() -> limelight.getMT2RawData().pose().getRotation(),
+				MegaTagFilters.isYawAtExpectedAngle(
+					() -> limelight.getMT2RawData().pose.getRotation(),
 					() -> wantedYawAtTimestamp.apply(Limelight.getEstimateTimestampSeconds(limelight.getMT2RawData())),
 					isYawCalibrated,
 					yawAtAngleTolerance
 				)
 			)
-			.and(MegaTagFilters.isYawNotZero(() -> limelight.getMT2RawData().pose().getRotation()));
+			.and(MegaTagFilters.isYawNotZero(() -> limelight.getMT2RawData().pose.getRotation()));
 	}
 
 	private static class ObjectDetectionFilters {
@@ -70,15 +70,15 @@ public class LimelightFilters {
 
 	private static class MegaTagFilters {
 
-		private static Filter isYawAtAngle(
-			Supplier<Rotation2d> robotYaw,
-			Supplier<Optional<Rotation2d>> wantedYawSupplier,
-			Supplier<Boolean> isYawCalibrated,
-			Rotation2d yawTolerance
+		private static Filter isYawAtExpectedAngle(
+			Supplier<Rotation2d> cameraSuppliedRobotYaw,
+			Supplier<Optional<Rotation2d>> expectedYawSupplier,
+			Supplier<Boolean> isExpectedYawCalibrated,
+			Rotation2d expectedYawTolerance
 		) {
-			return () -> !isYawCalibrated.get()
-				|| wantedYawSupplier.get()
-					.map(wantedAngle -> ToleranceMath.isNearWrapped(wantedAngle, robotYaw.get(), yawTolerance))
+			return () -> !isExpectedYawCalibrated.get()
+				|| expectedYawSupplier.get()
+					.map(wantedAngle -> ToleranceMath.isNearWrapped(wantedAngle, cameraSuppliedRobotYaw.get(), expectedYawTolerance))
 					.orElse(false);
 		}
 

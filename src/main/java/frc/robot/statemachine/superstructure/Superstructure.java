@@ -503,7 +503,7 @@ public class Superstructure extends GBSubsystem {
 					climbStateHandler.setState(ClimbState.STOP),
 					algaeIntakeStateHandler.setState(AlgaeIntakeState.TRANSFER_TO_END_EFFECTOR_WITH_RELEASE)
 
-				).until(() -> robot.getArm().isBehindPosition(Rotation2d.fromDegrees(130)))
+				).until(() -> robot.getArm().isBehindPosition(Rotation2d.fromDegrees(130))).withTimeout(5)
 			),
 			RobotState.TRANSFER_ALGAE_TO_END_EFFECTOR
 		);

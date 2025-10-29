@@ -107,7 +107,7 @@ public class SwerveCommandsBuilder {
 					swerve.getDriveRadiusMeters(),
 					SwerveConstants.WHEEL_RADIUS_CALIBRATION_VELOCITY_PER_SECOND,
 					swerve.getModules()::getDrivesPositions,
-					swerve::getAbsoluteHeading,
+					swerve::getIMUAbsoluteYaw,
 					rotationsPerSecond -> swerve
 						.driveByState(new ChassisSpeeds(0, 0, rotationsPerSecond.getRadians()), SwerveState.DEFAULT_DRIVE),
 					swerve.getModules()::stop

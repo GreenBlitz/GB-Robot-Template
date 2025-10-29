@@ -63,7 +63,7 @@ public class Swerve extends GBSubsystem {
 		this.imuSignals = imuSignals;
 
 		this.kinematics = new SwerveDriveKinematics(modules.getModulePositionsFromCenterMeters());
-		this.headingSupplier = this::getGyroAbsoluteYaw;
+		this.headingSupplier = this::getIMUAbsoluteYaw;
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
 		this.stateHandler = new SwerveStateHandler(this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
@@ -96,19 +96,6 @@ public class Swerve extends GBSubsystem {
 		return stateHandler;
 	}
 
-	public Rotation3d getAngularVelocityFromIMURotation2dPerSecond() {
-		return imuSignals.getAngularVelocity();
-	}
-
-	public Rotation3d getOrientationFromIMU() {
-		return imuSignals.getOrientation();
-	}
-
-	public Translation3d getAccelerationFromIMUMetersPerSecondSquared() {
-		return imuSignals.getAccelerationEarthGravitationalAcceleration()
-			.times(RobotConstants.GRAVITATIONAL_ACCELERATION_METERS_PER_SECOND_SQUARED_ISRAEL);
-	}
-
 
 	public void configPathPlanner(Supplier<Pose2d> currentPoseSupplier, Consumer<Pose2d> resetPoseConsumer, RobotConfig robotConfig) {
 		PathPlannerUtil.configPathPlanner(
@@ -131,7 +118,7 @@ public class Swerve extends GBSubsystem {
 		this.driversPowerInputs = powers;
 	}
 
-	public void setHeading(Rotation2d heading) {
+	public void setIMUYaw(Rotation2d heading) {
 		imu.setYaw(heading);
 		updateIMU();
 		headingStabilizer.unlockTarget();
@@ -198,14 +185,22 @@ public class Swerve extends GBSubsystem {
 		return driveRadiusMeters;
 	}
 
-	public Rotation2d getGyroAbsoluteYaw() {
+	public Rotation2d getIMUAbsoluteYaw() {
 		double inputtedHeadingRadians = MathUtil.angleModulus(imuSignals.yawSignal().getLatestValue().getRadians());
 		return Rotation2d.fromRadians(inputtedHeadingRadians);
 	}
 
-	public Rotation2d getAbsoluteHeading() {
-		double inputtedHeadingRadians = MathUtil.angleModulus(headingSupplier.get().getRadians());
-		return Rotation2d.fromRadians(inputtedHeadingRadians);
+	public Rotation3d getAngularVelocityFromIMURotation2dPerSecond() {
+		return imuSignals.getAngularVelocity();
+	}
+
+	public Rotation3d getOrientationFromIMU() {
+		return imuSignals.getOrientation();
+	}
+
+	public Translation3d getAccelerationFromIMUMetersPerSecondSquared() {
+		return imuSignals.getAccelerationEarthGravitationalAcceleration()
+						 .times(RobotConstants.GRAVITATIONAL_ACCELERATION_METERS_PER_SECOND_SQUARED_ISRAEL);
 	}
 
 	public Rotation2d getAllianceRelativeHeading() {

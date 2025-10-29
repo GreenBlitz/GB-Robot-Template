@@ -170,11 +170,10 @@ public class Superstructure extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/IsAlgaeInIntake", isAlgaeInAlgaeIntake());
 	}
 
-	private Command driveActionChooser(){
-		if (robot.getElevator().isPastPosition(1)){
+	private Command driveActionChooser() {
+		if (robot.getElevator().isPastPosition(1)) {
 			return softClose();
-		}
-		else {
+		} else {
 			return idle().andThen(idle());
 		}
 	}
@@ -677,22 +676,27 @@ public class Superstructure extends GBSubsystem {
 
 	private Command softClose() {
 		return asSubsystemCommand(
-				new ParallelDeadlineGroup(
-						new SequentialCommandGroup(
-								new ParallelCommandGroup(armStateHandler.setState(ArmState.MID_WAY_CLOSE), elevatorStateHandler.setState(elevatorStateHandler.getCurrentState()))
-										.until(() -> robot.getArm().isPastPosition(Rotation2d.fromDegrees(45))),
-								new ParallelCommandGroup(armStateHandler.setState(ArmState.MID_WAY_CLOSE), elevatorStateHandler.setState(ElevatorState.CLOSED))
-										.until(() -> !robot.getElevator().isPastPosition(0.7)),
-								new ParallelDeadlineGroup(armStateHandler.setState(ArmState.CLOSED), elevatorStateHandler.setState(ElevatorState.CLOSED)).until(
-										() -> armStateHandler.isAtState(ArmState.CLOSED, TargetChecks.ARM_POSITION)
-												&& elevatorStateHandler.isAtState(ElevatorState.CLOSED, TargetChecks.ELEVATOR_HEIGHT_METERS)
-								)
-						),
-						endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
-						climbStateHandler.setState(ClimbState.STOP),
-						algaeIntakeStateHandler.handleIdle()
+			new ParallelDeadlineGroup(
+				new SequentialCommandGroup(
+					new ParallelCommandGroup(
+						armStateHandler.setState(ArmState.MID_WAY_CLOSE),
+						elevatorStateHandler.setState(elevatorStateHandler.getCurrentState())
+					).until(() -> robot.getArm().isPastPosition(Rotation2d.fromDegrees(45))),
+					new ParallelCommandGroup(
+						armStateHandler.setState(ArmState.MID_WAY_CLOSE),
+						elevatorStateHandler.setState(ElevatorState.CLOSED)
+					).until(() -> !robot.getElevator().isPastPosition(0.7)),
+					new ParallelDeadlineGroup(armStateHandler.setState(ArmState.CLOSED), elevatorStateHandler.setState(ElevatorState.CLOSED))
+						.until(
+							() -> armStateHandler.isAtState(ArmState.CLOSED, TargetChecks.ARM_POSITION)
+								&& elevatorStateHandler.isAtState(ElevatorState.CLOSED, TargetChecks.ELEVATOR_HEIGHT_METERS)
+						)
 				),
-				"Soft Close "
+				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),
+				climbStateHandler.setState(ClimbState.STOP),
+				algaeIntakeStateHandler.handleIdle()
+			),
+			"Soft Close "
 		);
 	}
 

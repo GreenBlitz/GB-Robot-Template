@@ -139,9 +139,9 @@ public class Superstructure extends GBSubsystem {
 	}
 
 	public Command setState(RobotState robotState) {
-		return switch (robotState) {
+		Command command = switch (robotState) {
 			case NET -> netWithRelease();
-			case DRIVE -> driveActionChooser();
+			case DRIVE -> idle();
 			case SCORE -> scoreWithRelease();
 			case INTAKE -> intake();
 			case PRE_NET -> preNet();
@@ -167,6 +167,35 @@ public class Superstructure extends GBSubsystem {
 			case TRANSFER_ALGAE_TO_END_EFFECTOR -> transferAlgaeFromIntakeToEndEffector();
 			case ALGAE_OUTTAKE_FROM_END_EFFECTOR -> algaeOuttakeFromEndEffector();
 		};
+
+		boolean isTargetStateLow = (robotState == RobotState.DRIVE
+			|| robotState == RobotState.INTAKE
+			|| robotState == RobotState.PRE_CLIMB
+			|| robotState == RobotState.EXIT_CLIMB
+			|| robotState == RobotState.HOLD_ALGAE
+			|| robotState == RobotState.STOP_CLIMB
+			|| robotState == RobotState.CLOSE_CLIMB
+			|| robotState == RobotState.ALGAE_INTAKE
+			|| robotState == RobotState.ALGAE_REMOVE
+			|| robotState == RobotState.MANUAL_CLIMB
+			|| robotState == RobotState.ARM_PRE_SCORE
+			|| robotState == RobotState.CORAL_OUTTAKE
+			|| robotState == RobotState.PROCESSOR_SCORE
+			|| robotState == RobotState.PROCESSOR_NO_SCORE
+			|| robotState == RobotState.CLIMB_WITH_LIMIT_SWITCH
+			|| robotState == RobotState.ALGAE_OUTTAKE_FROM_INTAKE
+			|| robotState == RobotState.CLIMB_WITHOUT_LIMIT_SWITCH
+			|| robotState == RobotState.TRANSFER_ALGAE_TO_END_EFFECTOR
+			|| robotState == RobotState.ALGAE_OUTTAKE_FROM_END_EFFECTOR
+
+
+		);
+
+		if (robot.getElevator().isPastPosition(1) && isTargetStateLow) {
+			return softClose().andThen(command);
+		} else {
+			return command;
+		}
 	}
 
 	private void log() {
@@ -176,14 +205,6 @@ public class Superstructure extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/ClimbState", climbStateHandler.getCurrentState());
 		Logger.recordOutput(getLogPath() + "/AlgaeIntakeState", algaeIntakeStateHandler.getCurrentState());
 		Logger.recordOutput(getLogPath() + "/IsAlgaeInIntake", isAlgaeInAlgaeIntake());
-	}
-
-	private Command driveActionChooser() {
-		if (robot.getElevator().isPastPosition(1)) {
-			return softClose().andThen(idle());
-		} else {
-			return idle();
-		}
 	}
 
 	public Command idle() {

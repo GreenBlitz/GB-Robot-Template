@@ -4,9 +4,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 public enum LimelightType {
 
-	LIMELIGHT3(new Translation2d(0,0)),
-	LIMELIGHT3GB(new Translation2d(0,0)),
-	LIMELIGHT4(new Translation2d(0,0));
+	LIMELIGHT3(new Translation2d(0, 0)),
+	LIMELIGHT3GB(new Translation2d(0, 0)),
+	LIMELIGHT4(new Translation2d(0, 0));
 
 	private final Translation2d fieldOfView;
 
@@ -19,7 +19,7 @@ public enum LimelightType {
 		return fieldOfView.getX();
 	}
 
-	public double getFieldOfViewY(){
+	public double getFieldOfViewY() {
 		return fieldOfView.getY();
 	}
 

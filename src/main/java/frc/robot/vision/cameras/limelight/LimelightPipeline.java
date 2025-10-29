@@ -5,8 +5,8 @@ import frc.robot.vision.DetectedObjectType;
 
 public enum LimelightPipeline {
 
-	APRIL_TAG(0, false, true,new DetectedObjectType[0]),
-	OBJECT_DETECTION(1, true, false,new DetectedObjectType[0]);
+	APRIL_TAG(0, false, true, new DetectedObjectType[0]),
+	OBJECT_DETECTION(1, true, false, new DetectedObjectType[0]);
 
 	private final int pipelineIndex;
 	private final boolean isDetectingObjects;

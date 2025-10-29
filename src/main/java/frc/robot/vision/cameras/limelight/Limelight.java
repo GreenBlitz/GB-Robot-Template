@@ -145,12 +145,16 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	@Override
 	public Optional<ArrayList<DetectedObjectObservation>> getRobotRelativeObjectTranslation() {
-		if(pipeline.isDetectingObjects()){
+		if (pipeline.isDetectingObjects()) {
 			ArrayList<DetectedObjectObservation> toInsert = new ArrayList<>();
 			int count = 0;
 			for (int i = 0; i < detectedObjectObservation.size(); i++) {
-				if (pipeline.isDetectingObjects() && doesObservationExist(detectedObjectObservation.get(i)) && detectedObjectFilter.passesFilter()) {
-					toInsert.set(count,detectedObjectObservation.get(i));
+				if (
+					pipeline.isDetectingObjects()
+						&& doesObservationExist(detectedObjectObservation.get(i))
+						&& detectedObjectFilter.passesFilter()
+				) {
+					toInsert.set(count, detectedObjectObservation.get(i));
 					count++;
 				}
 			}

@@ -151,8 +151,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 			ArrayList<DetectedObjectObservation> toInsert = new ArrayList<>();
 			for (int i = 0; i < detectedObjectObservation.size(); i++) {
 				if (
-					pipeline.isDetectingObjects()
-						&& doesObservationExist(detectedObjectObservation.get(i))
+						doesObservationExist(detectedObjectObservation.get(i))
 						&& detectedObjectFilter.passesFilter()
 				) {
 					toInsert.add(detectedObjectObservation.get(i));

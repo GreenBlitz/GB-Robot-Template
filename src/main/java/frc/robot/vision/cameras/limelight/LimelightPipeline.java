@@ -33,12 +33,8 @@ public enum LimelightPipeline {
 		return isUsingMT;
 	}
 
-	public DetectedObjectType[] getDetectedObjectTypes() {
-		DetectedObjectType[] temp = new DetectedObjectType[numOfObjects];
-		for (int i = 0; i < detectedObjectTypes.length; i++) {
-			temp[i] = detectedObjectTypes[i];
-		}
-		return temp;
+	public DetectedObjectType getDetectedObjectType(int index) {
+		return detectedObjectTypes[index];
 	}
 
 }

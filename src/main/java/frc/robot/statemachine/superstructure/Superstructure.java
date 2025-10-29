@@ -83,6 +83,14 @@ public class Superstructure extends GBSubsystem {
 		this.isRunningIndependently = false;
 	}
 
+	public AlgaeIntakeStateHandler getAlgaeIntakeStateHandler() {
+		return algaeIntakeStateHandler;
+	}
+
+	public ClimbStateHandler getClimbStateHandler() {
+		return climbStateHandler;
+	}
+
 	public boolean isRunningIndependently() {
 		return isRunningIndependently
 			|| robot.getElevator().getCommandsBuilder().isRunningIndependently()
@@ -172,9 +180,9 @@ public class Superstructure extends GBSubsystem {
 
 	private Command driveActionChooser() {
 		if (robot.getElevator().isPastPosition(1)) {
-			return softClose();
+			return softClose().andThen(idle());
 		} else {
-			return idle().andThen(idle());
+			return idle();
 		}
 	}
 

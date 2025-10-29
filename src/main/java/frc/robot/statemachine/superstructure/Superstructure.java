@@ -205,6 +205,7 @@ public class Superstructure extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/ClimbState", climbStateHandler.getCurrentState());
 		Logger.recordOutput(getLogPath() + "/AlgaeIntakeState", algaeIntakeStateHandler.getCurrentState());
 		Logger.recordOutput(getLogPath() + "/IsAlgaeInIntake", isAlgaeInAlgaeIntake());
+		Logger.recordOutput(getLogPath() + "/IsRunningIndependently", isRunningIndependently());
 	}
 
 	public Command idle() {

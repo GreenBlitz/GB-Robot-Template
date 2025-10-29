@@ -24,6 +24,8 @@ import frc.utils.DriverStationUtil;
 import frc.utils.math.AngleTransform;
 import frc.utils.math.FieldMath;
 import frc.utils.math.ToleranceMath;
+import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -95,23 +97,9 @@ public class RobotCommander extends GBSubsystem {
 		setDefaultCommand(
 			new DeferredCommand(
 				() -> new ConditionalCommand(
-					Commands.none(),
-					new DeferredCommand(
-						() -> endState(currentState),
-						Set.of(
-							this,
-							superstructure,
-							swerve,
-							robot.getElevator(),
-							robot.getArm(),
-							robot.getEndEffector(),
-							robot.getLifter(),
-							robot.getSolenoid(),
-							robot.getPivot(),
-							robot.getRollers()
-						)
-					),
-					() -> isRunningIndependently()
+					asSubsystemCommand(Commands.none(), "Disabled"),
+					endState(currentState),
+					this::isRunningIndependently
 				),
 				Set.of(this)
 			)
@@ -376,7 +364,7 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	private Command endState(RobotState state) {
-		return switch (state) {
+		Command command = switch (state) {
 			case STAY_IN_PLACE, CORAL_OUTTAKE -> driveWith(RobotState.STAY_IN_PLACE);
 			case
 				INTAKE,
@@ -397,6 +385,23 @@ public class RobotCommander extends GBSubsystem {
 			case PRE_CLIMB -> driveWith(RobotState.PRE_CLIMB);
 			case CLIMB_WITHOUT_LIMIT_SWITCH, CLIMB_WITH_LIMIT_SWITCH, MANUAL_CLIMB, EXIT_CLIMB, STOP_CLIMB -> driveWith(RobotState.STOP_CLIMB);
 		};
+
+		command.addRequirements(
+			Set.of(
+				this,
+				superstructure,
+				swerve,
+				robot.getElevator(),
+				robot.getArm(),
+				robot.getEndEffector(),
+				robot.getLifter(),
+				robot.getSolenoid(),
+				robot.getPivot(),
+				robot.getRollers()
+			)
+		);
+
+		return command;
 	}
 
 }

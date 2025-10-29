@@ -93,26 +93,28 @@ public class RobotCommander extends GBSubsystem {
 
 	public void initializeDefaultCommand() {
 		setDefaultCommand(
-				new DeferredCommand(() ->
-			new ConditionalCommand(
-				Commands.none(),
-				new DeferredCommand(
-					() -> endState(currentState),
-					Set.of(
-						this,
-						superstructure,
-						swerve,
-						robot.getElevator(),
-						robot.getArm(),
-						robot.getEndEffector(),
-						robot.getLifter(),
-						robot.getSolenoid(),
-						robot.getPivot(),
-						robot.getRollers()
-					)
+			new DeferredCommand(
+				() -> new ConditionalCommand(
+					Commands.none(),
+					new DeferredCommand(
+						() -> endState(currentState),
+						Set.of(
+							this,
+							superstructure,
+							swerve,
+							robot.getElevator(),
+							robot.getArm(),
+							robot.getEndEffector(),
+							robot.getLifter(),
+							robot.getSolenoid(),
+							robot.getPivot(),
+							robot.getRollers()
+						)
+					),
+					() -> isRunningIndependently()
 				),
-				() -> isRunningIndependently()
-			), Set.of(this))
+				Set.of(this)
+			)
 		);
 	}
 

@@ -25,8 +25,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	private final String name;
 	private final String logPath;
 	private final Pose3d robotRelativeCameraPose;
-	private static final double FOV_X = 0.9;
-	private static final double FOV_Y = 1.2;
+	private static final FOV fov = FOV.LIMELIGHT3;
 	private ArrayList<DetectedObjectObservation> detectedObjectObservation;
 
 	private LimelightTarget2dValues target2dValues;
@@ -91,7 +90,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	private static Pair<Rotation2d, Rotation2d> convertCornerToCrosshair(Rotation2d txnc, Rotation2d tync){
-		return  new Pair<>(new Rotation2d(txnc.getRadians()-(0.5*FOV_X)), new Rotation2d(tync.getRadians()-(0.5*FOV_Y)));
+		return  new Pair<>(new Rotation2d(txnc.getRadians()-(0.5*fov.getFieldOfViewX())), new Rotation2d(tync.getRadians()-(0.5*fov.getFieldOfViewY())));
 	}
 
 	public void updateObjectDetection() {

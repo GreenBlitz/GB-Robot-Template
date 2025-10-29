@@ -104,7 +104,8 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 					Rotation2d.fromRadians(rawDetectionsArr[i].txnc),
 					Rotation2d.fromRadians(rawDetectionsArr[i].tync)
 				);
-				pipeline.getDetectedObjectType((rawDetectionsArr[i].classId).getByName(LimelightHelpers.getDetectorClass(name))
+				pipeline.getDetectedObjectType(rawDetectionsArr[i].classId)
+					.getByName(LimelightHelpers.getDetectorClass(name))
 					.ifPresent(
 						objectType -> resetsAccordingly.add(
 							ObjectDetectionMath.getDetectedObjectObservation(

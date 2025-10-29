@@ -60,9 +60,4 @@ public class Phoenix6DynamicMotionMagicRequest extends Phoenix6MotionMagicReques
 		return maxAcceleration;
 	}
 
-	public Phoenix6DynamicMotionMagicRequest withArbitraryFeedForward(double newArbitraryFeedForward) {
-		super.withArbitraryFeedForward(newArbitraryFeedForward);
-		return this;
-	}
-
 }

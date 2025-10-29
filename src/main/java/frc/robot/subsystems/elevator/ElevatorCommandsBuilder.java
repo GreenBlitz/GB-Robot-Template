@@ -2,26 +2,18 @@ package frc.robot.subsystems.elevator;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.robot.subsystems.GBCommandsBuilder;
 import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.function.DoubleSupplier;
 
-public class ElevatorCommandsBuilder {
+public class ElevatorCommandsBuilder extends GBCommandsBuilder {
 
 	private final Elevator elevator;
-	private boolean isRunningIndependently;
 
 	public ElevatorCommandsBuilder(Elevator elevator) {
+		super();
 		this.elevator = elevator;
-		this.isRunningIndependently = false;
-	}
-
-	public boolean isRunningIndependently() {
-		return isRunningIndependently;
-	}
-
-	public void setIsRunningIndependently(boolean isRunningIndependently) {
-		this.isRunningIndependently = isRunningIndependently;
 	}
 
 	public Command setPower(double power) {

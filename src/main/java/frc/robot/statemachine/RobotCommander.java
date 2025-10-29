@@ -40,8 +40,6 @@ public class RobotCommander extends GBSubsystem {
 	public boolean keepAlgaeInIntake;
 
 	public boolean netAssist = true;
-	public boolean algaeIntakeAssist = true;
-	public boolean cageAssist = true;
 
 	public RobotCommander(String logPath, Robot robot) {
 		super(logPath);
@@ -295,7 +293,7 @@ public class RobotCommander extends GBSubsystem {
 						() -> ToleranceMath.isNear(
 							netEdgeOpenSuperstructurePosition,
 							robot.getPoseEstimator().getEstimatedPose(),
-							Tolerances.NET_OPENING_SUPERSTRUCTURE_POSITION_METERS
+							PositionTargets.NET_OPENING_SUPERSTRUCTURE_POSITION_METERS
 						)
 					)
 					.onlyIf(
@@ -313,7 +311,7 @@ public class RobotCommander extends GBSubsystem {
 						() -> ToleranceMath.isNear(
 							openSuperstructurePosition.get(),
 							robot.getPoseEstimator().getEstimatedPose(),
-							Tolerances.NET_OPENING_SUPERSTRUCTURE_POSITION_METERS
+							PositionTargets.NET_OPENING_SUPERSTRUCTURE_POSITION_METERS
 						)
 					),
 				new ParallelCommandGroup(
@@ -332,7 +330,7 @@ public class RobotCommander extends GBSubsystem {
 							() -> ToleranceMath.isNear(
 								scoringPosition.get(),
 								robot.getPoseEstimator().getEstimatedPose(),
-								Tolerances.NET_SCORING_POSITION_METERS
+								PositionTargets.NET_SCORING_POSITION_METERS
 							)
 						)
 						.andThen(swerve.getCommandsBuilder().resetTargetSpeeds()),

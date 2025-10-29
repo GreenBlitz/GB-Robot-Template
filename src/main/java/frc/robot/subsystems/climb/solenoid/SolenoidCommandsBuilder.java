@@ -2,25 +2,17 @@ package frc.robot.subsystems.climb.solenoid;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.robot.subsystems.GBCommandsBuilder;
 
 import java.util.function.DoubleSupplier;
 
-public class SolenoidCommandsBuilder {
+public class SolenoidCommandsBuilder extends GBCommandsBuilder {
 
 	private final Solenoid solenoid;
-	private boolean isRunningIndependently;
 
 	public SolenoidCommandsBuilder(Solenoid solenoid) {
+		super();
 		this.solenoid = solenoid;
-		this.isRunningIndependently = false;
-	}
-
-	public boolean isRunningIndependently() {
-		return isRunningIndependently;
-	}
-
-	public void setIsRunningIndependently(boolean isRunningIndependently) {
-		this.isRunningIndependently = isRunningIndependently;
 	}
 
 	public Command setPower(double power) {

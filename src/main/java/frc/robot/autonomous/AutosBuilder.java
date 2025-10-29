@@ -18,7 +18,7 @@ import frc.constants.field.Field;
 import frc.constants.field.enums.Branch;
 import frc.robot.Robot;
 import frc.robot.statemachine.StateMachineConstants;
-import frc.robot.statemachine.Tolerances;
+import frc.robot.statemachine.superstructure.TargetChecks;
 import frc.robot.subsystems.elevator.ElevatorState;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.scoringhelpers.ScoringHelpers;
@@ -508,7 +508,7 @@ public class AutosBuilder {
 				robot.getSwerve().getCommandsBuilder().moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, backOffFromReefPose)
 			).until(
 				() -> ToleranceMath.isNear(robot.getPoseEstimator().getEstimatedPose(), backOffFromReefPose, tolerance)
-					&& robot.getElevator().isAtPosition(elevatorStateAfterScore.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
+					&& robot.getElevator().isAtPosition(elevatorStateAfterScore.getHeightMeters(), TargetChecks.ELEVATOR_HEIGHT_METERS)
 			),
 			new ParallelCommandGroup(
 				algaeRemove,

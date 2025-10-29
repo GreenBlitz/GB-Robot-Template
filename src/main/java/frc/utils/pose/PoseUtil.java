@@ -25,8 +25,8 @@ public class PoseUtil {
 
 	public static Pose2d EMPTY_POSE2D = new Pose2d(Double.NaN, Double.NaN, Rotation2d.fromDegrees(Double.NaN));
 
-	public static boolean isAtPoseWithAngleOffset(
-		Rotation2d xAxisOffset,
+	public static boolean isAtPoseAngleRelative(
+		Rotation2d relativeTo,
 		Pose2d targetPoseFieldRelative,
 		Pose2d currentPoseFieldRelative,
 		ChassisSpeeds allianceRelativeSpeeds,
@@ -34,11 +34,11 @@ public class PoseUtil {
 		Pose2d velocityDeadband,
 		String name
 	) {
-		Pose2d offsetCurrentPose = FieldMath.rotatePose(xAxisOffset, currentPoseFieldRelative);
-		Pose2d offsetTargetPose = FieldMath.rotatePose(xAxisOffset, targetPoseFieldRelative);
+		Pose2d offsetCurrentPose = FieldMath.rotatePose(relativeTo, currentPoseFieldRelative);
+		Pose2d offsetTargetPose = FieldMath.rotatePose(relativeTo, targetPoseFieldRelative);
 
 		ChassisSpeeds offsetSpeeds = SwerveMath
-			.robotToAllianceRelativeSpeeds(allianceRelativeSpeeds, Field.getAllianceRelative(xAxisOffset.unaryMinus()));
+			.robotToAllianceRelativeSpeeds(allianceRelativeSpeeds, Field.getAllianceRelative(relativeTo.unaryMinus()));
 
 		return isAtPose(offsetCurrentPose, offsetTargetPose, offsetSpeeds, positionTolerance, velocityDeadband, "/" + name);
 	}

@@ -3,28 +3,20 @@ package frc.robot.subsystems.algaeIntake.pivot;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.robot.subsystems.GBCommandsBuilder;
 
-public class PivotCommandsBuilder {
+public class PivotCommandsBuilder extends GBCommandsBuilder {
 
 	private final Pivot pivot;
-	private boolean isRunningIndependently;
 
 	public PivotCommandsBuilder(Pivot pivot) {
+		super();
 		this.pivot = pivot;
-		this.isRunningIndependently = false;
 	}
 
 	public Command moveToPosition(Rotation2d targetPosition) {
 		return pivot
 			.asSubsystemCommand(new RunCommand(() -> pivot.setTargetPosition(targetPosition)), "Set target position to: " + targetPosition);
-	}
-
-	public boolean isRunningIndependently() {
-		return isRunningIndependently;
-	}
-
-	public void setIsRunningIndependently(boolean isRunningIndependently) {
-		this.isRunningIndependently = isRunningIndependently;
 	}
 
 	public Command stayInPlace() {

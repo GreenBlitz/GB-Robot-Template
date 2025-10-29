@@ -85,6 +85,15 @@ public class AlgaeIntakeStateHandler {
 
 
 	public void applyCalibrationBindings(SmartJoystick joystick) {
+		joystick.POV_DOWN.onTrue(new InstantCommand(() -> {
+			pivotStateHandler.getPivot().getCommandsBuilder().setIsRunningIndependently(true);
+			rollersStateHandler.getRollers().getCommandsBuilder().setIsRunningIndependently(true);
+		}));
+		joystick.POV_DOWN.onTrue(new InstantCommand(() -> {
+			pivotStateHandler.getPivot().getCommandsBuilder().setIsRunningIndependently(false);
+			rollersStateHandler.getRollers().getCommandsBuilder().setIsRunningIndependently(false);
+		}));
+
 		joystick.A.onTrue(setState(AlgaeIntakeState.CLOSED));
 		joystick.B.onTrue(setState(AlgaeIntakeState.INTAKE));
 		joystick.Y.onTrue(setState(AlgaeIntakeState.TRANSFER_TO_END_EFFECTOR_WITHOUT_RELEASE));

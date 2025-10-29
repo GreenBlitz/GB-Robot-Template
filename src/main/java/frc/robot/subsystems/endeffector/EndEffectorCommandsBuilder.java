@@ -2,25 +2,17 @@ package frc.robot.subsystems.endeffector;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.robot.subsystems.GBCommandsBuilder;
 
 import java.util.function.DoubleSupplier;
 
-public class EndEffectorCommandsBuilder {
+public class EndEffectorCommandsBuilder extends GBCommandsBuilder {
 
 	private final EndEffector endEffector;
-	private boolean isRunningIndependently;
 
 	public EndEffectorCommandsBuilder(EndEffector endEffector) {
+		super();
 		this.endEffector = endEffector;
-		this.isRunningIndependently = false;
-	}
-
-	public boolean isRunningIndependently() {
-		return isRunningIndependently;
-	}
-
-	public void setIsRunningIndependently(boolean isRunningIndependently) {
-		this.isRunningIndependently = isRunningIndependently;
 	}
 
 	public Command stop() {

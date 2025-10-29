@@ -207,6 +207,9 @@ public class Elevator extends GBSubsystem {
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick) {
+		joystick.A.onTrue(new InstantCommand(() -> commandsBuilder.setIsRunningIndependently(true)));
+		joystick.B.onTrue(new InstantCommand(() -> commandsBuilder.setIsRunningIndependently(false)));
+
 		joystick.getAxisAsButton(Axis.LEFT_TRIGGER).whileTrue(commandsBuilder.setVoltage(() -> ffCalibrationVoltage));
 		joystick.R1.onTrue(new InstantCommand(() -> ffCalibrationVoltage = ffCalibrationVoltage + 0.01));
 		joystick.L1.onTrue(new InstantCommand(() -> ffCalibrationVoltage = ffCalibrationVoltage - 0.01));

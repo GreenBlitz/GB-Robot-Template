@@ -2,23 +2,15 @@ package frc.robot.subsystems.algaeIntake.rollers;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.robot.subsystems.GBCommandsBuilder;
 
-public class RollersCommandsBuilder {
+public class RollersCommandsBuilder extends GBCommandsBuilder {
 
 	private final Rollers rollers;
-	private boolean isRunningIndependently;
 
 	public RollersCommandsBuilder(Rollers rollers) {
+		super();
 		this.rollers = rollers;
-		this.isRunningIndependently = false;
-	}
-
-	public boolean isRunningIndependently() {
-		return isRunningIndependently;
-	}
-
-	public void setIsRunningIndependently(boolean isRunningIndependently) {
-		this.isRunningIndependently = isRunningIndependently;
 	}
 
 	public Command setPower(double power) {

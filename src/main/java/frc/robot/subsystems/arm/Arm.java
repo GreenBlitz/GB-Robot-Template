@@ -2,14 +2,11 @@ package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
-import frc.robot.hardware.interfaces.ControllableMotor;
-import frc.robot.hardware.interfaces.IAngleEncoder;
-import frc.robot.hardware.interfaces.IRequest;
-import frc.robot.hardware.interfaces.InputSignal;
-import frc.robot.hardware.phoenix6.request.Phoenix6DynamicMotionMagicRequest;
+import frc.robot.hardware.interfaces.*;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.arm.factory.KrakenX60ArmBuilder;
 import frc.utils.alerts.Alert;
@@ -21,7 +18,7 @@ import org.littletonrobotics.junction.Logger;
 public class Arm extends GBSubsystem {
 
 	private final ControllableMotor motor;
-	private final Phoenix6DynamicMotionMagicRequest positionRequest;
+	private final IDynamicMotionMagicRequest positionRequest;
 	private final IRequest<Double> voltageRequest;
 	private final InputSignal<Rotation2d> motorPositionSignal;
 	private final InputSignal<Double> motorVoltageSignal;
@@ -35,7 +32,7 @@ public class Arm extends GBSubsystem {
 	public Arm(
 		String logPath,
 		ControllableMotor motor,
-		Phoenix6DynamicMotionMagicRequest positionRequest,
+		IDynamicMotionMagicRequest positionRequest,
 		IRequest<Double> voltageRequest,
 		InputSignal<Rotation2d> motorPositionSignal,
 		InputSignal<Double> motorVoltageSignal,
@@ -142,9 +139,9 @@ public class Arm extends GBSubsystem {
 		if (reversedSoftLimit.getDegrees() <= targetPosition.getDegrees()) {
 			motor.applyRequest(
 				positionRequest.withSetPoint(targetPosition)
-					.withArbitraryFeedForward(arbitraryFeedForward)
 					.withMaxVelocityRotation2dPerSecond(maxVelocityRotation2dPerSecond)
 					.withMaxAccelerationRotation2dPerSecondSquared(maxAccelerationRotation2dPerSecondSquared)
+					.withArbitraryFeedForward(arbitraryFeedForward)
 
 			);
 		} else {
@@ -177,6 +174,9 @@ public class Arm extends GBSubsystem {
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick) {
+		joystick.A.onTrue(new InstantCommand(() -> commandsBuilder.setIsRunningIndependently(true)));
+		joystick.B.onTrue(new InstantCommand(() -> commandsBuilder.setIsRunningIndependently(false)));
+
 		// Calibrate kG using phoenix tuner by setting the voltage
 
 		// Check limits

@@ -16,6 +16,9 @@ public class PositionTargets {
 	private final IPoseEstimator poseEstimator;
 	private final Swerve swerve;
 
+	public static final Pose2d NET_OPENING_SUPERSTRUCTURE_POSITION_METERS = new Pose2d(0.07, 0.07, Rotation2d.fromDegrees(2));
+	public static final Pose2d NET_SCORING_POSITION_METERS = new Pose2d(0.07, 0.07, Rotation2d.fromDegrees(10));
+
 	public PositionTargets(Robot robot) {
 		this.poseEstimator = robot.getPoseEstimator();
 		this.swerve = robot.getSwerve();
@@ -27,6 +30,7 @@ public class PositionTargets {
 
 	private static final Translation2d MIDDLE_OF_NET_SCORING_RANGE = new Translation2d(7.578, 6.03885);
 	private static final Translation2d NET_SCORING_RANGE_TOLERANCE = new Translation2d(0.035, 2.01295);
+
 
 	public boolean isReadyToScoreNet() {
 		return PoseUtil.isAtTranslation(
@@ -41,7 +45,7 @@ public class PositionTargets {
 	private static final Pose2d PROCESSOR_RELATIVE_SCORING_DEADBANDS = new Pose2d(3.8, 0.5, Rotation2d.fromRadians(2));
 
 	public boolean isReadyToScoreProcessor() {
-		return PoseUtil.isAtPoseWithAngleOffset(
+		return PoseUtil.isAtPoseAngleRelative(
 			Field.getProcessor().getRotation(),
 			ScoringHelpers.getAllianceRelativeProcessorScoringPose(),
 			poseEstimator.getEstimatedPose(),
@@ -106,7 +110,7 @@ public class PositionTargets {
 		Pose2d tolerance,
 		Pose2d deadband
 	) {
-		return PoseUtil.isAtPoseWithAngleOffset(
+		return PoseUtil.isAtPoseAngleRelative(
 			Field.getReefSideMiddle(ScoringHelpers.getTargetBranch().getReefSide()).getRotation(),
 			ScoringHelpers.getRobotBranchScoringPose(ScoringHelpers.getTargetBranch(), distanceFromReefMeters),
 			currentPose,

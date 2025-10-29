@@ -117,6 +117,15 @@ public class ClimbStateHandler {
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick) {
+		joystick.POV_DOWN.onTrue(new InstantCommand(() -> {
+			lifterStateHandler.getLifter().getCommandsBuilder().setIsRunningIndependently(true);
+			solenoidStateHandler.getSolenoid().getCommandsBuilder().setIsRunningIndependently(true);
+		}));
+		joystick.POV_DOWN.onTrue(new InstantCommand(() -> {
+			lifterStateHandler.getLifter().getCommandsBuilder().setIsRunningIndependently(false);
+			solenoidStateHandler.getSolenoid().getCommandsBuilder().setIsRunningIndependently(false);
+		}));
+
 		joystick.X.onTrue(setState(ClimbState.CLIMB_WITHOUT_LIMIT_SWITCH));
 		joystick.Y.whileTrue(setState(ClimbState.MANUAL_CLIMB));
 		joystick.B.onTrue(setState(ClimbState.DEPLOY));

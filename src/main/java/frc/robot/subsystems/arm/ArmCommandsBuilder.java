@@ -3,7 +3,8 @@ package frc.robot.subsystems.arm;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import frc.robot.statemachine.Tolerances;
+import frc.robot.statemachine.superstructure.TargetChecks;
+import frc.robot.subsystems.GBCommandsBuilder;
 import frc.utils.math.ToleranceMath;
 import frc.utils.utilcommands.InitExecuteCommand;
 import frc.utils.utilcommands.LoggedDashboardCommand;
@@ -11,22 +12,13 @@ import frc.utils.utilcommands.LoggedDashboardCommand;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
-public class ArmCommandsBuilder {
+public class ArmCommandsBuilder extends GBCommandsBuilder {
 
 	private final Arm arm;
-	private boolean isRunningIndependently;
 
 	public ArmCommandsBuilder(Arm arm) {
+		super();
 		this.arm = arm;
-		this.isRunningIndependently = false;
-	}
-
-	public boolean isRunningIndependently() {
-		return isRunningIndependently;
-	}
-
-	public void setIsRunningIndependently(boolean isRunningIndependently) {
-		this.isRunningIndependently = isRunningIndependently;
 	}
 
 	public Command stop() {
@@ -57,7 +49,7 @@ public class ArmCommandsBuilder {
 		double arbitraryFeedForward
 	) {
 		return arm.asSubsystemCommand(new RunCommand(() -> {
-			if (!ToleranceMath.isNearWrapped(positionSupplier.get(), arm.getPosition(), Tolerances.ARM_INTERPOLATION_POSITION)) {
+			if (!ToleranceMath.isNearWrapped(positionSupplier.get(), arm.getPosition(), TargetChecks.ARM_INTERPOLATION_POSITION)) {
 				arm.setTargetPosition(
 					positionSupplier.get(),
 					maxVelocityRotation2dPerSecond,

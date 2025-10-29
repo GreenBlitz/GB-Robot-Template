@@ -121,14 +121,6 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		}
 	}
 
-	public ArrayList<DetectedObjectObservation> getDetectedObjectObservation() {
-		ArrayList<DetectedObjectObservation> toReturn = new ArrayList<>(detectedObjectObservation.size());
-		for (int i = 0; i < detectedObjectObservation.size(); i++) {
-			toReturn.set(i, detectedObjectObservation.get(i));
-		}
-		return toReturn;
-	}
-
 	public void updateMT1() {
 		if (pipeline.isUsingMT()) {
 			mt1RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);

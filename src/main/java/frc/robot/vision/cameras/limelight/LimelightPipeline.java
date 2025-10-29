@@ -2,8 +2,6 @@ package frc.robot.vision.cameras.limelight;
 
 import frc.robot.vision.DetectedObjectType;
 
-import java.util.HashMap;
-import java.util.Map;
 
 public enum LimelightPipeline {
 
@@ -17,8 +15,6 @@ public enum LimelightPipeline {
 	private DetectedObjectType[] detectedObjectTypes = new DetectedObjectType[numOfObjects];
 
 	LimelightPipeline(int pipelineIndex, boolean isDetectingObjects, boolean isUsingMT) {
-
-
 		this.pipelineIndex = pipelineIndex;
 		this.isDetectingObjects = isDetectingObjects;
 		this.isUsingMT = isUsingMT;
@@ -39,8 +35,9 @@ public enum LimelightPipeline {
 	public DetectedObjectType[] getDetectedObjectTypes() {
 		DetectedObjectType[] temp = new DetectedObjectType[numOfObjects];
 		for (int i = 0; i < detectedObjectTypes.length; i++) {
-			temp[i]=detectedObjectTypes[i];
+			temp[i] = detectedObjectTypes[i];
 		}
 		return temp;
 	}
+
 }

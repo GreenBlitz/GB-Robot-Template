@@ -3,7 +3,6 @@ package frc.robot.vision.cameras.limelight;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.*;
 import frc.robot.vision.DetectedObjectObservation;
-import frc.robot.vision.DetectedObjectType;
 import frc.robot.vision.RobotPoseObservation;
 import frc.robot.vision.interfaces.ObjectDetector;
 import frc.robot.vision.interfaces.OrientationRequiringRobotPoseSupplier;
@@ -16,7 +15,6 @@ import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -25,7 +23,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	private final String name;
 	private final String logPath;
 	private final Pose3d robotRelativeCameraPose;
-	private static final FOV fov = FOV.LIMELIGHT3;
+	private final FOV fov = FOV.LIMELIGHT3;
 	private ArrayList<DetectedObjectObservation> detectedObjectObservation;
 
 	private LimelightTarget2dValues target2dValues;
@@ -81,7 +79,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 				Logger.recordOutput(logPath + "/megaTag2PoseObservation", mt2PoseObservation);
 			}
 		} else if (pipeline.isDetectingObjects()) {
-			for (int i = 0; i <detectedObjectObservation.size() ; i++) {
+			for (int i = 0; i < detectedObjectObservation.size(); i++) {
 				if (doesObservationExist(detectedObjectObservation.get(i))) {
 					Logger.recordOutput(logPath + "/detectedObjectObservation", detectedObjectObservation.get(i));
 				}
@@ -89,8 +87,11 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		}
 	}
 
-	private static Pair<Rotation2d, Rotation2d> convertCornerToCrosshair(Rotation2d txnc, Rotation2d tync){
-		return  new Pair<>(new Rotation2d(txnc.getRadians()-(0.5*fov.getFieldOfViewX())), new Rotation2d(tync.getRadians()-(0.5*fov.getFieldOfViewY())));
+	private static Pair<Rotation2d, Rotation2d> convertCornerToCrosshair(Rotation2d txnc, Rotation2d tync) {
+		return new Pair<>(
+			new Rotation2d(txnc.getRadians() - (0.5 * fov.getFieldOfViewX())),
+			new Rotation2d(tync.getRadians() - (0.5 * fov.getFieldOfViewY()))
+		);
 	}
 
 	public void updateObjectDetection() {
@@ -98,23 +99,22 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		if (target2dValues.isValid()) {
 			LimelightHelpers.RawDetection[] rawDetectionsArr = LimelightHelpers.getRawDetections(name);
 			for (int i = 0; i < rawDetectionsArr.length; i++) {
-				Pair<Rotation2d,Rotation2d> xyRotation2d =
-						convertCornerToCrosshair(
-								Rotation2d.fromRadians(rawDetectionsArr[i].txnc),
-								Rotation2d.fromRadians(rawDetectionsArr[i].tync)
-						);
-				pipeline.getDetectedObjectTypes()[(rawDetectionsArr[i].classId)].getByName(LimelightHelpers.getDetectorClass(name))
-						.ifPresent(
-						objectType -> detectedObjectObservation.add(
-						ObjectDetectionMath.getDetectedObjectObservation(
-						robotRelativeCameraPose,
-						objectType,
-						xyRotation2d.getFirst(),
-						xyRotation2d.getSecond(),
-						getTarget2dTimestampSeconds(target2dValues)
-						)
-					)
+				Pair<Rotation2d, Rotation2d> xyRotation2d = convertCornerToCrosshair(
+					Rotation2d.fromRadians(rawDetectionsArr[i].txnc),
+					Rotation2d.fromRadians(rawDetectionsArr[i].tync)
 				);
+				pipeline.getDetectedObjectTypes()[(rawDetectionsArr[i].classId)].getByName(LimelightHelpers.getDetectorClass(name))
+					.ifPresent(
+						objectType -> detectedObjectObservation.add(
+							ObjectDetectionMath.getDetectedObjectObservation(
+								robotRelativeCameraPose,
+								objectType,
+								xyRotation2d.getFirst(),
+								xyRotation2d.getSecond(),
+								getTarget2dTimestampSeconds(target2dValues)
+							)
+						)
+					);
 			}
 		} else {
 			detectedObjectObservation = new ArrayList<>();
@@ -153,7 +153,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	@Override
 	public Optional<DetectedObjectObservation> getRobotRelativeObjectTranslation() {
-		for (int i = 0; i <detectedObjectObservation.size() ; i++) {
+		for (int i = 0; i < detectedObjectObservation.size(); i++) {
 			if (pipeline.isDetectingObjects() && doesObservationExist(detectedObjectObservation.get(i)) && detectedObjectFilter.passesFilter()) {
 				return Optional.of(detectedObjectObservation.get(i));
 			}

@@ -1,6 +1,7 @@
 package frc.robot.vision.cameras.limelight;
 
 import frc.robot.vision.DetectedObjectType;
+import frc.utils.alerts.Alert;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -35,9 +36,15 @@ public enum LimelightPipeline {
 	public boolean isUsingMT() {
 		return isUsingMT;
 	}
-
-	public DetectedObjectType getDetectedObjectType(int index) {
-		return detectedObjectTypes[index];
+	
+	public Optional<DetectedObjectType> getDetectedObjectType(int index) {
+		try {
+			return Optional.ofNullable(detectedObjectTypes[index]);
+		} catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
+			System.out.println("nuh-uh");
+			Alert a = new Alert()
+			return Optional.empty();
+		}
 	}
 
 }

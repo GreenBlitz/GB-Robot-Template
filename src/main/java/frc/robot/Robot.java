@@ -16,10 +16,7 @@ import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.subsystems.swerve.factories.imu.IMUFactory;
 import frc.robot.vision.DetectedObjectType;
-import frc.robot.vision.cameras.limelight.Limelight;
-import frc.robot.vision.cameras.limelight.LimelightFilters;
-import frc.robot.vision.cameras.limelight.LimelightPipeline;
-import frc.robot.vision.cameras.limelight.LimelightStdDevCalculations;
+import frc.robot.vision.cameras.limelight.*;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
@@ -83,7 +80,8 @@ public class Robot {
 				new Translation3d(0.215, -0.11, 0.508),
 				new Rotation3d(Units.Degrees.of(-8.06180374425555), Units.Degrees.of(-27.07784559039065), Units.Degrees.of(-22.52372569716833))
 			),
-			LimelightPipeline.APRIL_TAG
+			LimelightPipeline.APRIL_TAG,
+			LimelightType.LIMELIGHT4
 		);
 		limelightFour.setMT1PoseFilter(
 			LimelightFilters.megaTag1Filter(
@@ -126,7 +124,8 @@ public class Robot {
 				new Translation3d(0.2022, 0.13, 0.508),
 				new Rotation3d(Units.Degrees.of(10.612258493096334), Units.Degrees.of(-27.18966371065684), Units.Degrees.of(20.10328620400214))
 			),
-			LimelightPipeline.APRIL_TAG
+			LimelightPipeline.APRIL_TAG,
+			LimelightType.LIMELIGHT3GB
 		);
 		limelightThreeGB.setMT1PoseFilter(
 			LimelightFilters.megaTag1Filter(
@@ -169,7 +168,8 @@ public class Robot {
 				new Translation3d(-0.08, 0.23, 0.865),
 				new Rotation3d(Units.Degrees.of(0), Units.Degrees.of(-27), Units.Degrees.of(-176.67))
 			),
-			LimelightPipeline.OBJECT_DETECTION
+			LimelightPipeline.OBJECT_DETECTION,
+			LimelightType.LIMELIGHT3
 		);
 		limelightObjectDetector
 			.setDetectedObjectFilter(LimelightFilters.detectedObjectFilter(limelightObjectDetector, DetectedObjectType.ALGAE));

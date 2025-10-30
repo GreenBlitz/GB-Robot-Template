@@ -101,17 +101,18 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 					fov.getFieldOfViewX(),
 					fov.getFieldOfViewY()
 				);
-				pipeline.getDetectedObjectType(rawDetections[i].classId).ifPresent(
-				 objectType -> currentlyInView.add(
-						ObjectDetectionMath.getDetectedObjectObservation(
-							robotRelativeCameraPose,
-							objectType,
-							objectRelativeToCrosshair.getFirst(),
-							objectRelativeToCrosshair.getSecond(),
-							getTarget2dTimestampSeconds(target2dValues)
+				pipeline.getDetectedObjectType(rawDetections[i].classId)
+					.ifPresent(
+						objectType -> currentlyInView.add(
+							ObjectDetectionMath.getDetectedObjectObservation(
+								robotRelativeCameraPose,
+								objectType,
+								objectRelativeToCrosshair.getFirst(),
+								objectRelativeToCrosshair.getSecond(),
+								getTarget2dTimestampSeconds(target2dValues)
+							)
 						)
-				 	)
-				 );
+					);
 				detectedObjectObservation = currentlyInView;
 			}
 		} else {

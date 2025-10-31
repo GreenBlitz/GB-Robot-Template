@@ -71,9 +71,7 @@ public class Superstructure extends GBSubsystem {
 			this
 		);
 
-		this.targetChecks = new TargetChecks(
-			this
-		);
+		this.targetChecks = new TargetChecks(this);
 
 		this.currentState = RobotState.STAY_IN_PLACE;
 		this.isSubsystemRunningIndependently = false;

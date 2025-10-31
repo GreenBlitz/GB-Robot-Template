@@ -3,13 +3,8 @@ package frc.robot.statemachine.superstructure;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.scoringhelpers.ScoringHelpers;
 import frc.robot.subsystems.algaeIntake.AlgaeIntakeState;
-import frc.robot.subsystems.algaeIntake.AlgaeIntakeStateHandler;
 import frc.robot.subsystems.arm.ArmState;
-import frc.robot.subsystems.arm.ArmStateHandler;
-import frc.robot.subsystems.climb.ClimbStateHandler;
 import frc.robot.subsystems.elevator.ElevatorState;
-import frc.robot.subsystems.elevator.ElevatorStateHandler;
-import frc.robot.subsystems.endeffector.EndEffectorStateHandler;
 import org.littletonrobotics.junction.Logger;
 
 
@@ -28,27 +23,27 @@ public class TargetChecks {
 	public static final Rotation2d PIVOT_POSITION_TOLERANCE = Rotation2d.fromDegrees(3);
 
 
-
-	public TargetChecks(
-		Superstructure superstructure
-	) {
+	public TargetChecks(Superstructure superstructure) {
 		this.superstructure = superstructure;
 	}
 
 
 	public boolean isPreNetReady() {
-		return superstructure.getElevatorStateHandler().isAtState(ElevatorState.NET) && superstructure.getArmStateHandler().isAtState(ArmState.PRE_NET);
+		return superstructure.getElevatorStateHandler().isAtState(ElevatorState.NET)
+			&& superstructure.getArmStateHandler().isAtState(ArmState.PRE_NET);
 	}
 
 	public boolean isPreScoreReady() {
 		ScoreLevel targetScoreLevel = ScoringHelpers.targetScoreLevel;
 		ArmState targetArmState = targetScoreLevel == ScoreLevel.L4 ? targetScoreLevel.getArmScore() : targetScoreLevel.getArmPreScore();
-		return superstructure.getElevatorStateHandler().isAtState(targetScoreLevel.getElevatorPreScore()) && superstructure.getArmStateHandler().isAtState(targetArmState);
+		return superstructure.getElevatorStateHandler().isAtState(targetScoreLevel.getElevatorPreScore())
+			&& superstructure.getArmStateHandler().isAtState(targetArmState);
 	}
 
 	public boolean isReadyToScore() {
 		ScoreLevel targetScoreLevel = ScoringHelpers.targetScoreLevel;
-		return superstructure.getElevatorStateHandler().isAtState(targetScoreLevel.getElevatorScore()) && superstructure.getArmStateHandler().isAtState(targetScoreLevel.getArmScore());
+		return superstructure.getElevatorStateHandler().isAtState(targetScoreLevel.getElevatorScore())
+			&& superstructure.getArmStateHandler().isAtState(targetScoreLevel.getArmScore());
 	}
 
 	public boolean isReadyToOuttakeAlgae() {

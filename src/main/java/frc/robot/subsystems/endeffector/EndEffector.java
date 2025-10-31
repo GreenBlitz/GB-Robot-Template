@@ -104,8 +104,8 @@ public class EndEffector extends GBSubsystem {
 	}
 
 	public void applyCalibrationsBindings(SmartJoystick joystick) {
-		joystick.R3.onTrue(new InstantCommand(() -> commandsBuilder.setIsRunningIndependently(true)));
-		joystick.L3.onTrue(new InstantCommand(() -> commandsBuilder.setIsRunningIndependently(false)));
+		joystick.R3.onTrue(new InstantCommand(() -> commandsBuilder.setIsSubsystemRunningIndependently(true)));
+		joystick.L3.onTrue(new InstantCommand(() -> commandsBuilder.setIsSubsystemRunningIndependently(false)));
 
 		joystick.R1.whileTrue(commandsBuilder.setPower(() -> calibrationPower));
 

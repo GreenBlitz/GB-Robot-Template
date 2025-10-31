@@ -103,20 +103,21 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 					fov.getFieldOfViewY()
 				);
 				if (pipeline.isDetectingObjects()) {
-					pipeline.getDetectedObjectType(rawDetections[i].classId)
-						.ifPresent(
-							objectType -> currentlyInView.add(
-								ObjectDetectionMath.getDetectedObjectObservation(
-									robotRelativeCameraPose,
-									objectType,
-									objectRelativeToCrosshair.getFirst(),
-									objectRelativeToCrosshair.getSecond(),
-									getTarget2dTimestampSeconds(target2dValues)
-								)
-							)
+					pipeline.getDetectedObjectType(rawDetections[i].classId).ifPresent(objectType -> {
+						DetectedObjectObservation observation = ObjectDetectionMath.getDetectedObjectObservation(
+							robotRelativeCameraPose,
+							objectType,
+							objectRelativeToCrosshair.getFirst(),
+							objectRelativeToCrosshair.getSecond(),
+							getTarget2dTimestampSeconds(target2dValues)
 						);
-					detectedObjectObservations = currentlyInView;
+
+						if (doesObservationExist(observation)) {
+							currentlyInView.add(observation);
+						}
+					});
 				}
+				detectedObjectObservations = currentlyInView;
 			}
 		} else {
 			detectedObjectObservations = new ArrayList<>();
@@ -147,16 +148,13 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	@Override
 	public Optional<ArrayList<DetectedObjectObservation>> getRobotRelativeObjectTranslation() {
-		if (pipeline.isDetectingObjects()) {
-			ArrayList<DetectedObjectObservation> toInsert = new ArrayList<>();
-			for (int i = 0; i < detectedObjectObservations.size(); i++) {
-				if (doesObservationExist(detectedObjectObservations.get(i))) {
-					toInsert.add(detectedObjectObservations.get(i));
-				}
+		ArrayList<DetectedObjectObservation> toInsert = new ArrayList<>();
+		for (int i = 0; i < detectedObjectObservations.size(); i++) {
+			if (doesObservationExist(detectedObjectObservations.get(i))) {
+				toInsert.add(detectedObjectObservations.get(i));
 			}
-			return Optional.of(toInsert);
 		}
-		return Optional.empty();
+		return Optional.of(toInsert);
 	}
 
 	@Override

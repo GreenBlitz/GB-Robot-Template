@@ -9,7 +9,7 @@ import java.util.Optional;
 public enum LimelightPipeline {
 
 	APRIL_TAG(0, false, true, new DetectedObjectType[0]),
-	OBJECT_DETECTION(1, true, false, new DetectedObjectType[]{DetectedObjectType.ALGAE, DetectedObjectType.CORAL});
+	OBJECT_DETECTION(1, true, false, new DetectedObjectType[] {DetectedObjectType.ALGAE, DetectedObjectType.CORAL});
 
 	private final int pipelineIndex;
 	private final boolean isDetectingObjects;

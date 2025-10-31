@@ -206,7 +206,7 @@ public class JoysticksBindings {
 		usedJoystick.R1.onTrue(netActionChooser(robot));
 
 		usedJoystick.Y.onTrue(robot.getRobotCommander().driveWith(RobotState.CORAL_OUTTAKE));
-//		usedJoystick.X.onTrue(algaeOuttakeActionChooser(robot));
+		usedJoystick.X.onTrue(algaeOuttakeActionChooser(robot));
 		usedJoystick.B.onTrue(processorActionChooser(robot));
 
 

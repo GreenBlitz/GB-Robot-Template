@@ -96,9 +96,22 @@ public class RobotCommander extends GBSubsystem {
 
 			new ConditionalCommand(
 				asSubsystemCommand(Commands.none(), "Disabled"),
-				new DeferredCommand(
-					() -> endState(currentState),
-					Set.of(this)
+				new RunCommand(
+					() -> new DeferredCommand(
+						() -> endState(currentState),
+						Set.of(
+							this,
+							superstructure,
+							swerve,
+							robot.getElevator(),
+							robot.getArm(),
+							robot.getEndEffector(),
+							robot.getLifter(),
+							robot.getSolenoid(),
+							robot.getPivot(),
+							robot.getRollers()
+						)
+					).schedule()
 				),
 				this::isRunningIndependently
 			)

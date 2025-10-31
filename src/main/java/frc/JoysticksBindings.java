@@ -198,7 +198,7 @@ public class JoysticksBindings {
 		// bindings...
 		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(closeReefActionChooser(robot));
 
-		usedJoystick.X.onTrue(closeReefActionChooser(robot));
+		usedJoystick.X.onTrue(robot.getRobotCommander().intakeAutomation());
 		usedJoystick.L1.onTrue(robot.getRobotCommander().driveWith(RobotState.ALGAE_INTAKE));
 
 		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getRobotCommander().driveWith(RobotState.INTAKE));

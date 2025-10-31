@@ -24,7 +24,8 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	private final String logPath;
 	private final Pose3d robotRelativeCameraPose;
 	private final LimelightType fov;
-	private ArrayList<DetectedObjectObservation> detectedObjectObservation;
+
+	private ArrayList<DetectedObjectObservation> detectedObjectObservations;
 
 	private LimelightTarget2dValues target2dValues;
 
@@ -50,7 +51,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		this.robotRelativeCameraPose = robotRelativeCameraPose;
 		setRobotRelativeCameraPose(robotRelativeCameraPose);
 
-		this.detectedObjectObservation = new ArrayList<>();
+		this.detectedObjectObservations = new ArrayList<>();
 
 		this.target2dValues = new LimelightTarget2dValues();
 
@@ -81,9 +82,9 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 				Logger.recordOutput(logPath + "/megaTag2PoseObservation", mt2PoseObservation);
 			}
 		} else if (pipeline.isDetectingObjects()) {
-			for (int i = 0; i < detectedObjectObservation.size(); i++) {
-				if (doesObservationExist(detectedObjectObservation.get(i))) {
-					Logger.recordOutput(logPath + "/detectedObjectObservation", detectedObjectObservation.get(i));
+			for (DetectedObjectObservation observation : detectedObjectObservations) {
+				if (doesObservationExist(observation)) {
+					Logger.recordOutput(logPath + "/detectedObjectObservation", observation);
 				}
 			}
 		}
@@ -101,22 +102,24 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 					fov.getFieldOfViewX(),
 					fov.getFieldOfViewY()
 				);
-				pipeline.getDetectedObjectType(rawDetections[i].classId)
-					.ifPresent(
-						objectType -> currentlyInView.add(
-							ObjectDetectionMath.getDetectedObjectObservation(
-								robotRelativeCameraPose,
-								objectType,
-								objectRelativeToCrosshair.getFirst(),
-								objectRelativeToCrosshair.getSecond(),
-								getTarget2dTimestampSeconds(target2dValues)
+				if(pipeline.isDetectingObjects()){
+					pipeline.getDetectedObjectType(rawDetections[i].classId)
+						.ifPresent(
+							objectType -> currentlyInView.add(
+								ObjectDetectionMath.getDetectedObjectObservation(
+									robotRelativeCameraPose,
+									objectType,
+									objectRelativeToCrosshair.getFirst(),
+									objectRelativeToCrosshair.getSecond(),
+									getTarget2dTimestampSeconds(target2dValues)
+								)
 							)
-						)
-					);
-				detectedObjectObservation = currentlyInView;
+						);
+					detectedObjectObservations = currentlyInView;
+				}
 			}
 		} else {
-			detectedObjectObservation = new ArrayList<>();
+			detectedObjectObservations = new ArrayList<>();
 		}
 	}
 
@@ -146,9 +149,9 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	public Optional<ArrayList<DetectedObjectObservation>> getRobotRelativeObjectTranslation() {
 		if (pipeline.isDetectingObjects()) {
 			ArrayList<DetectedObjectObservation> toInsert = new ArrayList<>();
-			for (int i = 0; i < detectedObjectObservation.size(); i++) {
-				if (doesObservationExist(detectedObjectObservation.get(i))) {
-					toInsert.add(detectedObjectObservation.get(i));
+			for (int i = 0; i < detectedObjectObservations.size(); i++) {
+				if (doesObservationExist(detectedObjectObservations.get(i))) {
+					toInsert.add(detectedObjectObservations.get(i));
 				}
 			}
 			return Optional.of(toInsert);

@@ -40,7 +40,7 @@ public enum LimelightPipeline {
 		try {
 			return Optional.of(detectedObjectTypes[index]);
 		} catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
-			new Alert(Alert.AlertType.WARNING, "ObjectDetections/getDetectedObject").report();
+			new Alert(Alert.AlertType.WARNING, "ObjectDetections/InvalidObjectID: ").report();
 			return Optional.empty();
 		}
 	}

@@ -99,8 +99,8 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 				Pair<Rotation2d, Rotation2d> objectRelativeToCrosshair = ObjectDetectionMath.convertCornerToCrosshair(
 					Rotation2d.fromDegrees(rawDetections[i].txnc),
 					Rotation2d.fromDegrees(rawDetections[i].tync),
-					fov.getFieldOfViewX(),
-					fov.getFieldOfViewY()
+					fov.getFieldOfViewX().getDegrees(),
+					fov.getFieldOfViewY().getDegrees()
 				);
 				if (pipeline.isDetectingObjects()) {
 					pipeline.getDetectedObjectType(rawDetections[i].classId).ifPresent(objectType -> {

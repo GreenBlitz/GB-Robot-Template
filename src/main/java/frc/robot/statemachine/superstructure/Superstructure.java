@@ -14,7 +14,7 @@ public class Superstructure extends GBSubsystem {
 	private final Robot robot;
 	private final Set<Subsystem> subsystems;
 	private final TargetChecks targetChecks;
-	private boolean isRunningIndependently;
+	private boolean isSubsystemRunningIndependently;
 
 	private RobotState currentState;
 
@@ -27,15 +27,15 @@ public class Superstructure extends GBSubsystem {
 		this.targetChecks = new TargetChecks(this);
 
 		this.currentState = RobotState.STAY_IN_PLACE;
-		this.isRunningIndependently = false;
+		this.isSubsystemRunningIndependently = false;
 	}
 
-	public boolean isRunningIndependently() {
-		return isRunningIndependently;
+	public boolean isSubsystemRunningIndependently() {
+		return isSubsystemRunningIndependently;
 	}
 
-	public void setIsRunningIndependently(boolean isRunningIndependently) {
-		this.isRunningIndependently = isRunningIndependently;
+	public void setIsSubsystemRunningIndependently(boolean isSubsystemRunningIndependently) {
+		this.isSubsystemRunningIndependently = isSubsystemRunningIndependently;
 	}
 
 	public RobotState getCurrentState() {
@@ -58,7 +58,7 @@ public class Superstructure extends GBSubsystem {
 	}
 
 	private void log() {
-		Logger.recordOutput(getLogPath() + "/IsRunningIndependently", isRunningIndependently());
+		Logger.recordOutput(getLogPath() + "/IsSubsystemRunningIndependently", isSubsystemRunningIndependently());
 	}
 
 	public Command stayInPlace() {

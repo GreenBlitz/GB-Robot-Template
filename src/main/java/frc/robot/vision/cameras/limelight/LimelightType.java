@@ -8,20 +8,20 @@ public enum LimelightType {
 	LIMELIGHT3GB(Rotation2d.fromDegrees(72.25), Rotation2d.fromDegrees(52.65)), // temp value
 	LIMELIGHT4(Rotation2d.fromDegrees(82.0), Rotation2d.fromDegrees(56.2));
 
-	private final Rotation2d horizontalFieldOfView;
-	private final Rotation2d verticalFieldOfView;
+	private final Rotation2d fieldOfViewX;
+	private final Rotation2d fieldOfViewY;
 
 	LimelightType(Rotation2d horizontalFieldOfView, Rotation2d verticalFieldOfView) {
-		this.horizontalFieldOfView = horizontalFieldOfView;
-		this.verticalFieldOfView = verticalFieldOfView;
+		this.fieldOfViewX = horizontalFieldOfView;
+		this.fieldOfViewY = verticalFieldOfView;
 	}
 
 	public Rotation2d getFieldOfViewX() {
-		return horizontalFieldOfView;
+		return fieldOfViewX;
 	}
 
 	public Rotation2d getFieldOfViewY() {
-		return verticalFieldOfView;
+		return fieldOfViewY;
 	}
 
 

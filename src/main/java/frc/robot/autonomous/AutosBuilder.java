@@ -508,7 +508,7 @@ public class AutosBuilder {
 				robot.getSwerve().getCommandsBuilder().moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, backOffFromReefPose)
 			).until(
 				() -> ToleranceMath.isNear(robot.getPoseEstimator().getEstimatedPose(), backOffFromReefPose, tolerance)
-					&& robot.getElevator().isAtPosition(elevatorStateAfterScore.getHeightMeters(), TargetChecks.ELEVATOR_HEIGHT_METERS)
+					&& robot.getElevator().isAtPosition(elevatorStateAfterScore.getHeightMeters(), TargetChecks.ELEVATOR_HEIGHT_TOLERANCE_METERS)
 			),
 			new ParallelCommandGroup(
 				algaeRemove,

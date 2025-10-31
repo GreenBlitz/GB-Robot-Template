@@ -93,10 +93,9 @@ public class RobotCommander extends GBSubsystem {
 
 	public void initializeDefaultCommand() {
 		setDefaultCommand(
-
 			new ConditionalCommand(
 				asSubsystemCommand(Commands.none(), "Disabled"),
-				new RunCommand(
+				new InstantCommand(
 					() -> new DeferredCommand(
 						() -> endState(currentState),
 						Set.of(

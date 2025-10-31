@@ -49,7 +49,7 @@ public class ArmStateHandler {
 	}
 
 	public boolean isAtState(ArmState state) {
-		return isAtState(state, TargetChecks.ARM_POSITION);
+		return isAtState(state, TargetChecks.ARM_POSITION_TOLERANCE);
 	}
 
 	public boolean isAtState(ArmState state, Rotation2d tolerance) {

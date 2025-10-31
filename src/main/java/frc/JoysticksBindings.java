@@ -234,7 +234,7 @@ public class JoysticksBindings {
 		usedJoystick.R1.onTrue(new InstantCommand(() -> ScoringHelpers.isLeftBranch = false));
 		usedJoystick.L1.onTrue(new InstantCommand(() -> ScoringHelpers.isLeftBranch = true));
 
-		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getRobotCommander().driveWith(RobotState.INTAKE));
+		usedJoystick.getAxisAsButton(Axis.RIGHT_TRIGGER).onTrue(robot.getRobotCommander().driveWith(RobotState.INTAKE.activateSwerve(false)));
 		usedJoystick.POV_UP.onTrue(new InstantCommand(() -> ScoringHelpers.isAutoAlgaeRemoveActivated = true));
 
 		usedJoystick.L3.onTrue(robot.getRobotCommander().driveWith(RobotState.PRE_CLIMB));

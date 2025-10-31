@@ -34,7 +34,7 @@ public class PivotStateHandler {
 	}
 
 	public boolean isAtState(PivotState state) {
-		return isAtState(state, TargetChecks.PIVOT);
+		return isAtState(state, TargetChecks.PIVOT_POSITION_TOLERANCE);
 	}
 
 	public boolean isAtState(PivotState state, Rotation2d tolerance) {

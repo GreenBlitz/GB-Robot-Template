@@ -72,15 +72,23 @@ public class Superstructure extends GBSubsystem {
 		);
 
 		this.targetChecks = new TargetChecks(
-			elevatorStateHandler,
-			armStateHandler,
-			endEffectorStateHandler,
-			climbStateHandler,
-			algaeIntakeStateHandler
+			this
 		);
 
 		this.currentState = RobotState.STAY_IN_PLACE;
 		this.isRunningIndependently = false;
+	}
+
+	public ElevatorStateHandler getElevatorStateHandler() {
+		return elevatorStateHandler;
+	}
+
+	public ArmStateHandler getArmStateHandler() {
+		return armStateHandler;
+	}
+
+	public EndEffectorStateHandler getEndEffectorStateHandler() {
+		return endEffectorStateHandler;
 	}
 
 	public AlgaeIntakeStateHandler getAlgaeIntakeStateHandler() {
@@ -718,8 +726,8 @@ public class Superstructure extends GBSubsystem {
 					).until(() -> !robot.getElevator().isPastPosition(0.7)),
 					new ParallelDeadlineGroup(armStateHandler.setState(ArmState.CLOSED), elevatorStateHandler.setState(ElevatorState.CLOSED))
 						.until(
-							() -> armStateHandler.isAtState(ArmState.CLOSED, TargetChecks.ARM_POSITION)
-								&& elevatorStateHandler.isAtState(ElevatorState.CLOSED, TargetChecks.ELEVATOR_HEIGHT_METERS)
+							() -> armStateHandler.isAtState(ArmState.CLOSED, TargetChecks.ARM_POSITION_TOLERANCE)
+								&& elevatorStateHandler.isAtState(ElevatorState.CLOSED, TargetChecks.ELEVATOR_HEIGHT_TOLERANCE_METERS)
 						)
 				),
 				endEffectorStateHandler.setState(EndEffectorState.DEFAULT),

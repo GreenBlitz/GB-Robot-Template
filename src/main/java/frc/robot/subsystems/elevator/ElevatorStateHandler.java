@@ -39,7 +39,7 @@ public class ElevatorStateHandler {
 	}
 
 	public boolean isAtState(ElevatorState state) {
-		return currentState == state && elevator.isAtPosition(state.getHeightMeters(), TargetChecks.ELEVATOR_HEIGHT_METERS);
+		return currentState == state && elevator.isAtPosition(state.getHeightMeters(), TargetChecks.ELEVATOR_HEIGHT_TOLERANCE_METERS);
 	}
 
 }

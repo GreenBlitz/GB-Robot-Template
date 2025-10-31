@@ -49,7 +49,7 @@ public class ArmCommandsBuilder extends GBCommandsBuilder {
 		double arbitraryFeedForward
 	) {
 		return arm.asSubsystemCommand(new RunCommand(() -> {
-			if (!ToleranceMath.isNearWrapped(positionSupplier.get(), arm.getPosition(), TargetChecks.ARM_INTERPOLATION_POSITION)) {
+			if (!ToleranceMath.isNearWrapped(positionSupplier.get(), arm.getPosition(), TargetChecks.ARM_INTERPOLATION_POSITION_TOLERANCE)) {
 				arm.setTargetPosition(
 					positionSupplier.get(),
 					maxVelocityRotation2dPerSecond,

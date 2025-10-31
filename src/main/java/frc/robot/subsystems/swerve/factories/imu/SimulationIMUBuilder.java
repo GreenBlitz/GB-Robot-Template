@@ -42,9 +42,9 @@ class SimulationIMUBuilder {
 
 	static IMUSignals buildSignals() {
 		return new IMUSignals(
-			buildEmptyAngleSignal("yaw"),
 			buildEmptyAngleSignal("roll"),
 			buildEmptyAngleSignal("pitch"),
+			buildEmptyAngleSignal("yaw"),
 			buildEmptyAngleSignal("angularVelocityX"),
 			buildEmptyAngleSignal("angularVelocityY"),
 			buildEmptyAngleSignal("angularVelocityZ"),

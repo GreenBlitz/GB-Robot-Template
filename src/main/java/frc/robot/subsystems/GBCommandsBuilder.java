@@ -2,18 +2,18 @@ package frc.robot.subsystems;
 
 public class GBCommandsBuilder {
 
-	private boolean isRunningIndependently;
+	private boolean isSubsystemRunningIndependently;
 
 	public GBCommandsBuilder() {
-		this.isRunningIndependently = false;
+		this.isSubsystemRunningIndependently = false;
 	}
 
-	public boolean isRunningIndependently() {
-		return isRunningIndependently;
+	public boolean isSubsystemRunningIndependently() {
+		return isSubsystemRunningIndependently;
 	}
 
-	public void setIsRunningIndependently(boolean isRunningIndependently) {
-		this.isRunningIndependently = isRunningIndependently;
+	public void setIsSubsystemRunningIndependently(boolean isSubsystemRunningIndependently) {
+		this.isSubsystemRunningIndependently = isSubsystemRunningIndependently;
 	}
 
 }

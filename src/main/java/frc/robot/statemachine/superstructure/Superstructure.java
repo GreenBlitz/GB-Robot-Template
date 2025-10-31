@@ -44,7 +44,7 @@ public class Superstructure extends GBSubsystem {
 	private final AlgaeIntakeStateHandler algaeIntakeStateHandler;
 	private final Set<Subsystem> subsystems;
 	private final TargetChecks targetChecks;
-	private boolean isRunningIndependently;
+	private boolean isSubsystemRunningIndependently;
 
 	private RobotState currentState;
 
@@ -76,7 +76,7 @@ public class Superstructure extends GBSubsystem {
 		);
 
 		this.currentState = RobotState.STAY_IN_PLACE;
-		this.isRunningIndependently = false;
+		this.isSubsystemRunningIndependently = false;
 	}
 
 	public ElevatorStateHandler getElevatorStateHandler() {
@@ -99,19 +99,19 @@ public class Superstructure extends GBSubsystem {
 		return climbStateHandler;
 	}
 
-	public boolean isRunningIndependently() {
-		return isRunningIndependently
-			|| robot.getElevator().getCommandsBuilder().isRunningIndependently()
-			|| robot.getArm().getCommandsBuilder().isRunningIndependently()
-			|| robot.getEndEffector().getCommandsBuilder().isRunningIndependently()
-			|| robot.getPivot().getCommandsBuilder().isRunningIndependently()
-			|| robot.getRollers().getCommandsBuilder().isRunningIndependently()
-			|| robot.getSolenoid().getCommandsBuilder().isRunningIndependently()
-			|| robot.getLifter().getCommandsBuilder().isRunningIndependently();
+	public boolean isSubsystemRunningIndependently() {
+		return isSubsystemRunningIndependently
+			|| robot.getElevator().getCommandsBuilder().isSubsystemRunningIndependently()
+			|| robot.getArm().getCommandsBuilder().isSubsystemRunningIndependently()
+			|| robot.getEndEffector().getCommandsBuilder().isSubsystemRunningIndependently()
+			|| robot.getPivot().getCommandsBuilder().isSubsystemRunningIndependently()
+			|| robot.getRollers().getCommandsBuilder().isSubsystemRunningIndependently()
+			|| robot.getSolenoid().getCommandsBuilder().isSubsystemRunningIndependently()
+			|| robot.getLifter().getCommandsBuilder().isSubsystemRunningIndependently();
 	}
 
-	public void setIsRunningIndependently(boolean isRunningIndependently) {
-		this.isRunningIndependently = isRunningIndependently;
+	public void setIsSubsystemRunningIndependently(boolean isSubsystemRunningIndependently) {
+		this.isSubsystemRunningIndependently = isSubsystemRunningIndependently;
 	}
 
 	public RobotState getCurrentState() {
@@ -213,7 +213,7 @@ public class Superstructure extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/ClimbState", climbStateHandler.getCurrentState());
 		Logger.recordOutput(getLogPath() + "/AlgaeIntakeState", algaeIntakeStateHandler.getCurrentState());
 		Logger.recordOutput(getLogPath() + "/IsAlgaeInIntake", isAlgaeInAlgaeIntake());
-		Logger.recordOutput(getLogPath() + "/IsRunningIndependently", isRunningIndependently());
+		Logger.recordOutput(getLogPath() + "/IsSubsystemRunningIndependently", isSubsystemRunningIndependently());
 	}
 
 	public Command idle() {

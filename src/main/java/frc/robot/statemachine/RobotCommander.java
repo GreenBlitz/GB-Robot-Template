@@ -87,8 +87,8 @@ public class RobotCommander extends GBSubsystem {
 		return ledStateHandler;
 	}
 
-	public boolean isRunningIndependently() {
-		return superstructure.isRunningIndependently() || swerve.getCommandsBuilder().isRunningIndependently();
+	public boolean isSubsystemRunningIndependently() {
+		return superstructure.isSubsystemRunningIndependently() || swerve.getCommandsBuilder().isSubsystemRunningIndependently();
 	}
 
 	public void initializeDefaultCommand() {
@@ -112,7 +112,7 @@ public class RobotCommander extends GBSubsystem {
 						)
 					).schedule()
 				),
-				this::isRunningIndependently
+				this::isSubsystemRunningIndependently
 			)
 
 		);

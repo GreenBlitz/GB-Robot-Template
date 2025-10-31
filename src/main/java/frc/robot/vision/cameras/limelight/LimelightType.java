@@ -1,25 +1,27 @@
 package frc.robot.vision.cameras.limelight;
 
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 public enum LimelightType {
 
-	LIMELIGHT3(new Translation2d(62.5, 48.9)), // horizontal-vertical in degrees
-	LIMELIGHT3GB(new Translation2d(72.25, 52.65)), // temp value
-	LIMELIGHT4(new Translation2d(82, 56.2));
+	LIMELIGHT3(Rotation2d.fromDegrees(62.5), Rotation2d.fromDegrees(48.9)),
+	LIMELIGHT3GB(Rotation2d.fromDegrees(72.25), Rotation2d.fromDegrees(52.65)), // temp value
+	LIMELIGHT4(Rotation2d.fromDegrees(82.0), Rotation2d.fromDegrees(56.2));
 
-	private final Translation2d fieldOfView;
+	private final Rotation2d horizontalFieldOfView;
+	private final Rotation2d verticalFieldOfView;
 
-	LimelightType(Translation2d fieldOfViewY) {
-		this.fieldOfView = fieldOfViewY;
+	LimelightType(Rotation2d horizontalFieldOfView, Rotation2d verticalFieldOfView) {
+		this.horizontalFieldOfView = horizontalFieldOfView;
+		this.verticalFieldOfView = verticalFieldOfView;
 	}
 
-	public double getFieldOfViewX() {
-		return fieldOfView.getX();
+	public Rotation2d getFieldOfViewX() {
+		return horizontalFieldOfView;
 	}
 
-	public double getFieldOfViewY() {
-		return fieldOfView.getY();
+	public Rotation2d getFieldOfViewY() {
+		return verticalFieldOfView;
 	}
 
 

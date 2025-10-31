@@ -99,8 +99,8 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 				Pair<Rotation2d, Rotation2d> objectRelativeToCrosshair = ObjectDetectionMath.convertCornerToCrosshair(
 					Rotation2d.fromDegrees(rawDetections[i].txnc),
 					Rotation2d.fromDegrees(rawDetections[i].tync),
-					fov.getFieldOfViewX(),
-					fov.getFieldOfViewY()
+					fov.getFieldOfViewX().getDegrees(),
+					fov.getFieldOfViewY().getDegrees()
 				);
 				if (pipeline.isDetectingObjects()) {
 					pipeline.getDetectedObjectType(rawDetections[i].classId).ifPresent(objectType -> {
@@ -148,11 +148,14 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	@Override
 	public Optional<ArrayList<DetectedObjectObservation>> getRobotRelativeObjectTranslation() {
-		ArrayList<DetectedObjectObservation> toInsert = new ArrayList<>();
-		for (int i = 0; i < detectedObjectObservations.size(); i++) {
-			toInsert.add(detectedObjectObservations.get(i));
+		if (pipeline.isDetectingObjects()) {
+			ArrayList<DetectedObjectObservation> toInsert = new ArrayList<>();
+			for (int i = 0; i < detectedObjectObservations.size(); i++) {
+				toInsert.add(detectedObjectObservations.get(i));
+			}
+			return Optional.of(toInsert);
 		}
-		return Optional.of(toInsert);
+		return Optional.empty();
 	}
 
 	@Override

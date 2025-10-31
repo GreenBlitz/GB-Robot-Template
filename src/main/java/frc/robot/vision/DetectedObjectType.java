@@ -4,7 +4,8 @@ import java.util.Optional;
 
 public enum DetectedObjectType {
 
-	ALGAE("algae", 0.206375);
+	ALGAE("algae", 0.206375),
+	CORAL("coral",0.1234);
 
 	private final String name;
 	private final double centerHeightFromFloorMeters;

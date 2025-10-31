@@ -116,8 +116,8 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 							currentlyInView.add(observation);
 						}
 					});
+					detectedObjectObservations = currentlyInView;
 				}
-				detectedObjectObservations = currentlyInView;
 			}
 		} else {
 			detectedObjectObservations = new ArrayList<>();
@@ -150,9 +150,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	public Optional<ArrayList<DetectedObjectObservation>> getRobotRelativeObjectTranslation() {
 		ArrayList<DetectedObjectObservation> toInsert = new ArrayList<>();
 		for (int i = 0; i < detectedObjectObservations.size(); i++) {
-			if (doesObservationExist(detectedObjectObservations.get(i))) {
-				toInsert.add(detectedObjectObservations.get(i));
-			}
+			toInsert.add(detectedObjectObservations.get(i));
 		}
 		return Optional.of(toInsert);
 	}

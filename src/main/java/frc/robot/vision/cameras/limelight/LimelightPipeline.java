@@ -38,11 +38,9 @@ public enum LimelightPipeline {
 
 	public Optional<DetectedObjectType> getDetectedObjectType(int index) {
 		try {
-			return Optional.ofNullable(detectedObjectTypes[index]);
+			return Optional.of(detectedObjectTypes[index]);
 		} catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
-			System.out.println("nuh-uh");
-			Alert a = new Alert(Alert.AlertType.WARNING, "outOfBounds");
-			a.report();
+			new Alert(Alert.AlertType.WARNING, "outOfBounds").report();
 			return Optional.empty();
 		}
 	}

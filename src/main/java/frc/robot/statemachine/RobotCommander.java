@@ -23,9 +23,16 @@ public class RobotCommander extends GBSubsystem {
 		this.swerve = null;
 		this.positionTargets = new PositionTargets(robot);
 		this.superstructure = new Superstructure("StateMachine/Superstructure", robot);
-		this.currentState = RobotState.STAY_IN_PLACE;
+		this.currentState = null;
 
-		initializeDefaultCommand();
+		setDefaultCommand(
+			new ConditionalCommand(
+				asSubsystemCommand(Commands.none(), "Disabled"),
+				new InstantCommand(() -> new DeferredCommand(() -> endState(currentState), Set.of(this, swerve)).schedule()),
+				this::isSubsystemRunningIndependently
+			)
+
+		);
 	}
 
 	public RobotState getCurrentState() {
@@ -40,15 +47,9 @@ public class RobotCommander extends GBSubsystem {
 		return superstructure.isSubsystemRunningIndependently() || swerve.getCommandsBuilder().isSubsystemRunningIndependently();
 	}
 
-	public void initializeDefaultCommand() {
-		setDefaultCommand(
-			new ConditionalCommand(
-				asSubsystemCommand(Commands.none(), "Disabled"),
-				new InstantCommand(() -> new DeferredCommand(() -> endState(currentState), Set.of(this, superstructure, swerve)).schedule()),
-				this::isSubsystemRunningIndependently
-			)
-
-		);
+	@Override
+	protected void subsystemPeriodic() {
+		superstructure.log();
 	}
 
 	public Command driveWith(RobotState state, Command command) {
@@ -66,13 +67,9 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	private Command endState(RobotState state) {
-		Command command = switch (state) {
-			case STAY_IN_PLACE -> driveWith(RobotState.STAY_IN_PLACE);
+		return switch (state) {
+			default -> new InstantCommand();
 		};
-
-		command.addRequirements(Set.of(this, superstructure, swerve));
-
-		return command;
 	}
 
 }

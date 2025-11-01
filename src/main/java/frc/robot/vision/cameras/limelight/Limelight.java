@@ -96,7 +96,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 			if (target2dValues.isValid()) {
 				LimelightHelpers.RawDetection[] rawDetections = LimelightHelpers.getRawDetections(name);
 				for (LimelightHelpers.RawDetection rawDetection : rawDetections) {
-					Pair<Rotation2d, Rotation2d> objectRelativeToCrosshair = ObjectDetectionMath.convertCornerToCrosshair(
+					Pair<Rotation2d, Rotation2d> objectRelativeToCrosshair = ObjectDetectionMath.convertCornerToCrosshairOrigin(
 							Rotation2d.fromDegrees(rawDetection.txnc),
 							Rotation2d.fromDegrees(rawDetection.tync),
 							limelightType.getHorizontalFieldOfView(),

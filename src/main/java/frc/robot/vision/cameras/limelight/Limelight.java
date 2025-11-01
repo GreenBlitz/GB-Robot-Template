@@ -96,20 +96,20 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 			target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
 			if (target2dValues.isValid()) {
 				LimelightHelpers.RawDetection[] rawDetections = LimelightHelpers.getRawDetections(name);
-				for (int i = 0; i < rawDetections.length; i++) {
+				for (LimelightHelpers.RawDetection rawDetection : rawDetections) {
 					Pair<Rotation2d, Rotation2d> objectRelativeToCrosshair = ObjectDetectionMath.convertCornerToCrosshair(
-						Rotation2d.fromDegrees(rawDetections[i].txnc),
-						Rotation2d.fromDegrees(rawDetections[i].tync),
-						fov.getFieldOfViewX(),
-						fov.getFieldOfViewY()
+							Rotation2d.fromDegrees(rawDetection.txnc),
+							Rotation2d.fromDegrees(rawDetection.tync),
+							fov.getFieldOfViewX(),
+							fov.getFieldOfViewY()
 					);
-					pipeline.getDetectedObjectType(rawDetections[i].classId).ifPresent(objectType -> {
+					pipeline.getDetectedObjectType(rawDetection.classId).ifPresent(objectType -> {
 						DetectedObjectObservation observation = ObjectDetectionMath.getDetectedObjectObservation(
-							robotRelativeCameraPose,
-							objectType,
-							objectRelativeToCrosshair.getFirst(),
-							objectRelativeToCrosshair.getSecond(),
-							getTarget2dTimestampSeconds(target2dValues)
+								robotRelativeCameraPose,
+								objectType,
+								objectRelativeToCrosshair.getFirst(),
+								objectRelativeToCrosshair.getSecond(),
+								getTarget2dTimestampSeconds(target2dValues)
 						);
 
 						if (doesObservationExist(observation)) {

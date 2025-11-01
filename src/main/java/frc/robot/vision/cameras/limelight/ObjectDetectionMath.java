@@ -46,8 +46,8 @@ public class ObjectDetectionMath {
 
 	public static Pair<Rotation2d, Rotation2d> convertCornerToCrosshair(Rotation2d txnc, Rotation2d tync, Rotation2d fovX, Rotation2d fovY) {
 		return new Pair<>(
-			new Rotation2d(txnc.getRadians() - (0.5 * fovX.getRadians())),
-			new Rotation2d(tync.getRadians() - (0.5 * fovY.getRadians()))
+				txnc.minus(fovX.div(2)),
+				tync.minus(fovY.div(2))
 		);
 	}
 

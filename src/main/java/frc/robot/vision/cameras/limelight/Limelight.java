@@ -25,7 +25,6 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	private final String logPath;
 	private final Pose3d robotRelativeCameraPose;
 	private final LimelightType limelightType;
-
 	private final ArrayList<DetectedObjectObservation> detectedObjectObservations;
 
 	private LimelightTarget2dValues target2dValues;

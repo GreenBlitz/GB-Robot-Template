@@ -26,7 +26,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	private final Pose3d robotRelativeCameraPose;
 	private final LimelightType limelightType;
 
-	private ArrayList<DetectedObjectObservation> detectedObjectObservations;
+	private final ArrayList<DetectedObjectObservation> detectedObjectObservations;
 
 	private LimelightTarget2dValues target2dValues;
 
@@ -123,7 +123,8 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 				}
 			}
 		}
-		detectedObjectObservations = currentlyInView;
+		detectedObjectObservations.clear();
+		detectedObjectObservations.addAll(currentlyInView);
 	}
 
 	public void updateMT1() {

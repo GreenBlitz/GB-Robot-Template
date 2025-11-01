@@ -15,7 +15,6 @@ import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -44,7 +43,13 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	private LimelightPipeline pipeline;
 
-	public Limelight(String name, String logPathPrefix, Pose3d robotRelativeCameraPose, LimelightPipeline pipeline, LimelightType limelightType) {
+	public Limelight(
+		String name,
+		String logPathPrefix,
+		Pose3d robotRelativeCameraPose,
+		LimelightPipeline pipeline,
+		LimelightType limelightType
+	) {
 		this.name = name;
 		this.logPath = logPathPrefix + "/" + name;
 
@@ -81,7 +86,10 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 				Logger.recordOutput(logPath + "/megaTag2PoseObservation", mt2PoseObservation);
 			}
 		} else if (pipeline.isDetectingObjects()) {
-			Logger.recordOutput(logPath + "/detectedObjectObservations", detectedObjectObservations.toArray(new DetectedObjectObservation[detectedObjectObservations.size()]));
+			Logger.recordOutput(
+				logPath + "/detectedObjectObservations",
+				detectedObjectObservations.toArray(new DetectedObjectObservation[detectedObjectObservations.size()])
+			);
 		}
 	}
 
@@ -93,18 +101,18 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 				LimelightHelpers.RawDetection[] rawDetections = LimelightHelpers.getRawDetections(name);
 				for (LimelightHelpers.RawDetection rawDetection : rawDetections) {
 					Pair<Rotation2d, Rotation2d> objectRelativeToCrosshair = ObjectDetectionMath.convertCornerToCrosshairOrigin(
-							Rotation2d.fromDegrees(rawDetection.txnc),
-							Rotation2d.fromDegrees(rawDetection.tync),
-							limelightType.getHorizontalFieldOfView(),
-							limelightType.getVerticalFieldOfView()
+						Rotation2d.fromDegrees(rawDetection.txnc),
+						Rotation2d.fromDegrees(rawDetection.tync),
+						limelightType.getHorizontalFieldOfView(),
+						limelightType.getVerticalFieldOfView()
 					);
 					pipeline.getDetectedObjectType(rawDetection.classId).ifPresent(objectType -> {
 						DetectedObjectObservation observation = ObjectDetectionMath.getDetectedObjectObservation(
-								robotRelativeCameraPose,
-								objectType,
-								objectRelativeToCrosshair.getFirst(),
-								objectRelativeToCrosshair.getSecond(),
-								getTarget2dTimestampSeconds(target2dValues)
+							robotRelativeCameraPose,
+							objectType,
+							objectRelativeToCrosshair.getFirst(),
+							objectRelativeToCrosshair.getSecond(),
+							getTarget2dTimestampSeconds(target2dValues)
 						);
 
 						if (doesObservationExist(observation)) {

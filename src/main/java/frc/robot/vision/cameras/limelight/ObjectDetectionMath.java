@@ -44,11 +44,13 @@ public class ObjectDetectionMath {
 		return objectAndCameraHeightDifferenceMeters / objectAndCameraTotalPitch.getTan();
 	}
 
-	public static Pair<Rotation2d, Rotation2d> convertCornerToCrosshairOrigin(Rotation2d txnc, Rotation2d tync, Rotation2d fovX, Rotation2d fovY) {
-		return new Pair<>(
-				txnc.minus(fovX.div(2)),
-				tync.minus(fovY.div(2))
-		);
+	public static Pair<Rotation2d, Rotation2d> convertCornerToCrosshairOrigin(
+		Rotation2d txnc,
+		Rotation2d tync,
+		Rotation2d fovX,
+		Rotation2d fovY
+	) {
+		return new Pair<>(txnc.minus(fovX.div(2)), tync.minus(fovY.div(2)));
 	}
 
 	private static double getCameraRelativeObjectY(

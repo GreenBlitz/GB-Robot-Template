@@ -44,10 +44,10 @@ public class ObjectDetectionMath {
 		return objectAndCameraHeightDifferenceMeters / objectAndCameraTotalPitch.getTan();
 	}
 
-	public static Pair<Rotation2d, Rotation2d> convertCornerToCrosshair(Rotation2d txnc, Rotation2d tync, Rotation2d FOVx, Rotation2d FOVy) {
+	public static Pair<Rotation2d, Rotation2d> convertCornerToCrosshair(Rotation2d txnc, Rotation2d tync, Rotation2d fovX, Rotation2d fovY) {
 		return new Pair<>(
-			new Rotation2d(txnc.getRadians() - (0.5 * FOVx.getRadians())),
-			new Rotation2d(tync.getRadians() - (0.5 * FOVy.getRadians()))
+			new Rotation2d(txnc.getRadians() - (0.5 * fovX.getRadians())),
+			new Rotation2d(tync.getRadians() - (0.5 * fovY.getRadians()))
 		);
 	}
 

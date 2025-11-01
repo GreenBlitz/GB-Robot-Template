@@ -15,6 +15,7 @@ import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -81,11 +82,15 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 				Logger.recordOutput(logPath + "/megaTag2PoseObservation", mt2PoseObservation);
 			}
 		} else if (pipeline.isDetectingObjects()) {
+			ArrayList<DetectedObjectObservation> validObservations = new ArrayList<>();
+			int count = 0;
 			for (DetectedObjectObservation observation : detectedObjectObservations) {
 				if (doesObservationExist(observation)) {
-					Logger.recordOutput(logPath + "/detectedObjectObservation", observation);
+					count++;
+					validObservations.add(observation);
 				}
 			}
+			Logger.recordOutput(logPath + "/detectedObjectObservations", validObservations.toArray(new DetectedObjectObservation[count]));
 		}
 	}
 

@@ -94,7 +94,6 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	public void updateObjectDetection() {
-		ArrayList<DetectedObjectObservation> currentlyInView = new ArrayList<>();
 		if (pipeline.isDetectingObjects()) {
 			target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
 			if (target2dValues.isValid()) {
@@ -116,14 +115,12 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 						);
 
 						if (doesObservationExist(observation)) {
-							currentlyInView.add(observation);
+							detectedObjectObservations.add(observation);
 						}
 					});
 				}
 			}
 		}
-		detectedObjectObservations.clear();
-		detectedObjectObservations.addAll(currentlyInView);
 	}
 
 	public void updateMT1() {

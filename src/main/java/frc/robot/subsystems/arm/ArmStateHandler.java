@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.statemachine.Tolerances;
+import frc.robot.statemachine.superstructure.TargetChecks;
 
 import java.util.function.Supplier;
 
@@ -13,10 +13,12 @@ public class ArmStateHandler {
 	private final Arm arm;
 	private ArmState currentState;
 	private final Supplier<Double> distanceSupplier;
+	private final Supplier<Double> arbitraryFeedForwardSupplier;
 
-	public ArmStateHandler(Arm arm, Supplier<Double> distanceSupplier) {
+	public ArmStateHandler(Arm arm, Supplier<Double> distanceSupplier, Supplier<Double> arbitraryFeedForwardSupplier) {
 		this.arm = arm;
 		this.distanceSupplier = distanceSupplier;
+		this.arbitraryFeedForwardSupplier = arbitraryFeedForwardSupplier;
 	}
 
 
@@ -32,20 +34,22 @@ public class ArmStateHandler {
 					.moveToPosition(
 						() -> getStatePosition(state),
 						state.getMaxVelocityRotation2dPerSecond(),
-						state.getMaxAccelerationRotation2dPerSecondSquared()
+						state.getMaxAccelerationRotation2dPerSecondSquared(),
+						arbitraryFeedForwardSupplier.get()
 					);
 			default ->
 				arm.getCommandsBuilder()
 					.moveToPosition(
 						state.getPosition(),
 						state.getMaxVelocityRotation2dPerSecond(),
-						state.getMaxAccelerationRotation2dPerSecondSquared()
+						state.getMaxAccelerationRotation2dPerSecondSquared(),
+						arbitraryFeedForwardSupplier.get()
 					);
 		});
 	}
 
 	public boolean isAtState(ArmState state) {
-		return isAtState(state, Tolerances.ARM_POSITION);
+		return isAtState(state, TargetChecks.ARM_POSITION_TOLERANCE);
 	}
 
 	public boolean isAtState(ArmState state, Rotation2d tolerance) {

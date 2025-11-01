@@ -2,14 +2,16 @@ package frc.robot.subsystems.climb.lifter;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.robot.subsystems.GBCommandsBuilder;
 
 import java.util.function.DoubleSupplier;
 
-public class LifterCommandsBuilder {
+public class LifterCommandsBuilder extends GBCommandsBuilder {
 
 	private final Lifter lifter;
 
 	public LifterCommandsBuilder(Lifter lifter) {
+		super();
 		this.lifter = lifter;
 	}
 

@@ -18,7 +18,7 @@ import frc.constants.field.Field;
 import frc.constants.field.enums.Branch;
 import frc.robot.Robot;
 import frc.robot.statemachine.StateMachineConstants;
-import frc.robot.statemachine.Tolerances;
+import frc.robot.statemachine.superstructure.TargetChecks;
 import frc.robot.subsystems.elevator.ElevatorState;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.robot.scoringhelpers.ScoringHelpers;
@@ -385,7 +385,7 @@ public class AutosBuilder {
 			true,
 			AngleTransform.MIRROR_Y
 		);
-		Supplier<Command> softCloseNet = () -> robot.getRobotCommander().getSuperstructure().softCloseNet().asProxy();
+		Supplier<Command> closeNet = () -> robot.getRobotCommander().getSuperstructure().idle().asProxy();
 
 		Command bulbulBalls = new SequentialCommandGroup(
 			autoScoreToBranch(robot, firstAutoScoreTargetBranch, firstAutoScoreTargetScoreLevel),
@@ -403,7 +403,7 @@ public class AutosBuilder {
 					robot.getPoseEstimator()::getEstimatedPose,
 					PathHelper.PATH_PLANNER_PATHS.get("LN-RFA"),
 					AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
-					softCloseNet,
+					closeNet,
 					tolerance
 				),
 				getFloorAlgaeToNetCommand(robot, algaeTranslationSupplier, algaeRemoveCommand, netCommand, tolerance, true),
@@ -413,7 +413,7 @@ public class AutosBuilder {
 					robot.getPoseEstimator()::getEstimatedPose,
 					PathHelper.PATH_PLANNER_PATHS.get("CLN-LFA"),
 					AutonomousConstants.getRealTimeConstraintsForAuto(robot.getSwerve()),
-					softCloseNet,
+					closeNet,
 					tolerance
 				),
 				getFloorAlgaeToNetCommand(robot, algaeTranslationSupplier, algaeRemoveCommand, netCommand, tolerance, false),
@@ -434,7 +434,9 @@ public class AutosBuilder {
 	public static PathPlannerAutoWrapper autoScoreToBranch(Robot robot, Branch branch, ScoreLevel scoreLevel) {
 		return new PathPlannerAutoWrapper(
 			robot.getRobotCommander()
-				.autoScoreForAutonomous(getAutoScorePath(robot.getSwerve(), robot.getPoseEstimator()::getEstimatedPose, branch, scoreLevel)),
+				.reefAutomationForAutonomous(
+					getAutoScorePath(robot.getSwerve(), robot.getPoseEstimator()::getEstimatedPose, branch, scoreLevel)
+				),
 			Pose2d.kZero,
 			branch.name() + " Auto Score"
 		);
@@ -506,7 +508,7 @@ public class AutosBuilder {
 				robot.getSwerve().getCommandsBuilder().moveToPoseByPID(robot.getPoseEstimator()::getEstimatedPose, backOffFromReefPose)
 			).until(
 				() -> ToleranceMath.isNear(robot.getPoseEstimator().getEstimatedPose(), backOffFromReefPose, tolerance)
-					&& robot.getElevator().isAtPosition(elevatorStateAfterScore.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS)
+					&& robot.getElevator().isAtPosition(elevatorStateAfterScore.getHeightMeters(), TargetChecks.ELEVATOR_HEIGHT_TOLERANCE_METERS)
 			),
 			new ParallelCommandGroup(
 				algaeRemove,
@@ -582,7 +584,7 @@ public class AutosBuilder {
 						.getSuperstructure()
 						.preNet()
 						.asProxy()
-						.until(robot.getRobotCommander().getSuperstructure()::isPreNetReady)
+						.until(robot.getRobotCommander().getSuperstructure().getTargetChecks()::isPreNetReady)
 				)
 			),
 			robot.getRobotCommander().getSuperstructure().netWithRelease().asProxy()

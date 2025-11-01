@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import frc.constants.field.Field;
 import frc.robot.poseestimator.Pose2dComponentsValue;
 import frc.robot.poseestimator.Pose3dComponentsValue;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -14,6 +15,7 @@ import frc.robot.subsystems.swerve.SwerveMath;
 import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
 
+import frc.utils.math.FieldMath;
 import frc.utils.math.ToleranceMath;
 import org.littletonrobotics.junction.Logger;
 
@@ -22,6 +24,24 @@ public class PoseUtil {
 	private static final String IS_AT_POSE_LOG_PATH_PREFIX = "isAtPoses";
 
 	public static Pose2d EMPTY_POSE2D = new Pose2d(Double.NaN, Double.NaN, Rotation2d.fromDegrees(Double.NaN));
+
+	public static boolean isAtPoseAngleRelative(
+		Rotation2d relativeTo,
+		Pose2d targetPoseFieldRelative,
+		Pose2d currentPoseFieldRelative,
+		ChassisSpeeds allianceRelativeSpeeds,
+		Pose2d positionTolerance,
+		Pose2d velocityDeadband,
+		String name
+	) {
+		Pose2d offsetCurrentPose = FieldMath.rotatePose(relativeTo, currentPoseFieldRelative);
+		Pose2d offsetTargetPose = FieldMath.rotatePose(relativeTo, targetPoseFieldRelative);
+
+		ChassisSpeeds offsetSpeeds = SwerveMath
+			.robotToAllianceRelativeSpeeds(allianceRelativeSpeeds, Field.getAllianceRelative(relativeTo.unaryMinus()));
+
+		return isAtPose(offsetCurrentPose, offsetTargetPose, offsetSpeeds, positionTolerance, velocityDeadband, "/" + name);
+	}
 
 	public static boolean isAtPose(
 		Pose2d currentPose,

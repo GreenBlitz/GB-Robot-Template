@@ -10,6 +10,10 @@ public class SolenoidStateHandler {
 		this.solenoid = solenoid;
 	}
 
+	public Solenoid getSolenoid() {
+		return solenoid;
+	}
+
 	public Command setState(SolenoidState state) {
 		return solenoid.getCommandsBuilder().setPower(state.getPower());
 	}

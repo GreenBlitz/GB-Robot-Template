@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.constants.field.Field;
 import frc.robot.autonomous.PathFollowingCommandsBuilder;
+import frc.robot.subsystems.GBCommandsBuilder;
 import frc.robot.subsystems.swerve.module.ModuleConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.Modules;
@@ -30,7 +31,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
-public class SwerveCommandsBuilder {
+public class SwerveCommandsBuilder extends GBCommandsBuilder {
 
 	private final Swerve swerve;
 	private final Modules modules;
@@ -38,6 +39,7 @@ public class SwerveCommandsBuilder {
 	private final SysIdCalibrator driveCalibrator;
 
 	public SwerveCommandsBuilder(Swerve swerve) {
+		super();
 		this.swerve = swerve;
 		this.modules = swerve.getModules();
 		this.steerCalibrator = new SysIdCalibrator(

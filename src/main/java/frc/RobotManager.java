@@ -94,7 +94,8 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void autonomousInit() {
-		robot.getRobotCommander().removeDefaultCommand();
+		robot.getRobotCommander().getSuperstructure().setIsSubsystemRunningIndependently(true);
+		robot.getSwerve().getCommandsBuilder().setIsSubsystemRunningIndependently(true);
 
 		if (auto == null) {
 			this.auto = robot.getAuto();
@@ -111,7 +112,8 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void teleopInit() {
-		robot.getRobotCommander().initializeDefaultCommand();
+		robot.getRobotCommander().getSuperstructure().setIsSubsystemRunningIndependently(false);
+		robot.getSwerve().getCommandsBuilder().setIsSubsystemRunningIndependently(false);
 	}
 
 	@Override

@@ -62,12 +62,8 @@ public class AlgaeIntakeStateHandler {
 		return isAlgaeInByMin && isPivotDown && Robot.ROBOT_TYPE.isReal();
 	}
 
-	public Command handleIdle(boolean isAlgaeInAlgaeIntakeOverride) {
-		return new ConditionalCommand(
-			setState(AlgaeIntakeState.HOLD_ALGAE),
-			setState(AlgaeIntakeState.CLOSED),
-			() -> isAlgaeIn() || isAlgaeInAlgaeIntakeOverride
-		);
+	public Command handleIdle() {
+		return new ConditionalCommand(setState(AlgaeIntakeState.HOLD_ALGAE), setState(AlgaeIntakeState.CLOSED), this::isAlgaeIn);
 	}
 
 	public void updateAlgaeSensor(Robot robot) {
@@ -89,6 +85,15 @@ public class AlgaeIntakeStateHandler {
 
 
 	public void applyCalibrationBindings(SmartJoystick joystick) {
+		joystick.POV_DOWN.onTrue(new InstantCommand(() -> {
+			pivotStateHandler.getPivot().getCommandsBuilder().setIsSubsystemRunningIndependently(true);
+			rollersStateHandler.getRollers().getCommandsBuilder().setIsSubsystemRunningIndependently(true);
+		}));
+		joystick.POV_DOWN.onTrue(new InstantCommand(() -> {
+			pivotStateHandler.getPivot().getCommandsBuilder().setIsSubsystemRunningIndependently(false);
+			rollersStateHandler.getRollers().getCommandsBuilder().setIsSubsystemRunningIndependently(false);
+		}));
+
 		joystick.A.onTrue(setState(AlgaeIntakeState.CLOSED));
 		joystick.B.onTrue(setState(AlgaeIntakeState.INTAKE));
 		joystick.Y.onTrue(setState(AlgaeIntakeState.TRANSFER_TO_END_EFFECTOR_WITHOUT_RELEASE));

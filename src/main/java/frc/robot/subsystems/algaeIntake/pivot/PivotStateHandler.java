@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.statemachine.Tolerances;
+import frc.robot.statemachine.superstructure.TargetChecks;
 
 public class PivotStateHandler {
 
@@ -34,7 +34,7 @@ public class PivotStateHandler {
 	}
 
 	public boolean isAtState(PivotState state) {
-		return isAtState(state, Tolerances.PIVOT);
+		return isAtState(state, TargetChecks.PIVOT_POSITION_TOLERANCE);
 	}
 
 	public boolean isAtState(PivotState state, Rotation2d tolerance) {

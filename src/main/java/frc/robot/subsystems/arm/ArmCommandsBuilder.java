@@ -3,7 +3,8 @@ package frc.robot.subsystems.arm;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import frc.robot.statemachine.Tolerances;
+import frc.robot.statemachine.superstructure.TargetChecks;
+import frc.robot.subsystems.GBCommandsBuilder;
 import frc.utils.math.ToleranceMath;
 import frc.utils.utilcommands.InitExecuteCommand;
 import frc.utils.utilcommands.LoggedDashboardCommand;
@@ -11,11 +12,12 @@ import frc.utils.utilcommands.LoggedDashboardCommand;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
-public class ArmCommandsBuilder {
+public class ArmCommandsBuilder extends GBCommandsBuilder {
 
 	private final Arm arm;
 
 	public ArmCommandsBuilder(Arm arm) {
+		super();
 		this.arm = arm;
 	}
 
@@ -43,11 +45,17 @@ public class ArmCommandsBuilder {
 	public Command moveToPosition(
 		Supplier<Rotation2d> positionSupplier,
 		Rotation2d maxVelocityRotation2dPerSecond,
-		Rotation2d maxAccelerationRotation2dPerSecondSquared
+		Rotation2d maxAccelerationRotation2dPerSecondSquared,
+		double arbitraryFeedForward
 	) {
 		return arm.asSubsystemCommand(new RunCommand(() -> {
-			if (!ToleranceMath.isNearWrapped(positionSupplier.get(), arm.getPosition(), Tolerances.ARM_INTERPOLATION_POSITION)) {
-				arm.setTargetPosition(positionSupplier.get(), maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared);
+			if (!ToleranceMath.isNearWrapped(positionSupplier.get(), arm.getPosition(), TargetChecks.ARM_INTERPOLATION_POSITION_TOLERANCE)) {
+				arm.setTargetPosition(
+					positionSupplier.get(),
+					maxVelocityRotation2dPerSecond,
+					maxAccelerationRotation2dPerSecondSquared,
+					arbitraryFeedForward
+				);
 			}
 		}), "Set target position to supplier");
 	}
@@ -55,11 +63,17 @@ public class ArmCommandsBuilder {
 	public Command moveToPosition(
 		Rotation2d position,
 		Rotation2d maxVelocityRotation2dPerSecond,
-		Rotation2d maxAccelerationRotation2dPerSecondSquared
+		Rotation2d maxAccelerationRotation2dPerSecondSquared,
+		double arbitraryFeedForward
 	) {
 		return arm.asSubsystemCommand(
 			new InitExecuteCommand(
-				() -> arm.setTargetPosition(position, maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared),
+				() -> arm.setTargetPosition(
+					position,
+					maxVelocityRotation2dPerSecond,
+					maxAccelerationRotation2dPerSecondSquared,
+					arbitraryFeedForward
+				),
 				() -> {}
 			),
 			"Set target position to: " + position

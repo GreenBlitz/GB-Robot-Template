@@ -271,17 +271,17 @@ public class Robot {
 		Supplier<Command> scoringCommand = () -> new WaitUntilCommand(robotCommander::isReadyToScore).andThen(
 			robotCommander.getSuperstructure()
 				.scoreWithoutRelease()
-				.until(robotCommander.getSuperstructure()::isReadyToScore)
+				.until(robotCommander.getSuperstructure().getTargetChecks()::isReadyToScore)
 				.andThen(robotCommander.getSuperstructure().scoreWithRelease())
 				.deadlineFor(getRobotCommander().getLedStateHandler().setState(LEDState.IN_POSITION_TO_SCORE))
 				.asProxy()
 		);
 		Supplier<Command> intakingCommand = () -> robotCommander.getSuperstructure()
-			.softCloseL4()
+			.idle()
 			.andThen(robotCommander.getSuperstructure().intake().withTimeout(AutonomousConstants.INTAKING_TIMEOUT_SECONDS))
 			.asProxy();
 		Supplier<Command> algaeRemoveCommand = () -> robotCommander.getSuperstructure()
-			.softCloseNetToAlgaeRemove()
+			.algaeRemove()
 			.andThen(robotCommander.getSuperstructure().algaeRemove().withTimeout(AutonomousConstants.ALGAE_REMOVE_TIMEOUT_SECONDS))
 			.asProxy();
 		Supplier<Command> netCommand = () -> new WaitUntilCommand(robotCommander::isReadyForNetForAuto)
@@ -299,7 +299,7 @@ public class Robot {
 			robotCommander.getSuperstructure()
 				.preScore()
 				.alongWith(getRobotCommander().getLedStateHandler().setState(LEDState.IN_POSITION_TO_OPEN_ELEVATOR))
-				.until(() -> robotCommander.getSuperstructure().isPreScoreReady())
+				.until(() -> robotCommander.getSuperstructure().getTargetChecks().isPreScoreReady())
 				.andThen(
 					robotCommander.getSuperstructure()
 						.scoreWithoutRelease()

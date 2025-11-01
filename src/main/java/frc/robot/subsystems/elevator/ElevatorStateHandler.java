@@ -3,7 +3,7 @@ package frc.robot.subsystems.elevator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.statemachine.Tolerances;
+import frc.robot.statemachine.superstructure.TargetChecks;
 
 public class ElevatorStateHandler {
 
@@ -39,7 +39,7 @@ public class ElevatorStateHandler {
 	}
 
 	public boolean isAtState(ElevatorState state) {
-		return currentState == state && elevator.isAtPosition(state.getHeightMeters(), Tolerances.ELEVATOR_HEIGHT_METERS);
+		return currentState == state && elevator.isAtPosition(state.getHeightMeters(), TargetChecks.ELEVATOR_HEIGHT_TOLERANCE_METERS);
 	}
 
 }

@@ -23,7 +23,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	private final String name;
 	private final String logPath;
 	private final Pose3d robotRelativeCameraPose;
-	private final LimelightType fov;
+	private final LimelightType limelightType;
 
 	private ArrayList<DetectedObjectObservation> detectedObjectObservations;
 
@@ -68,7 +68,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		this.calculateMT1StdDevs = () -> LimelightStdDevCalculations.DEFAULT_STD_DEVS;
 		this.calculateMT2StdDevs = () -> LimelightStdDevCalculations.DEFAULT_STD_DEVS;
 
-		this.fov = fov;
+		this.limelightType = fov;
 
 		setPipeline(pipeline);
 	}
@@ -100,8 +100,8 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 					Pair<Rotation2d, Rotation2d> objectRelativeToCrosshair = ObjectDetectionMath.convertCornerToCrosshair(
 							Rotation2d.fromDegrees(rawDetection.txnc),
 							Rotation2d.fromDegrees(rawDetection.tync),
-							fov.getHorizontalFieldOfView(),
-							fov.getVerticalFieldOfView()
+							limelightType.getHorizontalFieldOfView(),
+							limelightType.getVerticalFieldOfView()
 					);
 					pipeline.getDetectedObjectType(rawDetection.classId).ifPresent(objectType -> {
 						DetectedObjectObservation observation = ObjectDetectionMath.getDetectedObjectObservation(

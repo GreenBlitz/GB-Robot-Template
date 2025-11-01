@@ -44,12 +44,13 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	private LimelightPipeline pipeline;
 
-	public Limelight(String name, String logPathPrefix, Pose3d robotRelativeCameraPose, LimelightPipeline pipeline, LimelightType fov) {
+	public Limelight(String name, String logPathPrefix, Pose3d robotRelativeCameraPose, LimelightPipeline pipeline, LimelightType limelightType) {
 		this.name = name;
 		this.logPath = logPathPrefix + "/" + name;
 
 		this.robotRelativeCameraPose = robotRelativeCameraPose;
 		setRobotRelativeCameraPose(robotRelativeCameraPose);
+		this.limelightType = limelightType;
 
 		this.detectedObjectObservations = new ArrayList<>();
 
@@ -67,8 +68,6 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 		this.calculateMT1StdDevs = () -> LimelightStdDevCalculations.DEFAULT_STD_DEVS;
 		this.calculateMT2StdDevs = () -> LimelightStdDevCalculations.DEFAULT_STD_DEVS;
-
-		this.limelightType = fov;
 
 		setPipeline(pipeline);
 	}

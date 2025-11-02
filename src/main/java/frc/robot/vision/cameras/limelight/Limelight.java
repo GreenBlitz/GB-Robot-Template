@@ -15,6 +15,7 @@ import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -138,7 +139,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	@Override
-	public Optional<ArrayList<DetectedObjectObservation>> getRobotRelativeObjectTranslations() {
+	public Optional<List<DetectedObjectObservation>> getRobotRelativeObjectTranslations() {
 		if (pipeline.isDetectingObjects()) {
 			ArrayList<DetectedObjectObservation> toInsert = (ArrayList<DetectedObjectObservation>) detectedObjectObservations.clone();
 			return Optional.of(toInsert);

@@ -3,6 +3,8 @@ package frc.utils.calibration.limelightcalibration;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.vision.cameras.limelight.Limelight;
+import frc.utils.LimelightHelpers;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.List;
@@ -10,18 +12,18 @@ import java.util.function.Supplier;
 
 public class CameraCalibration extends Command {
 
-	private final Supplier<Transform3d> tagToCamera;
+	private final Limelight limelight;
 	private final Pose3d tagToRobot;
 	private List<Pose3d> pose;
 
-	public CameraCalibration(Supplier<Transform3d> tagToCamera, Pose3d tagToRobot) {
-		this.tagToCamera = tagToCamera;
-		this.tagToRobot = tagToRobot;
-		Logger.recordOutput("cameraCalibration", LimelightCalculations.getCameraToRobot(tagToCamera, tagToRobot));
+	public CameraCalibration(Limelight limelight) {
+		this.limelight = limelight;
+		this.tagToRobot = limelight.getRobotRelativeCameraPose();
+		Logger.recordOutput("cameraCalibration", LimelightCalculations.getCameraToRobot(LimelightHelpers.getTargetPose3d_CameraSpace(limelight.getName()), tagToRobot));
 	}
 
 	public void addToPoseList() {
-		pose.add(LimelightCalculations.getCameraToRobot(tagToCamera, tagToRobot));
+		pose.add(LimelightCalculations.getCameraToRobot(LimelightHelpers.getTargetPose3d_CameraSpace(limelight.getName()), tagToRobot));
 	}
 
 	public Pose3d getAvgPose() {

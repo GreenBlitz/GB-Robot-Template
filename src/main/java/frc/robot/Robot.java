@@ -179,6 +179,14 @@ public class Robot {
 		);
 	}
 
+	public Limelight getLimelightFour(){
+		return limelightFour;
+	}
+
+	public Limelight getLimelightThreeGB() {
+		return limelightThreeGB;
+	}
+
 	public void periodic() {
 		BusChain.refreshAll();
 

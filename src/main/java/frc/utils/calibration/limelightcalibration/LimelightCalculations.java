@@ -9,8 +9,8 @@ import java.util.function.Supplier;
 
 public class LimelightCalculations {
 
-	public static Pose3d getCameraToRobot(Supplier<Transform3d> tagToCamera, Pose3d tagToRobot) {
-		return tagToRobot.transformBy(tagToCamera.get().inverse());
+	public static Pose3d getCameraToRobot(Pose3d tagToCamera, Pose3d tagToRobot) {
+		return tagToRobot.transformBy(tagToCamera.minus(new Pose3d()).inverse());
 	}
 
 	public static Rotation3d add(Rotation3d rotation, Rotation3d other) {

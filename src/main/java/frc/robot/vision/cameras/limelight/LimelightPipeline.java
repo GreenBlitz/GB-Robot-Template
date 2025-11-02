@@ -12,8 +12,8 @@ public enum LimelightPipeline {
 	OBJECT_DETECTION(1, true, false, new DetectedObjectType[0]);
 
 	private final int pipelineIndex;
-	private final boolean isDetectingObjects;
-	private final boolean isUsingMT;
+	private final boolean detectsObjects;
+	private final boolean usesMT;
 	private DetectedObjectType[] detectedObjectTypes;
 
 	LimelightPipeline(int pipelineIndex, boolean isDetectingObjects, boolean isUsingMT, DetectedObjectType[] detectedObjectTypes) {

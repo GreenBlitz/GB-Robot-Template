@@ -34,7 +34,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	private LimelightHelpers.PoseEstimate mt1RawData;
 	private LimelightHelpers.PoseEstimate mt2RawData;
 
-	private Function<LimelightHelpers.RawDetection, Boolean> detectedObjectFilter; // rawDetection->bool if() //call on every raw detection
+	private Function<LimelightHelpers.RawDetection, Boolean> detectedObjectFilter;
 	private Filter mt1PoseFilter;
 	private Filter mt2PoseFilter;
 

@@ -1,6 +1,5 @@
 package frc.robot.vision.cameras.limelight;
 
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.*;
 import frc.robot.vision.DetectedObjectObservation;
 import frc.robot.vision.RobotPoseObservation;
@@ -43,12 +42,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	private LimelightPipeline pipeline;
 
-	public Limelight(
-		String name,
-		String logPathPrefix,
-		Pose3d robotRelativeCameraPose,
-		LimelightPipeline pipeline
-	) {
+	public Limelight(String name, String logPathPrefix, Pose3d robotRelativeCameraPose, LimelightPipeline pipeline) {
 		this.name = name;
 		this.logPath = logPathPrefix + "/" + name;
 

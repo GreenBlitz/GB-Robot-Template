@@ -25,11 +25,11 @@ public class CameraCalibration extends Command {
 
     public void addToPoseList() {
         pose.add(LimelightCalculations.getCameraToRobot(LimelightHelpers.getTargetPose3d_CameraSpace(limelight.getName()), tagToRobot));
+		sum.getTranslation().plus(pose.getLast().getTranslation());
+		sum.getRotation().plus(pose.getLast().getRotation());
     }
 
     public Pose3d getAvgPose() {
-        sum.getTranslation().times(pose.size() - 1).plus(pose.getLast().getTranslation());
-        sum.getRotation().times(pose.size() - 1).plus(pose.getLast().getRotation());
         return sum.div(pose.size());
     }
 

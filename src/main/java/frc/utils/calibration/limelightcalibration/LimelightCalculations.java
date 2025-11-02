@@ -13,11 +13,15 @@ public class LimelightCalculations {
 		return tagToRobot.transformBy(tagToCamera.get().inverse());
 	}
 
-	public static Rotation3d getSum(Rotation3d sum, Rotation3d other){
-		Rotation2d sumX = new Rotation2d(sum.getX());
-		Rotation2d sumY = new Rotation2d(sum.getY());
-		Rotation2d sumZ = new Rotation2d(sum.getZ());
-		return new Rotation3d(sumX.plus(new Rotation2d(other.getX())).getRadians(), sumY.plus(new Rotation2d(other.getY())).getRadians(), sumZ.plus(new Rotation2d(other.getZ())).getRadians());
+	public static Rotation3d add(Rotation3d rotation, Rotation3d other) {
+		Rotation2d sumX = new Rotation2d(rotation.getX());
+		Rotation2d sumY = new Rotation2d(rotation.getY());
+		Rotation2d sumZ = new Rotation2d(rotation.getZ());
+		return new Rotation3d(
+			sumX.plus(new Rotation2d(other.getX())).getRadians(),
+			sumY.plus(new Rotation2d(other.getY())).getRadians(),
+			sumZ.plus(new Rotation2d(other.getZ())).getRadians()
+		);
 	}
 
 }

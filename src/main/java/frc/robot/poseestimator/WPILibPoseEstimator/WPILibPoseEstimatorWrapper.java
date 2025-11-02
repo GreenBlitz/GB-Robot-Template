@@ -29,14 +29,14 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 		String logPath,
 		SwerveDriveKinematics kinematics,
 		SwerveModulePosition[] modulePositions,
-		Rotation2d initialGyroAngle
+		Rotation2d initialIMUAngle
 	) {
 		super(logPath);
 		this.kinematics = kinematics;
-		this.lastOdometryAngle = initialGyroAngle;
+		this.lastOdometryAngle = initialIMUAngle;
 		this.odometryEstimator = new Odometry<>(
 			kinematics,
-			initialGyroAngle,
+			initialIMUAngle,
 			modulePositions,
 			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
 		);
@@ -46,7 +46,7 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 			WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS.asColumnVector(),
 			WPILibPoseEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATIONS.asColumnVector()
 		);
-		this.lastOdometryData = new OdometryData(modulePositions, Optional.of(initialGyroAngle), TimeUtil.getCurrentTimeSeconds());
+		this.lastOdometryData = new OdometryData(modulePositions, Optional.of(initialIMUAngle), TimeUtil.getCurrentTimeSeconds());
 	}
 
 
@@ -122,6 +122,10 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 			visionObservation.stdDevs().asColumnVector()
 		);
 		this.lastVisionObservation = visionObservation;
+	}
+
+	private boolean isIMUOffsetCalibrated() {
+		return true;
 	}
 
 	private void log() {

@@ -38,7 +38,7 @@ public enum LimelightPipeline {
 	public Optional<DetectedObjectType> getDetectedObjectType(int index) {
 		try {
 			return Optional.of(detectedObjectTypes[index]);
-		} catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
+		} catch (Exception e) {
 			new Alert(Alert.AlertType.WARNING, "ObjectDetections/InvalidObjectID: ").report();
 			return Optional.empty();
 		}

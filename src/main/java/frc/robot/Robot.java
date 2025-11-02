@@ -25,11 +25,14 @@ import frc.robot.poseestimator.helpers.robotheadingestimator.RobotHeadingEstimat
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
+import frc.utils.LimelightHelpers;
 import frc.utils.TimedValue;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.math.StandardDeviations2D;
 import frc.utils.time.TimeUtil;
+
+import java.util.function.Function;
 
 
 /**
@@ -169,7 +172,7 @@ public class Robot {
 			LimelightPipeline.OBJECT_DETECTION
 		);
 		limelightObjectDetector
-			.setDetectedObjectFilter(LimelightFilters.detectedObjectFilter(limelightObjectDetector, DetectedObjectType.ALGAE));
+			.setDetectedObjectFilter( (rawDetection)->true);
 
 		swerve.setHeadingSupplier(
 			ROBOT_TYPE.isSimulation() ? () -> poseEstimator.getEstimatedPose().getRotation() : () -> headingEstimator.getEstimatedHeading()

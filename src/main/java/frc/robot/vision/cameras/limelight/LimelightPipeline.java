@@ -8,19 +8,22 @@ import java.util.Optional;
 
 public enum LimelightPipeline {
 
-	APRIL_TAG(0, false, true, new DetectedObjectType[0]),
-	OBJECT_DETECTION(1, true, false, new DetectedObjectType[] {DetectedObjectType.ALGAE, DetectedObjectType.CORAL});
+	APRIL_TAG(0, false),
+	OBJECT_DETECTION(1, false, new DetectedObjectType[0]);
 
 	private final int pipelineIndex;
-	private final boolean isDetectingObjects;
 	private final boolean isUsingMT;
 	private final DetectedObjectType[] detectedObjectTypes;
 
-	LimelightPipeline(int pipelineIndex, boolean isDetectingObjects, boolean isUsingMT, DetectedObjectType[] detectedObjectTypes) {
-		this.detectedObjectTypes = detectedObjectTypes;
+	LimelightPipeline(int pipelineIndex, boolean isUsingMT){
+		this(pipelineIndex,isUsingMT,new DetectedObjectType[0]);
+
+	}
+
+	LimelightPipeline(int pipelineIndex, boolean isUsingMT, DetectedObjectType[] detectedObjectTypes) {
 		this.pipelineIndex = pipelineIndex;
-		this.isDetectingObjects = isDetectingObjects;
 		this.isUsingMT = isUsingMT;
+		this.detectedObjectTypes = detectedObjectTypes;
 	}
 
 	public int getPipelineIndex() {
@@ -28,7 +31,7 @@ public enum LimelightPipeline {
 	}
 
 	public boolean isDetectingObjects() {
-		return isDetectingObjects;
+		return detectedObjectTypes.length > 0;
 	}
 
 	public boolean isUsingMT() {

@@ -14,7 +14,7 @@ public enum LimelightPipeline {
 	private final int pipelineIndex;
 	private final boolean isDetectingObjects;
 	private final boolean isUsingMT;
-	private DetectedObjectType[] detectedObjectTypes;
+	private final DetectedObjectType[] detectedObjectTypes;
 
 	LimelightPipeline(int pipelineIndex, boolean isDetectingObjects, boolean isUsingMT, DetectedObjectType[] detectedObjectTypes) {
 		this.detectedObjectTypes = detectedObjectTypes;

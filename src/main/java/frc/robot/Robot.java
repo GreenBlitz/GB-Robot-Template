@@ -80,8 +80,7 @@ public class Robot {
 				new Translation3d(0.215, -0.11, 0.508),
 				new Rotation3d(Units.Degrees.of(-8.06180374425555), Units.Degrees.of(-27.07784559039065), Units.Degrees.of(-22.52372569716833))
 			),
-			LimelightPipeline.APRIL_TAG,
-			LimelightType.LIMELIGHT4
+			LimelightPipeline.APRIL_TAG
 		);
 		limelightFour.setMT1PoseFilter(
 			LimelightFilters.megaTag1Filter(
@@ -124,8 +123,7 @@ public class Robot {
 				new Translation3d(0.2022, 0.13, 0.508),
 				new Rotation3d(Units.Degrees.of(10.612258493096334), Units.Degrees.of(-27.18966371065684), Units.Degrees.of(20.10328620400214))
 			),
-			LimelightPipeline.APRIL_TAG,
-			LimelightType.LIMELIGHT3GB
+			LimelightPipeline.APRIL_TAG
 		);
 		limelightThreeGB.setMT1PoseFilter(
 			LimelightFilters.megaTag1Filter(
@@ -168,8 +166,7 @@ public class Robot {
 				new Translation3d(-0.08, 0.23, 0.865),
 				new Rotation3d(Units.Degrees.of(0), Units.Degrees.of(-27), Units.Degrees.of(-176.67))
 			),
-			LimelightPipeline.OBJECT_DETECTION,
-			LimelightType.LIMELIGHT3
+			LimelightPipeline.OBJECT_DETECTION
 		);
 		limelightObjectDetector
 			.setDetectedObjectFilter(LimelightFilters.detectedObjectFilter(limelightObjectDetector, DetectedObjectType.ALGAE));

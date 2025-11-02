@@ -70,7 +70,6 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		setPipeline(pipeline);
 	}
 
-
 	public void log() {
 		if (pipeline.isUsingMT()) {
 			if (doesObservationExist(mt1PoseObservation)) {

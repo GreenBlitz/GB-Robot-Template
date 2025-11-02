@@ -15,14 +15,14 @@ public enum LimelightPipeline {
 	private final boolean isUsingMT;
 	private final DetectedObjectType[] detectedObjectTypes;
 
-	LimelightPipeline(int pipelineIndex, boolean isUsingMT) {
-		this(pipelineIndex, isUsingMT, new DetectedObjectType[0]);
-	}
-
 	LimelightPipeline(int pipelineIndex, boolean isUsingMT, DetectedObjectType[] detectedObjectTypes) {
 		this.pipelineIndex = pipelineIndex;
 		this.isUsingMT = isUsingMT;
 		this.detectedObjectTypes = detectedObjectTypes;
+	}
+
+	LimelightPipeline(int pipelineIndex, boolean isUsingMT) {
+		this(pipelineIndex, isUsingMT, new DetectedObjectType[0]);
 	}
 
 	public int getPipelineIndex() {
@@ -41,7 +41,7 @@ public enum LimelightPipeline {
 		try {
 			return Optional.of(detectedObjectTypes[index]);
 		} catch (Exception e) {
-			new Alert(Alert.AlertType.WARNING, "ObjectDetections/InvalidObjectID: ").report();
+			new Alert(Alert.AlertType.WARNING, "ObjectDetections/InvalidObjectID: " + index + "in pipeline " + name()).report();
 			return Optional.empty();
 		}
 	}

@@ -79,10 +79,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 				Logger.recordOutput(logPath + "/megaTag2PoseObservation", mt2PoseObservation);
 			}
 		} else if (pipeline.isDetectingObjects()) {
-			Logger.recordOutput(
-				logPath + "/detectedObjectObservations",
-				detectedObjectObservations.toArray(new DetectedObjectObservation[0])
-			);
+			Logger.recordOutput(logPath + "/detectedObjectObservations", detectedObjectObservations.toArray(new DetectedObjectObservation[0]));
 		}
 	}
 

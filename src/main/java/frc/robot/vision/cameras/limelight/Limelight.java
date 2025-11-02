@@ -34,7 +34,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	private LimelightHelpers.PoseEstimate mt1RawData;
 	private LimelightHelpers.PoseEstimate mt2RawData;
 
-	private Function <LimelightHelpers.RawDetection, Boolean> detectedObjectFilter; //rawDetection->bool if() //call on every raw detection
+	private Function<LimelightHelpers.RawDetection, Boolean> detectedObjectFilter; // rawDetection->bool if() //call on every raw detection
 	private Filter mt1PoseFilter;
 	private Filter mt2PoseFilter;
 
@@ -60,7 +60,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		this.mt1RawData = new LimelightHelpers.PoseEstimate();
 		this.mt2RawData = new LimelightHelpers.PoseEstimate();
 
-		this.detectedObjectFilter = (rawDetection)->true;
+		this.detectedObjectFilter = (rawDetection) -> true;
 		this.mt1PoseFilter = Filter.nonFilteringFilter();
 		this.mt2PoseFilter = Filter.nonFilteringFilter();
 
@@ -94,7 +94,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 			if (target2dValues.isValid()) {
 				LimelightHelpers.RawDetection[] rawDetections = LimelightHelpers.getRawDetections(name);
 				for (LimelightHelpers.RawDetection rawDetection : rawDetections) {
-					if(detectedObjectFilter.apply(rawDetection)){
+					if (detectedObjectFilter.apply(rawDetection)) {
 						pipeline.getDetectedObjectType(rawDetection.classId).ifPresent(objectType -> {
 							DetectedObjectObservation observation = ObjectDetectionMath.getDetectedObjectObservation(
 								robotRelativeCameraPose,

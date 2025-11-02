@@ -18,7 +18,7 @@ public enum RobotState {
 		this.swerveStateActive = true;
 	}
 
-	public RobotState activateSwerve(boolean active) {
+	public RobotState activateSwerveAssist(boolean active) {
 		swerveStateActive = active;
 		return this;
 	}

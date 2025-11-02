@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface ObjectDetector {
 
-	Optional<List<DetectedObjectObservation>> getRobotRelativeObjectTranslations();
+	List<DetectedObjectObservation> getRobotRelativeObjectTranslations();
 
 }

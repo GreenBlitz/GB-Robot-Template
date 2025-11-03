@@ -21,10 +21,11 @@ public class DynamicMotionMagicArm extends Arm{
         this.defaultDynamicMotionVelocity = defaultMotionMagicVelocity;
     }
 
-    public void withPosition(Rotation2d target,Rotation2d acceleration,Rotation2d velocity){
+    public void withPosition(Rotation2d target,Rotation2d acceleration,Rotation2d velocity,double arbitraryFeedForward){
         motionMagicRequest.withSetPoint(target);
         motionMagicRequest.withMaxAccelerationRotation2dPerSecondSquared(acceleration);
         motionMagicRequest.withMaxVelocityRotation2dPerSecond(velocity);
+        motionMagicRequest.withArbitraryFeedForward(arbitraryFeedForward);
     }
 
     public void withPosition(Rotation2d target){

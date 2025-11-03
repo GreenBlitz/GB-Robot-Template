@@ -211,7 +211,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	protected Pose3d getPrimaryTagPoseInCameraSpace() {
-		return robotRelativeCameraPose;
+		return primaryTagPoseInCameraSpace;
 	}
 
 	protected LimelightHelpers.PoseEstimate getMT1RawData() {

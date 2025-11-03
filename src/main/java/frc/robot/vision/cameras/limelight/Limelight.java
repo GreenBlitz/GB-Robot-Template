@@ -87,7 +87,6 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		if (pipeline.isDetectingObjects()) {
 			detectedObjectObservations.clear();
 			target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
-			detectedObjectObservations.clear();
 			if (target2dValues.isValid()) {
 				LimelightHelpers.RawDetection[] rawDetections = LimelightHelpers.getRawDetections(name);
 				for (LimelightHelpers.RawDetection rawDetection : rawDetections) {

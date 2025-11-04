@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.statemachine.RobotCommander;
 import frc.robot.subsystems.swerve.factories.imu.IMUFactory;
 import frc.robot.vision.cameras.limelight.*;
 import frc.robot.poseestimator.IPoseEstimator;
@@ -46,6 +47,7 @@ public class Robot {
 	private final Limelight limelightThreeGB;
 	private final Limelight limelightObjectDetector;
 	private final RobotHeadingEstimator headingEstimator;
+	private final RobotCommander robotCommander;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -171,6 +173,8 @@ public class Robot {
 		swerve.setHeadingSupplier(
 			ROBOT_TYPE.isSimulation() ? () -> poseEstimator.getEstimatedPose().getRotation() : () -> headingEstimator.getEstimatedHeading()
 		);
+
+		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
 	}
 
 	public void periodic() {
@@ -227,6 +231,10 @@ public class Robot {
 
 	public Swerve getSwerve() {
 		return swerve;
+	}
+
+	public RobotCommander getRobotCommander() {
+		return robotCommander;
 	}
 
 	public IPoseEstimator getPoseEstimator() {

@@ -76,7 +76,7 @@ public class RobotManager extends LoggedRobot {
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 		}
- 		robot.getRobotCommander().getSuperstructure().setIsSubsystemRunningIndependently(false);
+		robot.getRobotCommander().getSuperstructure().setIsSubsystemRunningIndependently(false);
 		robot.getSwerve().getCommandsBuilder().setIsSubsystemRunningIndependently(false);
 	}
 

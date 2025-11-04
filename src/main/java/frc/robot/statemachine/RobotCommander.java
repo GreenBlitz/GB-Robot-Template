@@ -19,7 +19,7 @@ public class RobotCommander extends GBSubsystem {
 	public RobotCommander(String logPath, Robot robot) {
 		super(logPath);
 		this.robot = robot;
-        this.swerve = robot.getSwerve();
+		this.swerve = robot.getSwerve();
 		this.positionTargets = new PositionTargets(robot);
 		this.superstructure = new Superstructure("StateMachine/Superstructure", robot);
 		this.currentState = null;

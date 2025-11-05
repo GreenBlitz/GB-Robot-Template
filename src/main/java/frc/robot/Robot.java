@@ -179,7 +179,7 @@ public class Robot {
 		);
 	}
 
-	public Limelight getLimelightFour(){
+	public Limelight getLimelightFour() {
 		return limelightFour;
 	}
 

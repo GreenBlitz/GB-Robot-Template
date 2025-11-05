@@ -55,19 +55,7 @@ public class ArmBuilder {
 		double kV,
 		double kA
 	) {
-		TalonFXMotor arm = new TalonFXMotor(
-			logPath + "/Arm",
-			new Phoenix6DeviceID(armId),
-			new SysIdRoutine.Config(),
-			new SimpleMotorSimulation(
-				new DCMotorSim(
-					LinearSystemId
-						.createDCMotorSystem(DCMotor.getKrakenX60Foc(talonFXFollowerConfig.followerIDs.length + 1), JKgMetersSquared, gearing),
-					DCMotor.getKrakenX60Foc(talonFXFollowerConfig.followerIDs.length + 1)
-				)
-			)
-		);
-
+        TalonFXMotor arm = arm(armId, logPath, talonFXFollowerConfig,JKgMetersSquared,gearing);
 
 		Phoenix6AngleSignal velocity = Phoenix6SignalBuilder
 			.build(arm.getDevice().getVelocity(), ArmConstants.defaultFrequency, AngleUnit.ROTATIONS, BusChain.ROBORIO);
@@ -127,18 +115,7 @@ public class ArmBuilder {
 		double kD,
 		double kG
 	) {
-		TalonFXMotor arm = new TalonFXMotor(
-			logPath + "/Arm",
-			new Phoenix6DeviceID(armId),
-			new SysIdRoutine.Config(),
-			new SimpleMotorSimulation(
-				new DCMotorSim(
-					LinearSystemId
-						.createDCMotorSystem(DCMotor.getKrakenX60Foc(talonFXFollowerConfig.followerIDs.length + 1), JKgMetersSquared, gearing),
-					DCMotor.getKrakenX60Foc(talonFXFollowerConfig.followerIDs.length + 1)
-				)
-			)
-		);
+        TalonFXMotor arm = arm(armId, logPath, talonFXFollowerConfig,JKgMetersSquared,gearing);
 
 		Phoenix6AngleSignal velocity = Phoenix6SignalBuilder
 			.build(arm.getDevice().getVelocity(), ArmConstants.defaultFrequency, AngleUnit.ROTATIONS, BusChain.ROBORIO);
@@ -179,6 +156,21 @@ public class ArmBuilder {
 		talonFXConfiguration.MotorOutput.withNeutralMode(NeutralModeValue.Coast);
 		return talonFXConfiguration;
 	}
+
+    private static TalonFXMotor arm(int armId, String logPath, TalonFXFollowerConfig talonFXFollowerConfig,double JKgMetersSquared,double gearing){
+        return new TalonFXMotor(
+                logPath + "/Arm",
+                new Phoenix6DeviceID(armId),
+                new SysIdRoutine.Config(),
+                new SimpleMotorSimulation(
+                        new DCMotorSim(
+                                LinearSystemId
+                                        .createDCMotorSystem(DCMotor.getKrakenX60Foc(talonFXFollowerConfig.followerIDs.length + 1), JKgMetersSquared, gearing),
+                                DCMotor.getKrakenX60Foc(talonFXFollowerConfig.followerIDs.length + 1)
+                        )
+                )
+        );
+    }
 
 
 }

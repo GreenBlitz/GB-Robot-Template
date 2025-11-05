@@ -25,6 +25,7 @@ import frc.robot.hardware.phoenix6.signal.Phoenix6DoubleSignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6LatencySignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.utils.AngleUnit;
+import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public class ArmBuilder {
 
@@ -135,6 +136,7 @@ public class ArmBuilder {
 		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder
 			.build(new MotionMagicVoltage(position.getLatestValue().getRotations()), feedforward, true);
 		arm.applyConfiguration(configuration(rotorRatio, mechanismRatio, kP, kG, kI, kD));
+
 		return new Arm(logPath, arm, velocity, position, voltage, current, voltageRequest, positionRequest);
 	}
 
@@ -152,5 +154,6 @@ public class ArmBuilder {
 		talonFXConfiguration.MotorOutput.withNeutralMode(NeutralModeValue.Coast);
 		return talonFXConfiguration;
 	}
+
 
 }

@@ -16,7 +16,7 @@ public class Arm extends GBSubsystem {
 	private final ArmCommandBuilder armCommandBuilder;
 	private final IRequest<Double> armVoltageRequest;
     private final IFeedForwardRequest motionMagicRequest;
-	//private final SysIdCalibrator sysIdCalibrator;
+	private final SysIdCalibrator sysIdCalibrator;
     private final SysIdCalibrator.SysIdConfigInfo sysIdConfig;
 	public Arm(
 		String logPath,
@@ -38,9 +38,10 @@ public class Arm extends GBSubsystem {
 		this.armVoltageRequest = armVoltageRequest;
 		this.motionMagicRequest = motionMagicRequest;
         this.sysIdConfig = config;
-        //sysIdCalibrator = new SysIdCalibrator(config,this,);
+        sysIdCalibrator = new SysIdCalibrator(config,this,this::setVoltage);
 		armCommandBuilder = new ArmCommandBuilder(this);
 		setDefaultCommand(armCommandBuilder.stayInPlace());
+
 	}
 
 	public ArmCommandBuilder getCommandsBuilder() {

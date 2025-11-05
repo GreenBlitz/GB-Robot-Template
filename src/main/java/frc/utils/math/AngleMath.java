@@ -41,16 +41,16 @@ public class AngleMath {
 		}
 	}
 
-	public static Rotation2d getAngleAverageWrapped(double sinSum, double cosSum, double scalar){
-		return Rotation2d.fromRadians(Math.atan2(sinSum/scalar, cosSum/scalar));
+	public static Rotation2d getAngleAverageWrapped(double sinSum, double cosSum){
+		return Rotation2d.fromRadians(Math.atan2(sinSum, cosSum));
 	}
 
 	public static Rotation3d getAngleAverageWrapped(Rotation3d... angles){
 		return new Rotation3d(getAngleAverageWrapped((Rotation2d) Arrays.stream(angles).map(Rotation3d::getX), (Rotation2d) Arrays.stream(angles).map(Rotation3d::getY), (Rotation2d) Arrays.stream(angles).map(Rotation3d::getZ)));
 	}
 
-	public static Rotation3d getAngleAverageWrapped(double sinXSum, double cosXSum, double sinYSum, double cosYSum, double sinZSum, double cosZSum, double scalar){
-		return new Rotation3d(getAngleAverageWrapped(sinXSum, cosXSum, scalar).getRadians(), getAngleAverageWrapped(sinYSum, cosYSum, scalar).getRadians(), getAngleAverageWrapped(sinZSum, cosZSum, scalar).getRadians());
+	public static Rotation3d getAngleAverageWrapped(double sinXSum, double cosXSum, double sinYSum, double cosYSum, double sinZSum, double cosZSum){
+		return new Rotation3d(getAngleAverageWrapped(sinXSum, cosXSum).getRadians(), getAngleAverageWrapped(sinYSum, cosYSum).getRadians(), getAngleAverageWrapped(sinZSum, cosZSum).getRadians());
 	}
 
 }

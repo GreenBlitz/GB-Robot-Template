@@ -1,11 +1,7 @@
 package frc.robot.vision.cameras.limelight;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.*;
 import frc.robot.vision.DetectedObjectObservation;
-import frc.robot.vision.DetectedObjectType;
 import frc.robot.vision.RobotPoseObservation;
 import frc.robot.vision.interfaces.ObjectDetector;
 import frc.robot.vision.interfaces.OrientationRequiringRobotPoseSupplier;
@@ -17,7 +13,10 @@ import frc.utils.math.StandardDeviations2D;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, OrientationRequiringRobotPoseSupplier {
@@ -25,8 +24,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	private final String name;
 	private final String logPath;
 	private final Pose3d robotRelativeCameraPose;
-
-	private DetectedObjectObservation detectedObjectObservation;
+	private final ArrayList<DetectedObjectObservation> detectedObjectObservations;
 
 	private LimelightTarget2dValues target2dValues;
 
@@ -38,7 +36,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	private LimelightHelpers.PoseEstimate mt1RawData;
 	private LimelightHelpers.PoseEstimate mt2RawData;
 
-	private Filter detectedObjectFilter;
+	private Function<LimelightHelpers.RawDetection, Boolean> detectedObjectFilter;
 	private Filter mt1PoseFilter;
 	private Filter mt2PoseFilter;
 
@@ -54,7 +52,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		this.robotRelativeCameraPose = robotRelativeCameraPose;
 		setRobotRelativeCameraPose(robotRelativeCameraPose);
 
-		this.detectedObjectObservation = new DetectedObjectObservation();
+		this.detectedObjectObservations = new ArrayList<>();
 
 		this.target2dValues = new LimelightTarget2dValues();
 
@@ -66,7 +64,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		this.mt1RawData = new LimelightHelpers.PoseEstimate();
 		this.mt2RawData = new LimelightHelpers.PoseEstimate();
 
-		this.detectedObjectFilter = Filter.nonFilteringFilter();
+		this.detectedObjectFilter = (rawDetection) -> true;
 		this.mt1PoseFilter = Filter.nonFilteringFilter();
 		this.mt2PoseFilter = Filter.nonFilteringFilter();
 
@@ -85,27 +83,35 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 				Logger.recordOutput(logPath + "/megaTag2PoseObservation", mt2PoseObservation);
 			}
 		} else if (pipeline.isDetectingObjects()) {
-			if (doesObservationExist(detectedObjectObservation)) {
-				Logger.recordOutput(logPath + "/detectedObjectObservation", detectedObjectObservation);
-			}
+			Logger.recordOutput(logPath + "/detectedObjectObservations", detectedObjectObservations.toArray(new DetectedObjectObservation[0]));
 		}
 	}
 
 	public void updateObjectDetection() {
-		target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
-		if (target2dValues.isValid()) {
-			DetectedObjectType.getByName(LimelightHelpers.getDetectorClass(name))
-				.ifPresent(
-					objectType -> detectedObjectObservation = ObjectDetectionMath.getDetectedObjectObservation(
-						robotRelativeCameraPose,
-						objectType,
-						target2dValues.targetX(),
-						target2dValues.targetY(),
-						getTarget2dTimestampSeconds(target2dValues)
-					)
-				);
-		} else {
-			detectedObjectObservation = new DetectedObjectObservation();
+		if (pipeline.isDetectingObjects()) {
+			detectedObjectObservations.clear();
+			target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
+			if (target2dValues.isValid()) {
+				LimelightHelpers.RawDetection[] rawDetections = LimelightHelpers.getRawDetections(name);
+				for (LimelightHelpers.RawDetection rawDetection : rawDetections) {
+					if (detectedObjectFilter.apply(rawDetection)) {
+						pipeline.getDetectedObjectType(rawDetection.classId).ifPresent(objectType -> {
+							DetectedObjectObservation observation = ObjectDetectionMath.getDetectedObjectObservation(
+								robotRelativeCameraPose,
+								objectType,
+								Rotation2d.fromDegrees(rawDetection.txnc),
+								Rotation2d.fromDegrees(rawDetection.tync),
+								getTarget2dTimestampSeconds(target2dValues)
+							);
+
+
+							if (doesObservationExist(observation)) {
+								detectedObjectObservations.add(observation);
+							}
+						});
+					}
+				}
+			}
 		}
 	}
 
@@ -133,11 +139,11 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	@Override
-	public Optional<DetectedObjectObservation> getRobotRelativeObjectTranslation() {
-		if (pipeline.isDetectingObjects() && doesObservationExist(detectedObjectObservation) && detectedObjectFilter.passesFilter()) {
-			return Optional.of(detectedObjectObservation);
+	public List<DetectedObjectObservation> getRobotRelativeObjectTranslations() {
+		if (pipeline.isDetectingObjects()) {
+			return (ArrayList<DetectedObjectObservation>) detectedObjectObservations.clone();
 		}
-		return Optional.empty();
+		return new ArrayList<>();
 	}
 
 	@Override
@@ -156,7 +162,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		return Optional.empty();
 	}
 
-	public Filter getDetectedObjectFilter() {
+	public Function<LimelightHelpers.RawDetection, Boolean> getDetectedObjectFilter() {
 		return detectedObjectFilter;
 	}
 
@@ -186,7 +192,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		LimelightHelpers.setPipelineIndex(name, pipeline.getPipelineIndex());
 	}
 
-	public void setDetectedObjectFilter(Filter detectedObjectFilter) {
+	public void setDetectedObjectFilter(Function<LimelightHelpers.RawDetection, Boolean> detectedObjectFilter) {
 		this.detectedObjectFilter = detectedObjectFilter;
 	}
 

@@ -27,4 +27,7 @@ public class WPILibPoseEstimatorConstants {
 
 	public static final Pose2d STARTING_ODOMETRY_POSE = new Pose2d();
 
+	public static final int ESTIMATION_ANGLE_DIFFERENCE_BUFFER_SIZE = 67;
+
+
 }

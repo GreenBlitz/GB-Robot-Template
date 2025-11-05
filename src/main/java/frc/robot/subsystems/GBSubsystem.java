@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
+import javax.smartcardio.CommandAPDU;
+
 public abstract class GBSubsystem extends SubsystemBase {
 
 	private final String logPath;

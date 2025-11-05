@@ -1,5 +1,6 @@
 package frc.robot.subsystems.arm;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
@@ -9,6 +10,11 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.units.VelocityUnit;
+import edu.wpi.first.units.VoltageUnit;
+import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.units.measure.Velocity;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.hardware.interfaces.IDynamicMotionMagicRequest;
@@ -29,13 +35,15 @@ import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public class ArmBuilder {
 
-	public Arm create(
+	public DynamicMotionMagicArm create(
 		String logPath,
+        TalonFXFollowerConfig talonFXFollowerConfig,
 		int armId,
-		int followerId,
-		double JKgMetersSquared,
+        Voltage stepUpVoltage,
+        Time timeout,
+        Velocity<VoltageUnit> rampUp,
+        double JKgMetersSquared,
 		double gearing,
-		boolean opposeMain,
 		Rotation2d maxAcceleration,
 		Rotation2d maxVelocity,
 		double feedForward,
@@ -44,20 +52,19 @@ public class ArmBuilder {
 		double kP,
 		double kI,
 		double kD,
-		double kG
+		double kG,
+        double kV,
+        double kA
 	) {
-		TalonFXFollowerConfig followerConfig = new TalonFXFollowerConfig();
-		followerConfig.followerIDs = new TalonFXFollowerConfig.TalonFXFollowerID[] {
-			new TalonFXFollowerConfig.TalonFXFollowerID("ArmFollower", new Phoenix6DeviceID(followerId), opposeMain)};
-		TalonFXMotor arm = new TalonFXMotor(
+        TalonFXMotor arm = new TalonFXMotor(
 			logPath + "/Arm",
 			new Phoenix6DeviceID(armId),
 			new SysIdRoutine.Config(),
 			new SimpleMotorSimulation(
 				new DCMotorSim(
 					LinearSystemId
-						.createDCMotorSystem(DCMotor.getKrakenX60Foc(followerConfig.followerIDs.length + 1), JKgMetersSquared, gearing),
-					DCMotor.getKrakenX60Foc(followerConfig.followerIDs.length + 1)
+						.createDCMotorSystem(DCMotor.getKrakenX60Foc(talonFXFollowerConfig.followerIDs.length + 1), JKgMetersSquared, gearing),
+					DCMotor.getKrakenX60Foc(talonFXFollowerConfig.followerIDs.length + 1)
 				)
 			)
 		);
@@ -84,17 +91,20 @@ public class ArmBuilder {
 		positionRequest.withArbitraryFeedForward(feedForward);
         TalonFXConfiguration configuration = configuration(rotorRatio, mechanismRatio, kP, kG, kI, kD);
 		arm.applyConfiguration(configuration);
-		return new Arm(logPath, arm, velocity, position, voltage, current, voltageRequest, positionRequest);
+        SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo = new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(rampUp,stepUpVoltage,timeout,state -> SignalLogger.writeString("state", state.toString())),true);
+		return new DynamicMotionMagicArm(logPath, arm, velocity, position, voltage, current, voltageRequest, positionRequest,maxAcceleration,maxVelocity,sysIdConfigInfo);
 	}
 
 
 	public Arm create(
 		String logPath,
+        Velocity<VoltageUnit> rampUp,
+        Voltage stepUpVoltage,
+        Time timeout,
+        TalonFXFollowerConfig talonFXFollowerConfig,
 		int armId,
-		int followerId,
 		double gearing,
 		double JKgMetersSquared,
-		boolean opposeMain,
 		double feedforward,
 		double rotorRatio,
 		double mechanismRatio,
@@ -103,9 +113,6 @@ public class ArmBuilder {
 		double kD,
 		double kG
 	) {
-		TalonFXFollowerConfig followerConfig = new TalonFXFollowerConfig();
-		followerConfig.followerIDs = new TalonFXFollowerConfig.TalonFXFollowerID[] {
-			new TalonFXFollowerConfig.TalonFXFollowerID("ArmFollower", new Phoenix6DeviceID(followerId), opposeMain)};
 		TalonFXMotor arm = new TalonFXMotor(
 			logPath + "/Arm",
 			new Phoenix6DeviceID(armId),
@@ -113,8 +120,8 @@ public class ArmBuilder {
 			new SimpleMotorSimulation(
 				new DCMotorSim(
 					LinearSystemId
-						.createDCMotorSystem(DCMotor.getKrakenX60Foc(followerConfig.followerIDs.length + 1), JKgMetersSquared, gearing),
-					DCMotor.getKrakenX60Foc(followerConfig.followerIDs.length + 1)
+						.createDCMotorSystem(DCMotor.getKrakenX60Foc(talonFXFollowerConfig.followerIDs.length + 1), JKgMetersSquared, gearing),
+					DCMotor.getKrakenX60Foc(talonFXFollowerConfig.followerIDs.length + 1)
 				)
 			)
 		);
@@ -136,8 +143,9 @@ public class ArmBuilder {
 		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder
 			.build(new MotionMagicVoltage(position.getLatestValue().getRotations()), feedforward, true);
 		arm.applyConfiguration(configuration(rotorRatio, mechanismRatio, kP, kG, kI, kD));
+        SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo = new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(rampUp,stepUpVoltage,timeout,state -> SignalLogger.writeString("state", state.toString())),true);
 
-		return new Arm(logPath, arm, velocity, position, voltage, current, voltageRequest, positionRequest);
+		return new Arm(logPath, arm, velocity, position, voltage, current, voltageRequest, positionRequest, sysIdConfigInfo);
 	}
 
 	private static TalonFXConfiguration configuration(double rotorRatio, double mechanismRatio, double kP, double kG, double kI, double kD) {

@@ -2,6 +2,7 @@ package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.*;
+import frc.utils.calibration.sysid.SysIdCalibrator;
 
 
 public class DynamicMotionMagicArm extends Arm {
@@ -21,9 +22,10 @@ public class DynamicMotionMagicArm extends Arm {
 		IRequest<Double> armVoltageRequest,
 		IDynamicMotionMagicRequest motionMagicRequest,
 		Rotation2d defaultMotionMagicAcceleration,
-		Rotation2d defaultMotionMagicVelocity
+		Rotation2d defaultMotionMagicVelocity,
+        SysIdCalibrator.SysIdConfigInfo configInfo
 	) {
-		super(logPath, arm, velocitySignal, positionSignal, voltageSignal, currentSignal, armVoltageRequest, motionMagicRequest);
+		super(logPath, arm, velocitySignal, positionSignal, voltageSignal, currentSignal, armVoltageRequest, motionMagicRequest,configInfo);
 		this.motionMagicRequest = motionMagicRequest;
 		this.defaultDynamicMotionAcceleration = defaultMotionMagicAcceleration;
 		this.defaultDynamicMotionVelocity = defaultMotionMagicVelocity;

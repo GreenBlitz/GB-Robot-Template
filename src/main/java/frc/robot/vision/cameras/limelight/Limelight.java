@@ -232,10 +232,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	protected static double getEstimateTimestampSeconds(LimelightHelpers.PoseEstimate poseEstimate) {
-		if (poseEstimate.timestampSeconds == 0) {
-			return 0;
-		}
-		return TimeUtil.getCurrentTimeSeconds() - Conversions.milliSecondsToSeconds(poseEstimate.latency);
+		return poseEstimate.timestampSeconds - Conversions.milliSecondsToSeconds(poseEstimate.latency);
 	}
 
 	private static double getTarget2dTimestampSeconds(LimelightTarget2dValues target2dValues) {

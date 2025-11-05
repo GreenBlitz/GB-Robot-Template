@@ -10,7 +10,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.units.VelocityUnit;
 import edu.wpi.first.units.VoltageUnit;
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.units.measure.Velocity;
@@ -37,12 +36,12 @@ public class ArmBuilder {
 
 	public DynamicMotionMagicArm create(
 		String logPath,
-        TalonFXFollowerConfig talonFXFollowerConfig,
+		TalonFXFollowerConfig talonFXFollowerConfig,
 		int armId,
-        Voltage stepUpVoltage,
-        Time timeout,
-        Velocity<VoltageUnit> rampUp,
-        double JKgMetersSquared,
+		Voltage stepUpVoltage,
+		Time timeout,
+		Velocity<VoltageUnit> rampUp,
+		double JKgMetersSquared,
 		double gearing,
 		Rotation2d maxAcceleration,
 		Rotation2d maxVelocity,
@@ -53,10 +52,10 @@ public class ArmBuilder {
 		double kI,
 		double kD,
 		double kG,
-        double kV,
-        double kA
+		double kV,
+		double kA
 	) {
-        TalonFXMotor arm = new TalonFXMotor(
+		TalonFXMotor arm = new TalonFXMotor(
 			logPath + "/Arm",
 			new Phoenix6DeviceID(armId),
 			new SysIdRoutine.Config(),
@@ -89,19 +88,34 @@ public class ArmBuilder {
 		positionRequest.withMaxAccelerationRotation2dPerSecondSquared(maxAcceleration);
 		positionRequest.withMaxVelocityRotation2dPerSecond(maxVelocity);
 		positionRequest.withArbitraryFeedForward(feedForward);
-        TalonFXConfiguration configuration = configuration(rotorRatio, mechanismRatio, kP, kG, kI, kD);
+		TalonFXConfiguration configuration = configuration(rotorRatio, mechanismRatio, kP, kG, kI, kD);
 		arm.applyConfiguration(configuration);
-        SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo = new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(rampUp,stepUpVoltage,timeout,state -> SignalLogger.writeString("state", state.toString())),true);
-		return new DynamicMotionMagicArm(logPath, arm, velocity, position, voltage, current, voltageRequest, positionRequest,maxAcceleration,maxVelocity,sysIdConfigInfo);
+		SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo = new SysIdCalibrator.SysIdConfigInfo(
+			new SysIdRoutine.Config(rampUp, stepUpVoltage, timeout, state -> SignalLogger.writeString("state", state.toString())),
+			true
+		);
+		return new DynamicMotionMagicArm(
+			logPath,
+			arm,
+			velocity,
+			position,
+			voltage,
+			current,
+			voltageRequest,
+			positionRequest,
+			maxAcceleration,
+			maxVelocity,
+			sysIdConfigInfo
+		);
 	}
 
 
 	public Arm create(
 		String logPath,
-        Velocity<VoltageUnit> rampUp,
-        Voltage stepUpVoltage,
-        Time timeout,
-        TalonFXFollowerConfig talonFXFollowerConfig,
+		Velocity<VoltageUnit> rampUp,
+		Voltage stepUpVoltage,
+		Time timeout,
+		TalonFXFollowerConfig talonFXFollowerConfig,
 		int armId,
 		double gearing,
 		double JKgMetersSquared,
@@ -143,7 +157,10 @@ public class ArmBuilder {
 		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder
 			.build(new MotionMagicVoltage(position.getLatestValue().getRotations()), feedforward, true);
 		arm.applyConfiguration(configuration(rotorRatio, mechanismRatio, kP, kG, kI, kD));
-        SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo = new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(rampUp,stepUpVoltage,timeout,state -> SignalLogger.writeString("state", state.toString())),true);
+		SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo = new SysIdCalibrator.SysIdConfigInfo(
+			new SysIdRoutine.Config(rampUp, stepUpVoltage, timeout, state -> SignalLogger.writeString("state", state.toString())),
+			true
+		);
 
 		return new Arm(logPath, arm, velocity, position, voltage, current, voltageRequest, positionRequest, sysIdConfigInfo);
 	}

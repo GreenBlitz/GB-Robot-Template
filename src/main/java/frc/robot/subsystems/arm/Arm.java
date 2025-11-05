@@ -2,7 +2,6 @@ package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
@@ -20,8 +19,9 @@ public class Arm extends GBSubsystem {
 	private final InputSignal<Double> currentSignal;
 	private final ArmCommandBuilder armCommandBuilder;
 	private final IRequest<Double> armVoltageRequest;
-    private final IFeedForwardRequest motionMagicRequest;
+	private final IFeedForwardRequest motionMagicRequest;
 	private final SysIdCalibrator sysIdCalibrator;
+
 	public Arm(
 		String logPath,
 		ControllableMotor arm,
@@ -31,7 +31,7 @@ public class Arm extends GBSubsystem {
 		InputSignal<Double> currentSignal,
 		IRequest<Double> armVoltageRequest,
 		IFeedForwardRequest motionMagicRequest,
-        SysIdCalibrator.SysIdConfigInfo config
+		SysIdCalibrator.SysIdConfigInfo config
 	) {
 		super(logPath);
 		this.arm = arm;
@@ -41,10 +41,9 @@ public class Arm extends GBSubsystem {
 		this.currentSignal = currentSignal;
 		this.armVoltageRequest = armVoltageRequest;
 		this.motionMagicRequest = motionMagicRequest;
-        sysIdCalibrator = new SysIdCalibrator(config,this,this::setVoltage);
+		sysIdCalibrator = new SysIdCalibrator(config, this, this::setVoltage);
 		armCommandBuilder = new ArmCommandBuilder(this);
 		setDefaultCommand(armCommandBuilder.stayInPlace());
-
 	}
 
 	public ArmCommandBuilder getCommandsBuilder() {
@@ -115,26 +114,26 @@ public class Arm extends GBSubsystem {
 		setTargetPosition(positionSignal.getLatestValue());
 	}
 
-    private double getKgVoltage() {
-        return Robot.ROBOT_TYPE.isReal() ? ArmConstants.kG * getPosition().getCos() : 0;
-    }
+	private double getKgVoltage() {
+		return Robot.ROBOT_TYPE.isReal() ? ArmConstants.kG * getPosition().getCos() : 0;
+	}
 
-    public void applyCalibrationBindings(SmartJoystick joystick) {
-        joystick.A.onTrue(new InstantCommand(() -> armCommandBuilder.setIsSubsystemRunningIndependently(true)));
-        joystick.B.onTrue(new InstantCommand(() -> armCommandBuilder.setIsSubsystemRunningIndependently(false)));
+	public void applyCalibrationBindings(SmartJoystick joystick) {
+		joystick.A.onTrue(new InstantCommand(() -> armCommandBuilder.setIsSubsystemRunningIndependently(true)));
+		joystick.B.onTrue(new InstantCommand(() -> armCommandBuilder.setIsSubsystemRunningIndependently(false)));
 
-        // Calibrate kG using phoenix tuner by setting the voltage
+		// Calibrate kG using phoenix tuner by setting the voltage
 
-        // Check limits
-        joystick.R1.whileTrue(
-                armCommandBuilder.setPower(
-                        () -> joystick.getAxisValue(Axis.LEFT_Y) * ArmConstants.CALIBRATION_MAX_POWER
-                                + (getKgVoltage() / BatteryUtil.getCurrentVoltage())
-                )
-        );
+		// Check limits
+		joystick.R1.whileTrue(
+			armCommandBuilder.setPower(
+				() -> joystick.getAxisValue(Axis.LEFT_Y) * ArmConstants.CALIBRATION_MAX_POWER
+					+ (getKgVoltage() / BatteryUtil.getCurrentVoltage())
+			)
+		);
 
-        // Calibrate feed forward using sys id:
-        sysIdCalibrator.setAllButtonsForCalibration (joystick);
+		// Calibrate feed forward using sys id:
+		sysIdCalibrator.setAllButtonsForCalibration(joystick);
 
 //        ArmStateHandler armStateHandler = new ArmStateHandler(this, () -> 0.0, () -> 0.0);
 //
@@ -144,8 +143,8 @@ public class Arm extends GBSubsystem {
 //        joystick.POV_LEFT.onTrue(armStateHandler.setState(ArmState.NET));
 //        joystick.POV_DOWN.onTrue(armStateHandler.setState(ArmState.PRE_L4));
 
-        // Calibrate max acceleration and cruise velocity by the equations: max acceleration = (12 + Ks)/2kA, cruise velocity =(12 + Ks)/kV
-    }
+		// Calibrate max acceleration and cruise velocity by the equations: max acceleration = (12 + Ks)/2kA, cruise velocity =(12 + Ks)/kV
+	}
 
 }
 

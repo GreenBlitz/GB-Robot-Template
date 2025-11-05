@@ -24,6 +24,7 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	private RobotPoseObservation lastVisionObservation;
 	private OdometryData lastOdometryData;
 	private Rotation2d lastOdometryAngle;
+	private boolean isIMUOffsetCalibrated;
 
 	public WPILibPoseEstimatorWrapper(
 		String logPath,
@@ -124,8 +125,8 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 		this.lastVisionObservation = visionObservation;
 	}
 
-	private boolean isIMUOffsetCalibrated() {
-		return true;
+	private void updateIsIMUOffsetCalibrated() {
+		isIMUOffsetCalibrated = true;
 	}
 
 	private void log() {

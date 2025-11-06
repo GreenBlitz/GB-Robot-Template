@@ -52,7 +52,7 @@ public class Arm extends GBSubsystem {
         this.CALIBRATION_MAX_POWER = calibrationMaxPower;
 		sysIdCalibrator = new SysIdCalibrator(config, this, this::setVoltage);
 		armCommandBuilder = new ArmCommandBuilder(this);
-		setDefaultCommand(armCommandBuilder.stayInPlace());
+		//setDefaultCommand(armCommandBuilder.stayInPlace());
 	}
 
 	public ArmCommandBuilder getCommandsBuilder() {

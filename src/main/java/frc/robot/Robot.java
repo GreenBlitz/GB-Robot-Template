@@ -29,7 +29,7 @@ import static edu.wpi.first.units.Units.Volts;
 public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
-    private static TalonFXConfiguration config = new TalonFXConfiguration();
+    private static final TalonFXConfiguration config = new TalonFXConfiguration();
 
 
 
@@ -64,5 +64,8 @@ public class Robot {
 	public PathPlannerAutoWrapper getAutonomousCommand() {
 		return new PathPlannerAutoWrapper();
 	}
+    public DynamicMotionMagicArm getArm(){
+        return arm;
+    }
 
 }

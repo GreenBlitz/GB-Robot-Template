@@ -48,7 +48,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		this.logPath = logPathPrefix + "/" + name;
 
 		this.robotRelativeCameraPose = robotRelativeCameraPose;
-		setRobotRelativeCameraPose(new Pose3d());
+		setNetworkTablesRobotRelativeCameraPose(new Pose3d());
 
 		this.detectedObjectObservations = new ArrayList<>();
 
@@ -182,6 +182,10 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		);
 	}
 
+	public void transformRobotRelativeCameraPose(Transform3d cameraPose){
+		robotRelativeCameraPose.transformBy(cameraPose);
+	}
+
 	public void setPipeline(LimelightPipeline pipeline) {
 		this.pipeline = pipeline;
 		LimelightHelpers.setPipelineIndex(name, pipeline.getPipelineIndex());
@@ -219,7 +223,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		return mt2RawData;
 	}
 
-	private void setRobotRelativeCameraPose(Pose3d robotRelativeCameraPose) {
+	private void setNetworkTablesRobotRelativeCameraPose(Pose3d robotRelativeCameraPose) {
 		LimelightHelpers.setCameraPose_RobotSpace(
 			name,
 			robotRelativeCameraPose.getX(),

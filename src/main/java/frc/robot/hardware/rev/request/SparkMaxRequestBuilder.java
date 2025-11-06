@@ -1,6 +1,6 @@
 package frc.robot.hardware.rev.request;
 
-import com.revrobotics.CANSparkBase;
+import com.revrobotics.spark.SparkBase;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 import java.util.function.Function;
@@ -9,18 +9,18 @@ public class SparkMaxRequestBuilder {
 
 	public static SparkMaxRequest<Rotation2d> build(
 		Rotation2d setPoint,
-		CANSparkBase.ControlType controlType,
+		SparkBase.ControlType controlType,
 		int pidSlot,
 		Function<Rotation2d, Double> feedforwardCalculator
 	) {
 		return new SparkMaxRequest<>(setPoint, controlType, pidSlot, feedforwardCalculator, Rotation2d::getRotations);
 	}
 
-	public static SparkMaxRequest<Rotation2d> build(Rotation2d setPoint, CANSparkBase.ControlType controlType, int pidSlot) {
+	public static SparkMaxRequest<Rotation2d> build(Rotation2d setPoint, SparkBase.ControlType controlType, int pidSlot) {
 		return new SparkMaxRequest<>(setPoint, controlType, pidSlot, Rotation2d::getRotations);
 	}
 
-	public static SparkMaxRequest<Double> build(Double setPoint, CANSparkBase.ControlType controlType, int pidSlot) {
+	public static SparkMaxRequest<Double> build(Double setPoint, SparkBase.ControlType controlType, int pidSlot) {
 		return new SparkMaxRequest<>(setPoint, controlType, pidSlot, setpoint -> setpoint);
 	}
 

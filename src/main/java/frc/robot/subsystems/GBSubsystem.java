@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.*;
 import org.littletonrobotics.junction.Logger;
 
 import javax.smartcardio.CommandAPDU;
@@ -9,14 +8,16 @@ import javax.smartcardio.CommandAPDU;
 public abstract class GBSubsystem extends SubsystemBase {
 
 	private final String logPath;
+	private Command currentCommand;
 
 	public GBSubsystem(String logPath) {
 		this.logPath = logPath;
+		this.currentCommand = Commands.none().withName("None");
 	}
 
-	private String getCurrentCommandName() {
-		Command currentCommand = getCurrentCommand();
-		return currentCommand != null ? currentCommand.getName() : "no command is currently running on the subsystem";
+	@Override
+	public Command getCurrentCommand() {
+		return currentCommand;
 	}
 
 	public String getLogPath() {
@@ -25,10 +26,16 @@ public abstract class GBSubsystem extends SubsystemBase {
 
 	@Override
 	public final void periodic() {
-		Logger.recordOutput(getLogPath() + "CurrentCommand", getCurrentCommandName());
+		Logger.recordOutput(getLogPath() + "/CurrentCommand", getCurrentCommand().getName());
 		subsystemPeriodic();
 	}
 
 	protected void subsystemPeriodic() {}
+
+	public Command asSubsystemCommand(Command command, String commandName) {
+		command.setName(commandName);
+		command.addRequirements(this);
+		return command.beforeStarting(new InstantCommand(() -> currentCommand = command));
+	}
 
 }

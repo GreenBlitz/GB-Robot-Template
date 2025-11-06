@@ -1,10 +1,11 @@
 package frc.robot.hardware.phoenix6.signal;
 
 import com.ctre.phoenix6.StatusSignal;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.signal.AngleSignal;
-import frc.robot.hardware.signal.TimedValue;
+import frc.utils.TimedValue;
 import frc.utils.AngleUnit;
-import frc.utils.time.TimeUtils;
+import frc.utils.time.TimeUtil;
 
 public class Phoenix6AngleSignal extends AngleSignal implements SignalGetter {
 
@@ -15,17 +16,18 @@ public class Phoenix6AngleSignal extends AngleSignal implements SignalGetter {
 		this.statusSignal = statusSignal;
 	}
 
-	@Override
-	protected TimedValue<Double> getNewValue() {
-		return new TimedValue<>(statusSignal.getValueAsDouble(), TimeUtils.getCurrentTimeSeconds() - statusSignal.getTimestamp().getLatency());
-	}
-
 	/**
 	 * For using refresh all with more signals...
 	 */
 	@Override
 	public StatusSignal<?> getSignal() {
 		return statusSignal;
+	}
+
+	@Override
+	protected void updateValue(TimedValue<Rotation2d> timedValue) {
+		timedValue.setValue(angleUnit.toRotation2d(statusSignal.getValueAsDouble()));
+		timedValue.setTimestamp(TimeUtil.getCurrentTimeSeconds() - statusSignal.getTimestamp().getLatency());
 	}
 
 }

@@ -1,5 +1,7 @@
 package frc.robot;
 
+import frc.RobotManager;
+
 public enum RobotType {
 
 	REAL,

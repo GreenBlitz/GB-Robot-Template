@@ -2,7 +2,7 @@ package frc.robot.hardware.mechanisms.wpilib;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import frc.utils.time.TimeUtils;
+import frc.utils.time.TimeUtil;
 
 public class SingleJointedArmSimulation implements WPILibMechanismSimulation {
 
@@ -31,7 +31,7 @@ public class SingleJointedArmSimulation implements WPILibMechanismSimulation {
 
 	@Override
 	public void updateMotor() {
-		singleJointedArmSimulation.update(TimeUtils.getLatestCycleTimeSeconds());
+		singleJointedArmSimulation.update(TimeUtil.getLatestCycleTimeSeconds());
 	}
 
 	@Override

@@ -2,10 +2,11 @@ package frc.robot.hardware.phoenix6.signal;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.signal.AngleSignal;
-import frc.robot.hardware.signal.TimedValue;
+import frc.utils.TimedValue;
 import frc.utils.AngleUnit;
-import frc.utils.time.TimeUtils;
+import frc.utils.time.TimeUtil;
 
 public class Phoenix6LatencySignal extends AngleSignal implements SignalGetter {
 
@@ -19,8 +20,9 @@ public class Phoenix6LatencySignal extends AngleSignal implements SignalGetter {
 	}
 
 	@Override
-	protected TimedValue<Double> getNewValue() {
-		return new TimedValue<>(BaseStatusSignal.getLatencyCompensatedValueAsDouble(signal, slopeSignal), TimeUtils.getCurrentTimeSeconds());
+	protected void updateValue(TimedValue<Rotation2d> timedValue) {
+		timedValue.setValue(angleUnit.toRotation2d(BaseStatusSignal.getLatencyCompensatedValueAsDouble(signal, slopeSignal)));
+		timedValue.setTimestamp(TimeUtil.getCurrentTimeSeconds());
 	}
 
 	/**

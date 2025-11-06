@@ -1,11 +1,11 @@
 package frc.robot.hardware.rev.motors;
 
-import com.revrobotics.CANSparkLowLevel;
+import com.revrobotics.spark.SparkLowLevel;
 
-public record SparkMaxDeviceID(int id, CANSparkLowLevel.MotorType type) {
+public record SparkMaxDeviceID(int id, SparkLowLevel.MotorType type) {
 
 	public SparkMaxDeviceID(int id) {
-		this(id, CANSparkLowLevel.MotorType.kBrushless);
+		this(id, SparkLowLevel.MotorType.kBrushless);
 	}
 
 }

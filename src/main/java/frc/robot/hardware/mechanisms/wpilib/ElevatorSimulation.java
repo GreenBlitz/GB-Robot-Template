@@ -3,7 +3,7 @@ package frc.robot.hardware.mechanisms.wpilib;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import frc.utils.Conversions;
-import frc.utils.time.TimeUtils;
+import frc.utils.time.TimeUtil;
 
 public class ElevatorSimulation implements WPILibMechanismSimulation {
 
@@ -34,7 +34,7 @@ public class ElevatorSimulation implements WPILibMechanismSimulation {
 
 	@Override
 	public void updateMotor() {
-		elevatorSimulation.update(TimeUtils.getLatestCycleTimeSeconds());
+		elevatorSimulation.update(TimeUtil.getLatestCycleTimeSeconds());
 	}
 
 	@Override

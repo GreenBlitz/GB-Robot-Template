@@ -11,7 +11,7 @@ import java.nio.file.Path;
 
 public class LoggerFactory {
 
-	private static final String LOG_PATH = "Logger/";
+	private static final String LOG_PATH = "Logger";
 
 	public static void initializeLogger() {
 		switch (Robot.ROBOT_TYPE) {
@@ -26,7 +26,7 @@ public class LoggerFactory {
 		if (LogSavePath.USB.isWritable()) {
 			startLoggerOnUSB();
 		} else {
-			new Alert(Alert.AlertType.WARNING, LOG_PATH + "Didn't find USB").report();
+			new Alert(Alert.AlertType.WARNING, LOG_PATH + "/Didn't find USB").report();
 			startLoggerOnRoborio();
 		}
 	}
@@ -47,7 +47,7 @@ public class LoggerFactory {
 		setLoggingPath(logSavePath.getSavePath());
 		Logger.addDataReceiver(new NT4Publisher());
 		Logger.start();
-		Logger.recordOutput(LOG_PATH + "Logged In", logSavePath);
+		Logger.recordOutput(LOG_PATH + "/Logged In", logSavePath);
 	}
 
 	private static void setLoggingPath(Path path) {

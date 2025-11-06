@@ -2,7 +2,7 @@ package frc.robot.hardware.mechanisms.wpilib;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import frc.utils.time.TimeUtils;
+import frc.utils.time.TimeUtil;
 
 public class SimpleMotorSimulation implements WPILibMechanismSimulation {
 
@@ -29,7 +29,7 @@ public class SimpleMotorSimulation implements WPILibMechanismSimulation {
 
 	@Override
 	public void updateMotor() {
-		motorSimulation.update(TimeUtils.getLatestCycleTimeSeconds());
+		motorSimulation.update(TimeUtil.getLatestCycleTimeSeconds());
 	}
 
 	@Override

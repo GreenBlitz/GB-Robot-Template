@@ -3,8 +3,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.*;
 import org.littletonrobotics.junction.Logger;
 
-import javax.smartcardio.CommandAPDU;
-
 public abstract class GBSubsystem extends SubsystemBase {
 
 	private final String logPath;

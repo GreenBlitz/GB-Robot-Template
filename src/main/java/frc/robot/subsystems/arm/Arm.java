@@ -1,5 +1,6 @@
 package frc.robot.subsystems.arm;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.joysticks.Axis;
@@ -9,6 +10,7 @@ import frc.robot.hardware.interfaces.*;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.calibration.sysid.SysIdCalibrator;
+import org.littletonrobotics.junction.Logger;
 
 public class Arm extends GBSubsystem {
 
@@ -93,13 +95,18 @@ public class Arm extends GBSubsystem {
 	protected void subsystemPeriodic() {
 		arm.updateSimulation();
 		updateInputs();
+        log();
+
 	}
 
 	private void updateInputs() {
 		arm.updateInputs(positionSignal, voltageSignal, velocitySignal, currentSignal);
 	}
 
-	public void log() {}
+	public void log() {
+        Logger.recordOutput("ArmTarget/",motionMagicRequest.getSetPoint());
+        Logger.recordOutput("ArmIsBehindTarget/",this.isBehindPosition(motionMagicRequest.getSetPoint()));
+    }
 
 	public void setVoltage(Double voltage) {
 		arm.applyRequest(armVoltageRequest.withSetPoint(voltage));
@@ -109,7 +116,7 @@ public class Arm extends GBSubsystem {
 		arm.setBrake(brake);
 	}
 
-	public void setTargetPosition(Rotation2d targetPosition) {
+	public void withPosition(Rotation2d targetPosition) {
 		arm.applyRequest(motionMagicRequest.withSetPoint(targetPosition));
 	}
 
@@ -118,7 +125,7 @@ public class Arm extends GBSubsystem {
 	}
 
 	protected void stayInPlace() {
-		setTargetPosition(positionSignal.getLatestValue());
+        withPosition(positionSignal.getLatestValue());
 	}
 
 	private double getKgVoltage() {

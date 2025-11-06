@@ -14,40 +14,43 @@ public class CameraCalibration extends Command {
 
 	private final Limelight limelight;
 	private final Pose3d tagToRobot;
-	private List<Pose3d> pose;
-	private Translation3d translationSum;
-    private double sinXSum;
-    private double cosXSum;
-    private double sinYSum;
-    private double cosYSum;
-    private double sinZSum;
-    private double cosZSum;
+	private final Translation3d translationSum;
+	private List<Pose3d> poses;
+	private double sinXSum;
+	private double cosXSum;
+	private double sinYSum;
+	private double cosYSum;
+	private double sinZSum;
+	private double cosZSum;
 
 	public CameraCalibration(Limelight limelight, Pose3d tagToRobot) {
 		this.limelight = limelight;
 		this.tagToRobot = tagToRobot;
 		this.translationSum = new Translation3d();
-        this.sinXSum = 0;
-        this.cosXSum = 0;
-        this.sinYSum = 0;
-        this.cosYSum = 0;
-        this.sinZSum = 0;
-        this.cosZSum = 0;
+		this.sinXSum = 0;
+		this.cosXSum = 0;
+		this.sinYSum = 0;
+		this.cosYSum = 0;
+		this.sinZSum = 0;
+		this.cosZSum = 0;
 	}
 
 	public void addToPoseList() {
-		pose.add(LimelightCalculations.getCameraToRobot(LimelightHelpers.getTargetPose3d_CameraSpace(limelight.getName()), tagToRobot));
-		translationSum.plus(pose.getLast().getTranslation());
-        sinXSum += Math.sin(pose.getLast().getRotation().getX());
-        cosXSum += Math.cos(pose.getLast().getRotation().getX());
-        sinYSum += Math.sin(pose.getLast().getRotation().getY());
-        cosYSum += Math.cos(pose.getLast().getRotation().getY());
-        sinZSum += Math.sin(pose.getLast().getRotation().getZ());
-        cosZSum += Math.cos(pose.getLast().getRotation().getZ());
+		poses.add(LimelightCalculations.getCameraToRobot(LimelightHelpers.getTargetPose3d_CameraSpace(limelight.getName()), tagToRobot));
+		translationSum.plus(poses.get(poses.size() - 1).getTranslation());
+		sinXSum += Math.sin(poses.get(poses.size() - 1).getRotation().getX());
+		cosXSum += Math.cos(poses.get(poses.size() - 1).getRotation().getX());
+		sinYSum += Math.sin(poses.get(poses.size() - 1).getRotation().getY());
+		cosYSum += Math.cos(poses.get(poses.size() - 1).getRotation().getY());
+		sinZSum += Math.sin(poses.get(poses.size() - 1).getRotation().getZ());
+		cosZSum += Math.cos(poses.get(poses.size() - 1).getRotation().getZ());
 	}
 
 	public Pose3d getAvgPose() {
-		return new Pose3d(translationSum.getX()/pose.size(), translationSum.getY()/ pose.size(), translationSum.getZ()/ pose.size(), AngleMath.getAngleAverageWrapped(sinXSum, cosXSum, sinYSum, cosYSum, sinZSum, cosZSum));
+		return new Pose3d(
+			translationSum.div(poses.size()),
+			AngleMath.getAngleAverageWrapped(sinXSum, cosXSum, sinYSum, cosYSum, sinZSum, cosZSum)
+		);
 	}
 
 	@Override
@@ -58,7 +61,7 @@ public class CameraCalibration extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return pose.size() > 100;
+		return poses.size() > 100;
 	}
 
 }

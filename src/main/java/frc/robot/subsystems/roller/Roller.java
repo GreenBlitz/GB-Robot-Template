@@ -42,17 +42,9 @@ public class Roller extends GBSubsystem {
         return currentSignal;
     }
 
-    public InputSignal<Rotation2d> getLatencySignal (){
-        return latencySignal;
-    }
-
-    public InputSignal<Rotation2d> getVelocitySignal (){
-        return velocitySignal;
-    }
-
     @Override
     public void subsystemPeriodic(){
         roller.updateSimulation();
-        roller.updateInputs(velocitySignal,latencySignal,voltageSignal,currentSignal);
+        roller.updateInputs(voltageSignal,currentSignal);
     }
 }

@@ -27,8 +27,7 @@ import static edu.wpi.first.units.Units.Volts;
 public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
-    private final Arm pivot = ;
-    private final DynamicMotionMagicArm arm = ArmBuilder.build("Arm/", new TalonFXFollowerConfig(),20,Volts.of(7),null,Volts.of(1).per(Second), ArmConstants.MASS_KG, Rotation2d.fromRotations(3),Rotation2d.fromRotations(3),);
+    private final DynamicMotionMagicArm arm = ArmBuilder.build("Arm/", new TalonFXFollowerConfig(),20,Volts.of(7),null,Volts.of(1).per(Second), ArmConstants.MASS_KG, Rotation2d.fromRotations(3),Rotation2d.fromRotations(3),0,450.0 / 7.0,1,28,0.065,0,0,0.37,true,Rotation2d.fromDegrees(-24 + Rotation2d.fromDegrees(-16).getDegrees()),Rotation2d.fromDegrees(231 + Rotation2d.fromDegrees(-16).getDegrees()),Rotation2d.fromRotations(3),Rotation2d.fromRotations(3));
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 	}

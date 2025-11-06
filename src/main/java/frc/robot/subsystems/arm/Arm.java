@@ -1,5 +1,6 @@
 package frc.robot.subsystems.arm;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.joysticks.Axis;
@@ -21,6 +22,9 @@ public class Arm extends GBSubsystem {
 	private final IRequest<Double> armVoltageRequest;
 	private final IFeedForwardRequest motionMagicRequest;
 	private final SysIdCalibrator sysIdCalibrator;
+    private final Rotation2d forwardSoftLimit;
+    private final Rotation2d reverseSoftLimit;
+
 
 	public Arm(
 		String logPath,
@@ -31,7 +35,9 @@ public class Arm extends GBSubsystem {
 		InputSignal<Double> currentSignal,
 		IRequest<Double> armVoltageRequest,
 		IFeedForwardRequest motionMagicRequest,
-		SysIdCalibrator.SysIdConfigInfo config
+		SysIdCalibrator.SysIdConfigInfo config,
+        Rotation2d reverseSoftLimit,
+        Rotation2d forwardSoftLimit
 	) {
 		super(logPath);
 		this.arm = arm;
@@ -41,6 +47,9 @@ public class Arm extends GBSubsystem {
 		this.currentSignal = currentSignal;
 		this.armVoltageRequest = armVoltageRequest;
 		this.motionMagicRequest = motionMagicRequest;
+        this.forwardSoftLimit = forwardSoftLimit;
+        this.reverseSoftLimit = reverseSoftLimit;
+
 		sysIdCalibrator = new SysIdCalibrator(config, this, this::setVoltage);
 		armCommandBuilder = new ArmCommandBuilder(this);
 		setDefaultCommand(armCommandBuilder.stayInPlace());
@@ -110,8 +119,15 @@ public class Arm extends GBSubsystem {
 		arm.setPower(power);
 	}
 
-	protected void stayInPlace() {
-		setTargetPosition(positionSignal.getLatestValue());
+    protected void stayInPlace() {
+        Rotation2d limitedPosition = Rotation2d.fromDegrees(
+                MathUtil.clamp(
+                        positionSignal.getLatestValue().getDegrees(),
+                        reverseSoftLimit.getDegrees(),
+                        forwardSoftLimit.getDegrees()
+                )
+        );
+        setTargetPosition(limitedPosition);
 	}
 
 	private double getKgVoltage() {

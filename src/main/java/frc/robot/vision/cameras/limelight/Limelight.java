@@ -114,14 +114,14 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	public void updateMT1() {
 		if (pipeline.isUsingMT()) {
 			mt1RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
-			mt1PoseObservation = new RobotPoseObservation(getEstimateTimestampSeconds(mt1RawData), mt1RawData.pose, calculateMT1StdDevs.get());
+			mt1PoseObservation = new RobotPoseObservation(mt1RawData.timestampSeconds, mt1RawData.pose, calculateMT1StdDevs.get());
 		}
 	}
 
 	public void updateMT2() {
 		if (pipeline.isUsingMT()) {
 			mt2RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-			mt2PoseObservation = new RobotPoseObservation(getEstimateTimestampSeconds(mt2RawData), mt2RawData.pose, calculateMT2StdDevs.get());
+			mt2PoseObservation = new RobotPoseObservation(mt1RawData.timestampSeconds, mt2RawData.pose, calculateMT2StdDevs.get());
 		}
 	}
 
@@ -229,10 +229,6 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 			Math.toDegrees(robotRelativeCameraPose.getRotation().getY()),
 			Math.toDegrees(robotRelativeCameraPose.getRotation().getZ())
 		);
-	}
-
-	protected static double getEstimateTimestampSeconds(LimelightHelpers.PoseEstimate poseEstimate) {
-		return poseEstimate.timestampSeconds - Conversions.milliSecondsToSeconds(poseEstimate.latency);
 	}
 
 	private static double getTarget2dTimestampSeconds(LimelightTarget2dValues target2dValues) {

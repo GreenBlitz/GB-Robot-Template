@@ -12,13 +12,11 @@ public enum LimelightPipeline {
 	OBJECT_DETECTION(1, false, new DetectedObjectType[] {DetectedObjectType.ALGAE});
 
 	private final int pipelineIndex;
-	private final boolean isDetectingObjects;
 	private final boolean isUsingMT;
 	private final DetectedObjectType[] detectedObjectTypes;
 
 	LimelightPipeline(int pipelineIndex, boolean isUsingMT, DetectedObjectType[] detectedObjectTypes) {
 		this.pipelineIndex = pipelineIndex;
-		this.isDetectingObjects = isDetectingObjects;
 		this.isUsingMT = isUsingMT;
 		this.detectedObjectTypes = detectedObjectTypes;
 	}

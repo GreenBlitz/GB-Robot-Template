@@ -40,7 +40,7 @@ public class ArmBuilder {
     public static final int CURRENT_LIMIT = 40;
     public static final int DEFAULT_FREQUENCY = 50;
 
-	public DynamicMotionMagicArm create(
+	public static DynamicMotionMagicArm createDynamicMotionMagic(
 		String logPath,
 		TalonFXFollowerConfig talonFXFollowerConfig,
 		int armId,
@@ -105,7 +105,7 @@ public class ArmBuilder {
 	}
 
 
-	public Arm create(
+	public static Arm create(
 		String logPath,
 		Velocity<VoltageUnit> rampUp,
 		Voltage stepUpVoltage,

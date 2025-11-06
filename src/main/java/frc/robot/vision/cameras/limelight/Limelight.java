@@ -48,7 +48,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		this.logPath = logPathPrefix + "/" + name;
 
 		this.robotRelativeCameraPose = robotRelativeCameraPose;
-		setRobotRelativeCameraPose(robotRelativeCameraPose);
+		setNetworkTablesRobotRelativeCameraPose(new Pose3d());
 
 		this.detectedObjectObservations = new ArrayList<>();
 
@@ -114,14 +114,14 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	public void updateMT1() {
 		if (pipeline.isUsingMT()) {
 			mt1RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
-			mt1PoseObservation = new RobotPoseObservation(getEstimateTimestampSeconds(mt1RawData), mt1RawData.pose, calculateMT1StdDevs.get());
+			mt1PoseObservation = new RobotPoseObservation(getEstimateTimestampSeconds(mt1RawData), mt1RawData.pose.relativeTo(robotRelativeCameraPose.toPose2d()), calculateMT1StdDevs.get());
 		}
 	}
 
 	public void updateMT2() {
 		if (pipeline.isUsingMT()) {
 			mt2RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-			mt2PoseObservation = new RobotPoseObservation(getEstimateTimestampSeconds(mt2RawData), mt2RawData.pose, calculateMT2StdDevs.get());
+			mt2PoseObservation = new RobotPoseObservation(getEstimateTimestampSeconds(mt2RawData), mt2RawData.pose.relativeTo(robotRelativeCameraPose.toPose2d()), calculateMT2StdDevs.get());
 		}
 	}
 
@@ -182,6 +182,10 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		);
 	}
 
+	public void transformRobotRelativeCameraPose(Transform3d cameraPose){
+		robotRelativeCameraPose.transformBy(cameraPose);
+	}
+
 	public void setPipeline(LimelightPipeline pipeline) {
 		this.pipeline = pipeline;
 		LimelightHelpers.setPipelineIndex(name, pipeline.getPipelineIndex());
@@ -219,7 +223,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		return mt2RawData;
 	}
 
-	private void setRobotRelativeCameraPose(Pose3d robotRelativeCameraPose) {
+	private void setNetworkTablesRobotRelativeCameraPose(Pose3d robotRelativeCameraPose) {
 		LimelightHelpers.setCameraPose_RobotSpace(
 			name,
 			robotRelativeCameraPose.getX(),

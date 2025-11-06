@@ -21,7 +21,8 @@ public class Arm extends GBSubsystem {
 	private final IRequest<Double> armVoltageRequest;
 	private final IFeedForwardRequest motionMagicRequest;
 	private final SysIdCalibrator sysIdCalibrator;
-	private final Double kG;
+    private final double CALIBRATION_MAX_POWER;
+    private final double kG;
 
 
 	public Arm(
@@ -34,7 +35,8 @@ public class Arm extends GBSubsystem {
 		IRequest<Double> armVoltageRequest,
 		IFeedForwardRequest motionMagicRequest,
 		SysIdCalibrator.SysIdConfigInfo config,
-        Double kG
+        double kG,
+        double calibrationMaxPower
 	) {
 		super(logPath);
 		this.arm = arm;
@@ -45,6 +47,7 @@ public class Arm extends GBSubsystem {
 		this.armVoltageRequest = armVoltageRequest;
 		this.motionMagicRequest = motionMagicRequest;
         this.kG = kG;
+        this.CALIBRATION_MAX_POWER = calibrationMaxPower;
 		sysIdCalibrator = new SysIdCalibrator(config, this, this::setVoltage);
 		armCommandBuilder = new ArmCommandBuilder(this);
 		setDefaultCommand(armCommandBuilder.stayInPlace());
@@ -131,7 +134,7 @@ public class Arm extends GBSubsystem {
 		// Check limits
 		joystick.R1.whileTrue(
 			armCommandBuilder.setPower(
-				() -> joystick.getAxisValue(Axis.LEFT_Y) * ArmConstants.CALIBRATION_MAX_POWER
+				() -> joystick.getAxisValue(Axis.LEFT_Y) * CALIBRATION_MAX_POWER
 					+ (getKgVoltage() / BatteryUtil.getCurrentVoltage())
 			)
 		);

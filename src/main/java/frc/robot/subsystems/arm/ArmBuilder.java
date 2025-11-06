@@ -56,7 +56,8 @@ public class ArmBuilder {
 		double mechanismRatio,
         TalonFXConfiguration realSlotsConfig,
         TalonFXConfiguration simulationSlotsConfig,
-        double kG
+        double kG,
+        double calibrationMaxPower
 
     ) {
         TalonFXMotor arm = arm(armId, logPath, talonFXFollowerConfig,JKgMetersSquared,gearing);
@@ -98,7 +99,8 @@ public class ArmBuilder {
 			maxAcceleration,
 			maxVelocity,
 			sysIdConfigInfo,
-            kG
+            kG,
+            calibrationMaxPower
 		);
 	}
 
@@ -117,7 +119,8 @@ public class ArmBuilder {
 		double mechanismRatio,
 		TalonFXConfiguration realSlotsConfig,
         TalonFXConfiguration simulationSlotsConfig,
-        double kG
+        double kG,
+        double calibrationMaxPower
 	) {
         TalonFXMotor arm = arm(armId, logPath, talonFXFollowerConfig,JKgMetersSquared,gearing);
 
@@ -143,7 +146,7 @@ public class ArmBuilder {
 			true
 		);
 
-		return new Arm(logPath, arm, velocity, position, voltage, current, voltageRequest, positionRequest, sysIdConfigInfo,kG);
+		return new Arm(logPath, arm, velocity, position, voltage, current, voltageRequest, positionRequest, sysIdConfigInfo,kG,calibrationMaxPower);
 	}
 
 	private static TalonFXConfiguration configuration(double rotorRatio, double mechanismRatio,TalonFXConfiguration simulationConfigSlots,TalonFXConfiguration realConfigSlots,double kG) {

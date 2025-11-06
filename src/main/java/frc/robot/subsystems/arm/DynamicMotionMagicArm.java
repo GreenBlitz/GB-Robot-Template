@@ -24,9 +24,10 @@ public class DynamicMotionMagicArm extends Arm {
 		Rotation2d defaultMotionMagicAcceleration,
 		Rotation2d defaultMotionMagicVelocity,
 		SysIdCalibrator.SysIdConfigInfo configInfo,
-        Double kG
+        double kG,
+        double calibrationMaxPower
 	) {
-		super(logPath, arm, velocitySignal, positionSignal, voltageSignal, currentSignal, armVoltageRequest, motionMagicRequest, configInfo,kG);
+		super(logPath, arm, velocitySignal, positionSignal, voltageSignal, currentSignal, armVoltageRequest, motionMagicRequest, configInfo,kG,calibrationMaxPower);
 		this.motionMagicRequest = motionMagicRequest;
 		this.defaultDynamicMotionAcceleration = defaultMotionMagicAcceleration;
 		this.defaultDynamicMotionVelocity = defaultMotionMagicVelocity;

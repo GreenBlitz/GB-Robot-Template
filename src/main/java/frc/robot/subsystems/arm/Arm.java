@@ -21,6 +21,8 @@ public class Arm extends GBSubsystem {
 	private final IRequest<Double> armVoltageRequest;
 	private final IFeedForwardRequest motionMagicRequest;
 	private final SysIdCalibrator sysIdCalibrator;
+	private final Double kG;
+
 
 	public Arm(
 		String logPath,
@@ -31,7 +33,8 @@ public class Arm extends GBSubsystem {
 		InputSignal<Double> currentSignal,
 		IRequest<Double> armVoltageRequest,
 		IFeedForwardRequest motionMagicRequest,
-		SysIdCalibrator.SysIdConfigInfo config
+		SysIdCalibrator.SysIdConfigInfo config,
+        Double kG
 	) {
 		super(logPath);
 		this.arm = arm;
@@ -41,6 +44,7 @@ public class Arm extends GBSubsystem {
 		this.currentSignal = currentSignal;
 		this.armVoltageRequest = armVoltageRequest;
 		this.motionMagicRequest = motionMagicRequest;
+        this.kG = kG;
 		sysIdCalibrator = new SysIdCalibrator(config, this, this::setVoltage);
 		armCommandBuilder = new ArmCommandBuilder(this);
 		setDefaultCommand(armCommandBuilder.stayInPlace());
@@ -115,7 +119,7 @@ public class Arm extends GBSubsystem {
 	}
 
 	private double getKgVoltage() {
-		return Robot.ROBOT_TYPE.isReal() ? ArmConstants.kG * getPosition().getCos() : 0;
+		return Robot.ROBOT_TYPE.isReal() ? kG * getPosition().getCos() : 0;
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick) {

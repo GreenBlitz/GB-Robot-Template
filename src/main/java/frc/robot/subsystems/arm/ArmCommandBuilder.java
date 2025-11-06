@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.subsystems.GBCommandsBuilder;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 public class ArmCommandBuilder extends GBCommandsBuilder {
 
@@ -17,11 +18,11 @@ public class ArmCommandBuilder extends GBCommandsBuilder {
 	}
 
 	public Command stayInPlace() {
-		return new InstantCommand(arm::stayInPlace, arm);
+		return arm.asSubsystemCommand(new RunCommand(arm::stayInPlace, arm),"Stay in place");
 	}
 
 	public Command setPower(double power) {
-		return new RunCommand(() -> arm.setPower(power), arm);
+		return arm.asSubsystemCommand(new RunCommand(() -> arm.setPower(power), arm),"Set power by constant") ;
 	}
 
 	public Command setPower(DoubleSupplier powerSupplier) {
@@ -29,15 +30,21 @@ public class ArmCommandBuilder extends GBCommandsBuilder {
 	}
 
 	public Command setNeutralMode(boolean brake) {
-		return new InstantCommand(() -> arm.setBrake(brake), arm);
+		return arm.asSubsystemCommand(new InstantCommand(() -> arm.setBrake(brake), arm),"Set neutral mode");
 	}
 
 	public Command moveToPosition(Rotation2d target) {
-		return new RunCommand(() -> arm.setTargetPosition(target), arm);
+		return arm.asSubsystemCommand(new RunCommand(() -> arm.setTargetPosition(target), arm),"Move to position with constant");
+	}
+    public Command moveToPosition(Supplier<Rotation2d> target) {
+		return arm.asSubsystemCommand(new RunCommand(() -> arm.setTargetPosition(target.get()), arm),"Move to position with constant");
 	}
 
 	public Command setVoltage(Double voltage) {
-		return new RunCommand(() -> arm.setVoltage(voltage), arm);
+		return arm.asSubsystemCommand(new RunCommand(() -> arm.setVoltage(voltage), arm),"Set voltage by constant");
+	}
+    public Command setVoltage(DoubleSupplier voltage) {
+		return arm.asSubsystemCommand(new RunCommand(() -> arm.setVoltage(voltage.getAsDouble()), arm),"Set voltage by supplier");
 	}
 
 }

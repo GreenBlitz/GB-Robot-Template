@@ -16,6 +16,7 @@ import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Robot;
 import frc.robot.hardware.interfaces.IDynamicMotionMagicRequest;
 import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -32,7 +33,12 @@ import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.utils.AngleUnit;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 
+import static frc.robot.RobotType.SIMULATION;
+
 public class ArmBuilder {
+
+    public static final int CURRENT_LIMIT = 40;
+    public static final int DEFAULT_FREQUENCY = 50;
 
 	public DynamicMotionMagicArm create(
 		String logPath,
@@ -48,26 +54,24 @@ public class ArmBuilder {
 		double feedForward,
 		double rotorRatio,
 		double mechanismRatio,
-		double kP,
-		double kI,
-		double kD,
-		double kG,
-		double kV,
-		double kA
-	) {
+        TalonFXConfiguration realSlotsConfig,
+        TalonFXConfiguration simulationSlotsConfig,
+        double kG
+
+    ) {
         TalonFXMotor arm = arm(armId, logPath, talonFXFollowerConfig,JKgMetersSquared,gearing);
 
 		Phoenix6AngleSignal velocity = Phoenix6SignalBuilder
-			.build(arm.getDevice().getVelocity(), ArmConstants.defaultFrequency, AngleUnit.ROTATIONS, BusChain.ROBORIO);
+			.build(arm.getDevice().getVelocity(), DEFAULT_FREQUENCY, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 
 		Phoenix6LatencySignal position = Phoenix6SignalBuilder
-			.build(arm.getDevice().getPosition(), velocity, ArmConstants.defaultFrequency, AngleUnit.ROTATIONS, BusChain.ROBORIO);
+			.build(arm.getDevice().getPosition(), velocity, DEFAULT_FREQUENCY, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 
 		Phoenix6DoubleSignal voltage = Phoenix6SignalBuilder
-			.build(arm.getDevice().getMotorVoltage(), ArmConstants.defaultFrequency, BusChain.ROBORIO);
+			.build(arm.getDevice().getMotorVoltage(), DEFAULT_FREQUENCY, BusChain.ROBORIO);
 
 		Phoenix6DoubleSignal current = Phoenix6SignalBuilder
-			.build(arm.getDevice().getStatorCurrent(), ArmConstants.defaultFrequency, BusChain.ROBORIO);
+			.build(arm.getDevice().getStatorCurrent(), DEFAULT_FREQUENCY, BusChain.ROBORIO);
 
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), true);
 
@@ -76,7 +80,7 @@ public class ArmBuilder {
 		positionRequest.withMaxAccelerationRotation2dPerSecondSquared(maxAcceleration);
 		positionRequest.withMaxVelocityRotation2dPerSecond(maxVelocity);
 		positionRequest.withArbitraryFeedForward(feedForward);
-		TalonFXConfiguration configuration = configuration(rotorRatio, mechanismRatio, kP, kG, kI, kD);
+		TalonFXConfiguration configuration = configuration(rotorRatio, mechanismRatio,simulationSlotsConfig,realSlotsConfig,kG);
 		arm.applyConfiguration(configuration);
 		SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo = new SysIdCalibrator.SysIdConfigInfo(
 			new SysIdRoutine.Config(rampUp, stepUpVoltage, timeout, state -> SignalLogger.writeString("state", state.toString())),
@@ -93,7 +97,8 @@ public class ArmBuilder {
 			positionRequest,
 			maxAcceleration,
 			maxVelocity,
-			sysIdConfigInfo
+			sysIdConfigInfo,
+            kG
 		);
 	}
 
@@ -110,49 +115,57 @@ public class ArmBuilder {
 		double feedforward,
 		double rotorRatio,
 		double mechanismRatio,
-		double kP,
-		double kI,
-		double kD,
-		double kG
+		TalonFXConfiguration realSlotsConfig,
+        TalonFXConfiguration simulationSlotsConfig,
+        double kG
 	) {
         TalonFXMotor arm = arm(armId, logPath, talonFXFollowerConfig,JKgMetersSquared,gearing);
 
 		Phoenix6AngleSignal velocity = Phoenix6SignalBuilder
-			.build(arm.getDevice().getVelocity(), ArmConstants.defaultFrequency, AngleUnit.ROTATIONS, BusChain.ROBORIO);
+			.build(arm.getDevice().getVelocity(), DEFAULT_FREQUENCY, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 
 		Phoenix6LatencySignal position = Phoenix6SignalBuilder
-			.build(arm.getDevice().getPosition(), velocity, ArmConstants.defaultFrequency, AngleUnit.ROTATIONS, BusChain.ROBORIO);
+			.build(arm.getDevice().getPosition(), velocity, DEFAULT_FREQUENCY, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 
 		Phoenix6DoubleSignal voltage = Phoenix6SignalBuilder
-			.build(arm.getDevice().getMotorVoltage(), ArmConstants.defaultFrequency, BusChain.ROBORIO);
+			.build(arm.getDevice().getMotorVoltage(), DEFAULT_FREQUENCY, BusChain.ROBORIO);
 
 		Phoenix6DoubleSignal current = Phoenix6SignalBuilder
-			.build(arm.getDevice().getStatorCurrent(), ArmConstants.defaultFrequency, BusChain.ROBORIO);
+			.build(arm.getDevice().getStatorCurrent(), DEFAULT_FREQUENCY, BusChain.ROBORIO);
 
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), true);
 
 		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder
 			.build(new MotionMagicVoltage(position.getLatestValue().getRotations()), feedforward, true);
-		arm.applyConfiguration(configuration(rotorRatio, mechanismRatio, kP, kG, kI, kD));
+		arm.applyConfiguration(configuration(rotorRatio, mechanismRatio,simulationSlotsConfig,realSlotsConfig,kG));
 		SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo = new SysIdCalibrator.SysIdConfigInfo(
 			new SysIdRoutine.Config(rampUp, stepUpVoltage, timeout, state -> SignalLogger.writeString("state", state.toString())),
 			true
 		);
 
-		return new Arm(logPath, arm, velocity, position, voltage, current, voltageRequest, positionRequest, sysIdConfigInfo);
+		return new Arm(logPath, arm, velocity, position, voltage, current, voltageRequest, positionRequest, sysIdConfigInfo,kG);
 	}
 
-	private static TalonFXConfiguration configuration(double rotorRatio, double mechanismRatio, double kP, double kG, double kI, double kD) {
+	private static TalonFXConfiguration configuration(double rotorRatio, double mechanismRatio,TalonFXConfiguration simulationConfigSlots,TalonFXConfiguration realConfigSlots,double kG) {
 		TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
-		talonFXConfiguration.Feedback.RotorToSensorRatio = rotorRatio;
-		talonFXConfiguration.Feedback.SensorToMechanismRatio = mechanismRatio;
-		talonFXConfiguration.Slot0.kP = kP;
-		talonFXConfiguration.Slot0.kI = kI;
-		talonFXConfiguration.Slot0.kD = kD;
-		talonFXConfiguration.Slot0.kG = kG;
-		talonFXConfiguration.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
+
+
+        switch (Robot.ROBOT_TYPE) {
+            case REAL -> {
+                talonFXConfiguration = realConfigSlots;
+                talonFXConfiguration.Slot0.kG = kG;
+            }
+            case SIMULATION -> {
+                talonFXConfiguration = simulationConfigSlots;
+            }
+        }
+
+        talonFXConfiguration.Feedback.RotorToSensorRatio = rotorRatio;
+        talonFXConfiguration.Feedback.SensorToMechanismRatio = mechanismRatio;
+
+        talonFXConfiguration.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
 		talonFXConfiguration.CurrentLimits.withStatorCurrentLimitEnable(true);
-		talonFXConfiguration.CurrentLimits.withStatorCurrentLimit(ArmConstants.CURRENT_LIMIT);
+		talonFXConfiguration.CurrentLimits.withStatorCurrentLimit(CURRENT_LIMIT);
 		talonFXConfiguration.MotorOutput.withNeutralMode(NeutralModeValue.Coast);
 		return talonFXConfiguration;
 	}

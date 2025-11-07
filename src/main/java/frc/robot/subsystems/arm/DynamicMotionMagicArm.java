@@ -3,6 +3,7 @@ package frc.robot.subsystems.arm;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.*;
 import frc.utils.calibration.sysid.SysIdCalibrator;
+import org.littletonrobotics.junction.Logger;
 
 
 public class DynamicMotionMagicArm extends Arm {
@@ -33,18 +34,24 @@ public class DynamicMotionMagicArm extends Arm {
 		this.defaultDynamicMotionVelocity = defaultMotionMagicVelocity;
 	}
 
-	public void withPosition(Rotation2d target, Rotation2d acceleration, Rotation2d velocity, double arbitraryFeedForward) {
+	public void setTargetPosition(Rotation2d target, Rotation2d acceleration, Rotation2d velocity, double arbitraryFeedForward) {
 		motionMagicRequest.withSetPoint(target);
 		motionMagicRequest.withMaxAccelerationRotation2dPerSecondSquared(acceleration);
 		motionMagicRequest.withMaxVelocityRotation2dPerSecond(velocity);
 		motionMagicRequest.withArbitraryFeedForward(arbitraryFeedForward);
 	}
 
-	public void withPosition(Rotation2d target) {
+	public void setTargetPosition(Rotation2d target) {
 		motionMagicRequest.withSetPoint(target);
 		motionMagicRequest.withMaxAccelerationRotation2dPerSecondSquared(defaultDynamicMotionAcceleration);
 		motionMagicRequest.withMaxVelocityRotation2dPerSecond(defaultDynamicMotionVelocity);
 	}
 
-
+    @Override
+    public void log() {
+        super.log();
+        Logger.recordOutput(getLogPath()+"PositionTarget/",motionMagicRequest.getSetPoint());
+        Logger.recordOutput(getLogPath()+"DefaultDynamicMotionAcceleration/",defaultDynamicMotionAcceleration);
+        Logger.recordOutput(getLogPath()+"DefaultDynamicMotionVelocity/",defaultDynamicMotionVelocity);
+    }
 }

@@ -33,24 +33,25 @@ public class Robot {
 
 
 
-    private final DynamicMotionMagicArm arm = ArmBuilder.createDynamicMotionMagic("Arm/",new TalonFXFollowerConfig() ,20,Volts.of(7),null,Volts.of(1).per(Second),0.001, SingleJointedArmSim.estimateMOI(0.3, 5),Rotation2d.fromRotations(3),Rotation2d.fromRotations(3),0,450.0 / 7.0,1,config,config,0.37,0.2);
+    private final DynamicMotionMagicArm arm;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
-        // Motion magic
-        config.Slot0.kP = 28;
+        config.Slot0.kP = 70;
         config.Slot0.kI = 0;
         config.Slot0.kD = 0;
-        config.Slot0.kS = 0.065;
-        config.Slot0.kV = 9.0000095367432;
-        config.Slot0.kA = 0.5209;
+        config.Slot0.kS = 0;
+        config.Slot0.kG = 0;
 
-        // PID
-        config.Slot1.kP = 80;
+        config.Slot1.kP = 70;
         config.Slot1.kI = 0;
         config.Slot1.kD = 0;
-        config.Slot1.kS = 0.0715;
+        config.Slot1.kS = 0;
+        config.Slot1.kG = 0;
 
+        config.MotionMagic.withMotionMagicCruiseVelocity(3);
+        config.MotionMagic.withMotionMagicAcceleration(3);
+        arm = ArmBuilder.createDynamicMotionMagic("Arm/",new TalonFXFollowerConfig() ,20,Volts.of(7),null,Volts.of(1).per(Second),0.001, SingleJointedArmSim.estimateMOI(0.3, 5),Rotation2d.fromRotations(3),Rotation2d.fromRotations(3),0,450.0 / 7.0,1,config,config,0.37,0.2);
     }
 
 	public void periodic() {

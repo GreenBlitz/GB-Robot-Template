@@ -33,11 +33,11 @@ public class ArmCommandBuilder extends GBCommandsBuilder {
 		return arm.asSubsystemCommand(new InstantCommand(() -> arm.setBrake(brake), arm),"Set neutral mode");
 	}
 
-	public Command moveToPosition(Rotation2d target) {
-		return arm.asSubsystemCommand(new RunCommand(() -> arm.withPosition(target), arm),"Move to position with constant");
+	public Command setTargetPosition(Rotation2d target) {
+		return arm.asSubsystemCommand(new RunCommand(() -> arm.setTargetPosition(target), arm),"Move to position with constant");
 	}
-    public Command moveToPosition(Supplier<Rotation2d> target) {
-		return arm.asSubsystemCommand(new RunCommand(() -> arm.withPosition(target.get()), arm),"Move to position with constant");
+    public Command setTargetPosition(Supplier<Rotation2d> target) {
+		return arm.asSubsystemCommand(new RunCommand(() -> arm.setTargetPosition(target.get()), arm),"Move to position with constant");
 	}
 
 	public Command setVoltage(Double voltage) {

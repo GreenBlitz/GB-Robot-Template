@@ -16,7 +16,7 @@ public class LimelightStdDevCalculations {
 	) {
 		return () -> exponentialTagDistanceDividedByVisibleTags(
 			limelight.getMT1RawData().tagCount(),
-			limelight.getClosestTagPoseInCameraSpace().getTranslation().getNorm(),
+			limelight.getMT1RawData().avgTagDist(),
 			stdDevExponents,
 			stdDevFactors,
 			stdDevAdditions
@@ -28,11 +28,7 @@ public class LimelightStdDevCalculations {
 		StandardDeviations2D minStdDevs,
 		StandardDeviations2D stdDevFactors
 	) {
-		return () -> closestTagDistanceParabola(
-			limelight.getClosestTagPoseInCameraSpace().getTranslation().getNorm(),
-			minStdDevs,
-			stdDevFactors
-		);
+		return () -> closestTagDistanceParabola(limelight.getMT1RawData().avgTagDist(), minStdDevs, stdDevFactors);
 	}
 
 	private static StandardDeviations2D closestTagDistanceParabola(

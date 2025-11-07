@@ -38,6 +38,7 @@ public class RobotManager extends LoggedRobot {
 			setUseTiming(false);
 		}
 		LoggerFactory.initializeLogger();
+		LoggerFactory.logReplaySource.updateTable(RobotManager.replayLogsTable);
 		DriverStation.silenceJoystickConnectionWarning(true);
 		PathPlannerUtil.startPathfinder();
 		PathPlannerUtil.setupPathPlannerLogging();
@@ -83,9 +84,9 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void robotPeriodic() {
 		updateTimeRelatedData(); // Better to be first
-        if (Robot.ROBOT_TYPE.isReplay()) {
-            LoggerFactory.logReplaySource.updateTable(RobotManager.replayLogsTable);
-        }
+		if (Robot.ROBOT_TYPE.isReplay()) {
+			LoggerFactory.logReplaySource.updateTable(RobotManager.replayLogsTable);
+		}
 		JoysticksBindings.updateChassisDriverInputs();
 		robot.periodic();
 		AlertManager.reportAlerts();

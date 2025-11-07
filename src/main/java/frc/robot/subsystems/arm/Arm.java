@@ -21,7 +21,7 @@ public class Arm extends GBSubsystem {
 	private final InputSignal<Double> currentSignal;
 	private final ArmCommandBuilder armCommandBuilder;
 	private final IRequest<Double> armVoltageRequest;
-	private final IFeedForwardRequest motionMagicRequest;
+	private final IFeedForwardRequest armPositionRequest;
 	private final SysIdCalibrator sysIdCalibrator;
     private final double CALIBRATION_MAX_POWER;
     private final double kG;
@@ -35,7 +35,7 @@ public class Arm extends GBSubsystem {
 		InputSignal<Double> voltageSignal,
 		InputSignal<Double> currentSignal,
 		IRequest<Double> armVoltageRequest,
-		IFeedForwardRequest motionMagicRequest,
+		IFeedForwardRequest armPositionRequest,
 		SysIdCalibrator.SysIdConfigInfo config,
         double kG,
         double calibrationMaxPower
@@ -47,7 +47,7 @@ public class Arm extends GBSubsystem {
 		this.voltageSignal = voltageSignal;
 		this.currentSignal = currentSignal;
 		this.armVoltageRequest = armVoltageRequest;
-		this.motionMagicRequest = motionMagicRequest;
+		this.armPositionRequest = armPositionRequest;
         this.kG = kG;
         this.CALIBRATION_MAX_POWER = calibrationMaxPower;
 		sysIdCalibrator = new SysIdCalibrator(config, this, this::setVoltage);
@@ -104,8 +104,7 @@ public class Arm extends GBSubsystem {
 	}
 
 	public void log() {
-        Logger.recordOutput("ArmTarget/",motionMagicRequest.getSetPoint());
-        Logger.recordOutput("ArmIsBehindTarget/",this.isBehindPosition(motionMagicRequest.getSetPoint()));
+        Logger.recordOutput(getLogPath() + "PositionTarget/",armPositionRequest.getSetPoint());
     }
 
 	public void setVoltage(Double voltage) {
@@ -116,8 +115,8 @@ public class Arm extends GBSubsystem {
 		arm.setBrake(brake);
 	}
 
-	public void withPosition(Rotation2d targetPosition) {
-		arm.applyRequest(motionMagicRequest.withSetPoint(targetPosition));
+	public void setTargetPosition(Rotation2d targetPosition) {
+		arm.applyRequest(armPositionRequest.withSetPoint(targetPosition));
 	}
 
 	public void setPower(double power) {
@@ -125,7 +124,7 @@ public class Arm extends GBSubsystem {
 	}
 
 	protected void stayInPlace() {
-        withPosition(positionSignal.getLatestValue());
+        setTargetPosition(positionSignal.getLatestValue());
 	}
 
 	private double getKgVoltage() {
@@ -149,15 +148,6 @@ public class Arm extends GBSubsystem {
 		// Calibrate feed forward using sys id:
 		sysIdCalibrator.setAllButtonsForCalibration(joystick);
 
-//        ArmStateHandler armStateHandler = new ArmStateHandler(this, () -> 0.0, () -> 0.0);
-//
-//        // Calibrate PID using phoenix tuner and these bindings:
-//        joystick.POV_UP.onTrue(armStateHandler.setState(ArmState.CLOSED));
-//        joystick.POV_RIGHT.onTrue(armStateHandler.setState(ArmState.CLIMB));
-//        joystick.POV_LEFT.onTrue(armStateHandler.setState(ArmState.NET));
-//        joystick.POV_DOWN.onTrue(armStateHandler.setState(ArmState.PRE_L4));
-
-		// Calibrate max acceleration and cruise velocity by the equations: max acceleration = (12 + Ks)/2kA, cruise velocity =(12 + Ks)/kV
 	}
 
 }

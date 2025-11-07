@@ -27,8 +27,8 @@ public class WPILibPoseEstimatorConstants {
 
 	public static final Pose2d STARTING_ODOMETRY_POSE = new Pose2d();
 
-	public static final int POSE_TO_GYRO_ANGLE_DIFFERENCE_BUFFER_SIZE = 67;
+	public static final int POSE_TO_IMU_ANGLE_DIFFERENCE_BUFFER_SIZE = 67;
 
-    public static final String POSE_TO_GYRO_OFFSET_STD_DEV_LOGPATH = "PoseToGyroOffsetStdDev/";
+    public static double MAX_POSE_TO_IMU_ANGLE_DIFFERENCE_STD_DEV = 1000000;
 
 }

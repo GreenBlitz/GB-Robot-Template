@@ -27,7 +27,7 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	private OdometryData lastOdometryData;
 	private Rotation2d lastOdometryAngle;
 	private boolean isIMUOffsetCalibrated;
-	private final RingBuffer<Rotation2d> poseToGyroAngleDifferenceBuffer;
+	private final RingBuffer<Rotation2d> poseToIMUAngleDifferenceBuffer;
 
 	public WPILibPoseEstimatorWrapper(
 		String logPath,
@@ -52,7 +52,7 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 		);
 		this.lastOdometryData = new OdometryData(modulePositions, Optional.of(initialIMUAngle), TimeUtil.getCurrentTimeSeconds());
 		this.isIMUOffsetCalibrated = false;
-		this.poseToGyroAngleDifferenceBuffer = new RingBuffer<>(WPILibPoseEstimatorConstants.POSE_TO_GYRO_ANGLE_DIFFERENCE_BUFFER_SIZE);
+		this.poseToIMUAngleDifferenceBuffer = new RingBuffer<>(WPILibPoseEstimatorConstants.POSE_TO_IMU_ANGLE_DIFFERENCE_BUFFER_SIZE);
 	}
 
 
@@ -91,7 +91,7 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 		Rotation2d odometryAngle = getOdometryAngle(data, changeInPose);
 		poseEstimator.updateWithTime(data.getTimestamp(), odometryAngle, data.getWheelPositions());
 
-		getPoseToGyroAngleDifference(data).ifPresent((poseToGyroAngleDifferenceBuffer::insert));
+		getPoseToIMUAngleDifference(data).ifPresent((poseToIMUAngleDifferenceBuffer::insert));
 
 		lastOdometryAngle = odometryAngle;
 		lastOdometryData.setWheelPositions(data.getWheelPositions());
@@ -110,20 +110,20 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 	public void resetOdometry(SwerveModulePosition[] wheelPositions, Rotation2d gyroAngle, Pose2d robotPose) {
 		poseEstimator.resetPosition(gyroAngle, wheelPositions, robotPose);
 		this.lastOdometryData = new OdometryData(wheelPositions, Optional.of(gyroAngle), TimeUtil.getCurrentTimeSeconds());
-		poseToGyroAngleDifferenceBuffer.clear();
+		resetIsIMUOffsetCalibrated();
 	}
 
 	@Override
 	public void resetPose(Pose2d newPose) {
 		Logger.recordOutput(getLogPath() + "lastPoseResetTo", newPose);
 		poseEstimator.resetPosition(lastOdometryAngle, lastOdometryData.getWheelPositions(), newPose);
-		poseToGyroAngleDifferenceBuffer.clear();
+		resetIsIMUOffsetCalibrated();
 	}
 
 	@Override
 	public void setHeading(Rotation2d newHeading) {
 		poseEstimator.resetRotation(newHeading);
-		poseToGyroAngleDifferenceBuffer.clear();
+		resetIsIMUOffsetCalibrated();
 	}
 
 	private void addVisionMeasurement(RobotPoseObservation visionObservation) {
@@ -135,18 +135,23 @@ public class WPILibPoseEstimatorWrapper extends GBSubsystem implements IPoseEsti
 		this.lastVisionObservation = visionObservation;
 	}
 
-	private void updateIsIMUOffsetCalibrated(double maxVisionAndGyroAngleDifferenceStdDev) {
-		double poseToGyroAngleDifferenceStdDev = StatisticsMath
-			.calculateStandardDeviations(poseToGyroAngleDifferenceBuffer, Rotation2d::getRadians);
-		boolean isGyroOffsetCalibrated = poseToGyroAngleDifferenceStdDev < maxVisionAndGyroAngleDifferenceStdDev
-			&& poseToGyroAngleDifferenceBuffer.isFull();
-		Logger.recordOutput(getLogPath() + WPILibPoseEstimatorConstants.POSE_TO_GYRO_OFFSET_STD_DEV_LOGPATH, poseToGyroAngleDifferenceStdDev);
-		Logger.recordOutput(getLogPath() + "isGyroOffsetCalibrated", isGyroOffsetCalibrated);
-		isIMUOffsetCalibrated = isGyroOffsetCalibrated;
+	private void updateIsIMUOffsetCalibrated() {
+		double poseToIMUAngleDifferenceStdDev = StatisticsMath
+			.calculateStandardDeviations(poseToIMUAngleDifferenceBuffer, Rotation2d::getRadians);
+		boolean isIMUOffsetCalibrated = poseToIMUAngleDifferenceStdDev < WPILibPoseEstimatorConstants.MAX_POSE_TO_IMU_ANGLE_DIFFERENCE_STD_DEV
+			&& poseToIMUAngleDifferenceBuffer.isFull();
+		Logger.recordOutput(getLogPath() + "PoseToIMUOffsetStdDev", poseToIMUAngleDifferenceStdDev);
+		Logger.recordOutput(getLogPath() + "isIMUOffsetCalibrated", isIMUOffsetCalibrated);
+		this.isIMUOffsetCalibrated = isIMUOffsetCalibrated;
 	}
 
-	private Optional<Rotation2d> getPoseToGyroAngleDifference(OdometryData data) {
+	private Optional<Rotation2d> getPoseToIMUAngleDifference(OdometryData data) {
 		return data.getGyroYaw().map(rotation2d -> getEstimatedPose().getRotation().minus(rotation2d));
+	}
+
+	private void resetIsIMUOffsetCalibrated() {
+		poseToIMUAngleDifferenceBuffer.clear();
+		isIMUOffsetCalibrated = false;
 	}
 
 	private void log() {

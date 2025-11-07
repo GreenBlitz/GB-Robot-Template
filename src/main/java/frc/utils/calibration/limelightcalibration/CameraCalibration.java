@@ -15,7 +15,7 @@ public class CameraCalibration extends Command {
 	private final Limelight limelight;
 	private final Pose3d tagToRobot;
 	private final Translation3d translationSum;
-	private List<Pose3d> poses;
+	private int posesAmount;
 	private double sinXSum;
 	private double cosXSum;
 	private double sinYSum;
@@ -27,6 +27,7 @@ public class CameraCalibration extends Command {
 		this.limelight = limelight;
 		this.tagToRobot = tagToRobot;
 		this.translationSum = new Translation3d();
+		this.posesAmount = 0;
 		this.sinXSum = 0;
 		this.cosXSum = 0;
 		this.sinYSum = 0;
@@ -36,19 +37,20 @@ public class CameraCalibration extends Command {
 	}
 
 	public void addToPoseList() {
-		poses.add(LimelightCalculations.getCameraToRobot(LimelightHelpers.getTargetPose3d_CameraSpace(limelight.getName()), tagToRobot));
-		translationSum.plus(poses.get(poses.size() - 1).getTranslation());
-		sinXSum += Math.sin(poses.get(poses.size() - 1).getRotation().getX());
-		cosXSum += Math.cos(poses.get(poses.size() - 1).getRotation().getX());
-		sinYSum += Math.sin(poses.get(poses.size() - 1).getRotation().getY());
-		cosYSum += Math.cos(poses.get(poses.size() - 1).getRotation().getY());
-		sinZSum += Math.sin(poses.get(poses.size() - 1).getRotation().getZ());
-		cosZSum += Math.cos(poses.get(poses.size() - 1).getRotation().getZ());
+		Pose3d currentPose = LimelightCalculations.getCameraToRobot(LimelightHelpers.getTargetPose3d_CameraSpace(limelight.getName()), tagToRobot);
+		posesAmount++;
+		translationSum.plus(currentPose.getTranslation());
+		sinXSum += Math.sin(currentPose.getRotation().getX());
+		cosXSum += Math.cos(currentPose.getRotation().getX());
+		sinYSum += Math.sin(currentPose.getRotation().getY());
+		cosYSum += Math.cos(currentPose.getRotation().getY());
+		sinZSum += Math.sin(currentPose.getRotation().getZ());
+		cosZSum += Math.cos(currentPose.getRotation().getZ());
 	}
 
 	public Pose3d getAvgPose() {
 		return new Pose3d(
-			translationSum.div(poses.size()),
+			translationSum.div(posesAmount),
 			AngleMath.getAngleAverageWrapped(sinXSum, cosXSum, sinYSum, cosYSum, sinZSum, cosZSum)
 		);
 	}
@@ -61,7 +63,7 @@ public class CameraCalibration extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return poses.size() > 100;
+		return false;
 	}
 
 }

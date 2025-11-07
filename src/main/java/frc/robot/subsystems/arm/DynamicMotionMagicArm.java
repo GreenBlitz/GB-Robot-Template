@@ -11,7 +11,7 @@ public class DynamicMotionMagicArm extends Arm {
 	private final IDynamicMotionMagicRequest motionMagicRequest;
 	private final Rotation2d defaultDynamicMotionAcceleration;
 	private final Rotation2d defaultDynamicMotionVelocity;
-
+    private final DynamicMotionMagicArmCommandBuilder dynamicMotionMagicCommandBuilder;
 
 	public DynamicMotionMagicArm(
 		String logPath,
@@ -32,26 +32,34 @@ public class DynamicMotionMagicArm extends Arm {
 		this.motionMagicRequest = motionMagicRequest;
 		this.defaultDynamicMotionAcceleration = defaultMotionMagicAcceleration;
 		this.defaultDynamicMotionVelocity = defaultMotionMagicVelocity;
+        this.dynamicMotionMagicCommandBuilder = new DynamicMotionMagicArmCommandBuilder(this);
 	}
 
 	public void setTargetPosition(Rotation2d target, Rotation2d acceleration, Rotation2d velocity, double arbitraryFeedForward) {
-		motionMagicRequest.withSetPoint(target);
 		motionMagicRequest.withMaxAccelerationRotation2dPerSecondSquared(acceleration);
 		motionMagicRequest.withMaxVelocityRotation2dPerSecond(velocity);
 		motionMagicRequest.withArbitraryFeedForward(arbitraryFeedForward);
-	}
+        motionMagicRequest.withSetPoint(target);
+        arm.applyRequest(motionMagicRequest);
 
+    }
+    @Override
 	public void setTargetPosition(Rotation2d target) {
+        motionMagicRequest.withMaxAccelerationRotation2dPerSecondSquared(defaultDynamicMotionAcceleration);
+        motionMagicRequest.withMaxVelocityRotation2dPerSecond(defaultDynamicMotionVelocity);
 		motionMagicRequest.withSetPoint(target);
-		motionMagicRequest.withMaxAccelerationRotation2dPerSecondSquared(defaultDynamicMotionAcceleration);
-		motionMagicRequest.withMaxVelocityRotation2dPerSecond(defaultDynamicMotionVelocity);
+        arm.applyRequest(motionMagicRequest);
 	}
+    @Override
+    public DynamicMotionMagicArmCommandBuilder getCommandsBuilder(){
+        return dynamicMotionMagicCommandBuilder;
+    }
 
     @Override
     public void log() {
         super.log();
         Logger.recordOutput(getLogPath()+"PositionTarget/",motionMagicRequest.getSetPoint());
-        Logger.recordOutput(getLogPath()+"DefaultDynamicMotionAcceleration/",defaultDynamicMotionAcceleration);
-        Logger.recordOutput(getLogPath()+"DefaultDynamicMotionVelocity/",defaultDynamicMotionVelocity);
+        Logger.recordOutput(getLogPath()+"DynamicMotionAcceleration/",motionMagicRequest.getMaxAccelerationRotation2dPerSecondSquared());
+        Logger.recordOutput(getLogPath()+"DefaultDynamicMotionVelocity/",motionMagicRequest.getMaxAccelerationRotation2dPerSecondSquared());
     }
 }

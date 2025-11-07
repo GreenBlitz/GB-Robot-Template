@@ -14,7 +14,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class Arm extends GBSubsystem {
 
-	private final ControllableMotor arm;
+	protected final ControllableMotor arm;
 	private final InputSignal<Double> voltageSignal;
 	private final InputSignal<Rotation2d> velocitySignal;
 	private final InputSignal<Rotation2d> positionSignal;

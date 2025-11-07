@@ -34,6 +34,7 @@ public class Robot {
 
 
     private final DynamicMotionMagicArm arm;
+//    private final Arm pivot;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -52,6 +53,7 @@ public class Robot {
         config.MotionMagic.withMotionMagicCruiseVelocity(3);
         config.MotionMagic.withMotionMagicAcceleration(3);
         arm = ArmBuilder.createDynamicMotionMagic("Arm/",new TalonFXFollowerConfig() ,20,Volts.of(7),null,Volts.of(1).per(Second),0.001, SingleJointedArmSim.estimateMOI(0.3, 5),Rotation2d.fromRotations(3),Rotation2d.fromRotations(3),0,450.0 / 7.0,1,config,config,0.37,0.2);
+//        pivot = ArmBuilder.create("Pivot/",new SysIdRoutine.Config(),)
     }
 
 	public void periodic() {

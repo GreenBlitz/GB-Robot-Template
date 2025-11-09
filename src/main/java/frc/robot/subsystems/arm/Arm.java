@@ -1,6 +1,5 @@
 package frc.robot.subsystems.arm;
 
-import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.joysticks.Axis;
@@ -23,8 +22,8 @@ public class Arm extends GBSubsystem {
 	private final IRequest<Double> armVoltageRequest;
 	private final IFeedForwardRequest armPositionRequest;
 	private final SysIdCalibrator sysIdCalibrator;
-    private final double CALIBRATION_MAX_POWER;
-    private final double kG;
+	private final double CALIBRATION_MAX_POWER;
+	private final double kG;
 
 
 	public Arm(
@@ -37,8 +36,8 @@ public class Arm extends GBSubsystem {
 		IRequest<Double> armVoltageRequest,
 		IFeedForwardRequest armPositionRequest,
 		SysIdCalibrator.SysIdConfigInfo config,
-        double kG,
-        double calibrationMaxPower
+		double kG,
+		double calibrationMaxPower
 	) {
 		super(logPath);
 		this.arm = arm;
@@ -48,8 +47,8 @@ public class Arm extends GBSubsystem {
 		this.currentSignal = currentSignal;
 		this.armVoltageRequest = armVoltageRequest;
 		this.armPositionRequest = armPositionRequest;
-        this.kG = kG;
-        this.CALIBRATION_MAX_POWER = calibrationMaxPower;
+		this.kG = kG;
+		this.CALIBRATION_MAX_POWER = calibrationMaxPower;
 		sysIdCalibrator = new SysIdCalibrator(config, this, this::setVoltage);
 		armCommandBuilder = new ArmCommandBuilder(this);
 		setDefaultCommand(armCommandBuilder.stayInPlace());
@@ -95,8 +94,7 @@ public class Arm extends GBSubsystem {
 	protected void subsystemPeriodic() {
 		arm.updateSimulation();
 		updateInputs();
-        log();
-
+		log();
 	}
 
 	private void updateInputs() {
@@ -104,8 +102,8 @@ public class Arm extends GBSubsystem {
 	}
 
 	public void log() {
-        Logger.recordOutput(getLogPath() + "PositionTarget/",armPositionRequest.getSetPoint());
-    }
+		Logger.recordOutput(getLogPath() + "PositionTarget/", armPositionRequest.getSetPoint());
+	}
 
 	public void setVoltage(Double voltage) {
 		arm.applyRequest(armVoltageRequest.withSetPoint(voltage));
@@ -124,7 +122,7 @@ public class Arm extends GBSubsystem {
 	}
 
 	protected void stayInPlace() {
-        setTargetPosition(positionSignal.getLatestValue());
+		setTargetPosition(positionSignal.getLatestValue());
 	}
 
 	private double getKgVoltage() {
@@ -139,15 +137,12 @@ public class Arm extends GBSubsystem {
 
 		// Check limits
 		joystick.R1.whileTrue(
-			armCommandBuilder.setPower(
-				() -> joystick.getAxisValue(Axis.LEFT_Y) * CALIBRATION_MAX_POWER
-					+ (getKgVoltage() / BatteryUtil.getCurrentVoltage())
-			)
+			armCommandBuilder
+				.setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * CALIBRATION_MAX_POWER + (getKgVoltage() / BatteryUtil.getCurrentVoltage()))
 		);
 
 		// Calibrate feed forward using sys id:
 		sysIdCalibrator.setAllButtonsForCalibration(joystick);
-
 	}
 
 }

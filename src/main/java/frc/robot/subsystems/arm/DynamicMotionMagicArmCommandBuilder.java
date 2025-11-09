@@ -13,9 +13,11 @@ public class DynamicMotionMagicArmCommandBuilder extends ArmCommandBuilder {
 		super(arm);
 		this.arm = arm;
 	}
-    @Override
+
+	@Override
 	public Command setTargetPosition(Rotation2d position) {
-		return arm.asSubsystemCommand(new InitExecuteCommand(() -> arm.setTargetPosition(position), () -> {}), "Set target position to: " + position);
+		return arm
+			.asSubsystemCommand(new InitExecuteCommand(() -> arm.setTargetPosition(position), () -> {}), "Set target position to: " + position);
 	}
 
 
@@ -27,8 +29,12 @@ public class DynamicMotionMagicArmCommandBuilder extends ArmCommandBuilder {
 	) {
 		return arm.asSubsystemCommand(
 			new InitExecuteCommand(
-				() -> arm
-					.setTargetPosition(position, maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared, arbitraryFeedForward),
+				() -> arm.setTargetPosition(
+					position,
+					maxVelocityRotation2dPerSecond,
+					maxAccelerationRotation2dPerSecondSquared,
+					arbitraryFeedForward
+				),
 				() -> {}
 			),
 			"Set target position to: " + position

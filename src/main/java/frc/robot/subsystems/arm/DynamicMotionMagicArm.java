@@ -26,18 +26,31 @@ public class DynamicMotionMagicArm extends Arm {
 		Rotation2d defaultMotionMagicAcceleration,
 		Rotation2d defaultMotionMagicVelocity,
 		SysIdCalibrator.SysIdConfigInfo configInfo,
-        double kG,
-        double calibrationMaxPower
+		double kG,
+		double calibrationMaxPower
 	) {
-		super(logPath, arm, velocitySignal, positionSignal, voltageSignal, currentSignal, armVoltageRequest, motionMagicRequest, configInfo,kG,calibrationMaxPower);
+		super(
+			logPath,
+			arm,
+			velocitySignal,
+			positionSignal,
+			voltageSignal,
+			currentSignal,
+			armVoltageRequest,
+			motionMagicRequest,
+			configInfo,
+			kG,
+			calibrationMaxPower
+		);
 		this.motionMagicRequest = motionMagicRequest;
 		this.defaultDynamicMotionAcceleration = defaultMotionMagicAcceleration;
 		this.defaultDynamicMotionVelocity = defaultMotionMagicVelocity;
-        this.dynamicMotionMagicCommandBuilder = new DynamicMotionMagicArmCommandBuilder(this);
+		this.dynamicMotionMagicCommandBuilder = new DynamicMotionMagicArmCommandBuilder(this);
 	}
-    public DynamicMotionMagicArmCommandBuilder getCommandsBuilder(){
-        return dynamicMotionMagicCommandBuilder;
-    }
+
+	public DynamicMotionMagicArmCommandBuilder getCommandsBuilder() {
+		return dynamicMotionMagicCommandBuilder;
+	}
 
 	public void setTargetPosition(Rotation2d target, Rotation2d acceleration, Rotation2d velocity, double arbitraryFeedForward) {
 		motionMagicRequest.withSetPoint(target);
@@ -45,19 +58,20 @@ public class DynamicMotionMagicArm extends Arm {
 		motionMagicRequest.withMaxVelocityRotation2dPerSecond(velocity);
 		motionMagicRequest.withArbitraryFeedForward(arbitraryFeedForward);
 	}
-    @Override
+
+	@Override
 	public void setTargetPosition(Rotation2d target) {
 		motionMagicRequest.withSetPoint(target);
 		motionMagicRequest.withMaxAccelerationRotation2dPerSecondSquared(defaultDynamicMotionAcceleration);
 		motionMagicRequest.withMaxVelocityRotation2dPerSecond(defaultDynamicMotionVelocity);
 	}
-    @Override
-    public void log(){
-        Logger.recordOutput(getLogPath() + "PositionTarget/",motionMagicRequest.getSetPoint());
-        Logger.recordOutput(getLogPath() + "DynamicMotionMagicAcceleration/",motionMagicRequest.getMaxAccelerationRotation2dPerSecondSquared());
-        Logger.recordOutput(getLogPath() + "DynamicMotionMagicVelocity/",motionMagicRequest.getMaxVelocityRotation2dPerSecond());
 
-    }
+	@Override
+	public void log() {
+		Logger.recordOutput(getLogPath() + "PositionTarget/", motionMagicRequest.getSetPoint());
+		Logger.recordOutput(getLogPath() + "DynamicMotionMagicAcceleration/", motionMagicRequest.getMaxAccelerationRotation2dPerSecondSquared());
+		Logger.recordOutput(getLogPath() + "DynamicMotionMagicVelocity/", motionMagicRequest.getMaxVelocityRotation2dPerSecond());
+	}
 
 
 }

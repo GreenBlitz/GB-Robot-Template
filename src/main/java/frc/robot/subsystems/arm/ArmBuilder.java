@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Robot;
 import frc.robot.hardware.interfaces.IDynamicMotionMagicRequest;
+import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
@@ -42,9 +43,7 @@ public class ArmBuilder {
 		String logPath,
 		TalonFXFollowerConfig talonFXFollowerConfig,
 		Phoenix6DeviceID deviceID,
-		Voltage stepUpVoltage,
-		Time timeout,
-		Velocity<VoltageUnit> rampUp,
+		SysIdCalibrator.SysIdConfigInfo sysIdCalibratorConfigInfo,
 		Rotation2d maxAcceleration,
 		Rotation2d maxVelocity,
 		double feedForward,
@@ -56,11 +55,7 @@ public class ArmBuilder {
         int signalFrequency,
         BusChain busChain
     ) {
-        SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo = new SysIdCalibrator.SysIdConfigInfo(
-                new SysIdRoutine.Config(rampUp, stepUpVoltage, timeout, state -> SignalLogger.writeString("state", state.toString())),
-                true
-        );
-        TalonFXMotor arm = new TalonFXMotor(logPath,deviceID,talonFXFollowerConfig,sysIdConfigInfo.config());
+        TalonFXMotor arm = arm(deviceID,logPath,talonFXFollowerConfig,sysIdCalibratorConfigInfo);
 
 		Phoenix6AngleSignal velocity = Phoenix6SignalBuilder
 			.build(arm.getDevice().getVelocity(), signalFrequency, AngleUnit.ROTATIONS, busChain);
@@ -74,7 +69,7 @@ public class ArmBuilder {
 		Phoenix6DoubleSignal current = Phoenix6SignalBuilder
 			.build(arm.getDevice().getStatorCurrent(), signalFrequency, busChain);
 
-		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), true);
+		Phoenix6Request<Double> voltageRequest = voltageRequest();
 
 		IDynamicMotionMagicRequest positionRequest = Phoenix6RequestBuilder
 			.build(new DynamicMotionMagicVoltage(position.getLatestValue().getRotations(), 0, 0, 0), 0, true);
@@ -95,7 +90,7 @@ public class ArmBuilder {
 			positionRequest,
 			maxAcceleration,
 			maxVelocity,
-			sysIdConfigInfo,
+			sysIdCalibratorConfigInfo,
             configuration.Slot0.kG,
             calibrationMaxPower
 		);
@@ -104,12 +99,10 @@ public class ArmBuilder {
 
 	public Arm create(
 		String logPath,
-		Velocity<VoltageUnit> rampUp,
-		Voltage stepUpVoltage,
-		Time timeout,
 		TalonFXFollowerConfig talonFXFollowerConfig,
 		Phoenix6DeviceID deviceID,
-		double feedforward,
+        SysIdCalibrator.SysIdConfigInfo sysIdCalibratorConfigInfo,
+        double feedforward,
 		FeedbackConfigs feedbackConfigs,
 		TalonFXConfiguration realSlotsConfig,
         TalonFXConfiguration simulationSlotsConfig,
@@ -117,13 +110,7 @@ public class ArmBuilder {
         int currentLimit,
         int signalFrequency
 	) {
-
-        SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo = new SysIdCalibrator.SysIdConfigInfo(
-                new SysIdRoutine.Config(rampUp, stepUpVoltage, timeout, state -> SignalLogger.writeString("state", state.toString())),
-                true
-        );
-
-        TalonFXMotor arm = new TalonFXMotor(logPath,deviceID,talonFXFollowerConfig,sysIdConfigInfo.config());
+        TalonFXMotor arm = arm(deviceID,logPath,talonFXFollowerConfig,sysIdCalibratorConfigInfo);
 
 		Phoenix6AngleSignal velocity = Phoenix6SignalBuilder
 			.build(arm.getDevice().getVelocity(), signalFrequency, AngleUnit.ROTATIONS, BusChain.ROBORIO);
@@ -137,14 +124,14 @@ public class ArmBuilder {
 		Phoenix6DoubleSignal current = Phoenix6SignalBuilder
 			.build(arm.getDevice().getStatorCurrent(), signalFrequency, BusChain.ROBORIO);
 
-		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), true);
+		Phoenix6Request<Double> voltageRequest = voltageRequest();
 
 		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder
 			.build(new MotionMagicVoltage(position.getLatestValue().getRotations()), feedforward, true);
         TalonFXConfiguration configuration = (configuration(feedbackConfigs,simulationSlotsConfig,realSlotsConfig,currentLimit));
         arm.applyConfiguration(configuration);
 
-		return new Arm(logPath, arm, velocity, position, voltage, current, voltageRequest, positionRequest, sysIdConfigInfo,configuration.Slot0.kG,calibrationMaxPower);
+		return new Arm(logPath, arm, velocity, position, voltage, current, voltageRequest, positionRequest, sysIdCalibratorConfigInfo,configuration.Slot0.kG,calibrationMaxPower);
 	}
 
 	private static TalonFXConfiguration configuration(FeedbackConfigs feedbackConfigs,TalonFXConfiguration simulationConfigSlots,TalonFXConfiguration realConfigSlots,int currentLimit) {
@@ -169,20 +156,15 @@ public class ArmBuilder {
 		return talonFXConfiguration;
 	}
 
-    private static TalonFXMotor arm(int armId, String logPath, TalonFXFollowerConfig talonFXFollowerConfig,double JKgMetersSquared,double gearing){
-        return new TalonFXMotor(
-                logPath + "/Arm",
-                new Phoenix6DeviceID(armId),
-                new SysIdRoutine.Config(),
-                new SimpleMotorSimulation(
-                        new DCMotorSim(
-                                LinearSystemId
-                                        .createDCMotorSystem(DCMotor.getKrakenX60Foc(talonFXFollowerConfig.followerIDs.length + 1), JKgMetersSquared, gearing),
-                                DCMotor.getKrakenX60Foc(talonFXFollowerConfig.followerIDs.length + 1)
-                        )
-                )
-        );
+    private static TalonFXMotor arm(Phoenix6DeviceID deviceID, String logPath, TalonFXFollowerConfig followerConfig, SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo){
+        return new TalonFXMotor(logPath,deviceID,followerConfig,sysIdConfigInfo.config());
     }
+
+    private static Phoenix6Request<Double> voltageRequest(){
+        return Phoenix6RequestBuilder.build(new VoltageOut(0), true);
+    }
+
+
 
 
 }

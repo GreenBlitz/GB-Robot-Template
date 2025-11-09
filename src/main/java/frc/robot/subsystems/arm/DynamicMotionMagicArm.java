@@ -59,6 +59,7 @@ public class DynamicMotionMagicArm extends Arm {
 		motionMagicRequest.withMaxAccelerationRotation2dPerSecondSquared(acceleration);
 		motionMagicRequest.withMaxVelocityRotation2dPerSecond(velocity);
 		motionMagicRequest.withArbitraryFeedForward(arbitraryFeedForward);
+        motor.applyRequest(motionMagicRequest);
 	}
 
 	@Override
@@ -66,6 +67,7 @@ public class DynamicMotionMagicArm extends Arm {
 		motionMagicRequest.withSetPoint(target);
 		motionMagicRequest.withMaxAccelerationRotation2dPerSecondSquared(defaultDynamicMotionAcceleration);
 		motionMagicRequest.withMaxVelocityRotation2dPerSecond(defaultDynamicMotionVelocity);
+        motor.applyRequest(motionMagicRequest);
 	}
 
 	@Override

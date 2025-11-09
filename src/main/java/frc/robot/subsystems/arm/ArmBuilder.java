@@ -35,13 +35,14 @@ public class ArmBuilder {
 		TalonFXConfiguration realSlotsConfig,
 		TalonFXConfiguration simulationSlotsConfig,
 		double calibrationMaxPower,
+        Rotation2d defaultPositionTolerance,
 		int currentLimit,
 		int signalFrequency,
 		BusChain busChain
 	) {
-		TalonFXMotor arm = arm(deviceID, logPath, talonFXFollowerConfig, sysIdCalibratorConfigInfo);
+		TalonFXMotor motor = arm(deviceID, logPath, talonFXFollowerConfig, sysIdCalibratorConfigInfo);
 
-		ArmRecordSignals signals = new ArmRecordSignals(arm, signalFrequency, busChain);
+		ArmRecordSignals signals = new ArmRecordSignals(motor, signalFrequency, busChain);
 
 		Phoenix6Request<Double> voltageRequest = voltageRequest();
 
@@ -51,11 +52,11 @@ public class ArmBuilder {
 		positionRequest.withMaxVelocityRotation2dPerSecond(maxVelocity);
 		positionRequest.withArbitraryFeedForward(feedForward);
 		TalonFXConfiguration configuration = configuration(feedbackConfigs, simulationSlotsConfig, realSlotsConfig, currentLimit);
-		arm.applyConfiguration(configuration);
+		motor.applyConfiguration(configuration);
 
 		return new DynamicMotionMagicArm(
 			logPath,
-			arm,
+			motor,
 			signals.velocitySignal(),
 			signals.positionSignal(),
 			signals.voltageSignal(),
@@ -66,7 +67,8 @@ public class ArmBuilder {
 			maxVelocity,
 			sysIdCalibratorConfigInfo,
 			configuration.Slot0.kG,
-			calibrationMaxPower
+			calibrationMaxPower,
+            defaultPositionTolerance
 		);
 	}
 
@@ -82,22 +84,23 @@ public class ArmBuilder {
 		double calibrationMaxPower,
 		int currentLimit,
 		int signalFrequency,
+        Rotation2d defaultPositionTolerance,
 		BusChain busChain
 	) {
-		TalonFXMotor arm = arm(deviceID, logPath, talonFXFollowerConfig, sysIdCalibratorConfigInfo);
+		TalonFXMotor motor = arm(deviceID, logPath, talonFXFollowerConfig, sysIdCalibratorConfigInfo);
 
-		ArmRecordSignals signals = new ArmRecordSignals(arm, signalFrequency, busChain);
+		ArmRecordSignals signals = new ArmRecordSignals(motor, signalFrequency, busChain);
 
 		Phoenix6Request<Double> voltageRequest = voltageRequest();
 
 		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder
 			.build(new MotionMagicVoltage(signals.positionSignal().getLatestValue().getRotations()), feedforward, true);
 		TalonFXConfiguration configuration = (configuration(feedbackConfigs, simulationSlotsConfig, realSlotsConfig, currentLimit));
-		arm.applyConfiguration(configuration);
+		motor.applyConfiguration(configuration);
 
 		return new Arm(
 			logPath,
-			arm,
+			motor,
 			signals.velocitySignal(),
 			signals.positionSignal(),
 			signals.voltageSignal(),
@@ -106,7 +109,8 @@ public class ArmBuilder {
 			positionRequest,
 			sysIdCalibratorConfigInfo,
 			configuration.Slot0.kG,
-			calibrationMaxPower
+			calibrationMaxPower,
+            defaultPositionTolerance
 		);
 	}
 

@@ -13,22 +13,23 @@ import org.littletonrobotics.junction.Logger;
 
 public class Arm extends GBSubsystem {
 
-	private final ControllableMotor arm;
+	private final ControllableMotor motor;
 	private final InputSignal<Double> voltageSignal;
 	private final InputSignal<Rotation2d> velocitySignal;
 	private final InputSignal<Rotation2d> positionSignal;
 	private final InputSignal<Double> currentSignal;
-	private final ArmCommandBuilder armCommandBuilder;
 	private final IRequest<Double> armVoltageRequest;
 	private final IFeedForwardRequest armPositionRequest;
 	private final SysIdCalibrator sysIdCalibrator;
 	private final double CALIBRATION_MAX_POWER;
 	private final double kG;
+    private final Rotation2d DEFAULT_IS_AT_POSITION_TOLERANCE;
+    private final ArmCommandBuilder armCommandBuilder;
 
 
-	public Arm(
+    public Arm(
 		String logPath,
-		ControllableMotor arm,
+		ControllableMotor motor,
 		InputSignal<Rotation2d> velocitySignal,
 		InputSignal<Rotation2d> positionSignal,
 		InputSignal<Double> voltageSignal,
@@ -37,10 +38,11 @@ public class Arm extends GBSubsystem {
 		IFeedForwardRequest armPositionRequest,
 		SysIdCalibrator.SysIdConfigInfo config,
 		double kG,
-		double calibrationMaxPower
+		double calibrationMaxPower,
+        Rotation2d defaultPositionTolerance
 	) {
 		super(logPath);
-		this.arm = arm;
+		this.motor = motor;
 		this.positionSignal = positionSignal;
 		this.velocitySignal = velocitySignal;
 		this.voltageSignal = voltageSignal;
@@ -49,6 +51,7 @@ public class Arm extends GBSubsystem {
 		this.armPositionRequest = armPositionRequest;
 		this.kG = kG;
 		this.CALIBRATION_MAX_POWER = calibrationMaxPower;
+        this.DEFAULT_IS_AT_POSITION_TOLERANCE = defaultPositionTolerance;
 		sysIdCalibrator = new SysIdCalibrator(config, this, this::setVoltage);
 		armCommandBuilder = new ArmCommandBuilder(this);
 		setDefaultCommand(armCommandBuilder.stayInPlace());
@@ -81,6 +84,9 @@ public class Arm extends GBSubsystem {
 	public boolean isAtPosition(Rotation2d targetPosition, Rotation2d tolerance) {
 		return positionSignal.isNear(targetPosition, tolerance);
 	}
+    public boolean isAtPosition(Rotation2d targetPosition) {
+		return positionSignal.isNear(targetPosition, DEFAULT_IS_AT_POSITION_TOLERANCE);
+	}
 
 	public boolean isPastPosition(Rotation2d position) {
 		return positionSignal.isGreater(position);
@@ -92,13 +98,13 @@ public class Arm extends GBSubsystem {
 
 	@Override
 	protected void subsystemPeriodic() {
-		arm.updateSimulation();
+		motor.updateSimulation();
 		updateInputs();
 		log();
 	}
 
 	private void updateInputs() {
-		arm.updateInputs(positionSignal, voltageSignal, velocitySignal, currentSignal);
+		motor.updateInputs(positionSignal, voltageSignal, velocitySignal, currentSignal);
 	}
 
 	public void log() {
@@ -106,19 +112,19 @@ public class Arm extends GBSubsystem {
 	}
 
 	public void setVoltage(Double voltage) {
-		arm.applyRequest(armVoltageRequest.withSetPoint(voltage));
+		motor.applyRequest(armVoltageRequest.withSetPoint(voltage));
 	}
 
 	public void setBrake(boolean brake) {
-		arm.setBrake(brake);
+		motor.setBrake(brake);
 	}
 
 	public void setTargetPosition(Rotation2d targetPosition) {
-		arm.applyRequest(armPositionRequest.withSetPoint(targetPosition));
+		motor.applyRequest(armPositionRequest.withSetPoint(targetPosition));
 	}
 
 	public void setPower(double power) {
-		arm.setPower(power);
+		motor.setPower(power);
 	}
 
 	protected void stayInPlace() {

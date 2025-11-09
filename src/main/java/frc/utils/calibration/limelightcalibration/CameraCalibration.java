@@ -1,6 +1,7 @@
 package frc.utils.calibration.limelightcalibration;
 
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.vision.cameras.limelight.Limelight;
@@ -54,11 +55,21 @@ public class CameraCalibration extends Command {
 			AngleMath.getAngleAverageWrapped(sinXSum, cosXSum, sinYSum, cosYSum, sinZSum, cosZSum)
 		);
 	}
-
+	
+	@Override
+	public void initialize() {
+		posesAmount = 0;
+	}
+	
 	@Override
 	public void execute() {
 		addToPoseList();
 		Logger.recordOutput("/cameraCalibration/cameraToRobotPose", getAvgPose());
+		Logger.recordOutput("/cameraCalibration/cameraToRobotPose2d", getAvgPose().toPose2d());
+		Logger.recordOutput("/cameraCalibration/cameraToRobotAngleRoll", Rotation2d.fromRadians(getAvgPose().getRotation().getX()).getDegrees());
+		Logger.recordOutput("/cameraCalibration/cameraToRobotAnglePitch", Rotation2d.fromRadians(getAvgPose().getRotation().getY()).getDegrees());
+		Logger.recordOutput("/cameraCalibration/cameraToRobotAngleYaw", Rotation2d.fromRadians(getAvgPose().getRotation().getZ()).getDegrees());
+		Logger.recordOutput("/cameraCalibration/cameraToRobotPoseNum", posesAmount);
 	}
 
 	@Override

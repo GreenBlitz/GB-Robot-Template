@@ -52,7 +52,7 @@ public class CameraCalibration extends Command {
 	public Pose3d getAvgPose() {
 		return new Pose3d(
 			translationSum.div(posesAmount),
-			AngleMath.getAngleAverageWrapped(sinXSum, cosXSum, sinYSum, cosYSum, sinZSum, cosZSum)
+			AngleMath.getAngleAverageWrapped(sinXSum, cosXSum, sinYSum, cosYSum, sinZSum, cosZSum, posesAmount)
 		);
 	}
 	

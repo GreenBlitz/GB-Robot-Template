@@ -1,6 +1,7 @@
 package frc.robot.subsystems.arm;
 
 import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
@@ -47,15 +48,13 @@ public class ArmBuilder {
 		Rotation2d maxAcceleration,
 		Rotation2d maxVelocity,
 		double feedForward,
-		double rotorRatio,
-		double mechanismRatio,
+		FeedbackConfigs feedbackConfigs,
         TalonFXConfiguration realSlotsConfig,
         TalonFXConfiguration simulationSlotsConfig,
         double calibrationMaxPower,
         int currentLimit,
         int signalFrequency,
         BusChain busChain
-
     ) {
         SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo = new SysIdCalibrator.SysIdConfigInfo(
                 new SysIdRoutine.Config(rampUp, stepUpVoltage, timeout, state -> SignalLogger.writeString("state", state.toString())),
@@ -82,7 +81,7 @@ public class ArmBuilder {
 		positionRequest.withMaxAccelerationRotation2dPerSecondSquared(maxAcceleration);
 		positionRequest.withMaxVelocityRotation2dPerSecond(maxVelocity);
 		positionRequest.withArbitraryFeedForward(feedForward);
-		TalonFXConfiguration configuration = configuration(rotorRatio, mechanismRatio,simulationSlotsConfig,realSlotsConfig,currentLimit);
+		TalonFXConfiguration configuration = configuration(feedbackConfigs,simulationSlotsConfig,realSlotsConfig,currentLimit);
 		arm.applyConfiguration(configuration);
 
 		return new DynamicMotionMagicArm(
@@ -111,8 +110,7 @@ public class ArmBuilder {
 		TalonFXFollowerConfig talonFXFollowerConfig,
 		Phoenix6DeviceID deviceID,
 		double feedforward,
-		double rotorRatio,
-		double mechanismRatio,
+		FeedbackConfigs feedbackConfigs,
 		TalonFXConfiguration realSlotsConfig,
         TalonFXConfiguration simulationSlotsConfig,
         double calibrationMaxPower,
@@ -143,13 +141,13 @@ public class ArmBuilder {
 
 		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder
 			.build(new MotionMagicVoltage(position.getLatestValue().getRotations()), feedforward, true);
-        TalonFXConfiguration configuration = (configuration(rotorRatio, mechanismRatio,simulationSlotsConfig,realSlotsConfig,currentLimit));
+        TalonFXConfiguration configuration = (configuration(feedbackConfigs,simulationSlotsConfig,realSlotsConfig,currentLimit));
         arm.applyConfiguration(configuration);
 
 		return new Arm(logPath, arm, velocity, position, voltage, current, voltageRequest, positionRequest, sysIdConfigInfo,configuration.Slot0.kG,calibrationMaxPower);
 	}
 
-	private static TalonFXConfiguration configuration(double rotorRatio, double mechanismRatio,TalonFXConfiguration simulationConfigSlots,TalonFXConfiguration realConfigSlots,int currentLimit) {
+	private static TalonFXConfiguration configuration(FeedbackConfigs feedbackConfigs,TalonFXConfiguration simulationConfigSlots,TalonFXConfiguration realConfigSlots,int currentLimit) {
 		TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
 
 
@@ -161,9 +159,8 @@ public class ArmBuilder {
                 talonFXConfiguration = simulationConfigSlots;
             }
         }
+        talonFXConfiguration.Feedback = feedbackConfigs;
 
-        talonFXConfiguration.Feedback.RotorToSensorRatio = rotorRatio;
-        talonFXConfiguration.Feedback.SensorToMechanismRatio = mechanismRatio;
 
         talonFXConfiguration.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
 		talonFXConfiguration.CurrentLimits.withStatorCurrentLimitEnable(true);

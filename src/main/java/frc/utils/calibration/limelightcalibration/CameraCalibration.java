@@ -14,7 +14,7 @@ public class CameraCalibration extends Command {
 
 	private final Limelight limelight;
 	private final Pose3d tagToRobot;
-	private final Translation3d translationSum;
+	private Translation3d translationSum;
 	private int posesAmount;
 	private double sinXSum;
 	private double cosXSum;
@@ -39,7 +39,7 @@ public class CameraCalibration extends Command {
 	public void addToPoseList() {
 		Pose3d currentPose = LimelightCalculations.getCameraToRobot(LimelightHelpers.getTargetPose3d_CameraSpace(limelight.getName()), tagToRobot);
 		posesAmount++;
-		translationSum.plus(currentPose.getTranslation());
+		translationSum = translationSum.plus(currentPose.getTranslation());
 		sinXSum += Math.sin(currentPose.getRotation().getX());
 		cosXSum += Math.cos(currentPose.getRotation().getX());
 		sinYSum += Math.sin(currentPose.getRotation().getY());
@@ -63,7 +63,7 @@ public class CameraCalibration extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return false;
+		return posesAmount>100;
 	}
 
 }

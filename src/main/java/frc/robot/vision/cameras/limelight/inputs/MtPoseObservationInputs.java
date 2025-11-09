@@ -6,6 +6,6 @@ import org.littletonrobotics.junction.AutoLog;
 @AutoLog
 public class MtPoseObservationInputs {
 
-    public LimelightHelpers.PoseEstimate mtRawData = new LimelightHelpers.PoseEstimate();
+	public LimelightHelpers.PoseEstimate mtRawData = new LimelightHelpers.PoseEstimate();
 
 }

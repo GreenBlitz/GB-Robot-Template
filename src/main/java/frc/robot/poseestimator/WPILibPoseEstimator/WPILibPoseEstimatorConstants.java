@@ -7,7 +7,7 @@ import frc.utils.math.StandardDeviations2D;
 
 public class WPILibPoseEstimatorConstants {
 
-	public static final String WPILIB_POSEESTIMATOR_LOGPATH = "WPILibPoseEstimator/";
+	public static final String WPILIB_POSEESTIMATOR_LOGPATH = "WPILibPoseEstimator";
 
 	public static final StandardDeviations2D DEFAULT_ODOMETRY_STANDARD_DEVIATIONS = new StandardDeviations2D(0.003, 0.003, 0.003);
 

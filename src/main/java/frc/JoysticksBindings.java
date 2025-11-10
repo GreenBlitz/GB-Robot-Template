@@ -1,6 +1,7 @@
 package frc;
 
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.joysticks.Axis;
@@ -11,6 +12,7 @@ import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.utils.LimelightHelpers;
 import frc.utils.calibration.limelightcalibration.CameraCalibration;
 import frc.utils.calibration.limelightcalibration.LimelightCalculations;
+import org.littletonrobotics.junction.Logger;
 
 public class JoysticksBindings {
 
@@ -70,7 +72,13 @@ public class JoysticksBindings {
 //		usedJoystick.A.onTrue(new CameraCalibration(robot.getLimelightFour(), tagToRobot));
 //		usedJoystick.B.onTrue(new CameraCalibration(robot.getLimelightThreeGB(), tagToRobot));
 		usedJoystick.X.onTrue(new RunCommand(() -> LimelightCalculations.getCameraToRobot(robot.getLimelightFour().getRobotRelativeCameraPose(), tagToRobot)));
-		usedJoystick.Y.onTrue(new RunCommand(() -> LimelightCalculations.getCameraToRobot(LimelightHelpers.getTargetPose3d_CameraSpace(robot.getLimelightThreeGB().getName()), tagToRobot)));
+		usedJoystick.Y.onTrue(new RunCommand(() -> {
+			Pose3d cameraToRobot = LimelightCalculations.getCameraToRobot(LimelightHelpers.getTargetPose3d_CameraSpace(robot.getLimelightThreeGB().getName()), tagToRobot);
+			Logger.recordOutput("AAAAAAAAAAAAAAA", cameraToRobot);
+			Logger.recordOutput("AAAAAAAAAAAAAAA/roll", Rotation2d.fromRadians(cameraToRobot.getRotation().getX()).getDegrees());
+			Logger.recordOutput("AAAAAAAAAAAAAAA/pitch", Rotation2d.fromRadians(cameraToRobot.getRotation().getY()).getDegrees());
+			Logger.recordOutput("AAAAAAAAAAAAAAA/yaw", Rotation2d.fromRadians(cameraToRobot.getRotation().getZ()).getDegrees());
+		}));
 
 
 	}

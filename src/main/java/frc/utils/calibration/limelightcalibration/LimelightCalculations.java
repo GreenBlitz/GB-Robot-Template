@@ -6,7 +6,9 @@ import edu.wpi.first.math.geometry.Pose3d;
 public class LimelightCalculations {
 
 	public static Pose3d getCameraToRobot(Pose3d tagToCamera, Pose3d tagToRobot) {
-		return tagToRobot.transformBy(tagToCamera.minus(new Pose3d()).inverse());
+//		return tagToRobot.transformBy(tagToCamera.minus(new Pose3d()).inverse());
+		tagToCamera = new Pose3d(tagToCamera.getTranslation().unaryMinus(), tagToCamera.getRotation().unaryMinus());
+		return tagToCamera.transformBy(tagToRobot.minus(new Pose3d()));
 	}
 
 

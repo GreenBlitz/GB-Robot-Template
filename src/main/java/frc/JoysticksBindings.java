@@ -8,6 +8,7 @@ import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
+import frc.utils.LimelightHelpers;
 import frc.utils.calibration.limelightcalibration.CameraCalibration;
 import frc.utils.calibration.limelightcalibration.LimelightCalculations;
 
@@ -69,7 +70,7 @@ public class JoysticksBindings {
 //		usedJoystick.A.onTrue(new CameraCalibration(robot.getLimelightFour(), tagToRobot));
 //		usedJoystick.B.onTrue(new CameraCalibration(robot.getLimelightThreeGB(), tagToRobot));
 		usedJoystick.X.onTrue(new RunCommand(() -> LimelightCalculations.getCameraToRobot(robot.getLimelightFour().getRobotRelativeCameraPose(), tagToRobot)));
-		usedJoystick.Y.onTrue(new RunCommand(() -> LimelightCalculations.getCameraToRobot(robot.getLimelightThreeGB().getRobotRelativeCameraPose(), tagToRobot)));
+		usedJoystick.Y.onTrue(new RunCommand(() -> LimelightCalculations.getCameraToRobot(LimelightHelpers.getTargetPose3d_CameraSpace(robot.getLimelightThreeGB().getName()), tagToRobot)));
 
 
 	}

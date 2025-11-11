@@ -21,4 +21,8 @@ public record LimelightInputs(
 		return ObjectDetectionInputs.target2dValues;
 	}
 
+	public LimelightHelpers.RawDetection[] getRawDetections() {
+		return ObjectDetectionInputs.rawDetections;
+	}
+
 }

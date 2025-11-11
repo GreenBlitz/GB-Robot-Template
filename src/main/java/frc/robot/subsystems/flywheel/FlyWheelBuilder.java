@@ -2,10 +2,12 @@ package frc.robot.subsystems.flywheel;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.*;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
+import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
 import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
@@ -17,9 +19,14 @@ import com.ctre.phoenix6.controls.VoltageOut;
 
 public class FlyWheelBuilder {
 
-	public static FlyWheel generate(String logPath, Phoenix6DeviceID IDSRightMotor, Phoenix6DeviceID IDLeftMotor) {
-		TalonFXMotor rightMotor = new TalonFXMotor(logPath + "/right", IDSRightMotor, new SysIdRoutine.Config());
-		TalonFXMotor leftMotor = new TalonFXMotor(logPath + "/left", IDLeftMotor, new SysIdRoutine.Config());
+	public static FlyWheel generate(
+		String logPath,
+		Phoenix6DeviceID IDSRightMotor,
+		TalonFXFollowerConfig talonFXFollowerConfig,
+		Phoenix6DeviceID IDLeftMotor
+	) {
+		TalonFXMotor rightMotor = new TalonFXMotor(logPath + "/right", IDSRightMotor, talonFXFollowerConfig, new SysIdRoutine.Config());
+		TalonFXMotor leftMotor = new TalonFXMotor(logPath + "/left", IDLeftMotor, talonFXFollowerConfig, new SysIdRoutine.Config());
 
 		Phoenix6DoubleSignal voltageSignalRightMotor = Phoenix6SignalBuilder
 			.build(rightMotor.getDevice().getMotorVoltage(), Constants.DEFAULT_SIGNALS_FREQUENCY, BusChain.ROBORIO);
@@ -32,8 +39,8 @@ public class FlyWheelBuilder {
 
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), true);
 		Phoenix6Request<Rotation2d> velocityRequest = Phoenix6RequestBuilder.build(new VelocityVoltage(0), 0, true);
-		rightMotor.applyConfiguration(buildConfigRight());
-		leftMotor.applyConfiguration(buildConfigLeft());
+		rightMotor.applyConfiguration(buildConfig(talonFXFollowerConfig));
+		leftMotor.applyConfiguration(buildConfig(talonFXFollowerConfig));
 
 		return new FlyWheel(
 			logPath,
@@ -48,19 +55,15 @@ public class FlyWheelBuilder {
 		);
 	}
 
-	public static TalonFXConfiguration buildConfigRight() {
-		TalonFXConfiguration LeftMotorConfiguration = new TalonFXConfiguration();
-		LeftMotorConfiguration.CurrentLimits.SupplyCurrentLimit = Constants.CURRENT_LIMITS;
-		LeftMotorConfiguration.Voltage.withPeakForwardVoltage(Constants.FORWARD_VOLTAGE_LIMIT);
-		LeftMotorConfiguration.Voltage.withPeakReverseVoltage(Constants.BACKWARD_VOLTAGE_LIMIT);
-		return LeftMotorConfiguration;
-	}
-
-	public static TalonFXConfiguration buildConfigLeft() {
-		TalonFXConfiguration RightMotorConfiguration = new TalonFXConfiguration();
-		RightMotorConfiguration.CurrentLimits.SupplyCurrentLimit = Constants.CURRENT_LIMITS;
-		RightMotorConfiguration.Voltage.withPeakForwardVoltage(Constants.FORWARD_VOLTAGE_LIMIT);
-		return RightMotorConfiguration;
+	public static TalonFXConfiguration buildConfig(TalonFXFollowerConfig talonFXFollowerConfig) {
+		talonFXFollowerConfig.motorConfig.CurrentLimits.SupplyCurrentLimit = Constants.CURRENT_LIMITS;
+		talonFXFollowerConfig.motorConfig.Voltage.withPeakForwardVoltage(Constants.FORWARD_VOLTAGE_LIMIT);
+		talonFXFollowerConfig.motorConfig.Voltage.withPeakReverseVoltage(Constants.BACKWARD_VOLTAGE_LIMIT);
+		talonFXFollowerConfig.motorConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+		talonFXFollowerConfig.motorConfig.Slot0.kP = Constants.KP;
+		talonFXFollowerConfig.motorConfig.Slot0.kI = Constants.KI;
+		talonFXFollowerConfig.motorConfig.Slot0.kD = Constants.KD;
+		return talonFXFollowerConfig.motorConfig;
 	}
 
 }

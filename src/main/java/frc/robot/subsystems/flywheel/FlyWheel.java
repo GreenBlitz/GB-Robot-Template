@@ -15,23 +15,29 @@ public class FlyWheel extends GBSubsystem {
 	private final IRequest<Rotation2d> velocityRequest;
 	private final IRequest<Double> voltageRequest;
 
-	private final InputSignal<Double> voltageSignal;
-	private final InputSignal<Rotation2d> velocitySignal;
+	private final InputSignal<Double> voltageSignalRightMotor;
+	private final InputSignal<Double> voltageSignalLeftMotor;
+	private final InputSignal<Rotation2d> velocitySignalRightMotor;
+	private final InputSignal<Rotation2d> velocitySignalLeftMotor;
 
 	public FlyWheel(
 		String logPath,
 		IRequest<Rotation2d> velocityRequest,
 		IRequest<Double> voltageRequest,
-		InputSignal<Rotation2d> velocitySignal,
-		InputSignal<Double> voltageSignal,
+		InputSignal<Rotation2d> velocitySignalRightMotor,
+		InputSignal<Double> voltageSignalRightMotor,
+		InputSignal<Rotation2d> velocitySignalLeftMotor,
+		InputSignal<Double> voltageSignalLeftMotor,
 		ControllableMotor rightMotor,
 		ControllableMotor lettMotor
 	) {
 		super(logPath);
 		this.velocityRequest = velocityRequest;
 		this.voltageRequest = voltageRequest;
-		this.velocitySignal = velocitySignal;
-		this.voltageSignal = voltageSignal;
+		this.velocitySignalRightMotor = velocitySignalRightMotor;
+		this.voltageSignalRightMotor = voltageSignalRightMotor;
+		this.velocitySignalLeftMotor = velocitySignalLeftMotor;
+		this.voltageSignalLeftMotor = voltageSignalLeftMotor;
 		this.rightMotor = rightMotor;
 		this.leftMotor = lettMotor;
 	}
@@ -46,16 +52,20 @@ public class FlyWheel extends GBSubsystem {
 		rightMotor.applyRequest(velocityRequest.withSetPoint(velocity));
 	}
 
-	public Rotation2d getVelocity() {
-		return velocitySignal.getLatestValue();
+	public Rotation2d getVelocityRightMotor() {
+		return velocitySignalRightMotor.getLatestValue();
 	}
 
-	public double getVoltage() {
-		return voltageSignal.getLatestValue();
+	public Rotation2d getVelocityLeftMotor() {
+		return velocitySignalLeftMotor.getLatestValue();
 	}
 
-	public boolean isAtVelocity(Rotation2d velocity) {
-		return ToleranceMath.isNear(getVelocity().getRotations(), velocity.getRotations(), Constants.VELOCITY_TOLERANCE);
+	public boolean isLeftAtVelocity(Rotation2d chekVelocity) {
+		return ToleranceMath.isNear(getVelocityLeftMotor().getRotations(), chekVelocity.getRotations(), Constants.VELOCITY_TOLERANCE);
+	}
+
+	public boolean isRightAtVelocity(Rotation2d chekVelocity) {
+		return ToleranceMath.isNear(getVelocityRightMotor().getRotations(), chekVelocity.getRotations(), Constants.VELOCITY_TOLERANCE);
 	}
 
 	public void stop() {
@@ -70,8 +80,8 @@ public class FlyWheel extends GBSubsystem {
 
 	@Override
 	protected void subsystemPeriodic() {
-		rightMotor.updateInputs(velocitySignal, voltageSignal);
-		leftMotor.updateInputs(velocitySignal, voltageSignal);
+		rightMotor.updateInputs(velocitySignalRightMotor, voltageSignalRightMotor);
+		leftMotor.updateInputs(voltageSignalLeftMotor, velocitySignalLeftMotor);
 	}
 
 }

@@ -4,7 +4,7 @@ import frc.robot.vision.cameras.limelight.LimelightTarget2dValues;
 import org.littletonrobotics.junction.AutoLog;
 
 @AutoLog
-public class DetectedObjectObservationsInputs {
+public class ObjectDetectionInputs {
 
 	public LimelightTarget2dValues target2dValues = new LimelightTarget2dValues();
 

@@ -3,9 +3,9 @@ package frc.robot.vision.cameras.limelight;
 import edu.wpi.first.math.geometry.*;
 import frc.robot.vision.DetectedObjectObservation;
 import frc.robot.vision.RobotPoseObservation;
-import frc.robot.vision.cameras.limelight.inputs.DetectedObjectObservationsInputsAutoLogged;
+import frc.robot.vision.cameras.limelight.inputs.ObjectDetectionInputsAutoLogged;
 import frc.robot.vision.cameras.limelight.inputs.LimelightInputs;
-import frc.robot.vision.cameras.limelight.inputs.MtPoseObservationInputsAutoLogged;
+import frc.robot.vision.cameras.limelight.inputs.MtInputsAutoLogged;
 import frc.robot.vision.interfaces.ObjectDetector;
 import frc.robot.vision.interfaces.OrientationRequiringRobotPoseSupplier;
 import frc.robot.vision.interfaces.IndependentRobotPoseSupplier;
@@ -29,10 +29,10 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	private final Pose3d robotRelativeCameraPose;
 	private final ArrayList<DetectedObjectObservation> detectedObjectObservations;
 
+	private final LimelightInputs inputs;
+
 	private RobotPoseObservation mt1PoseObservation;
 	private RobotPoseObservation mt2PoseObservation;
-
-	private LimelightInputs inputs;
 
 	private Function<LimelightHelpers.RawDetection, Boolean> detectedObjectFilter;
 	private Filter mt1PoseFilter;
@@ -55,11 +55,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		this.mt1PoseObservation = new RobotPoseObservation();
 		this.mt2PoseObservation = new RobotPoseObservation();
 
-		this.inputs = new LimelightInputs(
-			new MtPoseObservationInputsAutoLogged(),
-			new MtPoseObservationInputsAutoLogged(),
-			new DetectedObjectObservationsInputsAutoLogged()
-		);
+		this.inputs = new LimelightInputs(new MtInputsAutoLogged(), new MtInputsAutoLogged(), new ObjectDetectionInputsAutoLogged());
 
 		this.detectedObjectFilter = (rawDetection) -> true;
 		this.mt1PoseFilter = Filter.nonFilteringFilter();
@@ -88,12 +84,12 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		if (pipeline.isDetectingObjects()) {
 			detectedObjectObservations.clear();
 
-			inputs.detectedObjectObservationsInputs().target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
-			Logger.processInputs(logPath + "/detectedObjectObservationsInputs", inputs.detectedObjectObservationsInputs());
-			LimelightTarget2dValues target2dValues = inputs.detectedObjectObservationsInputs().target2dValues;
+			inputs.ObjectDetectionInputs().target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
+			Logger.processInputs(logPath + "/ObjectDetectionInputs", inputs.ObjectDetectionInputs());
 
-			if (target2dValues.isValid()) {
+			if (inputs.getTarget2dValues().isValid()) {
 				LimelightHelpers.RawDetection[] rawDetections = LimelightHelpers.getRawDetections(name);
+
 				for (LimelightHelpers.RawDetection rawDetection : rawDetections) {
 					if (detectedObjectFilter.apply(rawDetection)) {
 						pipeline.getDetectedObjectType(rawDetection.classId).ifPresent(objectType -> {
@@ -102,7 +98,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 								objectType,
 								Rotation2d.fromDegrees(rawDetection.txnc),
 								Rotation2d.fromDegrees(rawDetection.tync),
-								getTarget2dTimestampSeconds(target2dValues)
+								getTarget2dTimestampSeconds(inputs.getTarget2dValues())
 							);
 
 							if (doesObservationExist(observation)) {
@@ -117,21 +113,27 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	public void updateMT1() {
 		if (pipeline.isUsingMT()) {
-			inputs.mt1PoseObservationInputs().mtRawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
-			Logger.processInputs(logPath + "/mt1PoseObservationInputs", inputs.mt1PoseObservationInputs());
+			inputs.mt1Inputs().mtRawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
+			Logger.processInputs(logPath + "/mt1Inputs", inputs.mt1Inputs());
 
-			LimelightHelpers.PoseEstimate mt1RawData = inputs.mt1PoseObservationInputs().mtRawData;
-			mt1PoseObservation = new RobotPoseObservation(mt1RawData.timestampSeconds(), mt1RawData.pose(), calculateMT1StdDevs.get());
+			mt1PoseObservation = new RobotPoseObservation(
+				inputs.getMt1RawData().timestampSeconds(),
+				inputs.getMt1RawData().pose(),
+				calculateMT1StdDevs.get()
+			);
 		}
 	}
 
 	public void updateMT2() {
 		if (pipeline.isUsingMT()) {
-			inputs.mt2PoseObservationInputs().mtRawData = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-			Logger.processInputs(logPath + "/mt2PoseObservationInputs", inputs.mt2PoseObservationInputs());
+			inputs.mt2Inputs().mtRawData = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
+			Logger.processInputs(logPath + "/mt2Inputs", inputs.mt2Inputs());
 
-			LimelightHelpers.PoseEstimate mt2RawData = inputs.mt2PoseObservationInputs().mtRawData;
-			mt2PoseObservation = new RobotPoseObservation(mt2RawData.timestampSeconds(), mt2RawData.pose(), calculateMT2StdDevs.get());
+			mt2PoseObservation = new RobotPoseObservation(
+				inputs.getMt2RawData().timestampSeconds(),
+				inputs.getMt2RawData().pose(),
+				calculateMT2StdDevs.get()
+			);
 		}
 	}
 
@@ -218,15 +220,15 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	protected LimelightTarget2dValues getTarget2dValues() {
-		return inputs.detectedObjectObservationsInputs().target2dValues;
+		return inputs.getTarget2dValues();
 	}
 
 	protected LimelightHelpers.PoseEstimate getMT1RawData() {
-		return inputs.mt1PoseObservationInputs().mtRawData;
+		return inputs.getMt1RawData();
 	}
 
 	protected LimelightHelpers.PoseEstimate getMT2RawData() {
-		return inputs.mt2PoseObservationInputs().mtRawData;
+		return inputs.getMt2RawData();
 	}
 
 	private void setRobotRelativeCameraPose(Pose3d robotRelativeCameraPose) {

@@ -4,7 +4,7 @@ import frc.utils.LimelightHelpers;
 import org.littletonrobotics.junction.AutoLog;
 
 @AutoLog
-public class MtInputs {
+public class MTInputs {
 
 	public LimelightHelpers.PoseEstimate mtRawData = new LimelightHelpers.PoseEstimate();
 

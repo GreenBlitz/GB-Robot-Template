@@ -5,7 +5,7 @@ import frc.robot.vision.DetectedObjectObservation;
 import frc.robot.vision.RobotPoseObservation;
 import frc.robot.vision.cameras.limelight.inputs.MTInputsAutoLogged;
 import frc.robot.vision.cameras.limelight.inputs.ObjectDetectionInputsAutoLogged;
-import frc.robot.vision.cameras.limelight.inputs.LimelightInputs;
+import frc.robot.vision.cameras.limelight.inputs.LimelightInputsSet;
 import frc.robot.vision.interfaces.ObjectDetector;
 import frc.robot.vision.interfaces.OrientationRequiringRobotPoseSupplier;
 import frc.robot.vision.interfaces.IndependentRobotPoseSupplier;
@@ -29,7 +29,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	private final Pose3d robotRelativeCameraPose;
 	private final ArrayList<DetectedObjectObservation> detectedObjectObservations;
 
-	private final LimelightInputs inputs;
+	private final LimelightInputsSet inputs;
 
 	private RobotPoseObservation mt1PoseObservation;
 	private RobotPoseObservation mt2PoseObservation;
@@ -55,7 +55,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		this.mt1PoseObservation = new RobotPoseObservation();
 		this.mt2PoseObservation = new RobotPoseObservation();
 
-		this.inputs = new LimelightInputs(new MTInputsAutoLogged(), new MTInputsAutoLogged(), new ObjectDetectionInputsAutoLogged());
+		this.inputs = new LimelightInputsSet(new MTInputsAutoLogged(), new MTInputsAutoLogged(), new ObjectDetectionInputsAutoLogged());
 
 		this.detectedObjectFilter = (rawDetection) -> true;
 		this.mt1PoseFilter = Filter.nonFilteringFilter();

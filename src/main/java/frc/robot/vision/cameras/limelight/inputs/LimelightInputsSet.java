@@ -1,7 +1,7 @@
 package frc.robot.vision.cameras.limelight.inputs;
 
 
-public record LimelightInputs(
+public record LimelightInputsSet(
 	MTInputsAutoLogged mt1Inputs,
 	MTInputsAutoLogged mt2Inputs,
 	ObjectDetectionInputsAutoLogged ObjectDetectionInputs

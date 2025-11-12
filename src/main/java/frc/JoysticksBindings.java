@@ -1,7 +1,6 @@
 package frc;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
@@ -49,12 +48,12 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 //        usedJoystick.Y.onTrue(robot.getArm().getCommandsBuilder().setPower(0.5));
-        usedJoystick.A.onTrue(robot.getArm().getCommandsBuilder().setVoltage(5.0));
-        usedJoystick.Y.onTrue(robot.getArm().getCommandsBuilder().setVoltage(0.0));
-        usedJoystick.X.onTrue(robot.getArm().getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(0)));
-        usedJoystick.B.onTrue(robot.getArm().getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(50)));
+		usedJoystick.A.onTrue(robot.getArm().getCommandsBuilder().setVoltage(5.0));
+		usedJoystick.Y.onTrue(robot.getArm().getCommandsBuilder().setVoltage(0.0));
+		usedJoystick.X.onTrue(robot.getArm().getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(0)));
+		usedJoystick.B.onTrue(robot.getArm().getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(50)));
 //        usedJoystick.B.onTrue(robot.getArm().getCommandsBuilder().setPower(0));
-        // bindings...
+		// bindings...
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

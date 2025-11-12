@@ -4,7 +4,7 @@ import frc.robot.subsystems.swerve.states.SwerveState;
 
 public enum RobotState {
 
-	;
+	DRIVE;
 
 	private final SwerveState swerveState;
 	private boolean swerveStateActive;

@@ -3,8 +3,6 @@ package frc.robot.vision.cameras.limelight;
 import edu.wpi.first.math.geometry.*;
 import frc.robot.vision.DetectedObjectObservation;
 import frc.robot.vision.RobotPoseObservation;
-import frc.robot.vision.cameras.limelight.inputs.MTInputsAutoLogged;
-import frc.robot.vision.cameras.limelight.inputs.ObjectDetectionInputsAutoLogged;
 import frc.robot.vision.cameras.limelight.inputs.LimelightInputsSet;
 import frc.robot.vision.interfaces.ObjectDetector;
 import frc.robot.vision.interfaces.OrientationRequiringRobotPoseSupplier;
@@ -55,7 +53,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		this.mt1PoseObservation = new RobotPoseObservation();
 		this.mt2PoseObservation = new RobotPoseObservation();
 
-		this.inputs = new LimelightInputsSet(new MTInputsAutoLogged(), new MTInputsAutoLogged(), new ObjectDetectionInputsAutoLogged());
+		this.inputs = new LimelightInputsSet();
 
 		this.detectedObjectFilter = (rawDetection) -> true;
 		this.mt1PoseFilter = Filter.nonFilteringFilter();

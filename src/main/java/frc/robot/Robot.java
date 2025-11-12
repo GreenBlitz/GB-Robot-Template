@@ -7,6 +7,7 @@ package frc.robot;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -52,12 +53,12 @@ public class Robot {
         feedbackConfigs.RotorToSensorRatio = 450.0 / 7.0;
         feedbackConfigs.SensorToMechanismRatio = 1;
 
-        arm = ArmBuilder.create("Arm/",new TalonFXFollowerConfig() ,id,new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(),true), Rotation2d.fromRotations(3),Rotation2d.fromRotations(3),0,feedbackConfigs,config,config,Rotation2d.fromRotations(0),40, ArmSignals(),);
+        arm = ArmBuilder.create("Arm/",new TalonFXFollowerConfig() ,id,new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(),true), Rotation2d.fromRotations(3),Rotation2d.fromRotations(3),0,feedbackConfigs,config,config,40,BusChain.ROBORIO,50, InvertedValue.Clockwise_Positive);
 
-        arm = ArmBuilder.createDynamicMotionMagic("Arm/",new TalonFXFollowerConfig() ,20,Volts.of(7),null,Volts.of(1).per(Second),0.001, SingleJointedArmSim.estimateMOI(0.3, 5),Rotation2d.fromRotations(3),Rotation2d.fromRotations(3),0,450.0 / 7.0,1,config,config,0.37,0.2);
+        //arm = ArmBuilder.createDynamicMotionMagic("Arm/",new TalonFXFollowerConfig() ,20,Volts.of(7),null,Volts.of(1).per(Second),0.001, SingleJointedArmSim.estimateMOI(0.3, 5),Rotation2d.fromRotations(3),Rotation2d.fromRotations(3),0,450.0 / 7.0,1,config,config,0.37,0.2);
 //        pivot = ArmBuilder.create("Pivot/",new SysIdRoutine.Config(),)
     }
-	}
+
 
 	public void periodic() {
 		BusChain.refreshAll();

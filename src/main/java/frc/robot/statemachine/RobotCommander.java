@@ -24,14 +24,13 @@ public class RobotCommander extends GBSubsystem {
 		this.superstructure = new Superstructure("StateMachine/Superstructure", robot);
 		this.currentState = null;
 
-		setDefaultCommand(
-			new ConditionalCommand(
-				asSubsystemCommand(Commands.none(), "Disabled"),
-				new InstantCommand(() -> new DeferredCommand(() -> endState(currentState), Set.of(this, swerve)).schedule()),
-				this::isSubsystemRunningIndependently
-			)
-
-		);
+//		setDefaultCommand(
+//			new ConditionalCommand(
+//				asSubsystemCommand(Commands.none(), "Disabled"),
+//				new InstantCommand(() -> new DeferredCommand(() -> endState(currentState), Set.of(this, swerve)).schedule()),
+//				this::isSubsystemRunningIndependently
+//			)
+//		);
 	}
 
 	public RobotState getCurrentState() {

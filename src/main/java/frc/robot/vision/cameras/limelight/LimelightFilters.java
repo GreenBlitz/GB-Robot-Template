@@ -30,7 +30,7 @@ public class LimelightFilters {
 			.and(
 				MegaTagFilters.isYawAtExpectedAngle(
 					() -> limelight.getMT1RawData().pose.getRotation(),
-					() -> wantedYawAtTimestamp.apply(Limelight.getEstimateTimestampSeconds(limelight.getMT1RawData())),
+					() -> wantedYawAtTimestamp.apply(limelight.getMT1RawData().timestampSeconds),
 					isYawCalibrated,
 					yawAtAngleTolerance
 				)
@@ -48,7 +48,7 @@ public class LimelightFilters {
 			.and(
 				MegaTagFilters.isYawAtExpectedAngle(
 					() -> limelight.getMT2RawData().pose.getRotation(),
-					() -> wantedYawAtTimestamp.apply(Limelight.getEstimateTimestampSeconds(limelight.getMT2RawData())),
+					() -> wantedYawAtTimestamp.apply(limelight.getMT2RawData().timestampSeconds),
 					isYawCalibrated,
 					yawAtAngleTolerance
 				)

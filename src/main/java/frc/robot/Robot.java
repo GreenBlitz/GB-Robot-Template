@@ -61,6 +61,7 @@ public class Robot {
 			40,
 			BusChain.ROBORIO,
 			50,
+            0.001,
 			InvertedValue.Clockwise_Positive
 		);
 

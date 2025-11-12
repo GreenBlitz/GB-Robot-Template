@@ -213,12 +213,9 @@ public class Robot {
 		limelightFour.getIndependentRobotPose().ifPresent(poseEstimator::updateVision);
 		limelightThreeGB.getIndependentRobotPose().ifPresent(poseEstimator::updateVision);
 
-		limelightFour.log();
-		limelightThreeGB.log();
 		headingEstimator.log();
 
 		limelightObjectDetector.updateObjectDetection();
-		limelightObjectDetector.log();
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();

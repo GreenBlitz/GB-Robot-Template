@@ -23,7 +23,7 @@ public class Arm extends GBSubsystem {
 	private final SysIdCalibrator sysIdCalibrator;
 	private final double CALIBRATION_MAX_POWER;
 	private final double kG;
-    private final Rotation2d DEFAULT_IS_AT_POSITION_TOLERANCE;
+    private final Rotation2d DEFAULT_POSITION_TOLERANCE;
     private final ArmCommandBuilder armCommandBuilder;
 
 
@@ -51,7 +51,7 @@ public class Arm extends GBSubsystem {
 		this.armPositionRequest = armPositionRequest;
 		this.kG = kG;
 		this.CALIBRATION_MAX_POWER = calibrationMaxPower;
-        this.DEFAULT_IS_AT_POSITION_TOLERANCE = defaultPositionTolerance;
+        this.DEFAULT_POSITION_TOLERANCE = defaultPositionTolerance;
 		sysIdCalibrator = new SysIdCalibrator(config, this, this::setVoltage);
 		armCommandBuilder = new ArmCommandBuilder(this);
 		setDefaultCommand(armCommandBuilder.stayInPlace());
@@ -81,12 +81,12 @@ public class Arm extends GBSubsystem {
 		return sysIdCalibrator;
 	}
 
-	public boolean isAtPosition(Rotation2d targetPosition, Rotation2d tolerance) {
-		return positionSignal.isNear(targetPosition, tolerance);
-	}
+    public boolean isAtPosition(Rotation2d targetPosition, Rotation2d tolerance) {
+        return positionSignal.isNear(targetPosition, tolerance);
+    }
     public boolean isAtPosition(Rotation2d targetPosition) {
-		return positionSignal.isNear(targetPosition, DEFAULT_IS_AT_POSITION_TOLERANCE);
-	}
+        return isAtPosition(targetPosition, DEFAULT_POSITION_TOLERANCE);
+    }
 
 	public boolean isPastPosition(Rotation2d position) {
 		return positionSignal.isGreater(position);

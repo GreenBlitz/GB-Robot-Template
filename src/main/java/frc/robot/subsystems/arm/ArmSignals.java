@@ -8,14 +8,14 @@ import frc.robot.hardware.phoenix6.signal.Phoenix6LatencySignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.utils.AngleUnit;
 
-public record ArmRecordSignals(
+public record ArmSignals(
 	Phoenix6AngleSignal velocitySignal,
 	Phoenix6DoubleSignal currentSignal,
 	Phoenix6DoubleSignal voltageSignal,
 	Phoenix6LatencySignal positionSignal
 ) {
 
-	public ArmRecordSignals(TalonFXMotor arm, int signalFrequency, BusChain busChain) {
+	public ArmSignals(TalonFXMotor arm, int signalFrequency, BusChain busChain) {
 		this(
 			Phoenix6SignalBuilder.build(arm.getDevice().getVelocity(), signalFrequency, AngleUnit.ROTATIONS, busChain),
 			Phoenix6SignalBuilder.build(arm.getDevice().getStatorCurrent(), signalFrequency, busChain),

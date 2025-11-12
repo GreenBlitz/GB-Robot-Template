@@ -19,8 +19,6 @@ import frc.robot.hardware.phoenix6.request.Phoenix6Request;
 import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 
-import static frc.robot.RobotType.SIMULATION;
-
 public class ArmBuilder {
 
 	public static DynamicMotionMagicArm create(
@@ -40,18 +38,18 @@ public class ArmBuilder {
 		int signalFrequency,
 		BusChain busChain
 	) {
-		TalonFXMotor motor = arm(deviceID, logPath, talonFXFollowerConfig, sysIdCalibratorConfigInfo);
+		TalonFXMotor motor = motorGenerator(deviceID, logPath, talonFXFollowerConfig, sysIdCalibratorConfigInfo);
 
-		ArmRecordSignals signals = new ArmRecordSignals(motor, signalFrequency, busChain);
+		ArmSignals signals = new ArmSignals(motor, signalFrequency, busChain);
 
 		Phoenix6Request<Double> voltageRequest = voltageRequest();
 
 		IDynamicMotionMagicRequest positionRequest = Phoenix6RequestBuilder
-			.build(new DynamicMotionMagicVoltage(signals.positionSignal().getLatestValue().getRotations(), 0, 0, 0), 0, true);
+			.build(new DynamicMotionMagicVoltage(signals.positionSignal().getLatestValue().getRotations(), maxVelocity.getRotations(), maxAcceleration.getRotations(), 0), 0, true);
 		positionRequest.withMaxAccelerationRotation2dPerSecondSquared(maxAcceleration);
 		positionRequest.withMaxVelocityRotation2dPerSecond(maxVelocity);
 		positionRequest.withArbitraryFeedForward(feedForward);
-		TalonFXConfiguration configuration = configuration(feedbackConfigs, simulationSlotsConfig, realSlotsConfig, currentLimit);
+		TalonFXConfiguration configuration = generateConfiguration(feedbackConfigs, simulationSlotsConfig, realSlotsConfig, currentLimit);
 		motor.applyConfiguration(configuration);
 
 		return new DynamicMotionMagicArm(
@@ -87,15 +85,15 @@ public class ArmBuilder {
         Rotation2d defaultPositionTolerance,
 		BusChain busChain
 	) {
-		TalonFXMotor motor = arm(deviceID, logPath, talonFXFollowerConfig, sysIdCalibratorConfigInfo);
+		TalonFXMotor motor = motorGenerator(deviceID, logPath, talonFXFollowerConfig, sysIdCalibratorConfigInfo);
 
-		ArmRecordSignals signals = new ArmRecordSignals(motor, signalFrequency, busChain);
+		ArmSignals signals = new ArmSignals(motor, signalFrequency, busChain);
 
 		Phoenix6Request<Double> voltageRequest = voltageRequest();
 
 		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder
 			.build(new MotionMagicVoltage(signals.positionSignal().getLatestValue().getRotations()), feedforward, true);
-		TalonFXConfiguration configuration = (configuration(feedbackConfigs, simulationSlotsConfig, realSlotsConfig, currentLimit));
+		TalonFXConfiguration configuration = (generateConfiguration(feedbackConfigs, simulationSlotsConfig, realSlotsConfig, currentLimit));
 		motor.applyConfiguration(configuration);
 
 		return new Arm(
@@ -114,7 +112,7 @@ public class ArmBuilder {
 		);
 	}
 
-	private static TalonFXConfiguration configuration(
+	private static TalonFXConfiguration generateConfiguration(
 		FeedbackConfigs feedbackConfigs,
 		TalonFXConfiguration simulationConfigSlots,
 		TalonFXConfiguration realConfigSlots,
@@ -139,7 +137,7 @@ public class ArmBuilder {
 		return talonFXConfiguration;
 	}
 
-	private static TalonFXMotor arm(
+	private static TalonFXMotor motorGenerator(
 		Phoenix6DeviceID deviceID,
 		String logPath,
 		TalonFXFollowerConfig followerConfig,

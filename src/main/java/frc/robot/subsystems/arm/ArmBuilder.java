@@ -40,10 +40,10 @@ public class ArmBuilder {
 		int currentLimit,
 		BusChain busChain,
 		int signalFrequency,
-        double JKgMeterSquared,
+        double JkGMeterSquared,
 		InvertedValue inverted
 	) {
-		TalonFXMotor motor = motorGenerator(deviceID, logPath, talonFXFollowerConfig, sysIdCalibratorConfigInfo,feedbackConfigs.RotorToSensorRatio*feedbackConfigs.SensorToMechanismRatio,JKgMeterSquared);
+		TalonFXMotor motor = motorGenerator(deviceID, logPath, talonFXFollowerConfig, JkGMeterSquared,feedbackConfigs.RotorToSensorRatio*feedbackConfigs.SensorToMechanismRatio, sysIdCalibratorConfigInfo);
 
 		ArmSignals signals = new ArmSignals(motor, signalFrequency, busChain);
 
@@ -99,10 +99,10 @@ public class ArmBuilder {
 		int currentLimit,
 		BusChain busChain,
 		int signalFrequency,
-        double JKgMeterSquared,
-        InvertedValue inverted
+        double JkGMeterSquared,
+		InvertedValue inverted
 	) {
-		TalonFXMotor motor = motorGenerator(deviceID, logPath, talonFXFollowerConfig, sysIdCalibratorConfigInfo,feedbackConfigs.RotorToSensorRatio*feedbackConfigs.SensorToMechanismRatio,JKgMeterSquared);
+		TalonFXMotor motor = motorGenerator(deviceID, logPath, talonFXFollowerConfig, JkGMeterSquared,feedbackConfigs.RotorToSensorRatio*feedbackConfigs.SensorToMechanismRatio,sysIdCalibratorConfigInfo);
 
 		ArmSignals signals = new ArmSignals(motor, signalFrequency, busChain);
 
@@ -163,12 +163,12 @@ public class ArmBuilder {
 		Phoenix6DeviceID deviceID,
 		String logPath,
 		TalonFXFollowerConfig followerConfig,
-		SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo,
+        double JkGMeterSquared,
         double gearing,
-        double JKgMetersSquared
+		SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo
 	) {
-		return new TalonFXMotor(logPath, deviceID, followerConfig, sysIdConfigInfo.config(),new SimpleMotorSimulation(new DCMotorSim(LinearSystemId
-                .createDCMotorSystem(DCMotor.getKrakenX60Foc(followerConfig.followerIDs.length + 1), JKgMetersSquared, gearing),
+        return new TalonFXMotor(logPath, deviceID, followerConfig, sysIdConfigInfo.config(),new SimpleMotorSimulation(new DCMotorSim(LinearSystemId
+                .createDCMotorSystem(DCMotor.getKrakenX60Foc(followerConfig.followerIDs.length + 1), JkGMeterSquared, gearing),
                 DCMotor.getKrakenX60Foc(followerConfig.followerIDs.length + 1)
         )));
 	}

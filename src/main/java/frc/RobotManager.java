@@ -22,7 +22,7 @@ import org.littletonrobotics.junction.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the TimedRobot
- * documentation. If you change the name of this class or the package after creating this project, you must also update the build.gradle file in
+ * documentation. If you change the name of this class or the package after creating this project, you must also update the build .gradle file in
  * the project.
  */
 public class RobotManager extends LoggedRobot {
@@ -32,6 +32,9 @@ public class RobotManager extends LoggedRobot {
 	private int roborioCycles;
 
 	public RobotManager() {
+		if (Robot.ROBOT_TYPE.isReplay()) {
+			setUseTiming(false);
+		}
 		DriverStation.silenceJoystickConnectionWarning(true);
 		LoggerFactory.initializeLogger();
 		PathPlannerUtil.startPathfinder();
@@ -62,8 +65,8 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void autonomousInit() {
-//		robot.getRobotCommander().getSuperstructure().setIsSubsystemRunningIndependently(true);
-//		robot.getSwerve().getCommandsBuilder().setIsSubsystemRunningIndependently(true);
+		// robot.getRobotCommander().getSuperstructure().setIsSubsystemRunningIndependently(true);
+		// robot.getSwerve().getCommandsBuilder().setIsSubsystemRunningIndependently(true);
 
 		if (autonomousCommand == null) {
 			this.autonomousCommand = robot.getAutonomousCommand();
@@ -76,8 +79,8 @@ public class RobotManager extends LoggedRobot {
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 		}
-// 		robot.getRobotCommander().getSuperstructure().setIsSubsystemRunningIndependently(false);
-//		robot.getSwerve().getCommandsBuilder().setIsSubsystemRunningIndependently(false);
+		// robot.getRobotCommander().getSuperstructure().setIsSubsystemRunningIndependently(false);
+		// robot.getSwerve().getCommandsBuilder().setIsSubsystemRunningIndependently(false);
 	}
 
 	@Override

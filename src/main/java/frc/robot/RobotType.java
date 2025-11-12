@@ -5,7 +5,8 @@ import frc.RobotManager;
 public enum RobotType {
 
 	REAL,
-	SIMULATION;
+	SIMULATION,
+	REPLAY;
 
 	public boolean isReal() {
 		return this.equals(RobotType.REAL);
@@ -15,8 +16,12 @@ public enum RobotType {
 		return this.equals(RobotType.SIMULATION);
 	}
 
-	public static RobotType determineRobotType() {
-		return RobotManager.isSimulation() ? RobotType.SIMULATION : RobotType.REAL;
+	public boolean isReplay() {
+		return this.equals(RobotType.REPLAY);
+	}
+
+	public static RobotType determineRobotType(boolean replay) {
+		return replay ? REPLAY : (RobotManager.isSimulation() ? RobotType.SIMULATION : RobotType.REAL);
 	}
 
 }

@@ -17,7 +17,7 @@ import frc.utils.battery.BatteryUtil;
  */
 public class Robot {
 
-	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
+	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(true);
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();

@@ -41,7 +41,7 @@ public class RollerCommandsBuilder extends GBCommandsBuilder {
 	}
 
 	public Command rollRotations(double rotations) {
-		Rotation2d targetPosition = Rotation2d.fromRotations(rotations + roller.getPositionSignal().getLatestValue().getRotations());
+		Rotation2d targetPosition = Rotation2d.fromRotations(rotations + roller.getPositio.getRotations());
 		return roller.asSubsystemCommand(
 			new DeferredCommand(() -> new RunCommand(() -> roller.goToPosition(targetPosition)), Set.of(roller)),
 			"rollRotations " + rotations

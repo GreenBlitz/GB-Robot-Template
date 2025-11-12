@@ -5,6 +5,7 @@ import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
+import org.littletonrobotics.junction.Logger;
 
 public class Roller extends GBSubsystem {
 
@@ -13,9 +14,10 @@ public class Roller extends GBSubsystem {
 	private final InputSignal<Double> currentSignal;
 	private final InputSignal<Rotation2d> positionSignal;
 	private final RollerCommandsBuilder commandsBuilder = new RollerCommandsBuilder(this);
-	private final IRequest<Double> setVoltageRequest;
-	private final IRequest<Rotation2d> goToPositionRequest;
+	private final IRequest<Double> VoltageRequest;
+	private final IRequest<Rotation2d> PositionRequest;
 	private final Rotation2d tolerance;
+	private final String logPath;
 
 	public Roller(
 		String logPath,
@@ -23,8 +25,8 @@ public class Roller extends GBSubsystem {
 		InputSignal<Double> voltageSignal,
 		InputSignal<Double> currentSignal,
 		InputSignal<Rotation2d> positionSignal,
-		IRequest<Double> setVoltageRequest,
-		IRequest<Rotation2d> goToPositionRequest,
+		IRequest<Double> VoltageRequest,
+		IRequest<Rotation2d> PositionRequest,
 		Rotation2d tolerance
 	) {
 		super(logPath);
@@ -32,13 +34,14 @@ public class Roller extends GBSubsystem {
 		this.voltageSignal = voltageSignal;
 		this.currentSignal = currentSignal;
 		this.positionSignal = positionSignal;
-		this.setVoltageRequest = setVoltageRequest;
-		this.goToPositionRequest = goToPositionRequest;
+		this.VoltageRequest = VoltageRequest;
+		this.PositionRequest = PositionRequest;
 		this.tolerance = tolerance;
+		this.logPath = logPath;
 	}
 
 	public void setVoltage(double voltage) {
-		roller.applyRequest(setVoltageRequest.withSetPoint(voltage));
+		roller.applyRequest(VoltageRequest.withSetPoint(voltage));
 	}
 
 	public void setPower(double power) {
@@ -53,19 +56,19 @@ public class Roller extends GBSubsystem {
 		roller.setBrake(brake);
 	}
 
-	public InputSignal<Double> getVoltageSignal() {
-		return voltageSignal;
+	public Double getVoltage() {
+		return voltageSignal.getLatestValue();
 	}
 
-	public InputSignal<Double> getCurrentSignal() {
-		return currentSignal;
+	public Double getCurrent() {
+		return currentSignal.getLatestValue();
 	}
 
-	public InputSignal<Rotation2d> getPositionSignal() {
-		return positionSignal;
+	public Rotation2d getPosition() {
+		return positionSignal.getLatestValue();
 	}
 
-	public RollerCommandsBuilder getCommands() {
+	public RollerCommandsBuilder getCommandsBuilder() {
 		return commandsBuilder;
 	}
 
@@ -75,18 +78,24 @@ public class Roller extends GBSubsystem {
 
 	public boolean isPastPosition(Rotation2d position) {
 		if (!isAtPosition(position)) {
-			return (position.getDegrees() > positionSignal.getLatestValue().getDegrees());
+			return Math.abs(position.getDegrees() - positionSignal.getLatestValue().getDegrees()) < tolerance.getDegrees();
 		}
 		return false;
 	}
 
 	public void goToPosition(Rotation2d position) {
-		roller.applyRequest(goToPositionRequest.withSetPoint(position));
+		roller.applyRequest(PositionRequest.withSetPoint(position));
+	}
+	public void logAll(){
+		Logger.recordOutput(logPath + "angle",positionSignal.getLatestValue());
+		Logger.recordOutput(logPath + "current",currentSignal.getLatestValue());
+		Logger.recordOutput(logPath + "voltage",voltageSignal.getLatestValue());
 	}
 
 	@Override
 	public void subsystemPeriodic() {
 		roller.updateSimulation();
+		logAll();
 		roller.updateInputs(voltageSignal, currentSignal, positionSignal);
 	}
 

@@ -23,15 +23,15 @@ public class SparkMaxRollerBuilder {
 
 	public static Roller createSparkMaxMotorRoller(
 		String logPath,
-		int ID,
+		int id,
 		double gearRatio,
 		int currentLimiting,
 		Rotation2d tolerance,
-		double KP,
-		double KI,
-		double KD
+		double kP,
+		double kI,
+		double kD
 	) {
-		SparkMaxDeviceID rotorID = new SparkMaxDeviceID(ID);
+		SparkMaxDeviceID rotorID = new SparkMaxDeviceID(id);
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(rotorID);
 
 		SimpleMotorSimulation rollerSimulation = new SimpleMotorSimulation(
@@ -49,19 +49,19 @@ public class SparkMaxRollerBuilder {
 		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("current", sparkMaxWrapper::getOutputCurrent);
 		Supplier<Double> positionSupplier = () -> sparkMaxWrapper.getEncoder().getPosition();
 		SuppliedAngleSignal latencySignal = new SuppliedAngleSignal("angle", positionSupplier, AngleUnit.ROTATIONS);
-		roller.applyConfiguration(configRoller(gearRatio, currentLimiting, KP, KI, KD));
-		SparkMaxRequest<Double> setVoltageRequest = SparkMaxRequestBuilder.build(0.0, SparkBase.ControlType.kVoltage, 0);
-		SparkMaxRequest<Rotation2d> goToAngleRequest = SparkMaxRequestBuilder
+		roller.applyConfiguration(configRoller(gearRatio, currentLimiting, kP, kI, kD));
+		SparkMaxRequest<Double> VoltageRequest = SparkMaxRequestBuilder.build(0.0, SparkBase.ControlType.kVoltage, 0);
+		SparkMaxRequest<Rotation2d> AngleRequest = SparkMaxRequestBuilder
 			.build(Rotation2d.fromRotations(0), SparkBase.ControlType.kPosition, 0);
-		return new Roller(logPath, roller, voltageSignal, currentSignal, latencySignal, setVoltageRequest, goToAngleRequest, tolerance);
+		return new Roller(logPath, roller, voltageSignal, currentSignal, latencySignal, VoltageRequest,AngleRequest, tolerance);
 	}
 
-	private static SparkMaxConfiguration configRoller(double gearRatio, int currentLimiting, double KP, double KI, double KD) {
+	private static SparkMaxConfiguration configRoller(double gearRatio, int currentLimiting, double kP, double kI, double kD) {
 		SparkMaxConfiguration configs = new SparkMaxConfiguration();
 		configs.getSparkMaxConfig().smartCurrentLimit(currentLimiting);
 		configs.getSparkMaxConfig().encoder.positionConversionFactor(gearRatio);
 		configs.getSparkMaxConfig().encoder.velocityConversionFactor(gearRatio);
-		configs.getSparkMaxConfig().closedLoop.pid(KP, KI, KD);
+		configs.getSparkMaxConfig().closedLoop.pid(kP, kI, kD);
 		return configs;
 	}
 

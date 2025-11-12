@@ -53,12 +53,12 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		usedJoystick.A.onTrue(roller.getCommands().setPower(0.1));
-		usedJoystick.X.onTrue(roller.getCommands().setPower(() -> usedJoystick.getAxisValue(Axis.LEFT_Y)));
-		usedJoystick.B.onTrue(roller.getCommands().setVoltage(12));
-		usedJoystick.Y.onTrue(roller.getCommands().rollRotations(5));
-		usedJoystick.POV_UP.onTrue(roller.getCommands().setBrake(true));
-		usedJoystick.POV_DOWN.onTrue(roller.getCommands().setBrake(false));
+		usedJoystick.A.onTrue(roller.getCommandsBuilder().setPower(0.1));
+		usedJoystick.X.onTrue(roller.getCommandsBuilder().setPower(() -> usedJoystick.getAxisValue(Axis.LEFT_Y)));
+		usedJoystick.B.onTrue(roller.getCommandsBuilder().setVoltage(12));
+		usedJoystick.Y.onTrue(roller.getCommandsBuilder().rollRotations(5));
+		usedJoystick.POV_UP.onTrue(roller.getCommandsBuilder().setBrake(true));
+		usedJoystick.POV_DOWN.onTrue(roller.getCommandsBuilder().setBrake(false));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

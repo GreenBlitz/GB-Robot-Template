@@ -11,7 +11,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Robot;
 import frc.robot.hardware.interfaces.IDynamicMotionMagicRequest;
-import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
@@ -32,38 +31,52 @@ public class ArmBuilder {
 		double arbitraryFeedForward,
 		FeedbackConfigs feedbackConfigs,
 		Slot0Configs realSlotsConfig,
-        Slot0Configs simulationSlotsConfig,
-        Rotation2d defaultPositionTolerance,
+		Slot0Configs simulationSlotsConfig,
+		Rotation2d defaultPositionTolerance,
 		int currentLimit,
 		ArmSignals signals,
-        InvertedValue inverted
+		InvertedValue inverted
 	) {
 		TalonFXMotor motor = motorGenerator(deviceID, logPath, talonFXFollowerConfig, sysIdCalibratorConfigInfo);
 
 		Phoenix6Request<Double> voltageRequest = voltageRequest();
 
-		IDynamicMotionMagicRequest positionRequest = Phoenix6RequestBuilder
-			.build(new DynamicMotionMagicVoltage(signals.positionSignal().getLatestValue().getRotations(), maxVelocity.getRotations(), maxAcceleration.getRotations(), 0), 0, true);
+		IDynamicMotionMagicRequest positionRequest = Phoenix6RequestBuilder.build(
+			new DynamicMotionMagicVoltage(
+				signals.positionSignal().getLatestValue().getRotations(),
+				maxVelocity.getRotations(),
+				maxAcceleration.getRotations(),
+				0
+			),
+			0,
+			true
+		);
 		positionRequest.withMaxAccelerationRotation2dPerSecondSquared(maxAcceleration);
 		positionRequest.withMaxVelocityRotation2dPerSecond(maxVelocity);
 		positionRequest.withArbitraryFeedForward(arbitraryFeedForward);
-		TalonFXConfiguration configuration = generateConfiguration(feedbackConfigs, simulationSlotsConfig, realSlotsConfig,inverted, currentLimit);
+		TalonFXConfiguration configuration = generateConfiguration(
+			feedbackConfigs,
+			simulationSlotsConfig,
+			realSlotsConfig,
+			inverted,
+			currentLimit
+		);
 		motor.applyConfiguration(configuration);
 
 		return new DynamicMotionMagicArm(
 			logPath,
 			motor,
-			signals.velocitySignal(),
-			signals.positionSignal(),
 			signals.voltageSignal(),
 			signals.currentSignal(),
+			signals.velocitySignal(),
+			signals.positionSignal(),
 			voltageRequest,
 			positionRequest,
 			maxAcceleration,
 			maxVelocity,
 			sysIdCalibratorConfigInfo,
 			configuration.Slot0.kG,
-            defaultPositionTolerance
+			defaultPositionTolerance
 		);
 	}
 
@@ -75,11 +88,11 @@ public class ArmBuilder {
 		double arbitraryFeedForward,
 		FeedbackConfigs feedbackConfigs,
 		Slot0Configs realSlotsConfig,
-        Slot0Configs simulationSlotsConfig,
+		Slot0Configs simulationSlotsConfig,
 		int currentLimit,
-        Rotation2d defaultPositionTolerance,
-        ArmSignals signals,
-        InvertedValue inverted
+		Rotation2d defaultPositionTolerance,
+		ArmSignals signals,
+		InvertedValue inverted
 	) {
 		TalonFXMotor motor = motorGenerator(deviceID, logPath, talonFXFollowerConfig, sysIdCalibratorConfigInfo);
 
@@ -87,29 +100,35 @@ public class ArmBuilder {
 
 		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder
 			.build(new MotionMagicVoltage(signals.positionSignal().getLatestValue().getRotations()), arbitraryFeedForward, true);
-		TalonFXConfiguration configuration = (generateConfiguration(feedbackConfigs, simulationSlotsConfig, realSlotsConfig,inverted,currentLimit));
+		TalonFXConfiguration configuration = (generateConfiguration(
+			feedbackConfigs,
+			simulationSlotsConfig,
+			realSlotsConfig,
+			inverted,
+			currentLimit
+		));
 		motor.applyConfiguration(configuration);
 
 		return new Arm(
 			logPath,
 			motor,
-			signals.velocitySignal(),
-			signals.positionSignal(),
 			signals.voltageSignal(),
 			signals.currentSignal(),
+			signals.velocitySignal(),
+			signals.positionSignal(),
 			voltageRequest,
 			positionRequest,
 			sysIdCalibratorConfigInfo,
 			configuration.Slot0.kG,
-            defaultPositionTolerance
+			defaultPositionTolerance
 		);
 	}
 
 	private static TalonFXConfiguration generateConfiguration(
 		FeedbackConfigs feedbackConfigs,
-        Slot0Configs simulationConfigSlots,
-        Slot0Configs realConfigSlots,
-        InvertedValue invertedValue,
+		Slot0Configs simulationConfigSlots,
+		Slot0Configs realConfigSlots,
+		InvertedValue invertedValue,
 		int currentLimit
 	) {
 		TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();

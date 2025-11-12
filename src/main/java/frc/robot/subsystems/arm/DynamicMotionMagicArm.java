@@ -17,30 +17,30 @@ public class DynamicMotionMagicArm extends Arm {
 	public DynamicMotionMagicArm(
 		String logPath,
 		ControllableMotor arm,
-		InputSignal<Rotation2d> velocitySignal,
-		InputSignal<Rotation2d> positionSignal,
 		InputSignal<Double> voltageSignal,
 		InputSignal<Double> currentSignal,
+		InputSignal<Rotation2d> velocitySignal,
+		InputSignal<Rotation2d> positionSignal,
 		IRequest<Double> armVoltageRequest,
 		IDynamicMotionMagicRequest motionMagicRequest,
 		Rotation2d defaultMotionMagicAcceleration,
 		Rotation2d defaultMotionMagicVelocity,
 		SysIdCalibrator.SysIdConfigInfo configInfo,
 		double kG,
-        Rotation2d defaultPositionTolerance
+		Rotation2d defaultPositionTolerance
 	) {
 		super(
 			logPath,
 			arm,
-			velocitySignal,
-			positionSignal,
 			voltageSignal,
 			currentSignal,
+			velocitySignal,
+			positionSignal,
 			armVoltageRequest,
 			motionMagicRequest,
 			configInfo,
 			kG,
-            defaultPositionTolerance
+			defaultPositionTolerance
 		);
 		this.motionMagicRequest = motionMagicRequest;
 		this.defaultDynamicMotionAcceleration = defaultMotionMagicAcceleration;
@@ -57,7 +57,7 @@ public class DynamicMotionMagicArm extends Arm {
 		motionMagicRequest.withMaxAccelerationRotation2dPerSecondSquared(acceleration);
 		motionMagicRequest.withMaxVelocityRotation2dPerSecond(velocity);
 		motionMagicRequest.withArbitraryFeedForward(arbitraryFeedForward);
-        motor.applyRequest(motionMagicRequest);
+		motor.applyRequest(motionMagicRequest);
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class DynamicMotionMagicArm extends Arm {
 		motionMagicRequest.withSetPoint(target);
 		motionMagicRequest.withMaxAccelerationRotation2dPerSecondSquared(defaultDynamicMotionAcceleration);
 		motionMagicRequest.withMaxVelocityRotation2dPerSecond(defaultDynamicMotionVelocity);
-        motor.applyRequest(motionMagicRequest);
+		motor.applyRequest(motionMagicRequest);
 	}
 
 	@Override

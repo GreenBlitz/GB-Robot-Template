@@ -22,22 +22,22 @@ public class Arm extends GBSubsystem {
 	private final IFeedForwardRequest armPositionRequest;
 	private final SysIdCalibrator sysIdCalibrator;
 	private final double kG;
-    private final Rotation2d DEFAULT_POSITION_TOLERANCE;
-    private final ArmCommandBuilder armCommandBuilder;
+	private final Rotation2d DEFAULT_POSITION_TOLERANCE;
+	private final ArmCommandBuilder armCommandBuilder;
 
 
-    public Arm(
+	public Arm(
 		String logPath,
 		ControllableMotor motor,
-		InputSignal<Rotation2d> velocitySignal,
-		InputSignal<Rotation2d> positionSignal,
 		InputSignal<Double> voltageSignal,
 		InputSignal<Double> currentSignal,
+		InputSignal<Rotation2d> velocitySignal,
+		InputSignal<Rotation2d> positionSignal,
 		IRequest<Double> armVoltageRequest,
 		IFeedForwardRequest armPositionRequest,
 		SysIdCalibrator.SysIdConfigInfo config,
 		double kG,
-        Rotation2d defaultPositionTolerance
+		Rotation2d defaultPositionTolerance
 	) {
 		super(logPath);
 		this.motor = motor;
@@ -48,7 +48,7 @@ public class Arm extends GBSubsystem {
 		this.armVoltageRequest = armVoltageRequest;
 		this.armPositionRequest = armPositionRequest;
 		this.kG = kG;
-        this.DEFAULT_POSITION_TOLERANCE = defaultPositionTolerance;
+		this.DEFAULT_POSITION_TOLERANCE = defaultPositionTolerance;
 		sysIdCalibrator = new SysIdCalibrator(config, this, this::setVoltage);
 		armCommandBuilder = new ArmCommandBuilder(this);
 		setDefaultCommand(armCommandBuilder.stayInPlace());
@@ -78,12 +78,13 @@ public class Arm extends GBSubsystem {
 		return sysIdCalibrator;
 	}
 
-    public boolean isAtPosition(Rotation2d targetPosition, Rotation2d tolerance) {
-        return positionSignal.isNear(targetPosition, tolerance);
-    }
-    public boolean isAtPosition(Rotation2d targetPosition) {
-        return isAtPosition(targetPosition, DEFAULT_POSITION_TOLERANCE);
-    }
+	public boolean isAtPosition(Rotation2d targetPosition, Rotation2d tolerance) {
+		return positionSignal.isNear(targetPosition, tolerance);
+	}
+
+	public boolean isAtPosition(Rotation2d targetPosition) {
+		return isAtPosition(targetPosition, DEFAULT_POSITION_TOLERANCE);
+	}
 
 	public boolean isPastPosition(Rotation2d position) {
 		return positionSignal.isGreater(position);
@@ -101,7 +102,7 @@ public class Arm extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		motor.updateInputs(positionSignal, voltageSignal, velocitySignal, currentSignal);
+		motor.updateInputs(voltageSignal, currentSignal, velocitySignal, positionSignal);
 	}
 
 	public void log() {
@@ -132,7 +133,7 @@ public class Arm extends GBSubsystem {
 		return Robot.ROBOT_TYPE.isReal() ? kG * getPosition().getCos() : 0;
 	}
 
-	public void applyCalibrationBindings(SmartJoystick joystick,double maxCalibrationPower) {
+	public void applyCalibrationBindings(SmartJoystick joystick, double maxCalibrationPower) {
 		joystick.A.onTrue(new InstantCommand(() -> armCommandBuilder.setIsSubsystemRunningIndependently(true)));
 		joystick.B.onTrue(new InstantCommand(() -> armCommandBuilder.setIsSubsystemRunningIndependently(false)));
 

@@ -38,9 +38,6 @@ public class RobotManager extends LoggedRobot {
 		PathPlannerUtil.startPathfinder();
 		PathPlannerUtil.setupPathPlannerLogging();
 
-		Logger.recordOutput("Interpolation/HoodInterpolation", TemporaryInterpolation.hoodInterpolation(() -> 3.2));
-		Logger.recordOutput("Interpolation/flywheelInterpolation", TemporaryInterpolation.flywheelInterpolation(() -> 2.5));
-
 		this.roborioCycles = 0;
 		this.robot = new Robot();
 

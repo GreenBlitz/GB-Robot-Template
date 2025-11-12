@@ -29,10 +29,6 @@ public class ArmCommandBuilder extends GBCommandsBuilder {
 		return arm.asSubsystemCommand(new RunCommand(() -> arm.setPower(powerSupplier.getAsDouble())), "Set power by supplier");
 	}
 
-	public Command setNeutralMode(boolean brake) {
-		return arm.asSubsystemCommand(new InstantCommand(() -> arm.setBrake(brake), arm), "Set neutral mode to: " + brake);
-	}
-
 	public Command setTargetPosition(Rotation2d target) {
 		return arm.asSubsystemCommand(new RunCommand(() -> arm.setTargetPosition(target), arm), "Set target position to: " + target);
 	}

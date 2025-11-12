@@ -21,7 +21,6 @@ public class Arm extends GBSubsystem {
 	private final IRequest<Double> armVoltageRequest;
 	private final IFeedForwardRequest armPositionRequest;
 	private final SysIdCalibrator sysIdCalibrator;
-	private final double CALIBRATION_MAX_POWER;
 	private final double kG;
     private final Rotation2d DEFAULT_POSITION_TOLERANCE;
     private final ArmCommandBuilder armCommandBuilder;
@@ -38,7 +37,6 @@ public class Arm extends GBSubsystem {
 		IFeedForwardRequest armPositionRequest,
 		SysIdCalibrator.SysIdConfigInfo config,
 		double kG,
-		double calibrationMaxPower,
         Rotation2d defaultPositionTolerance
 	) {
 		super(logPath);
@@ -50,7 +48,6 @@ public class Arm extends GBSubsystem {
 		this.armVoltageRequest = armVoltageRequest;
 		this.armPositionRequest = armPositionRequest;
 		this.kG = kG;
-		this.CALIBRATION_MAX_POWER = calibrationMaxPower;
         this.DEFAULT_POSITION_TOLERANCE = defaultPositionTolerance;
 		sysIdCalibrator = new SysIdCalibrator(config, this, this::setVoltage);
 		armCommandBuilder = new ArmCommandBuilder(this);
@@ -135,7 +132,7 @@ public class Arm extends GBSubsystem {
 		return Robot.ROBOT_TYPE.isReal() ? kG * getPosition().getCos() : 0;
 	}
 
-	public void applyCalibrationBindings(SmartJoystick joystick) {
+	public void applyCalibrationBindings(SmartJoystick joystick,double maxCalibrationPower) {
 		joystick.A.onTrue(new InstantCommand(() -> armCommandBuilder.setIsSubsystemRunningIndependently(true)));
 		joystick.B.onTrue(new InstantCommand(() -> armCommandBuilder.setIsSubsystemRunningIndependently(false)));
 
@@ -144,7 +141,7 @@ public class Arm extends GBSubsystem {
 		// Check limits
 		joystick.R1.whileTrue(
 			armCommandBuilder
-				.setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * CALIBRATION_MAX_POWER + (getKgVoltage() / BatteryUtil.getCurrentVoltage()))
+				.setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * maxCalibrationPower + (getKgVoltage() / BatteryUtil.getCurrentVoltage()))
 		);
 
 		// Calibrate feed forward using sys id:

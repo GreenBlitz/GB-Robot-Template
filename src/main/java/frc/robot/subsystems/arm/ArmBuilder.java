@@ -1,6 +1,7 @@
 package frc.robot.subsystems.arm;
 
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
@@ -28,19 +29,16 @@ public class ArmBuilder {
 		SysIdCalibrator.SysIdConfigInfo sysIdCalibratorConfigInfo,
 		Rotation2d maxAcceleration,
 		Rotation2d maxVelocity,
-		double feedForward,
+		double arbitraryFeedForward,
 		FeedbackConfigs feedbackConfigs,
-		TalonFXConfiguration realSlotsConfig,
-		TalonFXConfiguration simulationSlotsConfig,
-		double calibrationMaxPower,
+		Slot0Configs realSlotsConfig,
+        Slot0Configs simulationSlotsConfig,
         Rotation2d defaultPositionTolerance,
 		int currentLimit,
-		int signalFrequency,
-		BusChain busChain
+		ArmSignals signals,
+        InvertedValue inverted
 	) {
 		TalonFXMotor motor = motorGenerator(deviceID, logPath, talonFXFollowerConfig, sysIdCalibratorConfigInfo);
-
-		ArmSignals signals = new ArmSignals(motor, signalFrequency, busChain);
 
 		Phoenix6Request<Double> voltageRequest = voltageRequest();
 
@@ -48,8 +46,8 @@ public class ArmBuilder {
 			.build(new DynamicMotionMagicVoltage(signals.positionSignal().getLatestValue().getRotations(), maxVelocity.getRotations(), maxAcceleration.getRotations(), 0), 0, true);
 		positionRequest.withMaxAccelerationRotation2dPerSecondSquared(maxAcceleration);
 		positionRequest.withMaxVelocityRotation2dPerSecond(maxVelocity);
-		positionRequest.withArbitraryFeedForward(feedForward);
-		TalonFXConfiguration configuration = generateConfiguration(feedbackConfigs, simulationSlotsConfig, realSlotsConfig, currentLimit);
+		positionRequest.withArbitraryFeedForward(arbitraryFeedForward);
+		TalonFXConfiguration configuration = generateConfiguration(feedbackConfigs, simulationSlotsConfig, realSlotsConfig,inverted, currentLimit);
 		motor.applyConfiguration(configuration);
 
 		return new DynamicMotionMagicArm(
@@ -65,7 +63,6 @@ public class ArmBuilder {
 			maxVelocity,
 			sysIdCalibratorConfigInfo,
 			configuration.Slot0.kG,
-			calibrationMaxPower,
             defaultPositionTolerance
 		);
 	}
@@ -75,25 +72,22 @@ public class ArmBuilder {
 		TalonFXFollowerConfig talonFXFollowerConfig,
 		Phoenix6DeviceID deviceID,
 		SysIdCalibrator.SysIdConfigInfo sysIdCalibratorConfigInfo,
-		double feedforward,
+		double arbitraryFeedForward,
 		FeedbackConfigs feedbackConfigs,
-		TalonFXConfiguration realSlotsConfig,
-		TalonFXConfiguration simulationSlotsConfig,
-		double calibrationMaxPower,
+		Slot0Configs realSlotsConfig,
+        Slot0Configs simulationSlotsConfig,
 		int currentLimit,
-		int signalFrequency,
         Rotation2d defaultPositionTolerance,
-		BusChain busChain
+        ArmSignals signals,
+        InvertedValue inverted
 	) {
 		TalonFXMotor motor = motorGenerator(deviceID, logPath, talonFXFollowerConfig, sysIdCalibratorConfigInfo);
-
-		ArmSignals signals = new ArmSignals(motor, signalFrequency, busChain);
 
 		Phoenix6Request<Double> voltageRequest = voltageRequest();
 
 		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder
-			.build(new MotionMagicVoltage(signals.positionSignal().getLatestValue().getRotations()), feedforward, true);
-		TalonFXConfiguration configuration = (generateConfiguration(feedbackConfigs, simulationSlotsConfig, realSlotsConfig, currentLimit));
+			.build(new MotionMagicVoltage(signals.positionSignal().getLatestValue().getRotations()), arbitraryFeedForward, true);
+		TalonFXConfiguration configuration = (generateConfiguration(feedbackConfigs, simulationSlotsConfig, realSlotsConfig,inverted,currentLimit));
 		motor.applyConfiguration(configuration);
 
 		return new Arm(
@@ -107,30 +101,30 @@ public class ArmBuilder {
 			positionRequest,
 			sysIdCalibratorConfigInfo,
 			configuration.Slot0.kG,
-			calibrationMaxPower,
             defaultPositionTolerance
 		);
 	}
 
 	private static TalonFXConfiguration generateConfiguration(
 		FeedbackConfigs feedbackConfigs,
-		TalonFXConfiguration simulationConfigSlots,
-		TalonFXConfiguration realConfigSlots,
+        Slot0Configs simulationConfigSlots,
+        Slot0Configs realConfigSlots,
+        InvertedValue invertedValue,
 		int currentLimit
 	) {
 		TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
 		switch (Robot.ROBOT_TYPE) {
 			case REAL -> {
-				talonFXConfiguration = realConfigSlots;
+				talonFXConfiguration.Slot0 = realConfigSlots;
 			}
 			case SIMULATION -> {
-				talonFXConfiguration = simulationConfigSlots;
+				talonFXConfiguration.Slot0 = simulationConfigSlots;
 			}
 		}
 		talonFXConfiguration.Feedback = feedbackConfigs;
 
 
-		talonFXConfiguration.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
+		talonFXConfiguration.MotorOutput.withInverted(invertedValue);
 		talonFXConfiguration.CurrentLimits.withStatorCurrentLimitEnable(true);
 		talonFXConfiguration.CurrentLimits.withStatorCurrentLimit(currentLimit);
 		talonFXConfiguration.MotorOutput.withNeutralMode(NeutralModeValue.Coast);

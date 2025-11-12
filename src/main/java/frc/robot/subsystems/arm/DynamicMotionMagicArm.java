@@ -27,7 +27,6 @@ public class DynamicMotionMagicArm extends Arm {
 		Rotation2d defaultMotionMagicVelocity,
 		SysIdCalibrator.SysIdConfigInfo configInfo,
 		double kG,
-		double calibrationMaxPower,
         Rotation2d defaultPositionTolerance
 	) {
 		super(
@@ -41,7 +40,6 @@ public class DynamicMotionMagicArm extends Arm {
 			motionMagicRequest,
 			configInfo,
 			kG,
-			calibrationMaxPower,
             defaultPositionTolerance
 		);
 		this.motionMagicRequest = motionMagicRequest;

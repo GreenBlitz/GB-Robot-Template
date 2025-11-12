@@ -2,7 +2,6 @@ package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.utils.utilcommands.InitExecuteCommand;
 
 
@@ -15,8 +14,10 @@ public class DynamicMotionMagicArmCommandBuilder extends ArmCommandBuilder {
 		this.arm = arm;
 	}
 
+	@Override
 	public Command setTargetPosition(Rotation2d position) {
-		return arm.asSubsystemCommand(new RunCommand(() -> arm.setTargetPosition(position),arm), "Set target position to: " + position);
+		return arm
+			.asSubsystemCommand(new InitExecuteCommand(() -> arm.setTargetPosition(position), () -> {}), "Set target position to: " + position);
 	}
 
 
@@ -27,10 +28,14 @@ public class DynamicMotionMagicArmCommandBuilder extends ArmCommandBuilder {
 		double arbitraryFeedForward
 	) {
 		return arm.asSubsystemCommand(
-			new RunCommand(
-				() -> arm
-					.setTargetPosition(position, maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared, arbitraryFeedForward),
-                    arm
+			new InitExecuteCommand(
+				() -> arm.setTargetPosition(
+					position,
+					maxVelocityRotation2dPerSecond,
+					maxAccelerationRotation2dPerSecondSquared,
+					arbitraryFeedForward
+				),
+				() -> {}
 			),
 			"Set target position to: " + position
 		);

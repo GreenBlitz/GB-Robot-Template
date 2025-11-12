@@ -1,6 +1,5 @@
 package frc.robot.subsystems.arm;
 
-import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.joysticks.Axis;
@@ -14,45 +13,45 @@ import org.littletonrobotics.junction.Logger;
 
 public class Arm extends GBSubsystem {
 
-	protected final ControllableMotor arm;
+	protected final ControllableMotor motor;
 	private final InputSignal<Double> voltageSignal;
 	private final InputSignal<Rotation2d> velocitySignal;
 	private final InputSignal<Rotation2d> positionSignal;
 	private final InputSignal<Double> currentSignal;
-	private final ArmCommandBuilder armCommandBuilder;
 	private final IRequest<Double> armVoltageRequest;
-	private final IFeedForwardRequest motionMagicRequest;
+	private final IFeedForwardRequest armPositionRequest;
 	private final SysIdCalibrator sysIdCalibrator;
-    private final double CALIBRATION_MAX_POWER;
-    private final double kG;
+	private final double kG;
+	private final Rotation2d DEFAULT_POSITION_TOLERANCE;
+	private final ArmCommandBuilder armCommandBuilder;
 
 
 	public Arm(
 		String logPath,
-		ControllableMotor arm,
-		InputSignal<Rotation2d> velocitySignal,
-		InputSignal<Rotation2d> positionSignal,
+		ControllableMotor motor,
 		InputSignal<Double> voltageSignal,
 		InputSignal<Double> currentSignal,
+		InputSignal<Rotation2d> velocitySignal,
+		InputSignal<Rotation2d> positionSignal,
 		IRequest<Double> armVoltageRequest,
-		IFeedForwardRequest motionMagicRequest,
+		IFeedForwardRequest armPositionRequest,
 		SysIdCalibrator.SysIdConfigInfo config,
-        double kG,
-        double calibrationMaxPower
+		double kG,
+		Rotation2d defaultPositionTolerance
 	) {
 		super(logPath);
-		this.arm = arm;
+		this.motor = motor;
 		this.positionSignal = positionSignal;
 		this.velocitySignal = velocitySignal;
 		this.voltageSignal = voltageSignal;
 		this.currentSignal = currentSignal;
 		this.armVoltageRequest = armVoltageRequest;
-		this.motionMagicRequest = motionMagicRequest;
-        this.kG = kG;
-        this.CALIBRATION_MAX_POWER = calibrationMaxPower;
+		this.armPositionRequest = armPositionRequest;
+		this.kG = kG;
+		this.DEFAULT_POSITION_TOLERANCE = defaultPositionTolerance;
 		sysIdCalibrator = new SysIdCalibrator(config, this, this::setVoltage);
 		armCommandBuilder = new ArmCommandBuilder(this);
-		//setDefaultCommand(armCommandBuilder.stayInPlace());
+		setDefaultCommand(armCommandBuilder.stayInPlace());
 	}
 
 	public ArmCommandBuilder getCommandsBuilder() {
@@ -83,6 +82,10 @@ public class Arm extends GBSubsystem {
 		return positionSignal.isNear(targetPosition, tolerance);
 	}
 
+	public boolean isAtPosition(Rotation2d targetPosition) {
+		return isAtPosition(targetPosition, DEFAULT_POSITION_TOLERANCE);
+	}
+
 	public boolean isPastPosition(Rotation2d position) {
 		return positionSignal.isGreater(position);
 	}
@@ -93,45 +96,48 @@ public class Arm extends GBSubsystem {
 
 	@Override
 	protected void subsystemPeriodic() {
-		arm.updateSimulation();
+		motor.updateSimulation();
 		updateInputs();
-        log();
-
+		log();
 	}
 
 	private void updateInputs() {
-		arm.updateInputs(positionSignal, voltageSignal, velocitySignal, currentSignal);
+		motor.updateInputs(voltageSignal, currentSignal, velocitySignal, positionSignal);
 	}
 
 	public void log() {
-        Logger.recordOutput(getLogPath()+"PositionTarget/",motionMagicRequest.getSetPoint());
-    }
+		Logger.recordOutput(getLogPath() + "PositionTarget/", armPositionRequest.getSetPoint());
+	}
 
 	public void setVoltage(Double voltage) {
-		arm.applyRequest(armVoltageRequest.withSetPoint(voltage));
+		motor.applyRequest(armVoltageRequest.withSetPoint(voltage));
 	}
 
 	public void setBrake(boolean brake) {
-		arm.setBrake(brake);
+		motor.setBrake(brake);
 	}
 
 	public void setTargetPosition(Rotation2d targetPosition) {
-		arm.applyRequest(motionMagicRequest.withSetPoint(targetPosition));
+		motor.applyRequest(armPositionRequest.withSetPoint(targetPosition));
 	}
 
 	public void setPower(double power) {
-		arm.setPower(power);
+		motor.setPower(power);
 	}
 
+    public void setFeedForward(double arbitraryFeedForward){
+        armPositionRequest.withArbitraryFeedForward(arbitraryFeedForward);
+    }
+
 	protected void stayInPlace() {
-        setTargetPosition(positionSignal.getLatestValue());
+		setTargetPosition(positionSignal.getLatestValue());
 	}
 
 	private double getKgVoltage() {
 		return Robot.ROBOT_TYPE.isReal() ? kG * getPosition().getCos() : 0;
 	}
 
-	public void applyCalibrationBindings(SmartJoystick joystick) {
+	public void applyCalibrationBindings(SmartJoystick joystick, double maxCalibrationPower) {
 		joystick.A.onTrue(new InstantCommand(() -> armCommandBuilder.setIsSubsystemRunningIndependently(true)));
 		joystick.B.onTrue(new InstantCommand(() -> armCommandBuilder.setIsSubsystemRunningIndependently(false)));
 
@@ -139,16 +145,13 @@ public class Arm extends GBSubsystem {
 
 		// Check limits
 		joystick.R1.whileTrue(
-			armCommandBuilder.setPower(
-				() -> joystick.getAxisValue(Axis.LEFT_Y) * CALIBRATION_MAX_POWER
-					+ (getKgVoltage() / BatteryUtil.getCurrentVoltage())
-			)
+			armCommandBuilder
+				.setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * maxCalibrationPower + (getKgVoltage() / BatteryUtil.getCurrentVoltage()))
 		);
 
 		// Calibrate feed forward using sys id:
 		sysIdCalibrator.setAllButtonsForCalibration(joystick);
 	}
-
 
 }
 

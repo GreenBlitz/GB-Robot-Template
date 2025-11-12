@@ -22,7 +22,7 @@ public record ArmSignals(
 			Phoenix6SignalBuilder.build(arm.getDevice().getVelocity(), signalFrequency, AngleUnit.ROTATIONS, busChain),
 			Phoenix6SignalBuilder.build(
 				arm.getDevice().getPosition(),
-				Phoenix6SignalBuilder.build(arm.getDevice().getVelocity(), signalFrequency, AngleUnit.ROTATIONS, busChain),
+				arm.getDevice().getVelocity(),
 				signalFrequency,
 				AngleUnit.ROTATIONS,
 				busChain

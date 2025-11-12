@@ -22,7 +22,6 @@ public class Arm extends GBSubsystem {
 	private final IFeedForwardRequest armPositionRequest;
 	private final SysIdCalibrator sysIdCalibrator;
 	private final double kG;
-	private final Rotation2d DEFAULT_POSITION_TOLERANCE;
 	private final ArmCommandBuilder armCommandBuilder;
 
 
@@ -36,9 +35,8 @@ public class Arm extends GBSubsystem {
 		IRequest<Double> armVoltageRequest,
 		IFeedForwardRequest armPositionRequest,
 		SysIdCalibrator.SysIdConfigInfo config,
-		double kG,
-		Rotation2d defaultPositionTolerance
-	) {
+		double kG
+    ) {
 		super(logPath);
 		this.motor = motor;
 		this.positionSignal = positionSignal;
@@ -48,7 +46,6 @@ public class Arm extends GBSubsystem {
 		this.armVoltageRequest = armVoltageRequest;
 		this.armPositionRequest = armPositionRequest;
 		this.kG = kG;
-		this.DEFAULT_POSITION_TOLERANCE = defaultPositionTolerance;
 		sysIdCalibrator = new SysIdCalibrator(config, this, this::setVoltage);
 		armCommandBuilder = new ArmCommandBuilder(this);
 		setDefaultCommand(armCommandBuilder.stayInPlace());
@@ -80,10 +77,6 @@ public class Arm extends GBSubsystem {
 
 	public boolean isAtPosition(Rotation2d targetPosition, Rotation2d tolerance) {
 		return positionSignal.isNear(targetPosition, tolerance);
-	}
-
-	public boolean isAtPosition(Rotation2d targetPosition) {
-		return isAtPosition(targetPosition, DEFAULT_POSITION_TOLERANCE);
 	}
 
 	public boolean isPastPosition(Rotation2d position) {

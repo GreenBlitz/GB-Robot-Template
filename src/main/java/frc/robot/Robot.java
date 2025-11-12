@@ -39,7 +39,7 @@ import frc.utils.time.TimeUtil;
  */
 public class Robot {
 
-	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
+	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);
 
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
@@ -213,12 +213,9 @@ public class Robot {
 		limelightFour.getIndependentRobotPose().ifPresent(poseEstimator::updateVision);
 		limelightThreeGB.getIndependentRobotPose().ifPresent(poseEstimator::updateVision);
 
-		limelightFour.log();
-		limelightThreeGB.log();
 		headingEstimator.log();
 
 		limelightObjectDetector.updateObjectDetection();
-		limelightObjectDetector.log();
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();

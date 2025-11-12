@@ -125,6 +125,10 @@ public class Arm extends GBSubsystem {
 		motor.setPower(power);
 	}
 
+    public void setFeedForward(double arbitraryFeedForward){
+        armPositionRequest.withArbitraryFeedForward(arbitraryFeedForward);
+    }
+
 	protected void stayInPlace() {
 		setTargetPosition(positionSignal.getLatestValue());
 	}

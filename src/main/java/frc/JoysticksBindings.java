@@ -1,10 +1,18 @@
 package frc;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
+import frc.robot.hardware.rev.motors.SparkMaxDeviceID;
+import frc.robot.subsystems.roller.Roller;
+import frc.robot.subsystems.roller.SparkMaxRollerBuilder;
 import frc.robot.subsystems.swerve.ChassisPowers;
+import org.littletonrobotics.conduit.schema.Joystick;
+
+import java.util.Set;
 
 public class JoysticksBindings {
 
@@ -43,10 +51,15 @@ public class JoysticksBindings {
 			chassisDriverInputs.rotationalPower = 0;
 		}
 	}
-
+	private static Roller roller = SparkMaxRollerBuilder.createSparkMaxMotorRoller("endEffector",1,12,40, Rotation2d.fromDegrees(15),5,0,0);
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		// bindings...
+		usedJoystick.A.onTrue(roller.getCommands().setPower(0.1));
+		usedJoystick.X.onTrue(roller.getCommands().setPower(() -> usedJoystick.getAxisValue(Axis.LEFT_Y)));
+		usedJoystick.B.onTrue(roller.getCommands().setVoltage(12));
+		usedJoystick.Y.onTrue(roller.getCommands().rollRotations(5));
+		usedJoystick.POV_UP.onTrue(roller.getCommands().setBrake(true));
+		usedJoystick.POV_DOWN.onTrue(roller.getCommands().setBrake(false));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

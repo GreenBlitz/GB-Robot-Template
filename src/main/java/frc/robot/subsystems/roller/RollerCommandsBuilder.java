@@ -1,33 +1,27 @@
 package frc.robot.subsystems.roller;
 
-import com.fasterxml.jackson.databind.ser.std.StdKeySerializers;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBCommandsBuilder;
 
+import java.util.Set;
 import java.util.function.Supplier;
 
 public class RollerCommandsBuilder extends GBCommandsBuilder {
     private final Roller roller;
-    private final InputSignal<Double> voltageSignal;
-    private final InputSignal<Double> currlentSignal;
-    private final InputSignal<Rotation2d> latencySignal;
-    private final InputSignal<Rotation2d> velocitySignal;
 
-    RollerCommandsBuilder(Roller roller, InputSignal<Double> voltageSignal, InputSignal<Double> currlentSignal, InputSignal<Rotation2d> latencySignal, InputSignal<Rotation2d> velocitySignal){
+    RollerCommandsBuilder(Roller roller){
+        super();
         this.roller = roller;
-        this.voltageSignal = voltageSignal;
-        this.currlentSignal = currlentSignal;
-        this.latencySignal = latencySignal;
-        this.velocitySignal = velocitySignal;
         roller.setDefaultCommand(stop());
     }
 
     public Command setVoltage(double voltage){
-        return roller.asSubsystemCommand(new RunCommand(() -> roller.setVoltage(voltage)),"set roller voltage");
+        return roller.asSubsystemCommand(new RunCommand(() -> roller.setVoltage(voltage)),"set roller voltage to "+ voltage);
     }
 
     public Command stop(){
@@ -38,8 +32,16 @@ public class RollerCommandsBuilder extends GBCommandsBuilder {
        return roller.asSubsystemCommand(new InstantCommand(() -> roller.setBrake(brake)),"set brake");
     }
 
-    public Command setPowerWithSupplier(Supplier<Double> supplier){
+    public Command setPower(Supplier<Double> supplier){
         return roller.asSubsystemCommand(new RunCommand(() -> roller.setPower(supplier.get())),"set power with supplier");
     }
 
+    public Command setPower(Double power){
+        return roller.asSubsystemCommand(new RunCommand(() -> roller.setPower(power)),"set power to "+power);
+    }
+
+    public Command rollRotations(double rotations){
+        Rotation2d targetPosition = Rotation2d.fromRotations(rotations + roller.getPositionSignal().getLatestValue().getRotations());
+        return roller.asSubsystemCommand(new DeferredCommand(() -> new RunCommand(() -> roller.goToPosition(targetPosition)), Set.of(roller)),"rollRotations " + rotations);
+    }
 }

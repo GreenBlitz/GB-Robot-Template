@@ -103,7 +103,9 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 			Logger.processInputs(logPath + "/mt1Inputs", inputs.mt1Inputs());
 
 			mt1PoseObservation = new RobotPoseObservation(getMT1RawData().timestampSeconds(), getMT1RawData().pose(), calculateMT1StdDevs.get());
-			Logger.recordOutput(logPath + "/megaTag1PoseObservation", mt1PoseObservation);
+			if (doesObservationExist(mt1PoseObservation)) {
+				Logger.recordOutput(logPath + "/megaTag1PoseObservation", mt1PoseObservation);
+			}
 		}
 	}
 
@@ -113,7 +115,9 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 			Logger.processInputs(logPath + "/mt2Inputs", inputs.mt2Inputs());
 
 			mt2PoseObservation = new RobotPoseObservation(getMT2RawData().timestampSeconds(), getMT2RawData().pose(), calculateMT2StdDevs.get());
-			Logger.recordOutput(logPath + "/megaTag2PoseObservation", mt2PoseObservation);
+			if (doesObservationExist(mt2PoseObservation)) {
+				Logger.recordOutput(logPath + "/megaTag2PoseObservation", mt2PoseObservation);
+			}
 		}
 	}
 

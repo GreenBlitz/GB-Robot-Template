@@ -9,8 +9,12 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Robot;
 import frc.robot.hardware.interfaces.IDynamicMotionMagicRequest;
+import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
@@ -36,9 +40,10 @@ public class ArmBuilder {
 		int currentLimit,
 		BusChain busChain,
 		int signalFrequency,
+        double JkGMeterSquared,
 		InvertedValue inverted
 	) {
-		TalonFXMotor motor = motorGenerator(deviceID, logPath, talonFXFollowerConfig, sysIdCalibratorConfigInfo);
+		TalonFXMotor motor = motorGenerator(deviceID, logPath, talonFXFollowerConfig, JkGMeterSquared,feedbackConfigs.RotorToSensorRatio*feedbackConfigs.SensorToMechanismRatio, sysIdCalibratorConfigInfo);
 
 		ArmSignals signals = new ArmSignals(motor, signalFrequency, busChain);
 
@@ -94,9 +99,10 @@ public class ArmBuilder {
 		int currentLimit,
 		BusChain busChain,
 		int signalFrequency,
+        double JkGMeterSquared,
 		InvertedValue inverted
 	) {
-		TalonFXMotor motor = motorGenerator(deviceID, logPath, talonFXFollowerConfig, sysIdCalibratorConfigInfo);
+		TalonFXMotor motor = motorGenerator(deviceID, logPath, talonFXFollowerConfig, JkGMeterSquared,feedbackConfigs.RotorToSensorRatio*feedbackConfigs.SensorToMechanismRatio,sysIdCalibratorConfigInfo);
 
 		ArmSignals signals = new ArmSignals(motor, signalFrequency, busChain);
 
@@ -157,9 +163,14 @@ public class ArmBuilder {
 		Phoenix6DeviceID deviceID,
 		String logPath,
 		TalonFXFollowerConfig followerConfig,
+        double JkGMeterSquared,
+        double gearing,
 		SysIdCalibrator.SysIdConfigInfo sysIdConfigInfo
 	) {
-		return new TalonFXMotor(logPath, deviceID, followerConfig, sysIdConfigInfo.config());
+        return new TalonFXMotor(logPath, deviceID, followerConfig, sysIdConfigInfo.config(),new SimpleMotorSimulation(new DCMotorSim(LinearSystemId
+                .createDCMotorSystem(DCMotor.getKrakenX60Foc(followerConfig.followerIDs.length + 1), JkGMeterSquared, gearing),
+                DCMotor.getKrakenX60Foc(followerConfig.followerIDs.length + 1)
+        )));
 	}
 
 	private static Phoenix6Request<Double> voltageRequest() {

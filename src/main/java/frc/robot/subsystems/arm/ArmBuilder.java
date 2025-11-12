@@ -11,6 +11,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Robot;
 import frc.robot.hardware.interfaces.IDynamicMotionMagicRequest;
+import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
@@ -32,12 +33,14 @@ public class ArmBuilder {
 		FeedbackConfigs feedbackConfigs,
 		Slot0Configs realSlotsConfig,
 		Slot0Configs simulationSlotsConfig,
-		Rotation2d defaultPositionTolerance,
 		int currentLimit,
-		ArmSignals signals,
+		BusChain busChain,
+        int signalFrequency,
 		InvertedValue inverted
 	) {
 		TalonFXMotor motor = motorGenerator(deviceID, logPath, talonFXFollowerConfig, sysIdCalibratorConfigInfo);
+
+        ArmSignals signals = new ArmSignals(motor,signalFrequency,busChain);
 
 		Phoenix6Request<Double> voltageRequest = voltageRequest();
 
@@ -75,9 +78,8 @@ public class ArmBuilder {
 			maxAcceleration,
 			maxVelocity,
 			sysIdCalibratorConfigInfo,
-			configuration.Slot0.kG,
-			defaultPositionTolerance
-		);
+			configuration.Slot0.kG
+        );
 	}
 
 	public static Arm create(
@@ -90,11 +92,13 @@ public class ArmBuilder {
 		Slot0Configs realSlotsConfig,
 		Slot0Configs simulationSlotsConfig,
 		int currentLimit,
-		Rotation2d defaultPositionTolerance,
-		ArmSignals signals,
+        BusChain busChain,
+        int signalFrequency,
 		InvertedValue inverted
 	) {
 		TalonFXMotor motor = motorGenerator(deviceID, logPath, talonFXFollowerConfig, sysIdCalibratorConfigInfo);
+
+        ArmSignals signals = new ArmSignals(motor,signalFrequency,busChain);
 
 		Phoenix6Request<Double> voltageRequest = voltageRequest();
 
@@ -119,8 +123,7 @@ public class ArmBuilder {
 			voltageRequest,
 			positionRequest,
 			sysIdCalibratorConfigInfo,
-			configuration.Slot0.kG,
-			defaultPositionTolerance
+			configuration.Slot0.kG
 		);
 	}
 

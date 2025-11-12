@@ -20,8 +20,8 @@ public enum RobotType {
 		return this.equals(RobotType.REPLAY);
 	}
 
-	public static RobotType determineRobotType(boolean replay) {
-		return replay ? REPLAY : (RobotManager.isSimulation() ? RobotType.SIMULATION : RobotType.REAL);
+	public static RobotType determineRobotType(boolean isReplay) {
+		return isReplay ? REPLAY : (RobotManager.isSimulation() ? RobotType.SIMULATION : RobotType.REAL);
 	}
 
 }

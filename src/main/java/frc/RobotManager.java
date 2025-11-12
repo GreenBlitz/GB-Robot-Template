@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonomousConstants;
+import frc.robot.subsystems.doubleInterpolation.TemporaryInterpolation;
 import frc.utils.DriverStationUtil;
 import frc.utils.alerts.AlertManager;
 import frc.utils.auto.PathPlannerAutoWrapper;
@@ -36,6 +37,9 @@ public class RobotManager extends LoggedRobot {
 		LoggerFactory.initializeLogger();
 		PathPlannerUtil.startPathfinder();
 		PathPlannerUtil.setupPathPlannerLogging();
+
+		Logger.recordOutput("Interpolation/HoodInterpolation", TemporaryInterpolation.hoodInterpolation(() -> 3.2));
+		Logger.recordOutput("Interpolation/flywheelInterpolation", TemporaryInterpolation.flywheelInterpolation(() -> 2.5));
 
 		this.roborioCycles = 0;
 		this.robot = new Robot();

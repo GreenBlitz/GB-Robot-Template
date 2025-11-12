@@ -35,12 +35,12 @@ public class ArmBuilder {
 		Slot0Configs simulationSlotsConfig,
 		int currentLimit,
 		BusChain busChain,
-        int signalFrequency,
+		int signalFrequency,
 		InvertedValue inverted
 	) {
 		TalonFXMotor motor = motorGenerator(deviceID, logPath, talonFXFollowerConfig, sysIdCalibratorConfigInfo);
 
-        ArmSignals signals = new ArmSignals(motor,signalFrequency,busChain);
+		ArmSignals signals = new ArmSignals(motor, signalFrequency, busChain);
 
 		Phoenix6Request<Double> voltageRequest = voltageRequest();
 
@@ -79,7 +79,7 @@ public class ArmBuilder {
 			maxVelocity,
 			sysIdCalibratorConfigInfo,
 			configuration.Slot0.kG
-        );
+		);
 	}
 
 	public static Arm create(
@@ -92,13 +92,13 @@ public class ArmBuilder {
 		Slot0Configs realSlotsConfig,
 		Slot0Configs simulationSlotsConfig,
 		int currentLimit,
-        BusChain busChain,
-        int signalFrequency,
+		BusChain busChain,
+		int signalFrequency,
 		InvertedValue inverted
 	) {
 		TalonFXMotor motor = motorGenerator(deviceID, logPath, talonFXFollowerConfig, sysIdCalibratorConfigInfo);
 
-        ArmSignals signals = new ArmSignals(motor,signalFrequency,busChain);
+		ArmSignals signals = new ArmSignals(motor, signalFrequency, busChain);
 
 		Phoenix6Request<Double> voltageRequest = voltageRequest();
 

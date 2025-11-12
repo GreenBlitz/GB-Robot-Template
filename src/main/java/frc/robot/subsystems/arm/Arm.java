@@ -36,7 +36,7 @@ public class Arm extends GBSubsystem {
 		IFeedForwardRequest armPositionRequest,
 		SysIdCalibrator.SysIdConfigInfo config,
 		double kG
-    ) {
+	) {
 		super(logPath);
 		this.motor = motor;
 		this.positionSignal = positionSignal;
@@ -118,9 +118,9 @@ public class Arm extends GBSubsystem {
 		motor.setPower(power);
 	}
 
-    public void setFeedForward(double arbitraryFeedForward){
-        armPositionRequest.withArbitraryFeedForward(arbitraryFeedForward);
-    }
+	public void setFeedForward(double arbitraryFeedForward) {
+		armPositionRequest.withArbitraryFeedForward(arbitraryFeedForward);
+	}
 
 	protected void stayInPlace() {
 		setTargetPosition(positionSignal.getLatestValue());

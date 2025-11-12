@@ -21,7 +21,7 @@ public enum RobotType {
 	}
 
 	public static RobotType determineRobotType(boolean isReplay) {
-		return isReplay ? REPLAY : (RobotManager.isSimulation() ? RobotType.SIMULATION : RobotType.REAL);
+		return RobotManager.isSimulation() ? (isReplay ? REPLAY : SIMULATION) : REAL;
 	}
 
 }

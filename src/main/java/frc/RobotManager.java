@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonomousConstants;
-import frc.robot.subsystems.doubleInterpolation.TemporaryInterpolation;
 import frc.utils.DriverStationUtil;
 import frc.utils.alerts.AlertManager;
 import frc.utils.auto.PathPlannerAutoWrapper;

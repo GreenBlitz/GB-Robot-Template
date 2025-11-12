@@ -48,7 +48,7 @@ public class ArmBuilder {
 				maxAcceleration.getRotations(),
 				0
 			),
-			0,
+			arbitraryFeedForward,
 			true
 		);
 		positionRequest.withMaxAccelerationRotation2dPerSecondSquared(maxAcceleration);

@@ -65,19 +65,6 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		setPipeline(pipeline);
 	}
 
-	public void log() {
-		if (pipeline.isUsingMT()) {
-			if (doesObservationExist(mt1PoseObservation)) {
-				Logger.recordOutput(logPath + "/megaTag1PoseObservation", mt1PoseObservation);
-			}
-			if (doesObservationExist(mt2PoseObservation)) {
-				Logger.recordOutput(logPath + "/megaTag2PoseObservation", mt2PoseObservation);
-			}
-		} else if (pipeline.isDetectingObjects()) {
-			Logger.recordOutput(logPath + "/detectedObjectObservations", detectedObjectObservations.toArray(new DetectedObjectObservation[0]));
-		}
-	}
-
 	public void updateObjectDetection() {
 		if (pipeline.isDetectingObjects()) {
 			detectedObjectObservations.clear();
@@ -104,6 +91,8 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 						});
 					}
 				}
+				Logger
+					.recordOutput(logPath + "/detectedObjectObservations", detectedObjectObservations.toArray(new DetectedObjectObservation[0]));
 			}
 		}
 	}
@@ -114,6 +103,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 			Logger.processInputs(logPath + "/mt1Inputs", inputs.mt1Inputs());
 
 			mt1PoseObservation = new RobotPoseObservation(getMT1RawData().timestampSeconds(), getMT1RawData().pose(), calculateMT1StdDevs.get());
+			Logger.recordOutput(logPath + "/megaTag1PoseObservation", mt1PoseObservation);
 		}
 	}
 
@@ -123,6 +113,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 			Logger.processInputs(logPath + "/mt2Inputs", inputs.mt2Inputs());
 
 			mt2PoseObservation = new RobotPoseObservation(getMT2RawData().timestampSeconds(), getMT2RawData().pose(), calculateMT2StdDevs.get());
+			Logger.recordOutput(logPath + "/megaTag2PoseObservation", mt2PoseObservation);
 		}
 	}
 

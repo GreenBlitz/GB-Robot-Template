@@ -48,10 +48,10 @@ public class Robot {
 		feedbackConfigs.SensorToMechanismRatio = 1;
 
 		arm = ArmBuilder.create(
-			"Arm/",
-			new TalonFXFollowerConfig(),
-			id,
-			new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(), true),
+                "Arm/",
+                new TalonFXFollowerConfig(),
+                id,
+                new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(), true),
 			Rotation2d.fromRotations(3),
 			Rotation2d.fromRotations(3),
 			0,
@@ -65,10 +65,6 @@ public class Robot {
 			InvertedValue.Clockwise_Positive
 		);
 
-		// arm = ArmBuilder.createDynamicMotionMagic("Arm/",new TalonFXFollowerConfig() ,20,Volts.of(7),null,Volts.of(1).per(Second),0.001,
-		// SingleJointedArmSim.estimateMOI(0.3, 5),Rotation2d.fromRotations(3),Rotation2d.fromRotations(3),0,450.0 /
-		// 7.0,1,config,config,0.37,0.2);
-//        pivot = ArmBuilder.create("Pivot/",new SysIdRoutine.Config(),)
 	}
 
 

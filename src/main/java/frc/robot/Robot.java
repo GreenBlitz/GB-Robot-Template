@@ -6,6 +6,8 @@ package frc.robot;
 
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -68,34 +70,39 @@ public class Robot {
         configRealPivot.kS = 0.05;
         configRealPivot.kV = 0;
         configRealPivot.kA = 0;
+		configRealPivot.GravityType = GravityTypeValue.Arm_Cosine;
+		
 //        config.MotionMagic.withMotionMagicCruiseVelocity(3);
 //        config.MotionMagic.withMotionMagicAcceleration(3);
-		Phoenix6DeviceID id = new Phoenix6DeviceID(20);
+		Phoenix6DeviceID armId = new Phoenix6DeviceID(20, BusChain.Super);
 		FeedbackConfigs feedbackConfigsArm = new FeedbackConfigs();
 		feedbackConfigsArm.RotorToSensorRatio = 450.0 / 7.0;
 		feedbackConfigsArm.SensorToMechanismRatio = 1;
+		feedbackConfigsArm.FeedbackRemoteSensorID = 20;
+		feedbackConfigsArm.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+		
         FeedbackConfigs feedbackConfigsPivot = new FeedbackConfigs();
-		feedbackConfigsPivot.RotorToSensorRatio = 21.43;
-		feedbackConfigsPivot.SensorToMechanismRatio = 1;
+		feedbackConfigsPivot.RotorToSensorRatio = 1;
+		feedbackConfigsPivot.SensorToMechanismRatio = 21.43;
 
 
 
 		arm = ArmBuilder.createDynamicMotionMagic(
 			"Arm/",
 			new TalonFXFollowerConfig(),
-			id,
+			armId,
 			new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(), true),
 			feedbackConfigsArm,
             configRealArm,
             configArm,
-            Rotation2d.fromDegrees(231 + Rotation2d.fromDegrees(-16).getDegrees()),
-            Rotation2d.fromDegrees(-24 + Rotation2d.fromDegrees(-16).getDegrees()),
+            Rotation2d.fromDegrees(231 -16),
+            Rotation2d.fromDegrees(-24 -16),
 			40,
             (int)RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			0.001,
 			0.3,
-			Rotation2d.fromDegrees(-24 + -(16)).getRadians(),
-			Rotation2d.fromDegrees(246 + Rotation2d.fromDegrees(-16).getDegrees()).getRadians(),
+			Rotation2d.fromDegrees(-24 -16).getRadians(),
+			Rotation2d.fromDegrees(246-16).getRadians(),
 			InvertedValue.Clockwise_Positive,
 			0,
 			Rotation2d.fromRotations(3),
@@ -107,8 +114,8 @@ public class Robot {
                 new Phoenix6DeviceID(15,BusChain.ROBORIO),
                 new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(), true),
                 feedbackConfigsPivot,
-                configPivot,
                 configRealPivot,
+                configPivot,
                 Rotation2d.fromDegrees(120),
                 Rotation2d.fromDegrees(-20),
                 40,
@@ -119,7 +126,7 @@ public class Robot {
                 Rotation2d.fromDegrees(130).getRadians(),
                 InvertedValue.CounterClockwise_Positive,
                 0);
-
+		pivot.setPosition(Rotation2d.fromDegrees(130));
 	}
 
 

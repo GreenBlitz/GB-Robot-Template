@@ -177,6 +177,14 @@ public class Robot {
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
 	}
 
+	public Limelight getLimelightFour() {
+		return limelightFour;
+	}
+
+	public Limelight getLimelightThreeGB() {
+		return limelightThreeGB;
+	}
+
 	public void periodic() {
 		BusChain.refreshAll();
 

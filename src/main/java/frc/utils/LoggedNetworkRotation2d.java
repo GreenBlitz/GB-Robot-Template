@@ -17,7 +17,7 @@ public class LoggedNetworkRotation2d extends LoggedNetworkInput {
 
 	public LoggedNetworkRotation2d(String key) {
 		this.key = key;
-		this.entry = NetworkTableInstance.getDefault().getDoubleTopic(key).getEntry(0.0);
+		this.entry = NetworkTableInstance.getDefault().getDoubleTopic(key + "InDegrees").getEntry(0.0);
 		this.value = defaultValue;
 		Logger.registerDashboardInput(this);
 	}
@@ -48,7 +48,7 @@ public class LoggedNetworkRotation2d extends LoggedNetworkInput {
 		}
 
 		public void fromLog(LogTable table) {
-			value = table.get(removeSlash(key), defaultValue);
+			value = table.get(removeSlash(key + "InDegrees"), defaultValue);
 		}
 
 	};

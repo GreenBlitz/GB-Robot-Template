@@ -74,10 +74,7 @@ public class ArmBuilder {
 		return new DynamicMotionMagicArm(
 			logPath,
 			motor,
-			signals.voltageSignal(),
-			signals.currentSignal(),
-			signals.velocitySignal(),
-			signals.positionSignal(),
+			signals,
 			voltageRequest,
 			positionRequest,
 			maxAcceleration,
@@ -122,10 +119,7 @@ public class ArmBuilder {
 		return new Arm(
 			logPath,
 			motor,
-			signals.voltageSignal(),
-			signals.currentSignal(),
-			signals.velocitySignal(),
-			signals.positionSignal(),
+			signals,
 			voltageRequest,
 			positionRequest,
 			sysIdCalibratorConfigInfo,

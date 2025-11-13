@@ -17,10 +17,7 @@ public class DynamicMotionMagicArm extends Arm {
 	public DynamicMotionMagicArm(
 		String logPath,
 		ControllableMotor arm,
-		InputSignal<Double> voltageSignal,
-		InputSignal<Double> currentSignal,
-		InputSignal<Rotation2d> velocitySignal,
-		InputSignal<Rotation2d> positionSignal,
+		ArmSignals signals,
 		IRequest<Double> armVoltageRequest,
 		IDynamicMotionMagicRequest motionMagicRequest,
 		Rotation2d defaultMotionMagicAcceleration,
@@ -28,7 +25,7 @@ public class DynamicMotionMagicArm extends Arm {
 		SysIdCalibrator.SysIdConfigInfo configInfo,
 		double kG
 	) {
-		super(logPath, arm, voltageSignal, currentSignal, velocitySignal, positionSignal, armVoltageRequest, motionMagicRequest, configInfo, kG);
+		super(logPath, arm, signals, armVoltageRequest, motionMagicRequest, configInfo, kG);
 		this.motionMagicRequest = motionMagicRequest;
 		this.defaultDynamicMotionAcceleration = defaultMotionMagicAcceleration;
 		this.defaultDynamicMotionVelocity = defaultMotionMagicVelocity;

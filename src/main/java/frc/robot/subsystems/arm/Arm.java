@@ -14,10 +14,7 @@ import org.littletonrobotics.junction.Logger;
 public class Arm extends GBSubsystem {
 
 	protected final ControllableMotor motor;
-	private final InputSignal<Double> voltageSignal;
-	private final InputSignal<Rotation2d> velocitySignal;
-	private final InputSignal<Rotation2d> positionSignal;
-	private final InputSignal<Double> currentSignal;
+	private final ArmSignals signals;
 	private final IRequest<Double> armVoltageRequest;
 	private final IFeedForwardRequest armPositionRequest;
 	private final SysIdCalibrator sysIdCalibrator;
@@ -28,10 +25,7 @@ public class Arm extends GBSubsystem {
 	public Arm(
 		String logPath,
 		ControllableMotor motor,
-		InputSignal<Double> voltageSignal,
-		InputSignal<Double> currentSignal,
-		InputSignal<Rotation2d> velocitySignal,
-		InputSignal<Rotation2d> positionSignal,
+		ArmSignals signals,
 		IRequest<Double> armVoltageRequest,
 		IFeedForwardRequest armPositionRequest,
 		SysIdCalibrator.SysIdConfigInfo config,
@@ -39,10 +33,7 @@ public class Arm extends GBSubsystem {
 	) {
 		super(logPath);
 		this.motor = motor;
-		this.positionSignal = positionSignal;
-		this.velocitySignal = velocitySignal;
-		this.voltageSignal = voltageSignal;
-		this.currentSignal = currentSignal;
+		this.signals = signals;
 		this.armVoltageRequest = armVoltageRequest;
 		this.armPositionRequest = armPositionRequest;
 		this.kG = kG;
@@ -56,19 +47,19 @@ public class Arm extends GBSubsystem {
 	}
 
 	public Rotation2d getPosition() {
-		return positionSignal.getLatestValue();
+		return signals.positionSignal().getLatestValue();
 	}
 
 	public double getVoltage() {
-		return voltageSignal.getLatestValue();
+		return signals.voltageSignal().getLatestValue();
 	}
 
 	public Rotation2d getVelocity() {
-		return velocitySignal.getLatestValue();
+		return signals.velocitySignal().getLatestValue();
 	}
 
 	public double getCurrent() {
-		return currentSignal.getLatestValue();
+		return signals.currentSignal().getLatestValue();
 	}
 
 	public SysIdCalibrator getSysIdCalibrator() {
@@ -76,15 +67,15 @@ public class Arm extends GBSubsystem {
 	}
 
 	public boolean isAtPosition(Rotation2d targetPosition, Rotation2d tolerance) {
-		return positionSignal.isNear(targetPosition, tolerance);
+		return signals.positionSignal().isNear(targetPosition, tolerance);
 	}
 
 	public boolean isPastPosition(Rotation2d position) {
-		return positionSignal.isGreater(position);
+		return signals.positionSignal().isGreater(position);
 	}
 
 	public boolean isBehindPosition(Rotation2d position) {
-		return positionSignal.isLess(position);
+		return signals.positionSignal().isLess(position);
 	}
 
 	@Override
@@ -95,7 +86,7 @@ public class Arm extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		motor.updateInputs(voltageSignal, currentSignal, velocitySignal, positionSignal);
+		motor.updateInputs(signals.voltageSignal(), signals.currentSignal(), signals.velocitySignal(), signals.positionSignal());
 	}
 
 	public void log() {
@@ -123,7 +114,7 @@ public class Arm extends GBSubsystem {
 	}
 
 	protected void stayInPlace() {
-		setTargetPosition(positionSignal.getLatestValue());
+		setTargetPosition(signals.positionSignal().getLatestValue());
 	}
 
 	private double getKgVoltage() {

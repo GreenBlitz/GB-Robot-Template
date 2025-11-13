@@ -1,7 +1,9 @@
 package frc.utils.math;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import frc.constants.MathConstants;
 
 import java.util.Arrays;
@@ -63,6 +65,15 @@ public class AngleMath {
 			getAngleAverageWrapped(sinYSum, cosYSum, posesAmount).getRadians(),
 			getAngleAverageWrapped(sinZSum, cosZSum, posesAmount).getRadians()
 		);
+	}
+
+	public static Pose3d transformBy(Pose3d toTransform, Pose3d transformByInGlobalSpace) {
+		Pose3d transformByInToTransformSpace = new Pose3d(
+			transformByInGlobalSpace.getTranslation().rotateBy(toTransform.getRotation().unaryMinus()),
+			transformByInGlobalSpace.getRotation()
+		);
+		System.out.println("AAA " + transformByInToTransformSpace.getRotation().getZ());
+		return toTransform.transformBy(new Transform3d(new Pose3d(), transformByInToTransformSpace));
 	}
 
 }

@@ -7,6 +7,8 @@ import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.function.BooleanSupplier;
+
 public class Roller extends GBSubsystem {
 
 	private final ControllableMotor roller;
@@ -68,6 +70,7 @@ public class Roller extends GBSubsystem {
 		return positionSignal.getLatestValue();
 	}
 
+
 	public RollerCommandsBuilder getCommandsBuilder() {
 		return commandsBuilder;
 	}
@@ -75,16 +78,14 @@ public class Roller extends GBSubsystem {
 	public boolean isAtPosition(Rotation2d position) {
 		return (positionSignal.isNear(position, tolerance));
 	}
-
+	public BooleanSupplier isPastPositionSupplier(Rotation2d position) {
+		return () -> positionSignal.isGreater(position);
+	}
 	public boolean isPastPosition(Rotation2d position) {
 		if (!isAtPosition(position)) {
 			return Math.abs(position.getDegrees() - positionSignal.getLatestValue().getDegrees()) < tolerance.getDegrees();
 		}
 		return false;
-	}
-
-	public void goToPosition(Rotation2d position) {
-		roller.applyRequest(PositionRequest.withSetPoint(position));
 	}
 	public void logAll(){
 		Logger.recordOutput(logPath + "angle",positionSignal.getLatestValue());

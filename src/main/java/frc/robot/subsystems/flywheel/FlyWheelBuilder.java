@@ -28,7 +28,7 @@ public class FlyWheelBuilder {
 			new DCMotorSim(
 				LinearSystemId.createDCMotorSystem(
 					DCMotor.getKrakenX60Foc(talonFXFollowerConfig.followerIDs.length),
-					0.000000001,
+					Constants.JKG_METERS_SQUARED,
 					Constants.ROTOR_TO_SENSOR_RATIO
 				),
 				DCMotor.getKrakenX60Foc(talonFXFollowerConfig.followerIDs.length)

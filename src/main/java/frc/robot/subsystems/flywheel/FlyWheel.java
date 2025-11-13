@@ -41,13 +41,14 @@ public class FlyWheel extends GBSubsystem {
 		return flyWheelCommandBuilder;
 	}
 
+	public void setVelocity(Rotation2d velocity) {
+		masterMotor.applyRequest(velocityRequest.withSetPoint(velocity));
+	}
+
 	public void setVoltage(double voltage) {
 		masterMotor.applyRequest(voltageRequest.withSetPoint(voltage));
 	}
 
-	public void setVelocity(Rotation2d velocity) {
-		masterMotor.applyRequest(velocityRequest.withSetPoint(velocity));
-	}
 
 	public Rotation2d getVelocity() {
 		return velocitySignal.getLatestValue();

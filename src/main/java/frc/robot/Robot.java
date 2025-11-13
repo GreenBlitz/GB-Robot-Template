@@ -31,7 +31,9 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 	private static final Slot0Configs configPivot = new Slot0Configs();
+	private static final Slot0Configs configRealPivot = new Slot0Configs();
 	private static final Slot0Configs configArm = new Slot0Configs();
+	private static final Slot0Configs configRealArm = new Slot0Configs();
 	private final DynamicMotionMagicArm arm;
 	private final Arm pivot;
 
@@ -50,6 +52,22 @@ public class Robot {
         configPivot.kS = 0;
         configPivot.kV = 0;
         configPivot.kA = 0;
+
+        configRealArm.kP = 28;
+        configRealArm.kI = 0;
+        configRealArm.kD = 0;
+        configRealArm.kS = 0.065;
+        configRealArm.kG = 0.37;
+        configRealArm.kV = 9.0000095367432;
+        configRealArm.kA = 0.5209;
+
+        configRealPivot.kP = 20;
+        configRealPivot.kI = 0;
+        configRealPivot.kD = 0;
+        configRealPivot.kG = 0.4;
+        configRealPivot.kS = 0.05;
+        configRealPivot.kV = 0;
+        configRealPivot.kA = 0;
 //        config.MotionMagic.withMotionMagicCruiseVelocity(3);
 //        config.MotionMagic.withMotionMagicAcceleration(3);
 		Phoenix6DeviceID id = new Phoenix6DeviceID(20);
@@ -68,12 +86,12 @@ public class Robot {
 			id,
 			new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(), true),
 			feedbackConfigsArm,
-            configArm,
+            configRealArm,
             configArm,
             Rotation2d.fromDegrees(231 + Rotation2d.fromDegrees(-16).getDegrees()),
             Rotation2d.fromDegrees(-24 + Rotation2d.fromDegrees(-16).getDegrees()),
 			40,
-			50,
+            (int)RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			0.001,
 			0.3,
 			Rotation2d.fromDegrees(-24 + -(16)).getRadians(),
@@ -86,11 +104,11 @@ public class Robot {
         pivot = ArmBuilder.create(
 			"Pivot/",
                 new TalonFXFollowerConfig(),
-                new Phoenix6DeviceID(5),
+                new Phoenix6DeviceID(15,BusChain.ROBORIO),
                 new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(), true),
                 feedbackConfigsPivot,
                 configPivot,
-                configPivot,
+                configRealPivot,
                 Rotation2d.fromDegrees(120),
                 Rotation2d.fromDegrees(-20),
                 40,
@@ -99,7 +117,7 @@ public class Robot {
                 0.359,
                 Rotation2d.fromDegrees(-33).getRadians(),
                 Rotation2d.fromDegrees(130).getRadians(),
-                InvertedValue.Clockwise_Positive,
+                InvertedValue.CounterClockwise_Positive,
                 0);
 
 	}

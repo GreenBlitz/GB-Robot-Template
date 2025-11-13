@@ -41,7 +41,7 @@ public class CameraCalibration extends Command {
 
 	public void addToPoseList() {
 		Pose3d currentPose = LimelightCalculations
-			.getCameraToRobot(LimelightHelpers.getCameraPose3d_TargetSpace(limelight.getName()), tagToRobot);
+			.getCameraToRobot(tagToRobot, LimelightHelpers.getCameraPose3d_TargetSpace(limelight.getName()));
 		posesAmount++;
 		translationSum = translationSum.plus(currentPose.getTranslation());
 		sinXSum += Math.sin(currentPose.getRotation().getX());

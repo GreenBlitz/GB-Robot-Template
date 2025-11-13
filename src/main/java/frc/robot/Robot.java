@@ -9,6 +9,7 @@ import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
+import frc.robot.subsystems.flywheel.Constants;
 import frc.robot.subsystems.flywheel.FlyWheel;
 import frc.robot.subsystems.flywheel.FlyWheelBuilder;
 import frc.utils.auto.PathPlannerAutoWrapper;
@@ -24,14 +25,13 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
 	private final FlyWheel flyWheel;
 
-
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 		TalonFXFollowerConfig followerConfig = new TalonFXFollowerConfig();
 		followerConfig.followerIDs = new TalonFXFollowerConfig.TalonFXFollowerID[] {
-			new TalonFXFollowerConfig.TalonFXFollowerID("follower1", new Phoenix6DeviceID(2, BusChain.ROBORIO), false)};
+			new TalonFXFollowerConfig.TalonFXFollowerID("flyWheelFollower", new Phoenix6DeviceID(Constants.FLY_WHEEL_FOLLOWER_ID, BusChain.ROBORIO), false)};
 
-		this.flyWheel = FlyWheelBuilder.generate("flyWheel", new Phoenix6DeviceID(1, BusChain.ROBORIO), followerConfig);
+		this.flyWheel = FlyWheelBuilder.generate("flyWheel", new Phoenix6DeviceID(Constants.FLY_WHEEL_ID, BusChain.ROBORIO), followerConfig);
 	}
 
 	public void periodic() {

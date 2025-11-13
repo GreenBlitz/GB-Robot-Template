@@ -15,8 +15,8 @@ public class FlyWheel extends GBSubsystem {
 	private final IRequest<Rotation2d> velocityRequest;
 	private final IRequest<Double> voltageRequest;
 
-	private final InputSignal<Double> voltageSignal;
 	private final InputSignal<Rotation2d> velocitySignal;
+	private final InputSignal<Double> voltageSignal;
 
 	private final FlyWheelCommandBuilder flyWheelCommandBuilder;
 

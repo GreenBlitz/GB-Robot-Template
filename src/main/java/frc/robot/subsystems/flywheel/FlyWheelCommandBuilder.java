@@ -25,7 +25,7 @@ public class FlyWheelCommandBuilder {
 	public Command setVelocityAsSupplier(Supplier<Rotation2d> velocity) {
 		return flyWheel.asSubsystemCommand(
 			new RunCommand(() -> flyWheel.setVelocity(velocity.get())),
-			"setVelocityAsSupplier"
+			"set velocity as supplier"
 
 		);
 	}

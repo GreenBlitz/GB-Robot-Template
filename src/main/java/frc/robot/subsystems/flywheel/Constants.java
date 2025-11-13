@@ -8,5 +8,9 @@ public class Constants {
 	public final static double KI = 2.4;
 	public final static double KD = 0.0;
 	public final static double ROTOR_TO_SENSOR_RATIO = 1;
+	public final static int FLY_WHEEL_ID = 1;
+	public final static int FLY_WHEEL_FOLLOWER_ID = 2;
+
+
 
 }

@@ -49,9 +49,6 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 
-		usedJoystick.A.onTrue(robot.getFlyWheel().getCommandBuilder().stop());
-		usedJoystick.B.onTrue(robot.getFlyWheel().getCommandBuilder().setVelocity(Rotation2d.fromRotations(90)));
-		usedJoystick.X.onTrue(robot.getFlyWheel().getCommandBuilder().setVelocity(Rotation2d.fromRotations(20)));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

@@ -5,6 +5,7 @@ import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.RobotConstants;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
@@ -19,40 +20,18 @@ import com.ctre.phoenix6.controls.VoltageOut;
 
 public class FlyWheelBuilder {
 
-	public static FlyWheel generate(
-		String logPath,
-		Phoenix6DeviceID IDSRightMotor,
-		TalonFXFollowerConfig talonFXFollowerConfig,
-		Phoenix6DeviceID IDLeftMotor
-	) {
-		TalonFXMotor rightMotor = new TalonFXMotor(logPath + "/right", IDSRightMotor, talonFXFollowerConfig, new SysIdRoutine.Config());
-		TalonFXMotor leftMotor = new TalonFXMotor(logPath + "/left", IDLeftMotor, talonFXFollowerConfig, new SysIdRoutine.Config());
+	public static FlyWheel generate(String logPath, Phoenix6DeviceID motorID, TalonFXFollowerConfig talonFXFollowerConfig) {
+		TalonFXMotor masterMotor = new TalonFXMotor(logPath + "/master", motorID, talonFXFollowerConfig, new SysIdRoutine.Config());
 
 		Phoenix6DoubleSignal voltageSignalRightMotor = Phoenix6SignalBuilder
-			.build(rightMotor.getDevice().getMotorVoltage(), Constants.DEFAULT_SIGNALS_FREQUENCY, BusChain.ROBORIO);
-		Phoenix6DoubleSignal voltageSignalLeftMotor = Phoenix6SignalBuilder
-			.build(leftMotor.getDevice().getMotorVoltage(), Constants.DEFAULT_SIGNALS_FREQUENCY, BusChain.ROBORIO);
+			.build(masterMotor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
 		Phoenix6AngleSignal velocitySignalRightMotor = Phoenix6SignalBuilder
-			.build(rightMotor.getDevice().getVelocity(), Constants.DEFAULT_SIGNALS_FREQUENCY, AngleUnit.ROTATIONS, BusChain.ROBORIO);
-		Phoenix6AngleSignal velocitySignalLeftMotor = Phoenix6SignalBuilder
-			.build(leftMotor.getDevice().getVelocity(), Constants.DEFAULT_SIGNALS_FREQUENCY, AngleUnit.ROTATIONS, BusChain.ROBORIO);
-
+			.build(masterMotor.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), true);
 		Phoenix6Request<Rotation2d> velocityRequest = Phoenix6RequestBuilder.build(new VelocityVoltage(0), 0, true);
-		rightMotor.applyConfiguration(buildConfig(talonFXFollowerConfig));
-		leftMotor.applyConfiguration(buildConfig(talonFXFollowerConfig));
+		masterMotor.applyConfiguration(buildConfig(talonFXFollowerConfig));
 
-		return new FlyWheel(
-			logPath,
-			velocityRequest,
-			voltageRequest,
-			velocitySignalRightMotor,
-			voltageSignalRightMotor,
-			velocitySignalLeftMotor,
-			voltageSignalLeftMotor,
-			rightMotor,
-			leftMotor
-		);
+		return new FlyWheel(logPath, velocityRequest, voltageRequest, velocitySignalRightMotor, voltageSignalRightMotor, masterMotor);
 	}
 
 	public static TalonFXConfiguration buildConfig(TalonFXFollowerConfig talonFXFollowerConfig) {

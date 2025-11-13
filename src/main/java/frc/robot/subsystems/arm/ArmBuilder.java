@@ -35,6 +35,8 @@ public class ArmBuilder {
 		FeedbackConfigs feedbackConfigs,
 		Slot0Configs realSlotsConfig,
 		Slot0Configs simulationSlotsConfig,
+        Rotation2d forwardLimitSwitch,
+        Rotation2d backwardLimitSwitch,
 		double currentLimit,
 		int signalFrequency,
 		double JkGMeterSquared,
@@ -73,6 +75,8 @@ public class ArmBuilder {
 			simulationSlotsConfig,
 			realSlotsConfig,
 			inverted,
+            forwardLimitSwitch,
+            backwardLimitSwitch,
 			currentLimit
 		);
         addMotionMagicConfig(configuration,defaultMaxVelocityRotation2dPerSecond,defaultMaxAccelerationRotation2dPerSecondSquare);
@@ -99,6 +103,8 @@ public class ArmBuilder {
 		FeedbackConfigs feedbackConfigs,
 		Slot0Configs realSlotsConfig,
 		Slot0Configs simulationSlotsConfig,
+        Rotation2d forwardLimitSwitch,
+        Rotation2d backwardLimitSwitch,
 		double currentLimit,
 		int signalFrequency,
 		double JkGMeterSquared,
@@ -129,6 +135,8 @@ public class ArmBuilder {
 			simulationSlotsConfig,
 			realSlotsConfig,
 			inverted,
+            forwardLimitSwitch,
+            backwardLimitSwitch,
 			currentLimit
 		));
         addMotionMagicConfig(configuration,defaultMaxVelocityRotation2dPerSecond,defaultMaxAccelerationRotation2dPerSecondSquare);
@@ -146,6 +154,8 @@ public class ArmBuilder {
 		FeedbackConfigs feedbackConfigs,
 		Slot0Configs realSlotsConfig,
 		Slot0Configs simulationSlotsConfig,
+        Rotation2d forwardLimitSwitch,
+        Rotation2d backwardLimitSwitch,
 		double currentLimit,
 		int signalFrequency,
 		double JkGMeterSquared,
@@ -175,6 +185,8 @@ public class ArmBuilder {
 			simulationSlotsConfig,
 			realSlotsConfig,
 			inverted,
+            forwardLimitSwitch,
+            backwardLimitSwitch,
 			currentLimit
 		));
 		motor.applyConfiguration(configuration);
@@ -187,6 +199,8 @@ public class ArmBuilder {
 		Slot0Configs simulationConfigSlots,
 		Slot0Configs realConfigSlots,
 		InvertedValue invertedValue,
+        Rotation2d forwardLimitSwitch,
+        Rotation2d backwardLimitSwitch,
 		double currentLimit
 	) {
 		TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
@@ -199,6 +213,11 @@ public class ArmBuilder {
 			}
 		}
 		talonFXConfiguration.Feedback = feedbackConfigs;
+
+        talonFXConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+        talonFXConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+        talonFXConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = forwardLimitSwitch.getRotations();
+        talonFXConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = backwardLimitSwitch.getRotations();
 
 
 		talonFXConfiguration.MotorOutput.Inverted = invertedValue;

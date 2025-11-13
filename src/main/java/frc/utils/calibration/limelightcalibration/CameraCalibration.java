@@ -1,18 +1,19 @@
 package frc.utils.calibration.limelightcalibration;
 
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.vision.cameras.limelight.Limelight;
+import frc.utils.AngleUnit;
 import frc.utils.LimelightHelpers;
+import frc.utils.logger.LoggerUtils;
 import frc.utils.math.AngleMath;
 import org.littletonrobotics.junction.Logger;
 
-import java.util.List;
 
 public class CameraCalibration extends Command {
 
+	private final String logPath;
 	private final Limelight limelight;
 	private final Pose3d tagToRobot;
 	private Translation3d translationSum;
@@ -24,7 +25,8 @@ public class CameraCalibration extends Command {
 	private double sinZSum;
 	private double cosZSum;
 
-	public CameraCalibration(Limelight limelight, Pose3d tagToRobot) {
+	public CameraCalibration(Limelight limelight, Pose3d tagToRobot, String logPath) {
+		this.logPath = logPath;
 		this.limelight = limelight;
 		this.tagToRobot = tagToRobot;
 		this.translationSum = new Translation3d();
@@ -38,7 +40,8 @@ public class CameraCalibration extends Command {
 	}
 
 	public void addToPoseList() {
-		Pose3d currentPose = LimelightCalculations.getCameraToRobot(LimelightHelpers.getTargetPose3d_CameraSpace(limelight.getName()), tagToRobot);
+		Pose3d currentPose = LimelightCalculations
+			.getCameraToRobot(LimelightHelpers.getTargetPose3d_CameraSpace(limelight.getName()), tagToRobot);
 		posesAmount++;
 		translationSum = translationSum.plus(currentPose.getTranslation());
 		sinXSum += Math.sin(currentPose.getRotation().getX());
@@ -55,26 +58,24 @@ public class CameraCalibration extends Command {
 			AngleMath.getAngleAverageWrapped(sinXSum, cosXSum, sinYSum, cosYSum, sinZSum, cosZSum, posesAmount)
 		);
 	}
-	
+
 	@Override
 	public void initialize() {
 		posesAmount = 0;
 	}
-	
+
 	@Override
 	public void execute() {
 		addToPoseList();
-		Logger.recordOutput("/cameraCalibration/cameraToRobotPose", getAvgPose());
-		Logger.recordOutput("/cameraCalibration/cameraToRobotPose2d", getAvgPose().toPose2d());
-		Logger.recordOutput("/cameraCalibration/cameraToRobotAngleRoll", Rotation2d.fromRadians(getAvgPose().getRotation().getX()).getDegrees());
-		Logger.recordOutput("/cameraCalibration/cameraToRobotAnglePitch", Rotation2d.fromRadians(getAvgPose().getRotation().getY()).getDegrees());
-		Logger.recordOutput("/cameraCalibration/cameraToRobotAngleYaw", Rotation2d.fromRadians(getAvgPose().getRotation().getZ()).getDegrees());
-		Logger.recordOutput("/cameraCalibration/cameraToRobotPoseNum", posesAmount);
+		Logger.recordOutput(logPath + "/cameraToRobotPose", getAvgPose());
+		Logger.recordOutput(logPath + "/cameraToRobotPose2d", getAvgPose().toPose2d());
+		LoggerUtils.logRotation3d(getAvgPose().getRotation(), logPath + "/cameraToRobot", AngleUnit.DEGREES);
+		Logger.recordOutput(logPath + "/cameraToRobotPoseAmount", posesAmount);
 	}
 
 	@Override
 	public boolean isFinished() {
-		return posesAmount>100;
+		return posesAmount > 100;
 	}
 
 }

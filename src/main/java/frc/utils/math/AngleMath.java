@@ -26,8 +26,9 @@ public class AngleMath {
 
 	public static Rotation2d getAngleAverageWrapped(Rotation2d... angles) {
 		try {
-			return new Rotation2d(Arrays.stream(angles).mapToDouble(Rotation2d::getSin).average().getAsDouble(),
-					Arrays.stream(angles).mapToDouble(Rotation2d::getCos).average().getAsDouble()
+			return new Rotation2d(
+				Arrays.stream(angles).mapToDouble(Rotation2d::getSin).average().getAsDouble(),
+				Arrays.stream(angles).mapToDouble(Rotation2d::getCos).average().getAsDouble()
 			);
 		} catch (Exception e) {
 			return Rotation2d.fromRadians(0);
@@ -35,7 +36,7 @@ public class AngleMath {
 	}
 
 	public static Rotation2d getAngleAverageWrapped(double sinSum, double cosSum, int posesAmount) {
-		return new Rotation2d(sinSum/posesAmount, cosSum/posesAmount);
+		return new Rotation2d(sinSum / posesAmount, cosSum / posesAmount);
 	}
 
 	public static Rotation3d getAngleAverageWrapped(Rotation3d... angles) {

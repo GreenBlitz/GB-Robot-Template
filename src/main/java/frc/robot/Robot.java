@@ -62,6 +62,7 @@ public class Robot {
         configRealArm.kG = 0.37;
         configRealArm.kV = 9.0000095367432;
         configRealArm.kA = 0.5209;
+		configRealArm.GravityType = GravityTypeValue.Arm_Cosine;
 
         configRealPivot.kP = 20;
         configRealPivot.kI = 0;
@@ -84,9 +85,7 @@ public class Robot {
         FeedbackConfigs feedbackConfigsPivot = new FeedbackConfigs();
 		feedbackConfigsPivot.RotorToSensorRatio = 1;
 		feedbackConfigsPivot.SensorToMechanismRatio = 21.43;
-
-
-
+		
 		arm = ArmBuilder.createDynamicMotionMagic(
 			"Arm/",
 			new TalonFXFollowerConfig(),
@@ -108,6 +107,7 @@ public class Robot {
 			Rotation2d.fromRotations(3),
 			Rotation2d.fromRotations(3)
 		);
+		
         pivot = ArmBuilder.create(
 			"Pivot/",
                 new TalonFXFollowerConfig(),
@@ -116,8 +116,8 @@ public class Robot {
                 feedbackConfigsPivot,
                 configRealPivot,
                 configPivot,
-                Rotation2d.fromDegrees(60),
-                Rotation2d.fromDegrees(30),
+                Rotation2d.fromDegrees(120),
+                Rotation2d.fromDegrees(-10),
                 40,
                 50,
                 0.001,

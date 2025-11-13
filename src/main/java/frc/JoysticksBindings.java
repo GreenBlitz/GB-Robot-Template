@@ -49,14 +49,12 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 //        usedJoystick.Y.onTrue(robot.getArm().getCommandsBuilder().setPower(0.5));
 		
-		usedJoystick.POV_LEFT.onTrue(robot.getPivot().getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(5)));
-		usedJoystick.POV_RIGHT.onTrue(robot.getPivot().getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(50)));
-		robot.getPivot().applyCalibrationBindings(usedJoystick,0.2);
-//        usedJoystick.A.onTrue(robot.getArm().getCommandsBuilder().setVoltage(5.0));
-//		usedJoystick.Y.onTrue(robot.getArm().getCommandsBuilder().setVoltage(0.0));
-//		usedJoystick.X.onTrue(robot.getArm().getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(0)));
-//		usedJoystick.B.onTrue(robot.getArm().getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(50)));
-//        usedJoystick.B.onTrue(robot.getArm().getCommandsBuilder().setPower(0));
+//		usedJoystick.POV_LEFT.onTrue(robot.getPivot().getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(5)));
+//		usedJoystick.POV_RIGHT.onTrue(robot.getPivot().getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(50)));
+//		robot.getPivot().applyCalibrationBindings(usedJoystick,0.2);
+		usedJoystick.POV_DOWN.onTrue(robot.getArm().getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(10),Rotation2d.fromRotations(0.5),Rotation2d.fromRotations(3),0));
+		usedJoystick.POV_UP.onTrue(robot.getArm().getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(160),Rotation2d.fromRotations(3),Rotation2d.fromRotations(0.5),0));
+		usedJoystick.POV_LEFT.onTrue(robot.getArm().getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(90)));
 		// bindings...
 	}
 

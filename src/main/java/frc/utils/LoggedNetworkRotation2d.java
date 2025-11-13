@@ -12,7 +12,7 @@ public class LoggedNetworkRotation2d extends LoggedNetworkInput {
 
 	private final String key;
 	private final DoubleEntry entry;
-	private Rotation2d defaultValue = Rotation2d.fromRotations(0);
+	private Rotation2d defaultValue = Rotation2d.fromDegrees(0);
 	private Rotation2d value;
 
 	public LoggedNetworkRotation2d(String key) {
@@ -34,7 +34,7 @@ public class LoggedNetworkRotation2d extends LoggedNetworkInput {
 	}
 
 	public void set(Rotation2d value) {
-		entry.set(value.getRotations());
+		entry.set(value.getDegrees());
 	}
 
 	public Rotation2d get() {

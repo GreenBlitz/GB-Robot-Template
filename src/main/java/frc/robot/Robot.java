@@ -47,23 +47,11 @@ public class Robot {
 		feedbackConfigs.RotorToSensorRatio = 450.0 / 7.0;
 		feedbackConfigs.SensorToMechanismRatio = 1;
 
-		arm = ArmBuilder.create(
+		arm = ArmBuilder.createDynamicMotionMagic(
                 "Arm/",
                 new TalonFXFollowerConfig(),
                 id,
-                new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(), true),
-			Rotation2d.fromRotations(3),
-			Rotation2d.fromRotations(3),
-			0,
-			feedbackConfigs,
-			config,
-			config,
-			40,
-			BusChain.ROBORIO,
-			50,
-            0.001,
-			InvertedValue.Clockwise_Positive
-		);
+                new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(), true),feedbackConfigs,config,config,40,50,0.001,0.3,Rotation2d.fromDegrees(-24 + -(16)).getRadians(),Rotation2d.fromDegrees(246 +  Rotation2d.fromDegrees(-16).getDegrees()).getRadians(),InvertedValue.Clockwise_Positive,0,Rotation2d.fromRotations(3), Rotation2d.fromRotations(3));
 
 	}
 

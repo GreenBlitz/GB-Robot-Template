@@ -22,10 +22,15 @@ import frc.utils.battery.BatteryUtil;
 public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
-	private FlyWheel flyWheel;
+	private final FlyWheel flyWheel;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
+		TalonFXFollowerConfig followerConfig = new TalonFXFollowerConfig();
+		followerConfig.followerIDs = new TalonFXFollowerConfig.TalonFXFollowerID[] {
+			new TalonFXFollowerConfig.TalonFXFollowerID("follower1", new Phoenix6DeviceID(2, BusChain.ROBORIO), false)};
+
+		this.flyWheel = FlyWheelBuilder.generate("flyWheel", new Phoenix6DeviceID(1, BusChain.ROBORIO), followerConfig);
 	}
 
 	public void periodic() {
@@ -37,11 +42,6 @@ public class Robot {
 	}
 
 	public FlyWheel getFlyWheel() {
-		TalonFXFollowerConfig followerConfig = new TalonFXFollowerConfig();
-		followerConfig.motorConfig = FlyWheelBuilder.buildConfig();
-		followerConfig.followerIDs = new TalonFXFollowerConfig.TalonFXFollowerID[] {
-			new TalonFXFollowerConfig.TalonFXFollowerID("follower1", new Phoenix6DeviceID(7, BusChain.ROBORIO), false)};
-		this.flyWheel = FlyWheelBuilder.generate("flyWheel", new Phoenix6DeviceID(1, BusChain.ROBORIO), followerConfig);
 		return flyWheel;
 	}
 

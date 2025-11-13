@@ -67,8 +67,8 @@ public class FlyWheel extends GBSubsystem {
 
 	@Override
 	protected void subsystemPeriodic() {
-		masterMotor.updateInputs(velocitySignal, voltageSignal);
 		masterMotor.updateSimulation();
+		masterMotor.updateInputs(velocitySignal, voltageSignal);
 		Logger.recordOutput(getLogPath() + "/targetVelocity", velocityRequest.getSetPoint());
 	}
 

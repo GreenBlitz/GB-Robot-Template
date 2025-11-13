@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonomousConstants;
-import frc.robot.subsystems.doubleInterpolation.ShooterInterpolations;
 import frc.utils.DriverStationUtil;
 import frc.utils.alerts.AlertManager;
 import frc.utils.auto.PathPlannerAutoWrapper;
@@ -40,10 +39,6 @@ public class RobotManager extends LoggedRobot {
 
 		this.roborioCycles = 0;
 		this.robot = new Robot();
-
-		Double d = 3.0;
-
-		Logger.recordOutput("dsd", ShooterInterpolations.flywheelInterpolation(() -> d));
 
 		createAutoReadyForConstructionChooser();
 		JoysticksBindings.configureBindings(robot);

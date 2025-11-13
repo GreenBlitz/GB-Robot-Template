@@ -51,19 +51,19 @@ public class Arm extends GBSubsystem {
 		return signals.voltageSignal().getLatestValue();
 	}
 
-    public double getCurrent() {
-        return signals.currentSignal().getLatestValue();
-    }
+	public double getCurrent() {
+		return signals.currentSignal().getLatestValue();
+	}
 
-    public Rotation2d getVelocity() {
+	public Rotation2d getVelocity() {
 		return signals.velocitySignal().getLatestValue();
 	}
 
-    public Rotation2d getPosition() {
-        return signals.positionSignal().getLatestValue();
-    }
+	public Rotation2d getPosition() {
+		return signals.positionSignal().getLatestValue();
+	}
 
-    public SysIdCalibrator getSysIdCalibrator() {
+	public SysIdCalibrator getSysIdCalibrator() {
 		return sysIdCalibrator;
 	}
 

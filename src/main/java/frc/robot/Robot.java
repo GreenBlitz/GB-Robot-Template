@@ -14,6 +14,7 @@ import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
+import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmBuilder;
 import frc.robot.subsystems.arm.DynamicMotionMagicArm;
 import frc.utils.auto.PathPlannerAutoWrapper;
@@ -29,29 +30,73 @@ import frc.utils.calibration.sysid.SysIdCalibrator;
 public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
-	private static final Slot0Configs config = new Slot0Configs();
+	private static final Slot0Configs configPivot = new Slot0Configs();
+	private static final Slot0Configs configArm = new Slot0Configs();
 	private final DynamicMotionMagicArm arm;
+	private final Arm pivot;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
-		config.kP = 70;
-		config.kI = 0;
-		config.kD = 0;
-		config.kS = 0;
-		config.kG = 0;
+		configArm.kP = 70;
+		configArm.kI = 0;
+		configArm.kD = 0;
+		configArm.kS = 0;
+		configArm.kG = 0;
 
+        configPivot.kP = 5;
+        configPivot.kI = 0;
+        configPivot.kD = 0;
+        configPivot.kG = 0;
+        configPivot.kS = 0;
+        configPivot.kV = 0;
+        configPivot.kA = 0;
 //        config.MotionMagic.withMotionMagicCruiseVelocity(3);
 //        config.MotionMagic.withMotionMagicAcceleration(3);
 		Phoenix6DeviceID id = new Phoenix6DeviceID(20);
-		FeedbackConfigs feedbackConfigs = new FeedbackConfigs();
-		feedbackConfigs.RotorToSensorRatio = 450.0 / 7.0;
-		feedbackConfigs.SensorToMechanismRatio = 1;
+		FeedbackConfigs feedbackConfigsArm = new FeedbackConfigs();
+		feedbackConfigsArm.RotorToSensorRatio = 450.0 / 7.0;
+		feedbackConfigsArm.SensorToMechanismRatio = 1;
+        FeedbackConfigs feedbackConfigsPivot = new FeedbackConfigs();
+		feedbackConfigsPivot.RotorToSensorRatio = 21.43;
+		feedbackConfigsPivot.SensorToMechanismRatio = 1;
+
+
 
 		arm = ArmBuilder.createDynamicMotionMagic(
-                "Arm/",
+			"Arm/",
+			new TalonFXFollowerConfig(),
+			id,
+			new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(), true),
+			feedbackConfigsArm,
+                configArm,
+                configArm,
+			40,
+			50,
+			0.001,
+			0.3,
+			Rotation2d.fromDegrees(-24 + -(16)).getRadians(),
+			Rotation2d.fromDegrees(246 + Rotation2d.fromDegrees(-16).getDegrees()).getRadians(),
+			InvertedValue.Clockwise_Positive,
+			0,
+			Rotation2d.fromRotations(3),
+			Rotation2d.fromRotations(3)
+		);
+        pivot = ArmBuilder.create(
+			"Pivot/",
                 new TalonFXFollowerConfig(),
-                id,
-                new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(), true),feedbackConfigs,config,config,40,50,0.001,0.3,Rotation2d.fromDegrees(-24 + -(16)).getRadians(),Rotation2d.fromDegrees(246 +  Rotation2d.fromDegrees(-16).getDegrees()).getRadians(),InvertedValue.Clockwise_Positive,0,Rotation2d.fromRotations(3), Rotation2d.fromRotations(3));
+                new Phoenix6DeviceID(5),
+                new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(), true),
+                feedbackConfigsPivot,
+                configPivot,
+                configPivot,
+                40,
+                50,
+                0.001,
+                0.359,
+                Rotation2d.fromDegrees(-33).getRadians(),
+                Rotation2d.fromDegrees(130).getRadians(),
+                InvertedValue.Clockwise_Positive,
+                0);
 
 	}
 
@@ -68,6 +113,9 @@ public class Robot {
 		return arm;
 	}
 
+    public Arm getPivot(){
+        return pivot;
+    }
 	public PathPlannerAutoWrapper getAutonomousCommand() {
 		return new PathPlannerAutoWrapper();
 	}

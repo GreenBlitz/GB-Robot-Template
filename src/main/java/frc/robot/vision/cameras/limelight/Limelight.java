@@ -94,11 +94,11 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 					if (detectedObjectFilter.apply(rawDetection)) {
 						pipeline.getDetectedObjectType(rawDetection.classId).ifPresent(objectType -> {
 							DetectedObjectObservation observation = ObjectDetectionMath.getDetectedObjectObservation(
-									robotRelativeCameraPose,
-									objectType,
-									Rotation2d.fromDegrees(rawDetection.txnc),
-									Rotation2d.fromDegrees(rawDetection.tync),
-									getTarget2dTimestampSeconds(target2dValues)
+								robotRelativeCameraPose,
+								objectType,
+								Rotation2d.fromDegrees(rawDetection.txnc),
+								Rotation2d.fromDegrees(rawDetection.tync),
+								getTarget2dTimestampSeconds(target2dValues)
 							);
 
 
@@ -115,14 +115,22 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	public void updateMT1() {
 		if (pipeline.isUsingMT()) {
 			mt1RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
-			mt1PoseObservation = new RobotPoseObservation(getEstimateTimestampSeconds(mt1RawData), robotRelativeCameraPose.relativeTo(LimelightHelpers.getBotPose3d(name)).toPose2d(), calculateMT1StdDevs.get());
+			mt1PoseObservation = new RobotPoseObservation(
+				getEstimateTimestampSeconds(mt1RawData),
+				robotRelativeCameraPose.relativeTo(LimelightHelpers.getBotPose3d(name)).toPose2d(),
+				calculateMT1StdDevs.get()
+			);
 		}
 	}
 
 	public void updateMT2() {
 		if (pipeline.isUsingMT()) {
 			mt2RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-			mt2PoseObservation = new RobotPoseObservation(getEstimateTimestampSeconds(mt2RawData), robotRelativeCameraPose.relativeTo(LimelightHelpers.getBotPose3d(name)).toPose2d(), calculateMT2StdDevs.get());
+			mt2PoseObservation = new RobotPoseObservation(
+				getEstimateTimestampSeconds(mt2RawData),
+				robotRelativeCameraPose.relativeTo(LimelightHelpers.getBotPose3d(name)).toPose2d(),
+				calculateMT2StdDevs.get()
+			);
 		}
 	}
 
@@ -173,17 +181,17 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	@Override
 	public void setRobotOrientation(Rotation3d robotOrientation) {
 		LimelightHelpers.SetRobotOrientation(
-				name,
-				Math.toDegrees(robotOrientation.getZ()),
-				0,
-				Math.toDegrees(robotOrientation.getY()),
-				0,
-				Math.toDegrees(robotOrientation.getX()),
-				0
+			name,
+			Math.toDegrees(robotOrientation.getZ()),
+			0,
+			Math.toDegrees(robotOrientation.getY()),
+			0,
+			Math.toDegrees(robotOrientation.getX()),
+			0
 		);
 	}
 
-	public void transformRobotRelativeCameraPose(Transform3d currentRobotRelativeCameraPose){
+	public void transformRobotRelativeCameraPose(Transform3d currentRobotRelativeCameraPose) {
 		robotRelativeCameraPose = originalRelativeCameraPose.transformBy(currentRobotRelativeCameraPose);
 	}
 
@@ -226,13 +234,13 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	private void setNetworkTablesRobotRelativeCameraPose(Pose3d robotRelativeCameraPose) {
 		LimelightHelpers.setCameraPose_RobotSpace(
-				name,
-				robotRelativeCameraPose.getX(),
-				robotRelativeCameraPose.getY(),
-				robotRelativeCameraPose.getZ(),
-				Math.toDegrees(robotRelativeCameraPose.getRotation().getX()),
-				Math.toDegrees(robotRelativeCameraPose.getRotation().getY()),
-				Math.toDegrees(robotRelativeCameraPose.getRotation().getZ())
+			name,
+			robotRelativeCameraPose.getX(),
+			robotRelativeCameraPose.getY(),
+			robotRelativeCameraPose.getZ(),
+			Math.toDegrees(robotRelativeCameraPose.getRotation().getX()),
+			Math.toDegrees(robotRelativeCameraPose.getRotation().getY()),
+			Math.toDegrees(robotRelativeCameraPose.getRotation().getZ())
 		);
 	}
 
@@ -245,7 +253,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	private static double getTarget2dTimestampSeconds(LimelightTarget2dValues target2dValues) {
 		return TimeUtil.getCurrentTimeSeconds()
-				- Conversions.milliSecondsToSeconds(target2dValues.targetLatencyMilliseconds() + target2dValues.captureLatencyMilliseconds());
+			- Conversions.milliSecondsToSeconds(target2dValues.targetLatencyMilliseconds() + target2dValues.captureLatencyMilliseconds());
 	}
 
 	private static boolean doesObservationExist(DetectedObjectObservation detectedObjectObservation) {

@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.hardware.phoenix6.Phoenix6Device;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
@@ -26,7 +27,7 @@ public class TalonFXRollerBuilder {
 
 	public static Roller createTalonFXMotorRoller(
 		String logPath,
-		Phoenix6DeviceID rotorID,
+		int rotorId,
 		double gearRatio,
 		int currentLimiting,
 		Rotation2d tolerance,
@@ -34,6 +35,7 @@ public class TalonFXRollerBuilder {
 		double kI,
 		double kD
 	) {
+		Phoenix6DeviceID rotorID = new Phoenix6DeviceID(rotorId);
 		SimpleMotorSimulation rollerSimulation = new SimpleMotorSimulation(
 			new DCMotorSim(LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60(1), 0.001, gearRatio), DCMotor.getKrakenX60(1))
 

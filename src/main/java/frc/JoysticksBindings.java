@@ -7,6 +7,7 @@ import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.subsystems.roller.Roller;
 import frc.robot.subsystems.roller.SparkMaxRollerBuilder;
+import frc.robot.subsystems.roller.TalonFXRollerBuilder;
 import frc.robot.subsystems.swerve.ChassisPowers;
 
 
@@ -48,15 +49,14 @@ public class JoysticksBindings {
 		}
 	}
 
-	private static Roller roller = SparkMaxRollerBuilder
-		.createSparkMaxMotorRoller("endEffector", 1, 12, 40, Rotation2d.fromDegrees(15), 5, 0, 0);
+	private static Roller roller = TalonFXRollerBuilder.createTalonFXMotorRoller("endEffector", 1, 12, 40, Rotation2d.fromDegrees(15), 5, 0, 0);
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		usedJoystick.A.onTrue(roller.getCommandsBuilder().setPower(0.1));
 		usedJoystick.X.onTrue(roller.getCommandsBuilder().setPower(() -> usedJoystick.getAxisValue(Axis.LEFT_Y)));
 		usedJoystick.B.onTrue(roller.getCommandsBuilder().setVoltage(12));
-		usedJoystick.Y.onTrue(roller.getCommandsBuilder().rollRotations(5));
+		usedJoystick.Y.onTrue(roller.getCommandsBuilder().rollRotationsDeferred(5));
 		usedJoystick.POV_UP.onTrue(roller.getCommandsBuilder().setBrake(true));
 		usedJoystick.POV_DOWN.onTrue(roller.getCommandsBuilder().setBrake(false));
 	}

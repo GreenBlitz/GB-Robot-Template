@@ -40,12 +40,13 @@ public class RollerCommandsBuilder extends GBCommandsBuilder {
 		return roller.asSubsystemCommand(new RunCommand(() -> roller.setPower(power)), "set power to " + power);
 	}
 
-	public Command rollRotations(double rotations) {
-		Rotation2d targetPosition = Rotation2d.fromRotations(rotations + roller.getPositio.getRotations());
-		return roller.asSubsystemCommand(
-			new DeferredCommand(() -> new RunCommand(() -> roller.goToPosition(targetPosition)), Set.of(roller)),
-			"rollRotations " + rotations
-		);
+	private Command rollRotations(double rotations) {
+		Rotation2d targetPosition = Rotation2d.fromRotations(rotations + roller.getPosition().getRotations());
+		return new RunCommand(() -> roller.goToPosition(targetPosition));
+	}
+
+	public Command rollRotationsDeferred(double rotations){
+		return roller.asSubsystemCommand( new DeferredCommand(()->rollRotations(rotations),Set.of(roller)),"rollRotations"+rotations);
 	}
 
 }

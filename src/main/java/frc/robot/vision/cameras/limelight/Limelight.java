@@ -23,11 +23,11 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	private final String name;
 	private final String logPath;
-	private final Pose3d originalRelativeCameraPose;
+	private final Pose3d robotRelativeCameraPose;
 	private final ArrayList<DetectedObjectObservation> detectedObjectObservations;
 
 	private LimelightTarget2dValues target2dValues;
-	private Pose3d robotRelativeCameraPose;
+
 	private RobotPoseObservation mt1PoseObservation;
 	private RobotPoseObservation mt2PoseObservation;
 
@@ -48,7 +48,6 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		this.logPath = logPathPrefix + "/" + name;
 
 		this.robotRelativeCameraPose = robotRelativeCameraPose;
-		this.originalRelativeCameraPose = robotRelativeCameraPose;
 		setNetworkTablesRobotRelativeCameraPose(new Pose3d());
 
 		this.detectedObjectObservations = new ArrayList<>();
@@ -115,14 +114,22 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	public void updateMT1() {
 		if (pipeline.isUsingMT()) {
 			mt1RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
-			mt1PoseObservation = new RobotPoseObservation(getEstimateTimestampSeconds(mt1RawData), robotRelativeCameraPose.relativeTo(LimelightHelpers.getBotPose3d(name)).toPose2d(), calculateMT1StdDevs.get());
+			mt1PoseObservation = new RobotPoseObservation(
+				getEstimateTimestampSeconds(mt1RawData),
+				robotRelativeCameraPose.relativeTo(LimelightHelpers.getBotPose3d(name)).toPose2d(),
+				calculateMT1StdDevs.get()
+			);
 		}
 	}
 
 	public void updateMT2() {
 		if (pipeline.isUsingMT()) {
 			mt2RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-			mt2PoseObservation = new RobotPoseObservation(getEstimateTimestampSeconds(mt2RawData), robotRelativeCameraPose.relativeTo(LimelightHelpers.getBotPose3d(name)).toPose2d(), calculateMT2StdDevs.get());
+			mt2PoseObservation = new RobotPoseObservation(
+				getEstimateTimestampSeconds(mt2RawData),
+				robotRelativeCameraPose.relativeTo(LimelightHelpers.getBotPose3d(name)).toPose2d(),
+				calculateMT2StdDevs.get()
+			);
 		}
 	}
 
@@ -184,7 +191,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	public void transformRobotRelativeCameraPose(Transform3d currentRobotRelativeCameraPose){
-		robotRelativeCameraPose = originalRelativeCameraPose.transformBy(currentRobotRelativeCameraPose);
+		robotRelativeCameraPose = original.transformBy(currentRobotRelativeCameraPose);
 	}
 
 	public void setPipeline(LimelightPipeline pipeline) {

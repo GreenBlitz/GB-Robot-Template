@@ -29,7 +29,11 @@ public class Robot {
 		BatteryUtil.scheduleLimiter();
 		TalonFXFollowerConfig followerConfig = new TalonFXFollowerConfig();
 		followerConfig.followerIDs = new TalonFXFollowerConfig.TalonFXFollowerID[] {
-			new TalonFXFollowerConfig.TalonFXFollowerID("flyWheelFollower", new Phoenix6DeviceID(Constants.FLY_WHEEL_FOLLOWER_ID, BusChain.ROBORIO), false)};
+			new TalonFXFollowerConfig.TalonFXFollowerID(
+				"flyWheelFollower",
+				new Phoenix6DeviceID(Constants.FLY_WHEEL_FOLLOWER_ID, BusChain.ROBORIO),
+				false
+			)};
 
 		this.flyWheel = FlyWheelBuilder.generate("flyWheel", new Phoenix6DeviceID(Constants.FLY_WHEEL_ID, BusChain.ROBORIO), followerConfig);
 	}

@@ -26,8 +26,12 @@ public class FlyWheelBuilder {
 	public static FlyWheel generate(String logPath, Phoenix6DeviceID motorID, TalonFXFollowerConfig talonFXFollowerConfig) {
 		SimpleMotorSimulation simulationMotor = new SimpleMotorSimulation(
 			new DCMotorSim(
-					LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(talonFXFollowerConfig.followerIDs.length), 0.000000001, Constants.ROTOR_TO_SENSOR_RATIO),
-					DCMotor.getKrakenX60Foc(talonFXFollowerConfig.followerIDs.length)
+				LinearSystemId.createDCMotorSystem(
+					DCMotor.getKrakenX60Foc(talonFXFollowerConfig.followerIDs.length),
+					0.000000001,
+					Constants.ROTOR_TO_SENSOR_RATIO
+				),
+				DCMotor.getKrakenX60Foc(talonFXFollowerConfig.followerIDs.length)
 			)
 		);
 
@@ -36,7 +40,7 @@ public class FlyWheelBuilder {
 		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder
 			.build(motor.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
-				.build(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
+			.build(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
 
 		Phoenix6Request<Rotation2d> velocityRequest = Phoenix6RequestBuilder.build(new VelocityVoltage(0), 0, true);
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), true);

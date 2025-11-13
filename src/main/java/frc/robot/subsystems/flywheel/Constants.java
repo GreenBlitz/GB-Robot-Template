@@ -12,5 +12,4 @@ public class Constants {
 	public final static int FLY_WHEEL_FOLLOWER_ID = 2;
 
 
-
 }

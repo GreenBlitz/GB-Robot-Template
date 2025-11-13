@@ -213,7 +213,7 @@ public class Robot {
 		limelightThreeGB.log();
 		headingEstimator.log();
 
-		limelightObjectDetector.transformRobotRelativeCameraPose(new Translation3d());
+		limelightObjectDetector.transformRobotRelativeCameraPose(new Transform3d());
 		limelightObjectDetector.updateObjectDetection();
 		limelightObjectDetector.log();
 

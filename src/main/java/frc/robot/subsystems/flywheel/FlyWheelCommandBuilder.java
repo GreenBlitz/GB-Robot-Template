@@ -4,6 +4,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 
+import java.util.function.Supplier;
+
 public class FlyWheelCommandBuilder {
 
 	private final FlyWheel flyWheel;
@@ -17,12 +19,12 @@ public class FlyWheelCommandBuilder {
 		return new RunCommand(() -> flyWheel.setVelocity(velocity), flyWheel);
 	}
 
-	public Command stop() {
-		return new RunCommand(flyWheel::stop, flyWheel);
+	public Command setVelocityAsSupplier(Supplier<Rotation2d> velocity) {
+		return new RunCommand(() -> flyWheel.setVelocity((velocity.get())), flyWheel);
 	}
 
-	public Command setBrake() {
-		return new RunCommand(() -> flyWheel.setBrake(true), flyWheel);
+	public Command stop() {
+		return new RunCommand(flyWheel::stop, flyWheel);
 	}
 
 }

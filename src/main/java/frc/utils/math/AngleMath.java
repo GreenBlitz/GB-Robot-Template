@@ -72,7 +72,6 @@ public class AngleMath {
 			transformByInGlobalSpace.getTranslation().rotateBy(toTransform.getRotation().unaryMinus()),
 			transformByInGlobalSpace.getRotation()
 		);
-		System.out.println("AAA " + transformByInToTransformSpace.getRotation().getZ());
 		return toTransform.transformBy(new Transform3d(new Pose3d(), transformByInToTransformSpace));
 	}
 

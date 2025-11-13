@@ -16,15 +16,22 @@ public class FlyWheelCommandBuilder {
 	}
 
 	public Command setVelocity(Rotation2d velocity) {
-		return new RunCommand(() -> flyWheel.setVelocity(velocity), flyWheel);
+		return flyWheel.asSubsystemCommand(
+			new RunCommand(() -> flyWheel.setVelocity(velocity), flyWheel),
+			"set velocity to " + velocity.getRotations() + " rotations"
+		);
 	}
 
 	public Command setVelocityAsSupplier(Supplier<Rotation2d> velocity) {
-		return new RunCommand(() -> flyWheel.setVelocity((velocity.get())), flyWheel);
+		return flyWheel.asSubsystemCommand(
+			new RunCommand(() -> flyWheel.setVelocity(velocity.get()), flyWheel),
+			"setVelocityAsSupplier " + velocity + " rotations"
+
+		);
 	}
 
 	public Command stop() {
-		return new RunCommand(flyWheel::stop, flyWheel);
+		return flyWheel.asSubsystemCommand(new RunCommand(() -> flyWheel.stop(), flyWheel), "stop ");
 	}
 
 }

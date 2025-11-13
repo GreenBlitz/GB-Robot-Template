@@ -6,6 +6,7 @@ import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.math.ToleranceMath;
+import org.littletonrobotics.junction.Logger;
 
 public class FlyWheel extends GBSubsystem {
 
@@ -16,6 +17,8 @@ public class FlyWheel extends GBSubsystem {
 
 	private final InputSignal<Double> voltageSignal;
 	private final InputSignal<Rotation2d> velocitySignal;
+
+	private final FlyWheelCommandBuilder flyWheelCommandBuilder;
 
 	public FlyWheel(
 		String logPath,
@@ -31,6 +34,11 @@ public class FlyWheel extends GBSubsystem {
 		this.velocitySignal = velocitySignal;
 		this.voltageSignal = voltageSignal;
 		this.masterMotor = masterMotor;
+		this.flyWheelCommandBuilder = new FlyWheelCommandBuilder(this);
+	}
+
+	public FlyWheelCommandBuilder getCommandBuilder() {
+		return flyWheelCommandBuilder;
 	}
 
 	public void setVoltage(double voltage) {
@@ -60,6 +68,8 @@ public class FlyWheel extends GBSubsystem {
 	@Override
 	protected void subsystemPeriodic() {
 		masterMotor.updateInputs(velocitySignal, voltageSignal);
+		masterMotor.updateSimulation();
+		Logger.recordOutput(getLogPath() + "/targetVelocity", velocityRequest.getSetPoint());
 	}
 
 }

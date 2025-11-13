@@ -10,6 +10,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonomousConstants;
+import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
+import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
+import frc.robot.subsystems.flywheel.FlyWheel;
+import frc.robot.subsystems.flywheel.FlyWheelBuilder;
 import frc.utils.DriverStationUtil;
 import frc.utils.alerts.AlertManager;
 import frc.utils.auto.PathPlannerAutoWrapper;
@@ -30,6 +35,8 @@ public class RobotManager extends LoggedRobot {
 	private final Robot robot;
 	private PathPlannerAutoWrapper autonomousCommand;
 	private int roborioCycles;
+	private FlyWheel flyWheel;
+
 
 	public RobotManager() {
 		DriverStation.silenceJoystickConnectionWarning(true);
@@ -39,6 +46,8 @@ public class RobotManager extends LoggedRobot {
 
 		this.roborioCycles = 0;
 		this.robot = new Robot();
+		this.flyWheel = FlyWheelBuilder.generate("flyWheel", new Phoenix6DeviceID(1, BusChain.ROBORIO), new TalonFXFollowerConfig());
+
 
 		createAutoReadyForConstructionChooser();
 		JoysticksBindings.configureBindings(robot);

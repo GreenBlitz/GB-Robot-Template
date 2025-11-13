@@ -14,6 +14,10 @@ public class DynamicMotionMagicArmCommandBuilder extends ArmCommandBuilder {
 		this.arm = arm;
 	}
 
+    public Command stayInPlace() {
+        return arm.asSubsystemCommand(new InitExecuteCommand(arm::stayInPlace, () -> {}), "Stay in place");
+    }
+
 	@Override
 	public Command setTargetPosition(Rotation2d position) {
 		return arm

@@ -21,7 +21,7 @@ public class ShooterInterpolations {
 		InterpolationMap.interpolatorForRotation2d(),
 		Map.of()
 	);
-
+a
 	public static Rotation2d hoodInterpolation(Supplier<Double> distanceFromTower) {
 		return HOOD_INTERPOLATION_MAP.get(distanceFromTower.get());
 	}

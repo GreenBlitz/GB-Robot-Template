@@ -116,9 +116,9 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		if (pipeline.isUsingMT()) {
 			mt1RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
 			mt1PoseObservation = new RobotPoseObservation(
-				getEstimateTimestampSeconds(mt1RawData),
-				robotRelativeCameraPose.relativeTo(LimelightHelpers.getBotPose3d(name)).toPose2d(),
-				calculateMT1StdDevs.get()
+					getEstimateTimestampSeconds(mt1RawData),
+					robotRelativeCameraPose.relativeTo(LimelightHelpers.getBotPose3d(name)).toPose2d(),
+					calculateMT1StdDevs.get()
 			);
 		}
 	}
@@ -127,9 +127,9 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		if (pipeline.isUsingMT()) {
 			mt2RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
 			mt2PoseObservation = new RobotPoseObservation(
-				getEstimateTimestampSeconds(mt2RawData),
-				robotRelativeCameraPose.relativeTo(LimelightHelpers.getBotPose3d(name)).toPose2d(),
-				calculateMT2StdDevs.get()
+					getEstimateTimestampSeconds(mt2RawData),
+					robotRelativeCameraPose.relativeTo(LimelightHelpers.getBotPose3d(name)).toPose2d(),
+					calculateMT2StdDevs.get()
 			);
 		}
 	}

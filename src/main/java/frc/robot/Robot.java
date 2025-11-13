@@ -30,7 +30,7 @@ public class Robot {
 		followerConfig.followerIDs = new TalonFXFollowerConfig.TalonFXFollowerID[] {
 			new TalonFXFollowerConfig.TalonFXFollowerID("follower1", new Phoenix6DeviceID(2, BusChain.ROBORIO), false)};
 
-		this.flyWheel = FlyWheelBuilder.generate("flyWheel", new Phoenix6DeviceID(1, BusChain.ROBORIO), followerConfig);
+		this.flyWheel = FlyWheelBuilder.generate("flyWheel", new Phoenix6DeviceID(3, BusChain.ROBORIO), followerConfig);
 	}
 
 	public void periodic() {

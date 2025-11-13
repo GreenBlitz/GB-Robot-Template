@@ -30,11 +30,11 @@ public class LoggedNetworkRotation2d extends LoggedNetworkInput {
 
 	public void setDefault(Rotation2d defaultValue) {
 		this.defaultValue = defaultValue;
-		entry.set(entry.get(defaultValue.getRadians()));
+		entry.set(entry.get(defaultValue.getDegrees()));
 	}
 
 	public void set(Rotation2d value) {
-		entry.set(value.getRadians());
+		entry.set(value.getRotations());
 	}
 
 	public Rotation2d get() {
@@ -55,7 +55,7 @@ public class LoggedNetworkRotation2d extends LoggedNetworkInput {
 
 	public void periodic() {
 		if (!Logger.hasReplaySource()) {
-			value = Rotation2d.fromRadians(entry.get());
+			value = Rotation2d.fromDegrees(entry.get());
 		}
 		Logger.processInputs(prefix, inputs);
 	}

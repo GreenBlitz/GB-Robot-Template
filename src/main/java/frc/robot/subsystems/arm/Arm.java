@@ -19,33 +19,30 @@ public class Arm extends GBSubsystem {
 	private final IFeedForwardRequest armPositionRequest;
 	private final SysIdCalibrator sysIdCalibrator;
 	private final double kG;
-	private final ArmCommandBuilder armCommandBuilder;
-
+	private final ArmCommandBuilder commandBuilder;
 
 	public Arm(
 		String logPath,
 		ControllableMotor motor,
 		ArmSignals signals,
-		IRequest<Double> armVoltageRequest,
-		IFeedForwardRequest armPositionRequest,
-		SysIdCalibrator.SysIdConfigInfo config,
+		IRequest<Double> voltageRequest,
+		IFeedForwardRequest positionRequest,
 		double kG
 	) {
 		super(logPath);
 		this.motor = motor;
 		this.signals = signals;
-		this.armVoltageRequest = armVoltageRequest;
-		this.armPositionRequest = armPositionRequest;
+		this.armVoltageRequest = voltageRequest;
+		this.armPositionRequest = positionRequest;
 		this.kG = kG;
-		sysIdCalibrator = new SysIdCalibrator(config, this, this::setVoltage);
-		armCommandBuilder = new ArmCommandBuilder(this);
-		setDefaultCommand(armCommandBuilder.stayInPlace());
+		sysIdCalibrator = new SysIdCalibrator(motor.getSysidConfigInfo(), this, this::setVoltage);
+		commandBuilder = new ArmCommandBuilder(this);
+		setDefaultCommand(commandBuilder.stayInPlace());
 	}
 
 	public ArmCommandBuilder getCommandsBuilder() {
-		return armCommandBuilder;
+		return commandBuilder;
 	}
-
 
 	public double getVoltage() {
 		return signals.voltageSignal().getLatestValue();
@@ -127,14 +124,14 @@ public class Arm extends GBSubsystem {
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, double maxCalibrationPower) {
-		joystick.A.onTrue(new InstantCommand(() -> armCommandBuilder.setIsSubsystemRunningIndependently(true)));
-		joystick.B.onTrue(new InstantCommand(() -> armCommandBuilder.setIsSubsystemRunningIndependently(false)));
+		joystick.A.onTrue(new InstantCommand(() -> commandBuilder.setIsSubsystemRunningIndependently(true)));
+		joystick.B.onTrue(new InstantCommand(() -> commandBuilder.setIsSubsystemRunningIndependently(false)));
 
 		// Calibrate kG using phoenix tuner by setting the voltage
 
 		// Check limits
 		joystick.R1.whileTrue(
-			armCommandBuilder
+			commandBuilder
 				.setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * maxCalibrationPower + (getKgVoltage() / BatteryUtil.getCurrentVoltage()))
 		);
 

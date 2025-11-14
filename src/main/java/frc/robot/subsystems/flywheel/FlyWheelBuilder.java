@@ -28,7 +28,7 @@ public class FlyWheelBuilder {
 			new DCMotorSim(
 				LinearSystemId.createDCMotorSystem(
 					DCMotor.getKrakenX60Foc(talonFXFollowerConfig.followerIDs.length),
-					Constants.JKG_METERS_SQUARED,
+					Constants.MOMENT_OF_INERTIA,
 					Constants.ROTOR_TO_SENSOR_RATIO
 				),
 				DCMotor.getKrakenX60Foc(talonFXFollowerConfig.followerIDs.length)
@@ -54,7 +54,8 @@ public class FlyWheelBuilder {
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
 		configuration.CurrentLimits.StatorCurrentLimit = Constants.CURRENT_LIMITS;
 		configuration.CurrentLimits.StatorCurrentLimitEnable = true;
-		configuration.Feedback.SensorToMechanismRatio = Constants.ROTOR_TO_SENSOR_RATIO;
+		configuration.Feedback.SensorToMechanismRatio = Constants.SENSOR_TO_MECHANISM_RATIO;
+		configuration.Feedback.RotorToSensorRatio = Constants.ROTOR_TO_SENSOR_RATIO;
 		configuration.Slot0.kP = Constants.KP;
 		configuration.Slot0.kI = Constants.KI;
 		configuration.Slot0.kD = Constants.KD;

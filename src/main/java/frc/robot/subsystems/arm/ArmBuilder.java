@@ -30,7 +30,7 @@ import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public class ArmBuilder {
 
-	public static DynamicMotionMagicArm createDynamicMotionMagic(
+	public static DynamicMotionMagicArm createDynamicMotionMagicArm(
 		String logPath,
 		TalonFXFollowerConfig talonFXFollowerConfig,
 		Phoenix6DeviceID deviceID,
@@ -96,7 +96,7 @@ public class ArmBuilder {
 		);
 	}
 
-	public static Arm create(
+	public static Arm createMotionMagicArm(
 		String logPath,
 		TalonFXFollowerConfig talonFXFollowerConfig,
 		Phoenix6DeviceID deviceID,
@@ -145,7 +145,7 @@ public class ArmBuilder {
 		return new Arm(logPath, motor, signals, voltageRequest, positionRequest, sysIdCalibratorConfigInfo, configuration.Slot0.kG);
 	}
 
-    public static Arm create(
+    public static Arm createArm(
 		String logPath,
 		TalonFXFollowerConfig talonFXFollowerConfig,
 		Phoenix6DeviceID deviceID,

@@ -115,23 +115,27 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	public void updateMT1() {
 		if (pipeline.isUsingMT()) {
 			mt1RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
-			mt1PoseObservation = new RobotPoseObservation(getEstimateTimestampSeconds(mt1RawData), getRobotPose(), calculateMT1StdDevs.get());
+			mt1PoseObservation = new RobotPoseObservation(
+					getEstimateTimestampSeconds(mt1RawData),
+					getRobotPose(),
+					calculateMT1StdDevs.get()
+			);
 		}
 	}
 
 	public void updateMT2() {
 		if (pipeline.isUsingMT()) {
 			mt2RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-			mt2PoseObservation = new RobotPoseObservation(getEstimateTimestampSeconds(mt2RawData), getRobotPose(), calculateMT2StdDevs.get());
+			mt2PoseObservation = new RobotPoseObservation(
+					getEstimateTimestampSeconds(mt2RawData),
+					getRobotPose(),
+					calculateMT2StdDevs.get()
+			);
 		}
 	}
 
 	public String getName() {
 		return name;
-	}
-
-	public Pose3d getRobotRelativeCameraPose() {
-		return robotRelativeCameraPose;
 	}
 
 	@Override
@@ -181,10 +185,6 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 			Math.toDegrees(robotOrientation.getX()),
 			0
 		);
-	}
-
-	public void transformRobotRelativeCameraPose(Transform3d currentRobotRelativeCameraPose) {
-		robotRelativeCameraPose = originalRelativeCameraPose.transformBy(currentRobotRelativeCameraPose);
 	}
 
 	public void setPipeline(LimelightPipeline pipeline) {

@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.subsystems.GBCommandsBuilder;
+import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -16,12 +17,12 @@ public class ArmCommandBuilder extends GBCommandsBuilder {
 		this.arm = arm;
 	}
 
-	public Command stayInPlace() {
-		return arm.asSubsystemCommand(new RunCommand(arm::stayInPlace, arm), "Stay in place");
-	}
+    public Command stayInPlace() {
+        return arm.asSubsystemCommand(new InitExecuteCommand(arm::stayInPlace, () -> {}), "Stay in place");
+    }
 
 	public Command setPower(double power) {
-		return arm.asSubsystemCommand(new RunCommand(() -> arm.setPower(power), arm), "Set power to: " + power);
+		return arm.asSubsystemCommand(new RunCommand(() -> arm.setPower(power)), "Set power to: " + power);
 	}
 
 	public Command setPower(DoubleSupplier powerSupplier) {
@@ -29,19 +30,19 @@ public class ArmCommandBuilder extends GBCommandsBuilder {
 	}
 
 	public Command setTargetPosition(Rotation2d target) {
-		return arm.asSubsystemCommand(new RunCommand(() -> arm.setTargetPosition(target), arm), "Set target position to: " + target);
+		return arm.asSubsystemCommand(new RunCommand(() -> arm.setTargetPosition(target)), "Set target position to: " + target);
 	}
 
 	public Command setTargetPosition(Supplier<Rotation2d> target) {
-		return arm.asSubsystemCommand(new RunCommand(() -> arm.setTargetPosition(target.get()), arm), "Set target with Supplier");
+		return arm.asSubsystemCommand(new RunCommand(() -> arm.setTargetPosition(target.get())), "Set target with Supplier");
 	}
 
 	public Command setVoltage(Double voltage) {
-		return arm.asSubsystemCommand(new RunCommand(() -> arm.setVoltage(voltage), arm), "Set voltage to: " + voltage);
+		return arm.asSubsystemCommand(new RunCommand(() -> arm.setVoltage(voltage)), "Set voltage to: " + voltage);
 	}
 
 	public Command setVoltage(DoubleSupplier voltage) {
-		return arm.asSubsystemCommand(new RunCommand(() -> arm.setVoltage(voltage.getAsDouble()), arm), "Set voltage by supplier");
+		return arm.asSubsystemCommand(new RunCommand(() -> arm.setVoltage(voltage.getAsDouble())), "Set voltage by supplier");
 	}
 
 }

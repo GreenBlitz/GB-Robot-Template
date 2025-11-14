@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.utils.utilcommands.InitExecuteCommand;
 
-
 public class DynamicMotionMagicArmCommandBuilder extends ArmCommandBuilder {
 
 	private final DynamicMotionMagicArm arm;
@@ -14,16 +13,11 @@ public class DynamicMotionMagicArmCommandBuilder extends ArmCommandBuilder {
 		this.arm = arm;
 	}
 
-    public Command stayInPlace() {
-        return arm.asSubsystemCommand(new InitExecuteCommand(arm::stayInPlace, () -> {}), "Stay in place");
-    }
-
 	@Override
 	public Command setTargetPosition(Rotation2d position) {
 		return arm
 			.asSubsystemCommand(new InitExecuteCommand(() -> arm.setTargetPosition(position), () -> {}), "Set target position to: " + position);
 	}
-
 
 	public Command setTargetPosition(
 		Rotation2d position,

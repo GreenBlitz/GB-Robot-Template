@@ -13,7 +13,6 @@ public class DynamicMotionMagicArm extends Arm {
 	private final Rotation2d defaultDynamicMotionVelocity;
 	private final DynamicMotionMagicArmCommandBuilder dynamicMotionMagicCommandBuilder;
 
-
 	public DynamicMotionMagicArm(
 		String logPath,
 		ControllableMotor arm,
@@ -59,6 +58,5 @@ public class DynamicMotionMagicArm extends Arm {
 		Logger.recordOutput(getLogPath() + "DynamicMotionMagicAcceleration/", motionMagicRequest.getMaxAccelerationRotation2dPerSecondSquared());
 		Logger.recordOutput(getLogPath() + "DynamicMotionMagicVelocity/", motionMagicRequest.getMaxVelocityRotation2dPerSecond());
 	}
-
 
 }

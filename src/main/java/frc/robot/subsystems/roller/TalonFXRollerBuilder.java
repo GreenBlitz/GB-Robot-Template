@@ -29,7 +29,7 @@ public class TalonFXRollerBuilder {
 		String logPath,
 		int rotorId,
 		double gearRatio,
-		int currentLimiting,
+		int currentLimit,
 		Rotation2d tolerance,
 		double kP,
 		double kI,
@@ -37,30 +37,32 @@ public class TalonFXRollerBuilder {
 	) {
 		Phoenix6DeviceID rotorID = new Phoenix6DeviceID(rotorId);
 		SimpleMotorSimulation rollerSimulation = new SimpleMotorSimulation(
-			new DCMotorSim(LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60(1), 0.001, gearRatio), DCMotor.getKrakenX60(1))
+			new DCMotorSim(LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60(RollerConstants.NUMBER_OF_MOTORS), RollerConstants.J_KG_METERS_SQUARED, gearRatio), DCMotor.getKrakenX60(RollerConstants.NUMBER_OF_MOTORS))
 
 		);
 		TalonFXMotor roller = new TalonFXMotor(logPath, rotorID, new TalonFXFollowerConfig(), new SysIdRoutine.Config(), rollerSimulation);
-		roller.applyConfiguration(configRoller(gearRatio, currentLimiting, kP, kI, kD));
+
+		roller.applyConfiguration(configRoller(gearRatio, currentLimit, kP, kI, kD));
+
 		Phoenix6LatencySignal latencySignal = Phoenix6SignalBuilder.build(
-			roller.getDevice().getPosition(),
+				roller.getDevice().getPosition(),
 			roller.getDevice().getVelocity(),
 			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			AngleUnit.ROTATIONS,
 			BusChain.ROBORIO
 		);
-		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder
-			.build(roller.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
-		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
-			.build(roller.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
+		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder.build(roller.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
+		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder.build(roller.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
+
 		Phoenix6Request<Rotation2d> PositionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0), 0, true);
 		Phoenix6Request<Double> VoltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), true);
-		return new Roller(logPath, roller, voltageSignal, currentSignal, latencySignal, VoltageRequest, PositionRequest, tolerance);
+
+		return new Roller(logPath, roller, voltageSignal, latencySignal, currentSignal, VoltageRequest, PositionRequest, tolerance);
 	}
 
-	public static TalonFXConfiguration configRoller(double gearRatio, int currentLimiting, double kP, double kI, double kD) {
+	public static TalonFXConfiguration configRoller(double gearRatio, int currentLimit, double kP, double kI, double kD) {
 		TalonFXConfiguration configs = new TalonFXConfiguration();
-		configs.CurrentLimits.StatorCurrentLimit = currentLimiting;
+		configs.CurrentLimits.StatorCurrentLimit = currentLimit;
 		configs.CurrentLimits.StatorCurrentLimitEnable = true;
 		configs.Feedback.SensorToMechanismRatio = gearRatio;
 		configs.Voltage.PeakForwardVoltage = BatteryUtil.DEFAULT_VOLTAGE;

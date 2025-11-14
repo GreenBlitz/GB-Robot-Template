@@ -29,9 +29,6 @@ public class RollerCommandsBuilder extends GBCommandsBuilder {
 		return roller.asSubsystemCommand(new RunCommand(() -> roller.stop()), "stop roller");
 	}
 
-	public Command setBrake(boolean brake) {
-		return roller.asSubsystemCommand(new InstantCommand(() -> roller.setBrake(brake)), "set brake");
-	}
 
 	public Command setPower(Supplier<Double> supplier) {
 		return roller.asSubsystemCommand(new RunCommand(() -> roller.setPower(supplier.get())), "set power with supplier");

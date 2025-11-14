@@ -25,7 +25,7 @@ public class SparkMaxRollerBuilder {
 		String logPath,
 		int id,
 		double gearRatio,
-		int currentLimiting,
+		int currentLimit,
 		Rotation2d tolerance,
 		double kP,
 		double kI,
@@ -35,7 +35,7 @@ public class SparkMaxRollerBuilder {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(rotorID);
 
 		SimpleMotorSimulation rollerSimulation = new SimpleMotorSimulation(
-			new DCMotorSim(LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), 0.001, gearRatio), DCMotor.getNEO(1))
+			new DCMotorSim(LinearSystemId.createDCMotorSystem(DCMotor.getNEO(RollerConstants.NUMBER_OF_MOTORS), RollerConstants.J_KG_METERS_SQUARED, gearRatio), DCMotor.getNEO(RollerConstants.NUMBER_OF_MOTORS))
 		);
 
 		BrushlessSparkMAXMotor roller = new BrushlessSparkMAXMotor(
@@ -43,22 +43,24 @@ public class SparkMaxRollerBuilder {
 			sparkMaxWrapper,
 			rollerSimulation,
 			new SysIdRoutine.Config()
-
 		);
+		Supplier<Double> positionSupplier = () -> sparkMaxWrapper.getEncoder().getPosition();
+
+		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal("position", positionSupplier, AngleUnit.ROTATIONS);
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
 		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("current", sparkMaxWrapper::getOutputCurrent);
-		Supplier<Double> positionSupplier = () -> sparkMaxWrapper.getEncoder().getPosition();
-		SuppliedAngleSignal latencySignal = new SuppliedAngleSignal("angle", positionSupplier, AngleUnit.ROTATIONS);
-		roller.applyConfiguration(configRoller(gearRatio, currentLimiting, kP, kI, kD));
+
+		roller.applyConfiguration(configRoller(gearRatio, currentLimit, kP, kI, kD));
+
 		SparkMaxRequest<Double> VoltageRequest = SparkMaxRequestBuilder.build(0.0, SparkBase.ControlType.kVoltage, 0);
-		SparkMaxRequest<Rotation2d> AngleRequest = SparkMaxRequestBuilder
-			.build(Rotation2d.fromRotations(0), SparkBase.ControlType.kPosition, 0);
-		return new Roller(logPath, roller, voltageSignal, currentSignal, latencySignal, VoltageRequest,AngleRequest, tolerance);
+		SparkMaxRequest<Rotation2d> AngleRequest = SparkMaxRequestBuilder.build(Rotation2d.fromRotations(0), SparkBase.ControlType.kPosition, 0);
+
+		return new Roller(logPath, roller, voltageSignal, positionSignal, currentSignal,  VoltageRequest,AngleRequest, tolerance);
 	}
 
-	private static SparkMaxConfiguration configRoller(double gearRatio, int currentLimiting, double kP, double kI, double kD) {
+	private static SparkMaxConfiguration configRoller(double gearRatio, int currentLimit, double kP, double kI, double kD) {
 		SparkMaxConfiguration configs = new SparkMaxConfiguration();
-		configs.getSparkMaxConfig().smartCurrentLimit(currentLimiting);
+		configs.getSparkMaxConfig().smartCurrentLimit(currentLimit);
 		configs.getSparkMaxConfig().encoder.positionConversionFactor(gearRatio);
 		configs.getSparkMaxConfig().encoder.velocityConversionFactor(gearRatio);
 		configs.getSparkMaxConfig().closedLoop.pid(kP, kI, kD);

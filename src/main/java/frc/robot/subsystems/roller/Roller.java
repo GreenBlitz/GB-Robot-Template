@@ -10,23 +10,21 @@ import org.littletonrobotics.junction.Logger;
 import java.util.function.BooleanSupplier;
 
 public class Roller extends GBSubsystem {
-
+	private final String logPath;
 	private final ControllableMotor roller;
 	private final InputSignal<Double> voltageSignal;
-	private final InputSignal<Double> currentSignal;
 	private final InputSignal<Rotation2d> positionSignal;
-	private final RollerCommandsBuilder commandsBuilder = new RollerCommandsBuilder(this);
+	private final InputSignal<Double> currentSignal;
 	private final IRequest<Double> VoltageRequest;
 	private final IRequest<Rotation2d> PositionRequest;
 	private final Rotation2d tolerance;
-	private final String logPath;
-
+	private final RollerCommandsBuilder commandsBuilder = new RollerCommandsBuilder(this);
 	public Roller(
 		String logPath,
 		ControllableMotor roller,
 		InputSignal<Double> voltageSignal,
-		InputSignal<Double> currentSignal,
 		InputSignal<Rotation2d> positionSignal,
+		InputSignal<Double> currentSignal,
 		IRequest<Double> VoltageRequest,
 		IRequest<Rotation2d> PositionRequest,
 		Rotation2d tolerance
@@ -40,6 +38,9 @@ public class Roller extends GBSubsystem {
 		this.PositionRequest = PositionRequest;
 		this.tolerance = tolerance;
 		this.logPath = logPath;
+	}
+	public RollerCommandsBuilder getCommandsBuilder() {
+		return commandsBuilder;
 	}
 
 	public void setVoltage(double voltage) {
@@ -70,11 +71,6 @@ public class Roller extends GBSubsystem {
 		return positionSignal.getLatestValue();
 	}
 
-
-	public RollerCommandsBuilder getCommandsBuilder() {
-		return commandsBuilder;
-	}
-
 	public boolean isAtPosition(Rotation2d position) {
 		return (positionSignal.isNear(position, tolerance));
 	}
@@ -88,8 +84,9 @@ public class Roller extends GBSubsystem {
 		}
 		return false;
 	}
-	public void logAll(){
-		Logger.recordOutput(logPath + "angle",positionSignal.getLatestValue());
+
+	public void log(){
+		Logger.recordOutput(logPath + "position",positionSignal.getLatestValue());
 		Logger.recordOutput(logPath + "current",currentSignal.getLatestValue());
 		Logger.recordOutput(logPath + "voltage",voltageSignal.getLatestValue());
 	}
@@ -97,7 +94,7 @@ public class Roller extends GBSubsystem {
 	@Override
 	public void subsystemPeriodic() {
 		roller.updateSimulation();
-		logAll();
+		log();
 		roller.updateInputs(voltageSignal, currentSignal, positionSignal);
 	}
 

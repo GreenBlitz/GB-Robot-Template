@@ -87,7 +87,7 @@ public class Robot {
 		feedbackConfigsPivot.SensorToMechanismRatio = 21.43;
 		
 		arm = ArmBuilder.createDynamicMotionMagic(
-			"Arm/",
+			"Subsystem/Arm",
 			new TalonFXFollowerConfig(),
 			armId,
 			new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(), true),
@@ -107,7 +107,7 @@ public class Robot {
 		);
 		
         pivot = ArmBuilder.create(
-			"Pivot/",
+			"Subsystem/Pivot",
                 new TalonFXFollowerConfig(),
                 new Phoenix6DeviceID(15,BusChain.ROBORIO),
                 new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(), true),

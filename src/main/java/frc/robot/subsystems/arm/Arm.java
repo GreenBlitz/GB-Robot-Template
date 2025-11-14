@@ -91,7 +91,7 @@ public class Arm extends GBSubsystem {
 	}
 
 	public void log() {
-		Logger.recordOutput(getLogPath() + "PositionTarget/", armPositionRequest.getSetPoint());
+		Logger.recordOutput(getLogPath() + "/PositionTarget", armPositionRequest.getSetPoint());
 	}
 
 	public void setVoltage(Double voltage) {

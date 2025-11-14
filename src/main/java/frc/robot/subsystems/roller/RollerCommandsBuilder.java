@@ -45,9 +45,6 @@ public class RollerCommandsBuilder extends GBCommandsBuilder {
 		Rotation2d targetPosition = Rotation2d.fromRotations(rotations + roller.getPosition().getRotations());
 		double finalVoltage = Math.abs(voltage);
 		return new RunCommand(() ->{ roller.setVoltage(finalVoltage);
-				Logger.recordOutput("target voltage", voltage);
-				Logger.recordOutput("target position",targetPosition);
-				Logger.recordOutput("is at pos",roller.isPastPositionSupplier(targetPosition).getAsBoolean());
 	}
 		).until(roller.isPastPositionSupplier(targetPosition));
 	}
@@ -67,3 +64,4 @@ public class RollerCommandsBuilder extends GBCommandsBuilder {
 	}
 
 }
+

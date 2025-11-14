@@ -48,17 +48,9 @@ public class JoysticksBindings {
 		}
 	}
 
-	private static Roller roller = SparkMaxRollerBuilder.createSparkMaxMotorRoller("endEffector", 5, 25.0 / 6.0, 40, Rotation2d.fromDegrees(15), 5, 0, 0);
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		usedJoystick.A.onTrue(roller.getCommandsBuilder().setPower(0.1));
-		usedJoystick.X.whileTrue(roller.getCommandsBuilder().setPower(() -> usedJoystick.getAxisValue(Axis.LEFT_Y)));
-		usedJoystick.B.onTrue(roller.getCommandsBuilder().setVoltage(12));
-		usedJoystick.Y.onTrue(roller.getCommandsBuilder().rollRotationsForwardsDeferred(6,7));
-		usedJoystick.POV_UP.onTrue(roller.getCommandsBuilder().setBrake(true));
-		usedJoystick.POV_DOWN.onTrue(roller.getCommandsBuilder().setBrake(false));
-
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

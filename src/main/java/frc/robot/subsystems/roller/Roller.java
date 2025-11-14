@@ -81,6 +81,7 @@ public class Roller extends GBSubsystem {
 	public BooleanSupplier isPastPositionSupplier(Rotation2d position) {
 		return () -> positionSignal.isGreater(position);
 	}
+
 	public boolean isPastPosition(Rotation2d position) {
 		if (!isAtPosition(position)) {
 			return Math.abs(position.getDegrees() - positionSignal.getLatestValue().getDegrees()) < tolerance.getDegrees();

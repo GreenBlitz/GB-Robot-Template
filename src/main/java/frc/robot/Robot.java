@@ -100,9 +100,7 @@ public class Robot {
             (int)RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			0.001,
 			0.3,
-			Rotation2d.fromDegrees(-24 -16).getRadians(),
-			Rotation2d.fromDegrees(246-16).getRadians(),
-			InvertedValue.Clockwise_Positive,
+			true,
 			0,
 			Rotation2d.fromRotations(3),
 			Rotation2d.fromRotations(3)
@@ -122,9 +120,7 @@ public class Robot {
                 50,
                 0.001,
                 0.359,
-                Rotation2d.fromDegrees(-33).getRadians(),
-                Rotation2d.fromDegrees(130).getRadians(),
-                InvertedValue.CounterClockwise_Positive,
+                true,
                 0);
 		pivot.setPosition(Rotation2d.fromDegrees(130));
 	}

@@ -109,10 +109,6 @@ public class Arm extends GBSubsystem {
 		motor.resetPosition(targetPosition);
 	}
 
-    public void setPosition(Rotation2d targetPosition) {
-        motor.resetPosition(targetPosition);
-    }
-
 	public void setPower(double power) {
 		motor.setPower(power);
 	}

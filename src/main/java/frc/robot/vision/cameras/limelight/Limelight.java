@@ -115,22 +115,14 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	public void updateMT1() {
 		if (pipeline.isUsingMT()) {
 			mt1RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
-			mt1PoseObservation = new RobotPoseObservation(
-					getEstimateTimestampSeconds(mt1RawData),
-					getRobotPose(),
-					calculateMT1StdDevs.get()
-			);
+			mt1PoseObservation = new RobotPoseObservation(getEstimateTimestampSeconds(mt1RawData), getRobotPose(), calculateMT1StdDevs.get());
 		}
 	}
 
 	public void updateMT2() {
 		if (pipeline.isUsingMT()) {
 			mt2RawData = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-			mt2PoseObservation = new RobotPoseObservation(
-					getEstimateTimestampSeconds(mt2RawData),
-					getRobotPose(),
-					calculateMT2StdDevs.get()
-			);
+			mt2PoseObservation = new RobotPoseObservation(getEstimateTimestampSeconds(mt2RawData), getRobotPose(), calculateMT2StdDevs.get());
 		}
 	}
 
@@ -191,7 +183,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		);
 	}
 
-	public void transformRobotRelativeCameraPose(Transform3d currentRobotRelativeCameraPose){
+	public void transformRobotRelativeCameraPose(Transform3d currentRobotRelativeCameraPose) {
 		robotRelativeCameraPose = originalRelativeCameraPose.transformBy(currentRobotRelativeCameraPose);
 	}
 
@@ -244,8 +236,8 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		);
 	}
 
-	private Pose2d getRobotPose(){
-		return LimelightHelpers.getBotPose3d(name).transformBy(new Transform3d(new Pose3d(), robotRelativeCameraPose).inverse()).toPose2d();
+	private Pose2d getRobotPose() {
+		return (LimelightHelpers.getBotPose3d(name).transformBy(new Transform3d(new Pose3d(), robotRelativeCameraPose).inverse())).toPose2d();
 	}
 
 	protected static double getEstimateTimestampSeconds(LimelightHelpers.PoseEstimate poseEstimate) {

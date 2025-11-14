@@ -91,7 +91,7 @@ public class Arm extends GBSubsystem {
 	}
 
 	public void log() {
-		Logger.recordOutput(getLogPath() + "PositionTarget/", armPositionRequest.getSetPoint());
+		Logger.recordOutput(getLogPath() + "/PositionTarget", armPositionRequest.getSetPoint());
 	}
 
 	public void setVoltage(Double voltage) {
@@ -108,6 +108,10 @@ public class Arm extends GBSubsystem {
 	public void setPosition(Rotation2d targetPosition) {
 		motor.resetPosition(targetPosition);
 	}
+
+    public void setPosition(Rotation2d targetPosition) {
+        motor.resetPosition(targetPosition);
+    }
 
 	public void setPower(double power) {
 		motor.setPower(power);

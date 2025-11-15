@@ -2,13 +2,12 @@ package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.*;
-import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
 
 
 public class DynamicMotionMagicArm extends Arm {
 
-	private final IDynamicMotionMagicRequest motionMagicRequest;
+	private final IDynamicMotionMagicRequest dynamicMotionMagicRequest;
 	private final Rotation2d defaultDynamicMotionAcceleration;
 	private final Rotation2d defaultDynamicMotionVelocity;
 	private final DynamicMotionMagicArmCommandBuilder dynamicMotionMagicCommandBuilder;
@@ -22,42 +21,40 @@ public class DynamicMotionMagicArm extends Arm {
 		IDynamicMotionMagicRequest motionMagicRequest,
 		Rotation2d defaultMotionMagicAcceleration,
 		Rotation2d defaultMotionMagicVelocity,
-		SysIdCalibrator.SysIdConfigInfo configInfo,
 		double kG
 	) {
-		super(logPath, arm, signals, armVoltageRequest, motionMagicRequest, configInfo, kG);
-		this.motionMagicRequest = motionMagicRequest;
+		super(logPath, arm, signals, armVoltageRequest, motionMagicRequest, kG);
+		this.dynamicMotionMagicRequest = motionMagicRequest;
 		this.defaultDynamicMotionAcceleration = defaultMotionMagicAcceleration;
 		this.defaultDynamicMotionVelocity = defaultMotionMagicVelocity;
 		this.dynamicMotionMagicCommandBuilder = new DynamicMotionMagicArmCommandBuilder(this);
-        setDefaultCommand(getCommandsBuilder().stayInPlace());
+		setDefaultCommand(getCommandsBuilder().stayInPlace());
 	}
 
 	public DynamicMotionMagicArmCommandBuilder getCommandsBuilder() {
 		return dynamicMotionMagicCommandBuilder;
 	}
 
-	public void setTargetPosition(Rotation2d target, Rotation2d acceleration, Rotation2d velocity, double arbitraryFeedForward) {
-		motionMagicRequest.withSetPoint(target);
-		motionMagicRequest.withMaxAccelerationRotation2dPerSecondSquared(acceleration);
-		motionMagicRequest.withMaxVelocityRotation2dPerSecond(velocity);
-		motionMagicRequest.withArbitraryFeedForward(arbitraryFeedForward);
-		motor.applyRequest(motionMagicRequest);
+	public void setTargetPosition(Rotation2d target, Rotation2d acceleration, Rotation2d velocity) {
+		dynamicMotionMagicRequest.withSetPoint(target);
+		dynamicMotionMagicRequest.withMaxAccelerationRotation2dPerSecondSquared(acceleration);
+		dynamicMotionMagicRequest.withMaxVelocityRotation2dPerSecond(velocity);
+		motor.applyRequest(dynamicMotionMagicRequest);
 	}
 
 	@Override
 	public void setTargetPosition(Rotation2d target) {
-		motionMagicRequest.withSetPoint(target);
-		motionMagicRequest.withMaxAccelerationRotation2dPerSecondSquared(defaultDynamicMotionAcceleration);
-		motionMagicRequest.withMaxVelocityRotation2dPerSecond(defaultDynamicMotionVelocity);
-		motor.applyRequest(motionMagicRequest);
+		setTargetPosition(target, defaultDynamicMotionAcceleration, defaultDynamicMotionVelocity);
 	}
 
 	@Override
 	public void log() {
-		Logger.recordOutput(getLogPath() + "/PositionTarget", motionMagicRequest.getSetPoint());
-		Logger.recordOutput(getLogPath() + "/DynamicMotionMagicAcceleration", motionMagicRequest.getMaxAccelerationRotation2dPerSecondSquared());
-		Logger.recordOutput(getLogPath() + "/DynamicMotionMagicVelocity", motionMagicRequest.getMaxVelocityRotation2dPerSecond());
+		super.log();
+		Logger.recordOutput(
+			getLogPath() + "/DynamicMotionMagicAcceleration",
+			dynamicMotionMagicRequest.getMaxAccelerationRotation2dPerSecondSquared()
+		);
+		Logger.recordOutput(getLogPath() + "/DynamicMotionMagicVelocity", dynamicMotionMagicRequest.getMaxVelocityRotation2dPerSecond());
 	}
 
 

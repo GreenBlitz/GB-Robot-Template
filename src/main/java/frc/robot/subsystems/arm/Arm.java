@@ -15,52 +15,49 @@ public class Arm extends GBSubsystem {
 
 	protected final ControllableMotor motor;
 	private final ArmSignals signals;
-	private final IRequest<Double> armVoltageRequest;
-	private final IFeedForwardRequest armPositionRequest;
+	private final IRequest<Double> voltageRequest;
+	private final IFeedForwardRequest positionRequest;
 	private final SysIdCalibrator sysIdCalibrator;
 	private final double kG;
-	private final ArmCommandBuilder armCommandBuilder;
-
+	private final ArmCommandBuilder commandBuilder;
 
 	public Arm(
 		String logPath,
 		ControllableMotor motor,
 		ArmSignals signals,
-		IRequest<Double> armVoltageRequest,
-		IFeedForwardRequest armPositionRequest,
-		SysIdCalibrator.SysIdConfigInfo config,
+		IRequest<Double> voltageRequest,
+		IFeedForwardRequest positionRequest,
 		double kG
 	) {
 		super(logPath);
 		this.motor = motor;
 		this.signals = signals;
-		this.armVoltageRequest = armVoltageRequest;
-		this.armPositionRequest = armPositionRequest;
+		this.voltageRequest = voltageRequest;
+		this.positionRequest = positionRequest;
 		this.kG = kG;
-		sysIdCalibrator = new SysIdCalibrator(config, this, this::setVoltage);
-		armCommandBuilder = new ArmCommandBuilder(this);
-		setDefaultCommand(armCommandBuilder.stayInPlace());
+		sysIdCalibrator = new SysIdCalibrator(motor.getSysidConfigInfo(), this, this::setVoltage);
+		commandBuilder = new ArmCommandBuilder(this);
+		setDefaultCommand(commandBuilder.stayInPlace());
 	}
 
 	public ArmCommandBuilder getCommandsBuilder() {
-		return armCommandBuilder;
+		return commandBuilder;
 	}
 
-
 	public double getVoltage() {
-		return signals.voltageSignal().getLatestValue();
+		return signals.voltage().getLatestValue();
 	}
 
 	public double getCurrent() {
-		return signals.currentSignal().getLatestValue();
+		return signals.current().getLatestValue();
 	}
 
 	public Rotation2d getVelocity() {
-		return signals.velocitySignal().getLatestValue();
+		return signals.velocity().getLatestValue();
 	}
 
 	public Rotation2d getPosition() {
-		return signals.positionSignal().getLatestValue();
+		return signals.position().getLatestValue();
 	}
 
 	public SysIdCalibrator getSysIdCalibrator() {
@@ -68,15 +65,15 @@ public class Arm extends GBSubsystem {
 	}
 
 	public boolean isAtPosition(Rotation2d targetPosition, Rotation2d tolerance) {
-		return signals.positionSignal().isNear(targetPosition, tolerance);
+		return signals.position().isNear(targetPosition, tolerance);
 	}
 
 	public boolean isPastPosition(Rotation2d position) {
-		return signals.positionSignal().isGreater(position);
+		return signals.position().isGreater(position);
 	}
 
 	public boolean isBehindPosition(Rotation2d position) {
-		return signals.positionSignal().isLess(position);
+		return signals.position().isLess(position);
 	}
 
 	@Override
@@ -87,15 +84,16 @@ public class Arm extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		motor.updateInputs(signals.voltageSignal(), signals.currentSignal(), signals.velocitySignal(), signals.positionSignal());
+		motor.updateInputs(signals.voltage(), signals.current(), signals.velocity(), signals.position());
 	}
 
 	public void log() {
-		Logger.recordOutput(getLogPath() + "/PositionTarget", armPositionRequest.getSetPoint());
+		Logger.recordOutput(getLogPath() + "/PositionTarget", positionRequest.getSetPoint());
+		Logger.recordOutput(getLogPath() + "/ArbitraryFeedForward", positionRequest.getArbitraryFeedForward());
 	}
 
 	public void setVoltage(Double voltage) {
-		motor.applyRequest(armVoltageRequest.withSetPoint(voltage));
+		motor.applyRequest(voltageRequest.withSetPoint(voltage));
 	}
 
 	public void setBrake(boolean brake) {
@@ -103,8 +101,9 @@ public class Arm extends GBSubsystem {
 	}
 
 	public void setTargetPosition(Rotation2d targetPosition) {
-		motor.applyRequest(armPositionRequest.withSetPoint(targetPosition));
+		motor.applyRequest(positionRequest.withSetPoint(targetPosition));
 	}
+
 	public void setPosition(Rotation2d targetPosition) {
 		motor.resetPosition(targetPosition);
 	}
@@ -114,11 +113,11 @@ public class Arm extends GBSubsystem {
 	}
 
 	public void setFeedForward(double arbitraryFeedForward) {
-		armPositionRequest.withArbitraryFeedForward(arbitraryFeedForward);
+		positionRequest.withArbitraryFeedForward(arbitraryFeedForward);
 	}
 
 	protected void stayInPlace() {
-		setTargetPosition(signals.positionSignal().getLatestValue());
+		setTargetPosition(signals.position().getLatestValue());
 	}
 
 	private double getKgVoltage() {
@@ -126,14 +125,14 @@ public class Arm extends GBSubsystem {
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, double maxCalibrationPower) {
-		joystick.A.onTrue(new InstantCommand(() -> armCommandBuilder.setIsSubsystemRunningIndependently(true)));
-		joystick.B.onTrue(new InstantCommand(() -> armCommandBuilder.setIsSubsystemRunningIndependently(false)));
+		joystick.POV_DOWN.onTrue(new InstantCommand(() -> commandBuilder.setIsSubsystemRunningIndependently(true)));
+		joystick.POV_UP.onTrue(new InstantCommand(() -> commandBuilder.setIsSubsystemRunningIndependently(false)));
 
 		// Calibrate kG using phoenix tuner by setting the voltage
 
 		// Check limits
 		joystick.R1.whileTrue(
-			armCommandBuilder
+			commandBuilder
 				.setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * maxCalibrationPower + (getKgVoltage() / BatteryUtil.getCurrentVoltage()))
 		);
 

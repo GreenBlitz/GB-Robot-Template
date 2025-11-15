@@ -17,9 +17,9 @@ public class ArmCommandBuilder extends GBCommandsBuilder {
 		this.arm = arm;
 	}
 
-    public Command stayInPlace() {
-        return arm.asSubsystemCommand(new InitExecuteCommand(arm::stayInPlace, () -> {}), "Stay in place");
-    }
+	public Command stayInPlace() {
+		return arm.asSubsystemCommand(new InitExecuteCommand(arm::stayInPlace, () -> {}), "Stay in place");
+	}
 
 	public Command setPower(double power) {
 		return arm.asSubsystemCommand(new RunCommand(() -> arm.setPower(power)), "Set power to: " + power);

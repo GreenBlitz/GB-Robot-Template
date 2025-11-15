@@ -3,6 +3,7 @@ package frc.robot.hardware.signal;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.utils.TimedValue;
 import frc.utils.math.ToleranceMath;
+import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.LogTable;
 
 public abstract class DoubleSignal implements InputSignal<Double> {
@@ -69,6 +70,7 @@ public abstract class DoubleSignal implements InputSignal<Double> {
 	@Override
 	public void fromLog(LogTable table) {
 		timedValue.setValue(table.get(name, 0.0));
+		timedValue.setTimestamp(TimeUtil.getCurrentTimeSeconds());
 	}
 
 	public Double getAndUpdateValue() {

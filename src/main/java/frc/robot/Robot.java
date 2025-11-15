@@ -72,7 +72,7 @@ public class Robot {
         configRealPivot.kV = 0;
         configRealPivot.kA = 0;
 		configRealPivot.GravityType = GravityTypeValue.Arm_Cosine;
-		
+
 //        config.MotionMagic.withMotionMagicCruiseVelocity(3);
 //        config.MotionMagic.withMotionMagicAcceleration(3);
 		Phoenix6DeviceID armId = new Phoenix6DeviceID(20, BusChain.Super);
@@ -81,11 +81,11 @@ public class Robot {
 		feedbackConfigsArm.SensorToMechanismRatio = 1;
 		feedbackConfigsArm.FeedbackRemoteSensorID = 20;
 		feedbackConfigsArm.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-		
+
         FeedbackConfigs feedbackConfigsPivot = new FeedbackConfigs();
 		feedbackConfigsPivot.RotorToSensorRatio = 1;
 		feedbackConfigsPivot.SensorToMechanismRatio = 21.43;
-		
+
 		arm = ArmBuilder.createDynamicMotionMagic(
 			"Subsystem/Arm",
 			new TalonFXFollowerConfig(),
@@ -105,7 +105,7 @@ public class Robot {
 			Rotation2d.fromRotations(3),
 			Rotation2d.fromRotations(3)
 		);
-		
+
         pivot = ArmBuilder.create(
 			"Subsystem/Pivot",
                 new TalonFXFollowerConfig(),
@@ -124,7 +124,6 @@ public class Robot {
                 0);
 		pivot.setPosition(Rotation2d.fromDegrees(130));
 	}
-
 
 	public void periodic() {
 		BusChain.refreshAll();

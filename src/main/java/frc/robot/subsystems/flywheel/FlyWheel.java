@@ -1,6 +1,7 @@
 package frc.robot.subsystems.flywheel;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.joysticks.SmartJoystick;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
@@ -10,13 +11,14 @@ import org.littletonrobotics.junction.Logger;
 
 public class FlyWheel extends GBSubsystem {
 
-	private final ControllableMotor masterMotor;
+	private final ControllableMotor motor;
 
 	private final IRequest<Rotation2d> velocityRequest;
 	private final IRequest<Double> voltageRequest;
 
 	private final InputSignal<Rotation2d> velocitySignal;
 	private final InputSignal<Double> voltageSignal;
+	private final InputSignal<Double> currentSignal;
 
 	private final FlyWheelCommandBuilder flyWheelCommandBuilder;
 
@@ -26,14 +28,16 @@ public class FlyWheel extends GBSubsystem {
 		IRequest<Double> voltageRequest,
 		InputSignal<Rotation2d> velocitySignal,
 		InputSignal<Double> voltageSignal,
-		ControllableMotor masterMotor
+		InputSignal<Double> currentSignal,
+		ControllableMotor motor
 	) {
 		super(logPath);
 		this.velocityRequest = velocityRequest;
 		this.voltageRequest = voltageRequest;
 		this.velocitySignal = velocitySignal;
 		this.voltageSignal = voltageSignal;
-		this.masterMotor = masterMotor;
+		this.currentSignal = currentSignal;
+		this.motor = motor;
 		this.flyWheelCommandBuilder = new FlyWheelCommandBuilder(this);
 	}
 
@@ -41,12 +45,12 @@ public class FlyWheel extends GBSubsystem {
 		return flyWheelCommandBuilder;
 	}
 
-	public void setVelocity(Rotation2d velocity) {
-		masterMotor.applyRequest(velocityRequest.withSetPoint(velocity));
+	public void setTargetVelocity(Rotation2d velocity) {
+		motor.applyRequest(velocityRequest.withSetPoint(velocity));
 	}
 
 	public void setVoltage(double voltage) {
-		masterMotor.applyRequest(voltageRequest.withSetPoint(voltage));
+		motor.applyRequest(voltageRequest.withSetPoint(voltage));
 	}
 
 
@@ -54,23 +58,36 @@ public class FlyWheel extends GBSubsystem {
 		return velocitySignal.getLatestValue();
 	}
 
-	public boolean isAtVelocity(Rotation2d chekVelocity) {
-		return ToleranceMath.isNear(getVelocity().getRotations(), chekVelocity.getRotations(), Constants.VELOCITY_TOLERANCE);
+	public double getVoltage() {
+		return voltageSignal.getLatestValue();
+	}
+
+	public double getCurrent() {
+		return currentSignal.getLatestValue();
+	}
+
+	public boolean isAtVelocity(Rotation2d targetVelocity, double tolerance) {
+		return ToleranceMath.isNear(getVelocity().getRotations(), targetVelocity.getRotations(), tolerance);
 	}
 
 	public void stop() {
-		masterMotor.stop();
+		motor.stop();
 	}
 
 	public void setBrake(boolean brake) {
-		masterMotor.setBrake(brake);
+		motor.setBrake(brake);
 	}
 
 	@Override
 	protected void subsystemPeriodic() {
-		masterMotor.updateSimulation();
-		masterMotor.updateInputs(velocitySignal, voltageSignal);
+		motor.updateSimulation();
+		motor.updateInputs(velocitySignal, voltageSignal, currentSignal);
 		Logger.recordOutput(getLogPath() + "/targetVelocity", velocityRequest.getSetPoint());
+	}
+
+	public void applyCalibrationsBindings(SmartJoystick joystick) {
+		joystick.A.onTrue(getCommandBuilder().setTargetVelocity(Rotation2d.fromRotations(1)));
+		joystick.A.onTrue(getCommandBuilder().setTargetVelocity(Rotation2d.fromRotations(2)));
 	}
 
 }

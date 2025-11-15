@@ -7,7 +7,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
-import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
 import frc.robot.subsystems.flywheel.FlyWheel;
 import frc.robot.subsystems.flywheel.FlyWheelBuilder;
 import frc.utils.auto.PathPlannerAutoWrapper;
@@ -25,11 +24,8 @@ public class Robot {
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
-		TalonFXFollowerConfig followerConfig = new TalonFXFollowerConfig();
-		followerConfig.followerIDs = new TalonFXFollowerConfig.TalonFXFollowerID[] {
-			new TalonFXFollowerConfig.TalonFXFollowerID("flyWheelFollower", IDs.TalonFXIDs.FLY_WHEEL_FOLLOWER_ID, false)};
-
-		this.flyWheel = FlyWheelBuilder.generate("flyWheel", IDs.TalonFXIDs.FLY_WHEEL_ID, followerConfig);
+		this.flyWheel = FlyWheelBuilder
+			.generate("Subsystems/FlyWheel", IDs.TalonFXIDs.FLY_WHEEL_ID, FlyWheelBuilder.buildFollowerConfig(), BusChain.ROBORIO);
 	}
 
 	public void periodic() {

@@ -47,7 +47,7 @@ public class RollerCommandsBuilder extends GBCommandsBuilder {
 	}
 
 	public Command rollRotationsForwardsDeferred(double rotations,double voltage){
-		return roller.asSubsystemCommand( new DeferredCommand(()-> rollRotationsForwardsAtVoltage(rotations,voltage),Set.of(roller)),"rollRotations"+rotations);
+		return roller.asSubsystemCommand( new DeferredCommand(()-> rollRotationsForwardsAtVoltage(rotations,voltage),Set.of(roller)), "Roll " + rotations + " rotations");
 	}
 
 	private Command rollRotationsBackwardsAtVoltage(double rotations, double voltage) {
@@ -57,7 +57,7 @@ public class RollerCommandsBuilder extends GBCommandsBuilder {
 	}
 
 	public Command rollRotationsBackwardsDeferred(double rotations,double voltage){
-		return roller.asSubsystemCommand( new DeferredCommand(()-> rollRotationsBackwardsAtVoltage(rotations,voltage),Set.of(roller)),"rollRotations"+rotations);
+		return roller.asSubsystemCommand( new DeferredCommand(()-> rollRotationsBackwardsAtVoltage(rotations,voltage),Set.of(roller)), "Roll " + rotations + " rotations backwards");
 	}
 
 }

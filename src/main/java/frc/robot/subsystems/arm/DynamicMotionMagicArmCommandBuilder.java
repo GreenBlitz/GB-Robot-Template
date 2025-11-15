@@ -35,7 +35,12 @@ public class DynamicMotionMagicArmCommandBuilder extends ArmCommandBuilder {
 				),
 				() -> {}
 			),
-			"Set target position with " + maxAccelerationRotation2dPerSecondSquared + " acceleration per Second Squared and with " + maxVelocityRotation2dPerSecond + " velocity per second to:" + position
+			"Set target position with "
+				+ maxAccelerationRotation2dPerSecondSquared
+				+ " acceleration per Second Squared and with "
+				+ maxVelocityRotation2dPerSecond
+				+ " velocity per second to:"
+				+ position
 		);
 	}
 

@@ -27,7 +27,7 @@ public class DynamicMotionMagicArm extends Arm {
 		this.defaultDynamicMotionAcceleration = defaultMotionMagicAcceleration;
 		this.defaultDynamicMotionVelocity = defaultMotionMagicVelocity;
 		this.dynamicMotionMagicCommandBuilder = new DynamicMotionMagicArmCommandBuilder(this);
-        setDefaultCommand(getCommandsBuilder().stayInPlace());
+		setDefaultCommand(getCommandsBuilder().stayInPlace());
 	}
 
 	public DynamicMotionMagicArmCommandBuilder getCommandsBuilder() {
@@ -53,7 +53,10 @@ public class DynamicMotionMagicArm extends Arm {
 	@Override
 	public void log() {
 		Logger.recordOutput(getLogPath() + "/PositionTarget", dynamicMotionMagicRequest.getSetPoint());
-		Logger.recordOutput(getLogPath() + "/DynamicMotionMagicAcceleration", dynamicMotionMagicRequest.getMaxAccelerationRotation2dPerSecondSquared());
+		Logger.recordOutput(
+			getLogPath() + "/DynamicMotionMagicAcceleration",
+			dynamicMotionMagicRequest.getMaxAccelerationRotation2dPerSecondSquared()
+		);
 		Logger.recordOutput(getLogPath() + "/DynamicMotionMagicVelocity", dynamicMotionMagicRequest.getMaxVelocityRotation2dPerSecond());
 	}
 

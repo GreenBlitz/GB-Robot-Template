@@ -48,19 +48,19 @@ public class Arm extends GBSubsystem {
 		return signals.voltage().getLatestValue();
 	}
 
-    public double getCurrent() {
-        return signals.current().getLatestValue();
-    }
+	public double getCurrent() {
+		return signals.current().getLatestValue();
+	}
 
-    public Rotation2d getVelocity() {
+	public Rotation2d getVelocity() {
 		return signals.velocity().getLatestValue();
 	}
 
-    public Rotation2d getPosition() {
-        return signals.position().getLatestValue();
-    }
+	public Rotation2d getPosition() {
+		return signals.position().getLatestValue();
+	}
 
-    public SysIdCalibrator getSysIdCalibrator() {
+	public SysIdCalibrator getSysIdCalibrator() {
 		return sysIdCalibrator;
 	}
 
@@ -103,9 +103,9 @@ public class Arm extends GBSubsystem {
 		motor.applyRequest(positionRequest.withSetPoint(targetPosition));
 	}
 
-    public void setPosition(Rotation2d targetPosition) {
-        motor.resetPosition(targetPosition);
-    }
+	public void setPosition(Rotation2d targetPosition) {
+		motor.resetPosition(targetPosition);
+	}
 
 	public void setPower(double power) {
 		motor.setPower(power);

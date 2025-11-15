@@ -74,6 +74,7 @@ public class Roller extends GBSubsystem {
 	public boolean isAtPosition(Rotation2d position) {
 		return (positionSignal.isNear(position, tolerance));
 	}
+	
 	public BooleanSupplier isPastPositionSupplier(Rotation2d position) {
 		return () -> positionSignal.isGreater(position);
 	}

@@ -1,6 +1,8 @@
 package frc.robot.vision.cameras.limelight;
 
 import edu.wpi.first.math.geometry.*;
+import frc.RobotManager;
+import frc.robot.Robot;
 import frc.robot.vision.DetectedObjectObservation;
 import frc.robot.vision.RobotPoseObservation;
 import frc.robot.vision.cameras.limelight.inputs.LimelightInputsSet;
@@ -11,7 +13,9 @@ import frc.utils.Conversions;
 import frc.utils.LimelightHelpers;
 import frc.utils.filter.Filter;
 import frc.utils.math.StandardDeviations2D;
+import frc.utils.math.ToleranceMath;
 import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
@@ -101,10 +105,30 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		if (pipeline.isUsingMT()) {
 			inputs.mt1Inputs().mtRawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
 			Logger.processInputs(logPath + "/mt1Inputs", inputs.mt1Inputs());
+            if (Robot.ROBOT_TYPE.isReplay() && Robot.isOutputReplay) {
+                LogTable logTable = RobotManager.logTable.getSubtable("RealOutputs/" + logPath);
+                LimelightHelpers.PoseEstimate logRawData = logTable.get("megaTag1RawData", new LimelightHelpers.PoseEstimate());
+                if (ToleranceMath.isNear(inputs.mt1Inputs().mtRawData.timestampSeconds(), logRawData.timestampSeconds(), 0.005)) {
+                    inputs.mt1Inputs().mtRawData = new LimelightHelpers.PoseEstimate(
+                            new Pose2d(),
+                            inputs.mt1Inputs().mtRawData.timestampSeconds(),
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            new LimelightHelpers.RawFiducial[0],
+                            false
+                    );
+                } else {
+                    inputs.mt1Inputs().mtRawData = logRawData;
+                }
+            }
 
 			mt1PoseObservation = new RobotPoseObservation(getMT1RawData().timestampSeconds(), getMT1RawData().pose(), calculateMT1StdDevs.get());
 			if (doesObservationExist(mt1PoseObservation)) {
 				Logger.recordOutput(logPath + "/megaTag1PoseObservation", mt1PoseObservation);
+				Logger.recordOutput(logPath + "/megaTag1RawData", inputs.mt1Inputs().mtRawData);
 			}
 		}
 	}
@@ -113,10 +137,30 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		if (pipeline.isUsingMT()) {
 			inputs.mt2Inputs().mtRawData = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
 			Logger.processInputs(logPath + "/mt2Inputs", inputs.mt2Inputs());
+            if (Robot.ROBOT_TYPE.isReplay() && Robot.isOutputReplay) {
+                LogTable logTable = RobotManager.logTable.getSubtable("RealOutputs/" + logPath);
+                LimelightHelpers.PoseEstimate logRawData = logTable.get("megaTag2RawData", new LimelightHelpers.PoseEstimate());
+                if (ToleranceMath.isNear(inputs.mt2Inputs().mtRawData.timestampSeconds(), logRawData.timestampSeconds(), 0.005)) {
+                    inputs.mt2Inputs().mtRawData = new LimelightHelpers.PoseEstimate(
+                            new Pose2d(),
+                            inputs.mt2Inputs().mtRawData.timestampSeconds(),
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            new LimelightHelpers.RawFiducial[0],
+                            false
+                    );
+                } else {
+                    inputs.mt2Inputs().mtRawData = logRawData;
+                }
+            }
 
 			mt2PoseObservation = new RobotPoseObservation(getMT2RawData().timestampSeconds(), getMT2RawData().pose(), calculateMT2StdDevs.get());
 			if (doesObservationExist(mt2PoseObservation)) {
 				Logger.recordOutput(logPath + "/megaTag2PoseObservation", mt2PoseObservation);
+				Logger.recordOutput(logPath + "/megaTag2RawData", inputs.mt2Inputs().mtRawData);
 			}
 		}
 	}

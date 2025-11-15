@@ -17,6 +17,7 @@ import frc.utils.auto.PathPlannerUtil;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.logger.LoggerFactory;
 import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 
@@ -27,6 +28,7 @@ import org.littletonrobotics.junction.Logger;
  */
 public class RobotManager extends LoggedRobot {
 
+    public static final LogTable logTable = new LogTable(0);
 	private final Robot robot;
 	private PathPlannerAutoWrapper autonomousCommand;
 	private int roborioCycles;
@@ -87,6 +89,7 @@ public class RobotManager extends LoggedRobot {
 	public void robotPeriodic() {
 		updateTimeRelatedData(); // Better to be first
 		JoysticksBindings.updateChassisDriverInputs();
+        LoggerFactory.replaySource.updateTable(logTable);
 		robot.periodic();
 		AlertManager.reportAlerts();
 	}

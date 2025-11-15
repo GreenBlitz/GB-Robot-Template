@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.IDs;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.mechanisms.wpilib.FlywheelSimulation;
-import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
@@ -24,7 +23,7 @@ import com.ctre.phoenix6.controls.VoltageOut;
 
 public class KrakenX60FlyWheelBuilder {
 
-	public static FlyWheel build(String logPath, Phoenix6DeviceID motorID, BusChain busChain) {
+	public static FlyWheel build(String logPath, Phoenix6DeviceID motorID) {
 		TalonFXFollowerConfig followerConfig = buildFollowerConfig();
 		FlywheelSimulation simulationMotor = new FlywheelSimulation(
 			new FlywheelSim(

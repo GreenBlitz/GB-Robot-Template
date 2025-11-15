@@ -24,7 +24,7 @@ public class Robot {
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
-		this.flyWheel = KrakenX60FlyWheelBuilder.build("Subsystems/FlyWheel", IDs.TalonFXIDs.FLYWHEEL, IDs.TalonFXIDs.FLYWHEEL.busChain());
+		this.flyWheel = KrakenX60FlyWheelBuilder.build("Subsystems/FlyWheel", IDs.TalonFXIDs.FLYWHEEL);
 	}
 
 	public void periodic() {

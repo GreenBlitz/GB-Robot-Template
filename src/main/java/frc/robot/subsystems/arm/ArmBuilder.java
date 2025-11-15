@@ -27,7 +27,6 @@ import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
 import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.utils.AngleUnit;
-import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public class ArmBuilder {
 
@@ -54,7 +53,7 @@ public class ArmBuilder {
 			logPath,
 			deviceID,
 			talonFXFollowerConfig,
-			new SysIdCalibrator.SysIdConfigInfo(sysIdRoutineConfig, true).config(),
+			sysIdRoutineConfig,
 			createSimulation(
 				talonFXFollowerConfig,
 				JkGMeterSquared,
@@ -126,7 +125,7 @@ public class ArmBuilder {
 			logPath,
 			deviceID,
 			talonFXFollowerConfig,
-			new SysIdCalibrator.SysIdConfigInfo(sysIdRoutineConfig, true).config(),
+			sysIdRoutineConfig,
 			createSimulation(
 				talonFXFollowerConfig,
 				JkGMeterSquared,
@@ -179,7 +178,7 @@ public class ArmBuilder {
 			logPath,
 			deviceID,
 			talonFXFollowerConfig,
-			new SysIdCalibrator.SysIdConfigInfo(sysIdRoutineConfig, true).config(),
+			sysIdRoutineConfig,
 			createSimulation(
 				talonFXFollowerConfig,
 				JkGMeterSquared,

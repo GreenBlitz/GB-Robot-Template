@@ -206,7 +206,6 @@ public class ArmBuilder {
 			currentLimit
 		));
 		motor.applyConfiguration(configuration);
-
 		return new Arm(logPath, motor, signals, voltageRequest, positionRequest, configuration.Slot0.kG);
 	}
 

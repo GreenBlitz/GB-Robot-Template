@@ -3,6 +3,7 @@ package frc.robot.subsystems.arm;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.function.Supplier;
 
@@ -21,7 +22,7 @@ public class DynamicMotionMagicArmCommandBuilder extends ArmCommandBuilder {
 	}
 
 	public Command setTargetPosition(Supplier<Rotation2d> position) {
-		return arm.asSubsystemCommand(new RunCommand(() -> arm.setTargetPosition(position.get())), "Set target position to: " + position);
+		return arm.asSubsystemCommand(new RunCommand(() -> arm.setTargetPosition(position.get())), "Set target position by supplier");
 	}
 
 	public Command setTargetPosition(
@@ -30,7 +31,7 @@ public class DynamicMotionMagicArmCommandBuilder extends ArmCommandBuilder {
 		Rotation2d maxAccelerationRotation2dPerSecondSquared
 	) {
 		return arm.asSubsystemCommand(
-			new RunCommand(() -> arm.setTargetPosition(position, maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared)),
+			new InitExecuteCommand(() -> {},() -> arm.setTargetPosition(position, maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared)),
 			"Set target position with "
 				+ maxAccelerationRotation2dPerSecondSquared
 				+ " acceleration per Second Squared and with "

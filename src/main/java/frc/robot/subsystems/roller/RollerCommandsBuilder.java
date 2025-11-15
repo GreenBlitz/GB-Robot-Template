@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.subsystems.GBCommandsBuilder;
+import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -36,32 +37,22 @@ public class RollerCommandsBuilder extends GBCommandsBuilder {
 		return roller.asSubsystemCommand(new RunCommand(() -> roller.setPower(power)), "set power to " + power);
 	}
 
-	private Command rollRotationsForwardsAtVoltage(double rotations, double voltage) {
-		Rotation2d targetPosition = Rotation2d.fromRotations(rotations + roller.getPosition().getRotations());
+	private Command rollRotationsAtVoltage(double rotations, double voltage) {
+		return roller.asSubsystemCommand(new DeferredCommand(() -> new RunCommand(()-> roller.setVoltage(voltage)).until(
+				roller.isPastPositionSupplier(Rotation2d.fromRotations(rotations+roller.getPosition().getRotations()))),Set.of(roller)),"Roll " + rotations + " rotations");
+	}
+
+	public Command rollRotationsAtVoltageForwards(double rotations, double voltage){
 		double finalVoltage = Math.abs(voltage);
-		return new RunCommand(() -> {
-			roller.setVoltage(finalVoltage);
-		}).until(roller.isPastPositionSupplier(targetPosition));
+		return roller.asSubsystemCommand(new DeferredCommand(() -> new RunCommand(()-> roller.setVoltage(finalVoltage)).until(
+				roller.isPastPositionSupplier(Rotation2d.fromRotations(rotations+roller.getPosition().getRotations()))),Set.of(roller)),"Roll " + rotations + " rotations");
 	}
 
-	public Command rollRotationsForwardsDeferred(double rotations, double voltage) {
-		return roller.asSubsystemCommand(
-			new DeferredCommand(() -> rollRotationsForwardsAtVoltage(rotations, voltage), Set.of(roller)),
-			"Roll " + rotations + " rotations"
-		);
-	}
-
-	private Command rollRotationsBackwardsAtVoltage(double rotations, double voltage) {
-		Rotation2d targetPosition = Rotation2d.fromRotations(rotations + roller.getPosition().getRotations());
+	public Command rollRotationsAtVoltageBackwards(double rotations, double voltage){
 		double finalVoltage = -Math.abs(voltage);
-		return new RunCommand(() -> setVoltage(finalVoltage)).until(roller.isPastPositionSupplier(targetPosition));
-	}
-
-	public Command rollRotationsBackwardsDeferred(double rotations, double voltage) {
-		return roller.asSubsystemCommand(
-			new DeferredCommand(() -> rollRotationsBackwardsAtVoltage(rotations, voltage), Set.of(roller)),
-			"Roll " + rotations + " rotations backwards"
-		);
+		double finalRotations = -Math.abs(rotations);
+		return roller.asSubsystemCommand(new DeferredCommand(() -> new RunCommand(()-> roller.setVoltage(finalVoltage)).until(
+				roller.isBeforePositionSupplier(Rotation2d.fromRotations(finalRotations+roller.getPosition().getRotations()))),Set.of(roller)),"Roll " + rotations + " rotations");
 	}
 
 }

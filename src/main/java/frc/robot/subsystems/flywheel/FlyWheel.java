@@ -12,7 +12,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class FlyWheel extends GBSubsystem {
 
-	private final ControllableMotor motor;
+	private final ControllableMotor masterMotor;
 
 	private final IRequest<Rotation2d> velocityRequest;
 	private final IRequest<Double> voltageRequest;
@@ -30,7 +30,7 @@ public class FlyWheel extends GBSubsystem {
 		InputSignal<Rotation2d> velocitySignal,
 		InputSignal<Double> voltageSignal,
 		InputSignal<Double> currentSignal,
-		ControllableMotor motor
+		ControllableMotor masterMotor
 	) {
 		super(logPath);
 		this.velocityRequest = velocityRequest;
@@ -38,7 +38,7 @@ public class FlyWheel extends GBSubsystem {
 		this.velocitySignal = velocitySignal;
 		this.voltageSignal = voltageSignal;
 		this.currentSignal = currentSignal;
-		this.motor = motor;
+		this.masterMotor = masterMotor;
 		this.flyWheelCommandBuilder = new FlyWheelCommandBuilder(this);
 	}
 
@@ -47,11 +47,11 @@ public class FlyWheel extends GBSubsystem {
 	}
 
 	public void setTargetVelocity(Rotation2d velocity) {
-		motor.applyRequest(velocityRequest.withSetPoint(velocity));
+		masterMotor.applyRequest(velocityRequest.withSetPoint(velocity));
 	}
 
 	public void setVoltage(double voltage) {
-		motor.applyRequest(voltageRequest.withSetPoint(voltage));
+		masterMotor.applyRequest(voltageRequest.withSetPoint(voltage));
 	}
 
 
@@ -72,17 +72,17 @@ public class FlyWheel extends GBSubsystem {
 	}
 
 	public void stop() {
-		motor.stop();
+		masterMotor.stop();
 	}
 
 	public void setBrake(boolean brake) {
-		motor.setBrake(brake);
+		masterMotor.setBrake(brake);
 	}
 
 	@Override
 	protected void subsystemPeriodic() {
-		motor.updateSimulation();
-		motor.updateInputs(velocitySignal, voltageSignal, currentSignal);
+		masterMotor.updateSimulation();
+		masterMotor.updateInputs(velocitySignal, voltageSignal, currentSignal);
 		Logger.recordOutput(getLogPath() + "/targetVelocity", velocityRequest.getSetPoint());
 	}
 
@@ -91,6 +91,7 @@ public class FlyWheel extends GBSubsystem {
 		joystick.Y.onTrue(new InstantCommand(() -> getCommandBuilder().setIsSubsystemRunningIndependently(false)));
 		joystick.A.onTrue(getCommandBuilder().setTargetVelocity(Rotation2d.fromRotations(1)));
 		joystick.B.onTrue(getCommandBuilder().setTargetVelocity(Rotation2d.fromRotations(2)));
+		joystick.POV_DOWN.onTrue(getCommandBuilder().stop());
 	}
 
 }

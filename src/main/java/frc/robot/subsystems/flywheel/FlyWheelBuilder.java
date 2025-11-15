@@ -24,19 +24,20 @@ import com.ctre.phoenix6.controls.VoltageOut;
 
 public class FlyWheelBuilder {
 
-	public static FlyWheel generate(String logPath, Phoenix6DeviceID motorID, TalonFXFollowerConfig talonFXFollowerConfig, BusChain busChain) {
+	public static FlyWheel generate(String logPath, Phoenix6DeviceID motorID, BusChain busChain) {
+		TalonFXFollowerConfig followerConfig = buildFollowerConfig();
 		SimpleMotorSimulation simulationMotor = new SimpleMotorSimulation(
 			new DCMotorSim(
 				LinearSystemId.createDCMotorSystem(
-					DCMotor.getKrakenX60Foc(talonFXFollowerConfig.followerIDs.length + 1),
+					DCMotor.getKrakenX60Foc(followerConfig.followerIDs.length + 1),
 					Constants.MOMENT_OF_INERTIA,
 					Constants.ROTOR_TO_SENSOR_RATIO * Constants.SENSOR_TO_MECHANISM_RATIO
 				),
-				DCMotor.getKrakenX60Foc(talonFXFollowerConfig.followerIDs.length + 1)
+				DCMotor.getKrakenX60Foc(followerConfig.followerIDs.length + 1)
 			)
 		);
 
-		TalonFXMotor motor = new TalonFXMotor(logPath, motorID, talonFXFollowerConfig, new SysIdRoutine.Config(), simulationMotor);
+		TalonFXMotor motor = new TalonFXMotor(logPath, motorID, followerConfig, new SysIdRoutine.Config(), simulationMotor);
 
 		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder
 			.build(motor.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, busChain);
@@ -55,10 +56,10 @@ public class FlyWheelBuilder {
 
 	public static TalonFXConfiguration buildConfig() {
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
-		configuration.CurrentLimits.StatorCurrentLimit = 80;
+		configuration.CurrentLimits.StatorCurrentLimit = 30;
 		configuration.CurrentLimits.StatorCurrentLimitEnable = true;
-		configuration.Feedback.SensorToMechanismRatio = 1;
-		configuration.Feedback.RotorToSensorRatio = 1;
+		configuration.Feedback.SensorToMechanismRatio = Constants.SENSOR_TO_MECHANISM_RATIO;
+		configuration.Feedback.RotorToSensorRatio = Constants.ROTOR_TO_SENSOR_RATIO;
 		configuration.Slot0.kP = Constants.KP;
 		configuration.Slot0.kI = Constants.KI;
 		configuration.Slot0.kD = Constants.KD;
@@ -69,6 +70,7 @@ public class FlyWheelBuilder {
 
 	public static TalonFXFollowerConfig buildFollowerConfig() {
 		TalonFXFollowerConfig followerConfig = new TalonFXFollowerConfig();
+		followerConfig.motorConfig.Feedback.SensorToMechanismRatio = 8.41;
 		followerConfig.followerIDs = new TalonFXFollowerConfig.TalonFXFollowerID[] {
 			new TalonFXFollowerConfig.TalonFXFollowerID("flyWheelFollower", IDs.TalonFXIDs.FLY_WHEEL_FOLLOWER_ID, false)};
 		return followerConfig;

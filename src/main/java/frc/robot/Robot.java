@@ -24,8 +24,7 @@ public class Robot {
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
-		this.flyWheel = FlyWheelBuilder
-			.generate("Subsystems/FlyWheel", IDs.TalonFXIDs.FLY_WHEEL_ID, FlyWheelBuilder.buildFollowerConfig(), BusChain.ROBORIO);
+		this.flyWheel = FlyWheelBuilder.generate("Subsystems/FlyWheel", IDs.TalonFXIDs.FLY_WHEEL_ID, BusChain.ROBORIO);
 	}
 
 	public void periodic() {

@@ -31,7 +31,7 @@ import frc.utils.calibration.sysid.SysIdCalibrator;
  */
 public class Robot {
 
-	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
+	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(true);
 	private static final Slot0Configs configPivot = new Slot0Configs();
 	private static final Slot0Configs configRealPivot = new Slot0Configs();
 	private static final Slot0Configs configArm = new Slot0Configs();
@@ -86,42 +86,43 @@ public class Robot {
 		feedbackConfigsPivot.RotorToSensorRatio = 1;
 		feedbackConfigsPivot.SensorToMechanismRatio = 21.43;
 
-		arm = ArmBuilder.createDynamicMotionMagic(
+		arm = ArmBuilder.buildDynamicMotionMagicArm(
 			"Subsystem/Arm",
-			new TalonFXFollowerConfig(),
 			armId,
-			new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(), true),
+            true,
+            new TalonFXFollowerConfig(),
+            new SysIdRoutine.Config(),
 			feedbackConfigsArm,
             configRealArm,
             configArm,
-            Rotation2d.fromDegrees(231 -16),
-            Rotation2d.fromDegrees(-24 -16),
-			40,
+            40,
             (int)RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			0.001,
 			0.3,
-			true,
 			0,
+            Rotation2d.fromDegrees(231 -16),
+            Rotation2d.fromDegrees(-24 -16),
 			Rotation2d.fromRotations(3),
 			Rotation2d.fromRotations(3)
 		);
 
-        pivot = ArmBuilder.create(
+        pivot = ArmBuilder.buildArm(
 			"Subsystem/Pivot",
-                new TalonFXFollowerConfig(),
                 new Phoenix6DeviceID(15,BusChain.ROBORIO),
-                new SysIdCalibrator.SysIdConfigInfo(new SysIdRoutine.Config(), true),
+                true,
+                new TalonFXFollowerConfig(),
+                new SysIdRoutine.Config(),
                 feedbackConfigsPivot,
                 configRealPivot,
                 configPivot,
-                Rotation2d.fromDegrees(120),
-                Rotation2d.fromDegrees(-10),
                 40,
                 50,
                 0.001,
                 0.359,
-                true,
-                0);
+                0,
+                Rotation2d.fromDegrees(120),
+                Rotation2d.fromDegrees(-10)
+                );
 		pivot.setPosition(Rotation2d.fromDegrees(130));
 	}
 

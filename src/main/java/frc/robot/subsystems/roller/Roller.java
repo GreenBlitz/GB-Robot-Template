@@ -10,6 +10,7 @@ import org.littletonrobotics.junction.Logger;
 import java.util.function.BooleanSupplier;
 
 public class Roller extends GBSubsystem {
+
 	private final String logPath;
 	private final ControllableMotor roller;
 	private final InputSignal<Double> voltageSignal;
@@ -19,6 +20,7 @@ public class Roller extends GBSubsystem {
 	private final IRequest<Rotation2d> PositionRequest;
 	private final Rotation2d tolerance;
 	private final RollerCommandsBuilder commandsBuilder = new RollerCommandsBuilder(this);
+
 	public Roller(
 		String logPath,
 		ControllableMotor roller,
@@ -39,6 +41,7 @@ public class Roller extends GBSubsystem {
 		this.tolerance = tolerance;
 		this.logPath = logPath;
 	}
+
 	public RollerCommandsBuilder getCommandsBuilder() {
 		return commandsBuilder;
 	}
@@ -74,7 +77,7 @@ public class Roller extends GBSubsystem {
 	public boolean isAtPosition(Rotation2d position) {
 		return (positionSignal.isNear(position, tolerance));
 	}
-	
+
 	public BooleanSupplier isPastPositionSupplier(Rotation2d position) {
 		return () -> positionSignal.isGreater(position);
 	}
@@ -86,10 +89,10 @@ public class Roller extends GBSubsystem {
 		return false;
 	}
 
-	public void log(){
-		Logger.recordOutput(logPath + "position",positionSignal.getLatestValue());
-		Logger.recordOutput(logPath + "current",currentSignal.getLatestValue());
-		Logger.recordOutput(logPath + "voltage",voltageSignal.getLatestValue());
+	public void log() {
+		Logger.recordOutput(logPath + "position", positionSignal.getLatestValue());
+		Logger.recordOutput(logPath + "current", currentSignal.getLatestValue());
+		Logger.recordOutput(logPath + "voltage", voltageSignal.getLatestValue());
 	}
 
 	@Override

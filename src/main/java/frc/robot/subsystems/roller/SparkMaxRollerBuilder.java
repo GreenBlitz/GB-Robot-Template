@@ -35,15 +35,14 @@ public class SparkMaxRollerBuilder {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(rotorID);
 
 		SimpleMotorSimulation rollerSimulation = new SimpleMotorSimulation(
-			new DCMotorSim(LinearSystemId.createDCMotorSystem(DCMotor.getNEO(RollerConstants.NUMBER_OF_MOTORS), RollerConstants.J_KG_METERS_SQUARED, gearRatio), DCMotor.getNEO(RollerConstants.NUMBER_OF_MOTORS))
+			new DCMotorSim(
+				LinearSystemId
+					.createDCMotorSystem(DCMotor.getNEO(RollerConstants.NUMBER_OF_MOTORS), RollerConstants.J_KG_METERS_SQUARED, gearRatio),
+				DCMotor.getNEO(RollerConstants.NUMBER_OF_MOTORS)
+			)
 		);
 
-		BrushlessSparkMAXMotor roller = new BrushlessSparkMAXMotor(
-			logPath,
-			sparkMaxWrapper,
-			rollerSimulation,
-			new SysIdRoutine.Config()
-		);
+		BrushlessSparkMAXMotor roller = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, rollerSimulation, new SysIdRoutine.Config());
 		Supplier<Double> positionSupplier = () -> sparkMaxWrapper.getEncoder().getPosition();
 
 		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal("position", positionSupplier, AngleUnit.ROTATIONS);
@@ -55,7 +54,7 @@ public class SparkMaxRollerBuilder {
 		SparkMaxRequest<Double> VoltageRequest = SparkMaxRequestBuilder.build(0.0, SparkBase.ControlType.kVoltage, 0);
 		SparkMaxRequest<Rotation2d> AngleRequest = SparkMaxRequestBuilder.build(Rotation2d.fromRotations(0), SparkBase.ControlType.kPosition, 0);
 
-		return new Roller(logPath, roller, voltageSignal, positionSignal, currentSignal,  VoltageRequest,AngleRequest, tolerance);
+		return new Roller(logPath, roller, voltageSignal, positionSignal, currentSignal, VoltageRequest, AngleRequest, tolerance);
 	}
 
 	private static SparkMaxConfiguration configRoller(double gearRatio, int currentLimit, double kP, double kI, double kD) {

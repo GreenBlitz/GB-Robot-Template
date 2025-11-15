@@ -31,7 +31,7 @@ import frc.utils.calibration.sysid.SysIdCalibrator;
  */
 public class Robot {
 
-	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(true);
+	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false   );
 	private static final Slot0Configs configPivot = new Slot0Configs();
 	private static final Slot0Configs configRealPivot = new Slot0Configs();
 	private static final Slot0Configs configArm = new Slot0Configs();

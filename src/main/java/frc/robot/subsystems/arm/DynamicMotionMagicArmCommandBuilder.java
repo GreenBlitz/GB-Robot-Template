@@ -27,7 +27,7 @@ public class DynamicMotionMagicArmCommandBuilder extends ArmCommandBuilder {
 
 	public Command setTargetPosition(Supplier<Rotation2d> position) {
 		return arm.asSubsystemCommand(
-			new InitExecuteCommand(() -> arm.setTargetPosition(position.get()), () -> {}),
+			new InitExecuteCommand(() -> {},() -> arm.setTargetPosition(position.get())),
 			"Set target position to: " + position
 		);
 	}

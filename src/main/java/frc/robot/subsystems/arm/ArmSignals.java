@@ -9,8 +9,8 @@ import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.utils.AngleUnit;
 
 public record ArmSignals(
-	InputSignal<Double> voltageSignal,
-	InputSignal<Double> currentSignal,
-	InputSignal<Rotation2d> velocitySignal,
-	InputSignal<Rotation2d> positionSignal
+	InputSignal<Double> voltage,
+	InputSignal<Double> current,
+	InputSignal<Rotation2d> velocity,
+	InputSignal<Rotation2d> position
 ) { }

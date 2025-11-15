@@ -32,21 +32,21 @@ import frc.utils.calibration.sysid.SysIdCalibrator;
 public class ArmBuilder {
 
 	public static DynamicMotionMagicArm buildDynamicMotionMagicArm(
-		String logPath,
-		TalonFXFollowerConfig talonFXFollowerConfig,
-		Phoenix6DeviceID deviceID,
-		SysIdRoutine.Config sysIdRoutineConfig,
-		FeedbackConfigs feedbackConfigs,
-		Slot0Configs realSlotsConfig,
-		Slot0Configs simulationSlotsConfig,
+        String logPath,
+        Phoenix6DeviceID deviceID,
+        boolean isInverted,
+        TalonFXFollowerConfig talonFXFollowerConfig,
+        SysIdRoutine.Config sysIdRoutineConfig,
+        FeedbackConfigs feedbackConfigs,
+        Slot0Configs realSlotsConfig,
+        Slot0Configs simulationSlotsConfig,
+        double currentLimit,
+        double JkGMeterSquared,
+        double armLengthMeters,
+        double arbitraryFeedForward,
         Rotation2d forwardSoftwareLimits,
         Rotation2d backwardSoftwareLimits,
-		double currentLimit,
-		int signalsFrequency,
-		double JkGMeterSquared,
-        double armLengthMeters,
-		boolean inverted,
-        double arbitraryFeedForward,
+        int signalsFrequency,
         Rotation2d defaultMaxAccelerationRotation2dPerSecondSquare,
         Rotation2d defaultMaxVelocityRotation2dPerSecond
 	) {
@@ -64,7 +64,7 @@ public class ArmBuilder {
 
 		IDynamicMotionMagicRequest positionRequest = Phoenix6RequestBuilder.build(
 			new DynamicMotionMagicVoltage(
-				signals.positionSignal().getLatestValue().getRotations(),
+				signals.position().getLatestValue().getRotations(),
 				defaultMaxVelocityRotation2dPerSecond.getRotations(),
 				defaultMaxAccelerationRotation2dPerSecondSquare.getRotations(),
 				0
@@ -76,7 +76,7 @@ public class ArmBuilder {
 			feedbackConfigs,
 			simulationSlotsConfig,
 			realSlotsConfig,
-			inverted,
+			isInverted,
             forwardSoftwareLimits,
             backwardSoftwareLimits,
 			currentLimit
@@ -97,21 +97,21 @@ public class ArmBuilder {
 	}
 
 	public static Arm buildMotionMagicArm(
-		String logPath,
-		TalonFXFollowerConfig talonFXFollowerConfig,
-		Phoenix6DeviceID deviceID,
+        String logPath,
+        Phoenix6DeviceID deviceID,
+        boolean isInverted,
+        TalonFXFollowerConfig talonFXFollowerConfig,
         SysIdRoutine.Config sysIdRoutineConfig,
-		FeedbackConfigs feedbackConfigs,
-		Slot0Configs realSlotsConfig,
-		Slot0Configs simulationSlotsConfig,
+        FeedbackConfigs feedbackConfigs,
+        Slot0Configs realSlotsConfig,
+        Slot0Configs simulationSlotsConfig,
+        double currentLimit,
+        double JkGMeterSquared,
+        double armLengthMeters,
+        double arbitraryFeedForward,
         Rotation2d forwardSoftwareLimits,
         Rotation2d backwardSoftwareLimits,
-		double currentLimit,
-		int signalsFrequency,
-		double JkGMeterSquared,
-        double armLengthMeters,
-		boolean isInverted,
-        double arbitraryFeedForward,
+        int signalsFrequency,
         Rotation2d defaultMaxAccelerationRotation2dPerSecondSquare,
         Rotation2d defaultMaxVelocityRotation2dPerSecond
         ) {
@@ -128,7 +128,7 @@ public class ArmBuilder {
 		Phoenix6Request<Double> voltageRequest = voltageRequest();
 
 		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder
-			.build(new MotionMagicVoltage(signals.positionSignal().getLatestValue().getRotations()), arbitraryFeedForward, true);
+			.build(new MotionMagicVoltage(signals.position().getLatestValue().getRotations()), arbitraryFeedForward, true);
 		TalonFXConfiguration configuration = (generateConfiguration(
 			feedbackConfigs,
 			simulationSlotsConfig,
@@ -146,20 +146,20 @@ public class ArmBuilder {
 
     public static Arm buildArm(
 		String logPath,
-		TalonFXFollowerConfig talonFXFollowerConfig,
 		Phoenix6DeviceID deviceID,
+        boolean isInverted,
+        TalonFXFollowerConfig talonFXFollowerConfig,
         SysIdRoutine.Config sysIdRoutineConfig,
 		FeedbackConfigs feedbackConfigs,
 		Slot0Configs realSlotsConfig,
 		Slot0Configs simulationSlotsConfig,
+        double currentLimit,
+        double JkGMeterSquared,
+        double armLengthMeters,
+        double arbitraryFeedForward,
         Rotation2d forwardSoftwareLimits,
         Rotation2d backwardSoftwareLimits,
-		double currentLimit,
-		int signalFrequency,
-		double JkGMeterSquared,
-        double armLengthMeters,
-		boolean isInverted,
-        double arbitraryFeedForward
+		int signalsFrequency
     ) {
 		TalonFXMotor motor = new TalonFXMotor(
 			logPath,
@@ -169,12 +169,12 @@ public class ArmBuilder {
 			createSimulation(talonFXFollowerConfig,JkGMeterSquared,feedbackConfigs.RotorToSensorRatio*feedbackConfigs.SensorToMechanismRatio,armLengthMeters,backwardSoftwareLimits,forwardSoftwareLimits)
 		);
 
-		ArmSignals signals = getSignals(motor, signalFrequency, deviceID.busChain());
+		ArmSignals signals = getSignals(motor, signalsFrequency, deviceID.busChain());
 
 		Phoenix6Request<Double> voltageRequest = voltageRequest();
 
         Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder
-                .build(new PositionVoltage(signals.positionSignal().getLatestValue().getRotations()), arbitraryFeedForward, true);
+                .build(new PositionVoltage(signals.position().getLatestValue().getRotations()), arbitraryFeedForward, true);
 
         TalonFXConfiguration configuration = (generateConfiguration(
 			feedbackConfigs,

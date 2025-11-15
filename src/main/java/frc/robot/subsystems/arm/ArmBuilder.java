@@ -222,7 +222,7 @@ public class ArmBuilder {
 		TalonFXConfiguration config = new TalonFXConfiguration();
 
 		switch (Robot.ROBOT_TYPE) {
-			case REAL -> {
+            case REAL,REPLAY -> {
 				config.Slot0 = realConfigSlots;
 			}
 			case SIMULATION -> {

@@ -5,6 +5,9 @@ import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
+import org.littletonrobotics.junction.Logger;
+
+import java.util.function.BooleanSupplier;
 
 
 public class Roller extends GBSubsystem {
@@ -21,6 +24,8 @@ public class Roller extends GBSubsystem {
 	private final Rotation2d tolerance;
 
 	private final RollerCommandsBuilder commandsBuilder;
+
+	private Rotation2d targetPosition;
 
 	public Roller(
 		String logPath,
@@ -41,10 +46,15 @@ public class Roller extends GBSubsystem {
 		this.PositionRequest = PositionRequest;
 		this.tolerance = tolerance;
 		this.commandsBuilder = new RollerCommandsBuilder(this);
+		this.targetPosition = Rotation2d.fromRotations(0);
 	}
 
 	public RollerCommandsBuilder getCommandsBuilder() {
 		return commandsBuilder;
+	}
+
+	public void updateTargetPosition(Rotation2d targetPosition) {
+		this.targetPosition = targetPosition;
 	}
 
 	public void setVoltage(double voltage) {
@@ -75,6 +85,10 @@ public class Roller extends GBSubsystem {
 		return positionSignal.getLatestValue();
 	}
 
+	public Rotation2d getTargetPosition() {
+		return targetPosition;
+	}
+
 	public boolean isAtPosition(Rotation2d position) {
 		return positionSignal.isNear(position, tolerance);
 	}
@@ -84,14 +98,19 @@ public class Roller extends GBSubsystem {
 		return positionSignal.isLess(position);
 	}
 
-	public boolean isPastPosition(Rotation2d position) {
-		return positionSignal.isGreater(position);
+	public BooleanSupplier isPastPosition(Rotation2d position) {
+		return () -> positionSignal.isGreater(position);
+	}
+
+	private void log() {
+		Logger.recordOutput(getLogPath() + "targetPosition", targetPosition);
 	}
 
 
 	@Override
 	public void subsystemPeriodic() {
 		roller.updateSimulation();
+		log();
 		roller.updateInputs(voltageSignal, currentSignal, positionSignal);
 	}
 

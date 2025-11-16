@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.subsystems.GBCommandsBuilder;
+import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -40,8 +41,10 @@ public class RollerCommandsBuilder extends GBCommandsBuilder {
 		double finalVoltage = Math.abs(voltage);
 		return roller.asSubsystemCommand(
 			new DeferredCommand(
-				() -> new RunCommand(() -> roller.setVoltage(finalVoltage))
-					.until(() -> roller.isPastPosition(Rotation2d.fromRotations(rotations + roller.getPosition().getRotations()))),
+				() -> new InitExecuteCommand(
+					() -> roller.updateTargetPosition(Rotation2d.fromRotations(rotations + roller.getPosition().getRotations())),
+					() -> roller.setVoltage(finalVoltage)
+				).until(roller.isPastPosition(roller.getTargetPosition())),
 				Set.of(roller)
 			),
 			"Roll " + rotations + " rotations"
@@ -53,11 +56,14 @@ public class RollerCommandsBuilder extends GBCommandsBuilder {
 		double finalRotations = -Math.abs(rotations);
 		return roller.asSubsystemCommand(
 			new DeferredCommand(
-				() -> new RunCommand(() -> roller.setVoltage(finalVoltage))
-					.until(() -> roller.isBeforePosition(Rotation2d.fromRotations(finalRotations + roller.getPosition().getRotations()))),
+				() -> new InitExecuteCommand(
+					() -> roller.updateTargetPosition(Rotation2d.fromRotations(roller.getPosition().getRotations() - finalRotations)),
+					() -> roller.setVoltage(finalVoltage)
+				).until(roller.isPastPosition(roller.getTargetPosition())),
 				Set.of(roller)
 			),
-			"Roll " + rotations + " rotations"
+			"Roll " + rotations + " rotations backwards"
+
 		);
 	}
 

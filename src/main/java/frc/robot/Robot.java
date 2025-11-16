@@ -7,6 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.TalonFXArmBuilder;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 
@@ -17,10 +19,12 @@ import frc.utils.battery.BatteryUtil;
  */
 public class Robot {
 
+	private final Arm turret;
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
+		turret = TalonFXArmBuilder.buildMotionMagicArm();
 	}
 
 	public void periodic() {

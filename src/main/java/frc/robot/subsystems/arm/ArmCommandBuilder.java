@@ -13,7 +13,7 @@ public class ArmCommandBuilder extends GBCommandsBuilder {
 
 	private final Arm arm;
 
-    ArmCommandBuilder(Arm arm) {
+	protected ArmCommandBuilder(Arm arm) {
 		this.arm = arm;
 	}
 

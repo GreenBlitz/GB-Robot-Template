@@ -28,7 +28,7 @@ import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.utils.AngleUnit;
 
-public class ArmBuilder {
+public class TalonFXArmBuilder {
 
 	public static DynamicMotionMagicArm buildDynamicMotionMagicArm(
 		String logPath,
@@ -54,7 +54,7 @@ public class ArmBuilder {
 			deviceID,
 			talonFXFollowerConfig,
 			sysIdRoutineConfig,
-			createSimulation(
+			buildSimulation(
 				talonFXFollowerConfig,
 				JkGMeterSquared,
 				feedbackConfigs.RotorToSensorRatio * feedbackConfigs.SensorToMechanismRatio,
@@ -64,9 +64,9 @@ public class ArmBuilder {
 			)
 		);
 
-		ArmSignals signals = getSignals(motor, signalsFrequency, deviceID.busChain());
+		ArmSignals signals = buildSignals(motor, signalsFrequency, deviceID.busChain());
 
-		Phoenix6Request<Double> voltageRequest = voltageRequest();
+		Phoenix6Request<Double> voltageRequest = buildVoltageRequest();
 
 		IDynamicMotionMagicRequest positionRequest = Phoenix6RequestBuilder.build(
 			new DynamicMotionMagicVoltage(
@@ -78,7 +78,7 @@ public class ArmBuilder {
 			arbitraryFeedForward,
 			true
 		);
-		TalonFXConfiguration configuration = generateConfiguration(
+		TalonFXConfiguration configuration = buildConfiguration(
 			feedbackConfigs,
 			simulationSlotsConfig,
 			realSlotsConfig,
@@ -126,7 +126,7 @@ public class ArmBuilder {
 			deviceID,
 			talonFXFollowerConfig,
 			sysIdRoutineConfig,
-			createSimulation(
+			buildSimulation(
 				talonFXFollowerConfig,
 				JkGMeterSquared,
 				feedbackConfigs.RotorToSensorRatio * feedbackConfigs.SensorToMechanismRatio,
@@ -136,13 +136,13 @@ public class ArmBuilder {
 			)
 		);
 
-		ArmSignals signals = getSignals(motor, signalsFrequency, deviceID.busChain());
+		ArmSignals signals = buildSignals(motor, signalsFrequency, deviceID.busChain());
 
-		Phoenix6Request<Double> voltageRequest = voltageRequest();
+		Phoenix6Request<Double> voltageRequest = buildVoltageRequest();
 
 		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder
 			.build(new MotionMagicVoltage(signals.position().getLatestValue().getRotations()), arbitraryFeedForward, true);
-		TalonFXConfiguration configuration = (generateConfiguration(
+		TalonFXConfiguration configuration = (buildConfiguration(
 			feedbackConfigs,
 			simulationSlotsConfig,
 			realSlotsConfig,
@@ -179,7 +179,7 @@ public class ArmBuilder {
 			deviceID,
 			talonFXFollowerConfig,
 			sysIdRoutineConfig,
-			createSimulation(
+			buildSimulation(
 				talonFXFollowerConfig,
 				JkGMeterSquared,
 				feedbackConfigs.RotorToSensorRatio * feedbackConfigs.SensorToMechanismRatio,
@@ -189,14 +189,14 @@ public class ArmBuilder {
 			)
 		);
 
-		ArmSignals signals = getSignals(motor, signalsFrequency, deviceID.busChain());
+		ArmSignals signals = buildSignals(motor, signalsFrequency, deviceID.busChain());
 
-		Phoenix6Request<Double> voltageRequest = voltageRequest();
+		Phoenix6Request<Double> voltageRequest = buildVoltageRequest();
 
 		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder
 			.build(new PositionVoltage(signals.position().getLatestValue().getRotations()), arbitraryFeedForward, true);
 
-		TalonFXConfiguration configuration = (generateConfiguration(
+		TalonFXConfiguration configuration = buildConfiguration(
 			feedbackConfigs,
 			simulationSlotsConfig,
 			realSlotsConfig,
@@ -204,12 +204,12 @@ public class ArmBuilder {
 			forwardSoftwareLimits,
 			backwardSoftwareLimits,
 			currentLimit
-		));
+		);
 		motor.applyConfiguration(configuration);
 		return new Arm(logPath, motor, signals, voltageRequest, positionRequest, configuration.Slot0.kG);
 	}
 
-	private static TalonFXConfiguration generateConfiguration(
+	private static TalonFXConfiguration buildConfiguration(
 		FeedbackConfigs feedbackConfigs,
 		Slot0Configs simulationConfigSlots,
 		Slot0Configs realConfigSlots,
@@ -249,7 +249,7 @@ public class ArmBuilder {
 		config.MotionMagic.MotionMagicCruiseVelocity = maxVelocity.getRotations();
 	}
 
-	private static SingleJointedArmSimulation createSimulation(
+	private static SingleJointedArmSimulation buildSimulation(
 		TalonFXFollowerConfig followerConfig,
 		double JkGMeterSquared,
 		double gearing,
@@ -272,11 +272,11 @@ public class ArmBuilder {
 		);
 	}
 
-	private static Phoenix6Request<Double> voltageRequest() {
+	private static Phoenix6Request<Double> buildVoltageRequest() {
 		return Phoenix6RequestBuilder.build(new VoltageOut(0), true);
 	}
 
-	private static ArmSignals getSignals(TalonFXMotor motor, int signalFrequency, BusChain busChain) {
+	private static ArmSignals buildSignals(TalonFXMotor motor, int signalFrequency, BusChain busChain) {
 		Phoenix6AngleSignal velocity = Phoenix6SignalBuilder
 			.build(motor.getDevice().getVelocity(), signalFrequency, AngleUnit.ROTATIONS, busChain);
 		return new ArmSignals(

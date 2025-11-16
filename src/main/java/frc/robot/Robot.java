@@ -4,12 +4,18 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import edu.wpi.first.units.VoltageUnit;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
+import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.TalonFXArmBuilder;
+import frc.robot.subsystems.constants.hood.Constants;
+import frc.robot.subsystems.constants.hood.HoodConstants;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 
@@ -25,10 +31,19 @@ public class Robot {
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
+        FeedbackConfigs hoodFeedbackConfig = new FeedbackConfigs();
+
+        hoodFeedbackConfig.SensorToMechanismRatio = HoodConstants.GEAR_RATIO;
+        hoodFeedbackConfig.RotorToSensorRatio = 1;
 
         hood = TalonFXArmBuilder.buildMotionMagicArm(
                 RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Hood",
                 new Phoenix6DeviceID(IDs.TalonFXIDs.hoodId,BusChain.ROBORIO),
+                HoodConstants.isInverted,
+                new TalonFXFollowerConfig(),
+                new SysIdRoutine.Config(), //q
+                hoodFeedbackConfig,
+
 
                 )
 	}

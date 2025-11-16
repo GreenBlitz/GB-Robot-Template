@@ -8,9 +8,11 @@ public class Constants {
 	public final static double KV = 0.0;
 	public final static double KS = 0.0;
 	public final static double KA = 0.0;
-	public final static double ROTOR_TO_SENSOR_RATIO = 1;
+	public final static double ROTOR_TO_SENSOR_RATIO_MASTER = 1;
+	public final static double ROTOR_TO_SENSOR_RATIO_FOLLOWER = 1;
+	public final static double SENSOR_TO_MECHANISM_RATIO_FOLLOWER = 8.41;
 	public final static double MOMENT_OF_INERTIA = 0.000000001;
-	public final static double SENSOR_TO_MECHANISM_RATIO = 150 / 7.0;
+	public final static double SENSOR_TO_MECHANISM_RATIO_MASTER = 150 / 7.0;
 
 
 }

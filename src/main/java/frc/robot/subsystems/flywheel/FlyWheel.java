@@ -14,18 +14,19 @@ import org.littletonrobotics.junction.Logger;
 
 public class FlyWheel extends GBSubsystem {
 
-	private final ControllableMotor masterMotor;
-
 	private final IRequest<Rotation2d> velocityRequest;
 	private final IRequest<Double> voltageRequest;
+
 
 	private final InputSignal<Rotation2d> velocitySignal;
 	private final InputSignal<Double> voltageSignal;
 	private final InputSignal<Double> currentSignal;
 
-	private final SysIdCalibrator sysIdCalibrator;
+	private final ControllableMotor masterMotor;
 
 	private final FlyWheelCommandBuilder flyWheelCommandBuilder;
+
+	private final SysIdCalibrator sysIdCalibrator;
 
 	public FlyWheel(
 		String logPath,
@@ -42,9 +43,9 @@ public class FlyWheel extends GBSubsystem {
 		this.velocitySignal = velocitySignal;
 		this.voltageSignal = voltageSignal;
 		this.currentSignal = currentSignal;
-		this.sysIdCalibrator = new SysIdCalibrator(masterMotor.getSysidConfigInfo(), this, this::setVoltage);
 		this.masterMotor = masterMotor;
 		this.flyWheelCommandBuilder = new FlyWheelCommandBuilder(this);
+		this.sysIdCalibrator = new SysIdCalibrator(masterMotor.getSysidConfigInfo(), this, this::setVoltage);
 		setDefaultCommand(getCommandBuilder().stop());
 	}
 
@@ -59,7 +60,6 @@ public class FlyWheel extends GBSubsystem {
 	public void setVoltage(double voltage) {
 		masterMotor.applyRequest(voltageRequest.withSetPoint(voltage));
 	}
-
 
 	public Rotation2d getVelocity() {
 		return velocitySignal.getLatestValue();

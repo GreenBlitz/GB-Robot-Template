@@ -30,7 +30,7 @@ public class KrakenX60FlyWheelBuilder {
 				LinearSystemId.createFlywheelSystem(
 					DCMotor.getKrakenX60Foc(followerConfig.followerIDs.length + 1),
 					Constants.MOMENT_OF_INERTIA,
-					Constants.ROTOR_TO_SENSOR_RATIO * Constants.SENSOR_TO_MECHANISM_RATIO
+					Constants.ROTOR_TO_SENSOR_RATIO_MASTER * Constants.SENSOR_TO_MECHANISM_RATIO_MASTER
 				),
 				DCMotor.getKrakenX60Foc(followerConfig.followerIDs.length + 1)
 			)
@@ -57,8 +57,8 @@ public class KrakenX60FlyWheelBuilder {
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
 		configuration.CurrentLimits.StatorCurrentLimit = 40;
 		configuration.CurrentLimits.StatorCurrentLimitEnable = true;
-		configuration.Feedback.SensorToMechanismRatio = Constants.SENSOR_TO_MECHANISM_RATIO;
-		configuration.Feedback.RotorToSensorRatio = Constants.ROTOR_TO_SENSOR_RATIO;
+		configuration.Feedback.SensorToMechanismRatio = Constants.SENSOR_TO_MECHANISM_RATIO_MASTER;
+		configuration.Feedback.RotorToSensorRatio = Constants.ROTOR_TO_SENSOR_RATIO_MASTER;
 		configuration.Slot0.kP = Constants.KP;
 		configuration.Slot0.kI = Constants.KI;
 		configuration.Slot0.kD = Constants.KD;
@@ -70,12 +70,12 @@ public class KrakenX60FlyWheelBuilder {
 
 	public static TalonFXFollowerConfig buildFollowerConfig() {
 		TalonFXFollowerConfig followerConfig = new TalonFXFollowerConfig();
-		followerConfig.motorConfig.Feedback.SensorToMechanismRatio = 8.41;
+		followerConfig.motorConfig.Feedback.SensorToMechanismRatio = Constants.SENSOR_TO_MECHANISM_RATIO_FOLLOWER;
 		followerConfig.followerIDs = new TalonFXFollowerConfig.TalonFXFollowerID[] {
 			new TalonFXFollowerConfig.TalonFXFollowerID("flyWheelFollower", IDs.TalonFXIDs.FLYWHEEL_FOLLOWER, false)};
 		followerConfig.motorConfig.CurrentLimits.StatorCurrentLimit = 40;
 		followerConfig.motorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-		followerConfig.motorConfig.Feedback.RotorToSensorRatio = Constants.ROTOR_TO_SENSOR_RATIO;
+		followerConfig.motorConfig.Feedback.RotorToSensorRatio = Constants.ROTOR_TO_SENSOR_RATIO_FOLLOWER;
 		return followerConfig;
 	}
 

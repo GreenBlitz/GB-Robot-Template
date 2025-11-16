@@ -36,23 +36,12 @@ public class RollerCommandsBuilder extends GBCommandsBuilder {
 		return roller.asSubsystemCommand(new RunCommand(() -> roller.setPower(power)), "set power to " + power);
 	}
 
-	private Command rollRotationsAtVoltage(double rotations, double voltage) {
-		return roller.asSubsystemCommand(
-			new DeferredCommand(
-				() -> new RunCommand(() -> roller.setVoltage(voltage))
-					.until(roller.isPastPositionSupplier(Rotation2d.fromRotations(rotations + roller.getPosition().getRotations()))),
-				Set.of(roller)
-			),
-			"Roll " + rotations + " rotations"
-		);
-	}
-
 	public Command rollRotationsAtVoltageForwards(double rotations, double voltage) {
 		double finalVoltage = Math.abs(voltage);
 		return roller.asSubsystemCommand(
 			new DeferredCommand(
 				() -> new RunCommand(() -> roller.setVoltage(finalVoltage))
-					.until(roller.isPastPositionSupplier(Rotation2d.fromRotations(rotations + roller.getPosition().getRotations()))),
+					.until(() -> roller.isPastPosition(Rotation2d.fromRotations(rotations + roller.getPosition().getRotations()))),
 				Set.of(roller)
 			),
 			"Roll " + rotations + " rotations"
@@ -65,7 +54,7 @@ public class RollerCommandsBuilder extends GBCommandsBuilder {
 		return roller.asSubsystemCommand(
 			new DeferredCommand(
 				() -> new RunCommand(() -> roller.setVoltage(finalVoltage))
-					.until(roller.isBeforePositionSupplier(Rotation2d.fromRotations(finalRotations + roller.getPosition().getRotations()))),
+					.until(() -> roller.isBeforePosition(Rotation2d.fromRotations(finalRotations + roller.getPosition().getRotations()))),
 				Set.of(roller)
 			),
 			"Roll " + rotations + " rotations"

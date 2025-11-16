@@ -11,14 +11,17 @@ import java.util.function.BooleanSupplier;
 public class Roller extends GBSubsystem {
 
 	private final ControllableMotor roller;
+
 	private final InputSignal<Double> voltageSignal;
 	private final InputSignal<Rotation2d> positionSignal;
 	private final InputSignal<Double> currentSignal;
+
 	private final IRequest<Double> VoltageRequest;
 	private final IRequest<Rotation2d> PositionRequest;
-	private final Rotation2d tolerance;
-	private final RollerCommandsBuilder commandsBuilder;
 
+	private final Rotation2d tolerance;
+
+	private final RollerCommandsBuilder commandsBuilder;
 	public Roller(
 		String logPath,
 		ControllableMotor roller,
@@ -76,16 +79,14 @@ public class Roller extends GBSubsystem {
 		return positionSignal.isNear(position, tolerance);
 	}
 
-	public BooleanSupplier isPastPositionSupplier(Rotation2d position) {
-		return () -> positionSignal.isGreater(position);
-	}
 
-	public BooleanSupplier isBeforePositionSupplier(Rotation2d position) {
-		return () -> positionSignal.isLess(position);
+
+	public boolean isBeforePosition(Rotation2d position) {
+		return positionSignal.isLess(position);
 	}
 
 	public boolean isPastPosition(Rotation2d position) {
-		return Math.abs(position.getDegrees() - positionSignal.getLatestValue().getDegrees()) < tolerance.getDegrees();
+		return positionSignal.isGreater(position);
 	}
 
 

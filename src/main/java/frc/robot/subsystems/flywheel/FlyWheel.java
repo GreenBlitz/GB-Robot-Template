@@ -7,8 +7,10 @@ import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
+import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.math.ToleranceMath;
 import org.littletonrobotics.junction.Logger;
+
 
 public class FlyWheel extends GBSubsystem {
 
@@ -20,6 +22,8 @@ public class FlyWheel extends GBSubsystem {
 	private final InputSignal<Rotation2d> velocitySignal;
 	private final InputSignal<Double> voltageSignal;
 	private final InputSignal<Double> currentSignal;
+
+	private final SysIdCalibrator sysIdCalibrator;
 
 	private final FlyWheelCommandBuilder flyWheelCommandBuilder;
 
@@ -38,8 +42,10 @@ public class FlyWheel extends GBSubsystem {
 		this.velocitySignal = velocitySignal;
 		this.voltageSignal = voltageSignal;
 		this.currentSignal = currentSignal;
+		this.sysIdCalibrator = new SysIdCalibrator(masterMotor.getSysidConfigInfo(), this, this::setVoltage);
 		this.masterMotor = masterMotor;
 		this.flyWheelCommandBuilder = new FlyWheelCommandBuilder(this);
+		setDefaultCommand(getCommandBuilder().stop());
 	}
 
 	public FlyWheelCommandBuilder getCommandBuilder() {
@@ -92,6 +98,7 @@ public class FlyWheel extends GBSubsystem {
 		joystick.A.onTrue(getCommandBuilder().setTargetVelocity(Rotation2d.fromRotations(1)));
 		joystick.B.onTrue(getCommandBuilder().setTargetVelocity(Rotation2d.fromRotations(2)));
 		joystick.POV_DOWN.onTrue(getCommandBuilder().stop());
+		sysIdCalibrator.setAllButtonsForCalibration(joystick);
 	}
 
 }

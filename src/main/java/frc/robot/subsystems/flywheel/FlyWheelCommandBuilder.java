@@ -14,7 +14,6 @@ public class FlyWheelCommandBuilder extends GBCommandsBuilder {
 	public FlyWheelCommandBuilder(FlyWheel flyWheel) {
 		super();
 		this.flyWheel = flyWheel;
-		flyWheel.setDefaultCommand(stop());
 	}
 
 	public Command setTargetVelocity(Rotation2d velocity) {

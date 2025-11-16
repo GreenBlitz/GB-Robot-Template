@@ -73,6 +73,9 @@ public class KrakenX60FlyWheelBuilder {
 		followerConfig.motorConfig.Feedback.SensorToMechanismRatio = 8.41;
 		followerConfig.followerIDs = new TalonFXFollowerConfig.TalonFXFollowerID[] {
 			new TalonFXFollowerConfig.TalonFXFollowerID("flyWheelFollower", IDs.TalonFXIDs.FLYWHEEL_FOLLOWER, false)};
+		followerConfig.motorConfig.CurrentLimits.StatorCurrentLimit = 40;
+		followerConfig.motorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+		followerConfig.motorConfig.Feedback.RotorToSensorRatio = Constants.ROTOR_TO_SENSOR_RATIO;
 		return followerConfig;
 	}
 

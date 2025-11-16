@@ -1,13 +1,17 @@
-[ ] motors id
+- [ ] ROTOR_TO_SENSOR_RATIO
 
-[ ] ROTOR_TO_SENSOR_RATIO
+- [ ] SensorToMechanismRatio
 
-[ ] SensorToMechanismRatio
+- [ ] kP
 
-[ ] kP
+- [ ] Bus chain
 
-[ ]  kI
+- [ ]  kI
 
-[ ] kD
+- [ ] kD
 
-[ ] CurrentLimit
+- [ ] CurrentLimit
+
+- [ ] FLYWHEEL id
+
+- [ ] FLYWHEEL_FOLLOWER id

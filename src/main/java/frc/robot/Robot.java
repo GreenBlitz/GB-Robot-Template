@@ -9,6 +9,7 @@ import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.TalonFXArmBuilder;
+import frc.robot.subsystems.constants.turret.TurretConstants;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 
@@ -24,7 +25,7 @@ public class Robot {
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
-		turret = TalonFXArmBuilder.buildMotionMagicArm();
+		turret = TalonFXArmBuilder.buildMotionMagicArm(TurretConstants.LOG_PATH, TurretConstants.DEVICE_ID, TurretConstants.IS_INVERTED,TurretConstants.TALON_FX_FOLLOWER_CONFIG, TurretConstants.SYS_ID_ROUTINE_CONFIG, TurretConstants.FEEDBACK_CONFIGS, TurretConstants.REAL_SLOTS_CONFIG, TurretConstants.SIMULATION_SLOTS_CONFIG, TurretConstants.CURRENT_LIMIT, TurretConstants.SIGNALS_FREQUENCY,);
 	}
 
 	public void periodic() {

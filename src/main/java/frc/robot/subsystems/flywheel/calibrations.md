@@ -4,7 +4,7 @@
 - [ ] FLYWHEEL_FOLLOWER id
 - [ ] ROTOR_TO_SENSOR_RATIO
 - [ ] SensorToMechanismRatio
-- - [ ] CurrentLimit
+- [ ] CurrentLimit
 - [ ] Bus chain
 - [ ] kP
 - [ ] kI

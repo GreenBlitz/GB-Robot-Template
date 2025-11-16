@@ -1,10 +1,10 @@
-#### Flywheel calibrations ####
+ Flywheel calibrations
 --------------------------------
 - [ ] ROTOR_TO_SENSOR_RATIO
 - [ ] SensorToMechanismRatio
 - [ ] Bus chain
 - [ ] kP
-- [ ]  kI
+- [ ] kI
 - [ ] kD
 - [ ] CurrentLimit
 - [ ] FLYWHEEL id

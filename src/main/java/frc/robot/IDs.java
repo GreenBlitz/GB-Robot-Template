@@ -3,6 +3,7 @@ package frc.robot;
 public class IDs {
 
 	public static class TalonFXIDs {
+        public static int hoodId = 30;
 	}
 
 	public static class CANCoderIDs {

@@ -7,6 +7,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.TalonFXArmBuilder;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 
@@ -18,9 +21,16 @@ import frc.utils.battery.BatteryUtil;
 public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);
+    private final Arm hood;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
+
+        hood = TalonFXArmBuilder.buildMotionMagicArm(
+                RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Hood",
+                new Phoenix6DeviceID(IDs.TalonFXIDs.hoodId,BusChain.ROBORIO),
+
+                )
 	}
 
 	public void periodic() {
@@ -35,4 +45,7 @@ public class Robot {
 		return new PathPlannerAutoWrapper();
 	}
 
+    public Arm getHood() {
+        return hood;
+    }
 }

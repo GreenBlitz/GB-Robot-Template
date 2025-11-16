@@ -2,6 +2,7 @@ package frc.robot.subsystems.flywheel;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.*;
+import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -32,7 +33,7 @@ public class KrakenX60FlyWheelBuilder {
 				LinearSystemId.createFlywheelSystem(
 					DCMotor.getKrakenX60Foc(followerConfig.followerIDs.length + 1),
 					Constants.MOMENT_OF_INERTIA,
-					Constants.ROTOR_TO_SENSOR_RATIO_MASTER * Constants.SENSOR_TO_MECHANISM_RATIO_MASTER
+					Constants.SENSOR_TO_MECHANISM_RATIO_MASTER
 				),
 				DCMotor.getKrakenX60Foc(followerConfig.followerIDs.length + 1)
 			)
@@ -60,7 +61,7 @@ public class KrakenX60FlyWheelBuilder {
 		configuration.CurrentLimits.StatorCurrentLimit = 40;
 		configuration.CurrentLimits.StatorCurrentLimitEnable = true;
 		configuration.Feedback.SensorToMechanismRatio = Constants.SENSOR_TO_MECHANISM_RATIO_MASTER;
-		configuration.Feedback.RotorToSensorRatio = Constants.ROTOR_TO_SENSOR_RATIO_MASTER;
+		configuration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 		if (Robot.ROBOT_TYPE.equals(RobotType.REAL)) {
 			configuration.Slot0.kP = Constants.KP;
 			configuration.Slot0.kI = Constants.KI;
@@ -84,7 +85,7 @@ public class KrakenX60FlyWheelBuilder {
 		followerConfig.motorConfig.Feedback.SensorToMechanismRatio = Constants.SENSOR_TO_MECHANISM_RATIO_FOLLOWER;
 		followerConfig.motorConfig.CurrentLimits.StatorCurrentLimit = 40;
 		followerConfig.motorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-		followerConfig.motorConfig.Feedback.RotorToSensorRatio = Constants.ROTOR_TO_SENSOR_RATIO_FOLLOWER;
+		followerConfig.motorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 		followerConfig.followerIDs = new TalonFXFollowerConfig.TalonFXFollowerID[] {
 			new TalonFXFollowerConfig.TalonFXFollowerID("flyWheelFollower", IDs.TalonFXIDs.FLYWHEEL_FOLLOWER, false)};
 		return followerConfig;

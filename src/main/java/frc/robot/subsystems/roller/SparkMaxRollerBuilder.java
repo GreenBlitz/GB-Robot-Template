@@ -25,19 +25,21 @@ import frc.utils.AngleUnit;
 
 public class SparkMaxRollerBuilder {
 
-	private static SparkMaxWrapper generateSparkMaxWrapper(int id){
+	private static SparkMaxWrapper generateSparkMaxWrapper(int id) {
 		SparkMaxDeviceID ID = new SparkMaxDeviceID(id);
 		return new SparkMaxWrapper(ID);
 	}
-	private static SimpleMotorSimulation generateSimulation(double gearRatio){
+
+	private static SimpleMotorSimulation generateSimulation(double gearRatio) {
 		return new SimpleMotorSimulation(
-				new DCMotorSim(
-						LinearSystemId
-								.createDCMotorSystem(DCMotor.getNEO(RollerConstants.NUMBER_OF_MOTORS), RollerConstants.MOMENT_OF_INERTIA, gearRatio),
-						DCMotor.getNEO(RollerConstants.NUMBER_OF_MOTORS)
-				)
+			new DCMotorSim(
+				LinearSystemId
+					.createDCMotorSystem(DCMotor.getNEO(RollerConstants.NUMBER_OF_MOTORS), RollerConstants.MOMENT_OF_INERTIA, gearRatio),
+				DCMotor.getNEO(RollerConstants.NUMBER_OF_MOTORS)
+			)
 		);
 	}
+
 	public static Roller generate(
 		String logPath,
 		int id,
@@ -84,8 +86,6 @@ public class SparkMaxRollerBuilder {
 		double debounceTime,
 		boolean isForwardLimitSwitch
 	) {
-
-
 		SparkMaxWrapper sparkMaxWrapper = generateSparkMaxWrapper(id);
 
 		SimpleMotorSimulation rollerSimulation = generateSimulation(gearRatio);
@@ -93,30 +93,37 @@ public class SparkMaxRollerBuilder {
 		BrushlessSparkMAXMotor roller = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, rollerSimulation, new SysIdRoutine.Config());
 
 		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal(
-				"position",
-				() -> sparkMaxWrapper.getEncoder().getPosition(),
-				AngleUnit.ROTATIONS
+			"position",
+			() -> sparkMaxWrapper.getEncoder().getPosition(),
+			AngleUnit.ROTATIONS
 		);
 		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("current", sparkMaxWrapper::getOutputCurrent);
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
 
 		roller.applyConfiguration(configRoller(gearRatio, currentLimit, kP, kI, kD));
 
-		SparkMaxRequest<Rotation2d> positionRequest = SparkMaxRequestBuilder.build(Rotation2d.fromRotations(0), SparkBase.ControlType.kPosition, 0);
+		SparkMaxRequest<Rotation2d> positionRequest = SparkMaxRequestBuilder
+			.build(Rotation2d.fromRotations(0), SparkBase.ControlType.kPosition, 0);
 		SparkMaxRequest<Double> voltageRequest = SparkMaxRequestBuilder.build(0.0, SparkBase.ControlType.kVoltage, 0);
 
 		IDigitalInput digitalInput;
 		if (Robot.ROBOT_TYPE.isSimulation()) {
 			digitalInput = new ChooserDigitalInput(digitalInputName);
 		} else {
-			if(isForwardLimitSwitch){
-				digitalInput = new SuppliedDigitalInput(() -> sparkMaxWrapper.getForwardLimitSwitch().isPressed() ,new Debouncer(debounceTime));
-			}
-			else{
-				digitalInput = new SuppliedDigitalInput(() -> sparkMaxWrapper.getForwardLimitSwitch().isPressed(),new Debouncer(debounceTime),true);
+			if (isForwardLimitSwitch) {
+				digitalInput = new SuppliedDigitalInput(() -> sparkMaxWrapper.getForwardLimitSwitch().isPressed(), new Debouncer(debounceTime));
+			} else {
+				digitalInput = new SuppliedDigitalInput(
+					() -> sparkMaxWrapper.getForwardLimitSwitch().isPressed(),
+					new Debouncer(debounceTime),
+					true
+				);
 			}
 		}
-		return new Pair<Roller, IDigitalInput>(new Roller(logPath,roller,voltageSignal,positionSignal,currentSignal,voltageRequest,positionRequest,tolerance),digitalInput);
+		return new Pair<Roller, IDigitalInput>(
+			new Roller(logPath, roller, voltageSignal, positionSignal, currentSignal, voltageRequest, positionRequest, tolerance),
+			digitalInput
+		);
 	}
 
 	private static SparkMaxConfiguration configRoller(double gearRatio, int currentLimit, double kP, double kI, double kD) {

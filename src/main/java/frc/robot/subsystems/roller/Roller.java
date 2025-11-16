@@ -6,7 +6,6 @@ import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
 
-import java.util.function.BooleanSupplier;
 
 public class Roller extends GBSubsystem {
 
@@ -22,6 +21,7 @@ public class Roller extends GBSubsystem {
 	private final Rotation2d tolerance;
 
 	private final RollerCommandsBuilder commandsBuilder;
+
 	public Roller(
 		String logPath,
 		ControllableMotor roller,
@@ -78,7 +78,6 @@ public class Roller extends GBSubsystem {
 	public boolean isAtPosition(Rotation2d position) {
 		return positionSignal.isNear(position, tolerance);
 	}
-
 
 
 	public boolean isBeforePosition(Rotation2d position) {

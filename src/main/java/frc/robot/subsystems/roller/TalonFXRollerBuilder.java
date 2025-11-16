@@ -17,7 +17,6 @@ import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
 import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
-import frc.robot.hardware.phoenix6.signal.Phoenix6DoubleSignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.utils.AngleUnit;
 import frc.utils.battery.BatteryUtil;
@@ -26,7 +25,7 @@ public class TalonFXRollerBuilder {
 
 	public static Roller generate(
 		String logPath,
-		 Phoenix6DeviceID id,
+		Phoenix6DeviceID id,
 		double gearRatio,
 		int currentLimit,
 		Rotation2d tolerance,

@@ -13,7 +13,6 @@ import frc.robot.Robot;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.digitalinput.channeled.ChanneledDigitalInput;
 import frc.robot.hardware.digitalinput.chooser.ChooserDigitalInput;
-import frc.robot.hardware.digitalinput.supplied.SuppliedDigitalInput;
 import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
 import frc.robot.hardware.rev.motors.BrushlessSparkMAXMotor;
 import frc.robot.hardware.rev.motors.SparkMaxConfiguration;
@@ -50,7 +49,11 @@ public class SparkMaxRollerBuilder {
 
 		BrushlessSparkMAXMotor roller = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, rollerSimulation, new SysIdRoutine.Config());
 
-		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal("position", () -> sparkMaxWrapper.getEncoder().getPosition(), AngleUnit.ROTATIONS);
+		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal(
+			"position",
+			() -> sparkMaxWrapper.getEncoder().getPosition(),
+			AngleUnit.ROTATIONS
+		);
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
 		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("current", sparkMaxWrapper::getOutputCurrent);
 
@@ -62,15 +65,26 @@ public class SparkMaxRollerBuilder {
 		return new Roller(logPath, roller, voltageSignal, positionSignal, currentSignal, voltageRequest, angleRequest, tolerance);
 	}
 
-	public static Pair<Roller, IDigitalInput> generateWithDigitalInput(String logPath, int id, double gearRatio, int currentLimit, Rotation2d tolerance, double kP, double kI, double kD,String digitalInputName,int channel,double debounceTime){
+	public static Pair<Roller, IDigitalInput> generateWithDigitalInput(
+		String logPath,
+		int id,
+		double gearRatio,
+		int currentLimit,
+		Rotation2d tolerance,
+		double kP,
+		double kI,
+		double kD,
+		String digitalInputName,
+		int channel,
+		double debounceTime
+	) {
 		IDigitalInput digitalInput;
-		if (Robot.ROBOT_TYPE.isSimulation()){
+		if (Robot.ROBOT_TYPE.isSimulation()) {
 			digitalInput = new ChooserDigitalInput(digitalInputName);
-		}
-		else {
+		} else {
 			digitalInput = new ChanneledDigitalInput(new DigitalInput(channel), new Debouncer(debounceTime));
 		}
-		return new Pair<>(generate(logPath,id,gearRatio,currentLimit,tolerance,kP,kI,kD),digitalInput);
+		return new Pair<>(generate(logPath, id, gearRatio, currentLimit, tolerance, kP, kI, kD), digitalInput);
 	}
 
 	private static SparkMaxConfiguration configRoller(double gearRatio, int currentLimit, double kP, double kI, double kD) {

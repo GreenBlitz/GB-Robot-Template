@@ -43,6 +43,7 @@ public class JoysticksBindings {
 			chassisDriverInputs.rotationalPower = 0;
 		}
 	}
+
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...

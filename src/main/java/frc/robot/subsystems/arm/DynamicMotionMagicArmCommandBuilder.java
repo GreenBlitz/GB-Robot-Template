@@ -11,7 +11,7 @@ public class DynamicMotionMagicArmCommandBuilder extends ArmCommandBuilder {
 
 	private final DynamicMotionMagicArm arm;
 
-	public DynamicMotionMagicArmCommandBuilder(DynamicMotionMagicArm arm) {
+DynamicMotionMagicArmCommandBuilder(DynamicMotionMagicArm arm) {
 		super(arm);
 		this.arm = arm;
 	}

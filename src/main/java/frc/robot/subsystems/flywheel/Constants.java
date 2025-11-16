@@ -16,8 +16,8 @@ public class Constants {
 	public final static double KA_SIM = 0.0;
 	public final static double ROTOR_TO_SENSOR_RATIO_MASTER = 1;
 	public final static double ROTOR_TO_SENSOR_RATIO_FOLLOWER = 1;
-	public final static double SENSOR_TO_MECHANISM_RATIO_FOLLOWER = 8.41;
 	public final static double SENSOR_TO_MECHANISM_RATIO_MASTER = 150 / 7.0;
+	public final static double SENSOR_TO_MECHANISM_RATIO_FOLLOWER = 8.41;
 	public final static double MOMENT_OF_INERTIA = 0.000000001;
 
 }

@@ -8,7 +8,6 @@ import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.calibration.sysid.SysIdCalibrator;
-import frc.utils.math.ToleranceMath;
 import org.littletonrobotics.junction.Logger;
 
 
@@ -72,8 +71,8 @@ public class FlyWheel extends GBSubsystem {
 		return currentSignal.getLatestValue();
 	}
 
-	public boolean isAtVelocity(Rotation2d targetVelocity, double tolerance) {
-		return ToleranceMath.isNear(getVelocity().getRotations(), targetVelocity.getRotations(), tolerance);
+	public boolean isAtVelocity(Rotation2d targetVelocity, Rotation2d tolerance) {
+		return velocitySignal.isNear(targetVelocity, tolerance);
 	}
 
 	public void stop() {

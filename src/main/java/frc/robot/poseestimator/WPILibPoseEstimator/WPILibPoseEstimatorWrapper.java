@@ -148,11 +148,10 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	private void updateIsIMUOffsetCalibrated() {
 		double poseToIMUAngleDifferenceStdDev = StatisticsMath
 			.calculateStandardDeviations(poseToIMUAngleDifferenceBuffer, Rotation2d::getRadians);
-		boolean isIMUOffsetCalibrated = poseToIMUAngleDifferenceStdDev < WPILibPoseEstimatorConstants.MAX_POSE_TO_IMU_ANGLE_DIFFERENCE_STD_DEV
+		isIMUOffsetCalibrated = poseToIMUAngleDifferenceStdDev < WPILibPoseEstimatorConstants.MAX_POSE_TO_IMU_ANGLE_DIFFERENCE_STD_DEV
 			&& poseToIMUAngleDifferenceBuffer.isFull();
 		Logger.recordOutput(logPath + "/poseToIMUOffsetStdDev", poseToIMUAngleDifferenceStdDev);
 		Logger.recordOutput(logPath + "/isIMUOffsetCalibrated", isIMUOffsetCalibrated);
-		this.isIMUOffsetCalibrated = isIMUOffsetCalibrated;
 	}
 
 	private Optional<Rotation2d> getPoseToIMUAngleDifference(OdometryData data) {

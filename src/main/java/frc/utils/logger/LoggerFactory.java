@@ -31,6 +31,7 @@ public class LoggerFactory {
 		Logger.setReplaySource(new WPILOGReader(logPath));
 		Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_replay")));
 		Logger.start();
+        replaySource.start();
 	}
 
 	private static void startRealLogger() {

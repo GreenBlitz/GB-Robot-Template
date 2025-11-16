@@ -21,7 +21,7 @@ public class FlyWheel extends GBSubsystem {
 	private final InputSignal<Double> voltageSignal;
 	private final InputSignal<Double> currentSignal;
 
-	private final ControllableMotor masterMotor;
+	private final ControllableMotor motor;
 
 	private final FlyWheelCommandBuilder flyWheelCommandBuilder;
 
@@ -34,7 +34,7 @@ public class FlyWheel extends GBSubsystem {
 		InputSignal<Rotation2d> velocitySignal,
 		InputSignal<Double> voltageSignal,
 		InputSignal<Double> currentSignal,
-		ControllableMotor masterMotor
+		ControllableMotor motor
 	) {
 		super(logPath);
 		this.velocityRequest = velocityRequest;
@@ -42,9 +42,9 @@ public class FlyWheel extends GBSubsystem {
 		this.velocitySignal = velocitySignal;
 		this.voltageSignal = voltageSignal;
 		this.currentSignal = currentSignal;
-		this.masterMotor = masterMotor;
+		this.motor = motor;
 		this.flyWheelCommandBuilder = new FlyWheelCommandBuilder(this);
-		this.sysIdCalibrator = new SysIdCalibrator(masterMotor.getSysidConfigInfo(), this, this::setVoltage);
+		this.sysIdCalibrator = new SysIdCalibrator(motor.getSysidConfigInfo(), this, this::setVoltage);
 		setDefaultCommand(getCommandBuilder().stop());
 	}
 
@@ -53,11 +53,11 @@ public class FlyWheel extends GBSubsystem {
 	}
 
 	public void setTargetVelocity(Rotation2d velocity) {
-		masterMotor.applyRequest(velocityRequest.withSetPoint(velocity));
+		motor.applyRequest(velocityRequest.withSetPoint(velocity));
 	}
 
 	public void setVoltage(double voltage) {
-		masterMotor.applyRequest(voltageRequest.withSetPoint(voltage));
+		motor.applyRequest(voltageRequest.withSetPoint(voltage));
 	}
 
 	public Rotation2d getVelocity() {
@@ -77,17 +77,17 @@ public class FlyWheel extends GBSubsystem {
 	}
 
 	public void stop() {
-		masterMotor.stop();
+		motor.stop();
 	}
 
 	public void setBrake(boolean brake) {
-		masterMotor.setBrake(brake);
+		motor.setBrake(brake);
 	}
 
 	@Override
 	protected void subsystemPeriodic() {
-		masterMotor.updateSimulation();
-		masterMotor.updateInputs(velocitySignal, voltageSignal, currentSignal);
+		motor.updateSimulation();
+		motor.updateInputs(velocitySignal, voltageSignal, currentSignal);
 		Logger.recordOutput(getLogPath() + "/targetVelocity", velocityRequest.getSetPoint());
 	}
 

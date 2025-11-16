@@ -1,11 +1,16 @@
  Flywheel calibrations
 --------------------------------
+- [ ] FLYWHEEL id
+- [ ] FLYWHEEL_FOLLOWER id
 - [ ] ROTOR_TO_SENSOR_RATIO
 - [ ] SensorToMechanismRatio
+- - [ ] CurrentLimit
 - [ ] Bus chain
 - [ ] kP
 - [ ] kI
 - [ ] kD
-- [ ] CurrentLimit
-- [ ] FLYWHEEL id
-- [ ] FLYWHEEL_FOLLOWER id
+- [ ] kA
+- [ ] kS
+- [ ] kV
+- [ ] follower inverted
+

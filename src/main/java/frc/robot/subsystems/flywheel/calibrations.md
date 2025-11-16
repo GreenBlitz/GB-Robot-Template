@@ -1,9 +1,13 @@
 [ ] motors id
-[ ]ROTOR_TO_SENSOR_RATIO
-[ ]SensorToMechanismRatio
-[ ]P
-[ ]I
-[ ]D
-[ ]PeakForwardVoltage
-[ ]PeakReverseVoltage
-[ ]CurrentLimit
+
+[ ] ROTOR_TO_SENSOR_RATIO
+
+[ ] SensorToMechanismRatio
+
+[ ] kP
+
+[ ]  kI
+
+[ ] kD
+
+[ ] CurrentLimit

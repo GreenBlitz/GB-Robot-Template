@@ -15,7 +15,7 @@ public class LimelightStdDevCalculations {
 		StandardDeviations2D stdDevAdditions
 	) {
 		return () -> exponentialTagDistanceDividedByVisibleTags(
-			limelight.getMT1RawData().tagCount,
+			limelight.getMT1RawData().tagCount(),
 			limelight.getPrimaryTagPoseInCameraSpace().getTranslation().getNorm(),
 			stdDevExponents,
 			stdDevFactors,

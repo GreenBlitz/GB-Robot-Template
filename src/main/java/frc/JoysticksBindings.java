@@ -5,8 +5,11 @@ import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
+import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.subsystems.roller.Roller;
 import frc.robot.subsystems.roller.SparkMaxRollerBuilder;
+import frc.robot.subsystems.roller.TalonFXRollerBuilder;
 import frc.robot.subsystems.swerve.ChassisPowers;
 
 public class JoysticksBindings {
@@ -19,7 +22,6 @@ public class JoysticksBindings {
 	private static final SmartJoystick SIXTH_JOYSTICK = new SmartJoystick(JoystickPorts.SIXTH);
 
 	private static final ChassisPowers chassisDriverInputs = new ChassisPowers();
-	private static Roller r = SparkMaxRollerBuilder.generate("aaaaa", 1, 9, 40, Rotation2d.fromDegrees(15), 5, 0, 0);
 
 	public static void configureBindings(Robot robot) {
 		// Set 'chassisDriverInputs' to swerve...
@@ -50,7 +52,6 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		usedJoystick.A.onTrue(r.getCommandsBuilder().rollRotationsAtVoltageForwards(6, 7));
 		// bindings...
 	}
 

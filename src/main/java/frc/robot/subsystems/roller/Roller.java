@@ -47,6 +47,8 @@ public class Roller extends GBSubsystem {
 		this.tolerance = tolerance;
 		this.commandsBuilder = new RollerCommandsBuilder(this);
 		this.targetPosition = Rotation2d.fromRotations(0);
+		roller.setBrake(true);
+
 	}
 
 	public RollerCommandsBuilder getCommandsBuilder() {
@@ -85,10 +87,6 @@ public class Roller extends GBSubsystem {
 		return positionSignal.getLatestValue();
 	}
 
-	public Rotation2d getTargetPosition() {
-		return targetPosition;
-	}
-
 	public boolean isAtPosition(Rotation2d position) {
 		return positionSignal.isNear(position, tolerance);
 	}
@@ -98,19 +96,23 @@ public class Roller extends GBSubsystem {
 		return positionSignal.isLess(position);
 	}
 
-	public BooleanSupplier isPastPosition(Rotation2d position) {
-		return () -> positionSignal.isGreater(position);
+	public boolean isPastPosition(Rotation2d position) {
+		return positionSignal.isGreater(position);
 	}
 
-	private void log() {
-		Logger.recordOutput(getLogPath() + "targetPosition", targetPosition);
+	public boolean didPassTarget(boolean isForward){
+		if (isForward){
+			return isPastPosition(targetPosition);
+		}
+		else {
+			return isBeforePosition(targetPosition);
+		}
 	}
 
 
 	@Override
 	public void subsystemPeriodic() {
 		roller.updateSimulation();
-		log();
 		roller.updateInputs(voltageSignal, currentSignal, positionSignal);
 	}
 

@@ -1,15 +1,9 @@
 package frc;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
-import frc.robot.hardware.phoenix6.BusChain;
-import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
-import frc.robot.subsystems.roller.Roller;
-import frc.robot.subsystems.roller.SparkMaxRollerBuilder;
-import frc.robot.subsystems.roller.TalonFXRollerBuilder;
 import frc.robot.subsystems.swerve.ChassisPowers;
 
 public class JoysticksBindings {

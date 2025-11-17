@@ -5,9 +5,6 @@ import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
-import org.littletonrobotics.junction.Logger;
-
-import java.util.function.BooleanSupplier;
 
 
 public class Roller extends GBSubsystem {
@@ -48,7 +45,6 @@ public class Roller extends GBSubsystem {
 		this.commandsBuilder = new RollerCommandsBuilder(this);
 		this.targetPosition = Rotation2d.fromRotations(0);
 		roller.setBrake(true);
-
 	}
 
 	public RollerCommandsBuilder getCommandsBuilder() {
@@ -100,11 +96,10 @@ public class Roller extends GBSubsystem {
 		return positionSignal.isGreater(position);
 	}
 
-	public boolean didPassTarget(boolean isForward){
-		if (isForward){
+	public boolean didPassTarget(boolean isForward) {
+		if (isForward) {
 			return isPastPosition(targetPosition);
-		}
-		else {
+		} else {
 			return isBeforePosition(targetPosition);
 		}
 	}

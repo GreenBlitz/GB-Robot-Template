@@ -137,7 +137,6 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	public void updateMT2() {
 		if (pipeline.isUsingMT()) {
 			inputs.mt2Inputs().mtRawData = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-			Logger.processInputs(logPath + "/mt2Inputs", inputs.mt2Inputs());
             if (Robot.ROBOT_TYPE.isReplay() && Robot.isOutputReplay) {
                 LogTable logTable = RobotManager.logTable.getSubtable("RealOutputs/" + logPath);
                 LimelightHelpers.PoseEstimate logRawData = logTable.get("megaTag2RawData", new LimelightHelpers.PoseEstimate());
@@ -156,6 +155,8 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
                 } else {
                     inputs.mt2Inputs().mtRawData = logRawData;
                 }
+            } else {
+                Logger.processInputs(logPath + "/mt2Inputs", inputs.mt2Inputs());
             }
 
 			mt2PoseObservation = new RobotPoseObservation(getMT2RawData().timestampSeconds(), getMT2RawData().pose(), calculateMT2StdDevs.get());

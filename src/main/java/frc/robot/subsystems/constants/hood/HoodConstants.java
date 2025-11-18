@@ -13,9 +13,9 @@ public class HoodConstants {
 	public static final double kS = 67;
 	public static final double kA = 67;
 	public static final double kG = 67;
-    public static final double SIM_kP = 67;
-    public static final double SIM_kI = 67;
-    public static final double SIM_kD = 67;
+	public static final double SIM_kP = 67;
+	public static final double SIM_kI = 67;
+	public static final double SIM_kD = 67;
 	public static final double SIM_kS = 0;
 	public static final double SIM_kG = 0;
 	public static final double ARBITRARY_FEEDFORWARD = 67;

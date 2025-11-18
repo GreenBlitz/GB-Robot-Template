@@ -1,9 +1,12 @@
 package frc.robot;
 
+import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
+
 public class IDs {
 
 	public static class TalonFXIDs {
-        public static int hoodId = 30;
+        public static Phoenix6DeviceID hoodId = new Phoenix6DeviceID(30, BusChain.ROBORIO);
 	}
 
 	public static class CANCoderIDs {

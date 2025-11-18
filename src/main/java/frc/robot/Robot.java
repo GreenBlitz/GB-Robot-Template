@@ -31,11 +31,18 @@ public class Robot {
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
-		hood = createHood();
+		this.hood = createHood();
+	}
+
+	public void resetSubsystems() {
+		if (HoodConstants.STARTING_POSITION.getRadians()>hood.getPosition().getRadians())
+			hood.setPosition(HoodConstants.STARTING_POSITION);
 	}
 
 	public void periodic() {
 		BusChain.refreshAll();
+
+		resetSubsystems();
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
@@ -51,41 +58,15 @@ public class Robot {
 	}
 
 	public Arm createHood() {
-		FeedbackConfigs hoodFeedbackConfig = new FeedbackConfigs();
-		Slot0Configs realSlotConfig = new Slot0Configs();
-		Slot0Configs simulationSlotConfig = new Slot0Configs();
-
-		realSlotConfig.kP = HoodConstants.kP;
-		realSlotConfig.kI = HoodConstants.kI;
-		realSlotConfig.kD = HoodConstants.kD;
-		realSlotConfig.kV = HoodConstants.kV;
-		realSlotConfig.kG = HoodConstants.kG;
-		realSlotConfig.kA = HoodConstants.kA;
-		realSlotConfig.kS = HoodConstants.kS;
-		realSlotConfig.GravityType = GravityTypeValue.Arm_Cosine;
-		
-		simulationSlotConfig.kP = HoodConstants.SIM_kP;
-		simulationSlotConfig.kI = HoodConstants.SIM_kI;
-		simulationSlotConfig.kD = HoodConstants.SIM_kD;
-		simulationSlotConfig.kG = HoodConstants.SIM_kG;
-		simulationSlotConfig.kS = HoodConstants.SIM_kS;
-		simulationSlotConfig.GravityType = GravityTypeValue.Arm_Cosine;
-
-		hoodFeedbackConfig.RotorToSensorRatio = HoodConstants.GEAR_RATIO;
-		hoodFeedbackConfig.SensorToMechanismRatio = 1;
-		hoodFeedbackConfig.FeedbackRemoteSensorID = 20;
-		hoodFeedbackConfig.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-		
-		
 		return TalonFXArmBuilder.buildMotionMagicArm(
 			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Hood",
 			IDs.TalonFXIDs.hoodId,
 			HoodConstants.IS_INVERTED,
 			new TalonFXFollowerConfig(),
 			new SysIdRoutine.Config(), // q
-			hoodFeedbackConfig,
-			realSlotConfig,
-			simulationSlotConfig,
+			HoodConstants.FEEDBACK_CONFIGS,
+			HoodConstants.REAL_SLOT,
+			HoodConstants.SIMULATION_SLOT,
 			HoodConstants.CURRENT_LIMIT,
 			(int) RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			HoodConstants.MOMENT_OF_INERTIA,

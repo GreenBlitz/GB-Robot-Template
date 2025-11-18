@@ -49,14 +49,6 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-		new Trigger(() -> true).whileTrue(
-			new RunCommand(
-				() -> robot.getTank().arcadeDrive(
-					usedJoystick.getAxisValue(Axis.LEFT_Y),
-					usedJoystick.getAxisValue(Axis.RIGHT_X)
-				)
-			)
-		);
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

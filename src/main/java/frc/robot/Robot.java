@@ -6,7 +6,6 @@ package frc.robot;
 
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
-import edu.wpi.first.units.VoltageUnit;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.RobotManager;
@@ -26,14 +25,14 @@ import frc.utils.battery.BatteryUtil;
 public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);
-    private final Arm hood;
+	private final Arm hood;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
-        FeedbackConfigs hoodFeedbackConfig = new FeedbackConfigs();
-        Slot0Configs realSlotConfig = new Slot0Configs();
-        Slot0Configs simulationSlotConfig = new Slot0Configs();
-		
+		FeedbackConfigs hoodFeedbackConfig = new FeedbackConfigs();
+		Slot0Configs realSlotConfig = new Slot0Configs();
+		Slot0Configs simulationSlotConfig = new Slot0Configs();
+
 		realSlotConfig.kP = HoodConstants.KP;
 		realSlotConfig.kI = 0;
 		realSlotConfig.kD = 0;
@@ -41,35 +40,35 @@ public class Robot {
 		realSlotConfig.kG = HoodConstants.KG;
 		realSlotConfig.kA = HoodConstants.KA;
 		realSlotConfig.kS = HoodConstants.KS;
-		
+
 		simulationSlotConfig.kP = HoodConstants.SIM_KP;
 		simulationSlotConfig.kI = 0;
 		simulationSlotConfig.kD = 0;
 		simulationSlotConfig.kG = 0;
 		simulationSlotConfig.kS = 0;
-		
-        hoodFeedbackConfig.SensorToMechanismRatio = HoodConstants.GEAR_RATIO;
-        hoodFeedbackConfig.RotorToSensorRatio = 1;
 
-        hood = TalonFXArmBuilder.buildMotionMagicArm(
-                RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Hood",
-				IDs.TalonFXIDs.hoodId,
-                HoodConstants.IS_INVERTED,
-                new TalonFXFollowerConfig(),
-                new SysIdRoutine.Config(), //q
-                hoodFeedbackConfig,
-				realSlotConfig,
-				simulationSlotConfig,
-				HoodConstants.CURRENT_LIMIT,
-				(int)RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-				HoodConstants.MOMENT_OF_INERTIA,
-				HoodConstants.ARM_LENGTH_METERS,
-				HoodConstants.ARBITRARY_FEEDFORWARD,
-				HoodConstants.FORWARD_SOFTWARE_LIMIT,
-				HoodConstants.BACKWARD_SOFTWARE_LIMIT,
-				HoodConstants.DEFAULT_MAX_ACCELERATION_PER_SECOND_SQUARE,
-				HoodConstants.DEFAULT_MAX_VELOCITY_PER_SECOND
-                );
+		hoodFeedbackConfig.SensorToMechanismRatio = HoodConstants.GEAR_RATIO;
+		hoodFeedbackConfig.RotorToSensorRatio = 1;
+
+		hood = TalonFXArmBuilder.buildMotionMagicArm(
+			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Hood",
+			IDs.TalonFXIDs.hoodId,
+			HoodConstants.IS_INVERTED,
+			new TalonFXFollowerConfig(),
+			new SysIdRoutine.Config(), // q
+			hoodFeedbackConfig,
+			realSlotConfig,
+			simulationSlotConfig,
+			HoodConstants.CURRENT_LIMIT,
+			(int) RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+			HoodConstants.MOMENT_OF_INERTIA,
+			HoodConstants.ARM_LENGTH_METERS,
+			HoodConstants.ARBITRARY_FEEDFORWARD,
+			HoodConstants.FORWARD_SOFTWARE_LIMIT,
+			HoodConstants.BACKWARD_SOFTWARE_LIMIT,
+			HoodConstants.DEFAULT_MAX_ACCELERATION_PER_SECOND_SQUARE,
+			HoodConstants.DEFAULT_MAX_VELOCITY_PER_SECOND
+		);
 	}
 
 	public void periodic() {
@@ -84,7 +83,8 @@ public class Robot {
 		return new PathPlannerAutoWrapper();
 	}
 
-    public Arm getHood() {
-        return hood;
-    }
+	public Arm getHood() {
+		return hood;
+	}
+
 }

@@ -19,7 +19,7 @@ def USB_B_IP = "172.22.11.2"
 def IPS = [ROUTER_IP, USB_B_IP]
 def reachableIP
 
-final MAX_JAVA_HEAP_SIZE_MB = 100;
+final MAX_JAVA_HEAP_SIZE_MB = 10;
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project DeployUtils.

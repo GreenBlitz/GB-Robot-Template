@@ -81,10 +81,10 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	@Override
 	public void updateOdometry(OdometryData data) {
 		Twist2d changeInPose = kinematics.toTwist2d(lastOdometryData.getWheelPositions(), data.getWheelPositions());
-		Rotation2d odometryAngle = getOdometryAngle(data, changeInPose);
+		Rotation2d odometryAngle = getOdometryAngle(data.getGyroYaw(), Rotation2d.fromRadians(changeInPose.dtheta));
 		poseEstimator.updateWithTime(data.getTimestamp(), odometryAngle, data.getWheelPositions());
 
-		getPoseToIMUAngleDifference(data).ifPresent(poseToIMUAngleDifferenceBuffer::insert);
+		getPoseToIMUAngleDifference(data.getGyroYaw(), data.getTimestamp()).ifPresent(poseToIMUAngleDifferenceBuffer::insert);
 		updateIsIMUOffsetCalibrated();
 
 		lastOdometryAngle = odometryAngle;
@@ -120,15 +120,12 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		poseToIMUAngleDifferenceBuffer.clear();
 	}
 
-	public boolean getIsIMUOffsetCalibrated() {
+	public boolean isIMUOffsetCalibrated() {
 		return isIMUOffsetCalibrated;
 	}
 
-	public Rotation2d getOdometryAngle(OdometryData odometryData, Twist2d changeInPose) {
-		if (odometryData.getGyroYaw().isEmpty()) {
-			return lastOdometryAngle.plus(Rotation2d.fromRadians(changeInPose.dtheta));
-		}
-		return odometryData.getGyroYaw().get();
+	public Rotation2d getOdometryAngle(Optional<Rotation2d> gyroYaw, Rotation2d changeInOrientation) {
+		return gyroYaw.orElseGet(() -> lastOdometryAngle.plus(changeInOrientation));
 	}
 
 	public void resetIsIMUOffsetCalibrated() {
@@ -154,8 +151,8 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		Logger.recordOutput(logPath + "/isIMUOffsetCalibrated", isIMUOffsetCalibrated);
 	}
 
-	private Optional<Rotation2d> getPoseToIMUAngleDifference(OdometryData data) {
-		return data.getGyroYaw().map(rotation2d -> getEstimatedPoseAtTimestamp(data.getTimestamp()).getRotation().minus(rotation2d));
+	private Optional<Rotation2d> getPoseToIMUAngleDifference(Optional<Rotation2d> gyroYaw, double timeStamp) {
+		return gyroYaw.map(gyroYawRotation -> getEstimatedPoseAtTimestamp(timeStamp).getRotation().minus(gyroYawRotation));
 	}
 
 	private void log() {

@@ -6,6 +6,8 @@ package frc.robot;
 
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.RobotManager;
@@ -60,16 +62,21 @@ public class Robot {
 		realSlotConfig.kG = HoodConstants.kG;
 		realSlotConfig.kA = HoodConstants.kA;
 		realSlotConfig.kS = HoodConstants.kS;
-
+		realSlotConfig.GravityType = GravityTypeValue.Arm_Cosine;
+		
 		simulationSlotConfig.kP = HoodConstants.SIM_kP;
 		simulationSlotConfig.kI = HoodConstants.SIM_kI;
 		simulationSlotConfig.kD = HoodConstants.SIM_kD;
 		simulationSlotConfig.kG = HoodConstants.SIM_kG;
 		simulationSlotConfig.kS = HoodConstants.SIM_kS;
+		simulationSlotConfig.GravityType = GravityTypeValue.Arm_Cosine;
 
-		hoodFeedbackConfig.SensorToMechanismRatio = HoodConstants.GEAR_RATIO;
-		hoodFeedbackConfig.RotorToSensorRatio = 1;
-
+		hoodFeedbackConfig.RotorToSensorRatio = HoodConstants.GEAR_RATIO;
+		hoodFeedbackConfig.SensorToMechanismRatio = 1;
+		hoodFeedbackConfig.FeedbackRemoteSensorID = 20;
+		hoodFeedbackConfig.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+		
+		
 		return TalonFXArmBuilder.buildMotionMagicArm(
 			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Hood",
 			IDs.TalonFXIDs.hoodId,

@@ -21,20 +21,20 @@ public class RollerCommandsBuilder extends GBCommandsBuilder {
 	}
 
 	public Command setVoltage(double voltage) {
-		return roller.asSubsystemCommand(new RunCommand(() -> roller.setVoltage(voltage)), "set roller voltage to " + voltage);
+		return roller.asSubsystemCommand(new RunCommand(() -> roller.setVoltage(voltage)), "Set roller voltage to " + voltage);
 	}
 
 	public Command stop() {
-		return roller.asSubsystemCommand(new RunCommand(() -> roller.stop()), "stop roller");
+		return roller.asSubsystemCommand(new RunCommand(() -> roller.stop()), "Stop roller");
 	}
 
 
 	public Command setPower(Supplier<Double> supplier) {
-		return roller.asSubsystemCommand(new RunCommand(() -> roller.setPower(supplier.get())), "set power with supplier");
+		return roller.asSubsystemCommand(new RunCommand(() -> roller.setPower(supplier.get())), "Set power with supplier");
 	}
 
 	public Command setPower(Double power) {
-		return roller.asSubsystemCommand(new RunCommand(() -> roller.setPower(power)), "set power to " + power);
+		return roller.asSubsystemCommand(new RunCommand(() -> roller.setPower(power)), "Set power to " + power);
 	}
 
 	public Command rollRotationsAtVoltageForwards(double rotations, double voltage) {
@@ -44,7 +44,7 @@ public class RollerCommandsBuilder extends GBCommandsBuilder {
 				() -> new InitExecuteCommand(
 					() -> roller.updateTargetPosition(Rotation2d.fromRotations(rotations + roller.getPosition().getRotations())),
 					() -> roller.setVoltage(finalVoltage)
-				).until(() -> roller.didPassTarget(true)),
+				).until(() -> roller.didPassTargetForwards()),
 				Set.of(roller)
 			),
 			"Roll " + rotations + " rotations"
@@ -59,7 +59,7 @@ public class RollerCommandsBuilder extends GBCommandsBuilder {
 				() -> new InitExecuteCommand(
 					() -> roller.updateTargetPosition(Rotation2d.fromRotations(roller.getPosition().getRotations() - finalRotations)),
 					() -> roller.setVoltage(finalVoltage)
-				).until(() -> roller.didPassTarget(false)),
+				).until(() -> roller.didPassTargetBackwards()),
 				Set.of(roller)
 			),
 			"Roll " + rotations + " rotations backwards"

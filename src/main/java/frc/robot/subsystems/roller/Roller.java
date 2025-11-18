@@ -14,9 +14,8 @@ public class Roller extends GBSubsystem {
 	private final InputSignal<Double> voltageSignal;
 	private final InputSignal<Rotation2d> positionSignal;
 	private final InputSignal<Double> currentSignal;
-
 	private final IRequest<Double> VoltageRequest;
-	private final IRequest<Rotation2d> PositionRequest;
+	private final IRequest<Rotation2d> positionRequest;
 
 	private final Rotation2d tolerance;
 
@@ -37,14 +36,13 @@ public class Roller extends GBSubsystem {
 		super(logPath);
 		this.roller = roller;
 		this.voltageSignal = voltageSignal;
-		this.currentSignal = currentSignal;
 		this.positionSignal = positionSignal;
 		this.VoltageRequest = VoltageRequest;
-		this.PositionRequest = PositionRequest;
+		this.currentSignal = currentSignal;
+		this.positionRequest = PositionRequest;
 		this.tolerance = tolerance;
 		this.commandsBuilder = new RollerCommandsBuilder(this);
 		this.targetPosition = Rotation2d.fromRotations(0);
-		roller.setBrake(true);
 	}
 
 	public RollerCommandsBuilder getCommandsBuilder() {
@@ -96,14 +94,13 @@ public class Roller extends GBSubsystem {
 		return positionSignal.isGreater(position);
 	}
 
-	public boolean didPassTarget(boolean isForward) {
-		if (isForward) {
-			return isPastPosition(targetPosition);
-		} else {
-			return isBeforePosition(targetPosition);
-		}
+	public boolean didPassTargetForwards() {
+		return isPastPosition(targetPosition);
 	}
 
+	public boolean didPassTargetBackwards() {
+		return isBeforePosition(targetPosition);
+	}
 
 	@Override
 	public void subsystemPeriodic() {

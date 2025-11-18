@@ -25,11 +25,6 @@ import frc.utils.AngleUnit;
 
 public class SparkMaxRollerBuilder {
 
-	private static SparkMaxWrapper generateSparkMaxWrapper(int id) {
-		SparkMaxDeviceID ID = new SparkMaxDeviceID(id);
-		return new SparkMaxWrapper(ID);
-	}
-
 	private static SimpleMotorSimulation generateSimulation(double gearRatio) {
 		return new SimpleMotorSimulation(
 			new DCMotorSim(
@@ -42,7 +37,7 @@ public class SparkMaxRollerBuilder {
 
 	public static Roller generate(
 		String logPath,
-		int id,
+		SparkMaxDeviceID id,
 		double gearRatio,
 		int currentLimit,
 		Rotation2d tolerance,
@@ -50,7 +45,7 @@ public class SparkMaxRollerBuilder {
 		double kI,
 		double kD
 	) {
-		SparkMaxWrapper sparkMaxWrapper = generateSparkMaxWrapper(id);
+		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(id);
 
 		SimpleMotorSimulation rollerSimulation = generateSimulation(gearRatio);
 
@@ -74,7 +69,7 @@ public class SparkMaxRollerBuilder {
 
 	public static Pair<Roller, IDigitalInput> generateWithDigitalInput(
 		String logPath,
-		int id,
+		SparkMaxDeviceID id,
 		double gearRatio,
 		int currentLimit,
 		Rotation2d tolerance,
@@ -82,23 +77,22 @@ public class SparkMaxRollerBuilder {
 		double kI,
 		double kD,
 		String digitalInputName,
-		int channel,
 		double debounceTime,
 		boolean isForwardLimitSwitch
 	) {
-		SparkMaxWrapper sparkMaxWrapper = generateSparkMaxWrapper(id);
+		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(id);
 
 		SimpleMotorSimulation rollerSimulation = generateSimulation(gearRatio);
 
 		BrushlessSparkMAXMotor roller = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, rollerSimulation, new SysIdRoutine.Config());
 
+		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
 		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal(
 			"position",
 			() -> sparkMaxWrapper.getEncoder().getPosition(),
 			AngleUnit.ROTATIONS
 		);
 		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("current", sparkMaxWrapper::getOutputCurrent);
-		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
 
 		roller.applyConfiguration(configRoller(gearRatio, currentLimit, kP, kI, kD));
 

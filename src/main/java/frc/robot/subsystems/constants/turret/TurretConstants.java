@@ -22,5 +22,7 @@ public class TurretConstants {
     public static final Slot0Configs SIMULATION_SLOTS_CONFIG = new Slot0Configs();
     public static final double CURRENT_LIMIT = 40;
     public static final int SIGNALS_FREQUENCY = (int) RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ;
+    public static final double MOMENT_OF_INERTIA = 0.001;
+    public static final double ARM_LENGTH = 0.04;
 
 }

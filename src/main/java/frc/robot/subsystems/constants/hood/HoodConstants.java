@@ -6,12 +6,18 @@ public class HoodConstants {
 
 	public static final boolean IS_INVERTED = false;
 	public static final double GEAR_RATIO = 67;
-	public static final double KP = 67;
-	public static final double SIM_KP = 67;
-	public static final double KV = 67;
-	public static final double KS = 67;
-	public static final double KA = 67;
-	public static final double KG = 67;
+	public static final double kP = 67;
+	public static final double kI = 67;
+	public static final double kD = 67;
+	public static final double kV = 67;
+	public static final double kS = 67;
+	public static final double kA = 67;
+	public static final double kG = 67;
+    public static final double SIM_kP = 67;
+    public static final double SIM_kI = 67;
+    public static final double SIM_kD = 67;
+	public static final double SIM_kS = 0;
+	public static final double SIM_kG = 0;
 	public static final double ARBITRARY_FEEDFORWARD = 67;
 	public static final double CURRENT_LIMIT = 40;
 	public static final double MOMENT_OF_INERTIA = 0.001;

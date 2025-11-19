@@ -32,7 +32,6 @@ public class RollerCommandsBuilder extends GBCommandsBuilder {
 		return roller.asSubsystemCommand(new RunCommand(() -> roller.stop()), "Stop roller");
 	}
 
-
 	public Command setPower(Supplier<Double> supplier) {
 		return roller.asSubsystemCommand(new RunCommand(() -> roller.setPower(supplier.get())), "Set power with supplier");
 	}

@@ -25,7 +25,7 @@ public class RollerCommandsBuilder extends GBCommandsBuilder {
 	}
 
 	public Command setVoltage(Supplier<Double> voltage) {
-		return roller.asSubsystemCommand(new RunCommand(() -> roller.setVoltage(voltage.get())), "Set roller voltage to " + voltage.get());
+		return roller.asSubsystemCommand(new RunCommand(() -> roller.setVoltage(voltage.get())), "Set roller voltage");
 	}
 
 	public Command stop() {

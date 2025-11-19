@@ -34,19 +34,22 @@ public class SparkMaxRollerBuilder {
 			)
 		);
 	}
-	private static Roller generateRoller(String logPath,
-										 SparkMaxWrapper sparkMaxWrapper,
-										 double gearRatio,
-										 int currentLimit,
-										 Rotation2d tolerance){
+
+	private static Roller generateRoller(
+		String logPath,
+		SparkMaxWrapper sparkMaxWrapper,
+		double gearRatio,
+		int currentLimit,
+		Rotation2d tolerance
+	) {
 		SimpleMotorSimulation rollerSimulation = generateSimulation(gearRatio);
 
 		BrushlessSparkMAXMotor roller = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, rollerSimulation, new SysIdRoutine.Config());
 
 		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal(
-				"position",
-				() -> sparkMaxWrapper.getEncoder().getPosition(),
-				AngleUnit.ROTATIONS
+			"position",
+			() -> sparkMaxWrapper.getEncoder().getPosition(),
+			AngleUnit.ROTATIONS
 		);
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
 		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("current", sparkMaxWrapper::getOutputCurrent);
@@ -58,15 +61,9 @@ public class SparkMaxRollerBuilder {
 		return new Roller(logPath, roller, voltageSignal, positionSignal, currentSignal, voltageRequest, tolerance);
 	}
 
-	public static Roller generate(
-		String logPath,
-		SparkMaxDeviceID id,
-		double gearRatio,
-		int currentLimit,
-		Rotation2d tolerance
-	) {
+	public static Roller generate(String logPath, SparkMaxDeviceID id, double gearRatio, int currentLimit, Rotation2d tolerance) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(id);
-		return generateRoller(logPath,sparkMaxWrapper,gearRatio,currentLimit,tolerance);
+		return generateRoller(logPath, sparkMaxWrapper, gearRatio, currentLimit, tolerance);
 	}
 
 	public static Pair<Roller, IDigitalInput> generateWithDigitalInput(
@@ -95,10 +92,7 @@ public class SparkMaxRollerBuilder {
 				);
 			}
 		}
-		return new Pair<Roller, IDigitalInput>(
-			generateRoller(logPath,sparkMaxWrapper,gearRatio,currentLimit,tolerance),
-			digitalInput
-		);
+		return new Pair<Roller, IDigitalInput>(generateRoller(logPath, sparkMaxWrapper, gearRatio, currentLimit, tolerance), digitalInput);
 	}
 
 	private static SparkMaxConfiguration configRoller(double gearRatio, int currentLimit) {

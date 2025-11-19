@@ -64,19 +64,19 @@ public class KrakenX60FlyWheelBuilder {
 		configuration.Feedback.SensorToMechanismRatio = Constants.SENSOR_TO_MECHANISM_RATIO_MASTER;
 		configuration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 		if (Robot.ROBOT_TYPE.equals(RobotType.REAL)) {
-			configuration.Slot0.kP = Constants.KP;
-			configuration.Slot0.kI = Constants.KI;
-			configuration.Slot0.kD = Constants.KD;
-			configuration.Slot0.kV = Constants.KV;
-			configuration.Slot0.kA = Constants.KA;
-			configuration.Slot0.kS = Constants.KS;
+			configuration.Slot0.kP = Constants.kP;
+			configuration.Slot0.kI = Constants.kI;
+			configuration.Slot0.kD = Constants.kD;
+			configuration.Slot0.kV = Constants.kV;
+			configuration.Slot0.kA = Constants.kA;
+			configuration.Slot0.kS = Constants.kS;
 		} else {
-			configuration.Slot0.kP = Constants.KP_SIM;
-			configuration.Slot0.kI = Constants.KI_SIM;
-			configuration.Slot0.kD = Constants.KD_SIM;
-			configuration.Slot0.kV = Constants.KV_SIM;
-			configuration.Slot0.kA = Constants.KA_SIM;
-			configuration.Slot0.kS = Constants.KS_SIM;
+			configuration.Slot0.kP = Constants.kP_SIM;
+			configuration.Slot0.kI = Constants.kI_SIM;
+			configuration.Slot0.kD = Constants.kD_SIM;
+			configuration.Slot0.kV = Constants.kV_SIM;
+			configuration.Slot0.kA = Constants.kA_SIM;
+			configuration.Slot0.kS = Constants.kS_SIM;
 		}
 		return configuration;
 	}

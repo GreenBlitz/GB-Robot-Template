@@ -9,7 +9,6 @@ import frc.robot.RobotConstants;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
 
-
 public class TurretConstants {
 
 	public static final double GEAR_RATIO = 79.2;
@@ -49,7 +48,7 @@ public class TurretConstants {
 	}
 
 	public static final double CURRENT_LIMIT = 40;
-	public static final int SIGNALS_FREQUENCY = (int) RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ;
+	public static final double SIGNALS_FREQUENCY = RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ;
 	public static final double MOMENT_OF_INERTIA = 0.001;
 	public static final double ARM_LENGTH = 0.0;
 	public static final double ARBITRARY_FEED_FORWARD = 0.0;

@@ -112,7 +112,7 @@ public class TalonFXArmBuilder {
 		Slot0Configs realSlotsConfig,
 		Slot0Configs simulationSlotsConfig,
 		double currentLimit,
-		int signalsFrequency,
+		double signalsFrequency,
 		double JkGMeterSquared,
 		double armLengthMeters,
 		double arbitraryFeedForward,
@@ -276,7 +276,7 @@ public class TalonFXArmBuilder {
 		return Phoenix6RequestBuilder.build(new VoltageOut(0), true);
 	}
 
-	private static ArmSignals buildSignals(TalonFXMotor motor, int signalFrequency, BusChain busChain) {
+	private static ArmSignals buildSignals(TalonFXMotor motor, double signalFrequency, BusChain busChain) {
 		Phoenix6AngleSignal velocity = Phoenix6SignalBuilder
 			.build(motor.getDevice().getVelocity(), signalFrequency, AngleUnit.ROTATIONS, busChain);
 		return new ArmSignals(

@@ -35,12 +35,24 @@ public class OdometryData {
 		this.wheelPositions = wheelPositions;
 	}
 
+	public void setTimestamp(double timestamp) {
+		this.timestamp = timestamp;
+	}
+
 	public void setGyroYaw(Optional<Rotation2d> gyroYaw) {
 		this.gyroYaw = gyroYaw;
 	}
 
-	public void setTimestamp(double timestamp) {
-		this.timestamp = timestamp;
+	public void setGyroYaw(Rotation2d lastGyroAngle, Rotation2d changeInOrientation) {
+		setGyroYaw(Optional.of(lastGyroAngle.plus(changeInOrientation)));
+	}
+
+	public void setGyroYawIfNotPresent(Optional<Rotation2d> gyroYaw, Rotation2d lastGyroAngle, Rotation2d changeInOrientation) {
+		setGyroYaw(Optional.of(gyroYaw.orElseGet(() -> lastGyroAngle.plus(changeInOrientation))));
+	}
+
+	public void setGyroYawIfNotPresent(Rotation2d lastGyroAngle, Rotation2d changeInOrientation) {
+		setGyroYawIfNotPresent(this.gyroYaw, lastGyroAngle, changeInOrientation);
 	}
 
 }

@@ -81,13 +81,13 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	@Override
 	public void updateOdometry(OdometryData data) {
 		Twist2d changeInPose = kinematics.toTwist2d(lastOdometryData.getWheelPositions(), data.getWheelPositions());
-		Rotation2d odometryAngle = getOdometryAngle(data.getGyroYaw(), Rotation2d.fromRadians(changeInPose.dtheta));
-		poseEstimator.updateWithTime(data.getTimestamp(), odometryAngle, data.getWheelPositions());
+		data.setGyroYawIfNotPresent(Rotation2d.fromRadians(changeInPose.dtheta), lastOdometryAngle);
+		poseEstimator.updateWithTime(data.getTimestamp(), data.getGyroYaw().get(), data.getWheelPositions());
 
 		getPoseToIMUAngleDifference(data.getGyroYaw(), data.getTimestamp()).ifPresent(poseToIMUAngleDifferenceBuffer::insert);
 		updateIsIMUOffsetCalibrated();
 
-		lastOdometryAngle = odometryAngle;
+		lastOdometryAngle = data.getGyroYaw().get();
 		lastOdometryData.setWheelPositions(data.getWheelPositions());
 		lastOdometryData.setGyroYaw(data.getGyroYaw());
 		lastOdometryData.setTimestamp(data.getTimestamp());
@@ -101,9 +101,9 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	}
 
 	@Override
-	public void resetOdometry(SwerveModulePosition[] wheelPositions, Rotation2d gyroAngle, Pose2d robotPose) {
-		poseEstimator.resetPosition(gyroAngle, wheelPositions, robotPose);
-		this.lastOdometryData = new OdometryData(wheelPositions, Optional.of(gyroAngle), TimeUtil.getCurrentTimeSeconds());
+	public void resetOdometry(OdometryData odometryData, Pose2d robotPose) {
+		poseEstimator.resetPosition(odometryData.getGyroYaw().get(), odometryData.getWheelPositions(), robotPose);
+		this.lastOdometryData = odometryData;
 		poseToIMUAngleDifferenceBuffer.clear();
 	}
 
@@ -122,10 +122,6 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 
 	public boolean isIMUOffsetCalibrated() {
 		return isIMUOffsetCalibrated;
-	}
-
-	public Rotation2d getOdometryAngle(Optional<Rotation2d> gyroYaw, Rotation2d changeInOrientation) {
-		return gyroYaw.orElseGet(() -> lastOdometryAngle.plus(changeInOrientation));
 	}
 
 	public void resetIsIMUOffsetCalibrated() {

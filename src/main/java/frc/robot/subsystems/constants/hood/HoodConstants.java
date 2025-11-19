@@ -29,10 +29,10 @@ public class HoodConstants {
 		SIMULATION_SLOT.kS = 0;
 		SIMULATION_SLOT.GravityType = GravityTypeValue.Arm_Cosine;
 
-		FEEDBACK_CONFIGS.RotorToSensorRatio = 450 / 7.0;
-		FEEDBACK_CONFIGS.SensorToMechanismRatio = 1;
-		FEEDBACK_CONFIGS.FeedbackRemoteSensorID = 20;
-		FEEDBACK_CONFIGS.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+		FEEDBACK_CONFIGS.RotorToSensorRatio = 1;
+		FEEDBACK_CONFIGS.SensorToMechanismRatio = 450/7.0;
+//		FEEDBACK_CONFIGS.FeedbackRemoteSensorID = 20;
+//		FEEDBACK_CONFIGS.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
 	}
 
 	public static final boolean IS_INVERTED = false;
@@ -41,7 +41,7 @@ public class HoodConstants {
 	public static final double MOMENT_OF_INERTIA = 0.001;
 	public static final double ARM_LENGTH_METERS = 0.3;
 	public static final Rotation2d FORWARD_SOFTWARE_LIMIT = Rotation2d.fromDegrees(246 - 16);
-	public static final Rotation2d BACKWARD_SOFTWARE_LIMIT = Rotation2d.fromDegrees(-24);
+	public static final Rotation2d BACKWARD_SOFTWARE_LIMIT = Rotation2d.fromDegrees(10);
 	public static final Rotation2d DEFAULT_MAX_ACCELERATION_PER_SECOND_SQUARE = Rotation2d.fromRotations(3);
 	public static final Rotation2d DEFAULT_MAX_VELOCITY_PER_SECOND = Rotation2d.fromRotations(3);
 

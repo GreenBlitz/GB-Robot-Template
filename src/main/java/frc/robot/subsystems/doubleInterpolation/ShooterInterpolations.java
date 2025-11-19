@@ -3,7 +3,6 @@ package frc.robot.subsystems.doubleInterpolation;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import frc.utils.InterpolationMap;
-
 import java.util.Map;
 import java.util.function.Supplier;
 

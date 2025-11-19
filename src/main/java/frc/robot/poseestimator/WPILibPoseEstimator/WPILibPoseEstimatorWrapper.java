@@ -129,6 +129,16 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		poseToUnoffsettedIMUAngleDifferenceBuffer.clear();
 	}
 
+	public void log() {
+		Logger.recordOutput(logPath + "/estimatedPose", getEstimatedPose());
+		Logger.recordOutput(logPath + "/odometryPose", getOdometryPose());
+		Logger.recordOutput(logPath + "/lastOdometryUpdate", lastOdometryData.getTimestamp());
+		if (lastVisionObservation != null) {
+			Logger.recordOutput(logPath + "/lastVisionUpdate", lastVisionObservation.timestampSeconds());
+		}
+		Logger.recordOutput(logPath + "/isIMUOffsetCalibrated", isIMUOffsetCalibrated);
+	}
+
 	public boolean isIMUOffsetCalibrated() {
 		return isIMUOffsetCalibrated;
 	}
@@ -157,16 +167,6 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 
 	private Optional<Rotation2d> getPoseToIMUAngleDifference(Optional<Rotation2d> gyroYaw, double timeStampSeconds) {
 		return gyroYaw.map(yaw -> getEstimatedPoseAtTimestamp(timeStampSeconds).getRotation().minus(yaw));
-	}
-
-	private void log() {
-		Logger.recordOutput(logPath + "/estimatedPose", getEstimatedPose());
-		Logger.recordOutput(logPath + "/odometryPose", getOdometryPose());
-		Logger.recordOutput(logPath + "/lastOdometryUpdate", lastOdometryData.getTimestamp());
-		if (lastVisionObservation != null) {
-			Logger.recordOutput(logPath + "/lastVisionUpdate", lastVisionObservation.timestampSeconds());
-		}
-		Logger.recordOutput(logPath + "/isIMUOffsetCalibrated", isIMUOffsetCalibrated);
 	}
 
 }

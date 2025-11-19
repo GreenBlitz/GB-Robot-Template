@@ -8,7 +8,7 @@ import frc.robot.subsystems.GBSubsystem;
 
 public class Roller extends GBSubsystem {
 
-	private final ControllableMotor roller;
+	protected final ControllableMotor roller;
 
 	private final InputSignal<Double> voltageSignal;
 	private final InputSignal<Rotation2d> positionSignal;
@@ -35,6 +35,7 @@ public class Roller extends GBSubsystem {
 		this.currentSignal = currentSignal;
 		this.tolerance = tolerance;
 		this.commandsBuilder = new RollerCommandsBuilder(this);
+		this.roller.resetPosition(Rotation2d.fromRotations(0));
 		this.targetPosition = Rotation2d.fromRotations(0);
 	}
 

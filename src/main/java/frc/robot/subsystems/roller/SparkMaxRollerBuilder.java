@@ -85,11 +85,7 @@ public class SparkMaxRollerBuilder {
 			if (isForwardLimitSwitch) {
 				digitalInput = new SuppliedDigitalInput(() -> sparkMaxWrapper.getForwardLimitSwitch().isPressed(), new Debouncer(debounceTime));
 			} else {
-				digitalInput = new SuppliedDigitalInput(
-					() -> sparkMaxWrapper.getForwardLimitSwitch().isPressed(),
-					new Debouncer(debounceTime),
-					true
-				);
+				digitalInput = new SuppliedDigitalInput(() -> sparkMaxWrapper.getReverseLimitSwitch().isPressed(), new Debouncer(debounceTime));
 			}
 		}
 		return new Pair<Roller, IDigitalInput>(generateRoller(logPath, sparkMaxWrapper, gearRatio, currentLimit, tolerance), digitalInput);

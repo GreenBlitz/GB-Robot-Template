@@ -1,7 +1,7 @@
  Flywheel calibrations
 --------------------------------
-- [ ] Flywheel id
-- [ ] Flywheel follower id
+- [ ] Motor id
+- [ ] Follower id
 - [ ] Rotor to sensor ratio
 - [ ] Sensor to mechanism ratio
 - [ ] Current limit

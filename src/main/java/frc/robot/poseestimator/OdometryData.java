@@ -8,14 +8,14 @@ import java.util.Optional;
 public class OdometryData {
 
 	private SwerveModulePosition[] wheelPositions = new SwerveModulePosition[4];
-	private Optional<Rotation2d> gyroYaw = Optional.empty();
+	private Optional<Rotation2d> IMUYaw = Optional.empty();
 	private double timestamp = 0;
 
 	public OdometryData() {}
 
-	public OdometryData(SwerveModulePosition[] swerveModulePositions, Optional<Rotation2d> gyroYaw, double timestamp) {
+	public OdometryData(SwerveModulePosition[] swerveModulePositions, Optional<Rotation2d> IMUYaw, double timestamp) {
 		this.wheelPositions = swerveModulePositions;
-		this.gyroYaw = gyroYaw;
+		this.IMUYaw = IMUYaw;
 		this.timestamp = timestamp;
 	}
 
@@ -27,8 +27,8 @@ public class OdometryData {
 		return timestamp;
 	}
 
-	public Optional<Rotation2d> getGyroYaw() {
-		return gyroYaw;
+	public Optional<Rotation2d> getIMUYaw() {
+		return IMUYaw;
 	}
 
 	public void setWheelPositions(SwerveModulePosition[] wheelPositions) {
@@ -39,20 +39,12 @@ public class OdometryData {
 		this.timestamp = timestamp;
 	}
 
-	public void setGyroYaw(Optional<Rotation2d> gyroYaw) {
-		this.gyroYaw = gyroYaw;
+	public void setIMUYaw(Optional<Rotation2d> IMUYaw) {
+		this.IMUYaw = IMUYaw;
 	}
 
-	public void setGyroYaw(Rotation2d lastGyroAngle, Rotation2d changeInOrientation) {
-		setGyroYaw(Optional.of(lastGyroAngle.plus(changeInOrientation)));
-	}
-
-	public void setGyroYawIfNotPresent(Optional<Rotation2d> gyroYaw, Rotation2d lastGyroAngle, Rotation2d changeInOrientation) {
-		setGyroYaw(Optional.of(gyroYaw.orElseGet(() -> lastGyroAngle.plus(changeInOrientation))));
-	}
-
-	public void setGyroYawIfNotPresent(Rotation2d lastGyroAngle, Rotation2d changeInOrientation) {
-		setGyroYawIfNotPresent(this.gyroYaw, lastGyroAngle, changeInOrientation);
+	public void setIMUYaw(Rotation2d IMUYaw) {
+		setIMUYaw(Optional.of(IMUYaw));
 	}
 
 }

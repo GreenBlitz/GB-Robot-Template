@@ -40,6 +40,7 @@ public class Robot {
 	public void periodic() {
 		BusChain.refreshAll();
 		resetSubsystems();
+
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		CommandScheduler.getInstance().run(); // Should be last

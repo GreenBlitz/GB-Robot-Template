@@ -78,7 +78,7 @@ public class Roller extends GBSubsystem {
 		return positionSignal.isNear(position, tolerance);
 	}
 
-	public boolean isBeforePosition(Rotation2d position) {
+	public boolean isBehindPosition(Rotation2d position) {
 		return positionSignal.isLess(position);
 	}
 
@@ -91,7 +91,7 @@ public class Roller extends GBSubsystem {
 	}
 
 	public boolean isBehindTargetPosition() {
-		return isBeforePosition(targetPosition);
+		return isBehindPosition(targetPosition);
 	}
 
 	@Override

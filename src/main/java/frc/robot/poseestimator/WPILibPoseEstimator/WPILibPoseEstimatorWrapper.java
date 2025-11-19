@@ -110,9 +110,9 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	}
 
 	@Override
-	public void resetOdometry(OdometryData odometryData, Pose2d robotPose) {
-		poseEstimator.resetPosition(odometryData.getIMUYaw().get(), odometryData.getWheelPositions(), robotPose);
-		this.lastOdometryData = odometryData;
+	public void resetOdometry(SwerveModulePosition[] wheelPositions, Rotation2d IMUAngle, double timestampSeconds, Pose2d robotPose) {
+		poseEstimator.resetPosition(IMUAngle, wheelPositions, robotPose);
+		this.lastOdometryData = new OdometryData(wheelPositions, Optional.of(IMUAngle), timestampSeconds);
 		poseToUnoffsettedIMUAngleDifferenceBuffer.clear();
 	}
 

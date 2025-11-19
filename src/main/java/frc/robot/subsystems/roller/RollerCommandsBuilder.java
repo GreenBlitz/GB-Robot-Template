@@ -47,7 +47,7 @@ public class RollerCommandsBuilder extends GBCommandsBuilder {
 				() -> new InitExecuteCommand(
 					() -> roller.updateTargetPosition(Rotation2d.fromRotations(rotations + roller.getPosition().getRotations())),
 					() -> roller.setVoltage(finalVoltage)
-				).until(roller::isPassedTargetPosition),
+				).until(roller::isPastTargetPosition),
 				Set.of(roller)
 			),
 			"Roll " + rotations + " rotations"

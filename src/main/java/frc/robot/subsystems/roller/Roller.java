@@ -7,7 +7,6 @@ import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
 
 public class Roller extends GBSubsystem {
-
 	private final ControllableMotor roller;
 
 	private final InputSignal<Double> voltageSignal;
@@ -86,7 +85,7 @@ public class Roller extends GBSubsystem {
 		return positionSignal.isGreater(position);
 	}
 
-	public boolean isPassedTargetPosition() {
+	public boolean isPastTargetPosition() {
 		return isPastPosition(targetPosition);
 	}
 

@@ -21,6 +21,7 @@ import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
 import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6DoubleSignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
+import frc.robot.subsystems.constants.flywheel.Constants;
 import frc.utils.AngleUnit;
 import com.ctre.phoenix6.controls.VoltageOut;
 

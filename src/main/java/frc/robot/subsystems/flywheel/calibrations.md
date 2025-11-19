@@ -1,18 +1,18 @@
  Flywheel calibrations
 --------------------------------
-- [ ] flywheel id
-- [ ] flywheel follower id
-- [ ] rotor to sensor ratio
-- [ ] sensor to mechanism ratio
-- [ ] current limit
-- [ ] bus chain
-- - [ ] follower inverted
-- [ ] master inverted
-- [ ] kP
-- [ ] kI
-- [ ] kD
-- [ ] kA
-- [ ] kS
-- [ ] kV
+- [ ] Flywheel id
+- [ ] Flywheel follower id
+- [ ] Rotor to sensor ratio
+- [ ] Sensor to mechanism ratio
+- [ ] Current limit
+- [ ] Bus chain
+- [ ] Follower inverted
+- [ ] Master inverted
+- [ ] KP
+- [ ] KI
+- [ ] KD
+- [ ] KA
+- [ ] KS
+- [ ] KV
 
 

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.flywheel;
+package frc.robot.subsystems.constants.flywheel;
 
 public class Constants {
 

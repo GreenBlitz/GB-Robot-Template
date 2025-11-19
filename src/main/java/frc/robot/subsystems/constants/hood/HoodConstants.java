@@ -16,10 +16,10 @@ public class HoodConstants {
 		REAL_SLOT.kP = 28;
 		REAL_SLOT.kI = 0;
 		REAL_SLOT.kD = 0;
-		REAL_SLOT.kV = 0.065;
-		REAL_SLOT.kG = 9.0000095367432;
+		REAL_SLOT.kS = 0.065;
+		REAL_SLOT.kG = 0.37;
+		REAL_SLOT.kV = 9.0000095367432;
 		REAL_SLOT.kA = 0.5209;
-		REAL_SLOT.kS = 0.37;
 		REAL_SLOT.GravityType = GravityTypeValue.Arm_Cosine;
 
 		SIMULATION_SLOT.kP = 70;
@@ -44,7 +44,6 @@ public class HoodConstants {
 	public static final Rotation2d BACKWARD_SOFTWARE_LIMIT = Rotation2d.fromDegrees(-24);
 	public static final Rotation2d DEFAULT_MAX_ACCELERATION_PER_SECOND_SQUARE = Rotation2d.fromRotations(3);
 	public static final Rotation2d DEFAULT_MAX_VELOCITY_PER_SECOND = Rotation2d.fromRotations(3);
-	public static final Rotation2d STARTING_POSITION = Rotation2d.fromRotations(-27);
 
 }
 

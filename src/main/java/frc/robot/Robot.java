@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.RobotManager;
@@ -31,15 +32,14 @@ public class Robot {
 	}
 
 	public void resetSubsystems() {
-		if (HoodConstants.STARTING_POSITION.getRadians() > hood.getPosition().getRadians())
-			hood.setPosition(HoodConstants.STARTING_POSITION);
+		if (HoodConstants.BACKWARD_SOFTWARE_LIMIT.getRadians() > hood.getPosition().getRadians()) {
+			hood.setPosition(HoodConstants.BACKWARD_SOFTWARE_LIMIT);
+		}
 	}
 
 	public void periodic() {
 		BusChain.refreshAll();
-
 		resetSubsystems();
-
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		CommandScheduler.getInstance().run(); // Should be last

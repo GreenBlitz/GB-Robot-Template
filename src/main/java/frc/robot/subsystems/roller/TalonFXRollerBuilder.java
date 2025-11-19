@@ -21,17 +21,16 @@ import frc.utils.battery.BatteryUtil;
 
 public class TalonFXRollerBuilder {
 
-	public static Roller generate(String logPath, Phoenix6DeviceID id, double gearRatio, int currentLimit, Rotation2d tolerance) {
+	public static Roller build(String logPath, Phoenix6DeviceID id, double gearRatio, int currentLimit, double momentOfInertia) {
 		SimpleMotorSimulation rollerSimulation = new SimpleMotorSimulation(
 			new DCMotorSim(
-				LinearSystemId
-					.createDCMotorSystem(DCMotor.getKrakenX60(RollerConstants.NUMBER_OF_MOTORS), RollerConstants.MOMENT_OF_INERTIA, gearRatio),
+				LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60(RollerConstants.NUMBER_OF_MOTORS), momentOfInertia, gearRatio),
 				DCMotor.getKrakenX60(RollerConstants.NUMBER_OF_MOTORS)
 			)
 		);
 		TalonFXMotor roller = new TalonFXMotor(logPath, id, new TalonFXFollowerConfig(), new SysIdRoutine.Config(), rollerSimulation);
 
-		roller.applyConfiguration(configRoller(gearRatio, currentLimit));
+		roller.applyConfiguration(buildConfiguration(gearRatio, currentLimit));
 
 		InputSignal<Double> voltageSignal = Phoenix6SignalBuilder
 			.build(roller.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, id.busChain());
@@ -47,10 +46,10 @@ public class TalonFXRollerBuilder {
 
 		Phoenix6Request<Double> VoltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), true);
 
-		return new Roller(logPath, roller, voltageSignal, positionSignal, currentSignal, VoltageRequest, tolerance);
+		return new Roller(logPath, roller, voltageSignal, positionSignal, currentSignal, VoltageRequest);
 	}
 
-	public static TalonFXConfiguration configRoller(double gearRatio, int currentLimit) {
+	public static TalonFXConfiguration buildConfiguration(double gearRatio, int currentLimit) {
 		TalonFXConfiguration configs = new TalonFXConfiguration();
 		configs.CurrentLimits.StatorCurrentLimit = currentLimit;
 		configs.CurrentLimits.StatorCurrentLimitEnable = true;

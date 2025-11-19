@@ -3,7 +3,6 @@ package frc.robot.subsystems.roller;
 import com.revrobotics.spark.SparkBase;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
@@ -25,24 +24,23 @@ import frc.utils.AngleUnit;
 
 public class SparkMaxRollerBuilder {
 
-	private static SimpleMotorSimulation generateSimulation(double gearRatio) {
+	private static SimpleMotorSimulation buildSimulation(double gearRatio, double momentOfInertia) {
 		return new SimpleMotorSimulation(
 			new DCMotorSim(
-				LinearSystemId
-					.createDCMotorSystem(DCMotor.getNEO(RollerConstants.NUMBER_OF_MOTORS), RollerConstants.MOMENT_OF_INERTIA, gearRatio),
+				LinearSystemId.createDCMotorSystem(DCMotor.getNEO(RollerConstants.NUMBER_OF_MOTORS), momentOfInertia, gearRatio),
 				DCMotor.getNEO(RollerConstants.NUMBER_OF_MOTORS)
 			)
 		);
 	}
 
-	private static Roller generateRoller(
+	private static Roller buildRoller(
 		String logPath,
 		SparkMaxWrapper sparkMaxWrapper,
 		double gearRatio,
 		int currentLimit,
-		Rotation2d tolerance
+		double momentOfInertia
 	) {
-		SimpleMotorSimulation rollerSimulation = generateSimulation(gearRatio);
+		SimpleMotorSimulation rollerSimulation = buildSimulation(gearRatio, momentOfInertia);
 
 		BrushlessSparkMAXMotor roller = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, rollerSimulation, new SysIdRoutine.Config());
 
@@ -54,27 +52,27 @@ public class SparkMaxRollerBuilder {
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
 		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("current", sparkMaxWrapper::getOutputCurrent);
 
-		roller.applyConfiguration(configRoller(gearRatio, currentLimit));
+		roller.applyConfiguration(buildConfiguration(gearRatio, currentLimit));
 
 		SparkMaxRequest<Double> voltageRequest = SparkMaxRequestBuilder.build(0.0, SparkBase.ControlType.kVoltage, 0);
 
-		return new Roller(logPath, roller, voltageSignal, positionSignal, currentSignal, voltageRequest, tolerance);
+		return new Roller(logPath, roller, voltageSignal, positionSignal, currentSignal, voltageRequest);
 	}
 
-	public static Roller generate(String logPath, SparkMaxDeviceID id, double gearRatio, int currentLimit, Rotation2d tolerance) {
+	public static Roller build(String logPath, SparkMaxDeviceID id, double gearRatio, int currentLimit, double momentOfInertia) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(id);
-		return generateRoller(logPath, sparkMaxWrapper, gearRatio, currentLimit, tolerance);
+		return buildRoller(logPath, sparkMaxWrapper, gearRatio, currentLimit, momentOfInertia);
 	}
 
-	public static Pair<Roller, IDigitalInput> generateWithDigitalInput(
+	public static Pair<Roller, IDigitalInput> buildWithDigitalInput(
 		String logPath,
 		SparkMaxDeviceID id,
 		double gearRatio,
 		int currentLimit,
-		Rotation2d tolerance,
 		String digitalInputName,
 		double debounceTime,
-		boolean isForwardLimitSwitch
+		boolean isForwardLimitSwitch,
+		double momentOfInertia
 	) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(id);
 
@@ -88,10 +86,10 @@ public class SparkMaxRollerBuilder {
 				digitalInput = new SuppliedDigitalInput(() -> sparkMaxWrapper.getReverseLimitSwitch().isPressed(), new Debouncer(debounceTime));
 			}
 		}
-		return new Pair<Roller, IDigitalInput>(generateRoller(logPath, sparkMaxWrapper, gearRatio, currentLimit, tolerance), digitalInput);
+		return new Pair<Roller, IDigitalInput>(buildRoller(logPath, sparkMaxWrapper, gearRatio, currentLimit, momentOfInertia), digitalInput);
 	}
 
-	private static SparkMaxConfiguration configRoller(double gearRatio, int currentLimit) {
+	private static SparkMaxConfiguration buildConfiguration(double gearRatio, int currentLimit) {
 		SparkMaxConfiguration configs = new SparkMaxConfiguration();
 		configs.getSparkMaxConfig().smartCurrentLimit(currentLimit);
 		configs.getSparkMaxConfig().encoder.positionConversionFactor(gearRatio);

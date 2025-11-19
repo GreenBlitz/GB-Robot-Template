@@ -21,4 +21,6 @@ public class WPILibPoseEstimatorConstants {
 
 	public static double MAX_POSE_TO_IMU_ANGLE_DIFFERENCE_STD_DEV = 0.0025;
 
+	public static double UNOFFSETTED_IMU_ANGLE_BUFFER_SIZE_SECONDS = 2;
+
 }

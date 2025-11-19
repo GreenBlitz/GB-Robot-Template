@@ -52,10 +52,11 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 			WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS.asColumnVector(),
 			WPILibPoseEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATIONS.asColumnVector()
 		);
-		this.lastOdometryData = new OdometryData(modulePositions, Optional.of(initialIMUAngle), TimeUtil.getCurrentTimeSeconds());
+		this.lastOdometryData = new OdometryData(TimeUtil.getCurrentTimeSeconds(), modulePositions, Optional.of(initialIMUAngle));
 		this.isIMUOffsetCalibrated = false;
 		this.poseToUnoffsettedIMUAngleDifferenceBuffer = new RingBuffer<>(WPILibPoseEstimatorConstants.POSE_TO_IMU_ANGLE_DIFFERENCE_BUFFER_SIZE);
-		this.unoffsettedIMUAngleBuffer = TimeInterpolatableBuffer.createBuffer(5);
+		this.unoffsettedIMUAngleBuffer = TimeInterpolatableBuffer
+			.createBuffer(WPILibPoseEstimatorConstants.UNOFFSETTED_IMU_ANGLE_BUFFER_SIZE_SECONDS);
 	}
 
 
@@ -110,9 +111,9 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	}
 
 	@Override
-	public void resetOdometry(SwerveModulePosition[] wheelPositions, Rotation2d IMUAngle, double timestampSeconds, Pose2d robotPose) {
+	public void resetOdometry(double timestampSeconds, SwerveModulePosition[] wheelPositions, Rotation2d IMUAngle, Pose2d robotPose) {
 		poseEstimator.resetPosition(IMUAngle, wheelPositions, robotPose);
-		this.lastOdometryData = new OdometryData(wheelPositions, Optional.of(IMUAngle), timestampSeconds);
+		this.lastOdometryData = new OdometryData(timestampSeconds, wheelPositions, Optional.of(IMUAngle));
 		poseToUnoffsettedIMUAngleDifferenceBuffer.clear();
 	}
 

@@ -53,11 +53,10 @@ public class RollerCommandsBuilder extends GBCommandsBuilder {
 
 	public Command rollRotationsAtVoltageBackwards(double rotations, double voltage) {
 		double finalVoltage = -Math.abs(voltage);
-		double finalRotations = -Math.abs(rotations);
 		return roller.asSubsystemCommand(
 			new DeferredCommand(
 				() -> new InitExecuteCommand(
-					() -> roller.updateTargetPosition(Rotation2d.fromRotations(roller.getPosition().getRotations() - finalRotations)),
+					() -> roller.updateTargetPosition(Rotation2d.fromRotations(roller.getPosition().getRotations() - rotations)),
 					() -> roller.setVoltage(finalVoltage)
 				).until(() -> roller.didPassTargetBackwards()),
 				Set.of(roller)

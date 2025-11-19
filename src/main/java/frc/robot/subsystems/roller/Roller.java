@@ -14,13 +14,10 @@ public class Roller extends GBSubsystem {
 	private final InputSignal<Double> voltageSignal;
 	private final InputSignal<Rotation2d> positionSignal;
 	private final InputSignal<Double> currentSignal;
-	private final IRequest<Double> VoltageRequest;
+	private final IRequest<Double> voltageRequest;
 	private final IRequest<Rotation2d> positionRequest;
-
 	private final Rotation2d tolerance;
-
 	private final RollerCommandsBuilder commandsBuilder;
-
 	private Rotation2d targetPosition;
 
 	public Roller(
@@ -29,17 +26,17 @@ public class Roller extends GBSubsystem {
 		InputSignal<Double> voltageSignal,
 		InputSignal<Rotation2d> positionSignal,
 		InputSignal<Double> currentSignal,
-		IRequest<Double> VoltageRequest,
-		IRequest<Rotation2d> PositionRequest,
+		IRequest<Double> voltageRequest,
+		IRequest<Rotation2d> positionRequest,
 		Rotation2d tolerance
 	) {
 		super(logPath);
 		this.roller = roller;
 		this.voltageSignal = voltageSignal;
 		this.positionSignal = positionSignal;
-		this.VoltageRequest = VoltageRequest;
+		this.voltageRequest = voltageRequest;
 		this.currentSignal = currentSignal;
-		this.positionRequest = PositionRequest;
+		this.positionRequest = positionRequest;
 		this.tolerance = tolerance;
 		this.commandsBuilder = new RollerCommandsBuilder(this);
 		this.targetPosition = Rotation2d.fromRotations(0);
@@ -54,7 +51,7 @@ public class Roller extends GBSubsystem {
 	}
 
 	public void setVoltage(double voltage) {
-		roller.applyRequest(VoltageRequest.withSetPoint(voltage));
+		roller.applyRequest(voltageRequest.withSetPoint(voltage));
 	}
 
 	public void setPower(double power) {

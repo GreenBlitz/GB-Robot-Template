@@ -152,7 +152,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	}
 
 	private Optional<Rotation2d> getPoseToIMUAngleDifference(Optional<Rotation2d> gyroYaw, double timeStamp) {
-		return gyroYaw.map(gyroYawRotation -> getEstimatedPoseAtTimestamp(timeStamp).getRotation().minus(gyroYawRotation));
+		return gyroYaw.map(yaw -> getEstimatedPoseAtTimestamp(timeStamp).getRotation().minus(yaw));
 	}
 
 	private void log() {

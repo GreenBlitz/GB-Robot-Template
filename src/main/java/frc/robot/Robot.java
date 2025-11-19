@@ -4,10 +4,6 @@
 
 package frc.robot;
 
-import com.ctre.phoenix6.configs.FeedbackConfigs;
-import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
-import com.ctre.phoenix6.signals.GravityTypeValue;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.RobotManager;
@@ -35,7 +31,7 @@ public class Robot {
 	}
 
 	public void resetSubsystems() {
-		if (HoodConstants.STARTING_POSITION.getRadians()>hood.getPosition().getRadians())
+		if (HoodConstants.STARTING_POSITION.getRadians() > hood.getPosition().getRadians())
 			hood.setPosition(HoodConstants.STARTING_POSITION);
 	}
 
@@ -63,7 +59,7 @@ public class Robot {
 			IDs.TalonFXIDs.hoodId,
 			HoodConstants.IS_INVERTED,
 			new TalonFXFollowerConfig(),
-			new SysIdRoutine.Config(), // q
+			new SysIdRoutine.Config(),
 			HoodConstants.FEEDBACK_CONFIGS,
 			HoodConstants.REAL_SLOT,
 			HoodConstants.SIMULATION_SLOT,

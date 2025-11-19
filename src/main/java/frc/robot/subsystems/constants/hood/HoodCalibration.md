@@ -36,3 +36,4 @@ Hood calibrations
 - [ ] Arm length
 - [ ] Arm Weight
 - [ ] id
+- [ ] sysIdRoutineConfig

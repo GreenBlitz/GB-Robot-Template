@@ -58,6 +58,10 @@ public class Robot {
 		);
 	}
 
+	public Arm getTurret() {
+		return turret;
+	}
+
 	public PathPlannerAutoWrapper getAutonomousCommand() {
 		return new PathPlannerAutoWrapper();
 	}

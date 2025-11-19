@@ -1,9 +1,12 @@
 package frc;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
+import frc.robot.subsystems.arm.ArmCommandBuilder;
+import frc.robot.subsystems.arm.DynamicMotionMagicArm;
 import frc.robot.subsystems.swerve.ChassisPowers;
 
 public class JoysticksBindings {

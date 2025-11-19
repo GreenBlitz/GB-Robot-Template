@@ -7,6 +7,7 @@ import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
 
 public class Roller extends GBSubsystem {
+
 	private final ControllableMotor roller;
 
 	private final InputSignal<Double> voltageSignal;

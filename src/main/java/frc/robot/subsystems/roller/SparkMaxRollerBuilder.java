@@ -27,8 +27,8 @@ public class SparkMaxRollerBuilder {
 	private static SimpleMotorSimulation buildSimulation(double gearRatio, double momentOfInertia) {
 		return new SimpleMotorSimulation(
 			new DCMotorSim(
-				LinearSystemId.createDCMotorSystem(DCMotor.getNEO(RollerConstants.NUMBER_OF_MOTORS), momentOfInertia, gearRatio),
-				DCMotor.getNEO(RollerConstants.NUMBER_OF_MOTORS)
+				LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), momentOfInertia, gearRatio),
+				DCMotor.getNEO(1)
 			)
 		);
 	}
@@ -44,13 +44,13 @@ public class SparkMaxRollerBuilder {
 
 		BrushlessSparkMAXMotor roller = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, rollerSimulation, new SysIdRoutine.Config());
 
+		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
+		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("current", sparkMaxWrapper::getOutputCurrent);
 		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal(
 			"position",
 			() -> sparkMaxWrapper.getEncoder().getPosition(),
 			AngleUnit.ROTATIONS
 		);
-		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
-		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("current", sparkMaxWrapper::getOutputCurrent);
 
 		roller.applyConfiguration(buildConfiguration(gearRatio, currentLimit));
 
@@ -69,10 +69,10 @@ public class SparkMaxRollerBuilder {
 		SparkMaxDeviceID id,
 		double gearRatio,
 		int currentLimit,
+		double momentOfInertia,
 		String digitalInputName,
 		double debounceTime,
-		boolean isForwardLimitSwitch,
-		double momentOfInertia
+		boolean isForwardLimitSwitch
 	) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(id);
 

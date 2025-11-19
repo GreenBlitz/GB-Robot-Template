@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 
 public class RollerCommandsBuilder extends GBCommandsBuilder {
 
-	private final Roller roller;
+	protected final Roller roller;
 
 	RollerCommandsBuilder(Roller roller) {
 		super();

@@ -9,14 +9,14 @@ public class OdometryData {
 
 	private double timestamp = 0;
 	private SwerveModulePosition[] wheelPositions = new SwerveModulePosition[4];
-	private Optional<Rotation2d> IMUYaw = Optional.empty();
+	private Optional<Rotation2d> imuYaw = Optional.empty();
 
 	public OdometryData() {}
 
-	public OdometryData(double timestamp, SwerveModulePosition[] swerveModulePositions, Optional<Rotation2d> IMUYaw) {
+	public OdometryData(double timestamp, SwerveModulePosition[] swerveModulePositions, Optional<Rotation2d> imuYaw) {
 		this.timestamp = timestamp;
 		this.wheelPositions = swerveModulePositions;
-		this.IMUYaw = IMUYaw;
+		this.imuYaw = imuYaw;
 	}
 
 	public double getTimestamp() {
@@ -27,8 +27,8 @@ public class OdometryData {
 		return wheelPositions;
 	}
 
-	public Optional<Rotation2d> getIMUYaw() {
-		return IMUYaw;
+	public Optional<Rotation2d> getImuYaw() {
+		return imuYaw;
 	}
 
 	public void setTimestamp(double timestamp) {
@@ -39,12 +39,12 @@ public class OdometryData {
 		this.wheelPositions = wheelPositions;
 	}
 
-	public void setIMUYaw(Optional<Rotation2d> IMUYaw) {
-		this.IMUYaw = IMUYaw;
+	public void setImuYaw(Optional<Rotation2d> imuYaw) {
+		this.imuYaw = imuYaw;
 	}
 
 	public void setIMUYaw(Rotation2d IMUYaw) {
-		setIMUYaw(Optional.of(IMUYaw));
+		setImuYaw(Optional.of(IMUYaw));
 	}
 
 }

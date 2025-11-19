@@ -35,18 +35,19 @@ public class TurretConstants {
 	}
 
 	public static Slot0Configs SIMULATION_SLOTS_CONFIG() {
-        Slot0Configs SIMULATION_SLOTS_CONFIG = new Slot0Configs();
+		Slot0Configs SIMULATION_SLOTS_CONFIG = new Slot0Configs();
 
-        SIMULATION_SLOTS_CONFIG.kP = 1;
-        SIMULATION_SLOTS_CONFIG.kI = 0;
-        SIMULATION_SLOTS_CONFIG.kD = 0;
-        SIMULATION_SLOTS_CONFIG.kG = 0;
-        SIMULATION_SLOTS_CONFIG.kS = 0;
-        SIMULATION_SLOTS_CONFIG.kV = 0;
-        SIMULATION_SLOTS_CONFIG.kA = 0;
+		SIMULATION_SLOTS_CONFIG.kP = 1;
+		SIMULATION_SLOTS_CONFIG.kI = 0;
+		SIMULATION_SLOTS_CONFIG.kD = 0;
+		SIMULATION_SLOTS_CONFIG.kG = 0;
+		SIMULATION_SLOTS_CONFIG.kS = 0;
+		SIMULATION_SLOTS_CONFIG.kV = 0;
+		SIMULATION_SLOTS_CONFIG.kA = 0;
 
-        return SIMULATION_SLOTS_CONFIG;
-    }
+		return SIMULATION_SLOTS_CONFIG;
+	}
+
 	public static final double CURRENT_LIMIT = 40;
 	public static final int SIGNALS_FREQUENCY = (int) RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ;
 	public static final double MOMENT_OF_INERTIA = 0.001;

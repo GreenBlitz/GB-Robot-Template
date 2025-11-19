@@ -1,0 +1,2 @@
+- [ ] Calibrate PID
+- [ ] Calibrate motion magic

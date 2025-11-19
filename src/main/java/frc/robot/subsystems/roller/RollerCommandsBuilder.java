@@ -24,6 +24,10 @@ public class RollerCommandsBuilder extends GBCommandsBuilder {
 		return roller.asSubsystemCommand(new RunCommand(() -> roller.setVoltage(voltage)), "Set roller voltage to " + voltage);
 	}
 
+	public Command setVoltage(Supplier<Double> voltage) {
+		return roller.asSubsystemCommand(new RunCommand(() -> roller.setVoltage(voltage.get())), "Set roller voltage to " + voltage.get());
+	}
+
 	public Command stop() {
 		return roller.asSubsystemCommand(new RunCommand(() -> roller.stop()), "Stop roller");
 	}
@@ -44,7 +48,7 @@ public class RollerCommandsBuilder extends GBCommandsBuilder {
 				() -> new InitExecuteCommand(
 					() -> roller.updateTargetPosition(Rotation2d.fromRotations(rotations + roller.getPosition().getRotations())),
 					() -> roller.setVoltage(finalVoltage)
-				).until(() -> roller.didPassTargetForwards()),
+				).until(() -> roller.isPassedTargetPosition()),
 				Set.of(roller)
 			),
 			"Roll " + rotations + " rotations"
@@ -58,11 +62,10 @@ public class RollerCommandsBuilder extends GBCommandsBuilder {
 				() -> new InitExecuteCommand(
 					() -> roller.updateTargetPosition(Rotation2d.fromRotations(roller.getPosition().getRotations() - rotations)),
 					() -> roller.setVoltage(finalVoltage)
-				).until(() -> roller.didPassTargetBackwards()),
+				).until(() -> roller.isBehindTargetPosition()),
 				Set.of(roller)
 			),
 			"Roll " + rotations + " rotations backwards"
-
 		);
 	}
 

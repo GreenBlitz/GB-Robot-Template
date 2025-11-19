@@ -36,7 +36,6 @@ public class TalonFXRollerBuilder {
 					.createDCMotorSystem(DCMotor.getKrakenX60(RollerConstants.NUMBER_OF_MOTORS), RollerConstants.MOMENT_OF_INERTIA, gearRatio),
 				DCMotor.getKrakenX60(RollerConstants.NUMBER_OF_MOTORS)
 			)
-
 		);
 		TalonFXMotor roller = new TalonFXMotor(logPath, id, new TalonFXFollowerConfig(), new SysIdRoutine.Config(), rollerSimulation);
 
@@ -49,7 +48,7 @@ public class TalonFXRollerBuilder {
 			roller.getDevice().getVelocity(),
 			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			AngleUnit.ROTATIONS,
-			BusChain.ROBORIO
+			id.busChain()
 		);
 		InputSignal<Double> currentSignal = Phoenix6SignalBuilder
 			.build(roller.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, id.busChain());

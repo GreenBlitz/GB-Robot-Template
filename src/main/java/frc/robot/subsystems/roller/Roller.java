@@ -6,7 +6,6 @@ import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
 
-
 public class Roller extends GBSubsystem {
 
 	private final ControllableMotor roller;
@@ -79,7 +78,6 @@ public class Roller extends GBSubsystem {
 		return positionSignal.isNear(position, tolerance);
 	}
 
-
 	public boolean isBeforePosition(Rotation2d position) {
 		return positionSignal.isLess(position);
 	}
@@ -88,11 +86,11 @@ public class Roller extends GBSubsystem {
 		return positionSignal.isGreater(position);
 	}
 
-	public boolean didPassTargetForwards() {
+	public boolean isPassedTargetPosition() {
 		return isPastPosition(targetPosition);
 	}
 
-	public boolean didPassTargetBackwards() {
+	public boolean isBehindTargetPosition() {
 		return isBeforePosition(targetPosition);
 	}
 

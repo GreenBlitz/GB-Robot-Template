@@ -4,6 +4,7 @@ import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
+import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.Odometry;
@@ -23,7 +24,8 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	private final SwerveDriveKinematics kinematics;
 	private final Odometry<SwerveModulePosition[]> odometryEstimator;
 	private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
-	private final RingBuffer<Rotation2d> poseToIMUAngleDifferenceBuffer;
+	private final RingBuffer<Rotation2d> poseToUnoffsettedIMUAngleDifferenceBuffer;
+	private final TimeInterpolatableBuffer<Rotation2d> unoffsettedIMUAngleBuffer;
 	private RobotPoseObservation lastVisionObservation;
 	private OdometryData lastOdometryData;
 	private Rotation2d lastOdometryAngle;
@@ -52,7 +54,8 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		);
 		this.lastOdometryData = new OdometryData(modulePositions, Optional.of(initialIMUAngle), TimeUtil.getCurrentTimeSeconds());
 		this.isIMUOffsetCalibrated = false;
-		this.poseToIMUAngleDifferenceBuffer = new RingBuffer<>(WPILibPoseEstimatorConstants.POSE_TO_IMU_ANGLE_DIFFERENCE_BUFFER_SIZE);
+		this.poseToUnoffsettedIMUAngleDifferenceBuffer = new RingBuffer<>(WPILibPoseEstimatorConstants.POSE_TO_IMU_ANGLE_DIFFERENCE_BUFFER_SIZE);
+		this.unoffsettedIMUAngleBuffer = TimeInterpolatableBuffer.createBuffer(5);
 	}
 
 
@@ -84,7 +87,8 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		data.setIMUYaw(data.getIMUYaw().orElseGet((() -> lastOdometryAngle.plus(Rotation2d.fromRadians(changeInPose.dtheta)))));
 		poseEstimator.updateWithTime(data.getTimestamp(), data.getIMUYaw().get(), data.getWheelPositions());
 
-		getPoseToIMUAngleDifference(data.getIMUYaw(), data.getTimestamp()).ifPresent(poseToIMUAngleDifferenceBuffer::insert);
+		unoffsettedIMUAngleBuffer.addSample(data.getTimestamp(), data.getIMUYaw().get());
+
 		updateIsIMUOffsetCalibrated();
 
 		lastOdometryAngle = data.getIMUYaw().get();
@@ -97,6 +101,11 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	public void updateVision(RobotPoseObservation... visionRobotPoseObservations) {
 		for (RobotPoseObservation visionRobotPoseObservation : visionRobotPoseObservations) {
 			addVisionMeasurement(visionRobotPoseObservation);
+
+			getPoseToIMUAngleDifference(
+				unoffsettedIMUAngleBuffer.getSample(visionRobotPoseObservation.timestampSeconds()),
+				visionRobotPoseObservation.timestampSeconds()
+			).ifPresent(poseToUnoffsettedIMUAngleDifferenceBuffer::insert);
 		}
 	}
 
@@ -104,20 +113,20 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	public void resetOdometry(OdometryData odometryData, Pose2d robotPose) {
 		poseEstimator.resetPosition(odometryData.getIMUYaw().get(), odometryData.getWheelPositions(), robotPose);
 		this.lastOdometryData = odometryData;
-		poseToIMUAngleDifferenceBuffer.clear();
+		poseToUnoffsettedIMUAngleDifferenceBuffer.clear();
 	}
 
 	@Override
 	public void resetPose(Pose2d newPose) {
 		Logger.recordOutput(logPath + "/lastPoseResetTo", newPose);
 		poseEstimator.resetPosition(lastOdometryAngle, lastOdometryData.getWheelPositions(), newPose);
-		poseToIMUAngleDifferenceBuffer.clear();
+		poseToUnoffsettedIMUAngleDifferenceBuffer.clear();
 	}
 
 	@Override
 	public void setHeading(Rotation2d newHeading) {
 		poseEstimator.resetRotation(newHeading);
-		poseToIMUAngleDifferenceBuffer.clear();
+		poseToUnoffsettedIMUAngleDifferenceBuffer.clear();
 	}
 
 	public boolean isIMUOffsetCalibrated() {
@@ -125,7 +134,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	}
 
 	public void resetIsIMUOffsetCalibrated() {
-		poseToIMUAngleDifferenceBuffer.clear();
+		poseToUnoffsettedIMUAngleDifferenceBuffer.clear();
 		isIMUOffsetCalibrated = false;
 	}
 
@@ -140,14 +149,14 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 
 	private void updateIsIMUOffsetCalibrated() {
 		double poseToIMUAngleDifferenceStdDev = StatisticsMath
-			.calculateStandardDeviations(poseToIMUAngleDifferenceBuffer, Rotation2d::getRadians);
+			.calculateStandardDeviations(poseToUnoffsettedIMUAngleDifferenceBuffer, Rotation2d::getRadians);
 		isIMUOffsetCalibrated = poseToIMUAngleDifferenceStdDev < WPILibPoseEstimatorConstants.MAX_POSE_TO_IMU_ANGLE_DIFFERENCE_STD_DEV
-			&& poseToIMUAngleDifferenceBuffer.isFull();
+			&& poseToUnoffsettedIMUAngleDifferenceBuffer.isFull();
 		Logger.recordOutput(logPath + "/poseToIMUOffsetStdDev", poseToIMUAngleDifferenceStdDev);
 	}
 
-	private Optional<Rotation2d> getPoseToIMUAngleDifference(Optional<Rotation2d> gyroYaw, double timeStamp) {
-		return gyroYaw.map(yaw -> getEstimatedPoseAtTimestamp(timeStamp).getRotation().minus(yaw));
+	private Optional<Rotation2d> getPoseToIMUAngleDifference(Optional<Rotation2d> gyroYaw, double timeStampSeconds) {
+		return gyroYaw.map(yaw -> getEstimatedPoseAtTimestamp(timeStampSeconds).getRotation().minus(yaw));
 	}
 
 	private void log() {

@@ -40,10 +40,7 @@ public class SparkMaxRollerBuilder {
 		SparkMaxDeviceID id,
 		double gearRatio,
 		int currentLimit,
-		Rotation2d tolerance,
-		double kP,
-		double kI,
-		double kD
+		Rotation2d tolerance
 	) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(id);
 
@@ -59,12 +56,11 @@ public class SparkMaxRollerBuilder {
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
 		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("current", sparkMaxWrapper::getOutputCurrent);
 
-		roller.applyConfiguration(configRoller(gearRatio, currentLimit, kP, kI, kD));
+		roller.applyConfiguration(configRoller(gearRatio, currentLimit));
 
 		SparkMaxRequest<Double> voltageRequest = SparkMaxRequestBuilder.build(0.0, SparkBase.ControlType.kVoltage, 0);
-		SparkMaxRequest<Rotation2d> angleRequest = SparkMaxRequestBuilder.build(Rotation2d.fromRotations(0), SparkBase.ControlType.kPosition, 0);
 
-		return new Roller(logPath, roller, voltageSignal, positionSignal, currentSignal, voltageRequest, angleRequest, tolerance);
+		return new Roller(logPath, roller, voltageSignal, positionSignal, currentSignal, voltageRequest, tolerance);
 	}
 
 	public static Pair<Roller, IDigitalInput> generateWithDigitalInput(
@@ -73,9 +69,6 @@ public class SparkMaxRollerBuilder {
 		double gearRatio,
 		int currentLimit,
 		Rotation2d tolerance,
-		double kP,
-		double kI,
-		double kD,
 		String digitalInputName,
 		double debounceTime,
 		boolean isForwardLimitSwitch
@@ -94,10 +87,8 @@ public class SparkMaxRollerBuilder {
 		);
 		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("current", sparkMaxWrapper::getOutputCurrent);
 
-		roller.applyConfiguration(configRoller(gearRatio, currentLimit, kP, kI, kD));
+		roller.applyConfiguration(configRoller(gearRatio, currentLimit));
 
-		SparkMaxRequest<Rotation2d> positionRequest = SparkMaxRequestBuilder
-			.build(Rotation2d.fromRotations(0), SparkBase.ControlType.kPosition, 0);
 		SparkMaxRequest<Double> voltageRequest = SparkMaxRequestBuilder.build(0.0, SparkBase.ControlType.kVoltage, 0);
 
 		IDigitalInput digitalInput;
@@ -115,17 +106,16 @@ public class SparkMaxRollerBuilder {
 			}
 		}
 		return new Pair<Roller, IDigitalInput>(
-			new Roller(logPath, roller, voltageSignal, positionSignal, currentSignal, voltageRequest, positionRequest, tolerance),
+			new Roller(logPath, roller, voltageSignal, positionSignal, currentSignal, voltageRequest, tolerance),
 			digitalInput
 		);
 	}
 
-	private static SparkMaxConfiguration configRoller(double gearRatio, int currentLimit, double kP, double kI, double kD) {
+	private static SparkMaxConfiguration configRoller(double gearRatio, int currentLimit) {
 		SparkMaxConfiguration configs = new SparkMaxConfiguration();
 		configs.getSparkMaxConfig().smartCurrentLimit(currentLimit);
 		configs.getSparkMaxConfig().encoder.positionConversionFactor(gearRatio);
 		configs.getSparkMaxConfig().encoder.velocityConversionFactor(gearRatio);
-		configs.getSparkMaxConfig().closedLoop.pid(kP, kI, kD);
 		return configs;
 	}
 

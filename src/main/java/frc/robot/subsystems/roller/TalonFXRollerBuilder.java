@@ -28,10 +28,7 @@ public class TalonFXRollerBuilder {
 		Phoenix6DeviceID id,
 		double gearRatio,
 		int currentLimit,
-		Rotation2d tolerance,
-		double kP,
-		double kI,
-		double kD
+		Rotation2d tolerance
 	) {
 		SimpleMotorSimulation rollerSimulation = new SimpleMotorSimulation(
 			new DCMotorSim(
@@ -43,7 +40,7 @@ public class TalonFXRollerBuilder {
 		);
 		TalonFXMotor roller = new TalonFXMotor(logPath, id, new TalonFXFollowerConfig(), new SysIdRoutine.Config(), rollerSimulation);
 
-		roller.applyConfiguration(configRoller(gearRatio, currentLimit, kP, kI, kD));
+		roller.applyConfiguration(configRoller(gearRatio, currentLimit));
 
 		InputSignal<Double> voltageSignal = Phoenix6SignalBuilder
 			.build(roller.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, id.busChain());
@@ -57,22 +54,18 @@ public class TalonFXRollerBuilder {
 		InputSignal<Double> currentSignal = Phoenix6SignalBuilder
 			.build(roller.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, id.busChain());
 
-		Phoenix6Request<Rotation2d> PositionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0), 0, true);
 		Phoenix6Request<Double> VoltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), true);
 
-		return new Roller(logPath, roller, voltageSignal, positionSignal, currentSignal, VoltageRequest, PositionRequest, tolerance);
+		return new Roller(logPath, roller, voltageSignal, positionSignal, currentSignal, VoltageRequest, tolerance);
 	}
 
-	public static TalonFXConfiguration configRoller(double gearRatio, int currentLimit, double kP, double kI, double kD) {
+	public static TalonFXConfiguration configRoller(double gearRatio, int currentLimit) {
 		TalonFXConfiguration configs = new TalonFXConfiguration();
 		configs.CurrentLimits.StatorCurrentLimit = currentLimit;
 		configs.CurrentLimits.StatorCurrentLimitEnable = true;
 		configs.Feedback.SensorToMechanismRatio = gearRatio;
 		configs.Voltage.PeakForwardVoltage = BatteryUtil.DEFAULT_VOLTAGE;
 		configs.Voltage.PeakReverseVoltage = BatteryUtil.DEFAULT_VOLTAGE;
-		configs.Slot0.kI = kI;
-		configs.Slot0.kP = kP;
-		configs.Slot0.kD = kD;
 		return (configs);
 	}
 

@@ -30,6 +30,7 @@ public class Robot {
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 		this.flyWheel = KrakenX60FlyWheelBuilder.build("Subsystems/FlyWheel", IDs.TalonFXIDs.FLYWHEEL);
+		
 		this.hood = createHood();
 		hood.setPosition(HoodConstants.MINIMUM_POSITION);
 	}
@@ -64,15 +65,15 @@ public class Robot {
 	private Arm createHood() {
 		return TalonFXArmBuilder.buildMotionMagicArm(
 			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Hood",
-			IDs.TalonFXIDs.hoodId,
+			IDs.TalonFXIDs.HOOD_ID,
 			HoodConstants.IS_INVERTED,
 			new TalonFXFollowerConfig(),
-			HoodConstants.SYSIDROUTIN_CONFIG,
+			HoodConstants.SYSIDROUTINE_CONFIG,
 			HoodConstants.FEEDBACK_CONFIGS,
 			HoodConstants.REAL_SLOT,
 			HoodConstants.SIMULATION_SLOT,
 			HoodConstants.CURRENT_LIMIT,
-			(int) RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			HoodConstants.MOMENT_OF_INERTIA,
 			HoodConstants.HOOD_LENGTH_METERS,
 			HoodConstants.ARBITRARY_FEEDFORWARD,

@@ -46,5 +46,6 @@ public class HoodConstants {
 	public static final Rotation2d DEFAULT_MAX_ACCELERATION_PER_SECOND_SQUARE = Rotation2d.fromRotations(3);
 	public static final Rotation2d DEFAULT_MAX_VELOCITY_PER_SECOND = Rotation2d.fromRotations(3);
 	public static final SysIdRoutine.Config SYSIDROUTIN_CONFIG = new SysIdRoutine.Config();
+
 }
 

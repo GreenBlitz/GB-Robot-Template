@@ -106,9 +106,7 @@ public class SparkMaxRollerBuilder {
 
 	private static SparkMaxConfiguration buildConfiguration(boolean inverted, double gearRatio, int currentLimit) {
 		SparkMaxConfiguration configs = new SparkMaxConfiguration();
-		if (!Robot.ROBOT_TYPE.isSimulation()) {
-			configs.getSparkMaxConfig().smartCurrentLimit(currentLimit);
-		}
+		configs.getSparkMaxConfig().smartCurrentLimit(currentLimit);
 		configs.getSparkMaxConfig().inverted(inverted);
 		configs.getSparkMaxConfig().encoder.positionConversionFactor(1 / gearRatio);
 		configs.getSparkMaxConfig().encoder.velocityConversionFactor(1 / gearRatio);

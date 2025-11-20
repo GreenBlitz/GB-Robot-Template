@@ -109,6 +109,14 @@ public class JoysticksBindings {
 		joystick.POV_LEFT.onTrue(hood.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(50)));
 	}
 
+	private static void applyBellyCalibrationBindings(Roller belly, SmartJoystick joystick, double calibrationMaxPower) {
+		joystick.POV_DOWN.onTrue(new InstantCommand(() -> belly.getCommandsBuilder().setIsSubsystemRunningIndependently(true)));
+		joystick.POV_UP.onTrue(new InstantCommand(() -> belly.getCommandsBuilder().setIsSubsystemRunningIndependently(false)));
+
+		joystick.POV_RIGHT.onTrue(belly.getCommandsBuilder().rollRotationsAtVoltageForwards(1, 1));
+		joystick.POV_LEFT.onTrue(belly.getCommandsBuilder().setVoltage(2));
+	}
+
 	private static void applyOmniCalibrationBindings(Roller omni, SmartJoystick joystick, double maxCalibrationPower) {
 		joystick.POV_DOWN.onTrue(new InstantCommand(() -> omni.getCommandsBuilder().setIsSubsystemRunningIndependently(true)));
 		joystick.POV_UP.onTrue(new InstantCommand(() -> omni.getCommandsBuilder().setIsSubsystemRunningIndependently(false)));

@@ -29,6 +29,8 @@ public class IDs {
 
 	public static class SparkMAXIDs {
 
+		public static final SparkMaxDeviceID BELLY = new SparkMaxDeviceID(35, SparkLowLevel.MotorType.kBrushless);
+
 		public final static SparkMaxDeviceID OMNI = new SparkMaxDeviceID(25, SparkLowLevel.MotorType.kBrushless);
 
 	}

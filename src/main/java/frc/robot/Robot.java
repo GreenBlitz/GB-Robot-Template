@@ -11,6 +11,7 @@ import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.TalonFXArmBuilder;
+import frc.robot.subsystems.constants.belly.BellyConstants;
 import frc.robot.subsystems.constants.turret.TurretConstants;
 import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
 import frc.robot.subsystems.constants.hood.HoodConstants;
@@ -34,6 +35,7 @@ public class Robot {
 	private final Arm turret;
 	private final FlyWheel flyWheel;
 	private final Arm hood;
+	private final Roller belly;
 	private final Roller omni;
 	private final IDigitalInput funnelDigitalInput;
 
@@ -49,6 +51,9 @@ public class Robot {
 		this.hood = createHood();
 		hood.setPosition(HoodConstants.MINIMUM_POSITION);
 		BrakeStateManager.add(() -> hood.setBrake(true), () -> hood.setBrake(false));
+
+		this.belly = createBelly();
+		BrakeStateManager.add(() -> belly.setBrake(true), () -> belly.setBrake(false));
 
 		Pair<Roller, IDigitalInput> omniAndDigitalInput = createOmniAndSignal();
 		this.omni = omniAndDigitalInput.getFirst();
@@ -87,13 +92,28 @@ public class Robot {
 			TurretConstants.CURRENT_LIMIT,
 			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			TurretConstants.MOMENT_OF_INERTIA,
-			TurretConstants.ARM_LENGTH,
+			TurretConstants.TURRET_RADIUS,
 			TurretConstants.ARBITRARY_FEED_FORWARD,
 			TurretConstants.FORWARD_SOFTWARE_LIMIT,
 			TurretConstants.BACKWARDS_SOFTWARE_LIMIT,
 			TurretConstants.DEFAULT_MAX_ACCELERATION_PER_SECOND_SQUARE,
 			TurretConstants.DEFAULT_MAX_VELOCITY_PER_SECOND
 		);
+	}
+
+	private Roller createBelly() {
+		return SparkMaxRollerBuilder.build(
+			BellyConstants.LOG_PATH,
+			IDs.SparkMAXIDs.BELLY,
+			BellyConstants.INVERTED,
+			BellyConstants.GEAR_RATIO,
+			BellyConstants.CURRENT_LIMIT,
+			BellyConstants.MOMENT_OF_INERTIA
+		);
+	}
+
+	public Roller getBelly() {
+		return belly;
 	}
 
 	public Arm getTurret() {

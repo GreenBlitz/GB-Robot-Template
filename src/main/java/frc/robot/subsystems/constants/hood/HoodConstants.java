@@ -31,8 +31,6 @@ public class HoodConstants {
 
 		FEEDBACK_CONFIGS.RotorToSensorRatio = 1;
 		FEEDBACK_CONFIGS.SensorToMechanismRatio = 450 / 7.0;
-//		FEEDBACK_CONFIGS.FeedbackRemoteSensorID = 20;
-//		FEEDBACK_CONFIGS.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
 	}
 
 	public static final boolean IS_INVERTED = false;

@@ -92,8 +92,8 @@ public class JoysticksBindings {
 
 		hood.getSysIdCalibrator().setAllButtonsForCalibration(joystick);
 
-		joystick.POV_RIGHT.onTrue(hood.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(90)));
-		joystick.POV_LEFT.onTrue(hood.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(-20)));
+		joystick.POV_RIGHT.onTrue(hood.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(20)));
+		joystick.POV_LEFT.onTrue(hood.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(50)));
 	}
 
 }

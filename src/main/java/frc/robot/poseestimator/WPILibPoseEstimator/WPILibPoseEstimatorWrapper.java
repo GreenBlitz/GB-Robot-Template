@@ -129,10 +129,6 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		Logger.recordOutput(logPath + "/isIMUOffsetCalibrated", isIMUOffsetCalibrated);
 	}
 
-	public Rotation2d getRobotYaw() {
-		return getEstimatedPose().getRotation();
-	}
-
 	public void resetIsIMUOffsetCalibrated() {
 		poseToIMUYawDifferenceBuffer.clear();
 		isIMUOffsetCalibrated = false;

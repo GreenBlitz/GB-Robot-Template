@@ -10,6 +10,10 @@ import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.TalonFXArmBuilder;
 import frc.robot.subsystems.constants.turret.TurretConstants;
+import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.TalonFXArmBuilder;
+import frc.robot.subsystems.constants.hood.HoodConstants;
 import frc.robot.subsystems.flywheel.FlyWheel;
 import frc.robot.subsystems.flywheel.KrakenX60FlyWheelBuilder;
 import frc.utils.auto.PathPlannerAutoWrapper;
@@ -26,6 +30,7 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);
 	private final Arm turret;
 	private final FlyWheel flyWheel;
+	private final Arm hood;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -35,9 +40,15 @@ public class Robot {
 		BrakeStateManager.add(() -> turret.setBrake(true), () -> turret.setBrake(false));
 
 		this.flyWheel = KrakenX60FlyWheelBuilder.build("Subsystems/FlyWheel", IDs.TalonFXIDs.FLYWHEEL);
+
+		this.hood = createHood();
+		hood.setPosition(HoodConstants.MINIMUM_POSITION);
 	}
 
 	public void resetSubsystems() {
+		if (HoodConstants.MINIMUM_POSITION.getRadians() > hood.getPosition().getRadians()) {
+			hood.setPosition(HoodConstants.MINIMUM_POSITION);
+		}
 		if (TurretConstants.MIN_POSITION.getRadians() > turret.getPosition().getRadians()) {
 			turret.setPosition(TurretConstants.MIN_POSITION);
 		}
@@ -83,6 +94,32 @@ public class Robot {
 
 	public PathPlannerAutoWrapper getAutonomousCommand() {
 		return new PathPlannerAutoWrapper();
+	}
+
+	public Arm getHood() {
+		return hood;
+	}
+
+	private Arm createHood() {
+		return TalonFXArmBuilder.buildMotionMagicArm(
+			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Hood",
+			IDs.TalonFXIDs.HOOD,
+			HoodConstants.IS_INVERTED,
+			new TalonFXFollowerConfig(),
+			HoodConstants.SYSIDROUTINE_CONFIG,
+			HoodConstants.FEEDBACK_CONFIGS,
+			HoodConstants.REAL_SLOT,
+			HoodConstants.SIMULATION_SLOT,
+			HoodConstants.CURRENT_LIMIT,
+			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+			HoodConstants.MOMENT_OF_INERTIA,
+			HoodConstants.HOOD_LENGTH_METERS,
+			HoodConstants.ARBITRARY_FEEDFORWARD,
+			HoodConstants.FORWARD_SOFTWARE_LIMIT,
+			HoodConstants.BACKWARD_SOFTWARE_LIMIT,
+			HoodConstants.DEFAULT_MAX_ACCELERATION_PER_SECOND_SQUARE,
+			HoodConstants.DEFAULT_MAX_VELOCITY_PER_SECOND
+		);
 	}
 
 }

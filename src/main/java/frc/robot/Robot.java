@@ -31,7 +31,9 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);;
 	private final FlyWheel flyWheel;
+
 	private final Arm hood;
+
 	private final Roller omni;
 	private final IDigitalInput omniDigitalInput;
 
@@ -93,8 +95,8 @@ public class Robot {
 		);
 	}
 	
-	private void setOmniAndDigitInputOmni(){
-		Pair<Roller, IDigitalInput> omni = SparkMaxRollerBuilder.buildWithDigitalInput(
+	private Pair<Roller,IDigitalInput> createOmniAndSignal(){
+		return SparkMaxRollerBuilder.buildWithDigitalInput(
 				OmniConstant.LOG_PATH,
 				IDs.SparkMAXIDs.OMNI,
 				OmniConstant.GEAR_RATIO,
@@ -105,7 +107,5 @@ public class Robot {
 				OmniConstant.IS_FORWARD_LIMIT_SWITCH,
 				OmniConstant.IS_FORWARD_LIMIT_SWITCH_INVERTED
 		);
-		this.omni = omni.getFirst();
-		this.omniDigitalInput = omni.getSecond();
 	}
 }

@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonomousConstants;
+import frc.robot.subsystems.constants.turret.TurretConstants;
 import frc.utils.DriverStationUtil;
 import frc.utils.alerts.AlertManager;
 import frc.utils.auto.PathPlannerAutoWrapper;
@@ -42,6 +43,8 @@ public class RobotManager extends LoggedRobot {
 
 		this.roborioCycles = 0;
 		this.robot = new Robot();
+
+		BrakeStateManager.add(() -> robot.getTurret().setBrake(true), () -> robot.getTurret().setBrake(false));
 
 		createAutoReadyForConstructionChooser();
 		JoysticksBindings.configureBindings(robot);
@@ -89,6 +92,9 @@ public class RobotManager extends LoggedRobot {
 		JoysticksBindings.updateChassisDriverInputs();
 		robot.periodic();
 		AlertManager.reportAlerts();
+		if (robot.getTurret().getPosition().getDegrees() < TurretConstants.BACKWARDS_SOFTWARE_LIMIT.getDegrees()) {
+			robot.getTurret().setPosition(TurretConstants.BACKWARDS_SOFTWARE_LIMIT);
+		}
 	}
 
 	private void createAutoReadyForConstructionChooser() {

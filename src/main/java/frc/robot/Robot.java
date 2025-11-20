@@ -20,12 +20,13 @@ import frc.utils.battery.BatteryUtil;
  */
 public class Robot {
 
-	private final Arm turret;
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);
+	private final Arm turret;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 		this.turret = createTurret();
+		turret.setPosition(TurretConstants.BACKWARDS_SOFTWARE_LIMIT);
 	}
 
 	public void periodic() {
@@ -38,23 +39,23 @@ public class Robot {
 
 	private Arm createTurret() {
 		return TalonFXArmBuilder.buildMotionMagicArm(
-				TurretConstants.LOG_PATH,
-				TurretConstants.DEVICE_ID,
-				TurretConstants.IS_INVERTED,
-				TurretConstants.TALON_FX_FOLLOWER_CONFIG,
-				TurretConstants.SYS_ID_ROUTINE_CONFIG,
-				TurretConstants.FEEDBACK_CONFIGS,
-				TurretConstants.REAL_SLOTS_CONFIG(),
-				TurretConstants.SIMULATION_SLOTS_CONFIG(),
-				TurretConstants.CURRENT_LIMIT,
-				TurretConstants.SIGNALS_FREQUENCY,
-				TurretConstants.MOMENT_OF_INERTIA,
-				TurretConstants.ARM_LENGTH,
-				TurretConstants.ARBITRARY_FEED_FORWARD,
-				TurretConstants.FORWARD_SOFTWARE_LIMIT,
-				TurretConstants.BACKWARDS_SOFTWARE_LIMIT,
-				TurretConstants.DEFAULT_MAX_ACCELERATION_PER_SECOND_SQUARE,
-				TurretConstants.DEFAULT_MAX_VELOCITY_PER_SECOND
+			TurretConstants.LOG_PATH,
+			IDs.TalonFXIDs.turretID,
+			TurretConstants.IS_INVERTED,
+			TurretConstants.TALON_FX_FOLLOWER_CONFIG,
+			TurretConstants.SYS_ID_ROUTINE_CONFIG,
+			TurretConstants.FEEDBACK_CONFIGS,
+			TurretConstants.REAL_SLOTS_CONFIG,
+			TurretConstants.SIMULATION_SLOTS_CONFIG,
+			TurretConstants.CURRENT_LIMIT,
+			TurretConstants.SIGNALS_FREQUENCY,
+			TurretConstants.MOMENT_OF_INERTIA,
+			TurretConstants.ARM_LENGTH,
+			TurretConstants.ARBITRARY_FEED_FORWARD,
+			TurretConstants.FORWARD_SOFTWARE_LIMIT,
+			TurretConstants.BACKWARDS_SOFTWARE_LIMIT,
+			TurretConstants.DEFAULT_MAX_ACCELERATION_PER_SECOND_SQUARE,
+			TurretConstants.DEFAULT_MAX_VELOCITY_PER_SECOND
 		);
 	}
 

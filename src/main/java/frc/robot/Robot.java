@@ -31,7 +31,9 @@ public class Robot {
 
 	public void periodic() {
 		BusChain.refreshAll();
-
+		if (turret.getPosition().getDegrees() < TurretConstants.BACKWARDS_SOFTWARE_LIMIT.getDegrees()) {
+			turret.setPosition(TurretConstants.BACKWARDS_SOFTWARE_LIMIT);
+		}
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		CommandScheduler.getInstance().run(); // Should be last

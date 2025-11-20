@@ -92,9 +92,6 @@ public class RobotManager extends LoggedRobot {
 		JoysticksBindings.updateChassisDriverInputs();
 		robot.periodic();
 		AlertManager.reportAlerts();
-		if (robot.getTurret().getPosition().getDegrees() < TurretConstants.BACKWARDS_SOFTWARE_LIMIT.getDegrees()) {
-			robot.getTurret().setPosition(TurretConstants.BACKWARDS_SOFTWARE_LIMIT);
-		}
 	}
 
 	private void createAutoReadyForConstructionChooser() {

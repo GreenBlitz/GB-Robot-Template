@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.interfaces.IIMU;
@@ -69,7 +70,10 @@ public class Robot {
 			RobotHeadingEstimatorConstants.DEFAULT_GYRO_STANDARD_DEVIATION
 		);
 
-		this.limelightFour = new Limelight("limelight-left", "NewVision", () -> new Pose3d(), LimelightPipeline.APRIL_TAG);
+		this.limelightFour = new Limelight("limelight-left", "NewVision", () -> new Pose3d(
+				new Translation3d(0.215, -0.11, 0.508),
+				new Rotation3d(Units.Degrees.of(-8.06180374425555), Units.Degrees.of(-27.07784559039065), Units.Degrees.of(-22.52372569716833))
+		), LimelightPipeline.APRIL_TAG);
 		limelightFour.setMT1PoseFilter(
 			LimelightFilters.megaTag1Filter(
 				limelightFour,
@@ -104,7 +108,10 @@ public class Robot {
 			)
 		);
 
-		this.limelightThreeGB = new Limelight("limelight", "NewVision", () -> new Pose3d(), LimelightPipeline.APRIL_TAG);
+		this.limelightThreeGB = new Limelight("limelight", "NewVision", () -> new Pose3d(
+				new Translation3d(0.2022, 0.13, 0.508),
+				new Rotation3d(Units.Degrees.of(10.612258493096334), Units.Degrees.of(-27.18966371065684), Units.Degrees.of(20.10328620400214))
+		), LimelightPipeline.APRIL_TAG);
 		limelightThreeGB.setMT1PoseFilter(
 			LimelightFilters.megaTag1Filter(
 				limelightThreeGB,
@@ -139,7 +146,10 @@ public class Robot {
 			)
 		);
 
-		limelightObjectDetector = new Limelight("limelight-object", "NewVision", () -> new Pose3d(), LimelightPipeline.OBJECT_DETECTION);
+		limelightObjectDetector = new Limelight("limelight-object", "NewVision", () -> new Pose3d(
+				new Translation3d(-0.08, 0.23, 0.865),
+				new Rotation3d(Units.Degrees.of(0), Units.Degrees.of(-27), Units.Degrees.of(-176.67))
+		), LimelightPipeline.OBJECT_DETECTION);
 
 		swerve.setHeadingSupplier(
 			ROBOT_TYPE.isSimulation() ? () -> poseEstimator.getEstimatedPose().getRotation() : () -> headingEstimator.getEstimatedHeading()

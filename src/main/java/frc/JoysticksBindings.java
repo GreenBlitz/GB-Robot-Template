@@ -113,7 +113,6 @@ public class JoysticksBindings {
 		joystick.L3.onTrue(new InstantCommand(() -> robot.getIntakeRoller().getCommandsBuilder().setIsSubsystemRunningIndependently(false)));
 
 		joystick.POV_UP.onTrue(robot.getIntakeRoller().getCommandsBuilder().setVoltage(6));
-		joystick.POV_DOWN.onTrue(robot.getIntakeRoller().getCommandsBuilder().rollRotationsAtVoltageForwards(100, 0.2));
 	}
 
 }

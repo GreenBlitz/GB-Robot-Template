@@ -10,9 +10,8 @@ import com.ctre.phoenix6.CANBus.CANBusStatus;
 
 public enum BusChain {
 
-	ROBORIO("rio"),
-	SUPER("superstructure");
-
+	ROBORIO("rio");
+	
 	private static final double PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE = 0.6;
 	private static final int PERMITTED_RECEIVE_ERRORS = 0;
 	private static final int PERMITTED_TRANSMIT_ERRORS = 0;

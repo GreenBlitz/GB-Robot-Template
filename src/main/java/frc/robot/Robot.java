@@ -7,6 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.subsystems.flywheel.FlyWheel;
+import frc.robot.subsystems.flywheel.KrakenX60FlyWheelBuilder;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 
@@ -17,10 +19,12 @@ import frc.utils.battery.BatteryUtil;
  */
 public class Robot {
 
-	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);
+	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);;
+	private final FlyWheel flyWheel;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
+		this.flyWheel = KrakenX60FlyWheelBuilder.build("Subsystems/FlyWheel", IDs.TalonFXIDs.FLYWHEEL);
 	}
 
 	public void periodic() {
@@ -29,6 +33,10 @@ public class Robot {
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		CommandScheduler.getInstance().run(); // Should be last
+	}
+
+	public FlyWheel getFlyWheel() {
+		return flyWheel;
 	}
 
 	public PathPlannerAutoWrapper getAutonomousCommand() {

@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -43,10 +42,10 @@ public class Robot {
 		);
 
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
-				WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
-				swerve.getKinematics(),
-				swerve.getModules().getWheelPositions(0),
-				swerve.getGyroAbsoluteYaw()
+			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
+			swerve.getKinematics(),
+			swerve.getModules().getWheelPositions(0),
+			swerve.getGyroAbsoluteYaw()
 		);
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());

@@ -228,7 +228,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	private Pose2d getRobotPose() {
-		return (LimelightHelpers.getBotPose3d(name).transformBy(new Transform3d(new Pose3d(), robotRelativeCameraPoseSupplier.get()).inverse()))
+		return (LimelightHelpers.getBotPose3d_wpiBlue(name).transformBy(new Transform3d(new Pose3d(), robotRelativeCameraPoseSupplier.get()).inverse()))
 			.toPose2d();
 	}
 

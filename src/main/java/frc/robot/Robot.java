@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.*;
-import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.interfaces.IIMU;
@@ -26,8 +25,6 @@ import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.math.StandardDeviations2D;
 import frc.utils.time.TimeUtil;
-
-import java.util.function.Supplier;
 
 
 /**
@@ -72,12 +69,7 @@ public class Robot {
 			RobotHeadingEstimatorConstants.DEFAULT_GYRO_STANDARD_DEVIATION
 		);
 
-		this.limelightFour = new Limelight(
-				"limelight-left",
-				"NewVision",
-				()->new Pose3d(),
-				LimelightPipeline.APRIL_TAG
-		);
+		this.limelightFour = new Limelight("limelight-left", "NewVision", () -> new Pose3d(), LimelightPipeline.APRIL_TAG);
 		limelightFour.setMT1PoseFilter(
 			LimelightFilters.megaTag1Filter(
 				limelightFour,
@@ -112,12 +104,7 @@ public class Robot {
 			)
 		);
 
-		this.limelightThreeGB = new Limelight(
-			"limelight",
-			"NewVision",
-			()-> new Pose3d(),
-			LimelightPipeline.APRIL_TAG
-		);
+		this.limelightThreeGB = new Limelight("limelight", "NewVision", () -> new Pose3d(), LimelightPipeline.APRIL_TAG);
 		limelightThreeGB.setMT1PoseFilter(
 			LimelightFilters.megaTag1Filter(
 				limelightThreeGB,
@@ -152,12 +139,7 @@ public class Robot {
 			)
 		);
 
-		limelightObjectDetector = new Limelight(
-			"limelight-object",
-			"NewVision",
-			()->new Pose3d(),
-			LimelightPipeline.OBJECT_DETECTION
-		);
+		limelightObjectDetector = new Limelight("limelight-object", "NewVision", () -> new Pose3d(), LimelightPipeline.OBJECT_DETECTION);
 
 		swerve.setHeadingSupplier(
 			ROBOT_TYPE.isSimulation() ? () -> poseEstimator.getEstimatedPose().getRotation() : () -> headingEstimator.getEstimatedHeading()

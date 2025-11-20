@@ -97,7 +97,7 @@ public class Roller extends GBSubsystem {
 	public void subsystemPeriodic() {
 		roller.updateSimulation();
 		roller.updateInputs(voltageSignal, currentSignal, positionSignal);
-        Logger.recordOutput(getLogPath() + "/tr", targetPosition);
+		Logger.recordOutput(getLogPath() + "/PositionTarget", targetPosition);
 	}
 
 }

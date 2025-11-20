@@ -7,6 +7,7 @@ import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.roller.Roller;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.utils.battery.BatteryUtil;
 
@@ -50,9 +51,6 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		usedJoystick.A.onTrue(robot.getOmni().getCommandsBuilder().rollRotationsAtVoltageForwards(100, 0.2));
-		usedJoystick.B.onTrue(robot.getOmni().getCommandsBuilder().rollRotationsAtVoltageBackwards(50, 3));
-		usedJoystick.X.onTrue(robot.getOmni().getCommandsBuilder().setPower(0.5));
 		// bindings...
 	}
 
@@ -109,6 +107,13 @@ public class JoysticksBindings {
 
 		joystick.POV_RIGHT.onTrue(hood.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(20)));
 		joystick.POV_LEFT.onTrue(hood.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(50)));
+	}
+
+	private static void applyOmniCalibrationBindings(Roller omni, SmartJoystick joystick, double maxCalibrationPower) {
+		joystick.A.onTrue(omni.getCommandsBuilder().rollRotationsAtVoltageForwards(100, 0.2));
+		joystick.B.onTrue(omni.getCommandsBuilder().rollRotationsAtVoltageBackwards(50, 3));
+		joystick.X.onTrue(omni.getCommandsBuilder().setPower(0.5));
+		joystick.Y.onTrue(omni.getCommandsBuilder().setPower(-0.5));
 	}
 
 }

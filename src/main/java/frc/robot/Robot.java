@@ -53,8 +53,8 @@ public class Robot {
 		Pair<Roller, IDigitalInput> omniAndDigitalInput = createOmniAndSignal();
 		this.omni = omniAndDigitalInput.getFirst();
 		this.funnelDigitalInput = omniAndDigitalInput.getSecond();
-        BrakeStateManager.add(() -> omni.setBrake(true), () -> omni.setBrake(false));
-    }
+		BrakeStateManager.add(() -> omni.setBrake(true), () -> omni.setBrake(false));
+	}
 
 	public void resetSubsystems() {
 		if (HoodConstants.MINIMUM_POSITION.getRadians() > hood.getPosition().getRadians()) {
@@ -104,12 +104,20 @@ public class Robot {
 		return flyWheel;
 	}
 
-	public PathPlannerAutoWrapper getAutonomousCommand() {
-		return new PathPlannerAutoWrapper();
+	public Roller getOmni() {
+		return omni;
+	}
+
+	public IDigitalInput getFunnelDigitalInput() {
+		return funnelDigitalInput;
 	}
 
 	public Arm getHood() {
 		return hood;
+	}
+
+	public PathPlannerAutoWrapper getAutonomousCommand() {
+		return new PathPlannerAutoWrapper();
 	}
 
 	private Arm createHood() {
@@ -132,14 +140,6 @@ public class Robot {
 			HoodConstants.DEFAULT_MAX_ACCELERATION_PER_SECOND_SQUARE,
 			HoodConstants.DEFAULT_MAX_VELOCITY_PER_SECOND
 		);
-	}
-
-	public Roller getOmni() {
-		return omni;
-	}
-
-	public IDigitalInput getFunnelDigitalInput() {
-		return funnelDigitalInput;
 	}
 
 	private Pair<Roller, IDigitalInput> createOmniAndSignal() {

@@ -24,13 +24,13 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	private final String name;
 	private final String logPath;
-	private final Pose3d originalRelativeCameraPose;
+	private final Pose3d originalRobotRelativeCameraPose; //unused
 	private final ArrayList<DetectedObjectObservation> detectedObjectObservations;
 
 	private final LimelightInputsSet inputs;
 
 	private LimelightTarget2dValues target2dValues;
-	private Pose3d robotRelativeCameraPose;
+	private Pose3d currentRobotRelativeCameraPose;
 	private RobotPoseObservation mt1PoseObservation;
 	private RobotPoseObservation mt2PoseObservation;
 
@@ -47,9 +47,9 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		this.name = name;
 		this.logPath = logPathPrefix + "/" + name;
 
-		this.robotRelativeCameraPose = robotRelativeCameraPose;
-		this.originalRelativeCameraPose = robotRelativeCameraPose;
-		setRobotRelativeCameraPose(new Pose3d());
+		this.currentRobotRelativeCameraPose = robotRelativeCameraPose;
+		this.originalRobotRelativeCameraPose = robotRelativeCameraPose;
+		setCurrentRobotRelativeCameraPose(new Pose3d());
 
 		this.detectedObjectObservations = new ArrayList<>();
 
@@ -81,7 +81,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 					if (detectedObjectFilter.apply(rawDetection)) {
 						pipeline.getDetectedObjectType(rawDetection.classId()).ifPresent(objectType -> {
 							DetectedObjectObservation observation = ObjectDetectionMath.getDetectedObjectObservation(
-								robotRelativeCameraPose,
+									currentRobotRelativeCameraPose,
 								objectType,
 								Rotation2d.fromDegrees(rawDetection.txnc()),
 								Rotation2d.fromDegrees(rawDetection.tync()),
@@ -218,20 +218,20 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		return inputs.mt2Inputs().mtRawData;
 	}
 
-	private void setRobotRelativeCameraPose(Pose3d robotRelativeCameraPose) {
+	private void setCurrentRobotRelativeCameraPose(Pose3d currentRobotRelativeCameraPose) {
 		LimelightHelpers.setCameraPose_RobotSpace(
 			name,
-			robotRelativeCameraPose.getX(),
-			robotRelativeCameraPose.getY(),
-			robotRelativeCameraPose.getZ(),
-			Math.toDegrees(robotRelativeCameraPose.getRotation().getX()),
-			Math.toDegrees(robotRelativeCameraPose.getRotation().getY()),
-			Math.toDegrees(robotRelativeCameraPose.getRotation().getZ())
+			currentRobotRelativeCameraPose.getX(),
+			currentRobotRelativeCameraPose.getY(),
+			currentRobotRelativeCameraPose.getZ(),
+			Math.toDegrees(currentRobotRelativeCameraPose.getRotation().getX()),
+			Math.toDegrees(currentRobotRelativeCameraPose.getRotation().getY()),
+			Math.toDegrees(currentRobotRelativeCameraPose.getRotation().getZ())
 		);
 	}
 
 	private Pose2d getRobotPose() {
-		return (LimelightHelpers.getBotPose3d(name).transformBy(new Transform3d(new Pose3d(), robotRelativeCameraPose).inverse())).toPose2d();
+		return (LimelightHelpers.getBotPose3d(name).transformBy(new Transform3d(new Pose3d(), currentRobotRelativeCameraPose).inverse())).toPose2d();
 	}
 
 	protected static double getEstimateTimestampSeconds(LimelightHelpers.PoseEstimate poseEstimate) {

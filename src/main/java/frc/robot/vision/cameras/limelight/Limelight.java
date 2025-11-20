@@ -24,12 +24,11 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	private final String name;
 	private final String logPath;
-	private final Pose3d originalRobotRelativeCameraPose; //unused
 	private final ArrayList<DetectedObjectObservation> detectedObjectObservations;
 
 	private final LimelightInputsSet inputs;
 
-	private LimelightTarget2dValues target2dValues;
+	private Supplier<Pose3d> originalPoseRelativeCameraPoseSupplier;
 	private Pose3d currentRobotRelativeCameraPose;
 	private RobotPoseObservation mt1PoseObservation;
 	private RobotPoseObservation mt2PoseObservation;
@@ -43,12 +42,12 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	private LimelightPipeline pipeline;
 
-	public Limelight(String name, String logPathPrefix, Pose3d robotRelativeCameraPose, LimelightPipeline pipeline) {
+	public Limelight(String name, String logPathPrefix, Supplier<Pose3d> originalPoseRelativeCameraPoseSupplier, LimelightPipeline pipeline) {
 		this.name = name;
 		this.logPath = logPathPrefix + "/" + name;
 
-		this.currentRobotRelativeCameraPose = robotRelativeCameraPose;
-		this.originalRobotRelativeCameraPose = robotRelativeCameraPose;
+		this.originalPoseRelativeCameraPoseSupplier = originalPoseRelativeCameraPoseSupplier;
+		this.currentRobotRelativeCameraPose = originalPoseRelativeCameraPoseSupplier.get();
 		setCurrentRobotRelativeCameraPose(new Pose3d());
 
 		this.detectedObjectObservations = new ArrayList<>();
@@ -81,7 +80,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 					if (detectedObjectFilter.apply(rawDetection)) {
 						pipeline.getDetectedObjectType(rawDetection.classId()).ifPresent(objectType -> {
 							DetectedObjectObservation observation = ObjectDetectionMath.getDetectedObjectObservation(
-									currentRobotRelativeCameraPose,
+								currentRobotRelativeCameraPose,
 								objectType,
 								Rotation2d.fromDegrees(rawDetection.txnc()),
 								Rotation2d.fromDegrees(rawDetection.tync()),
@@ -231,7 +230,8 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	private Pose2d getRobotPose() {
-		return (LimelightHelpers.getBotPose3d(name).transformBy(new Transform3d(new Pose3d(), currentRobotRelativeCameraPose).inverse())).toPose2d();
+		return (LimelightHelpers.getBotPose3d(name).transformBy(new Transform3d(new Pose3d(), currentRobotRelativeCameraPose).inverse()))
+			.toPose2d();
 	}
 
 	protected static double getEstimateTimestampSeconds(LimelightHelpers.PoseEstimate poseEstimate) {

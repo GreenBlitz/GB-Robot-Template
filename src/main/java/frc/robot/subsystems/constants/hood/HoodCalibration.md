@@ -1,6 +1,27 @@
 Hood calibrations
 ---------------------
 
+#### IDs
+- [ ] motor id
+- [ ] motor Buschain
+
+#### Limits
+- [ ] Current limit
+- [ ] Forward limit
+- [ ] Backwards limit
+
+#### Motor config
+- [ ] Gear ratio
+- [ ] Is it rotor to sensor or sensor to mechanism
+- [ ] Neutral mode
+- [ ] Is Inverted
+
+#### General Constants
+- [ ] Arm length
+- [ ] Arm weight
+- [ ] SysIdRoutineConfig
+- [ ] Starting position
+
 #### PID
 - [ ] kP
 - [ ] kI
@@ -11,29 +32,14 @@ Hood calibrations
 - [ ] kI
 - [ ] kD
 
+#### FeedForward
+- [ ] kS
+- [ ] kG
+
 #### MotionMagic
 - [ ] Arbitrary feed forward
 - [ ] Default max acceleration per meter square
 - [ ] Default max velocity per meter
 
-#### FeedForward
-- [ ] kS
-- [ ] kG
-
 #### Simulation Constants
 - [ ] Moment of inertia
-
-#### Limits
-- [ ] Current limit
-- [ ] Forward limit
-- [ ] Backwards limit
-
-#### GearRatio
-- [ ] Gear ratio
-- [ ] Is it rotor to sensor or sensor to mechanism
-
-#### General Constants
-- [ ] Arm length
-- [ ] Arm Weight
-- [ ] id
-- [ ] sysIdRoutineConfig

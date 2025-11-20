@@ -2,7 +2,6 @@ package frc.robot.subsystems.constants.hood;
 
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 
@@ -30,7 +29,7 @@ public class HoodConstants {
 		SIMULATION_SLOT.GravityType = GravityTypeValue.Arm_Cosine;
 
 		FEEDBACK_CONFIGS.RotorToSensorRatio = 1;
-		FEEDBACK_CONFIGS.SensorToMechanismRatio = 450/7.0;
+		FEEDBACK_CONFIGS.SensorToMechanismRatio = 450 / 7.0;
 //		FEEDBACK_CONFIGS.FeedbackRemoteSensorID = 20;
 //		FEEDBACK_CONFIGS.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
 	}

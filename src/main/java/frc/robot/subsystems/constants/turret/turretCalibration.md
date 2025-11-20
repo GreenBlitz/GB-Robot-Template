@@ -9,8 +9,8 @@ Turret Calibration
 - [ ] Check current limit
 - [ ] Check forward limit
 - [ ] Check backwards limit
-- [ ] Check max voltage
 - [ ] Check max velocity
+- [ ] max acceleration
 
 #### Configs
 - [ ] Check invertion

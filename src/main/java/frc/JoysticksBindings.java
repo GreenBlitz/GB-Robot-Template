@@ -1,5 +1,6 @@
 package frc;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
@@ -87,5 +88,9 @@ public class JoysticksBindings {
 						.setPower(
 								() -> joystick.getAxisValue(Axis.LEFT_Y) * calibrationMaxPower)
 						);
+		turret.getSysIdCalibrator().setAllButtonsForCalibration(joystick);
+
+		joystick.POV_RIGHT.onTrue(turret.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(20)));
+		joystick.POV_LEFT.onTrue(turret.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(50)));
 	}
 }

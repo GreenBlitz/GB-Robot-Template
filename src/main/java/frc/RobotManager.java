@@ -43,8 +43,6 @@ public class RobotManager extends LoggedRobot {
 		this.roborioCycles = 0;
 		this.robot = new Robot();
 
-		BrakeStateManager.add(() -> robot.getTurret().setBrake(true), () -> robot.getTurret().setBrake(false));
-
 		createAutoReadyForConstructionChooser();
 		JoysticksBindings.configureBindings(robot);
 

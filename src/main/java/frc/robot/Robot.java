@@ -14,6 +14,7 @@ import frc.robot.subsystems.flywheel.FlyWheel;
 import frc.robot.subsystems.flywheel.KrakenX60FlyWheelBuilder;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
+import frc.utils.brakestate.BrakeStateManager;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -27,18 +28,24 @@ public class Robot {
 	private final FlyWheel flyWheel;
 
 	public Robot() {
+
 		BatteryUtil.scheduleLimiter();
 		this.turret = createTurret();
 		turret.setPosition(TurretConstants.MIN_POSITION);
-		BatteryUtil.scheduleLimiter();
+		BrakeStateManager.add(() -> turret.setBrake(true), () -> turret.setBrake(false));
+
 		this.flyWheel = KrakenX60FlyWheelBuilder.build("Subsystems/FlyWheel", IDs.TalonFXIDs.FLYWHEEL);
+	}
+
+	public void resetSubsystems() {
+		if (TurretConstants.MIN_POSITION.getRadians() > turret.getPosition().getRadians()) {
+			turret.setPosition(TurretConstants.MIN_POSITION);
+		}
 	}
 
 	public void periodic() {
 		BusChain.refreshAll();
-		if (turret.getPosition().getDegrees() < TurretConstants.MIN_POSITION.getDegrees()) {
-			turret.setPosition(TurretConstants.MIN_POSITION);
-		}
+		resetSubsystems();
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		CommandScheduler.getInstance().run(); // Should be last
@@ -47,7 +54,7 @@ public class Robot {
 	private Arm createTurret() {
 		return TalonFXArmBuilder.buildMotionMagicArm(
 			TurretConstants.LOG_PATH,
-			IDs.TalonFXIDs.turretID,
+			IDs.TalonFXIDs.TURRET,
 			TurretConstants.IS_INVERTED,
 			TurretConstants.TALON_FX_FOLLOWER_CONFIG,
 			TurretConstants.SYS_ID_ROUTINE_CONFIG,

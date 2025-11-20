@@ -182,6 +182,8 @@ public class Robot {
 		limelightThreeGB.getIndependentRobotPose().ifPresent(poseEstimator::updateVision);
 
 		limelightObjectDetector.updateObjectDetection();
+		
+		poseEstimator.log();
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();

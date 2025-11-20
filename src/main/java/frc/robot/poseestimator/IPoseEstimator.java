@@ -12,5 +12,7 @@ public interface IPoseEstimator extends IVisionEstimator, IOdometryEstimator {
 	Pose2d getEstimatedPoseAtTimestamp(double timestamp);
 
 	boolean isIMUOffsetCalibrated();
+	
+	void log();
 
 }

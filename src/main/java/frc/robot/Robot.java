@@ -7,7 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.RobotManager;
-import frc.constants.fourBar.FourBarConstants;
+import frc.robot.subsystems.constants.fourBar.FourBarConstants;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
 import frc.robot.subsystems.arm.Arm;
@@ -72,8 +72,8 @@ public class Robot {
 			new TalonFXFollowerConfig(),
 			new SysIdRoutine.Config(),
 			FourBarConstants.FEEDBACK_CONFIGS,
-			FourBarConstants.REAL_SLOTS_CONFIGS,
-			FourBarConstants.SIMULATION_SLOTS_CONFIGS,
+			FourBarConstants.REAL_SLOT,
+			FourBarConstants.SIMULATION_SLOT,
 			FourBarConstants.CURRENT_LIMIT,
 			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			FourBarConstants.MOMENT_OF_INERTIA,

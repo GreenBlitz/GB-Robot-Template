@@ -44,6 +44,7 @@ public class Robot {
 		BrakeStateManager.add(() -> turret.setBrake(true), () -> turret.setBrake(false));
 
 		this.flyWheel = KrakenX60FlyWheelBuilder.build("Subsystems/FlyWheel", IDs.TalonFXIDs.FLYWHEEL);
+
 		this.intakeRoller = createIntakeRollers();
 
 		this.hood = createHood();
@@ -67,6 +68,7 @@ public class Robot {
 		BusChain.logChainsStatuses();
 		CommandScheduler.getInstance().run(); // Should be last
 	}
+
 	public Roller createIntakeRollers() {
 		return SparkMaxRollerBuilder.build(
 			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/IntakeRollers",

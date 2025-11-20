@@ -30,7 +30,7 @@ public class Robot {
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 		this.flyWheel = KrakenX60FlyWheelBuilder.build("Subsystems/FlyWheel", IDs.TalonFXIDs.FLYWHEEL);
-		
+
 		this.hood = createHood();
 		hood.setPosition(HoodConstants.MINIMUM_POSITION);
 	}

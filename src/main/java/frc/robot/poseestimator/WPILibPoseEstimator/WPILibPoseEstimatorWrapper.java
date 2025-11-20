@@ -119,6 +119,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		return isIMUOffsetCalibrated;
 	}
 
+	@Override
 	public void log() {
 		Logger.recordOutput(logPath + "/estimatedPose", getEstimatedPose());
 		Logger.recordOutput(logPath + "/odometryPose", getOdometryPose());

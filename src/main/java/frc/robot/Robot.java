@@ -28,12 +28,12 @@ public class Robot {
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 		this.hood = createHood();
-		hood.setPosition(HoodConstants.STARTING_POSITION);
+		hood.setPosition(HoodConstants.MINIMUM_POSITION);
 	}
 
 	public void resetSubsystems() {
-		if (HoodConstants.STARTING_POSITION.getRadians() > hood.getPosition().getRadians()) {
-			hood.setPosition(HoodConstants.STARTING_POSITION);
+		if (HoodConstants.MINIMUM_POSITION.getRadians() > hood.getPosition().getRadians()) {
+			hood.setPosition(HoodConstants.MINIMUM_POSITION);
 		}
 	}
 

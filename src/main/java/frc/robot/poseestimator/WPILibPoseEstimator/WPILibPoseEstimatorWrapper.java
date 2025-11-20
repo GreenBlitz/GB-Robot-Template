@@ -58,8 +58,8 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	}
 
 	@Override
-	public Pose2d getEstimatedPoseAtTimestamp(double timestamp) {
-		return poseEstimator.sampleAt(timestamp).orElseGet(this::getEstimatedPose);
+	public Pose2d getEstimatedPoseAtTimestamp(double timestampSeconds) {
+		return poseEstimator.sampleAt(timestampSeconds).orElseGet(this::getEstimatedPose);
 	}
 
 	@Override
@@ -78,13 +78,13 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	public void updateOdometry(OdometryData data) {
 		Twist2d changeInPose = kinematics.toTwist2d(lastOdometryData.getWheelPositions(), data.getWheelPositions());
 		data.setIMUYaw(data.getIMUYaw().orElseGet((() -> lastOdometryData.getIMUYaw().get().plus(Rotation2d.fromRadians(changeInPose.dtheta)))));
-		poseEstimator.updateWithTime(data.getTimestamp(), data.getIMUYaw().get(), data.getWheelPositions());
+		poseEstimator.updateWithTime(data.getTimestampSeconds(), data.getIMUYaw().get(), data.getWheelPositions());
 
-		imuYawBuffer.addSample(data.getTimestamp(), data.getIMUYaw().get());
+		imuYawBuffer.addSample(data.getTimestampSeconds(), data.getIMUYaw().get());
 
 		lastOdometryData.setWheelPositions(data.getWheelPositions());
 		lastOdometryData.setIMUYaw(data.getIMUYaw());
-		lastOdometryData.setTimestamp(data.getTimestamp());
+		lastOdometryData.setTimestamp(data.getTimestampSeconds());
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	public void log() {
 		Logger.recordOutput(logPath + "/estimatedPose", getEstimatedPose());
 		Logger.recordOutput(logPath + "/odometryPose", getOdometryPose());
-		Logger.recordOutput(logPath + "/lastOdometryUpdate", lastOdometryData.getTimestamp());
+		Logger.recordOutput(logPath + "/lastOdometryUpdate", lastOdometryData.getTimestampSeconds());
 		if (lastVisionObservation != null) {
 			Logger.recordOutput(logPath + "/lastVisionUpdate", lastVisionObservation.timestampSeconds());
 		}
@@ -136,14 +136,16 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	private void updateVision(RobotPoseObservation visionRobotPoseObservation) {
 		addVisionMeasurement(visionRobotPoseObservation);
 
-		Optional<Rotation2d> poseToIMUYawDifference = getPoseToIMUYawDifference(
+		getPoseToIMUYawDifference(
 			imuYawBuffer.getSample(visionRobotPoseObservation.timestampSeconds()),
 			visionRobotPoseObservation.timestampSeconds()
-		);
-		if (poseToIMUYawDifference.isPresent()) {
-			poseToIMUYawDifferenceBuffer.insert(poseToIMUYawDifference.get());
-			updateIsIMUOffsetCalibrated();
-		}
+		).ifPresent(yawDifference -> {
+			poseToIMUYawDifferenceBuffer.insert(yawDifference);
+
+			if (!isIMUOffsetCalibrated) {
+				updateIsIMUOffsetCalibrated();
+			}
+		});
 	}
 
 	private void addVisionMeasurement(RobotPoseObservation visionObservation) {
@@ -162,8 +164,8 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		Logger.recordOutput(logPath + "/poseToIMUOffsetStdDev", poseToIMUYawDifferenceStdDev);
 	}
 
-	private Optional<Rotation2d> getPoseToIMUYawDifference(Optional<Rotation2d> gyroYaw, double timeStampSeconds) {
-		return gyroYaw.map(yaw -> getEstimatedPoseAtTimestamp(timeStampSeconds).getRotation().minus(yaw));
+	private Optional<Rotation2d> getPoseToIMUYawDifference(Optional<Rotation2d> gyroYaw, double timestampSeconds) {
+		return gyroYaw.map(yaw -> getEstimatedPoseAtTimestamp(timestampSeconds).getRotation().minus(yaw));
 	}
 
 }

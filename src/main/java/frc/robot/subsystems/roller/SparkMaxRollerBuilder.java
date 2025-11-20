@@ -57,7 +57,14 @@ public class SparkMaxRollerBuilder {
 		return new Roller(logPath, roller, voltageSignal, currentSignal, positionSignal, voltageRequest);
 	}
 
-	public static Roller build(String logPath, SparkMaxDeviceID id, boolean inverted, double gearRatio, int currentLimit, double momentOfInertia) {
+	public static Roller build(
+		String logPath,
+		SparkMaxDeviceID id,
+		boolean inverted,
+		double gearRatio,
+		int currentLimit,
+		double momentOfInertia
+	) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(id);
 		return buildRoller(logPath, sparkMaxWrapper, inverted, gearRatio, currentLimit, momentOfInertia);
 	}

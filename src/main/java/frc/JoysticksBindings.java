@@ -110,7 +110,9 @@ public class JoysticksBindings {
 	}
 
 	private static void applyOmniCalibrationBindings(Roller omni, SmartJoystick joystick, double maxCalibrationPower) {
-		joystick.A.onTrue(omni.getCommandsBuilder().rollRotationsAtVoltageForwards(100, 0.2));
+		joystick.POV_DOWN.onTrue(new InstantCommand(() -> omni.getCommandsBuilder().setIsSubsystemRunningIndependently(true)));
+		joystick.POV_UP.onTrue(new InstantCommand(() -> omni.getCommandsBuilder().setIsSubsystemRunningIndependently(false)));
+
 		joystick.B.onTrue(omni.getCommandsBuilder().rollRotationsAtVoltageBackwards(50, 3));
 		joystick.X.onTrue(omni.getCommandsBuilder().setPower(0.5));
 		joystick.Y.onTrue(omni.getCommandsBuilder().setPower(-0.5));

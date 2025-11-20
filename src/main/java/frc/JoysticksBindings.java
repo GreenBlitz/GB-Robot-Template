@@ -1,11 +1,15 @@
 package frc;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.constants.hood.HoodConstants;
 import frc.robot.subsystems.swerve.ChassisPowers;
+import frc.utils.battery.BatteryUtil;
 
 public class JoysticksBindings {
 
@@ -47,9 +51,6 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		usedJoystick.A.onTrue(robot.getHood().getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(90)));
-		usedJoystick.B.onTrue(robot.getHood().getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(10)));
-		usedJoystick.X.onTrue(robot.getHood().getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(-20)));
 		// bindings...
 	}
 
@@ -78,4 +79,21 @@ public class JoysticksBindings {
 		// bindings...
 	}
 
+	private static void applyHoodCalibrationBindings(Arm hood,SmartJoystick joystick,double calibrationMaxPower){
+		joystick.POV_DOWN.onTrue(new InstantCommand(() -> hood.getCommandsBuilder().setIsSubsystemRunningIndependently(true)));
+		joystick.POV_UP.onTrue(new InstantCommand(() -> hood.getCommandsBuilder().setIsSubsystemRunningIndependently(false)));
+		
+		// Check limits
+		joystick.R1.whileTrue(
+				hood.getCommandsBuilder().setPower(
+						() -> joystick.getAxisValue(Axis.LEFT_Y) * calibrationMaxPower
+								+ (hood.getKgVoltage() / BatteryUtil.getCurrentVoltage())
+				)
+		);
+		
+		hood.getSysIdCalibrator().setAllButtonsForCalibration(joystick);
+		
+		joystick.POV_RIGHT.onTrue(hood.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(90)));
+		joystick.POV_LEFT.onTrue(hood.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(-20)));
+	}
 }

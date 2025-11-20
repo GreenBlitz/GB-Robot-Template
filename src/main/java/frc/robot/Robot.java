@@ -68,7 +68,7 @@ public class Robot {
 			IDs.TalonFXIDs.hoodId,
 			HoodConstants.IS_INVERTED,
 			new TalonFXFollowerConfig(),
-			new SysIdRoutine.Config(),
+			HoodConstants.SYSIDROUTIN_CONFIG,
 			HoodConstants.FEEDBACK_CONFIGS,
 			HoodConstants.REAL_SLOT,
 			HoodConstants.SIMULATION_SLOT,

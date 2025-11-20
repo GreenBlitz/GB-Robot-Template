@@ -24,11 +24,11 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	private final String name;
 	private final String logPath;
-	private final Pose3d robotRelativeCameraPose;
 	private final ArrayList<DetectedObjectObservation> detectedObjectObservations;
 
 	private final LimelightInputsSet inputs;
 
+	private Supplier<Pose3d> robotRelativeCameraPoseSupplier;
 	private RobotPoseObservation mt1PoseObservation;
 	private RobotPoseObservation mt2PoseObservation;
 
@@ -41,12 +41,12 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	private LimelightPipeline pipeline;
 
-	public Limelight(String name, String logPathPrefix, Pose3d robotRelativeCameraPose, LimelightPipeline pipeline) {
+	public Limelight(String name, String logPathPrefix, Supplier<Pose3d> robotRelativeCameraPoseSupplier, LimelightPipeline pipeline) {
 		this.name = name;
 		this.logPath = logPathPrefix + "/" + name;
 
-		this.robotRelativeCameraPose = robotRelativeCameraPose;
-		setRobotRelativeCameraPose(robotRelativeCameraPose);
+		this.robotRelativeCameraPoseSupplier = robotRelativeCameraPoseSupplier;
+		setCurrentRobotRelativeCameraPose(new Pose3d());
 
 		this.detectedObjectObservations = new ArrayList<>();
 
@@ -78,7 +78,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 					if (detectedObjectFilter.apply(rawDetection)) {
 						pipeline.getDetectedObjectType(rawDetection.classId()).ifPresent(objectType -> {
 							DetectedObjectObservation observation = ObjectDetectionMath.getDetectedObjectObservation(
-								robotRelativeCameraPose,
+								robotRelativeCameraPoseSupplier.get(),
 								objectType,
 								Rotation2d.fromDegrees(rawDetection.txnc()),
 								Rotation2d.fromDegrees(rawDetection.tync()),
@@ -102,7 +102,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 			inputs.mt1Inputs().mtRawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
 			Logger.processInputs(logPath + "/mt1Inputs", inputs.mt1Inputs());
 
-			mt1PoseObservation = new RobotPoseObservation(getMT1RawData().timestampSeconds(), getMT1RawData().pose(), calculateMT1StdDevs.get());
+			mt1PoseObservation = new RobotPoseObservation(getMT1RawData().timestampSeconds(), getRobotPose(), calculateMT1StdDevs.get());
 			if (doesObservationExist(mt1PoseObservation)) {
 				Logger.recordOutput(logPath + "/megaTag1PoseObservation", mt1PoseObservation);
 			}
@@ -123,10 +123,6 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	public String getName() {
 		return name;
-	}
-
-	public Pose3d getRobotRelativeCameraPose() {
-		return robotRelativeCameraPose;
 	}
 
 	@Override
@@ -219,16 +215,28 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		return inputs.mt2Inputs().mtRawData;
 	}
 
-	private void setRobotRelativeCameraPose(Pose3d robotRelativeCameraPose) {
+	private void setCurrentRobotRelativeCameraPose(Pose3d currentRobotRelativeCameraPose) {
 		LimelightHelpers.setCameraPose_RobotSpace(
 			name,
-			robotRelativeCameraPose.getX(),
-			robotRelativeCameraPose.getY(),
-			robotRelativeCameraPose.getZ(),
-			Math.toDegrees(robotRelativeCameraPose.getRotation().getX()),
-			Math.toDegrees(robotRelativeCameraPose.getRotation().getY()),
-			Math.toDegrees(robotRelativeCameraPose.getRotation().getZ())
+			currentRobotRelativeCameraPose.getX(),
+			currentRobotRelativeCameraPose.getY(),
+			currentRobotRelativeCameraPose.getZ(),
+			Math.toDegrees(currentRobotRelativeCameraPose.getRotation().getX()),
+			Math.toDegrees(currentRobotRelativeCameraPose.getRotation().getY()),
+			Math.toDegrees(currentRobotRelativeCameraPose.getRotation().getZ())
 		);
+	}
+
+	private Pose2d getRobotPose() {
+		return (LimelightHelpers.getBotPose3d_wpiBlue(name)
+			.transformBy(new Transform3d(new Pose3d(), robotRelativeCameraPoseSupplier.get()).inverse())).toPose2d();
+	}
+
+	protected static double getEstimateTimestampSeconds(LimelightHelpers.PoseEstimate poseEstimate) {
+		if (poseEstimate.timestampSeconds() == 0) {
+			return 0;
+		}
+		return TimeUtil.getCurrentTimeSeconds() - Conversions.milliSecondsToSeconds(poseEstimate.latency());
 	}
 
 	private static double getTarget2dTimestampSeconds(LimelightTarget2dValues target2dValues) {

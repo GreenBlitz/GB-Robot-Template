@@ -4,11 +4,7 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
@@ -77,7 +73,7 @@ public class Robot {
 		this.limelightFour = new Limelight(
 			"limelight-left",
 			"NewVision",
-			new Pose3d(
+			() -> new Pose3d(
 				new Translation3d(0.215, -0.11, 0.508),
 				new Rotation3d(Units.Degrees.of(-8.06180374425555), Units.Degrees.of(-27.07784559039065), Units.Degrees.of(-22.52372569716833))
 			),
@@ -120,7 +116,7 @@ public class Robot {
 		this.limelightThreeGB = new Limelight(
 			"limelight",
 			"NewVision",
-			new Pose3d(
+			() -> new Pose3d(
 				new Translation3d(0.2022, 0.13, 0.508),
 				new Rotation3d(Units.Degrees.of(10.612258493096334), Units.Degrees.of(-27.18966371065684), Units.Degrees.of(20.10328620400214))
 			),
@@ -163,7 +159,7 @@ public class Robot {
 		limelightObjectDetector = new Limelight(
 			"limelight-object",
 			"NewVision",
-			new Pose3d(
+			() -> new Pose3d(
 				new Translation3d(-0.08, 0.23, 0.865),
 				new Rotation3d(Units.Degrees.of(0), Units.Degrees.of(-27), Units.Degrees.of(-176.67))
 			),

@@ -25,3 +25,6 @@ Turret Calibration
 - [ ] Calibrate kP
 - [ ] Calibrate kI
 - [ ] Calibrate kD
+
+#### Turret
+- [ ] Check turret radius

@@ -50,9 +50,9 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-        usedJoystick.A.onTrue(robot.getOmni().getCommandsBuilder().rollRotationsAtVoltageForwards(100,0.2));
-        usedJoystick.B.onTrue(robot.getOmni().getCommandsBuilder().rollRotationsAtVoltageBackwards(50,3));
-        usedJoystick.X.onTrue(robot.getOmni().getCommandsBuilder().setPower(0.5));
+		usedJoystick.A.onTrue(robot.getOmni().getCommandsBuilder().rollRotationsAtVoltageForwards(100, 0.2));
+		usedJoystick.B.onTrue(robot.getOmni().getCommandsBuilder().rollRotationsAtVoltageBackwards(50, 3));
+		usedJoystick.X.onTrue(robot.getOmni().getCommandsBuilder().setPower(0.5));
 		// bindings...
 	}
 

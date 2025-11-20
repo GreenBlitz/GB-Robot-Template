@@ -33,6 +33,7 @@ public class SparkMaxRollerBuilder {
 	private static Roller buildRoller(
 		String logPath,
 		SparkMaxWrapper sparkMaxWrapper,
+		boolean inverted,
 		double gearRatio,
 		int currentLimit,
 		double momentOfInertia
@@ -49,21 +50,22 @@ public class SparkMaxRollerBuilder {
 			AngleUnit.ROTATIONS
 		);
 
-		roller.applyConfiguration(buildConfiguration(gearRatio, currentLimit));
+		roller.applyConfiguration(buildConfiguration(inverted, gearRatio, currentLimit));
 
 		SparkMaxRequest<Double> voltageRequest = SparkMaxRequestBuilder.build(0.0, SparkBase.ControlType.kVoltage, 0);
 
 		return new Roller(logPath, roller, voltageSignal, currentSignal, positionSignal, voltageRequest);
 	}
 
-	public static Roller build(String logPath, SparkMaxDeviceID id, double gearRatio, int currentLimit, double momentOfInertia) {
+	public static Roller build(String logPath, SparkMaxDeviceID id, boolean inverted, double gearRatio, int currentLimit, double momentOfInertia) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(id);
-		return buildRoller(logPath, sparkMaxWrapper, gearRatio, currentLimit, momentOfInertia);
+		return buildRoller(logPath, sparkMaxWrapper, inverted, gearRatio, currentLimit, momentOfInertia);
 	}
 
 	public static Pair<Roller, IDigitalInput> buildWithDigitalInput(
 		String logPath,
 		SparkMaxDeviceID id,
+		boolean inverted,
 		double gearRatio,
 		int currentLimit,
 		double momentOfInertia,
@@ -92,12 +94,15 @@ public class SparkMaxRollerBuilder {
 				);
 			}
 		}
-		return new Pair<Roller, IDigitalInput>(buildRoller(logPath, sparkMaxWrapper, gearRatio, currentLimit, momentOfInertia), digitalInput);
+		return new Pair<>(buildRoller(logPath, sparkMaxWrapper, inverted, gearRatio, currentLimit, momentOfInertia), digitalInput);
 	}
 
-	private static SparkMaxConfiguration buildConfiguration(double gearRatio, int currentLimit) {
+	private static SparkMaxConfiguration buildConfiguration(boolean inverted, double gearRatio, int currentLimit) {
 		SparkMaxConfiguration configs = new SparkMaxConfiguration();
-		configs.getSparkMaxConfig().smartCurrentLimit(currentLimit);
+		if (!Robot.ROBOT_TYPE.isSimulation()) {
+			configs.getSparkMaxConfig().smartCurrentLimit(currentLimit);
+		}
+		configs.getSparkMaxConfig().encoder.inverted(inverted);
 		configs.getSparkMaxConfig().encoder.positionConversionFactor(gearRatio);
 		configs.getSparkMaxConfig().encoder.velocityConversionFactor(gearRatio);
 		return configs;

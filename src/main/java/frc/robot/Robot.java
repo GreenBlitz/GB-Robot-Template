@@ -43,6 +43,7 @@ public class Robot {
 
 		this.hood = createHood();
 		hood.setPosition(HoodConstants.MINIMUM_POSITION);
+		BrakeStateManager.add(() -> hood.setBrake(true), () -> hood.setBrake(false));
 	}
 
 	public void resetSubsystems() {

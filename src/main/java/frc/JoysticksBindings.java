@@ -2,11 +2,13 @@ package frc;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.roller.Roller;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.utils.battery.BatteryUtil;
 
@@ -51,6 +53,8 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+		usedJoystick.A.onTrue(robot.getBelly().getCommandsBuilder().rollRotationsAtVoltageForwards(10,5));
+		usedJoystick.B.onTrue(robot.getBelly().getCommandsBuilder().rollRotationsAtVoltageBackwards(10,5));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
@@ -106,6 +110,17 @@ public class JoysticksBindings {
 
 		joystick.POV_RIGHT.onTrue(hood.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(20)));
 		joystick.POV_LEFT.onTrue(hood.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(50)));
+	}
+
+	private static void applyBellyCalibrationBindings(Roller belly, SmartJoystick joystick, double calibrationMaxPower) {
+		joystick.POV_DOWN.onTrue(new InstantCommand(() -> belly.getCommandsBuilder().setIsSubsystemRunningIndependently(true)));
+		joystick.POV_UP.onTrue(new InstantCommand(() -> belly.getCommandsBuilder().setIsSubsystemRunningIndependently(false)));
+
+		// Check limits
+		joystick.R1.whileTrue(belly.getCommandsBuilder().setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * calibrationMaxPower));
+
+		joystick.POV_RIGHT.onTrue(belly.getCommandsBuilder().rollRotationsAtVoltageForwards(6,7));
+		joystick.POV_LEFT.onTrue(belly.getCommandsBuilder().rollRotationsAtVoltageBackwards(6,7));
 	}
 
 }

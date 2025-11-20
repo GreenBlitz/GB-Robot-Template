@@ -9,7 +9,7 @@ import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
 
 public class TurretConstants {
 
-	public static final String LOG_PATH = RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/turret";
+	public static final String LOG_PATH = RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Turret";
 	public static final boolean IS_INVERTED = false;
 	public static final TalonFXFollowerConfig TALON_FX_FOLLOWER_CONFIG = new TalonFXFollowerConfig();
 	public static final SysIdRoutine.Config SYS_ID_ROUTINE_CONFIG = new SysIdRoutine.Config();
@@ -40,7 +40,7 @@ public class TurretConstants {
 
 	public static final double CURRENT_LIMIT = 40;
 	public static final double MOMENT_OF_INERTIA = 0.001;
-	public static final double ARM_LENGTH = 0.0;
+	public static final double ARM_RADIUS = 0.0;
 	public static final double ARBITRARY_FEED_FORWARD = 0.0;
 	public static final Rotation2d FORWARD_SOFTWARE_LIMIT = Rotation2d.fromDegrees(257.0);
 	public static final Rotation2d BACKWARDS_SOFTWARE_LIMIT = Rotation2d.fromDegrees(4.0);

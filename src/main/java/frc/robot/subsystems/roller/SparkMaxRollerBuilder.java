@@ -72,7 +72,8 @@ public class SparkMaxRollerBuilder {
 		double momentOfInertia,
 		String digitalInputName,
 		double debounceTime,
-		boolean isForwardLimitSwitch
+		boolean isForwardLimitSwitch,
+		boolean isLimitSwitchInverted
 	) {
 		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(id);
 
@@ -81,9 +82,9 @@ public class SparkMaxRollerBuilder {
 			digitalInput = new ChooserDigitalInput(digitalInputName);
 		} else {
 			if (isForwardLimitSwitch) {
-				digitalInput = new SuppliedDigitalInput(() -> sparkMaxWrapper.getForwardLimitSwitch().isPressed(), new Debouncer(debounceTime));
+				digitalInput = new SuppliedDigitalInput(() -> sparkMaxWrapper.getForwardLimitSwitch().isPressed(), new Debouncer(debounceTime),isLimitSwitchInverted);
 			} else {
-				digitalInput = new SuppliedDigitalInput(() -> sparkMaxWrapper.getReverseLimitSwitch().isPressed(), new Debouncer(debounceTime));
+				digitalInput = new SuppliedDigitalInput(() -> sparkMaxWrapper.getReverseLimitSwitch().isPressed(), new Debouncer(debounceTime),isLimitSwitchInverted);
 			}
 		}
 		return new Pair<Roller, IDigitalInput>(buildRoller(logPath, sparkMaxWrapper, gearRatio, currentLimit, momentOfInertia), digitalInput);

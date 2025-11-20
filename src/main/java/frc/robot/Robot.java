@@ -65,7 +65,7 @@ public class Robot {
 	private Arm createHood() {
 		return TalonFXArmBuilder.buildMotionMagicArm(
 			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Hood",
-			IDs.TalonFXIDs.HOOD_ID,
+			IDs.TalonFXIDs.HOOD,
 			HoodConstants.IS_INVERTED,
 			new TalonFXFollowerConfig(),
 			HoodConstants.SYSIDROUTINE_CONFIG,

@@ -12,6 +12,8 @@ import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.TalonFXArmBuilder;
 import frc.robot.subsystems.constants.hood.HoodConstants;
+import frc.robot.subsystems.flywheel.FlyWheel;
+import frc.robot.subsystems.flywheel.KrakenX60FlyWheelBuilder;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 
@@ -22,11 +24,13 @@ import frc.utils.battery.BatteryUtil;
  */
 public class Robot {
 
-	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);
+	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);;
+	private final FlyWheel flyWheel;
 	private final Arm hood;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
+		this.flyWheel = KrakenX60FlyWheelBuilder.build("Subsystems/FlyWheel", IDs.TalonFXIDs.FLYWHEEL);
 		this.hood = createHood();
 		hood.setPosition(HoodConstants.MINIMUM_POSITION);
 	}
@@ -44,6 +48,10 @@ public class Robot {
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		CommandScheduler.getInstance().run(); // Should be last
+	}
+
+	public FlyWheel getFlyWheel() {
+		return flyWheel;
 	}
 
 	public PathPlannerAutoWrapper getAutonomousCommand() {

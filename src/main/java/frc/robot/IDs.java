@@ -7,6 +7,8 @@ public class IDs {
 
 	public static class TalonFXIDs {
 
+		public final static Phoenix6DeviceID FLYWHEEL = new Phoenix6DeviceID(10, BusChain.ROBORIO);
+		public final static Phoenix6DeviceID FLYWHEEL_FOLLOWER = new Phoenix6DeviceID(11, BusChain.ROBORIO);
 		public static Phoenix6DeviceID hoodId = new Phoenix6DeviceID(20, BusChain.SUPER);
 
 	}

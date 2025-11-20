@@ -36,7 +36,7 @@ public class TurretConstants {
 		SIMULATION_SLOTS_CONFIG.kV = 0;
 		SIMULATION_SLOTS_CONFIG.kA = 0;
 
-		FEEDBACK_CONFIGS.withSensorToMechanismRatio(79.2);
+		FEEDBACK_CONFIGS.SensorToMechanismRatio = 79.2;
 	}
 
 	public static final double CURRENT_LIMIT = 40;

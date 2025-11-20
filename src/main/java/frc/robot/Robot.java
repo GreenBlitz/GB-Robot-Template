@@ -28,8 +28,8 @@ public class Robot {
 	private final FlyWheel flyWheel;
 
 	public Robot() {
-
 		BatteryUtil.scheduleLimiter();
+
 		this.turret = createTurret();
 		turret.setPosition(TurretConstants.MIN_POSITION);
 		BrakeStateManager.add(() -> turret.setBrake(true), () -> turret.setBrake(false));

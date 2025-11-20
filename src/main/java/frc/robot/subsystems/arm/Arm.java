@@ -120,7 +120,7 @@ public class Arm extends GBSubsystem {
 		setTargetPosition(signals.position().getLatestValue());
 	}
 
-	private double getKgVoltage() {
+	public double getKgVoltage() {
 		return Robot.ROBOT_TYPE.isReal() ? kG * getPosition().getCos() : 0;
 	}
 

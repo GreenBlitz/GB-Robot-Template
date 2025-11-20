@@ -1,5 +1,6 @@
 package frc;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
@@ -44,14 +45,19 @@ public class JoysticksBindings {
 		}
 	}
 
+	public static void rollerApplyCalibrationsBindings(SmartJoystick joystick, Robot robot) {
+		joystick.L1.onTrue(new InstantCommand(() -> robot.getIntakeRoller().getCommandsBuilder().setIsSubsystemRunningIndependently(true)));
+		joystick.L3.onTrue(new InstantCommand(() -> robot.getIntakeRoller().getCommandsBuilder().setIsSubsystemRunningIndependently(false)));
+
+		joystick.POV_UP.onTrue(robot.getIntakeRoller().getCommandsBuilder().setVoltage(6));
+		joystick.POV_DOWN.onTrue(robot.getIntakeRoller().getCommandsBuilder().rollRotationsAtVoltageForwards(6, 7));
+	}
+
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-		usedJoystick.POV_UP.onTrue(robot.getIntakeRoller().getCommandsBuilder().setVoltage(6));
-		usedJoystick.X.onTrue(robot.getIntakeRoller().getCommandsBuilder().stop());
-		usedJoystick.POV_DOWN.onTrue(robot.getIntakeRoller().getCommandsBuilder().rollRotationsAtVoltageForwards(6, 7));
-		usedJoystick.Y.onTrue(robot.getIntakeRoller().getCommandsBuilder().setPower(9.0));
+		rollerApplyCalibrationsBindings(usedJoystick, robot);
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

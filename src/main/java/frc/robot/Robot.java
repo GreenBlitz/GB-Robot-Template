@@ -42,7 +42,7 @@ public class Robot {
 
 	public Roller createIntakeRollers() {
 		return SparkMaxRollerBuilder.build(
-			"Subsystems/IntakeRollers",
+			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/IntakeRollers",
 			IDs.SparkMAXIDs.INTAKE_ROLLERS,
 			IntakeRollerConstants.GEAR_RATIO,
 			IntakeRollerConstants.CURRENT_LIMIT,

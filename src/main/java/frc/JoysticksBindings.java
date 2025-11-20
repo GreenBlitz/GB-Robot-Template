@@ -18,7 +18,7 @@ public class JoysticksBindings {
 	private static final ChassisPowers chassisDriverInputs = new ChassisPowers();
 
 	public static void configureBindings(Robot robot) {
-		// Set 'chassisDriverInputs' to swerve...
+		robot.getSwerve().setDriversPowerInputs(chassisDriverInputs);
 
 		mainJoystickButtons(robot);
 		secondJoystickButtons(robot);

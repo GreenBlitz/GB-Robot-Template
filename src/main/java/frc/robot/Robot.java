@@ -55,6 +55,7 @@ public class Robot {
 	public void periodic() {
 		BusChain.refreshAll();
 
+		swerve.update();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 
 		BatteryUtil.logStatus();

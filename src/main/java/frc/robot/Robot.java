@@ -27,8 +27,6 @@ import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.math.StandardDeviations2D;
 
-import java.util.Optional;
-
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -76,7 +74,7 @@ public class Robot {
 		limelightFour.setMT1PoseFilter(
 			LimelightFilters.megaTag1Filter(
 				limelightFour,
-				timestamp -> Optional.of(poseEstimator.getEstimatedPoseAtTimestamp(timestamp).getRotation()),
+				timestamp -> poseEstimator.getEstimatedPoseAtTimestamp(timestamp).getRotation(),
 				poseEstimator::isIMUOffsetCalibrated,
 				new Translation2d(0.1, 0.1),
 				Rotation2d.fromDegrees(10)
@@ -85,7 +83,7 @@ public class Robot {
 		limelightFour.setMT2PoseFilter(
 			LimelightFilters.megaTag2Filter(
 				limelightFour,
-				timestamp -> Optional.of(poseEstimator.getEstimatedPoseAtTimestamp(timestamp).getRotation()),
+				timestamp -> poseEstimator.getEstimatedPoseAtTimestamp(timestamp).getRotation(),
 				poseEstimator::isIMUOffsetCalibrated,
 				new Translation2d(0.1, 0.1),
 				Rotation2d.fromDegrees(2)
@@ -119,7 +117,7 @@ public class Robot {
 		limelightThreeGB.setMT1PoseFilter(
 			LimelightFilters.megaTag1Filter(
 				limelightThreeGB,
-				timestamp -> Optional.of(poseEstimator.getEstimatedPoseAtTimestamp(timestamp).getRotation()),
+				timestamp -> poseEstimator.getEstimatedPoseAtTimestamp(timestamp).getRotation(),
 				poseEstimator::isIMUOffsetCalibrated,
 				new Translation2d(0.1, 0.1),
 				Rotation2d.fromDegrees(10)
@@ -128,7 +126,7 @@ public class Robot {
 		limelightThreeGB.setMT2PoseFilter(
 			LimelightFilters.megaTag2Filter(
 				limelightThreeGB,
-				timestamp -> Optional.of(poseEstimator.getEstimatedPoseAtTimestamp(timestamp).getRotation()),
+				timestamp -> poseEstimator.getEstimatedPoseAtTimestamp(timestamp).getRotation(),
 				poseEstimator::isIMUOffsetCalibrated,
 				new Translation2d(0.1, 0.1),
 				Rotation2d.fromDegrees(2)

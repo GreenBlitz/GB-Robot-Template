@@ -1,10 +1,13 @@
 package frc;
 
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
+import frc.utils.calibration.limelightcalibration.CameraCalibration;
 
 public class JoysticksBindings {
 
@@ -14,6 +17,9 @@ public class JoysticksBindings {
 	private static final SmartJoystick FOURTH_JOYSTICK = new SmartJoystick(JoystickPorts.FOURTH);
 	private static final SmartJoystick FIFTH_JOYSTICK = new SmartJoystick(JoystickPorts.FIFTH);
 	private static final SmartJoystick SIXTH_JOYSTICK = new SmartJoystick(JoystickPorts.SIXTH);
+
+	private static final double fourCoralsFromRobot = 0.4572;
+	private static final double tagHeight = 0.165;
 
 	private static final ChassisPowers chassisDriverInputs = new ChassisPowers();
 
@@ -55,12 +61,12 @@ public class JoysticksBindings {
 
 	private static void thirdJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = THIRD_JOYSTICK;
-		// bindings...
 	}
 
 	private static void fourthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = FOURTH_JOYSTICK;
-		// bindings...
+		usedJoystick.A.onTrue(new CameraCalibration(robot.getLimelightFour(), new Pose3d(fourCoralsFromRobot, 0, tagHeight, new Rotation3d(0, 0, Math.PI)), "camera-calbiration-test-limelightFour/"));
+		usedJoystick.B.onTrue(new CameraCalibration(robot.getLimelightThreeGB(), new Pose3d(), "camera-calibration-test-limelightThreeGB/"));
 	}
 
 	private static void fifthJoystickButtons(Robot robot) {

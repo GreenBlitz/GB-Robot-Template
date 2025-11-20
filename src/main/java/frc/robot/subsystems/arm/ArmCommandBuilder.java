@@ -30,7 +30,8 @@ public class ArmCommandBuilder extends GBCommandsBuilder {
 	}
 
 	public Command setTargetPosition(Rotation2d target) {
-		return arm.asSubsystemCommand(new RunCommand(() -> arm.setTargetPosition(target)), "Set target position to: " + target);
+		return arm
+			.asSubsystemCommand(new InitExecuteCommand(() -> arm.setTargetPosition(target), () -> {}), "Set target position to: " + target);
 	}
 
 	public Command setTargetPosition(Supplier<Rotation2d> target) {

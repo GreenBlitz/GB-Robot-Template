@@ -29,8 +29,8 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	private final LimelightInputsSet inputs;
 
-    private LimelightTarget2dValues target2dValues;
-    private Pose3d robotRelativeCameraPose;
+	private LimelightTarget2dValues target2dValues;
+	private Pose3d robotRelativeCameraPose;
 	private RobotPoseObservation mt1PoseObservation;
 	private RobotPoseObservation mt2PoseObservation;
 
@@ -49,7 +49,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 		this.robotRelativeCameraPose = robotRelativeCameraPose;
 		this.originalRelativeCameraPose = robotRelativeCameraPose;
-		setNetworkTablesRobotRelativeCameraPose(new Pose3d());
+		setRobotRelativeCameraPose(new Pose3d());
 
 		this.detectedObjectObservations = new ArrayList<>();
 
@@ -235,10 +235,10 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	protected static double getEstimateTimestampSeconds(LimelightHelpers.PoseEstimate poseEstimate) {
-		if (poseEstimate.timestampSeconds == 0) {
+		if (poseEstimate.timestampSeconds() == 0) {
 			return 0;
 		}
-		return TimeUtil.getCurrentTimeSeconds() - Conversions.milliSecondsToSeconds(poseEstimate.latency);
+		return TimeUtil.getCurrentTimeSeconds() - Conversions.milliSecondsToSeconds(poseEstimate.latency());
 	}
 
 	private static double getTarget2dTimestampSeconds(LimelightTarget2dValues target2dValues) {

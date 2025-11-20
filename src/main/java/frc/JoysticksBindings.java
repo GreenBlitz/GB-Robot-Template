@@ -48,19 +48,19 @@ public class JoysticksBindings {
 		}
 	}
 
-	public static void rollerApplyCalibrationsBindings(SmartJoystick joystick, Robot robot) {
+	public static void applyIntakeRollerCalibrationsBindings(SmartJoystick joystick, Robot robot) {
 		joystick.L1.onTrue(new InstantCommand(() -> robot.getIntakeRoller().getCommandsBuilder().setIsSubsystemRunningIndependently(true)));
 		joystick.L3.onTrue(new InstantCommand(() -> robot.getIntakeRoller().getCommandsBuilder().setIsSubsystemRunningIndependently(false)));
 
 		joystick.POV_UP.onTrue(robot.getIntakeRoller().getCommandsBuilder().setVoltage(6));
-		joystick.POV_DOWN.onTrue(robot.getIntakeRoller().getCommandsBuilder().rollRotationsAtVoltageForwards(6, 7));
+		joystick.POV_DOWN.onTrue(robot.getIntakeRoller().getCommandsBuilder().rollRotationsAtVoltageForwards(100, 0.2));
 	}
 
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-		rollerApplyCalibrationsBindings(usedJoystick,robot);
+		applyIntakeRollerCalibrationsBindings(usedJoystick, robot);
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

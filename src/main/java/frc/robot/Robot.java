@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import com.ctre.phoenix6.configs.FeedbackConfigs;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.RobotManager;
@@ -13,6 +12,7 @@ import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.TalonFXArmBuilder;
+import frc.robot.subsystems.constants.hood.HoodConstants;
 import frc.robot.subsystems.flywheel.FlyWheel;
 import frc.robot.subsystems.flywheel.KrakenX60FlyWheelBuilder;
 import frc.utils.auto.PathPlannerAutoWrapper;
@@ -28,15 +28,29 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);;
 	private final FlyWheel flyWheel;
 	private final Arm fourBar;
+	private final Arm hood;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 		this.flyWheel = KrakenX60FlyWheelBuilder.build("Subsystems/FlyWheel", IDs.TalonFXIDs.FLYWHEEL);
 		this.fourBar = createFourBar();
+
+		this.hood = createHood();
+		hood.setPosition(HoodConstants.MINIMUM_POSITION);
+	}
+
+	public void resetSubsystems() {
+		if (HoodConstants.MINIMUM_POSITION.getRadians() > hood.getPosition().getRadians()) {
+			hood.setPosition(HoodConstants.MINIMUM_POSITION);
+		}
+		if (FourBarConstants.MAXIMUM_POSITION.getRadians() < fourBar.getPosition().getRadians()){
+			fourBar.setPosition(FourBarConstants.MAXIMUM_POSITION);
+		}
 	}
 
 	public void periodic() {
 		BusChain.refreshAll();
+		resetSubsystems();
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
@@ -47,15 +61,60 @@ public class Robot {
 		return flyWheel;
 	}
 
-	public Arm createFourBar(){
-		return TalonFXArmBuilder.buildDynamicMotionMagicArm(FourBarConstants.LOG_PATH,IDs.TalonFXIDs.FOUR_BAR,false,new TalonFXFollowerConfig(),new SysIdRoutine.Config(),FourBarConstants.FEEDBACK_CONFIGS,FourBarConstants.REAL_SLOTS_CONFIGS,FourBarConstants.SIMULATION_SLOTS_CONFIGS,FourBarConstants.CURRENT_LIMIT,RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,FourBarConstants.MOMENT_OF_INERTIA,FourBarConstants.ARM_LENGTH_METERS,0,FourBarConstants.FORWARD_SOFTWARE_LIMITS,FourBarConstants.BACKWARD_SOFTWARE_LIMITS,FourBarConstants.MAX_ACCELERATION_ROTATION2D_METERS_PER_SECONDS_SQUARE,FourBarConstants.MAX_VELOCITY_ROTATION2D_METERS_PER_SECONDS);
+	public Arm createFourBar() {
+		return TalonFXArmBuilder.buildDynamicMotionMagicArm(
+			FourBarConstants.LOG_PATH,
+			IDs.TalonFXIDs.FOUR_BAR,
+			false,
+			new TalonFXFollowerConfig(),
+			new SysIdRoutine.Config(),
+			FourBarConstants.FEEDBACK_CONFIGS,
+			FourBarConstants.REAL_SLOTS_CONFIGS,
+			FourBarConstants.SIMULATION_SLOTS_CONFIGS,
+			FourBarConstants.CURRENT_LIMIT,
+			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+			FourBarConstants.MOMENT_OF_INERTIA,
+			FourBarConstants.ARM_LENGTH_METERS,
+			0,
+			FourBarConstants.FORWARD_SOFTWARE_LIMITS,
+			FourBarConstants.BACKWARD_SOFTWARE_LIMITS,
+			FourBarConstants.MAX_ACCELERATION_ROTATION2D_METERS_PER_SECONDS_SQUARE,
+			FourBarConstants.MAX_VELOCITY_ROTATION2D_METERS_PER_SECONDS
+		);
 	}
-	public Arm getFourBar(){
+
+	public Arm getFourBar() {
 		return fourBar;
 	}
 
 	public PathPlannerAutoWrapper getAutonomousCommand() {
 		return new PathPlannerAutoWrapper();
+	}
+
+	public Arm getHood() {
+		return hood;
+	}
+
+	private Arm createHood() {
+		return TalonFXArmBuilder.buildMotionMagicArm(
+			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Hood",
+			IDs.TalonFXIDs.HOOD,
+			HoodConstants.IS_INVERTED,
+			new TalonFXFollowerConfig(),
+			HoodConstants.SYSIDROUTINE_CONFIG,
+			HoodConstants.FEEDBACK_CONFIGS,
+			HoodConstants.REAL_SLOT,
+			HoodConstants.SIMULATION_SLOT,
+			HoodConstants.CURRENT_LIMIT,
+			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+			HoodConstants.MOMENT_OF_INERTIA,
+			HoodConstants.HOOD_LENGTH_METERS,
+			HoodConstants.ARBITRARY_FEEDFORWARD,
+			HoodConstants.FORWARD_SOFTWARE_LIMIT,
+			HoodConstants.BACKWARD_SOFTWARE_LIMIT,
+			HoodConstants.DEFAULT_MAX_ACCELERATION_PER_SECOND_SQUARE,
+			HoodConstants.DEFAULT_MAX_VELOCITY_PER_SECOND
+		);
 	}
 
 }

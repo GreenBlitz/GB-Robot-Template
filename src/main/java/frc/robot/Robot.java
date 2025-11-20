@@ -27,6 +27,8 @@ import frc.utils.battery.BatteryUtil;
 import frc.utils.math.StandardDeviations2D;
 import frc.utils.time.TimeUtil;
 
+import java.util.function.Supplier;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -71,13 +73,10 @@ public class Robot {
 		);
 
 		this.limelightFour = new Limelight(
-			"limelight-left",
-			"NewVision",
-			new Pose3d(
-				new Translation3d(0.215, -0.11, 0.508),
-				new Rotation3d(Units.Degrees.of(-8.06180374425555), Units.Degrees.of(-27.07784559039065), Units.Degrees.of(-22.52372569716833))
-			),
-			LimelightPipeline.APRIL_TAG
+				"limelight-left",
+				"NewVision",
+				()->new Pose3d(),
+				LimelightPipeline.APRIL_TAG
 		);
 		limelightFour.setMT1PoseFilter(
 			LimelightFilters.megaTag1Filter(
@@ -116,10 +115,7 @@ public class Robot {
 		this.limelightThreeGB = new Limelight(
 			"limelight",
 			"NewVision",
-			new Pose3d(
-				new Translation3d(0.2022, 0.13, 0.508),
-				new Rotation3d(Units.Degrees.of(10.612258493096334), Units.Degrees.of(-27.18966371065684), Units.Degrees.of(20.10328620400214))
-			),
+			()-> new Pose3d(),
 			LimelightPipeline.APRIL_TAG
 		);
 		limelightThreeGB.setMT1PoseFilter(
@@ -159,10 +155,7 @@ public class Robot {
 		limelightObjectDetector = new Limelight(
 			"limelight-object",
 			"NewVision",
-			new Pose3d(
-				new Translation3d(-0.08, 0.23, 0.865),
-				new Rotation3d(Units.Degrees.of(0), Units.Degrees.of(-27), Units.Degrees.of(-176.67))
-			),
+			()->new Pose3d(),
 			LimelightPipeline.OBJECT_DETECTION
 		);
 
@@ -209,13 +202,9 @@ public class Robot {
 		limelightFour.getIndependentRobotPose().ifPresent(poseEstimator::updateVision);
 		limelightThreeGB.getIndependentRobotPose().ifPresent(poseEstimator::updateVision);
 
-		limelightFour.log();
-		limelightThreeGB.log();
 		headingEstimator.log();
 
-		limelightObjectDetector.transformRobotRelativeCameraPose(new Transform3d());
 		limelightObjectDetector.updateObjectDetection();
-		limelightObjectDetector.log();
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();

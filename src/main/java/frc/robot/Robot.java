@@ -8,8 +8,12 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.factories.constants.SimulationSwerveConstants;
+import frc.robot.subsystems.swerve.factories.imu.SimulationIMUBuilder;
+import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
+import frc.robot.hardware.interfaces.IIMU;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -24,11 +28,12 @@ public class Robot {
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 
+		IIMU imu = SimulationIMUBuilder.buildIMU(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve/IMU");
 		this.swerve = new Swerve(
-				SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
-				ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
-				imu,
-				IMUFactory.createSignals(imu)
+			SimulationSwerveConstants.getSwerveConstants(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
+			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
+			imu,
+			SimulationIMUBuilder.buildSignals()
 		);
 	}
 
@@ -38,6 +43,10 @@ public class Robot {
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		CommandScheduler.getInstance().run(); // Should be last
+	}
+
+	public Swerve getSwerve() {
+		return swerve;
 	}
 
 	public PathPlannerAutoWrapper getAutonomousCommand() {

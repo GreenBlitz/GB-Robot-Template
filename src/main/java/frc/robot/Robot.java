@@ -57,10 +57,10 @@ public class Robot {
 		if (TurretConstants.MIN_POSITION.getRadians() > turret.getPosition().getRadians()) {
 			turret.setPosition(TurretConstants.MIN_POSITION);
 		}
-		if (FourBarConstants.MAXIMUM_POSITION.getRadians() < fourBar.getPosition().getRadians()){
+		if (FourBarConstants.MAXIMUM_POSITION.getRadians() < fourBar.getPosition().getRadians()) {
 			fourBar.setPosition(FourBarConstants.MAXIMUM_POSITION);
 		}
-		if (FourBarConstants.MINIMUM_POSITION.getRadians() > fourBar.getPosition().getRadians()){
+		if (FourBarConstants.MINIMUM_POSITION.getRadians() > fourBar.getPosition().getRadians()) {
 			fourBar.setPosition(FourBarConstants.MINIMUM_POSITION);
 		}
 	}

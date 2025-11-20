@@ -4,7 +4,6 @@ import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class FourBarConstants {
 
@@ -34,7 +33,6 @@ public class FourBarConstants {
 
 		FEEDBACK_CONFIGS.RotorToSensorRatio = 1;
 		FEEDBACK_CONFIGS.SensorToMechanismRatio = 450 / 7.0;
-
 	}
 	public static final Rotation2d FORWARD_SOFTWARE_LIMITS = Rotation2d.fromDegrees(193);
 	public static final Rotation2d BACKWARD_SOFTWARE_LIMITS = Rotation2d.fromDegrees(-24);
@@ -42,4 +40,5 @@ public class FourBarConstants {
 	public static final Rotation2d MINIMUM_POSITION = BACKWARD_SOFTWARE_LIMITS.minus(Rotation2d.fromDegrees(3));
 	public static final Rotation2d MAX_ACCELERATION_ROTATION2D_METERS_PER_SECONDS_SQUARE = Rotation2d.fromRotations(3);
 	public static final Rotation2d MAX_VELOCITY_ROTATION2D_METERS_PER_SECONDS = Rotation2d.fromRotations(3);
+
 }

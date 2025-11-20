@@ -46,6 +46,9 @@ public class Robot {
 		if (FourBarConstants.MAXIMUM_POSITION.getRadians() < fourBar.getPosition().getRadians()){
 			fourBar.setPosition(FourBarConstants.MAXIMUM_POSITION);
 		}
+		if (FourBarConstants.MINIMUM_POSITION.getRadians() > fourBar.getPosition().getRadians()){
+			fourBar.setPosition(FourBarConstants.MINIMUM_POSITION);
+		}
 	}
 
 	public void periodic() {

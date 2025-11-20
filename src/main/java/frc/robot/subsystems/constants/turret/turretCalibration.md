@@ -6,7 +6,7 @@ Turret Calibration
 - [ ] Check bus chain
 
 #### Limits
-- [ ] Check supply limit
+- [ ] Check current limit
 - [ ] Check forward limit
 - [ ] Check backwards limit
 - [ ] Check max voltage

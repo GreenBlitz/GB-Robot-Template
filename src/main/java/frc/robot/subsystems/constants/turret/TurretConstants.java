@@ -40,7 +40,6 @@ public class TurretConstants {
 	}
 
 	public static final double CURRENT_LIMIT = 40;
-	public static final double SIGNALS_FREQUENCY = RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ;
 	public static final double MOMENT_OF_INERTIA = 0.001;
 	public static final double ARM_LENGTH = 0.0;
 	public static final double ARBITRARY_FEED_FORWARD = 0.0;

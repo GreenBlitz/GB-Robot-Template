@@ -55,7 +55,7 @@ public class Robot {
 			TurretConstants.REAL_SLOTS_CONFIG,
 			TurretConstants.SIMULATION_SLOTS_CONFIG,
 			TurretConstants.CURRENT_LIMIT,
-			TurretConstants.SIGNALS_FREQUENCY,
+			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			TurretConstants.MOMENT_OF_INERTIA,
 			TurretConstants.ARM_LENGTH,
 			TurretConstants.ARBITRARY_FEED_FORWARD,
@@ -69,6 +69,7 @@ public class Robot {
 	public Arm getTurret() {
 		return turret;
 	}
+
 	public FlyWheel getFlyWheel() {
 		return flyWheel;
 	}

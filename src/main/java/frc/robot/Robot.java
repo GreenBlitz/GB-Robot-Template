@@ -14,12 +14,9 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.statemachine.RobotCommander;
 import frc.robot.subsystems.swerve.factories.imu.IMUFactory;
-import frc.robot.vision.DetectedObjectType;
-import frc.robot.vision.cameras.limelight.Limelight;
-import frc.robot.vision.cameras.limelight.LimelightFilters;
-import frc.robot.vision.cameras.limelight.LimelightPipeline;
-import frc.robot.vision.cameras.limelight.LimelightStdDevCalculations;
+import frc.robot.vision.cameras.limelight.*;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
@@ -50,6 +47,7 @@ public class Robot {
 	private final Limelight limelightThreeGB;
 	private final Limelight limelightObjectDetector;
 	private final RobotHeadingEstimator headingEstimator;
+	private final RobotCommander robotCommander;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -171,12 +169,12 @@ public class Robot {
 			),
 			LimelightPipeline.OBJECT_DETECTION
 		);
-//		limelightObjectDetector
-//			.setDetectedObjectFilter(LimelightFilters.detectedObjectFilter(limelightObjectDetector, DetectedObjectType.ALGAE));
-
+		
 		swerve.setHeadingSupplier(
 			ROBOT_TYPE.isSimulation() ? () -> poseEstimator.getEstimatedPose().getRotation() : () -> headingEstimator.getEstimatedHeading()
 		);
+
+		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
 	}
 
 	public Limelight getLimelightFour() {
@@ -223,12 +221,9 @@ public class Robot {
 		limelightFour.getIndependentRobotPose().ifPresent(poseEstimator::updateVision);
 		limelightThreeGB.getIndependentRobotPose().ifPresent(poseEstimator::updateVision);
 
-		limelightFour.log();
-		limelightThreeGB.log();
 		headingEstimator.log();
 
 		limelightObjectDetector.updateObjectDetection();
-		limelightObjectDetector.log();
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
@@ -241,6 +236,10 @@ public class Robot {
 
 	public Swerve getSwerve() {
 		return swerve;
+	}
+
+	public RobotCommander getRobotCommander() {
+		return robotCommander;
 	}
 
 	public IPoseEstimator getPoseEstimator() {

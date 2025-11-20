@@ -8,7 +8,7 @@ public class ModuleSpecificConstantsFactory {
 
 	public static ModuleSpecificConstants create(String logPath, ModuleUtil.ModulePosition modulePosition) {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> RealModuleConstants.getModuleSpecificConstants(logPath, modulePosition);
+			case REAL, REPLAY -> RealModuleConstants.getModuleSpecificConstants(logPath, modulePosition);
 			case SIMULATION -> SimulationModuleConstants.getModuleSpecificConstants(logPath, modulePosition);
 		};
 	}

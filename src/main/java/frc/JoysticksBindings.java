@@ -1,9 +1,11 @@
 package frc;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
+import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.swerve.ChassisPowers;
 
 public class JoysticksBindings {
@@ -74,4 +76,16 @@ public class JoysticksBindings {
 		// bindings...
 	}
 
+
+	private static void applyHoodCalibrationBindings(Arm turret, SmartJoystick joystick, double calibrationMaxPower) {
+		joystick.POV_DOWN.onTrue(new InstantCommand(() -> turret.getCommandsBuilder().setIsSubsystemRunningIndependently(true)));
+		joystick.POV_UP.onTrue(new InstantCommand(() -> turret.getCommandsBuilder().setIsSubsystemRunningIndependently(false)));
+
+		// Check limits
+		joystick.R1.whileTrue(
+				turret.getCommandsBuilder()
+						.setPower(
+								() -> joystick.getAxisValue(Axis.LEFT_Y) * calibrationMaxPower)
+						);
+	}
 }

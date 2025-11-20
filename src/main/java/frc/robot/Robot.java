@@ -4,15 +4,21 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.Pair;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
+import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.TalonFXArmBuilder;
 import frc.robot.subsystems.constants.hood.HoodConstants;
+import frc.robot.subsystems.constants.omni.OmniConstant;
 import frc.robot.subsystems.flywheel.FlyWheel;
 import frc.robot.subsystems.flywheel.KrakenX60FlyWheelBuilder;
+import frc.robot.subsystems.roller.Roller;
+import frc.robot.subsystems.roller.SparkMaxRollerBuilder;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 
@@ -26,6 +32,8 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);;
 	private final FlyWheel flyWheel;
 	private final Arm hood;
+	private final Roller omni;
+	private final IDigitalInput omniDigitalInput;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -33,6 +41,7 @@ public class Robot {
 
 		this.hood = createHood();
 		hood.setPosition(HoodConstants.MINIMUM_POSITION);
+		
 	}
 
 	public void resetSubsystems() {
@@ -83,5 +92,20 @@ public class Robot {
 			HoodConstants.DEFAULT_MAX_VELOCITY_PER_SECOND
 		);
 	}
-
+	
+	private void setOmniAndDigitInputOmni(){
+		Pair<Roller, IDigitalInput> omni = SparkMaxRollerBuilder.buildWithDigitalInput(
+				OmniConstant.LOG_PATH,
+				IDs.SparkMAXIDs.OMNI,
+				OmniConstant.GEAR_RATIO,
+				OmniConstant.CURRENT_LIMIT,
+				OmniConstant.MOMENT_OF_INERTIA,
+				OmniConstant.DIGITAL_INPUT_NAME,
+				OmniConstant.DEBOUNCE_TIME,
+				OmniConstant.IS_FORWARD_LIMIT_SWITCH,
+				OmniConstant.IS_FORWARD_LIMIT_SWITCH_INVERTED
+		);
+		this.omni = omni.getFirst();
+		this.omniDigitalInput = omni.getSecond();
+	}
 }

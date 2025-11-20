@@ -4,8 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
+import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.subsystems.constants.intakeRollers.IntakeRollerConstants;
 import frc.robot.subsystems.arm.Arm;
@@ -35,6 +37,8 @@ public class Robot {
 	private final FlyWheel flyWheel;
 	private final Roller intakeRoller;
 	private final Arm hood;
+	private final IDigitalInput intakeRollerDigitalInput;
+
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -45,11 +49,14 @@ public class Robot {
 
 		this.flyWheel = KrakenX60FlyWheelBuilder.build("Subsystems/FlyWheel", IDs.TalonFXIDs.FLYWHEEL);
 
-		this.intakeRoller = createIntakeRollers();
-
 		this.hood = createHood();
 		hood.setPosition(HoodConstants.MINIMUM_POSITION);
 		BrakeStateManager.add(() -> hood.setBrake(true), () -> hood.setBrake(false));
+
+		Pair<Roller, IDigitalInput> intakeRollerAndDigitalInput = createIntakeRollers();
+		this.intakeRoller = intakeRollerAndDigitalInput.getFirst();
+		this.intakeRollerDigitalInput = intakeRollerAndDigitalInput.getSecond();
+		BrakeStateManager.add(() -> intakeRoller.setBrake(true), () -> intakeRoller.setBrake(false));
 	}
 
 	public void resetSubsystems() {
@@ -61,6 +68,10 @@ public class Robot {
 		}
 	}
 
+	public IDigitalInput getIntakeRollerDigitalInput() {
+		return intakeRollerDigitalInput;
+	}
+
 	public void periodic() {
 		BusChain.refreshAll();
 		resetSubsystems();
@@ -69,14 +80,18 @@ public class Robot {
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 
-	public Roller createIntakeRollers() {
-		return SparkMaxRollerBuilder.build(
+	public Pair<Roller, IDigitalInput> createIntakeRollers() {
+		return SparkMaxRollerBuilder.buildWithDigitalInput(
 			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/IntakeRollers",
 			IDs.SparkMAXIDs.INTAKE_ROLLERS,
 			IntakeRollerConstants.IS_INVERTED,
 			IntakeRollerConstants.GEAR_RATIO,
 			IntakeRollerConstants.CURRENT_LIMIT,
-			IntakeRollerConstants.MOMENT_OF_INERTIA
+			IntakeRollerConstants.MOMENT_OF_INERTIA,
+			IntakeRollerConstants.DIGITAL_INPUT_NAME,
+			IntakeRollerConstants.DEBOUNCE,
+			IntakeRollerConstants.IS_FORWARD_LIMITSWITCH,
+			IntakeRollerConstants.IS_LIMITSWITCH_INVERTED
 		);
 	}
 

@@ -114,6 +114,11 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		poseToIMUYawDifferenceBuffer.clear();
 	}
 
+	@Override
+	public boolean isIMUOffsetCalibrated() {
+		return isIMUOffsetCalibrated;
+	}
+
 	public void log() {
 		Logger.recordOutput(logPath + "/estimatedPose", getEstimatedPose());
 		Logger.recordOutput(logPath + "/odometryPose", getOdometryPose());
@@ -122,10 +127,6 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 			Logger.recordOutput(logPath + "/lastVisionUpdate", lastVisionObservation.timestampSeconds());
 		}
 		Logger.recordOutput(logPath + "/isIMUOffsetCalibrated", isIMUOffsetCalibrated);
-	}
-
-	public boolean isIMUOffsetCalibrated() {
-		return isIMUOffsetCalibrated;
 	}
 
 	public void resetIsIMUOffsetCalibrated() {

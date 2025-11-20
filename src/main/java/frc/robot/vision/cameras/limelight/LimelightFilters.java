@@ -8,7 +8,6 @@ import frc.utils.filter.Filter;
 import frc.utils.math.ToleranceMath;
 
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 public class LimelightFilters {
@@ -41,14 +40,12 @@ public class LimelightFilters {
 
 		private static Filter isYawAtExpectedAngle(
 			Supplier<Rotation2d> cameraSuppliedRobotYaw,
-			Supplier<Optional<Rotation2d>> expectedYawSupplier,
+			Supplier<Rotation2d> expectedYawSupplier,
 			Supplier<Boolean> isExpectedYawCalibrated,
 			Rotation2d expectedYawTolerance
 		) {
 			return () -> !isExpectedYawCalibrated.get()
-				|| expectedYawSupplier.get()
-					.map(wantedAngle -> ToleranceMath.isNearWrapped(wantedAngle, cameraSuppliedRobotYaw.get(), expectedYawTolerance))
-					.orElse(false);
+				|| ToleranceMath.isNearWrapped(expectedYawSupplier.get(), cameraSuppliedRobotYaw.get(), expectedYawTolerance);
 		}
 
 		private static Filter isYawNotZero(Supplier<Rotation2d> robotYaw) {

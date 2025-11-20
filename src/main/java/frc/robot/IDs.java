@@ -10,9 +10,9 @@ public class IDs {
 		public final static Phoenix6DeviceID FLYWHEEL = new Phoenix6DeviceID(10, BusChain.ROBORIO);
 		public final static Phoenix6DeviceID FLYWHEEL_FOLLOWER = new Phoenix6DeviceID(11, BusChain.ROBORIO);
 
-		public static final Phoenix6DeviceID TURRET = new Phoenix6DeviceID(30, BusChain.ROBORIO);
-
 		public final static Phoenix6DeviceID HOOD = new Phoenix6DeviceID(20, BusChain.ROBORIO);
+
+		public static final Phoenix6DeviceID TURRET = new Phoenix6DeviceID(30, BusChain.ROBORIO);
 
 	}
 

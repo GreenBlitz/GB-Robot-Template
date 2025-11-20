@@ -13,7 +13,7 @@ public class EncoderFactory {
 	public static IAngleEncoder createEncoder(String logPath, ModuleUtil.ModulePosition modulePosition) {
 		logPath += ModuleConstants.MODULES_LOG_PATH_ADDITION + "/" + modulePosition + "/Encoder";
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> switch (modulePosition) {
+			case REAL, REPLAY -> switch (modulePosition) {
 				case FRONT_LEFT -> CANCoderEncoderBuilder.buildEncoder(logPath, IDs.CANCoderIDs.SWERVE_FRONT_LEFT);
 				case FRONT_RIGHT -> CANCoderEncoderBuilder.buildEncoder(logPath, IDs.CANCoderIDs.SWERVE_FRONT_RIGHT);
 				case BACK_LEFT -> CANCoderEncoderBuilder.buildEncoder(logPath, IDs.CANCoderIDs.SWERVE_BACK_LEFT);
@@ -25,7 +25,7 @@ public class EncoderFactory {
 
 	public static EncoderSignals createSignals(IAngleEncoder angleEncoder) {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> CANCoderEncoderBuilder.buildSignals((CANCoderEncoder) angleEncoder);
+			case REAL, REPLAY -> CANCoderEncoderBuilder.buildSignals((CANCoderEncoder) angleEncoder);
 			case SIMULATION -> SimulationEncoderBuilder.buildSignals();
 		};
 	}

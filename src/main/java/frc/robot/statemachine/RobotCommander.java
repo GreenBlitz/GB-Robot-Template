@@ -5,6 +5,8 @@ import frc.robot.Robot;
 import frc.robot.statemachine.superstructure.Superstructure;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.states.SwerveState;
+
 import java.util.Set;
 
 public class RobotCommander extends GBSubsystem {
@@ -22,15 +24,16 @@ public class RobotCommander extends GBSubsystem {
 		this.swerve = robot.getSwerve();
 		this.positionTargets = new PositionTargets(robot);
 		this.superstructure = new Superstructure("StateMachine/Superstructure", robot);
-		this.currentState = null;
+		this.currentState = RobotState.DRIVE;
 
-//		setDefaultCommand(
-//			new ConditionalCommand(
-//				asSubsystemCommand(Commands.none(), "Disabled"),
-//				new InstantCommand(() -> new DeferredCommand(() -> endState(currentState), Set.of(this, swerve)).schedule()),
-//				this::isSubsystemRunningIndependently
-//			)
-//		);
+		Command defaultCommand = new ConditionalCommand(
+			asSubsystemCommand(Commands.none(), "Disabled"),
+			new InstantCommand(() -> new DeferredCommand(() -> endState(currentState), Set.of(this, swerve)).schedule()),
+			this::isSubsystemRunningIndependently
+		);
+
+		defaultCommand.addRequirements(this);
+		setDefaultCommand(defaultCommand);
 	}
 
 	public RobotState getCurrentState() {
@@ -66,7 +69,7 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command endState(RobotState state) {
 		return switch (state) {
-			default -> new InstantCommand();
+			default -> swerve.getCommandsBuilder().driveByDriversInputs(SwerveState.DEFAULT_DRIVE);
 		};
 	}
 

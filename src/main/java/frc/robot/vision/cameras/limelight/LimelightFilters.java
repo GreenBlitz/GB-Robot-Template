@@ -26,11 +26,11 @@ public class LimelightFilters {
 		Translation2d robotInFieldTolerance,
 		Rotation2d yawAtAngleTolerance
 	) {
-		return MegaTagFilters.isRobotInField(() -> limelight.getMT1RawData().pose.getTranslation(), robotInFieldTolerance)
+		return MegaTagFilters.isRobotInField(() -> limelight.getMT1RawData().pose().getTranslation(), robotInFieldTolerance)
 			.and(
 				MegaTagFilters.isYawAtExpectedAngle(
-					() -> limelight.getMT1RawData().pose.getRotation(),
-					() -> wantedYawAtTimestamp.apply(limelight.getMT1RawData().timestampSeconds),
+					() -> limelight.getMT1RawData().pose().getRotation(),
+					() -> wantedYawAtTimestamp.apply(limelight.getMT1RawData().timestampSeconds()),
 					isYawCalibrated,
 					yawAtAngleTolerance
 				)
@@ -44,16 +44,16 @@ public class LimelightFilters {
 		Translation2d robotInFieldTolerance,
 		Rotation2d yawAtAngleTolerance
 	) {
-		return MegaTagFilters.isRobotInField(() -> limelight.getMT2RawData().pose.getTranslation(), robotInFieldTolerance)
+		return MegaTagFilters.isRobotInField(() -> limelight.getMT2RawData().pose().getTranslation(), robotInFieldTolerance)
 			.and(
 				MegaTagFilters.isYawAtExpectedAngle(
-					() -> limelight.getMT2RawData().pose.getRotation(),
-					() -> wantedYawAtTimestamp.apply(limelight.getMT2RawData().timestampSeconds),
+					() -> limelight.getMT2RawData().pose().getRotation(),
+					() -> wantedYawAtTimestamp.apply(limelight.getMT2RawData().timestampSeconds()),
 					isYawCalibrated,
 					yawAtAngleTolerance
 				)
 			)
-			.and(MegaTagFilters.isYawNotZero(() -> limelight.getMT2RawData().pose.getRotation()));
+			.and(MegaTagFilters.isYawNotZero(() -> limelight.getMT2RawData().pose().getRotation()));
 	}
 
 	private static class ObjectDetectionFilters {

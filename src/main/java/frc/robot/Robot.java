@@ -7,8 +7,11 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.subsystems.constants.intakeRollers.IntakeRollerConstants;
 import frc.robot.subsystems.flywheel.FlyWheel;
 import frc.robot.subsystems.flywheel.KrakenX60FlyWheelBuilder;
+import frc.robot.subsystems.roller.Roller;
+import frc.robot.subsystems.roller.SparkMaxRollerBuilder;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 
@@ -21,10 +24,12 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);;
 	private final FlyWheel flyWheel;
+	private final Roller intakeRoller;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 		this.flyWheel = KrakenX60FlyWheelBuilder.build("Subsystems/FlyWheel", IDs.TalonFXIDs.FLYWHEEL);
+		this.intakeRoller = createIntakeRollers();
 	}
 
 	public void periodic() {
@@ -33,6 +38,16 @@ public class Robot {
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		CommandScheduler.getInstance().run(); // Should be last
+	}
+
+	public Roller createIntakeRollers() {
+		return SparkMaxRollerBuilder.build(
+			"Subsysems/IntakeRollers",
+			IDs.SparkMAXIDs.INTAKE_ROLLERS,
+			IntakeRollerConstants.GEAR_RATIO,
+			IntakeRollerConstants.CURRENT_LIMIT,
+			IntakeRollerConstants.MOMENT_OF_INERTIA
+		);
 	}
 
 	public FlyWheel getFlyWheel() {

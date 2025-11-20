@@ -28,7 +28,6 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	private final LimelightInputsSet inputs;
 
-	private LimelightTarget2dValues target2dValues;
 	private Supplier<Pose3d> originalPoseRelativeCameraPoseSupplier;
 	private Pose3d currentRobotRelativeCameraPose;
 	private RobotPoseObservation mt1PoseObservation;

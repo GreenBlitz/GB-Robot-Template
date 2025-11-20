@@ -55,6 +55,7 @@ public class Robot {
         Pair<Roller,IDigitalInput> omniAndDigitalInput = createOmniAndSignal();
         this.omni = omniAndDigitalInput.getFirst();
         this.omniDigitalInput = omniAndDigitalInput.getSecond();
+
 		BrakeStateManager.add(() -> hood.setBrake(true), () -> hood.setBrake(false));
 	}
 
@@ -135,6 +136,14 @@ public class Robot {
 			HoodConstants.DEFAULT_MAX_VELOCITY_PER_SECOND
 		);
 	}
+
+    public Roller getOmni(){
+        return omni;
+    }
+
+    public IDigitalInput getOmniDigitalInput(){
+        return omniDigitalInput;
+    }
 
 	private Pair<Roller,IDigitalInput> createOmniAndSignal(){
 		return SparkMaxRollerBuilder.buildWithDigitalInput(

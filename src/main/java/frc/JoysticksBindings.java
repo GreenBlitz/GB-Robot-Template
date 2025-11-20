@@ -83,14 +83,11 @@ public class JoysticksBindings {
 		joystick.POV_UP.onTrue(new InstantCommand(() -> turret.getCommandsBuilder().setIsSubsystemRunningIndependently(false)));
 
 		// Check limits
-		joystick.R1.whileTrue(
-				turret.getCommandsBuilder()
-						.setPower(
-								() -> joystick.getAxisValue(Axis.LEFT_Y) * calibrationMaxPower)
-						);
+		joystick.R1.whileTrue(turret.getCommandsBuilder().setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * calibrationMaxPower));
 		turret.getSysIdCalibrator().setAllButtonsForCalibration(joystick);
 
 		joystick.POV_RIGHT.onTrue(turret.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(20)));
 		joystick.POV_LEFT.onTrue(turret.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(50)));
 	}
+
 }

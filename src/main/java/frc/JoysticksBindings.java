@@ -49,7 +49,7 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		usedJoystick.A.onTrue(robot.getHood().getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(90)));
 		usedJoystick.B.onTrue(robot.getHood().getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(10)));
-		usedJoystick.X.onTrue(robot.getHood().getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(-50)));
+		usedJoystick.X.onTrue(robot.getHood().getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(-20)));
 		// bindings...
 	}
 

@@ -28,6 +28,7 @@ public class Robot {
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 		this.hood = createHood();
+		hood.setPosition(HoodConstants.STARTING_POSITION);
 	}
 
 	public void resetSubsystems() {

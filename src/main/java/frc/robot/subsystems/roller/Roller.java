@@ -21,8 +21,8 @@ public class Roller extends GBSubsystem {
 		String logPath,
 		ControllableMotor roller,
 		InputSignal<Double> voltageSignal,
-		InputSignal<Rotation2d> positionSignal,
 		InputSignal<Double> currentSignal,
+		InputSignal<Rotation2d> positionSignal,
 		IRequest<Double> voltageRequest
 	) {
 		super(logPath);

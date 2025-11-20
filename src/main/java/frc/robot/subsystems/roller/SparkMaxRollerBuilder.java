@@ -53,7 +53,7 @@ public class SparkMaxRollerBuilder {
 
 		SparkMaxRequest<Double> voltageRequest = SparkMaxRequestBuilder.build(0.0, SparkBase.ControlType.kVoltage, 0);
 
-		return new Roller(logPath, roller, voltageSignal, positionSignal, currentSignal, voltageRequest);
+		return new Roller(logPath, roller, voltageSignal, currentSignal, positionSignal, voltageRequest);
 	}
 
 	public static Roller build(String logPath, SparkMaxDeviceID id, double gearRatio, int currentLimit, double momentOfInertia) {

@@ -4,8 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
+import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.TalonFXArmBuilder;
@@ -13,6 +15,7 @@ import frc.robot.subsystems.constants.belly.BellyConstants;
 import frc.robot.subsystems.constants.turret.TurretConstants;
 import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
 import frc.robot.subsystems.constants.hood.HoodConstants;
+import frc.robot.subsystems.constants.omni.OmniConstant;
 import frc.robot.subsystems.flywheel.FlyWheel;
 import frc.robot.subsystems.flywheel.KrakenX60FlyWheelBuilder;
 import frc.robot.subsystems.roller.Roller;
@@ -33,6 +36,8 @@ public class Robot {
 	private final FlyWheel flyWheel;
 	private final Arm hood;
 	private final Roller belly;
+	private final Roller omni;
+	private final IDigitalInput funnelDigitalInput;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -49,6 +54,11 @@ public class Robot {
 
 		this.belly = createBelly();
 		BrakeStateManager.add(() -> belly.setBrake(true), () -> belly.setBrake(false));
+
+		Pair<Roller, IDigitalInput> omniAndDigitalInput = createOmniAndSignal();
+		this.omni = omniAndDigitalInput.getFirst();
+		this.funnelDigitalInput = omniAndDigitalInput.getSecond();
+		BrakeStateManager.add(() -> omni.setBrake(true), () -> omni.setBrake(false));
 	}
 
 	public void resetSubsystems() {
@@ -63,6 +73,7 @@ public class Robot {
 	public void periodic() {
 		BusChain.refreshAll();
 		resetSubsystems();
+
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		CommandScheduler.getInstance().run(); // Should be last
@@ -113,12 +124,20 @@ public class Robot {
 		return flyWheel;
 	}
 
-	public PathPlannerAutoWrapper getAutonomousCommand() {
-		return new PathPlannerAutoWrapper();
+	public Roller getOmni() {
+		return omni;
+	}
+
+	public IDigitalInput getFunnelDigitalInput() {
+		return funnelDigitalInput;
 	}
 
 	public Arm getHood() {
 		return hood;
+	}
+
+	public PathPlannerAutoWrapper getAutonomousCommand() {
+		return new PathPlannerAutoWrapper();
 	}
 
 	private Arm createHood() {
@@ -140,6 +159,21 @@ public class Robot {
 			HoodConstants.BACKWARD_SOFTWARE_LIMIT,
 			HoodConstants.DEFAULT_MAX_ACCELERATION_PER_SECOND_SQUARE,
 			HoodConstants.DEFAULT_MAX_VELOCITY_PER_SECOND
+		);
+	}
+
+	private Pair<Roller, IDigitalInput> createOmniAndSignal() {
+		return SparkMaxRollerBuilder.buildWithDigitalInput(
+			OmniConstant.LOG_PATH,
+			IDs.SparkMAXIDs.OMNI,
+			OmniConstant.IS_INVERTED,
+			OmniConstant.GEAR_RATIO,
+			OmniConstant.CURRENT_LIMIT,
+			OmniConstant.MOMENT_OF_INERTIA,
+			OmniConstant.FUNNEL_INPUT_NAME,
+			OmniConstant.DEBOUNCE_TIME,
+			OmniConstant.IS_FORWARD_LIMIT_SWITCH,
+			OmniConstant.IS_FORWARD_LIMIT_SWITCH_INVERTED
 		);
 	}
 

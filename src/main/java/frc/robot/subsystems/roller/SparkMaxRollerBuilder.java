@@ -103,8 +103,8 @@ public class SparkMaxRollerBuilder {
 			configs.getSparkMaxConfig().smartCurrentLimit(currentLimit);
 		}
 		configs.getSparkMaxConfig().encoder.inverted(inverted);
-		configs.getSparkMaxConfig().encoder.positionConversionFactor(gearRatio);
-		configs.getSparkMaxConfig().encoder.velocityConversionFactor(gearRatio);
+		configs.getSparkMaxConfig().encoder.positionConversionFactor(1 / gearRatio);
+		configs.getSparkMaxConfig().encoder.velocityConversionFactor(1 / gearRatio);
 		return configs;
 	}
 

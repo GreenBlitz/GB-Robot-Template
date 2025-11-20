@@ -44,9 +44,14 @@ public class JoysticksBindings {
 		}
 	}
 
+
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+		usedJoystick.POV_UP.onTrue(robot.getIntakeRoller().getCommandsBuilder().setVoltage(6));
+		usedJoystick.X.onTrue(robot.getIntakeRoller().getCommandsBuilder().stop());
+		usedJoystick.POV_DOWN.onTrue(robot.getIntakeRoller().getCommandsBuilder().rollRotationsAtVoltageForwards(6, 7));
+		usedJoystick.Y.onTrue(robot.getIntakeRoller().getCommandsBuilder().setPower(9.0));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

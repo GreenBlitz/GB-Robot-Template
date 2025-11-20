@@ -54,6 +54,10 @@ public class Robot {
 		return flyWheel;
 	}
 
+	public Roller getIntakeRoller() {
+		return intakeRoller;
+	}
+
 	public PathPlannerAutoWrapper getAutonomousCommand() {
 		return new PathPlannerAutoWrapper();
 	}

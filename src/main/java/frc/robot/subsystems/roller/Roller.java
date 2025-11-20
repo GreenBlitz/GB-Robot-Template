@@ -5,6 +5,7 @@ import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.subsystems.GBSubsystem;
+import org.littletonrobotics.junction.Logger;
 
 public class Roller extends GBSubsystem {
 
@@ -96,6 +97,7 @@ public class Roller extends GBSubsystem {
 	public void subsystemPeriodic() {
 		roller.updateSimulation();
 		roller.updateInputs(voltageSignal, currentSignal, positionSignal);
+        Logger.recordOutput(getLogPath() + "/tr", targetPosition);
 	}
 
 }

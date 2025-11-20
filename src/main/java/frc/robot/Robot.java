@@ -53,7 +53,8 @@ public class Robot {
 		Pair<Roller, IDigitalInput> omniAndDigitalInput = createOmniAndSignal();
 		this.omni = omniAndDigitalInput.getFirst();
 		this.funnelDigitalInput = omniAndDigitalInput.getSecond();
-	}
+        BrakeStateManager.add(() -> omni.setBrake(true), () -> omni.setBrake(false));
+    }
 
 	public void resetSubsystems() {
 		if (HoodConstants.MINIMUM_POSITION.getRadians() > hood.getPosition().getRadians()) {

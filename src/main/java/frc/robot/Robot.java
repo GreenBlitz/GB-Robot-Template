@@ -31,8 +31,8 @@ public class Robot {
 	}
 
 	public void resetSubsystems() {
-		if (HoodConstants.BACKWARD_SOFTWARE_LIMIT.getRadians() > hood.getPosition().getRadians()) {
-			hood.setPosition(HoodConstants.BACKWARD_SOFTWARE_LIMIT);
+		if (HoodConstants.STARTING_POSITION.getRadians() > hood.getPosition().getRadians()) {
+			hood.setPosition(HoodConstants.STARTING_POSITION);
 		}
 	}
 

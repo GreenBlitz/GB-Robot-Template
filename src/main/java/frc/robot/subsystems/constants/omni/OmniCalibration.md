@@ -13,6 +13,3 @@ Omni calibrations
 - [ ] Gear ratio
 - [ ] Current limit
 - [ ] Is inverted
-
-#### Sim constants
-- [ ] Moment of inertia

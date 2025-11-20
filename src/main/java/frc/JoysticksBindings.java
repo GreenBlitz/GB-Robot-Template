@@ -52,8 +52,6 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-		usedJoystick.A.onTrue(robot.getBelly().getCommandsBuilder().rollRotationsAtVoltageForwards(1, 1));
-		usedJoystick.B.onTrue(robot.getBelly().getCommandsBuilder().rollRotationsAtVoltageBackwards(1, 1));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
@@ -115,11 +113,8 @@ public class JoysticksBindings {
 		joystick.POV_DOWN.onTrue(new InstantCommand(() -> belly.getCommandsBuilder().setIsSubsystemRunningIndependently(true)));
 		joystick.POV_UP.onTrue(new InstantCommand(() -> belly.getCommandsBuilder().setIsSubsystemRunningIndependently(false)));
 
-		// Check limits
-		joystick.R1.whileTrue(belly.getCommandsBuilder().setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * calibrationMaxPower));
-
-		joystick.POV_RIGHT.onTrue(belly.getCommandsBuilder().rollRotationsAtVoltageForwards(6, 7));
-		joystick.POV_LEFT.onTrue(belly.getCommandsBuilder().rollRotationsAtVoltageBackwards(6, 7));
+		joystick.POV_RIGHT.onTrue(belly.getCommandsBuilder().rollRotationsAtVoltageForwards(1, 1));
+		joystick.POV_LEFT.onTrue(belly.getCommandsBuilder().setVoltage(2));
 	}
 
 }

@@ -81,7 +81,7 @@ public class Robot {
 			TurretConstants.CURRENT_LIMIT,
 			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			TurretConstants.MOMENT_OF_INERTIA,
-			TurretConstants.ARM_RADIUS,
+			TurretConstants.TURRET_RADIUS,
 			TurretConstants.ARBITRARY_FEED_FORWARD,
 			TurretConstants.FORWARD_SOFTWARE_LIMIT,
 			TurretConstants.BACKWARDS_SOFTWARE_LIMIT,

@@ -26,13 +26,13 @@ public class Robot {
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 		this.turret = createTurret();
-		turret.setPosition(TurretConstants.BACKWARDS_SOFTWARE_LIMIT);
+		turret.setPosition(TurretConstants.MIN_POSITION);
 	}
 
 	public void periodic() {
 		BusChain.refreshAll();
-		if (turret.getPosition().getDegrees() < TurretConstants.BACKWARDS_SOFTWARE_LIMIT.getDegrees()) {
-			turret.setPosition(TurretConstants.BACKWARDS_SOFTWARE_LIMIT);
+		if (turret.getPosition().getDegrees() < TurretConstants.MIN_POSITION.getDegrees()) {
+			turret.setPosition(TurretConstants.MIN_POSITION);
 		}
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();

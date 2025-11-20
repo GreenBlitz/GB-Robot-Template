@@ -78,7 +78,6 @@ public class JoysticksBindings {
 		// bindings...
 	}
 
-
 	private static void applyTurretCalibrationBindings(Arm turret, SmartJoystick joystick, double calibrationMaxPower) {
 		joystick.POV_DOWN.onTrue(new InstantCommand(() -> turret.getCommandsBuilder().setIsSubsystemRunningIndependently(true)));
 		joystick.POV_UP.onTrue(new InstantCommand(() -> turret.getCommandsBuilder().setIsSubsystemRunningIndependently(false)));

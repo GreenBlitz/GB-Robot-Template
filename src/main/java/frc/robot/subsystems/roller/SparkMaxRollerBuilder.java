@@ -26,10 +26,7 @@ public class SparkMaxRollerBuilder {
 
 	private static SimpleMotorSimulation buildSimulation(double gearRatio, double momentOfInertia) {
 		return new SimpleMotorSimulation(
-			new DCMotorSim(
-				LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), momentOfInertia, gearRatio),
-				DCMotor.getNEO(1)
-			)
+			new DCMotorSim(LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), momentOfInertia, gearRatio), DCMotor.getNEO(1))
 		);
 	}
 
@@ -82,9 +79,17 @@ public class SparkMaxRollerBuilder {
 			digitalInput = new ChooserDigitalInput(digitalInputName);
 		} else {
 			if (isForwardLimitSwitch) {
-				digitalInput = new SuppliedDigitalInput(() -> sparkMaxWrapper.getForwardLimitSwitch().isPressed(), new Debouncer(debounceTime),isLimitSwitchInverted);
+				digitalInput = new SuppliedDigitalInput(
+					() -> sparkMaxWrapper.getForwardLimitSwitch().isPressed(),
+					new Debouncer(debounceTime),
+					isLimitSwitchInverted
+				);
 			} else {
-				digitalInput = new SuppliedDigitalInput(() -> sparkMaxWrapper.getReverseLimitSwitch().isPressed(), new Debouncer(debounceTime),isLimitSwitchInverted);
+				digitalInput = new SuppliedDigitalInput(
+					() -> sparkMaxWrapper.getReverseLimitSwitch().isPressed(),
+					new Debouncer(debounceTime),
+					isLimitSwitchInverted
+				);
 			}
 		}
 		return new Pair<Roller, IDigitalInput>(buildRoller(logPath, sparkMaxWrapper, gearRatio, currentLimit, momentOfInertia), digitalInput);

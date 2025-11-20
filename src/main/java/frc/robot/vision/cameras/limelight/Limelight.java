@@ -28,8 +28,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	private final LimelightInputsSet inputs;
 
-	private Supplier<Pose3d> originalPoseRelativeCameraPoseSupplier;
-	private Pose3d currentRobotRelativeCameraPose;
+	private Supplier<Pose3d> robotRelativeCameraPoseSupplier;
 	private RobotPoseObservation mt1PoseObservation;
 	private RobotPoseObservation mt2PoseObservation;
 
@@ -42,12 +41,11 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	private LimelightPipeline pipeline;
 
-	public Limelight(String name, String logPathPrefix, Supplier<Pose3d> originalPoseRelativeCameraPoseSupplier, LimelightPipeline pipeline) {
+	public Limelight(String name, String logPathPrefix, Supplier<Pose3d> robotRelativeCameraPoseSupplier, LimelightPipeline pipeline) {
 		this.name = name;
 		this.logPath = logPathPrefix + "/" + name;
 
-		this.originalPoseRelativeCameraPoseSupplier = originalPoseRelativeCameraPoseSupplier;
-		this.currentRobotRelativeCameraPose = originalPoseRelativeCameraPoseSupplier.get();
+		this.robotRelativeCameraPoseSupplier = robotRelativeCameraPoseSupplier;
 		setCurrentRobotRelativeCameraPose(new Pose3d());
 
 		this.detectedObjectObservations = new ArrayList<>();
@@ -80,7 +78,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 					if (detectedObjectFilter.apply(rawDetection)) {
 						pipeline.getDetectedObjectType(rawDetection.classId()).ifPresent(objectType -> {
 							DetectedObjectObservation observation = ObjectDetectionMath.getDetectedObjectObservation(
-								currentRobotRelativeCameraPose,
+								robotRelativeCameraPoseSupplier.get(),
 								objectType,
 								Rotation2d.fromDegrees(rawDetection.txnc()),
 								Rotation2d.fromDegrees(rawDetection.tync()),
@@ -230,7 +228,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	private Pose2d getRobotPose() {
-		return (LimelightHelpers.getBotPose3d(name).transformBy(new Transform3d(new Pose3d(), currentRobotRelativeCameraPose).inverse()))
+		return (LimelightHelpers.getBotPose3d(name).transformBy(new Transform3d(new Pose3d(), robotRelativeCameraPoseSupplier.get()).inverse()))
 			.toPose2d();
 	}
 

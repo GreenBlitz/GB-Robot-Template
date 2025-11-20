@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.subsystems.constants.flywheel.Constants;
 import frc.robot.subsystems.constants.intakeRollers.IntakeRollerConstants;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.TalonFXArmBuilder;
@@ -73,6 +74,7 @@ public class Robot {
 		return SparkMaxRollerBuilder.build(
 			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/IntakeRollers",
 			IDs.SparkMAXIDs.INTAKE_ROLLERS,
+			IntakeRollerConstants.IS_INVERTED,
 			IntakeRollerConstants.GEAR_RATIO,
 			IntakeRollerConstants.CURRENT_LIMIT,
 			IntakeRollerConstants.MOMENT_OF_INERTIA

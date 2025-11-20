@@ -171,8 +171,8 @@ public class Robot {
 			),
 			LimelightPipeline.OBJECT_DETECTION
 		);
-		limelightObjectDetector
-			.setDetectedObjectFilter(LimelightFilters.detectedObjectFilter(limelightObjectDetector, DetectedObjectType.ALGAE));
+//		limelightObjectDetector
+//			.setDetectedObjectFilter(LimelightFilters.detectedObjectFilter(limelightObjectDetector, DetectedObjectType.ALGAE));
 
 		swerve.setHeadingSupplier(
 			ROBOT_TYPE.isSimulation() ? () -> poseEstimator.getEstimatedPose().getRotation() : () -> headingEstimator.getEstimatedHeading()

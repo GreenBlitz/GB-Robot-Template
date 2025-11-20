@@ -10,6 +10,8 @@ import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.TalonFXArmBuilder;
 import frc.robot.subsystems.constants.turret.TurretConstants;
+import frc.robot.subsystems.flywheel.FlyWheel;
+import frc.robot.subsystems.flywheel.KrakenX60FlyWheelBuilder;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 
@@ -22,11 +24,14 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);
 	private final Arm turret;
+	private final FlyWheel flyWheel;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 		this.turret = createTurret();
 		turret.setPosition(TurretConstants.MIN_POSITION);
+		BatteryUtil.scheduleLimiter();
+		this.flyWheel = KrakenX60FlyWheelBuilder.build("Subsystems/FlyWheel", IDs.TalonFXIDs.FLYWHEEL);
 	}
 
 	public void periodic() {
@@ -63,6 +68,9 @@ public class Robot {
 
 	public Arm getTurret() {
 		return turret;
+	}
+	public FlyWheel getFlyWheel() {
+		return flyWheel;
 	}
 
 	public PathPlannerAutoWrapper getAutonomousCommand() {

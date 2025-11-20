@@ -1,7 +1,9 @@
 Intake rollers calibrations
 --------------------------------
 
-####General 
+####General
+
 - [ ] Motor id
 - [ ] Gear ratio
 - [ ] Current limit
+- [ ] Inverted?

@@ -50,7 +50,6 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		applyHoodCalibrationBindings(robot.getHood(), usedJoystick, 1);
 		// bindings...
 	}
 

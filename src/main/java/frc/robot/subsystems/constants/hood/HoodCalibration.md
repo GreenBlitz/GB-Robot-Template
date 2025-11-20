@@ -2,8 +2,8 @@ Hood calibrations
 ---------------------
 
 #### IDs
-- [ ] motor id
-- [ ] motor Buschain
+- [ ] Motor id
+- [ ] Motor buschain
 
 #### Limits
 - [ ] Current limit

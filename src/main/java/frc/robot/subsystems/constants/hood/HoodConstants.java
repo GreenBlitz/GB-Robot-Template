@@ -2,9 +2,9 @@ package frc.robot.subsystems.constants.hood;
 
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class HoodConstants {
 
@@ -39,12 +39,12 @@ public class HoodConstants {
 	public static final double ARBITRARY_FEEDFORWARD = 0;
 	public static final double CURRENT_LIMIT = 40;
 	public static final double MOMENT_OF_INERTIA = 0.001;
-	public static final double ARM_LENGTH_METERS = 0.3;
+	public static final double HOOD_LENGTH_METERS = 0.3;
 	public static final Rotation2d FORWARD_SOFTWARE_LIMIT = Rotation2d.fromDegrees(209 - 16);
 	public static final Rotation2d BACKWARD_SOFTWARE_LIMIT = Rotation2d.fromDegrees(-24);
 	public static final Rotation2d MINIMUM_POSITION = BACKWARD_SOFTWARE_LIMIT.minus(Rotation2d.fromDegrees(3));
 	public static final Rotation2d DEFAULT_MAX_ACCELERATION_PER_SECOND_SQUARE = Rotation2d.fromRotations(3);
 	public static final Rotation2d DEFAULT_MAX_VELOCITY_PER_SECOND = Rotation2d.fromRotations(3);
-
+	public static final SysIdRoutine.Config SYSIDROUTIN_CONFIG = new SysIdRoutine.Config();
 }
 

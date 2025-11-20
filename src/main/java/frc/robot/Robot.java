@@ -67,7 +67,7 @@ public class Robot {
 			HoodConstants.CURRENT_LIMIT,
 			(int) RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			HoodConstants.MOMENT_OF_INERTIA,
-			HoodConstants.ARM_LENGTH_METERS,
+			HoodConstants.HOOD_LENGTH_METERS,
 			HoodConstants.ARBITRARY_FEEDFORWARD,
 			HoodConstants.FORWARD_SOFTWARE_LIMIT,
 			HoodConstants.BACKWARD_SOFTWARE_LIMIT,

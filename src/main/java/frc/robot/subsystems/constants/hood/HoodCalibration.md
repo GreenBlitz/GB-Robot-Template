@@ -12,7 +12,6 @@ Hood calibrations
 
 #### Motor config
 - [ ] Gear ratio
-- [ ] Is it rotor to sensor or sensor to mechanism
 - [ ] Neutral mode
 - [ ] Is Inverted
 

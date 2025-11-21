@@ -11,9 +11,9 @@ import edu.wpi.first.math.kinematics.Odometry;
 import frc.robot.vision.RobotPoseObservation;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.OdometryData;
+import frc.utils.TimedValue;
 import frc.utils.buffers.RingBuffer.RingBuffer;
 import frc.utils.math.StatisticsMath;
-import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
@@ -34,18 +34,23 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		String logPath,
 		SwerveDriveKinematics kinematics,
 		SwerveModulePosition[] modulePositions,
-		Rotation2d initialIMUYaw
+		TimedValue<Rotation2d> initialIMUYaw
 	) {
 		this.logPath = logPath;
 		this.kinematics = kinematics;
-		this.odometryEstimator = new Odometry<>(kinematics, initialIMUYaw, modulePositions, WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE);
+		this.odometryEstimator = new Odometry<>(
+			kinematics,
+			initialIMUYaw.getValue(),
+			modulePositions,
+			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
+		);
 		this.poseEstimator = new PoseEstimator<>(
 			kinematics,
 			odometryEstimator,
 			WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS.asColumnVector(),
 			WPILibPoseEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATIONS.asColumnVector()
 		);
-		this.lastOdometryData = new OdometryData(TimeUtil.getCurrentTimeSeconds(), modulePositions, Optional.of(initialIMUYaw));
+		this.lastOdometryData = new OdometryData(initialIMUYaw.getTimestamp(), modulePositions, Optional.of(initialIMUYaw.getValue()));
 		this.isIMUOffsetCalibrated = false;
 		this.poseToIMUYawDifferenceBuffer = new RingBuffer<>(WPILibPoseEstimatorConstants.POSE_TO_IMU_YAW_DIFFERENCE_BUFFER_SIZE);
 		this.imuYawBuffer = TimeInterpolatableBuffer.createBuffer(WPILibPoseEstimatorConstants.IMU_YAW_BUFFER_SIZE_SECONDS);

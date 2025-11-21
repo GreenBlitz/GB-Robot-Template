@@ -104,7 +104,7 @@ public class Robot {
 		return flyWheel;
 	}
 
-	public Arm createFourBar() {
+	private Arm createFourBar() {
 		return TalonFXArmBuilder.buildDynamicMotionMagicArm(
 			FourBarConstants.LOG_PATH,
 			IDs.TalonFXIDs.FOUR_BAR,

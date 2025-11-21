@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.RobotManager;
 import frc.robot.subsystems.constants.fourBar.FourBarConstants;
 import frc.robot.hardware.digitalinput.IDigitalInput;
@@ -113,23 +112,23 @@ public class Robot {
 
 	private Arm createFourBar() {
 		return TalonFXArmBuilder.buildDynamicMotionMagicArm(
-				FourBarConstants.LOG_PATH,
-				IDs.TalonFXIDs.FOUR_BAR,
-				FourBarConstants.IS_INVERTED,
-				FourBarConstants.TALON_FX_FOLLOWER_CONFIG,
-				FourBarConstants.SYS_ID_ROUTINE,
-				FourBarConstants.FEEDBACK_CONFIGS,
-				FourBarConstants.REAL_SLOT,
-				FourBarConstants.SIMULATION_SLOT,
-				FourBarConstants.CURRENT_LIMIT,
-				RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-				FourBarConstants.MOMENT_OF_INERTIA,
-				FourBarConstants.ARM_LENGTH_METERS,
-				FourBarConstants.ARBITRARY_FEED_FORWARD,
-				FourBarConstants.FORWARD_SOFTWARE_LIMITS,
-				FourBarConstants.BACKWARD_SOFTWARE_LIMITS,
-				FourBarConstants.MAX_ACCELERATION_ROTATION2D_PER_SECONDS_SQUARE,
-				FourBarConstants.MAX_VELOCITY_ROTATION2D_PER_SECONDS
+			FourBarConstants.LOG_PATH,
+			IDs.TalonFXIDs.FOUR_BAR,
+			FourBarConstants.IS_INVERTED,
+			FourBarConstants.TALON_FX_FOLLOWER_CONFIG,
+			FourBarConstants.SYS_ID_ROUTINE,
+			FourBarConstants.FEEDBACK_CONFIGS,
+			FourBarConstants.REAL_SLOT,
+			FourBarConstants.SIMULATION_SLOT,
+			FourBarConstants.CURRENT_LIMIT,
+			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+			FourBarConstants.MOMENT_OF_INERTIA,
+			FourBarConstants.ARM_LENGTH_METERS,
+			FourBarConstants.ARBITRARY_FEED_FORWARD,
+			FourBarConstants.FORWARD_SOFTWARE_LIMITS,
+			FourBarConstants.BACKWARD_SOFTWARE_LIMITS,
+			FourBarConstants.MAX_ACCELERATION_ROTATION2D_PER_SECONDS_SQUARE,
+			FourBarConstants.MAX_VELOCITY_ROTATION2D_PER_SECONDS
 		);
 	}
 

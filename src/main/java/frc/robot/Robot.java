@@ -162,7 +162,8 @@ public class Robot {
 
 	public PathPlannerAutoWrapper getAutonomousCommand() {
 		return new PathPlannerAutoWrapper();
-		}
+	}
+
 	public Roller getOmni() {
 		return omni;
 	}

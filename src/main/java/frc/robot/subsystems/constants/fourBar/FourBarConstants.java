@@ -4,16 +4,23 @@ import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
 
 public class FourBarConstants {
 
-	public static final String LOG_PATH = "fourBar";
+	public static final String LOG_PATH = "FourBar";
 	public static final int CURRENT_LIMIT = 40;
 	public static final double MOMENT_OF_INERTIA = 0.001;
 	public static final double ARM_LENGTH_METERS = 0.3;
+	public static final double ARBITRARY_FEED_FORWARD = 0.0;
+	public static final boolean IS_INVERTED = false;
+	public static final TalonFXFollowerConfig TALON_FX_FOLLOWER_CONFIG = new TalonFXFollowerConfig();
+	public static final SysIdRoutine.Config SYS_ID_ROUTINE = new SysIdRoutine.Config();
 	public static final FeedbackConfigs FEEDBACK_CONFIGS = new FeedbackConfigs();
 	public static final Slot0Configs REAL_SLOT = new Slot0Configs();
 	public static final Slot0Configs SIMULATION_SLOT = new Slot0Configs();
+
 	static {
 		REAL_SLOT.kP = 28;
 		REAL_SLOT.kI = 0;
@@ -34,11 +41,12 @@ public class FourBarConstants {
 		FEEDBACK_CONFIGS.RotorToSensorRatio = 1;
 		FEEDBACK_CONFIGS.SensorToMechanismRatio = 450 / 7.0;
 	}
+
 	public static final Rotation2d FORWARD_SOFTWARE_LIMITS = Rotation2d.fromDegrees(193);
 	public static final Rotation2d BACKWARD_SOFTWARE_LIMITS = Rotation2d.fromDegrees(-24);
 	public static final Rotation2d MAXIMUM_POSITION = Rotation2d.fromDegrees(220);
 	public static final Rotation2d MINIMUM_POSITION = BACKWARD_SOFTWARE_LIMITS.minus(Rotation2d.fromDegrees(3));
-	public static final Rotation2d MAX_ACCELERATION_ROTATION2D_METERS_PER_SECONDS_SQUARE = Rotation2d.fromRotations(3);
-	public static final Rotation2d MAX_VELOCITY_ROTATION2D_METERS_PER_SECONDS = Rotation2d.fromRotations(3);
+	public static final Rotation2d MAX_ACCELERATION_ROTATION2D_PER_SECONDS_SQUARE = Rotation2d.fromRotations(3);
+	public static final Rotation2d MAX_VELOCITY_ROTATION2D_PER_SECONDS = Rotation2d.fromRotations(3);
 
 }

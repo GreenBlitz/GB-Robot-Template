@@ -11,9 +11,8 @@ FourBar calibrations
 - [ ] Backwards limit
 
 #### Motor config
-- [ ] Gear ratio
-- [ ] Is it rotor to sensor or sensor to mechanism
-- [ ] Neutral mode
+- [ ] Gear ratio rotor to sensor
+- [ ] Gear ratio sensor to mechanisem
 - [ ] Is Inverted
 
 #### General Constants
@@ -40,6 +39,3 @@ FourBar calibrations
 - [ ] Arbitrary feed forward
 - [ ] Default max acceleration per meter square
 - [ ] Default max velocity per meter
-
-#### Simulation Constants
-- [ ] Moment of inertia

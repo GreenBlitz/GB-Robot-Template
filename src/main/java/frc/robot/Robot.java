@@ -50,7 +50,10 @@ public class Robot {
 		BrakeStateManager.add(() -> turret.setBrake(true), () -> turret.setBrake(false));
 
 		this.flyWheel = KrakenX60FlyWheelBuilder.build("Subsystems/FlyWheel", IDs.TalonFXIDs.FLYWHEEL);
+
 		this.fourBar = createFourBar();
+		fourBar.setPosition(FourBarConstants.MAXIMUM_POSITION);
+		BrakeStateManager.add(() -> fourBar.setBrake(true), () -> fourBar.setBrake(false));
 
 		this.hood = createHood();
 		hood.setPosition(HoodConstants.MINIMUM_POSITION);
@@ -74,9 +77,6 @@ public class Robot {
 		}
 		if (FourBarConstants.MAXIMUM_POSITION.getRadians() < fourBar.getPosition().getRadians()) {
 			fourBar.setPosition(FourBarConstants.MAXIMUM_POSITION);
-		}
-		if (FourBarConstants.MINIMUM_POSITION.getRadians() > fourBar.getPosition().getRadians()) {
-			fourBar.setPosition(FourBarConstants.MINIMUM_POSITION);
 		}
 	}
 
@@ -111,6 +111,28 @@ public class Robot {
 		);
 	}
 
+	private Arm createFourBar() {
+		return TalonFXArmBuilder.buildDynamicMotionMagicArm(
+				FourBarConstants.LOG_PATH,
+				IDs.TalonFXIDs.FOUR_BAR,
+				FourBarConstants.IS_INVERTED,
+				FourBarConstants.TALON_FX_FOLLOWER_CONFIG,
+				FourBarConstants.SYS_ID_ROUTINE,
+				FourBarConstants.FEEDBACK_CONFIGS,
+				FourBarConstants.REAL_SLOT,
+				FourBarConstants.SIMULATION_SLOT,
+				FourBarConstants.CURRENT_LIMIT,
+				RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+				FourBarConstants.MOMENT_OF_INERTIA,
+				FourBarConstants.ARM_LENGTH_METERS,
+				FourBarConstants.ARBITRARY_FEED_FORWARD,
+				FourBarConstants.FORWARD_SOFTWARE_LIMITS,
+				FourBarConstants.BACKWARD_SOFTWARE_LIMITS,
+				FourBarConstants.MAX_ACCELERATION_ROTATION2D_PER_SECONDS_SQUARE,
+				FourBarConstants.MAX_VELOCITY_ROTATION2D_PER_SECONDS
+		);
+	}
+
 	private Roller createBelly() {
 		return SparkMaxRollerBuilder.build(
 			BellyConstants.LOG_PATH,
@@ -132,28 +154,6 @@ public class Robot {
 
 	public FlyWheel getFlyWheel() {
 		return flyWheel;
-	}
-
-	private Arm createFourBar() {
-		return TalonFXArmBuilder.buildDynamicMotionMagicArm(
-			FourBarConstants.LOG_PATH,
-			IDs.TalonFXIDs.FOUR_BAR,
-			false,
-			new TalonFXFollowerConfig(),
-			new SysIdRoutine.Config(),
-			FourBarConstants.FEEDBACK_CONFIGS,
-			FourBarConstants.REAL_SLOT,
-			FourBarConstants.SIMULATION_SLOT,
-			FourBarConstants.CURRENT_LIMIT,
-			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-			FourBarConstants.MOMENT_OF_INERTIA,
-			FourBarConstants.ARM_LENGTH_METERS,
-			0,
-			FourBarConstants.FORWARD_SOFTWARE_LIMITS,
-			FourBarConstants.BACKWARD_SOFTWARE_LIMITS,
-			FourBarConstants.MAX_ACCELERATION_ROTATION2D_METERS_PER_SECONDS_SQUARE,
-			FourBarConstants.MAX_VELOCITY_ROTATION2D_METERS_PER_SECONDS
-		);
 	}
 
 	public Arm getFourBar() {

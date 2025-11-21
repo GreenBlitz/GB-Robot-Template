@@ -5,11 +5,12 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.RobotConstants;
 import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
 
 public class FourBarConstants {
 
-	public static final String LOG_PATH = "FourBar";
+	public static final String LOG_PATH = RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/FourBar";
 	public static final int CURRENT_LIMIT = 40;
 	public static final double MOMENT_OF_INERTIA = 0.001;
 	public static final double ARM_LENGTH_METERS = 0.3;

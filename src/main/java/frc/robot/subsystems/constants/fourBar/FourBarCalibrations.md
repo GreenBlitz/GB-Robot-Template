@@ -13,14 +13,14 @@ FourBar calibrations
 - [ ] Min position
 
 #### Motor config
-- [ ] Gear ratio rotor to sensor
-- [ ] Gear ratio sensor to mechanisem
+- [ ] Rotor to sensor ratio
+- [ ] Sensor to mechanism ratio
 - [ ] Is Inverted
 
 #### General Constants
 - [ ] Arm length
-- [ ] Arm weight
 - [ ] SysIdRoutineConfig
+
 #### PID
 - [ ] kP
 - [ ] kI

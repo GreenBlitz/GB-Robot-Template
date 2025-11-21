@@ -143,38 +143,6 @@ public class Robot {
 		);
 	}
 
-	public Roller getBelly() {
-		return belly;
-	}
-
-	public Arm getTurret() {
-		return turret;
-	}
-
-	public FlyWheel getFlyWheel() {
-		return flyWheel;
-	}
-
-	public Arm getFourBar() {
-		return fourBar;
-	}
-
-	public Roller getOmni() {
-		return omni;
-	}
-
-	public IDigitalInput getFunnelDigitalInput() {
-		return funnelDigitalInput;
-	}
-
-	public Arm getHood() {
-		return hood;
-	}
-
-	public PathPlannerAutoWrapper getAutonomousCommand() {
-		return new PathPlannerAutoWrapper();
-	}
-
 	private Arm createHood() {
 		return TalonFXArmBuilder.buildMotionMagicArm(
 			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Hood",
@@ -210,6 +178,38 @@ public class Robot {
 			OmniConstant.IS_FORWARD_LIMIT_SWITCH,
 			OmniConstant.IS_FORWARD_LIMIT_SWITCH_INVERTED
 		);
+	}
+
+	public Roller getBelly() {
+		return belly;
+	}
+
+	public Arm getTurret() {
+		return turret;
+	}
+
+	public FlyWheel getFlyWheel() {
+		return flyWheel;
+	}
+
+	public Arm getFourBar() {
+		return fourBar;
+	}
+
+	public Roller getOmni() {
+		return omni;
+	}
+
+	public IDigitalInput getFunnelDigitalInput() {
+		return funnelDigitalInput;
+	}
+
+	public Arm getHood() {
+		return hood;
+	}
+
+	public PathPlannerAutoWrapper getAutonomousCommand() {
+		return new PathPlannerAutoWrapper();
 	}
 
 }

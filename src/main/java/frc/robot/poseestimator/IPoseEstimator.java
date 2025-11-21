@@ -15,6 +15,4 @@ public interface IPoseEstimator extends IVisionEstimator, IOdometryEstimator {
 
 	void log();
 
-	void log();
-
 }

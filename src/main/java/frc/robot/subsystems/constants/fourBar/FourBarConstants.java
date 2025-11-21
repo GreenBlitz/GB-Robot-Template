@@ -45,7 +45,7 @@ public class FourBarConstants {
 	public static final Rotation2d FORWARD_SOFTWARE_LIMITS = Rotation2d.fromDegrees(193);
 	public static final Rotation2d BACKWARD_SOFTWARE_LIMITS = Rotation2d.fromDegrees(-24);
 	public static final Rotation2d MAXIMUM_POSITION = Rotation2d.fromDegrees(220);
-	public static final Rotation2d MINIMUM_POSITION = BACKWARD_SOFTWARE_LIMITS.minus(Rotation2d.fromDegrees(3));
+	public static final Rotation2d MINIMUM_POSITION = Rotation2d.fromDegrees(-27);
 	public static final Rotation2d MAX_ACCELERATION_ROTATION2D_PER_SECONDS_SQUARE = Rotation2d.fromRotations(3);
 	public static final Rotation2d MAX_VELOCITY_ROTATION2D_PER_SECONDS = Rotation2d.fromRotations(3);
 

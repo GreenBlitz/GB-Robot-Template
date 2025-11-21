@@ -97,6 +97,7 @@ public class JoysticksBindings {
 
 		// Check limits
 		joystick.R1.whileTrue(fourBar.getCommandsBuilder().setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * calibrationMaxPower));
+
 		fourBar.getSysIdCalibrator().setAllButtonsForCalibration(joystick);
 
 		joystick.POV_RIGHT.onTrue(fourBar.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(20)));

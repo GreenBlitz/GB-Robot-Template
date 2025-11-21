@@ -159,10 +159,6 @@ public class Robot {
 		return fourBar;
 	}
 
-	public PathPlannerAutoWrapper getAutonomousCommand() {
-		return new PathPlannerAutoWrapper();
-	}
-
 	public Roller getOmni() {
 		return omni;
 	}
@@ -173,6 +169,10 @@ public class Robot {
 
 	public Arm getHood() {
 		return hood;
+	}
+
+	public PathPlannerAutoWrapper getAutonomousCommand() {
+		return new PathPlannerAutoWrapper();
 	}
 
 	private Arm createHood() {

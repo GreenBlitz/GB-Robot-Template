@@ -9,6 +9,8 @@ FourBar calibrations
 - [ ] Current limit
 - [ ] Forward limit
 - [ ] Backwards limit
+- [ ] Max position
+- [ ] Min position
 
 #### Motor config
 - [ ] Gear ratio rotor to sensor
@@ -19,8 +21,6 @@ FourBar calibrations
 - [ ] Arm length
 - [ ] Arm weight
 - [ ] SysIdRoutineConfig
-- [ ] Starting position
-
 #### PID
 - [ ] kP
 - [ ] kI

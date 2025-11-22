@@ -23,6 +23,7 @@ import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
+import frc.utils.TimedValue;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.math.StandardDeviations2D;
@@ -55,11 +56,13 @@ public class Robot {
 			IMUFactory.createSignals(imu)
 		);
 
+		TimedValue<Rotation2d> gyroAbsoluteYaw = swerve.getGyroAbsoluteYaw();
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
 			swerve.getKinematics(),
 			swerve.getModules().getWheelPositions(0),
-			swerve.getGyroAbsoluteYaw()
+			gyroAbsoluteYaw.getValue(),
+			gyroAbsoluteYaw.getTimestamp()
 		);
 
 		this.limelightFour = new Limelight(

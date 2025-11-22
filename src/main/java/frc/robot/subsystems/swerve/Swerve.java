@@ -201,8 +201,8 @@ public class Swerve extends GBSubsystem {
 
 	public TimedValue<Rotation2d> getGyroAbsoluteYaw() {
 		TimedValue<Rotation2d> latestGyroYaw = imuSignals.yawSignal().getLatestTimedValue();
-		latestGyroYaw.setValue(Rotation2d.fromRadians(MathUtil.angleModulus(latestGyroYaw.getValue().getRadians())));
-		return latestGyroYaw;
+		Rotation2d latestGyroAbsoluteYaw = Rotation2d.fromRadians(MathUtil.angleModulus(latestGyroYaw.getValue().getRadians()));
+		return new TimedValue<>(latestGyroAbsoluteYaw, latestGyroYaw.getTimestamp());
 	}
 
 	public Rotation2d getAbsoluteHeading() {

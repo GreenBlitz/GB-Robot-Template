@@ -9,7 +9,7 @@ FourBar calibrations
 - [ ] Current limit
 - [ ] Forward limit
 - [ ] Backwards limit
-- [ ] Max position;;
+- [ ] Max position
 - [ ] Min position
 
 #### Motor config

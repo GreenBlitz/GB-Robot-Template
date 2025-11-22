@@ -33,7 +33,7 @@ FourBar calibrations
 - [ ] kS
 - [ ] kG
 - [ ] kA
-- [ ] kS
+- [ ] kV
 
 #### MotionMagic
 - [ ] Default max acceleration per meter square

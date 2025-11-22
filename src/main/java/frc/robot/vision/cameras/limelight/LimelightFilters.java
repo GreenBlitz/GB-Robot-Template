@@ -27,7 +27,7 @@ public class LimelightFilters {
 		Rotation2d yawAtAngleTolerance
 	) {
 		return MegaTagFilters.isRobotInField(() -> limelight.getMT1RawData().pose().getTranslation(), robotInFieldTolerance)
-			.and(() -> wantedYawAtTimestamp.apply(limelight.getMT2RawData().timestampSeconds()).isPresent())
+			.and(() -> wantedYawAtTimestamp.apply(limelight.getMT1RawData().timestampSeconds()).isPresent())
 			.and(
 				MegaTagFilters.isYawAtExpectedAngle(
 					() -> limelight.getMT1RawData().pose().getRotation(),

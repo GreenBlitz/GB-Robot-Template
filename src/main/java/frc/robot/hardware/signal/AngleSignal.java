@@ -26,6 +26,11 @@ public abstract class AngleSignal implements InputSignal<Rotation2d> {
 	}
 
 	@Override
+	public TimedValue<Rotation2d> getLatestTimedValue() {
+		return timedValue;
+	}
+
+	@Override
 	public Rotation2d getLatestValue() {
 		return timedValue.getValue();
 	}

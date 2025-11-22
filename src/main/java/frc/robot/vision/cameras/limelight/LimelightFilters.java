@@ -27,10 +27,11 @@ public class LimelightFilters {
 		Rotation2d yawAtAngleTolerance
 	) {
 		return MegaTagFilters.isRobotInField(() -> limelight.getMT1RawData().pose().getTranslation(), robotInFieldTolerance)
+			.and(() -> wantedYawAtTimestamp.apply(limelight.getMT1RawData().timestampSeconds()).isPresent())
 			.and(
 				MegaTagFilters.isYawAtExpectedAngle(
 					() -> limelight.getMT1RawData().pose().getRotation(),
-					() -> wantedYawAtTimestamp.apply(limelight.getMT1RawData().timestampSeconds()),
+					() -> wantedYawAtTimestamp.apply(limelight.getMT1RawData().timestampSeconds()).get(),
 					isYawCalibrated,
 					yawAtAngleTolerance
 				)
@@ -45,10 +46,11 @@ public class LimelightFilters {
 		Rotation2d yawAtAngleTolerance
 	) {
 		return MegaTagFilters.isRobotInField(() -> limelight.getMT2RawData().pose().getTranslation(), robotInFieldTolerance)
+			.and(() -> wantedYawAtTimestamp.apply(limelight.getMT2RawData().timestampSeconds()).isPresent())
 			.and(
 				MegaTagFilters.isYawAtExpectedAngle(
 					() -> limelight.getMT2RawData().pose().getRotation(),
-					() -> wantedYawAtTimestamp.apply(limelight.getMT2RawData().timestampSeconds()),
+					() -> wantedYawAtTimestamp.apply(limelight.getMT2RawData().timestampSeconds()).get(),
 					isYawCalibrated,
 					yawAtAngleTolerance
 				)
@@ -72,14 +74,12 @@ public class LimelightFilters {
 
 		private static Filter isYawAtExpectedAngle(
 			Supplier<Rotation2d> cameraSuppliedRobotYaw,
-			Supplier<Optional<Rotation2d>> expectedYawSupplier,
+			Supplier<Rotation2d> expectedYawSupplier,
 			Supplier<Boolean> isExpectedYawCalibrated,
 			Rotation2d expectedYawTolerance
 		) {
 			return () -> !isExpectedYawCalibrated.get()
-				|| expectedYawSupplier.get()
-					.map(wantedAngle -> ToleranceMath.isNearWrapped(wantedAngle, cameraSuppliedRobotYaw.get(), expectedYawTolerance))
-					.orElse(false);
+				|| ToleranceMath.isNearWrapped(expectedYawSupplier.get(), cameraSuppliedRobotYaw.get(), expectedYawTolerance);
 		}
 
 		private static Filter isYawNotZero(Supplier<Rotation2d> robotYaw) {

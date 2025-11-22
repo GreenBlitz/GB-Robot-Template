@@ -1,10 +1,13 @@
 package frc.robot.hardware.interfaces;
 
+import frc.utils.TimedValue;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public interface InputSignal<T> extends LoggableInputs {
 
 	String getName();
+
+	TimedValue<T> getLatestTimedValue();
 
 	T getLatestValue();
 

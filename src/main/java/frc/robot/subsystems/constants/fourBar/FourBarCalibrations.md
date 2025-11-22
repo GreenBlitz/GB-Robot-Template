@@ -19,7 +19,6 @@ FourBar calibrations
 
 #### General Constants
 - [ ] Arm length
-- [ ] SysIdRoutineConfig
 
 #### PID
 - [ ] kP
@@ -36,6 +35,5 @@ FourBar calibrations
 - [ ] kG
 
 #### MotionMagic
-- [ ] Arbitrary feed forward
 - [ ] Default max acceleration per meter square
 - [ ] Default max velocity per meter

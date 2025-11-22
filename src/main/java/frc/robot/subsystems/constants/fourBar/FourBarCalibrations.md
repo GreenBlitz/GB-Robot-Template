@@ -9,16 +9,15 @@ FourBar calibrations
 - [ ] Current limit
 - [ ] Forward limit
 - [ ] Backwards limit
-- [ ] Max position
+- [ ] Max position;;
 - [ ] Min position
 
 #### Motor config
-- [ ] Rotor to sensor ratio
 - [ ] Sensor to mechanism ratio
 - [ ] Is Inverted
 
 #### General Constants
-- [ ] Arm length
+- [ ] FourBar length
 
 #### PID
 - [ ] kP
@@ -33,6 +32,8 @@ FourBar calibrations
 #### FeedForward
 - [ ] kS
 - [ ] kG
+- [ ] kA
+- [ ] kS
 
 #### MotionMagic
 - [ ] Default max acceleration per meter square

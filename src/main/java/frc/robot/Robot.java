@@ -123,7 +123,7 @@ public class Robot {
 			FourBarConstants.CURRENT_LIMIT,
 			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			FourBarConstants.MOMENT_OF_INERTIA,
-			FourBarConstants.ARM_LENGTH_METERS,
+			FourBarConstants.FOUR_BAR_LENGTH,
 			FourBarConstants.ARBITRARY_FEED_FORWARD,
 			FourBarConstants.FORWARD_SOFTWARE_LIMITS,
 			FourBarConstants.BACKWARD_SOFTWARE_LIMITS,

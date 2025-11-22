@@ -13,7 +13,7 @@ public class FourBarConstants {
 	public static final String LOG_PATH = RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/FourBar";
 	public static final int CURRENT_LIMIT = 40;
 	public static final double MOMENT_OF_INERTIA = 0.001;
-	public static final double ARM_LENGTH_METERS = 0.3;
+	public static final double FOUR_BAR_LENGTH = 0.3;
 	public static final double ARBITRARY_FEED_FORWARD = 0.0;
 	public static final boolean IS_INVERTED = false;
 	public static final TalonFXFollowerConfig TALON_FX_FOLLOWER_CONFIG = new TalonFXFollowerConfig();

@@ -63,8 +63,8 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	}
 
 	@Override
-	public Pose2d getEstimatedPoseAtTimestamp(double timestampSeconds) {
-		return poseEstimator.sampleAt(timestampSeconds).orElseGet(this::getEstimatedPose);
+	public Optional<Pose2d> getEstimatedPoseAtTimestamp(double timestampSeconds) {
+		return poseEstimator.sampleAt(timestampSeconds);
 	}
 
 	@Override
@@ -103,7 +103,8 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	public void resetPose(double timestampSeconds, Rotation2d imuYaw, SwerveModulePosition[] wheelPositions, Pose2d poseMeters) {
 		Logger.recordOutput(logPath + "/lastPoseResetTo", poseMeters);
 		poseEstimator.resetPosition(imuYaw, wheelPositions, poseMeters);
-		this.lastOdometryData = new OdometryData(timestampSeconds, wheelPositions, Optional.of(poseMeters.getRotation()));
+		this.lastOdometryData = new OdometryData(timestampSeconds, wheelPositions, Optional.of(imuYaw));
+		imuYawBuffer.addSample(timestampSeconds, imuYaw);
 		poseToIMUYawDifferenceBuffer.clear();
 	}
 
@@ -142,7 +143,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	private void updateVision(RobotPoseObservation visionRobotPoseObservation) {
 		addVisionMeasurement(visionRobotPoseObservation);
 
-		getPoseToIMUYawDifference(
+		getEstimatedPoseToIMUYawDifference(
 			imuYawBuffer.getSample(visionRobotPoseObservation.timestampSeconds()),
 			visionRobotPoseObservation.timestampSeconds()
 		).ifPresent(yawDifference -> {
@@ -170,8 +171,9 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		Logger.recordOutput(logPath + "/poseToIMUOffsetStdDev", poseToIMUYawDifferenceStdDev);
 	}
 
-	private Optional<Rotation2d> getPoseToIMUYawDifference(Optional<Rotation2d> gyroYaw, double timestampSeconds) {
-		return gyroYaw.map(yaw -> getEstimatedPoseAtTimestamp(timestampSeconds).getRotation().minus(yaw));
+	private Optional<Rotation2d> getEstimatedPoseToIMUYawDifference(Optional<Rotation2d> gyroYaw, double timestampSeconds) {
+		return getEstimatedPoseAtTimestamp(timestampSeconds)
+			.flatMap(estimatedPose -> gyroYaw.map(yaw -> estimatedPose.getRotation().minus(yaw)));
 	}
 
 }

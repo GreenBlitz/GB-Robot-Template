@@ -100,18 +100,16 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	}
 
 	@Override
-	public void resetOdometry(double timestampSeconds, SwerveModulePosition[] wheelPositions, Pose2d poseMeters) {
-		Logger.recordOutput(logPath + "/lastOdometryPoseResetTo", poseMeters);
-		odometryEstimator.resetPosition(lastOdometryData.getIMUYaw().get(), wheelPositions, poseMeters);
-		this.lastOdometryData = new OdometryData(timestampSeconds, wheelPositions, Optional.of(poseMeters.getRotation()));
-	}
-
-	@Override
 	public void resetPosition(double timestampSeconds, SwerveModulePosition[] wheelPositions, Pose2d poseMeters) {
 		Logger.recordOutput(logPath + "/lastPoseResetTo", poseMeters);
 		poseEstimator.resetPosition(lastOdometryData.getIMUYaw().get(), wheelPositions, poseMeters);
 		this.lastOdometryData = new OdometryData(timestampSeconds, wheelPositions, Optional.of(poseMeters.getRotation()));
 		poseToIMUYawDifferenceBuffer.clear();
+	}
+
+	@Override
+	public void resetPosition(Pose2d poseMeters) {
+		resetPosition(lastOdometryData.getTimestampSeconds(), lastOdometryData.getWheelPositions(), poseMeters);
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import frc.utils.filter.Filter;
 import frc.utils.math.ToleranceMath;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -20,16 +21,17 @@ public class LimelightFilters {
 
 	public static Filter megaTag1Filter(
 		Limelight limelight,
-		Function<Double, Rotation2d> wantedYawAtTimestamp,
+		Function<Double, Optional<Rotation2d>> wantedYawAtTimestamp,
 		Supplier<Boolean> isYawCalibrated,
 		Translation2d robotInFieldTolerance,
 		Rotation2d yawAtAngleTolerance
 	) {
 		return MegaTagFilters.isRobotInField(() -> limelight.getMT1RawData().pose().getTranslation(), robotInFieldTolerance)
+			.and(() -> wantedYawAtTimestamp.apply(limelight.getMT2RawData().timestampSeconds()).isPresent())
 			.and(
 				MegaTagFilters.isYawAtExpectedAngle(
 					() -> limelight.getMT1RawData().pose().getRotation(),
-					() -> wantedYawAtTimestamp.apply(limelight.getMT1RawData().timestampSeconds()),
+					() -> wantedYawAtTimestamp.apply(limelight.getMT1RawData().timestampSeconds()).get(),
 					isYawCalibrated,
 					yawAtAngleTolerance
 				)
@@ -38,16 +40,17 @@ public class LimelightFilters {
 
 	public static Filter megaTag2Filter(
 		Limelight limelight,
-		Function<Double, Rotation2d> wantedYawAtTimestamp,
+		Function<Double, Optional<Rotation2d>> wantedYawAtTimestamp,
 		Supplier<Boolean> isYawCalibrated,
 		Translation2d robotInFieldTolerance,
 		Rotation2d yawAtAngleTolerance
 	) {
 		return MegaTagFilters.isRobotInField(() -> limelight.getMT2RawData().pose().getTranslation(), robotInFieldTolerance)
+			.and(() -> wantedYawAtTimestamp.apply(limelight.getMT2RawData().timestampSeconds()).isPresent())
 			.and(
 				MegaTagFilters.isYawAtExpectedAngle(
 					() -> limelight.getMT2RawData().pose().getRotation(),
-					() -> wantedYawAtTimestamp.apply(limelight.getMT2RawData().timestampSeconds()),
+					() -> wantedYawAtTimestamp.apply(limelight.getMT2RawData().timestampSeconds()).get(),
 					isYawCalibrated,
 					yawAtAngleTolerance
 				)

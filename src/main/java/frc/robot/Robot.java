@@ -4,11 +4,7 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
@@ -21,7 +17,7 @@ import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
+import frc.robot.subsystems.swerve.factories.constants.*;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.utils.TimedValue;
 import frc.utils.auto.PathPlannerAutoWrapper;
@@ -77,7 +73,7 @@ public class Robot {
 		limelightFour.setMT1PoseFilter(
 			LimelightFilters.megaTag1Filter(
 				limelightFour,
-				timestamp -> poseEstimator.getEstimatedPoseAtTimestamp(timestamp).getRotation(),
+				timestamp -> poseEstimator.getEstimatedPoseAtTimestamp(timestamp).map(Pose2d::getRotation),
 				poseEstimator::isIMUOffsetCalibrated,
 				new Translation2d(0.1, 0.1),
 				Rotation2d.fromDegrees(10)
@@ -86,7 +82,7 @@ public class Robot {
 		limelightFour.setMT2PoseFilter(
 			LimelightFilters.megaTag2Filter(
 				limelightFour,
-				timestamp -> poseEstimator.getEstimatedPoseAtTimestamp(timestamp).getRotation(),
+				timestamp -> poseEstimator.getEstimatedPoseAtTimestamp(timestamp).map(Pose2d::getRotation),
 				poseEstimator::isIMUOffsetCalibrated,
 				new Translation2d(0.1, 0.1),
 				Rotation2d.fromDegrees(2)
@@ -120,7 +116,7 @@ public class Robot {
 		limelightThreeGB.setMT1PoseFilter(
 			LimelightFilters.megaTag1Filter(
 				limelightThreeGB,
-				timestamp -> poseEstimator.getEstimatedPoseAtTimestamp(timestamp).getRotation(),
+				timestamp -> poseEstimator.getEstimatedPoseAtTimestamp(timestamp).map(Pose2d::getRotation),
 				poseEstimator::isIMUOffsetCalibrated,
 				new Translation2d(0.1, 0.1),
 				Rotation2d.fromDegrees(10)
@@ -129,7 +125,7 @@ public class Robot {
 		limelightThreeGB.setMT2PoseFilter(
 			LimelightFilters.megaTag2Filter(
 				limelightThreeGB,
-				timestamp -> poseEstimator.getEstimatedPoseAtTimestamp(timestamp).getRotation(),
+				timestamp -> poseEstimator.getEstimatedPoseAtTimestamp(timestamp).map(Pose2d::getRotation),
 				poseEstimator::isIMUOffsetCalibrated,
 				new Translation2d(0.1, 0.1),
 				Rotation2d.fromDegrees(2)

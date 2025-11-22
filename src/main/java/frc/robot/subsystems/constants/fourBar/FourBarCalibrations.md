@@ -18,6 +18,7 @@ FourBar calibrations
 
 #### General Constants
 - [ ] FourBar length
+- [ ] SysIdRoutineConfig
 
 #### PID
 - [ ] kP

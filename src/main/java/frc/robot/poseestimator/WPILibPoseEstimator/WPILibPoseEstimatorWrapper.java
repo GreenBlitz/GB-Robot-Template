@@ -100,16 +100,17 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	}
 
 	@Override
-	public void resetOdometry(double timestampSeconds, SwerveModulePosition[] wheelPositions, Rotation2d imuYaw, Pose2d robotPose) {
-		poseEstimator.resetPosition(imuYaw, wheelPositions, robotPose);
-		this.lastOdometryData = new OdometryData(timestampSeconds, wheelPositions, Optional.of(imuYaw));
-		poseToIMUYawDifferenceBuffer.clear();
+	public void resetOdometry(double timestampSeconds, SwerveModulePosition[] wheelPositions, Pose2d poseMeters) {
+		Logger.recordOutput(logPath + "/lastOdometryPoseResetTo", poseMeters);
+		odometryEstimator.resetPosition(lastOdometryData.getIMUYaw().get(), wheelPositions, poseMeters);
+		this.lastOdometryData = new OdometryData(timestampSeconds, wheelPositions, Optional.of(poseMeters.getRotation()));
 	}
 
 	@Override
-	public void resetPose(Pose2d newPose) {
-		Logger.recordOutput(logPath + "/lastPoseResetTo", newPose);
-		poseEstimator.resetPosition(lastOdometryData.getIMUYaw().get(), lastOdometryData.getWheelPositions(), newPose);
+	public void resetPosition(double timestampSeconds, SwerveModulePosition[] wheelPositions, Pose2d poseMeters) {
+		Logger.recordOutput(logPath + "/lastPoseResetTo", poseMeters);
+		poseEstimator.resetPosition(lastOdometryData.getIMUYaw().get(), wheelPositions, poseMeters);
+		this.lastOdometryData = new OdometryData(timestampSeconds, wheelPositions, Optional.of(poseMeters.getRotation()));
 		poseToIMUYawDifferenceBuffer.clear();
 	}
 

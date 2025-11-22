@@ -2,6 +2,8 @@ package frc.robot.poseestimator;
 
 import edu.wpi.first.math.geometry.Pose2d;
 
+import java.util.Optional;
+
 
 public interface IPoseEstimator extends IVisionEstimator, IOdometryEstimator {
 
@@ -9,7 +11,7 @@ public interface IPoseEstimator extends IVisionEstimator, IOdometryEstimator {
 
 	Pose2d getEstimatedPose();
 
-	Pose2d getEstimatedPoseAtTimestamp(double timestampSeconds);
+	Optional<Pose2d> getEstimatedPoseAtTimestamp(double timestampSeconds);
 
 	boolean isIMUOffsetCalibrated();
 

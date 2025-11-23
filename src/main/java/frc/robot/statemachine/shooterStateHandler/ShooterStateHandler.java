@@ -55,7 +55,7 @@ public class ShooterStateHandler {
 		return new ParallelCommandGroup(new InstantCommand(() -> currentState = shooterState), switch (shooterState) {
 			case STAY_IN_PLACE -> stayInPlace();
 			case IDLE -> idle();
-			case SHOOT_WHILE_DRIVE -> shootWhileDrive();
+			case SHOOT -> shoot();
 		});
 	}
 
@@ -75,7 +75,7 @@ public class ShooterStateHandler {
 		);
 	}
 
-	private Command shootWhileDrive() {
+	private Command shoot() {
 		return new ParallelCommandGroup(
 			turret.getCommandsBuilder().stayInPlace(),
 			hood.getCommandsBuilder().setTargetPosition(hoodInterpolation(distanceFromTower)),

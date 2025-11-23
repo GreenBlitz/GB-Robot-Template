@@ -1,11 +1,12 @@
 Shooter Calibrations
 -----------------------------
 
-#### State
-- [ ] Check current state
-
 #### Constants
-- [ ] Check constants
+- [ ] Check default rotations per second for flywheel
 
 #### State Handler
-- [ ] Check states in state handler 
+- [ ] Check interpolation map
+- [ ] Check state handler functions 
+
+#### State
+- [ ] Check if the states in shooter states are correct

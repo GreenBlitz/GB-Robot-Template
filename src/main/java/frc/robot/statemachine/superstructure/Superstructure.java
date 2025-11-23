@@ -59,9 +59,9 @@ public class Superstructure {
 			case STAY_IN_PLACE -> stayInPlace();
 			case DRIVE -> idle();
 			case INTAKE -> intake();
+			case PRE_SHOOT -> preShoot();
 			case SHOOT -> shoot();
 			case SHOOT_AND_INTAKE -> shootAndIntake();
-			case PRE_SHOOT -> preShoot();
 		};
 	}
 

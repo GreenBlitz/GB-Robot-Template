@@ -1,6 +1,6 @@
 package frc.robot.statemachine.superstructure.funnelStateHandler;
 
-public enum FunnelStates {
+public enum FunnelState {
 
 	STAY_IN_PLACE,
 	INTAKE,

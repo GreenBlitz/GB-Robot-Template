@@ -1,6 +1,5 @@
 package frc.robot.statemachine.superstructure.funnelStateHandler;
 
-
 public class FunnelConstants {
 
 	public static double DRIVE_BELLY_VOLTAGE = 3;

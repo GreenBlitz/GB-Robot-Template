@@ -5,9 +5,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.subsystems.roller.Roller;
 
-import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
-
 public class FunnelStateHandler {
 
 	private final Roller omni;
@@ -28,14 +25,14 @@ public class FunnelStateHandler {
 		};
 	}
 
-    public BooleanSupplier isBallAtSensor(){
-        return () -> sensor.debouncedValue;
+    public boolean isBallAtSensor(){
+        return sensor.debouncedValue;
     }
 
 	private Command drive() {
 		return new ParallelCommandGroup(
 			omni.getCommandsBuilder().stop(),
-			belly.getCommandsBuilder().rollRotationsAtVoltageForwards(1, FunnelConstants.DRIVE_BELLY_VOLTAGE).until(isBallAtSensor())
+			belly.getCommandsBuilder().rollRotationsAtVoltageForwards(1, FunnelConstants.DRIVE_BELLY_VOLTAGE).until(this::isBallAtSensor)
 		);
 	}
 

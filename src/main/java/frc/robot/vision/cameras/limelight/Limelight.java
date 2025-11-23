@@ -106,29 +106,35 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	public void updateColorDetection() {
-		inputs.colorDetectionInputs().target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
-		inputs.colorDetectionInputs().rawTargets = LimelightHelpers.getRawTargets(name);
-		Logger.processInputs(logPath + "/colorDetectionInputs", inputs.colorDetectionInputs());
+		if (pipeline.isDetectingObjects()) {
+			detectedColorObservations.clear();
 
-		if (getTarget2dValues().isValid()) {
-			for (LimelightHelpers.RawTarget rawTarget : getRawTargets()) {
-				if (detectedColorFilter.apply(rawTarget)) {
-					pipeline.getDetectedObjectType(0).ifPresent(objectType -> {
-						DetectedObjectObservation observation = ObjectDetectionMath.getDetectedObjectObservation(
-							robotRelativeCameraPose,
-							objectType,
-							version.getHorizontalFieldOfView().times(0.5 * rawTarget.txnc()),
-							version.getVerticalFieldOfView().times(0.5 * rawTarget.tync()),
-							getTarget2dTimestampSeconds(getTarget2dValues())
-						);
+			inputs.colorDetectionInputs().target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
+			inputs.colorDetectionInputs().rawTargets = LimelightHelpers.getRawTargets(name);
+			Logger.processInputs(logPath + "/colorDetectionInputs", inputs.colorDetectionInputs());
 
-						if (doesObservationExist(observation)) {
-							detectedColorObservations.add(observation);
-						}
-					});
+			if (getTarget2dValues().isValid()) {
+				for (LimelightHelpers.RawTarget rawTarget : getRawTargets()) {
+					if (detectedColorFilter.apply(rawTarget)) {
+						pipeline.getDetectedObjectType(0).ifPresent(objectType -> {
+							DetectedObjectObservation observation = ObjectDetectionMath.getDetectedObjectObservation(
+								robotRelativeCameraPose,
+								objectType,
+								version.getHorizontalFieldOfView().times(0.5 * rawTarget.txnc()),
+								version.getVerticalFieldOfView().times(0.5 * rawTarget.tync()),
+								getTarget2dTimestampSeconds(getTarget2dValues())
+							);
+
+							if (doesObservationExist(observation)) {
+								detectedColorObservations.add(observation);
+							}
+						});
+					}
+					Logger.recordOutput(
+						logPath + "/detectedColorObservations",
+						detectedColorObservations.toArray(new DetectedObjectObservation[0])
+					);
 				}
-				Logger
-					.recordOutput(logPath + "/detectedColorObservations", detectedColorObservations.toArray(new DetectedObjectObservation[0]));
 			}
 		}
 	}
@@ -189,12 +195,12 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		return Optional.empty();
 	}
 
-    public List<DetectedObjectObservation> getRobotRelativeColorDetections() {
-        if (pipeline.isDetectingObjects()) {
-            return (ArrayList<DetectedObjectObservation>) detectedColorObservations.clone();
-        }
-        return new ArrayList<>();
-    }
+	public List<DetectedObjectObservation> getRobotRelativeColorDetections() {
+		if (pipeline.isDetectingObjects()) {
+			return (ArrayList<DetectedObjectObservation>) detectedColorObservations.clone();
+		}
+		return new ArrayList<>();
+	}
 
 	public Function<LimelightHelpers.RawDetection, Boolean> getDetectedObjectFilter() {
 		return detectedObjectFilter;

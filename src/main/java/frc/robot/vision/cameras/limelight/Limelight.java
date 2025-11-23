@@ -46,7 +46,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		this.logPath = logPathPrefix + "/" + name;
 
 		this.robotRelativeCameraPoseSupplier = robotRelativeCameraPoseSupplier;
-		setRobotRelativeCameraPose(new Pose3d());
+		setRobotRelativeCameraPose(new Pose3d(0,0,0, new Rotation3d(0,0,0)));
 
 		this.detectedObjectObservations = new ArrayList<>();
 

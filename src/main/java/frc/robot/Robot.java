@@ -117,7 +117,7 @@ public class Robot {
 			"limelight",
 			"NewVision",
 			() -> new Pose3d(
-				new Translation3d(0.2022, 0.13, 0.508),
+				new Translation3d(1, 1, 1),
 				new Rotation3d(Units.Degrees.of(10.612258493096334), Units.Degrees.of(-27.18966371065684), Units.Degrees.of(20.10328620400214))
 			),
 			LimelightPipeline.APRIL_TAG

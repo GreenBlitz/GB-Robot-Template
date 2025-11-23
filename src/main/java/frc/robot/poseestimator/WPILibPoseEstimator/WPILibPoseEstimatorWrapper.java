@@ -47,8 +47,8 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		this.poseEstimator = new PoseEstimator<>(
 			kinematics,
 			odometryEstimator,
-			WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STANDARD_DEVIATIONS.asColumnVector(),
-			WPILibPoseEstimatorConstants.DEFAULT_VISION_STANDARD_DEVIATIONS.asColumnVector()
+			WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STD_DEV.asColumnVector(),
+			WPILibPoseEstimatorConstants.DEFAULT_VISION_STD_DEV.asColumnVector()
 		);
 		this.lastOdometryData = new OdometryData(initialTimestampSeconds, initialModulePositions, Optional.of(initialIMUYaw));
 		this.isIMUOffsetCalibrated = false;

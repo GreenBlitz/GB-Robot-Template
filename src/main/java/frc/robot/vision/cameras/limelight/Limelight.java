@@ -46,7 +46,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		this.logPath = logPathPrefix + "/" + name;
 
 		this.robotRelativeCameraPoseSupplier = robotRelativeCameraPoseSupplier;
-		setCurrentRobotRelativeCameraPose(new Pose3d());
+		setRobotRelativeCameraPose(new Pose3d());
 
 		this.detectedObjectObservations = new ArrayList<>();
 
@@ -215,7 +215,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		return inputs.mt2Inputs().mtRawData;
 	}
 
-	private void setCurrentRobotRelativeCameraPose(Pose3d currentRobotRelativeCameraPose) {
+	private void setRobotRelativeCameraPose(Pose3d currentRobotRelativeCameraPose) {
 		LimelightHelpers.setCameraPose_RobotSpace(
 			name,
 			currentRobotRelativeCameraPose.getX(),

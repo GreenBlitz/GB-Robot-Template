@@ -1,13 +1,17 @@
 package frc.robot.statemachine.superstructure.funnelStateHandler;
 
-import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.subsystems.roller.Roller;
 
+import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
+
 public class FunnelStateHandler {
 
-	private Roller omni;
-	private Roller belly;
+	private final Roller omni;
+	private final Roller belly;
 	private DigitalInputInputsAutoLogged sensor;
 
 	public FunnelStateHandler(Roller omni, Roller belly, DigitalInputInputsAutoLogged sensor) {
@@ -24,10 +28,14 @@ public class FunnelStateHandler {
 		};
 	}
 
+    public BooleanSupplier isBallAtSensor(){
+        return () -> sensor.debouncedValue;
+    }
+
 	private Command drive() {
 		return new ParallelCommandGroup(
 			omni.getCommandsBuilder().stop(),
-			belly.getCommandsBuilder().rollRotationsAtVoltageForwards(1, FunnelConstants.DRIVE_BELLY_VOLTAGE).until(() -> sensor.debouncedValue)
+			belly.getCommandsBuilder().rollRotationsAtVoltageForwards(1, FunnelConstants.DRIVE_BELLY_VOLTAGE).until(isBallAtSensor())
 		);
 	}
 

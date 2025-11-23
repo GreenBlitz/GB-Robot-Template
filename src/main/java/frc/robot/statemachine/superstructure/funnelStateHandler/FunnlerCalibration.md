@@ -7,3 +7,6 @@ Funnel States Calibration
 #### shoot
 - [ ] Voltage for omni
 - [ ] Voltage for belly
+
+#### intake
+- [ ] Voltage for belly

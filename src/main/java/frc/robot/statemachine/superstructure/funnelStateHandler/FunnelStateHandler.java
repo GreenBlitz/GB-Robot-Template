@@ -16,7 +16,7 @@ public class FunnelStateHandler {
 		this.belly = belly;
 	}
 
-	public Command setState(FunnelStates state) {
+	public Command setState(FunnelState state) {
 		return switch (state) {
 			case DRIVE -> drive();
 			case SHOOT -> shoot();

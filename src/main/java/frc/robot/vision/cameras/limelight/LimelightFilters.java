@@ -20,18 +20,18 @@ public class LimelightFilters {
 
 	public static Filter megaTag1Filter(
 		Limelight limelight,
-		Function<Double, Optional<Rotation2d>> wantedYawAtTimestampFunction,
+		Function<Double, Optional<Rotation2d>> wantedYawAtTimestamp,
 		Supplier<Boolean> isYawCalibrated,
 		Translation2d robotInFieldTolerance,
 		Rotation2d yawAtAngleTolerance
 	) {
-		Optional<Rotation2d> wantedYawAtTimestamp = wantedYawAtTimestampFunction.apply(limelight.getMT1RawData().timestampSeconds());
+		double timestamp = limelight.getMT1RawData().timestampSeconds();
 		return MegaTagFilters.isRobotInField(() -> limelight.getMT1RawData().pose().getTranslation(), robotInFieldTolerance)
-			.and(wantedYawAtTimestamp::isPresent)
+			.and(MegaTagFilters.doesYawExistAtTimestamp(timestamp, wantedYawAtTimestamp))
 			.and(
 				MegaTagFilters.isYawAtExpectedAngle(
 					() -> limelight.getMT1RawData().pose().getRotation(),
-					wantedYawAtTimestamp::get,
+					() -> wantedYawAtTimestamp.apply(timestamp).get(),
 					isYawCalibrated,
 					yawAtAngleTolerance
 				)
@@ -40,18 +40,18 @@ public class LimelightFilters {
 
 	public static Filter megaTag2Filter(
 		Limelight limelight,
-		Function<Double, Optional<Rotation2d>> wantedYawAtTimestampFunction,
+		Function<Double, Optional<Rotation2d>> wantedYawAtTimestamp,
 		Supplier<Boolean> isYawCalibrated,
 		Translation2d robotInFieldTolerance,
 		Rotation2d yawAtAngleTolerance
 	) {
-		Optional<Rotation2d> wantedYawAtTimestamp = wantedYawAtTimestampFunction.apply(limelight.getMT2RawData().timestampSeconds());
+		double timestamp = limelight.getMT2RawData().timestampSeconds();
 		return MegaTagFilters.isRobotInField(() -> limelight.getMT2RawData().pose().getTranslation(), robotInFieldTolerance)
-			.and(wantedYawAtTimestamp::isPresent)
+			.and(MegaTagFilters.doesYawExistAtTimestamp(timestamp, wantedYawAtTimestamp))
 			.and(
 				MegaTagFilters.isYawAtExpectedAngle(
 					() -> limelight.getMT2RawData().pose().getRotation(),
-					wantedYawAtTimestamp::get,
+					() -> wantedYawAtTimestamp.apply(timestamp).get(),
 					isYawCalibrated,
 					yawAtAngleTolerance
 				)
@@ -72,6 +72,10 @@ public class LimelightFilters {
 	}
 
 	private static class MegaTagFilters {
+
+		private static Filter doesYawExistAtTimestamp(double timestamp, Function<Double, Optional<Rotation2d>> getYawAtTimestamp) {
+			return () -> getYawAtTimestamp.apply(timestamp).isPresent();
+		}
 
 		private static Filter isYawAtExpectedAngle(
 			Supplier<Rotation2d> cameraSuppliedRobotYaw,

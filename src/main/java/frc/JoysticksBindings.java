@@ -65,8 +65,20 @@ public class JoysticksBindings {
 
 	private static void fourthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = FOURTH_JOYSTICK;
-		usedJoystick.A.onTrue(new CameraCalibration(robot.getLimelightFour(), new Pose3d(fourCoralsFromRobot, 0, tagHeight, new Rotation3d(0, 0, Math.PI)), "test-limelightFour/"));
-		usedJoystick.B.onTrue(new CameraCalibration(robot.getLimelightThreeGB(), new Pose3d(fourCoralsFromRobot, 0, tagHeight, new Rotation3d(0, 0, Math.PI)), "test-limelightThreeGB/"));
+		usedJoystick.A.onTrue(
+			new CameraCalibration(
+				robot.getLimelightFour(),
+				new Pose3d(fourCoralsFromRobot, 0, tagHeight, new Rotation3d(0, 0, Math.PI)),
+				"test-limelightFour/"
+			)
+		);
+		usedJoystick.B.onTrue(
+			new CameraCalibration(
+				robot.getLimelightThreeGB(),
+				new Pose3d(fourCoralsFromRobot, 0, tagHeight, new Rotation3d(0, 0, Math.PI)),
+				"test-limelightThreeGB/"
+			)
+		);
 	}
 
 	private static void fifthJoystickButtons(Robot robot) {

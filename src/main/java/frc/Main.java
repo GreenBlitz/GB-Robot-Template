@@ -21,34 +21,40 @@ public final class Main {
 	 */
 	public static void main(String... args) {
 		RobotBase.startRobot(RobotManager::new);
-//		Pose3d cam = new Pose3d(-2, 0, 0, new Rotation3d(0, 0, 0));
-//		Pose3d tag = new Pose3d(-1, 1, 0, new Rotation3d(0, 0, Math.PI));
-//		Pose3d bot = new Pose3d();
-//
-//		Pose3d camToTagRelToZeroDeg = new Pose3d(-1, -1, 0, new Rotation3d(0, 0, Math.PI));
-//		Pose3d camToTagRelToTagDeg = new Pose3d(1, 1, 0, new Rotation3d(0, 0, Math.PI));
-//
-////        Transform3d bad = new Transform3d(new Pose3d(), camToTagRelToTagDeg);
-////        Transform3d good = new Transform3d(tag, cam);
-//
-//		Pose3d bad = AngleMath.transformBy(tag, camToTagRelToZeroDeg);
-//		Pose3d good = tag.transformBy(new Transform3d(tag, cam));
-
-//		System.out.println(bad.getX());
-//		System.out.println(bad.getY());
-//		System.out.println(bad.getZ());
-//		System.out.println(Rotation2d.fromRadians(bad.getRotation().getX()).getDegrees());
-//		System.out.println(Rotation2d.fromRadians(bad.getRotation().getY()).getDegrees());
-//		System.out.println(Rotation2d.fromRadians(bad.getRotation().getZ()).getDegrees());
-//
-//		System.out.println("");
-//
-//		System.out.println(good.getX());
-//		System.out.println(good.getY());
-//		System.out.println(good.getZ());
-//		System.out.println(Rotation2d.fromRadians(good.getRotation().getX()).getDegrees());
-//		System.out.println(Rotation2d.fromRadians(good.getRotation().getY()).getDegrees());
-//		System.out.println(Rotation2d.fromRadians(good.getRotation().getZ()).getDegrees());
+//		Pose3d pose1 = new Pose3d(
+//			0,
+//			0,
+//			0,
+//			new Rotation3d(
+//				Rotation2d.fromDegrees(45).getRadians(),
+//				Rotation2d.fromDegrees(45).getRadians(),
+//				Rotation2d.fromDegrees(45).getRadians()
+//			)
+//		);
+//		Pose3d pose2 = new Pose3d(
+//			0,
+//			0,
+//			0,
+//			new Rotation3d(
+//				Rotation2d.fromDegrees(90).getRadians(),
+//				Rotation2d.fromDegrees(90).getRadians(),
+//				Rotation2d.fromDegrees(90).getRadians()
+//			)
+//		);
+//		double sinX = Math.sin(pose1.getRotation().getX()) + Math.sin(pose2.getRotation().getX());
+//		double cosX = Math.cos(pose1.getRotation().getX()) + Math.cos(pose2.getRotation().getX());
+//		double sinY = Math.sin(pose1.getRotation().getY()) + Math.sin(pose2.getRotation().getY());
+//		double cosY = Math.cos(pose1.getRotation().getY()) + Math.cos(pose2.getRotation().getY());
+//		double sinZ = Math.sin(pose1.getRotation().getZ()) + Math.sin(pose2.getRotation().getZ());
+//		double cosZ = Math.cos(pose1.getRotation().getZ()) + Math.cos(pose2.getRotation().getZ());
+//		Rotation3d finalPose = AngleMath.getAngleAverageWrapped(sinX, cosX, sinY, cosY, sinZ, cosZ, 2);
+//		System.out.println(
+//			Rotation2d.fromRadians(finalPose.getX()).getDegrees()
+//				+ " "
+//				+ Rotation2d.fromRadians(finalPose.getY()).getDegrees()
+//				+ " "
+//				+ Rotation2d.fromRadians(finalPose.getZ()).getDegrees()
+//		);
 	}
 
 }

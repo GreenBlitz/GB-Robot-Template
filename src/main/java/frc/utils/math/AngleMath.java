@@ -37,8 +37,8 @@ public class AngleMath {
 		}
 	}
 
-	public static Rotation2d getAngleAverageWrapped(double sinSum, double cosSum, int posesAmount) {
-		return new Rotation2d(sinSum / posesAmount, cosSum / posesAmount);
+	public static double getAngleAverageWrapped(double sinSum, double cosSum, int posesAmount) {
+		return Math.atan2(sinSum / posesAmount, cosSum / posesAmount);
 	}
 
 	public static Rotation3d getAngleAverageWrapped(Rotation3d... angles) {
@@ -61,9 +61,9 @@ public class AngleMath {
 		int posesAmount
 	) {
 		return new Rotation3d(
-			getAngleAverageWrapped(sinXSum, cosXSum, posesAmount).getRadians(),
-			getAngleAverageWrapped(sinYSum, cosYSum, posesAmount).getRadians(),
-			getAngleAverageWrapped(sinZSum, cosZSum, posesAmount).getRadians()
+			getAngleAverageWrapped(sinXSum, cosXSum, posesAmount),
+			getAngleAverageWrapped(sinYSum, cosYSum, posesAmount),
+			getAngleAverageWrapped(sinZSum, cosZSum, posesAmount)
 		);
 	}
 

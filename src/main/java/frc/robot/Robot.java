@@ -169,7 +169,7 @@ public class Robot {
 			),
 			LimelightPipeline.OBJECT_DETECTION
 		);
-		
+
 		swerve.setHeadingSupplier(
 			ROBOT_TYPE.isSimulation() ? () -> poseEstimator.getEstimatedPose().getRotation() : () -> headingEstimator.getEstimatedHeading()
 		);

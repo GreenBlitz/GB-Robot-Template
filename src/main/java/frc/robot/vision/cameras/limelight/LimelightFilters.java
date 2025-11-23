@@ -40,17 +40,18 @@ public class LimelightFilters {
 
 	public static Filter megaTag2Filter(
 		Limelight limelight,
-		Function<Double, Optional<Rotation2d>> wantedYawAtTimestamp,
+		Function<Double, Optional<Rotation2d>> wantedYawAtTimestampFunction,
 		Supplier<Boolean> isYawCalibrated,
 		Translation2d robotInFieldTolerance,
 		Rotation2d yawAtAngleTolerance
 	) {
+		Optional<Rotation2d> wantedYawAtTimestamp = wantedYawAtTimestampFunction.apply(limelight.getMT2RawData().timestampSeconds());
 		return MegaTagFilters.isRobotInField(() -> limelight.getMT2RawData().pose().getTranslation(), robotInFieldTolerance)
-			.and(() -> wantedYawAtTimestamp.apply(limelight.getMT2RawData().timestampSeconds()).isPresent())
+			.and(wantedYawAtTimestamp::isPresent)
 			.and(
 				MegaTagFilters.isYawAtExpectedAngle(
 					() -> limelight.getMT2RawData().pose().getRotation(),
-					() -> wantedYawAtTimestamp.apply(limelight.getMT2RawData().timestampSeconds()).get(),
+					wantedYawAtTimestamp::get,
 					isYawCalibrated,
 					yawAtAngleTolerance
 				)

@@ -61,6 +61,7 @@ public class Superstructure {
 			case SHOOT -> shoot();
 			case DRIVE -> idle();
 			case SHOOT_AND_INTAKE -> shootAndIntake();
+			case PRE_SHOOT -> preShoot();
 		};
 	}
 
@@ -68,7 +69,7 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 			shooterStateHandler.setState(ShooterState.STAY_IN_PLACE),
 			funnelStateHandler.setState(FunnelState.STAY_IN_PLACE),
-			intakeStateHandler.setState(IntakeState.CLOSED)
+			intakeStateHandler.setState(IntakeState.INTAKE)
 		);
 	}
 
@@ -100,6 +101,14 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 			shooterStateHandler.setState(ShooterState.IDLE),
 			funnelStateHandler.setState(FunnelState.DRIVE),
+			intakeStateHandler.setState(IntakeState.CLOSED)
+		);
+	}
+
+	private Command preShoot() {
+		return new ParallelCommandGroup(
+			shooterStateHandler.setState(ShooterState.SHOOT),
+			funnelStateHandler.setState(FunnelState.STAY_IN_PLACE),
 			intakeStateHandler.setState(IntakeState.CLOSED)
 		);
 	}

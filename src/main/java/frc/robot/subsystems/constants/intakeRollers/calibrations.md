@@ -8,7 +8,6 @@ Intake rollers calibrations
 - [ ] Is inverted
 
 #### Digital input
-- [ ] Name
 - [ ] Is inverted
 - [ ] Forward or backward
 - [ ] Debounce time

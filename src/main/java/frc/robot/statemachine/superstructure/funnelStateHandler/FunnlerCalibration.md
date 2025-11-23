@@ -1,0 +1,9 @@
+Funnel States Calibration
+---------------------------------
+
+#### drive
+- [ ] Voltage for one circle
+
+#### shoot
+- [ ] Voltage for omni
+- [ ] Voltage for belly

@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.constants.field.Field;
 import frc.robot.vision.DetectedObjectType;
-import frc.utils.LimelightHelpers;
 import frc.utils.filter.Filter;
 import frc.utils.math.ToleranceMath;
 
@@ -15,8 +14,8 @@ import java.util.function.Supplier;
 
 public class LimelightFilters {
 
-	public static Filter detectedObjectFilter(Limelight limelight, DetectedObjectType... typesToReturn) {
-		return ObjectDetectionFilters.onlyTheseTypes(() -> LimelightHelpers.getDetectorClass(limelight.getName()), typesToReturn);
+	public static Filter detectedObjectFilter(Limelight limelight) {
+		return Filter.nonFilteringFilter();
 	}
 
 	public static Filter megaTag1Filter(
@@ -26,14 +25,18 @@ public class LimelightFilters {
 		Translation2d robotInFieldTolerance,
 		Rotation2d yawAtAngleTolerance
 	) {
+		double timestamp = limelight.getMT1RawData().timestampSeconds();
 		return MegaTagFilters.isRobotInField(() -> limelight.getMT1RawData().pose().getTranslation(), robotInFieldTolerance)
 			.and(
-				MegaTagFilters.isYawAtExpectedAngle(
-					() -> limelight.getMT1RawData().pose().getRotation(),
-					() -> wantedYawAtTimestamp.apply(limelight.getMT1RawData().timestampSeconds()),
-					isYawCalibrated,
-					yawAtAngleTolerance
-				)
+				MegaTagFilters.doesYawExistAtTimestamp(timestamp, wantedYawAtTimestamp)
+					.and(
+						MegaTagFilters.isYawAtExpectedAngle(
+							() -> limelight.getMT1RawData().pose().getRotation(),
+							() -> wantedYawAtTimestamp.apply(timestamp).get(),
+							isYawCalibrated,
+							yawAtAngleTolerance
+						)
+					)
 			);
 	}
 
@@ -44,14 +47,18 @@ public class LimelightFilters {
 		Translation2d robotInFieldTolerance,
 		Rotation2d yawAtAngleTolerance
 	) {
+		double timestamp = limelight.getMT2RawData().timestampSeconds();
 		return MegaTagFilters.isRobotInField(() -> limelight.getMT2RawData().pose().getTranslation(), robotInFieldTolerance)
 			.and(
-				MegaTagFilters.isYawAtExpectedAngle(
-					() -> limelight.getMT2RawData().pose().getRotation(),
-					() -> wantedYawAtTimestamp.apply(limelight.getMT2RawData().timestampSeconds()),
-					isYawCalibrated,
-					yawAtAngleTolerance
-				)
+				MegaTagFilters.doesYawExistAtTimestamp(timestamp, wantedYawAtTimestamp)
+					.and(
+						MegaTagFilters.isYawAtExpectedAngle(
+							() -> limelight.getMT2RawData().pose().getRotation(),
+							() -> wantedYawAtTimestamp.apply(timestamp).get(),
+							isYawCalibrated,
+							yawAtAngleTolerance
+						)
+					)
 			)
 			.and(MegaTagFilters.isYawNotZero(() -> limelight.getMT2RawData().pose().getRotation()));
 	}
@@ -70,16 +77,18 @@ public class LimelightFilters {
 
 	private static class MegaTagFilters {
 
+		private static Filter doesYawExistAtTimestamp(double timestamp, Function<Double, Optional<Rotation2d>> getYawAtTimestamp) {
+			return () -> getYawAtTimestamp.apply(timestamp).isPresent();
+		}
+
 		private static Filter isYawAtExpectedAngle(
 			Supplier<Rotation2d> cameraSuppliedRobotYaw,
-			Supplier<Optional<Rotation2d>> expectedYawSupplier,
+			Supplier<Rotation2d> expectedYawSupplier,
 			Supplier<Boolean> isExpectedYawCalibrated,
 			Rotation2d expectedYawTolerance
 		) {
 			return () -> !isExpectedYawCalibrated.get()
-				|| expectedYawSupplier.get()
-					.map(wantedAngle -> ToleranceMath.isNearWrapped(wantedAngle, cameraSuppliedRobotYaw.get(), expectedYawTolerance))
-					.orElse(false);
+				|| ToleranceMath.isNearWrapped(expectedYawSupplier.get(), cameraSuppliedRobotYaw.get(), expectedYawTolerance);
 		}
 
 		private static Filter isYawNotZero(Supplier<Rotation2d> robotYaw) {

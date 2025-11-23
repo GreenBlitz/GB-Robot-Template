@@ -20,17 +20,6 @@ public class ShooterStateHandler {
     private ShooterState currentState;
     private final Supplier<Double> distanceFromTower;
 
-    public ShooterStateHandler(Arm turret, Arm hood, FlyWheel flyWheel, Supplier<Double> distanceFromTower) {
-        this.turret = turret;
-        this.hood = hood;
-        this.flyWheel = flyWheel;
-        this.distanceFromTower = distanceFromTower;
-    }
-
-    public ShooterState getCurrentState() {
-        return currentState;
-    }
-
     public static final InterpolationMap<Double, Rotation2d> HOOD_INTERPOLATION_MAP = new InterpolationMap<Double, Rotation2d>(
             InverseInterpolator.forDouble(),
             InterpolationMap.interpolatorForRotation2d(),
@@ -42,6 +31,17 @@ public class ShooterStateHandler {
             InterpolationMap.interpolatorForRotation2d(),
             Map.of()
     );
+
+    public ShooterStateHandler(Arm turret, Arm hood, FlyWheel flyWheel, Supplier<Double> distanceFromTower) {
+        this.turret = turret;
+        this.hood = hood;
+        this.flyWheel = flyWheel;
+        this.distanceFromTower = distanceFromTower;
+    }
+
+    public ShooterState getCurrentState() {
+        return currentState;
+    }
 
     public static Rotation2d hoodInterpolation(Supplier<Double> distanceFromTower) {
         return HOOD_INTERPOLATION_MAP.get(distanceFromTower.get());
@@ -57,6 +57,7 @@ public class ShooterStateHandler {
                 switch (shooterState){
                     case STAY_IN_PLACE -> stayInPlace();
                     case IDLE -> idle();
+                    case SHOOT_WHILE_DRIVE -> shootWhileDrive();
                 }
         );
     }
@@ -73,7 +74,13 @@ public class ShooterStateHandler {
         return new ParallelCommandGroup(
                 turret.getCommandsBuilder().stayInPlace(),
                 hood.getCommandsBuilder().setTargetPosition(hoodInterpolation(distanceFromTower)),
-                flyWheel.getCommandBuilder().setTargetVelocity(flywheelInterpolation(distanceFromTower))
-        );
+                flyWheel.getCommandBuilder().setTargetVelocity(ShooterConstants.DEFAULT_FLYWHEEL_ROTATIONS_PER_SECOND));
+    }
+
+    private Command shootWhileDrive() {
+        return new ParallelCommandGroup(
+        turret.getCommandsBuilder().stayInPlace(),
+        hood.getCommandsBuilder().setTargetPosition(hoodInterpolation(distanceFromTower)),
+        flyWheel.getCommandBuilder().setTargetVelocity(flywheelInterpolation(distanceFromTower)));
     }
 }

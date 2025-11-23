@@ -75,4 +75,11 @@ public class AngleMath {
 		return toTransform.transformBy(new Transform3d(new Pose3d(), transformByInToTransformSpace));
 	}
 
+	public static Pose3d getCameraAngle(Pose3d tagToRobot, Pose3d tagToCamera) {
+		return new Pose3d().rotateAround(
+			tagToCamera.getTranslation().plus(tagToRobot.getTranslation().minus(tagToCamera.getTranslation())),
+			tagToRobot.getRotation().minus(tagToCamera.getRotation())
+		);
+	}
+
 }

@@ -39,8 +39,8 @@ public class CameraCalibration extends Command {
 		this.cosZSum = 0;
 	}
 
-	public Pose3d correctCameraToTag() {
-		Pose3d limelightCameraToTag = LimelightHelpers.getCameraPose3d_TargetSpace(limelight.getName());
+	public Pose3d correctTagToCamera() {
+		Pose3d limelightCameraToTag = LimelightHelpers.getTargetPose3d_CameraSpace(limelight.getName());
 		return new Pose3d(
 			limelightCameraToTag.getZ(),
 			limelightCameraToTag.getX(),
@@ -54,7 +54,7 @@ public class CameraCalibration extends Command {
 	}
 
 	public void addToPoseList() {
-		Pose3d currentPose = LimelightCalculations.getCameraToRobot(tagToRobot, correctCameraToTag());
+		Pose3d currentPose = LimelightCalculations.getCameraToRobot(tagToRobot, correctTagToCamera());
 		posesAmount++;
 		translationSum = translationSum.plus(currentPose.getTranslation());
 		sinXSum += Math.sin(currentPose.getRotation().getX());
@@ -84,19 +84,21 @@ public class CameraCalibration extends Command {
 //		Logger.recordOutput(logPath + "/cameraToRobotPose2d", getAvgPose().toPose2d());
 //		LoggerUtils.logRotation3d(getAvgPose().getRotation(), logPath + "/cameraToRobot", AngleUnit.DEGREES);
 //		Logger.recordOutput(logPath + "/cameraToRobotPoseAmount", posesAmount);
-		Logger.recordOutput(logPath + "cameraToRobot", LimelightCalculations.getCameraToRobot(tagToRobot, correctCameraToTag()));
+		Logger.recordOutput(logPath + "cameraToRobot", LimelightCalculations.getCameraToRobot(tagToRobot, correctTagToCamera()));
 		Logger.recordOutput(
 			logPath + "cameraToRobotRoll",
-			Rotation2d.fromRadians(LimelightCalculations.getCameraToRobot(tagToRobot, correctCameraToTag()).getRotation().getX()).getDegrees()
+			Rotation2d.fromRadians(LimelightCalculations.getCameraToRobot(tagToRobot, correctTagToCamera()).getRotation().getX()).getDegrees()
 		);
 		Logger.recordOutput(
 			logPath + "cameraToRobotPitch",
-			Rotation2d.fromRadians(LimelightCalculations.getCameraToRobot(tagToRobot, correctCameraToTag()).getRotation().getY()).getDegrees()
+			Rotation2d.fromRadians(LimelightCalculations.getCameraToRobot(tagToRobot, correctTagToCamera()).getRotation().getY()).getDegrees()
 		);
 		Logger.recordOutput(
 			logPath + "cameraToRobotYaw",
-			Rotation2d.fromRadians(LimelightCalculations.getCameraToRobot(tagToRobot, correctCameraToTag()).getRotation().getZ()).getDegrees()
+			Rotation2d.fromRadians(LimelightCalculations.getCameraToRobot(tagToRobot, correctTagToCamera()).getRotation().getZ()).getDegrees()
 		);
+		Logger.recordOutput(logPath + "cameraAngle",
+				AngleMath.getCameraAngle(tagToRobot, correctTagToCamera()));
 	}
 
 	@Override

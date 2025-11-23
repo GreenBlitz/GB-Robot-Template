@@ -25,7 +25,10 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	private final String name;
 	private final String logPath;
 	private final Pose3d robotRelativeCameraPose;
+	private final LimelightVersion version;
+
 	private final ArrayList<DetectedObjectObservation> detectedObjectObservations;
+	private final ArrayList<DetectedObjectObservation> detectedColorObservations;
 
 	private final LimelightInputsSet inputs;
 
@@ -33,6 +36,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	private RobotPoseObservation mt2PoseObservation;
 
 	private Function<LimelightHelpers.RawDetection, Boolean> detectedObjectFilter;
+	private Function<LimelightHelpers.RawTarget, Boolean> detectedColorFilter;
 	private Filter mt1PoseFilter;
 	private Filter mt2PoseFilter;
 
@@ -41,21 +45,25 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	private LimelightPipeline pipeline;
 
-	public Limelight(String name, String logPathPrefix, Pose3d robotRelativeCameraPose, LimelightPipeline pipeline) {
+	public Limelight(String name, String logPathPrefix, Pose3d robotRelativeCameraPose, LimelightVersion version, LimelightPipeline pipeline) {
 		this.name = name;
 		this.logPath = logPathPrefix + "/" + name;
 
 		this.robotRelativeCameraPose = robotRelativeCameraPose;
 		setRobotRelativeCameraPose(robotRelativeCameraPose);
 
+		this.version = version;
+
 		this.detectedObjectObservations = new ArrayList<>();
+		this.detectedColorObservations = new ArrayList<>();
 
 		this.mt1PoseObservation = new RobotPoseObservation();
 		this.mt2PoseObservation = new RobotPoseObservation();
 
 		this.inputs = new LimelightInputsSet();
 
-		this.detectedObjectFilter = (rawDetection) -> true;
+		this.detectedObjectFilter = rawDetection -> true;
+		this.detectedColorFilter = rawTarget -> true;
 		this.mt1PoseFilter = Filter.nonFilteringFilter();
 		this.mt2PoseFilter = Filter.nonFilteringFilter();
 
@@ -69,9 +77,9 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		if (pipeline.isDetectingObjects()) {
 			detectedObjectObservations.clear();
 
-			inputs.ObjectDetectionInputs().target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
-			inputs.ObjectDetectionInputs().rawDetections = LimelightHelpers.getRawDetections(name);
-			Logger.processInputs(logPath + "/ObjectDetectionInputs", inputs.ObjectDetectionInputs());
+			inputs.objectDetectionInputs().target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
+			inputs.objectDetectionInputs().rawDetections = LimelightHelpers.getRawDetections(name);
+			Logger.processInputs(logPath + "/objectDetectionInputs", inputs.objectDetectionInputs());
 
 			if (getTarget2dValues().isValid()) {
 				for (LimelightHelpers.RawDetection rawDetection : getRawDetections()) {
@@ -93,6 +101,34 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 				}
 				Logger
 					.recordOutput(logPath + "/detectedObjectObservations", detectedObjectObservations.toArray(new DetectedObjectObservation[0]));
+			}
+		}
+	}
+
+	public void updateColorDetection() {
+		inputs.colorDetectionInputs().target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
+		inputs.colorDetectionInputs().rawTargets = LimelightHelpers.getRawTargets(name);
+		Logger.processInputs(logPath + "/colorDetectionInputs", inputs.colorDetectionInputs());
+
+		if (getTarget2dValues().isValid()) {
+			for (LimelightHelpers.RawTarget rawTarget : getRawTargets()) {
+				if (detectedColorFilter.apply(rawTarget)) {
+					pipeline.getDetectedObjectType(0).ifPresent(objectType -> {
+						DetectedObjectObservation observation = ObjectDetectionMath.getDetectedObjectObservation(
+							robotRelativeCameraPose,
+							objectType,
+							version.getHorizontalFieldOfView().times(0.5 * rawTarget.txnc()),
+							version.getVerticalFieldOfView().times(0.5 * rawTarget.tync()),
+							getTarget2dTimestampSeconds(getTarget2dValues())
+						);
+
+						if (doesObservationExist(observation)) {
+							detectedColorObservations.add(observation);
+						}
+					});
+				}
+				Logger
+					.recordOutput(logPath + "/detectedColorObservations", detectedColorObservations.toArray(new DetectedObjectObservation[0]));
 			}
 		}
 	}
@@ -153,8 +189,19 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		return Optional.empty();
 	}
 
+    public List<DetectedObjectObservation> getRobotRelativeColorDetections() {
+        if (pipeline.isDetectingObjects()) {
+            return (ArrayList<DetectedObjectObservation>) detectedColorObservations.clone();
+        }
+        return new ArrayList<>();
+    }
+
 	public Function<LimelightHelpers.RawDetection, Boolean> getDetectedObjectFilter() {
 		return detectedObjectFilter;
+	}
+
+	public Function<LimelightHelpers.RawTarget, Boolean> getDetectedColorFilter() {
+		return detectedColorFilter;
 	}
 
 	public Filter getMt1PoseFilter() {
@@ -187,6 +234,10 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		this.detectedObjectFilter = detectedObjectFilter;
 	}
 
+	public void setDetectedColorFilter(Function<LimelightHelpers.RawTarget, Boolean> detectedColorFilter) {
+		this.detectedColorFilter = detectedColorFilter;
+	}
+
 	public void setMT1PoseFilter(Filter mt1RobotPoseFilter) {
 		this.mt1PoseFilter = mt1RobotPoseFilter;
 	}
@@ -204,11 +255,15 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	protected LimelightTarget2dValues getTarget2dValues() {
-		return inputs.ObjectDetectionInputs().target2dValues;
+		return inputs.objectDetectionInputs().target2dValues;
 	}
 
 	protected LimelightHelpers.RawDetection[] getRawDetections() {
-		return inputs.ObjectDetectionInputs().rawDetections;
+		return inputs.objectDetectionInputs().rawDetections;
+	}
+
+	protected LimelightHelpers.RawTarget[] getRawTargets() {
+		return inputs.colorDetectionInputs().rawTargets;
 	}
 
 	protected LimelightHelpers.PoseEstimate getMT1RawData() {

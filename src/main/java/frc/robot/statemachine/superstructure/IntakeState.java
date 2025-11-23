@@ -3,6 +3,7 @@ package frc.robot.statemachine.superstructure;
 public enum IntakeState {
 
 	CLOSED,
-	INTAKE;
+	INTAKE,
+	STAY_IN_PLACE;
 
 }

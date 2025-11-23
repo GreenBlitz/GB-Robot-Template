@@ -29,7 +29,7 @@ public class Superstructure {
 
 		this.targetChecks = new TargetChecks(this);
 
-		this.currentState = null;
+		this.currentState = RobotState.STAY_IN_PLACE;
 		this.isSubsystemRunningIndependently = false;
 		this.logPath = logPath;
 
@@ -57,9 +57,9 @@ public class Superstructure {
 	public Command setState(RobotState robotState) {
 		return switch (robotState) {
 			case STAY_IN_PLACE -> stayInPlace();
+			case DRIVE -> idle();
 			case INTAKE -> intake();
 			case SHOOT -> shoot();
-			case DRIVE -> idle();
 			case SHOOT_AND_INTAKE -> shootAndIntake();
 			case PRE_SHOOT -> preShoot();
 		};
@@ -69,7 +69,7 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 			shooterStateHandler.setState(ShooterState.STAY_IN_PLACE),
 			funnelStateHandler.setState(FunnelState.STAY_IN_PLACE),
-			intakeStateHandler.setState(IntakeState.INTAKE)
+			intakeStateHandler.setState(IntakeState.STAY_IN_PLACE)
 		);
 	}
 
@@ -108,7 +108,7 @@ public class Superstructure {
 	private Command preShoot() {
 		return new ParallelCommandGroup(
 			shooterStateHandler.setState(ShooterState.SHOOT),
-			funnelStateHandler.setState(FunnelState.STAY_IN_PLACE),
+			funnelStateHandler.setState(FunnelState.DRIVE),
 			intakeStateHandler.setState(IntakeState.CLOSED)
 		);
 	}

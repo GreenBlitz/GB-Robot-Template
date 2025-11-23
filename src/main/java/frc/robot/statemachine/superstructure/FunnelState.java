@@ -6,4 +6,5 @@ public enum FunnelState {
 	INTAKE,
 	SHOOT,
 	DRIVE
+
 }

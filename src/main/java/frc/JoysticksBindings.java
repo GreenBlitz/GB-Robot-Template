@@ -109,6 +109,14 @@ public class JoysticksBindings {
 		joystick.POV_LEFT.onTrue(hood.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(50)));
 	}
 
+	public static void applyIntakeRollerCalibrationsBindings(SmartJoystick joystick, Robot robot) {
+		joystick.L1.onTrue(new InstantCommand(() -> robot.getIntakeRoller().getCommandsBuilder().setIsSubsystemRunningIndependently(true)));
+		joystick.L3.onTrue(new InstantCommand(() -> robot.getIntakeRoller().getCommandsBuilder().setIsSubsystemRunningIndependently(false)));
+
+		joystick.POV_UP.onTrue(robot.getIntakeRoller().getCommandsBuilder().setVoltage(6));
+		joystick.POV_DOWN.onTrue(robot.getIntakeRoller().getCommandsBuilder().setVoltage(-6));
+	}
+
 	private static void applyBellyCalibrationBindings(Roller belly, SmartJoystick joystick, double calibrationMaxPower) {
 		joystick.POV_DOWN.onTrue(new InstantCommand(() -> belly.getCommandsBuilder().setIsSubsystemRunningIndependently(true)));
 		joystick.POV_UP.onTrue(new InstantCommand(() -> belly.getCommandsBuilder().setIsSubsystemRunningIndependently(false)));

@@ -37,8 +37,7 @@ public class Robot {
 	private final FlyWheel flyWheel;
 	private final Roller intakeRoller;
 	private final Arm hood;
-	private final IDigitalInput intakeRollerDigitalInput;
-
+	private final IDigitalInput intakeRollerSensor;
 
 	private final Roller belly;
 	private final Roller omni;
@@ -59,8 +58,9 @@ public class Robot {
 
 		Pair<Roller, IDigitalInput> intakeRollerAndDigitalInput = createIntakeRollers();
 		this.intakeRoller = intakeRollerAndDigitalInput.getFirst();
-		this.intakeRollerDigitalInput = intakeRollerAndDigitalInput.getSecond();
+		this.intakeRollerSensor = intakeRollerAndDigitalInput.getSecond();
 		BrakeStateManager.add(() -> intakeRoller.setBrake(true), () -> intakeRoller.setBrake(false));
+
 		this.belly = createBelly();
 		BrakeStateManager.add(() -> belly.setBrake(true), () -> belly.setBrake(false));
 
@@ -77,10 +77,6 @@ public class Robot {
 		if (TurretConstants.MIN_POSITION.getRadians() > turret.getPosition().getRadians()) {
 			turret.setPosition(TurretConstants.MIN_POSITION);
 		}
-	}
-
-	public IDigitalInput getIntakeRollerDigitalInput() {
-		return intakeRollerDigitalInput;
 	}
 
 	public void periodic() {
@@ -101,9 +97,9 @@ public class Robot {
 			IntakeRollerConstants.CURRENT_LIMIT,
 			IntakeRollerConstants.MOMENT_OF_INERTIA,
 			IntakeRollerConstants.DIGITAL_INPUT_NAME,
-			IntakeRollerConstants.DEBOUNCE,
-			IntakeRollerConstants.IS_FORWARD_LIMITSWITCH,
-			IntakeRollerConstants.IS_LIMITSWITCH_INVERTED
+			IntakeRollerConstants.DEBOUNCE_TIME,
+			IntakeRollerConstants.IS_FORWARD_LIMIT_SWITCH,
+			IntakeRollerConstants.IS_LIMIT_SWITCH_INVERTED
 		);
 	}
 
@@ -150,6 +146,10 @@ public class Robot {
 
 	public FlyWheel getFlyWheel() {
 		return flyWheel;
+	}
+
+	public IDigitalInput getIntakeRollerSensor() {
+		return intakeRollerSensor;
 	}
 
 	public Roller getIntakeRoller() {

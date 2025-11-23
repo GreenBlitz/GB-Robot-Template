@@ -7,8 +7,8 @@ public class IntakeRollerConstants {
 	public final static double MOMENT_OF_INERTIA = 0.0001;
 	public final static boolean IS_INVERTED = false;
 	public final static String DIGITAL_INPUT_NAME = "lol";
-	public final static double DEBOUNCE = 0.001;
-	public final static boolean IS_FORWARD_LIMITSWITCH = true;
-	public final static boolean IS_LIMITSWITCH_INVERTED = true;
+	public final static double DEBOUNCE_TIME = 0.001;
+	public final static boolean IS_FORWARD_LIMIT_SWITCH = true;
+	public final static boolean IS_LIMIT_SWITCH_INVERTED = true;
 
 }

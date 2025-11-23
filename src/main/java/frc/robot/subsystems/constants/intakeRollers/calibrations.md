@@ -6,6 +6,8 @@ Intake rollers calibrations
 - [ ] Gear ratio
 - [ ] Current limit
 - [ ] Inverted
-- [ ] Digital input name
-- [ ] Digital input inverted
-- [ ] Digital input forward
+
+#### Digital input
+- [ ] name
+- [ ] Is inverted
+- [ ] forward or backward

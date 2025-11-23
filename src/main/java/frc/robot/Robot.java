@@ -99,7 +99,7 @@ public class Robot {
 			IntakeRollerConstants.DIGITAL_INPUT_NAME,
 			IntakeRollerConstants.DEBOUNCE_TIME,
 			IntakeRollerConstants.IS_FORWARD_LIMIT_SWITCH,
-			IntakeRollerConstants.IS_LIMIT_SWITCH_INVERTED
+			IntakeRollerConstants.IS_SENSOR_INVERTED
 		);
 	}
 

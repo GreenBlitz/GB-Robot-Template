@@ -9,6 +9,6 @@ public class IntakeRollerConstants {
 	public final static String DIGITAL_INPUT_NAME = "lol";
 	public final static double DEBOUNCE_TIME = 0.001;
 	public final static boolean IS_FORWARD_LIMIT_SWITCH = true;
-	public final static boolean IS_LIMIT_SWITCH_INVERTED = true;
+	public final static boolean IS_SENSOR_INVERTED = true;
 
 }

@@ -232,13 +232,6 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 			.transformBy(new Transform3d(new Pose3d(), robotRelativeCameraPoseSupplier.get()).inverse())).toPose2d();
 	}
 
-	protected static double getEstimateTimestampSeconds(LimelightHelpers.PoseEstimate poseEstimate) {
-		if (poseEstimate.timestampSeconds() == 0) {
-			return 0;
-		}
-		return TimeUtil.getCurrentTimeSeconds() - Conversions.milliSecondsToSeconds(poseEstimate.latency());
-	}
-
 	private static double getTarget2dTimestampSeconds(LimelightTarget2dValues target2dValues) {
 		return TimeUtil.getCurrentTimeSeconds()
 			- Conversions.milliSecondsToSeconds(target2dValues.targetLatencyMilliseconds() + target2dValues.captureLatencyMilliseconds());

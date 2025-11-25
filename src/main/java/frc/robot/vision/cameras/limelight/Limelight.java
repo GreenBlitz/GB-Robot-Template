@@ -97,8 +97,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 					}
 				}
 			}
-            Logger
-                    .recordOutput(logPath + "/detectedObjectObservations", detectedObjectObservations.toArray(new DetectedObjectObservation[0]));
+			Logger.recordOutput(logPath + "/detectedObjectObservations", detectedObjectObservations.toArray(new DetectedObjectObservation[0]));
 		}
 	}
 
@@ -130,10 +129,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 				}
 			}
 
-            Logger.recordOutput(
-                    logPath + "/detectedColorObservations",
-                    detectedColorObservations.toArray(new DetectedObjectObservation[0])
-            );
+			Logger.recordOutput(logPath + "/detectedColorObservations", detectedColorObservations.toArray(new DetectedObjectObservation[0]));
 		}
 	}
 

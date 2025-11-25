@@ -118,7 +118,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 								robotRelativeCameraPose,
 								objectType,
 								Rotation2d.fromDegrees(rawTarget.txnc()),
-                                Rotation2d.fromDegrees(rawTarget.tync()),
+								Rotation2d.fromDegrees(rawTarget.tync()),
 								getTarget2dTimestampSeconds(getTarget2dValues())
 							);
 

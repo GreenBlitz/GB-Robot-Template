@@ -27,7 +27,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	private final Pose3d robotRelativeCameraPose;
 
 	private final ArrayList<DetectedObjectObservation> detectedObjectObservations;
-	private final ArrayList<DetectedObjectObservation> detectedColorObservations;
+	private final ArrayList<DetectedObjectObservation> colorDetections;
 
 	private final LimelightInputsSet inputs;
 
@@ -35,7 +35,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	private RobotPoseObservation mt2PoseObservation;
 
 	private Function<LimelightHelpers.RawDetection, Boolean> detectedObjectFilter;
-	private Function<LimelightHelpers.RawTarget, Boolean> detectedColorFilter;
+	private Function<LimelightHelpers.RawTarget, Boolean> colorDetectionFilter;
 	private Filter mt1PoseFilter;
 	private Filter mt2PoseFilter;
 
@@ -52,7 +52,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		setRobotRelativeCameraPose(robotRelativeCameraPose);
 
 		this.detectedObjectObservations = new ArrayList<>();
-		this.detectedColorObservations = new ArrayList<>();
+		this.colorDetections = new ArrayList<>();
 
 		this.mt1PoseObservation = new RobotPoseObservation();
 		this.mt2PoseObservation = new RobotPoseObservation();
@@ -60,7 +60,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		this.inputs = new LimelightInputsSet();
 
 		this.detectedObjectFilter = rawDetection -> true;
-		this.detectedColorFilter = rawTarget -> true;
+		this.colorDetectionFilter = rawTarget -> true;
 		this.mt1PoseFilter = Filter.nonFilteringFilter();
 		this.mt2PoseFilter = Filter.nonFilteringFilter();
 
@@ -103,7 +103,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	public void updateColorDetection() {
 		if (pipeline.isDetectingObjects()) {
-			detectedColorObservations.clear();
+			colorDetections.clear();
 
 			inputs.colorDetectionInputs().target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
 			inputs.colorDetectionInputs().rawTargets = LimelightHelpers.getRawTargets(name);
@@ -111,7 +111,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 			if (getTarget2dValues().isValid()) {
 				for (LimelightHelpers.RawTarget rawTarget : getRawTargets()) {
-					if (detectedColorFilter.apply(rawTarget)) {
+					if (colorDetectionFilter.apply(rawTarget)) {
 						pipeline.getDetectedObjectType(0).ifPresent(objectType -> {
 							DetectedObjectObservation observation = ObjectDetectionMath.getDetectedObjectObservation(
 								robotRelativeCameraPose,
@@ -122,14 +122,14 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 							);
 
 							if (doesObservationExist(observation)) {
-								detectedColorObservations.add(observation);
+								colorDetections.add(observation);
 							}
 						});
 					}
 				}
 			}
 
-			Logger.recordOutput(logPath + "/detectedColorObservations", detectedColorObservations.toArray(new DetectedObjectObservation[0]));
+			Logger.recordOutput(logPath + "/colorDetections", colorDetections.toArray(new DetectedObjectObservation[0]));
 		}
 	}
 
@@ -191,7 +191,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	public List<DetectedObjectObservation> getRobotRelativeColorDetections() {
 		if (pipeline.isDetectingObjects()) {
-			return (ArrayList<DetectedObjectObservation>) detectedColorObservations.clone();
+			return (ArrayList<DetectedObjectObservation>) colorDetections.clone();
 		}
 		return new ArrayList<>();
 	}
@@ -200,8 +200,8 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		return detectedObjectFilter;
 	}
 
-	public Function<LimelightHelpers.RawTarget, Boolean> getDetectedColorFilter() {
-		return detectedColorFilter;
+	public Function<LimelightHelpers.RawTarget, Boolean> getColorDetectionFilter() {
+		return colorDetectionFilter;
 	}
 
 	public Filter getMt1PoseFilter() {
@@ -234,8 +234,8 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		this.detectedObjectFilter = detectedObjectFilter;
 	}
 
-	public void setDetectedColorFilter(Function<LimelightHelpers.RawTarget, Boolean> detectedColorFilter) {
-		this.detectedColorFilter = detectedColorFilter;
+	public void setColorDetectionFilter(Function<LimelightHelpers.RawTarget, Boolean> colorDetectionFilter) {
+		this.colorDetectionFilter = colorDetectionFilter;
 	}
 
 	public void setMT1PoseFilter(Filter mt1RobotPoseFilter) {

@@ -25,7 +25,6 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	private final String name;
 	private final String logPath;
 	private final Pose3d robotRelativeCameraPose;
-	private final LimelightVersion version;
 
 	private final ArrayList<DetectedObjectObservation> detectedObjectObservations;
 	private final ArrayList<DetectedObjectObservation> detectedColorObservations;
@@ -45,14 +44,12 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	private LimelightPipeline pipeline;
 
-	public Limelight(String name, String logPathPrefix, Pose3d robotRelativeCameraPose, LimelightVersion version, LimelightPipeline pipeline) {
+	public Limelight(String name, String logPathPrefix, Pose3d robotRelativeCameraPose, LimelightPipeline pipeline) {
 		this.name = name;
 		this.logPath = logPathPrefix + "/" + name;
 
 		this.robotRelativeCameraPose = robotRelativeCameraPose;
 		setRobotRelativeCameraPose(robotRelativeCameraPose);
-
-		this.version = version;
 
 		this.detectedObjectObservations = new ArrayList<>();
 		this.detectedColorObservations = new ArrayList<>();
@@ -120,8 +117,8 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 							DetectedObjectObservation observation = ObjectDetectionMath.getDetectedObjectObservation(
 								robotRelativeCameraPose,
 								objectType,
-								version.getHorizontalFieldOfView().times(0.5 * rawTarget.txnc()),
-								version.getVerticalFieldOfView().times(0.5 * rawTarget.tync()),
+								Rotation2d.fromDegrees(rawTarget.txnc()),
+                                Rotation2d.fromDegrees(rawTarget.tync()),
 								getTarget2dTimestampSeconds(getTarget2dValues())
 							);
 

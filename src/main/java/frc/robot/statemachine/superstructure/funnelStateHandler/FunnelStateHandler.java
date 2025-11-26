@@ -32,13 +32,14 @@ public class FunnelStateHandler {
     }
 
     public Command setState(FunnelState state) {
-        return switch (state) {
+        Command command = switch (state) {
             case DRIVE -> drive();
             case SHOOT -> shoot();
             case INTAKE -> intake();
             case STOP -> stop();
             case CALIBRATION -> calibration();
         };
+        return new ParallelCommandGroup(new InstantCommand(() -> Logger.recordOutput(logPath, state.name())), command);
     }
 
     public boolean isBallAtSensor() {
@@ -47,7 +48,6 @@ public class FunnelStateHandler {
 
     private Command drive() {
         return new ParallelCommandGroup(
-                new InstantCommand(() -> Logger.recordOutput(logPath, "DRIVE")),
                 omni.getCommandsBuilder().stop(),
                 belly.getCommandsBuilder().rollRotationsAtVoltageForwards(1, FunnelState.DRIVE.getBellyVoltage()).until(this::isBallAtSensor)
         );
@@ -55,7 +55,6 @@ public class FunnelStateHandler {
 
     private Command shoot() {
         return new ParallelCommandGroup(
-                new InstantCommand(() -> Logger.recordOutput(logPath, "SHOOT")),
                 omni.getCommandsBuilder().setVoltage(FunnelState.SHOOT.getOmniVoltage()),
                 belly.getCommandsBuilder().setVoltage(FunnelState.SHOOT.getBellyVoltage())
         );
@@ -63,7 +62,6 @@ public class FunnelStateHandler {
 
     private Command intake() {
         return new ParallelCommandGroup(
-                new InstantCommand(() -> Logger.recordOutput(logPath, "INTAKE")),
                 omni.getCommandsBuilder().stop(),
                 belly.getCommandsBuilder().setVoltage(FunnelState.INTAKE.getBellyVoltage())
         );
@@ -71,13 +69,11 @@ public class FunnelStateHandler {
 
     private Command stop() {
         return new ParallelCommandGroup(
-                new InstantCommand(() -> Logger.recordOutput(logPath, "STOP")),
                 omni.getCommandsBuilder().stop(), belly.getCommandsBuilder().stop());
     }
 
     private Command calibration() {
         return new DeferredCommand(() -> new ParallelCommandGroup(
-                new InstantCommand(() -> Logger.recordOutput(logPath, "CALIBRATION")),
                 omni.getCommandsBuilder().setPower(() -> omniCalibrationPower.get()),
                 belly.getCommandsBuilder().setPower(() -> bellyCalibrationPower.get())
         ), Set.of(omni,belly));

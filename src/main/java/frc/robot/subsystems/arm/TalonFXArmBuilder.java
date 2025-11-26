@@ -201,8 +201,8 @@ public class TalonFXArmBuilder {
 		FeedbackConfigs feedbackConfigs,
 		Slot0Configs simulationConfigSlots,
 		Slot0Configs realConfigSlots,
-		Rotation2d forwardLimitSwitch,
-		Rotation2d reverseLimitSwitch,
+		Rotation2d forwardSoftwareLimit,
+		Rotation2d reverseSoftwareLimit,
 		boolean isInverted,
 		double currentLimit
 	) {
@@ -218,13 +218,10 @@ public class TalonFXArmBuilder {
 		}
 		config.Feedback = feedbackConfigs;
 
-		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = reverseLimitSwitch.getRotations();
-		config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = forwardLimitSwitch.getRotations();
+		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = reverseSoftwareLimit.getRotations();
+		config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = forwardSoftwareLimit.getRotations();
 		config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
 		config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-
-		config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-		config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
 
 		config.CurrentLimits.StatorCurrentLimitEnable = true;
 		config.CurrentLimits.StatorCurrentLimit = currentLimit;

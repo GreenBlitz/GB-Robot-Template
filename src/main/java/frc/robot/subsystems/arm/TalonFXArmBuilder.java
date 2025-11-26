@@ -249,7 +249,7 @@ public class TalonFXArmBuilder {
 			new SingleJointedArmSim(
 				LinearSystemId.createDCMotorSystem(
 					DCMotor.getKrakenX60Foc(followerConfig.followerIDs.length + 1),
-					simulationConstants.momentOfInertiaMeterSquared(),
+					simulationConstants.momentOfInertiaKgMeterSquared(),
 					gearing
 				),
 				DCMotor.getKrakenX60Foc(followerConfig.followerIDs.length + 1),

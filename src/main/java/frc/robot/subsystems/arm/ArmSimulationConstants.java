@@ -6,6 +6,6 @@ public record ArmSimulationConstants(
 	Rotation2d maxPosition,
 	Rotation2d minPosition,
 	Rotation2d startingPosition,
-	double momentOfInertiaMeterSquared,
+	double momentOfInertiaKgMeterSquared,
 	double armLengthMeters
 ) {}

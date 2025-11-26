@@ -42,9 +42,9 @@ public class TalonFXArmBuilder {
 		double currentLimit,
 		double signalsFrequency,
 		double arbitraryFeedForward,
-        Rotation2d forwardSoftwareLimit,
-        Rotation2d reverseSoftwareLimit,
-        ArmSimulationConstants simulationConstants,
+		Rotation2d forwardSoftwareLimit,
+		Rotation2d reverseSoftwareLimit,
+		ArmSimulationConstants simulationConstants,
 		Rotation2d defaultMaxAccelerationRotation2dPerSecondSquare,
 		Rotation2d defaultMaxVelocityRotation2dPerSecond
 	) {
@@ -55,8 +55,8 @@ public class TalonFXArmBuilder {
 			sysIdRoutineConfig,
 			buildSimulation(
 				simulationConstants,
-                talonFXFollowerConfig,
-                feedbackConfigs.RotorToSensorRatio * feedbackConfigs.SensorToMechanismRatio
+				talonFXFollowerConfig,
+				feedbackConfigs.RotorToSensorRatio * feedbackConfigs.SensorToMechanismRatio
 			)
 		);
 
@@ -78,8 +78,8 @@ public class TalonFXArmBuilder {
 			feedbackConfigs,
 			simulationSlotsConfig,
 			realSlotsConfig,
-            forwardSoftwareLimit,
-            reverseSoftwareLimit,
+			forwardSoftwareLimit,
+			reverseSoftwareLimit,
 			isInverted,
 			currentLimit
 		);
@@ -110,8 +110,8 @@ public class TalonFXArmBuilder {
 		double currentLimit,
 		double signalsFrequency,
 		double arbitraryFeedForward,
-        Rotation2d forwardSoftwareLimit,
-        Rotation2d reverseSoftwareLimit,
+		Rotation2d forwardSoftwareLimit,
+		Rotation2d reverseSoftwareLimit,
 		ArmSimulationConstants simulationConstants,
 		Rotation2d defaultMaxAccelerationRotation2dPerSecondSquare,
 		Rotation2d defaultMaxVelocityRotation2dPerSecond
@@ -122,8 +122,8 @@ public class TalonFXArmBuilder {
 			talonFXFollowerConfig,
 			sysIdRoutineConfig,
 			buildSimulation(
-                simulationConstants,
-                talonFXFollowerConfig,
+				simulationConstants,
+				talonFXFollowerConfig,
 				feedbackConfigs.RotorToSensorRatio * feedbackConfigs.SensorToMechanismRatio
 			)
 		);
@@ -138,8 +138,8 @@ public class TalonFXArmBuilder {
 			feedbackConfigs,
 			simulationSlotsConfig,
 			realSlotsConfig,
-            forwardSoftwareLimit,
-            reverseSoftwareLimit,
+			forwardSoftwareLimit,
+			reverseSoftwareLimit,
 			isInverted,
 			currentLimit
 		));
@@ -161,8 +161,8 @@ public class TalonFXArmBuilder {
 		double currentLimit,
 		double signalsFrequency,
 		double arbitraryFeedForward,
-        Rotation2d forwardSoftwareLimit,
-        Rotation2d reverseSoftwareLimit,
+		Rotation2d forwardSoftwareLimit,
+		Rotation2d reverseSoftwareLimit,
 		ArmSimulationConstants simulationConstants
 	) {
 		TalonFXMotor motor = new TalonFXMotor(
@@ -171,9 +171,9 @@ public class TalonFXArmBuilder {
 			talonFXFollowerConfig,
 			sysIdRoutineConfig,
 			buildSimulation(
-                simulationConstants,
-                talonFXFollowerConfig,
-                feedbackConfigs.RotorToSensorRatio * feedbackConfigs.SensorToMechanismRatio
+				simulationConstants,
+				talonFXFollowerConfig,
+				feedbackConfigs.RotorToSensorRatio * feedbackConfigs.SensorToMechanismRatio
 			)
 		);
 
@@ -188,8 +188,8 @@ public class TalonFXArmBuilder {
 			feedbackConfigs,
 			simulationSlotsConfig,
 			realSlotsConfig,
-            forwardSoftwareLimit,
-            reverseSoftwareLimit,
+			forwardSoftwareLimit,
+			reverseSoftwareLimit,
 			isInverted,
 			currentLimit
 		);
@@ -201,8 +201,8 @@ public class TalonFXArmBuilder {
 		FeedbackConfigs feedbackConfigs,
 		Slot0Configs simulationConfigSlots,
 		Slot0Configs realConfigSlots,
-        Rotation2d forwardLimitSwitch,
-        Rotation2d reverseLimitSwitch,
+		Rotation2d forwardLimitSwitch,
+		Rotation2d reverseLimitSwitch,
 		boolean isInverted,
 		double currentLimit
 	) {
@@ -218,10 +218,10 @@ public class TalonFXArmBuilder {
 		}
 		config.Feedback = feedbackConfigs;
 
-        config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = reverseLimitSwitch.getRotations();
-        config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = forwardLimitSwitch.getRotations();
-        config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-        config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = reverseLimitSwitch.getRotations();
+		config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = forwardLimitSwitch.getRotations();
+		config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+		config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
 
 		config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
 		config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
@@ -242,19 +242,23 @@ public class TalonFXArmBuilder {
 
 	private static SingleJointedArmSimulation buildSimulation(
 		ArmSimulationConstants simulationConstants,
-        TalonFXFollowerConfig followerConfig,
-        double gearing
+		TalonFXFollowerConfig followerConfig,
+		double gearing
 	) {
 		return new SingleJointedArmSimulation(
 			new SingleJointedArmSim(
-				LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(followerConfig.followerIDs.length + 1), simulationConstants.momentOfInertia(), gearing),
+				LinearSystemId.createDCMotorSystem(
+					DCMotor.getKrakenX60Foc(followerConfig.followerIDs.length + 1),
+					simulationConstants.momentOfInertiaMeterSquared(),
+					gearing
+				),
 				DCMotor.getKrakenX60Foc(followerConfig.followerIDs.length + 1),
 				gearing,
 				simulationConstants.armLengthMeters(),
 				simulationConstants.minPosition().getRadians(),
-                simulationConstants.maxPosition().getRadians(),
+				simulationConstants.maxPosition().getRadians(),
 				false,
-                simulationConstants.startingPosition().getRadians()
+				simulationConstants.startingPosition().getRadians()
 			),
 			gearing
 		);

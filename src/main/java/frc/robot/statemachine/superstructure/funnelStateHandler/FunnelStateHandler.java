@@ -1,16 +1,16 @@
 package frc.robot.statemachine.superstructure.funnelStateHandler;
 
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.hardware.digitalinput.DigitalInputInputs;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.subsystems.roller.Roller;
-import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
+
+import java.util.Set;
 
 public class FunnelStateHandler {
 
@@ -18,7 +18,7 @@ public class FunnelStateHandler {
     private final Roller belly;
     private final String logPath;
     private final IDigitalInput sensor;
-    private final DigitalInputInputsAutoLogged sensorInformation = new DigitalInputInputsAutoLogged();
+    private final DigitalInputInputsAutoLogged sensorInputsAutoLogged = new DigitalInputInputsAutoLogged();
     private final LoggedNetworkNumber bellyCalibrationPower = new LoggedNetworkNumber("BellyPower", 0);
     private final LoggedNetworkNumber omniCalibrationPower = new LoggedNetworkNumber("OmniPower", 0);
 
@@ -27,7 +27,7 @@ public class FunnelStateHandler {
         this.belly = belly;
         this.sensor = sensor;
         this.logPath = logPath + "/FunnelStateHandler";
-        sensor.updateInputs(sensorInformation);
+        sensor.updateInputs(sensorInputsAutoLogged);
     }
 
     public Command setState(FunnelState state) {
@@ -41,7 +41,7 @@ public class FunnelStateHandler {
     }
 
     public boolean isBallAtSensor() {
-        return sensorInformation.debouncedValue;
+        return sensorInputsAutoLogged.debouncedValue;
     }
 
     private Command drive() {
@@ -75,15 +75,15 @@ public class FunnelStateHandler {
     }
 
     private Command calibration() {
-        return new ParallelCommandGroup(
+        return new DeferredCommand(() -> new ParallelCommandGroup(
                 new InstantCommand(() -> Logger.recordOutput(logPath, "CALIBRATION")),
                 omni.getCommandsBuilder().setPower(omniCalibrationPower.get()),
                 belly.getCommandsBuilder().setPower(bellyCalibrationPower.get())
-        );
+        ), Set.of(omni,belly));
     }
 
     public void periodic(){
-        sensor.updateInputs(sensorInformation);
+        sensor.updateInputs(sensorInputsAutoLogged);
     }
 
 }

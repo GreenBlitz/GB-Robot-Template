@@ -3,6 +3,7 @@ package frc.robot.statemachine.superstructure.funnelStateHandler;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
+import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.subsystems.roller.Roller;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
@@ -12,15 +13,18 @@ public class FunnelStateHandler {
 	private final Roller omni;
 	private final Roller belly;
 	private final String logPath;
-	private final DigitalInputInputsAutoLogged sensor;
+	private final IDigitalInput sensor;
+    private final DigitalInputInputsAutoLogged inputInputsAutoLogged;
 	private final LoggedNetworkNumber bellyCalibrationPower = new LoggedNetworkNumber("BellyPower", 0);
 	private final LoggedNetworkNumber omniCalibrationPower = new LoggedNetworkNumber("OmniPower", 0);
 
-	public FunnelStateHandler(Roller omni, Roller belly, String logPath, DigitalInputInputsAutoLogged sensor) {
+	public FunnelStateHandler(Roller omni, Roller belly, String logPath, IDigitalInput sensor) {
 		this.omni = omni;
 		this.belly = belly;
 		this.sensor = sensor;
 		this.logPath = logPath + "/FunnelState";
+        this.inputInputsAutoLogged = new DigitalInputInputsAutoLogged();
+        this.sensor.updateInputs(inputInputsAutoLogged);
 	}
 
 	public Command setState(FunnelState state) {
@@ -34,7 +38,7 @@ public class FunnelStateHandler {
 	}
 
 	public boolean isBallAtSensor() {
-		return sensor.debouncedValue;
+		return true;
 	}
 
 	private Command drive() {

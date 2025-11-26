@@ -41,7 +41,7 @@ public class Robot {
         slot0Configs.kS = 0;
         slot0Configs.kG = 0;
         ArmSimulationConstants simulationConstants = new ArmSimulationConstants(Rotation2d.fromDegrees(17),Rotation2d.fromDegrees(0),Rotation2d.fromDegrees(17),0.001,0.3);
-        this.arm = TalonFXArmBuilder.buildArm(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX+"/arm",new Phoenix6DeviceID(1),false,new TalonFXFollowerConfig(),new SysIdRoutine.Config(),feedbackConfigs,slot0Configs,slot0Configs,40,50,0,simulationConstants);
+        this.arm = TalonFXArmBuilder.buildArm(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX+"/arm",new Phoenix6DeviceID(1),false,new TalonFXFollowerConfig(),new SysIdRoutine.Config(),feedbackConfigs,slot0Configs,slot0Configs,40,50,0,Rotation2d.fromDegrees(16),Rotation2d.fromDegrees(1),simulationConstants);
 	}
 
 	public void periodic() {

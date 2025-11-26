@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.flywheel.FlyWheel;
 import frc.utils.InterpolationMap;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Map;
 import java.util.function.Supplier;
@@ -81,6 +82,10 @@ public class ShooterStateHandler {
 			hood.getCommandsBuilder().setTargetPosition(hoodInterpolation(distanceFromTower)),
 			flyWheel.getCommandBuilder().setTargetVelocity(flywheelInterpolation(distanceFromTower))
 		);
+	}
+
+	public void Logger() {
+		Logger.recordOutput("stateHandler", currentState);
 	}
 
 }

@@ -6,10 +6,13 @@ import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
+import frc.robot.statemachine.shooterStateHandler.ShooterState;
+import frc.robot.statemachine.shooterStateHandler.ShooterStateHandler;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.roller.Roller;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.utils.battery.BatteryUtil;
+
 
 public class JoysticksBindings {
 
@@ -51,6 +54,10 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
+		ShooterStateHandler shooterStateHandler = new ShooterStateHandler(robot.getTurret(), robot.getHood(), robot.getFlyWheel(), () -> 9.0);
+		usedJoystick.A.onTrue(shooterStateHandler.setState(ShooterState.IDLE));
+		usedJoystick.B.onTrue(shooterStateHandler.setState(ShooterState.SHOOT));
+		usedJoystick.X.onTrue(shooterStateHandler.setState(ShooterState.STAY_IN_PLACE));
 		// bindings...
 	}
 

@@ -5,8 +5,5 @@ Shooter Calibrations
 - [ ] Check default rotations per second for flywheel
 
 #### State Handler
-- [ ] Check interpolation map
-- [ ] Check state handler functions 
-
-#### State
-- [ ] Check if the states in shooter states are correct
+- [ ] Check hood interpolation
+- [ ] Check fly wheel interpolation

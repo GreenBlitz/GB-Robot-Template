@@ -27,6 +27,7 @@ public class FunnelStateHandler {
         this.belly = belly;
         this.sensor = sensor;
         this.logPath = logPath + "/FunnelStateHandler";
+        Logger.recordOutput(logPath, "STOP");
         sensor.updateInputs(sensorInputsAutoLogged);
     }
 
@@ -70,15 +71,15 @@ public class FunnelStateHandler {
 
     private Command stop() {
         return new ParallelCommandGroup(
-                new InstantCommand(() -> Logger.recordOutput(logPath, "DRIVE")),
+                new InstantCommand(() -> Logger.recordOutput(logPath, "STOP")),
                 omni.getCommandsBuilder().stop(), belly.getCommandsBuilder().stop());
     }
 
     private Command calibration() {
         return new DeferredCommand(() -> new ParallelCommandGroup(
                 new InstantCommand(() -> Logger.recordOutput(logPath, "CALIBRATION")),
-                omni.getCommandsBuilder().setPower(omniCalibrationPower.get()),
-                belly.getCommandsBuilder().setPower(bellyCalibrationPower.get())
+                omni.getCommandsBuilder().setPower(() -> omniCalibrationPower.get()),
+                belly.getCommandsBuilder().setPower(() -> bellyCalibrationPower.get())
         ), Set.of(omni,belly));
     }
 

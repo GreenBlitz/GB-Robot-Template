@@ -2,10 +2,10 @@ package frc.robot.statemachine.superstructure.funnelStateHandler;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Robot;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.subsystems.roller.Roller;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class FunnelStateHandler {
 
@@ -17,7 +17,7 @@ public class FunnelStateHandler {
 	public FunnelStateHandler(Roller omni, Roller belly, String logPath, DigitalInputInputsAutoLogged sensor) {
 		this.omni = omni;
 		this.belly = belly;
-		this.logPath = logPath + "/State";
+		this.logPath = logPath + "/FunnelState";
 	}
 
 	public Command setState(FunnelState state) {
@@ -25,7 +25,8 @@ public class FunnelStateHandler {
 			case DRIVE -> drive();
 			case SHOOT -> shoot();
 			case INTAKE -> intake();
-			case STAY_IN_PLACE -> stayInPlace();
+			case STOP -> stop();
+            case CALIBRATION -> calibration();
 		};
 	}
 
@@ -37,15 +38,16 @@ public class FunnelStateHandler {
 		Logger.recordOutput(logPath,"DRIVE");
 		return new ParallelCommandGroup(
 			omni.getCommandsBuilder().stop(),
-			belly.getCommandsBuilder().rollRotationsAtVoltageForwards(1, FunnelConstants.DRIVE_BELLY_VOLTAGE).until(this::isBallAtSensor)
+			belly.getCommandsBuilder().rollRotationsAtVoltageForwards(
+            1, FunnelState.DRIVE.getBellyVoltage()).until(this::isBallAtSensor)
 		);
 	}
 
 	private Command shoot() {
 		Logger.recordOutput(logPath,"SHOOT");
 		return new ParallelCommandGroup(
-			omni.getCommandsBuilder().setVoltage(FunnelConstants.SHOOT_OMNI_VOLTAGE),
-			belly.getCommandsBuilder().setVoltage(FunnelConstants.SHOOT_BELLY_VOLTAGE)
+			omni.getCommandsBuilder().setVoltage(FunnelState.SHOOT.getOmniVoltage()),
+			belly.getCommandsBuilder().setVoltage(FunnelState.SHOOT.getBellyVoltage())
 		);
 	}
 
@@ -53,13 +55,23 @@ public class FunnelStateHandler {
 		Logger.recordOutput(logPath,"INTAKE");
 		return new ParallelCommandGroup(
 			omni.getCommandsBuilder().stop(),
-			belly.getCommandsBuilder().setPower(FunnelConstants.INTAKE_BELLY_VOLTAGE)
+			belly.getCommandsBuilder().setVoltage(FunnelState.INTAKE.getBellyVoltage())
 		);
 	}
 
-	private Command stayInPlace() {
-		Logger.recordOutput(logPath,"STAY_IN_PLACE");
-		return new ParallelCommandGroup(omni.getCommandsBuilder().stop(), belly.getCommandsBuilder().stop());
+	private Command stop() {
+		Logger.recordOutput(logPath,"STOP");
+		return new ParallelCommandGroup(
+                omni.getCommandsBuilder().stop(),
+                belly.getCommandsBuilder().stop()
+        );
+	}
+
+    private Command calibration() {
+		Logger.recordOutput(logPath,"CALIBRATION");
+		return new ParallelCommandGroup(
+                omni.getCommandsBuilder().setPower(LoggedNetworkNumber),
+                belly.getCommandsBuilder().setPower(LoggedNetworkNumber));
 	}
 
 }

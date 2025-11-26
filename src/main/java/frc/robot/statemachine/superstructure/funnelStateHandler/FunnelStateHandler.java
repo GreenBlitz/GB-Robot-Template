@@ -1,5 +1,6 @@
 package frc.robot.statemachine.superstructure.funnelStateHandler;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
@@ -12,11 +13,14 @@ public class FunnelStateHandler {
 	private final Roller omni;
 	private final Roller belly;
 	private final String logPath;
-	private DigitalInputInputsAutoLogged sensor;
+	private final DigitalInputInputsAutoLogged sensor;
+	private final LoggedNetworkNumber bellyCalibrationPower = new LoggedNetworkNumber("BellyPower",0);
+	private final LoggedNetworkNumber omniCalibrationPower = new LoggedNetworkNumber("OmniPower",0);
 
 	public FunnelStateHandler(Roller omni, Roller belly, String logPath, DigitalInputInputsAutoLogged sensor) {
 		this.omni = omni;
 		this.belly = belly;
+        this.sensor = sensor;
 		this.logPath = logPath + "/FunnelState";
 	}
 
@@ -70,8 +74,8 @@ public class FunnelStateHandler {
     private Command calibration() {
 		Logger.recordOutput(logPath,"CALIBRATION");
 		return new ParallelCommandGroup(
-                omni.getCommandsBuilder().setPower(LoggedNetworkNumber),
-                belly.getCommandsBuilder().setPower(LoggedNetworkNumber));
+                omni.getCommandsBuilder().setPower(omniCalibrationPower.get()),
+                belly.getCommandsBuilder().setPower(bellyCalibrationPower.get()));
 	}
 
 }

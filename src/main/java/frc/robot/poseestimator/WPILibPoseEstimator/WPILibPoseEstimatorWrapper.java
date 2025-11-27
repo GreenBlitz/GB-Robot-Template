@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.Odometry;
 import frc.robot.vision.RobotPoseObservation;
@@ -20,7 +19,7 @@ import java.util.Optional;
 public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 
 	private final String logPath;
-	private final SwerveDriveKinematics kinematics;
+	private final GBSwerveDriveKinematics kinematics;
 	private final Odometry<SwerveModulePosition[]> odometryEstimator;
 	private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
 	private final RingBuffer<Rotation2d> poseToIMUYawDifferenceBuffer;
@@ -31,7 +30,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 
 	public WPILibPoseEstimatorWrapper(
 		String logPath,
-		SwerveDriveKinematics kinematics,
+		GBSwerveDriveKinematics kinematics,
 		SwerveModulePosition[] initialModulePositions,
 		Rotation2d initialIMUYaw,
 		double initialTimestampSeconds

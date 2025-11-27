@@ -51,7 +51,7 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-        applyTurretCalibrationBindings(robot.getTurret(),usedJoystick,1);
+		applyTurretCalibrationBindings(robot.getTurret(), usedJoystick, 1);
 		// bindings...
 	}
 

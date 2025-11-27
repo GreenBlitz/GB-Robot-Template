@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.math.Pair;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.digitalinput.IDigitalInput;
@@ -106,7 +105,13 @@ public class Robot {
 	}
 
 	private Arm createTurret() {
-        ArmSimulationConstants turretSimulationConstants = new ArmSimulationConstants(TurretConstants.MAX_POSITION,TurretConstants.MIN_POSITION,TurretConstants.MAX_POSITION,TurretConstants.MOMENT_OF_INERTIA,TurretConstants.TURRET_RADIUS);
+		ArmSimulationConstants turretSimulationConstants = new ArmSimulationConstants(
+			TurretConstants.MAX_POSITION,
+			TurretConstants.MIN_POSITION,
+			TurretConstants.MAX_POSITION,
+			TurretConstants.MOMENT_OF_INERTIA,
+			TurretConstants.TURRET_RADIUS
+		);
 		return TalonFXArmBuilder.buildMotionMagicArm(
 			TurretConstants.LOG_PATH,
 			IDs.TalonFXIDs.TURRET,
@@ -122,7 +127,7 @@ public class Robot {
 			TurretConstants.FORWARD_SOFTWARE_LIMIT,
 			TurretConstants.BACKWARDS_SOFTWARE_LIMIT,
 			turretSimulationConstants,
-            TurretConstants.DEFAULT_MAX_ACCELERATION_PER_SECOND_SQUARE,
+			TurretConstants.DEFAULT_MAX_ACCELERATION_PER_SECOND_SQUARE,
 			TurretConstants.DEFAULT_MAX_VELOCITY_PER_SECOND
 		);
 	}
@@ -175,7 +180,13 @@ public class Robot {
 	}
 
 	private Arm createHood() {
-        ArmSimulationConstants hoodSimulationConstatns = new ArmSimulationConstants(HoodConstants.MAXIMUM_POSITION,HoodConstants.MINIMUM_POSITION,HoodConstants.MINIMUM_POSITION,HoodConstants.MOMENT_OF_INERTIA,HoodConstants.HOOD_LENGTH_METERS);
+		ArmSimulationConstants hoodSimulationConstatns = new ArmSimulationConstants(
+			HoodConstants.MAXIMUM_POSITION,
+			HoodConstants.MINIMUM_POSITION,
+			HoodConstants.MINIMUM_POSITION,
+			HoodConstants.MOMENT_OF_INERTIA,
+			HoodConstants.HOOD_LENGTH_METERS
+		);
 		return TalonFXArmBuilder.buildDynamicMotionMagicArm(
 			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Hood",
 			IDs.TalonFXIDs.HOOD,
@@ -190,7 +201,7 @@ public class Robot {
 			HoodConstants.ARBITRARY_FEEDFORWARD,
 			HoodConstants.FORWARD_SOFTWARE_LIMIT,
 			HoodConstants.BACKWARD_SOFTWARE_LIMIT,
-            hoodSimulationConstatns,
+			hoodSimulationConstatns,
 			HoodConstants.DEFAULT_MAX_ACCELERATION_PER_SECOND_SQUARE,
 			HoodConstants.DEFAULT_MAX_VELOCITY_PER_SECOND
 		);

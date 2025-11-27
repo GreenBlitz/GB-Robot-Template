@@ -30,14 +30,14 @@ public class LimelightStdDevCalculations {
 		StandardDeviations2D minStdDevs,
 		StandardDeviations2D stdDevFactors
 	) {
-		return () -> primaryTagDistanceParabola(
+		return () -> primaryTagDistanceSquared(
 			limelight.getMT2PrimaryTagPoseInCameraSpace().getTranslation().getNorm(),
 			minStdDevs,
 			stdDevFactors
 		);
 	}
 
-	private static StandardDeviations2D primaryTagDistanceParabola(
+	private static StandardDeviations2D primaryTagDistanceSquared(
 		double primaryTagDistanceFromCamera,
 		StandardDeviations2D minStandardDeviations,
 		StandardDeviations2D standardDeviationFactors

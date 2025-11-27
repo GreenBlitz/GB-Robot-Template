@@ -30,7 +30,7 @@ public class RollerCommandsBuilder extends GBCommandsBuilder {
 	}
 
 	public Command stop() {
-		return roller.asSubsystemCommand(new InstantCommand(roller::stop), "Stop roller");
+		return roller.asSubsystemCommand(new RunCommand(roller::stop), "Stop roller");
 	}
 
 	public Command setPower(Supplier<Double> supplier) {

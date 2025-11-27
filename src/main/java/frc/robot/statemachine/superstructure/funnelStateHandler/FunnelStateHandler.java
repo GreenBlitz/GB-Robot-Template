@@ -1,9 +1,6 @@
 package frc.robot.statemachine.superstructure.funnelStateHandler;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.DeferredCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.subsystems.roller.Roller;
@@ -52,9 +49,9 @@ public class FunnelStateHandler {
 	}
 
 	private Command drive() {
-		return new ParallelCommandGroup(
-			omni.getCommandsBuilder().stop(),
-			belly.getCommandsBuilder().rollRotationsAtVoltageForwards(1, FunnelState.DRIVE.getBellyVoltage()).until(this::isBallAtSensor)
+		return new ParallelDeadlineGroup(
+            belly.getCommandsBuilder().rollRotationsAtVoltageForwards(1, FunnelState.DRIVE.getBellyVoltage()).until(this::isBallAtSensor),
+            omni.getCommandsBuilder().stop()
 		);
 	}
 

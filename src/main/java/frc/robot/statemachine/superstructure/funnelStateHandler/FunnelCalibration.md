@@ -10,3 +10,6 @@ Funnel States Calibration
 
 #### intake
 - [ ] Voltage for belly
+
+#### general calibration
+- [ ] put periodic in periodic

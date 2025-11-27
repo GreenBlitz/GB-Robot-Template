@@ -26,6 +26,7 @@ import frc.robot.subsystems.swerve.states.SwerveStateHandler;
 import frc.robot.subsystems.swerve.states.heading.HeadingControl;
 import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
 import frc.robot.subsystems.swerve.states.SwerveState;
+import frc.utils.TimedValue;
 import frc.utils.auto.PathPlannerUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -63,7 +64,7 @@ public class Swerve extends GBSubsystem {
 		this.imuSignals = imuSignals;
 
 		this.kinematics = new SwerveDriveKinematics(modules.getModulePositionsFromCenterMeters());
-		this.headingSupplier = this::getGyroAbsoluteYaw;
+		this.headingSupplier = () -> getGyroAbsoluteYaw().getValue();
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
 		this.stateHandler = new SwerveStateHandler(this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
@@ -185,9 +186,9 @@ public class Swerve extends GBSubsystem {
 
 		for (int i = 0; i < odometryData.length; i++) {
 			odometryData[i] = new OdometryData(
+				imuSignals.yawSignal().getTimestamps()[i],
 				modules.getWheelPositions(i),
-				imu instanceof EmptyIMU ? Optional.empty() : Optional.of(imuSignals.yawSignal().asArray()[i]),
-				imuSignals.yawSignal().getTimestamps()[i]
+				imu instanceof EmptyIMU ? Optional.empty() : Optional.of(imuSignals.yawSignal().asArray()[i])
 			);
 		}
 
@@ -198,9 +199,10 @@ public class Swerve extends GBSubsystem {
 		return driveRadiusMeters;
 	}
 
-	public Rotation2d getGyroAbsoluteYaw() {
-		double inputtedHeadingRadians = MathUtil.angleModulus(imuSignals.yawSignal().getLatestValue().getRadians());
-		return Rotation2d.fromRadians(inputtedHeadingRadians);
+	public TimedValue<Rotation2d> getGyroAbsoluteYaw() {
+		TimedValue<Rotation2d> latestGyroYaw = imuSignals.yawSignal().getLatestTimedValue();
+		Rotation2d latestGyroAbsoluteYaw = Rotation2d.fromRadians(MathUtil.angleModulus(latestGyroYaw.getValue().getRadians()));
+		return new TimedValue<>(latestGyroAbsoluteYaw, latestGyroYaw.getTimestamp());
 	}
 
 	public Rotation2d getAbsoluteHeading() {
@@ -325,6 +327,9 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {
+		joystick.START.onTrue(new InstantCommand(() -> commandsBuilder.setIsSubsystemRunningIndependently(true)));
+		joystick.BACK.onTrue(new InstantCommand(() -> commandsBuilder.setIsSubsystemRunningIndependently(false)));
+
 		// Calibrate steer ks with phoenix tuner x
 		// Calibrate steer pid with phoenix tuner x
 

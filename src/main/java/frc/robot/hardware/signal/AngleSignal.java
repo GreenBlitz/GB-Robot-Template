@@ -5,6 +5,7 @@ import frc.robot.hardware.interfaces.InputSignal;
 import frc.utils.AngleUnit;
 import frc.utils.TimedValue;
 import frc.utils.math.ToleranceMath;
+import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.LogTable;
 
 public abstract class AngleSignal implements InputSignal<Rotation2d> {
@@ -22,6 +23,11 @@ public abstract class AngleSignal implements InputSignal<Rotation2d> {
 	@Override
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public TimedValue<Rotation2d> getLatestTimedValue() {
+		return timedValue;
 	}
 
 	@Override
@@ -73,6 +79,7 @@ public abstract class AngleSignal implements InputSignal<Rotation2d> {
 	@Override
 	public void fromLog(LogTable table) {
 		timedValue.setValue(table.get(name, new Rotation2d()));
+		timedValue.setTimestamp(TimeUtil.getCurrentTimeSeconds());
 	}
 
 	public Rotation2d getAndUpdateValue() {

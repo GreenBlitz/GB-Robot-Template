@@ -11,17 +11,17 @@ public class LimelightStdDevCalculations {
 	public static Supplier<StandardDeviations2D> getMT1StdDevsCalculation(
 		Limelight limelight,
 		StandardDeviations2D tagDistanceFactors,
-		StandardDeviations2D standardDeviationFactors,
+		StandardDeviations2D stdDevFactors,
 		StandardDeviations2D visibleTagsExponents,
-		StandardDeviations2D standardDeviationAdditions
+		StandardDeviations2D stdDevAdditions
 	) {
 		return () -> byExponentialTagDistanceDividedByPoweredVisibleTags(
 			limelight.getMT1RawData().tagCount(),
 			limelight.getMT1PrimaryTagPoseInCameraSpace().getTranslation().getNorm(),
 			tagDistanceFactors,
-			standardDeviationFactors,
+			stdDevFactors,
 			visibleTagsExponents,
-			standardDeviationAdditions
+			stdDevAdditions
 		);
 	}
 
@@ -39,16 +39,16 @@ public class LimelightStdDevCalculations {
 
 	private static StandardDeviations2D byPrimaryTagDistanceSquared(
 		double primaryTagDistanceFromCamera,
-		StandardDeviations2D minStandardDeviations,
-		StandardDeviations2D standardDeviationFactors
+		StandardDeviations2D minStdDevs,
+		StandardDeviations2D stdDevFactors
 	) {
 		double primaryTagDistanceSquared = Math.pow(primaryTagDistanceFromCamera, 2);
 		return new StandardDeviations2D(
-			Math.max(minStandardDeviations.xStandardDeviations(), standardDeviationFactors.xStandardDeviations() * primaryTagDistanceSquared),
-			Math.max(minStandardDeviations.yStandardDeviations(), standardDeviationFactors.yStandardDeviations() * primaryTagDistanceSquared),
+			Math.max(minStdDevs.xStandardDeviations(), stdDevFactors.xStandardDeviations() * primaryTagDistanceSquared),
+			Math.max(minStdDevs.yStandardDeviations(), stdDevFactors.yStandardDeviations() * primaryTagDistanceSquared),
 			Math.max(
-				minStandardDeviations.angleStandardDeviations(),
-				standardDeviationFactors.angleStandardDeviations() * primaryTagDistanceSquared
+				minStdDevs.angleStandardDeviations(),
+				stdDevFactors.angleStandardDeviations() * primaryTagDistanceSquared
 			)
 		);
 	}
@@ -57,23 +57,23 @@ public class LimelightStdDevCalculations {
 		double numberOfVisibleTags,
 		double primaryTagDistanceFromCamera,
 		StandardDeviations2D tagDistanceFactors,
-		StandardDeviations2D standardDeviationFactors,
+		StandardDeviations2D stdDevFactors,
 		StandardDeviations2D visibleTagsExponents,
-		StandardDeviations2D standardDeviationAdditions
+		StandardDeviations2D stdDevAdditions
 	) {
 		return new StandardDeviations2D(
 			Math.exp(tagDistanceFactors.xStandardDeviations() * primaryTagDistanceFromCamera)
-				* standardDeviationFactors.xStandardDeviations()
+				* stdDevFactors.xStandardDeviations()
 				/ Math.pow(numberOfVisibleTags, visibleTagsExponents.xStandardDeviations())
-				+ standardDeviationAdditions.xStandardDeviations(),
+				+ stdDevAdditions.xStandardDeviations(),
 			Math.exp(tagDistanceFactors.yStandardDeviations() * primaryTagDistanceFromCamera)
-				* standardDeviationFactors.yStandardDeviations()
+				* stdDevFactors.yStandardDeviations()
 				/ Math.pow(numberOfVisibleTags, visibleTagsExponents.yStandardDeviations())
-				+ standardDeviationAdditions.yStandardDeviations(),
+				+ stdDevAdditions.yStandardDeviations(),
 			Math.exp(tagDistanceFactors.angleStandardDeviations() * primaryTagDistanceFromCamera)
-				* standardDeviationFactors.angleStandardDeviations()
+				* stdDevFactors.angleStandardDeviations()
 				/ Math.pow(numberOfVisibleTags, visibleTagsExponents.angleStandardDeviations())
-				+ standardDeviationAdditions.angleStandardDeviations()
+				+ stdDevAdditions.angleStandardDeviations()
 		);
 	}
 

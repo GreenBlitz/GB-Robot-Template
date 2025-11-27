@@ -10,6 +10,7 @@ import frc.RobotManager;
 import frc.robot.subsystems.constants.fourBar.FourBarConstants;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.subsystems.constants.intakeRollers.IntakeRollerConstants;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.TalonFXArmBuilder;
 import frc.robot.subsystems.constants.belly.BellyConstants;
@@ -35,8 +36,11 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);
 	private final Arm turret;
 	private final FlyWheel flyWheel;
+	private final Roller intakeRoller;
 	private final Arm fourBar;
 	private final Arm hood;
+	private final IDigitalInput intakeRollerSensor;
+
 	private final Roller belly;
 	private final Roller omni;
 	private final IDigitalInput funnelDigitalInput;
@@ -57,6 +61,11 @@ public class Robot {
 		this.hood = createHood();
 		hood.setPosition(HoodConstants.MINIMUM_POSITION);
 		BrakeStateManager.add(() -> hood.setBrake(true), () -> hood.setBrake(false));
+
+		Pair<Roller, IDigitalInput> intakeRollerAndDigitalInput = createIntakeRollers();
+		this.intakeRoller = intakeRollerAndDigitalInput.getFirst();
+		this.intakeRollerSensor = intakeRollerAndDigitalInput.getSecond();
+		BrakeStateManager.add(() -> intakeRoller.setBrake(true), () -> intakeRoller.setBrake(false));
 
 		this.belly = createBelly();
 		BrakeStateManager.add(() -> belly.setBrake(true), () -> belly.setBrake(false));
@@ -86,6 +95,21 @@ public class Robot {
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		CommandScheduler.getInstance().run(); // Should be last
+	}
+
+	public Pair<Roller, IDigitalInput> createIntakeRollers() {
+		return SparkMaxRollerBuilder.buildWithDigitalInput(
+			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/IntakeRollers",
+			IDs.SparkMAXIDs.INTAKE_ROLLERS,
+			IntakeRollerConstants.IS_INVERTED,
+			IntakeRollerConstants.GEAR_RATIO,
+			IntakeRollerConstants.CURRENT_LIMIT,
+			IntakeRollerConstants.MOMENT_OF_INERTIA,
+			IntakeRollerConstants.DIGITAL_INPUT_NAME,
+			IntakeRollerConstants.DEBOUNCE_TIME,
+			IntakeRollerConstants.IS_FORWARD_LIMIT_SWITCH,
+			IntakeRollerConstants.IS_SENSOR_INVERTED
+		);
 	}
 
 	private Arm createTurret() {
@@ -142,7 +166,6 @@ public class Robot {
 			BellyConstants.MOMENT_OF_INERTIA
 		);
 	}
-
 	private Arm createHood() {
 		return TalonFXArmBuilder.buildMotionMagicArm(
 			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Hood",
@@ -178,6 +201,14 @@ public class Robot {
 			OmniConstant.IS_FORWARD_LIMIT_SWITCH,
 			OmniConstant.IS_FORWARD_LIMIT_SWITCH_INVERTED
 		);
+	}
+
+	public IDigitalInput getIntakeRollerSensor() {
+		return intakeRollerSensor;
+	}
+
+	public Roller getIntakeRoller() {
+		return intakeRoller;
 	}
 
 	public Roller getBelly() {

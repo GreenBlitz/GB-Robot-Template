@@ -7,7 +7,6 @@ import frc.robot.subsystems.roller.Roller;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
-import java.util.Set;
 
 public class FunnelStateHandler {
 
@@ -45,13 +44,13 @@ public class FunnelStateHandler {
 	}
 
 	public boolean isBallAtSensor() {
-		return sensorInputsAutoLogged.debouncedValue; //sensor wont work until we will put the periodic in periodic
+		return sensorInputsAutoLogged.debouncedValue; // sensor wont work until we will put the periodic in periodic
 	}
 
 	private Command drive() {
 		return new ParallelDeadlineGroup(
-            belly.getCommandsBuilder().rollRotationsAtVoltageForwards(1, FunnelState.DRIVE.getBellyVoltage()).until(this::isBallAtSensor),
-            omni.getCommandsBuilder().stop()
+			belly.getCommandsBuilder().rollRotationsAtVoltageForwards(1, FunnelState.DRIVE.getBellyVoltage()).until(this::isBallAtSensor),
+			omni.getCommandsBuilder().stop()
 		);
 	}
 
@@ -74,11 +73,10 @@ public class FunnelStateHandler {
 	}
 
 	private Command calibration() {
-		return
-			new ParallelCommandGroup(
-				omni.getCommandsBuilder().setPower(omniCalibrationPower::get),
-				belly.getCommandsBuilder().setPower(bellyCalibrationPower::get)
-			);
+		return new ParallelCommandGroup(
+			omni.getCommandsBuilder().setPower(omniCalibrationPower::get),
+			belly.getCommandsBuilder().setPower(bellyCalibrationPower::get)
+		);
 	}
 
 	public void periodic() {

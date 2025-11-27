@@ -12,11 +12,15 @@ public class FunnelStateHandler {
 
 	private final Roller omni;
 	private final Roller belly;
-	private final String logPath;
+	
 	private final IDigitalInput sensor;
 	private final DigitalInputInputsAutoLogged sensorInputsAutoLogged = new DigitalInputInputsAutoLogged();
+
+	private final String logPath;
+	
 	private final LoggedNetworkNumber bellyCalibrationPower = new LoggedNetworkNumber("BellyPower", 0);
 	private final LoggedNetworkNumber omniCalibrationPower = new LoggedNetworkNumber("OmniPower", 0);
+	
 	protected FunnelState currentState = FunnelState.STOP;
 
 	public FunnelStateHandler(Roller omni, Roller belly, String logPath, IDigitalInput sensor) {

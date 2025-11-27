@@ -49,14 +49,14 @@ public class Robot {
 		BatteryUtil.scheduleLimiter();
 
 		this.turret = createTurret();
-		turret.setPosition(TurretConstants.MIN_POSITION);
+		turret.setPosition(TurretConstants.MAX_POSITION);
 		BrakeStateManager.add(() -> turret.setBrake(true), () -> turret.setBrake(false));
 
 		this.flyWheel = KrakenX60FlyWheelBuilder.build("Subsystems/FlyWheel", IDs.TalonFXIDs.FLYWHEEL);
 
 		this.hood = createHood();
-//		hood.setPosition(HoodConstants.MAXIMUM_POSITION);
-//		BrakeStateManager.add(() -> hood.setBrake(true), () -> hood.setBrake(false));
+		hood.setPosition(HoodConstants.MINIMUM_POSITION);
+		BrakeStateManager.add(() -> hood.setBrake(true), () -> hood.setBrake(false));
 
 		Pair<Roller, IDigitalInput> intakeRollerAndDigitalInput = createIntakeRollers();
 		this.intakeRoller = intakeRollerAndDigitalInput.getFirst();
@@ -71,19 +71,19 @@ public class Robot {
 		this.funnelDigitalInput = omniAndDigitalInput.getSecond();
 		BrakeStateManager.add(() -> omni.setBrake(true), () -> omni.setBrake(false));
 	}
-//
-//	public void resetSubsystems() {
-//		if (HoodConstants.MINIMUM_POSITION.getRadians() > hood.getPosition().getRadians()) {
-//			hood.setPosition(HoodConstants.MINIMUM_POSITION);
-//		}
-//		if (TurretConstants.MIN_POSITION.getRadians() > turret.getPosition().getRadians()) {
-//			turret.setPosition(TurretConstants.MIN_POSITION);
-//		}
-//	}
+
+	public void resetSubsystems() {
+		if (HoodConstants.MINIMUM_POSITION.getRadians() > hood.getPosition().getRadians()) {
+			hood.setPosition(HoodConstants.MINIMUM_POSITION);
+		}
+		if (TurretConstants.MIN_POSITION.getRadians() > turret.getPosition().getRadians()) {
+			turret.setPosition(TurretConstants.MIN_POSITION);
+		}
+	}
 
 	public void periodic() {
 		BusChain.refreshAll();
-//		resetSubsystems();
+		resetSubsystems();
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
@@ -175,7 +175,7 @@ public class Robot {
 	}
 
 	private Arm createHood() {
-        ArmSimulationConstants hoodSimulationConstatns = new ArmSimulationConstants(HoodConstants.MAXIMUM_POSITION,Rotation2d.fromDegrees(-50),Rotation2d.fromDegrees(-50),HoodConstants.MOMENT_OF_INERTIA,HoodConstants.HOOD_LENGTH_METERS);
+        ArmSimulationConstants hoodSimulationConstatns = new ArmSimulationConstants(HoodConstants.MAXIMUM_POSITION,HoodConstants.MINIMUM_POSITION,HoodConstants.MINIMUM_POSITION,HoodConstants.MOMENT_OF_INERTIA,HoodConstants.HOOD_LENGTH_METERS);
 		return TalonFXArmBuilder.buildDynamicMotionMagicArm(
 			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Hood",
 			IDs.TalonFXIDs.HOOD,

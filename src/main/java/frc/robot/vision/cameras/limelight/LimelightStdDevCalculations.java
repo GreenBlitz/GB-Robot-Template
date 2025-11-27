@@ -46,10 +46,7 @@ public class LimelightStdDevCalculations {
 		return new StandardDeviations2D(
 			Math.max(minStdDevs.xStandardDeviations(), stdDevFactors.xStandardDeviations() * primaryTagDistanceSquared),
 			Math.max(minStdDevs.yStandardDeviations(), stdDevFactors.yStandardDeviations() * primaryTagDistanceSquared),
-			Math.max(
-				minStdDevs.angleStandardDeviations(),
-				stdDevFactors.angleStandardDeviations() * primaryTagDistanceSquared
-			)
+			Math.max(minStdDevs.angleStandardDeviations(), stdDevFactors.angleStandardDeviations() * primaryTagDistanceSquared)
 		);
 	}
 

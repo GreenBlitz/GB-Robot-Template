@@ -28,7 +28,7 @@ public class FunnelStateHandler {
 		this.belly = belly;
 		this.sensor = sensor;
 		this.logPath = logPath + "/FunnelStateHandler";
-		Logger.recordOutput(logPath, "STOP");
+		Logger.recordOutput(logPath + "/CurrentState", "STOP");
 		sensor.updateInputs(sensorInputsAutoLogged);
 	}
 

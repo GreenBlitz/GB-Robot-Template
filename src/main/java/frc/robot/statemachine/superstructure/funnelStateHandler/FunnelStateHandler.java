@@ -12,23 +12,24 @@ public class FunnelStateHandler {
 
 	private final Roller omni;
 	private final Roller belly;
-	
+
 	private final IDigitalInput sensor;
 	private final DigitalInputInputsAutoLogged sensorInputsAutoLogged = new DigitalInputInputsAutoLogged();
 
 	private final String logPath;
-	
+
 	private final LoggedNetworkNumber bellyCalibrationPower = new LoggedNetworkNumber("BellyPower", 0);
 	private final LoggedNetworkNumber omniCalibrationPower = new LoggedNetworkNumber("OmniPower", 0);
-	
-	protected FunnelState currentState = FunnelState.STOP;
+
+	protected FunnelState currentState;
 
 	public FunnelStateHandler(Roller omni, Roller belly, String logPath, IDigitalInput sensor) {
 		this.omni = omni;
 		this.belly = belly;
 		this.sensor = sensor;
 		this.logPath = logPath + "/FunnelStateHandler";
-		Logger.recordOutput(logPath, "STOP");
+		this.currentState = FunnelState.STOP;
+		Logger.recordOutput(logPath + "/CurrentState", "STOP");
 		sensor.updateInputs(sensorInputsAutoLogged);
 	}
 
@@ -41,14 +42,14 @@ public class FunnelStateHandler {
 			case CALIBRATION -> calibration();
 		};
 		return new ParallelCommandGroup(
-			new InstantCommand(() -> Logger.recordOutput(logPath, state.name())),
+			new InstantCommand(() -> Logger.recordOutput(logPath + "/CurrentState", state.name())),
 			new InstantCommand(() -> currentState = state),
 			command
 		);
 	}
 
 	public boolean isBallAtSensor() {
-		return sensorInputsAutoLogged.debouncedValue; // sensor wont work until we will put the periodic in periodic
+		return sensorInputsAutoLogged.debouncedValue;
 	}
 
 	private Command drive() {

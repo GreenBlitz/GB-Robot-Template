@@ -14,7 +14,7 @@ public class FunnelStateHandler {
 	private final Roller belly;
 	
 	private final IDigitalInput sensor;
-	private final DigitalInputInputsAutoLogged sensorInputsAutoLogged = new DigitalInputInputsAutoLogged();
+	private final DigitalInputInputsAutoLogged sensorInputsAutoLogged;
 
 	private final String logPath;
 	
@@ -31,6 +31,7 @@ public class FunnelStateHandler {
 		this.currentState = FunnelState.STOP;
         this.omniCalibrationPower = new LoggedNetworkNumber("OmniPower", 0);
         this.bellyCalibrationPower = new LoggedNetworkNumber("BellyPower", 0);
+        this.sensorInputsAutoLogged = new DigitalInputInputsAutoLogged();
 		Logger.recordOutput(logPath + "/CurrentState", "STOP");
 		sensor.updateInputs(sensorInputsAutoLogged);
 	}

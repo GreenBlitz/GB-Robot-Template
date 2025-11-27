@@ -11,8 +11,6 @@ public record DetectedObjectObservation(DetectedObjectType type, Translation3d r
     }
 
     public DetectedObjectObservation(DetectedObjectType type, Translation2d Translation2dObject, double timestampSeconds) {
-       Translation3d tempTranslation3d = new Translation3d(Translation2dObject.getX(),Translation2dObject.getY(),)
-
-        this(type,tempTranslation3d , timestampSeconds);
+        this(type, new Translation3d(Translation2dObject.getX(), Translation2dObject.getY(), type.getCenterHeightFromFloorMeters()), timestampSeconds);
     }
 }

@@ -7,19 +7,18 @@ import frc.robot.subsystems.roller.Roller;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
-
 public class FunnelStateHandler {
 
 	private final Roller omni;
 	private final Roller belly;
-	
+
 	private final IDigitalInput sensor;
 	private final DigitalInputInputsAutoLogged sensorInputsAutoLogged;
 
 	private final String logPath;
-	
-	private final LoggedNetworkNumber bellyCalibrationPower;
-	private final LoggedNetworkNumber omniCalibrationPower;
+
+	private final LoggedNetworkNumber bellyCalibrationVoltage;
+	private final LoggedNetworkNumber omniCalibrationVoltage;
 
 	protected FunnelState currentState;
 
@@ -29,10 +28,10 @@ public class FunnelStateHandler {
 		this.sensor = sensor;
 		this.logPath = logPath + "/FunnelStateHandler";
 		this.currentState = FunnelState.STOP;
-        this.omniCalibrationPower = new LoggedNetworkNumber("OmniPower", 0);
-        this.bellyCalibrationPower = new LoggedNetworkNumber("BellyPower", 0);
-        this.sensorInputsAutoLogged = new DigitalInputInputsAutoLogged();
-		Logger.recordOutput(logPath + "/CurrentState", "STOP");
+		this.omniCalibrationVoltage = new LoggedNetworkNumber("OmniPower", 0);
+		this.bellyCalibrationVoltage = new LoggedNetworkNumber("BellyPower", 0);
+		this.sensorInputsAutoLogged = new DigitalInputInputsAutoLogged();
+		Logger.recordOutput(logPath + "/CurrentState", currentState.name());
 		sensor.updateInputs(sensorInputsAutoLogged);
 	}
 
@@ -82,8 +81,8 @@ public class FunnelStateHandler {
 
 	private Command calibration() {
 		return new ParallelCommandGroup(
-			omni.getCommandsBuilder().setPower(omniCalibrationPower::get),
-			belly.getCommandsBuilder().setPower(bellyCalibrationPower::get)
+			omni.getCommandsBuilder().setVoltage(omniCalibrationVoltage::get),
+			belly.getCommandsBuilder().setVoltage(bellyCalibrationVoltage::get)
 		);
 	}
 

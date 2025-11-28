@@ -8,8 +8,8 @@ public enum FunnelState {
 	DRIVE(3),
 	CALIBRATION;
 
-	private double bellyVoltage;
-	private double omniVoltage;
+	private final double bellyVoltage;
+	private final double omniVoltage;
 
 	FunnelState(double omniVoltage, double bellyVoltage) {
 		this.bellyVoltage = bellyVoltage;

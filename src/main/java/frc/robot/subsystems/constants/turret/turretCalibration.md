@@ -28,3 +28,5 @@ Turret Calibration
 
 #### General
 - [ ] Check turret radius
+- [ ] Max position
+- [ ] Min position

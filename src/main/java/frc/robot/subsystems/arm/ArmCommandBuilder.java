@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.subsystems.GBCommandsBuilder;
 import frc.utils.utilcommands.InitExecuteCommand;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -31,8 +30,8 @@ public class ArmCommandBuilder extends GBCommandsBuilder {
 	}
 
 	public Command setTargetPosition(Rotation2d target) {
-		return arm.asSubsystemCommand(new InitExecuteCommand(() -> arm.setTargetPosition(target), () -> {
-		}), "Set target position to: " + target);
+		return arm
+			.asSubsystemCommand(new InitExecuteCommand(() -> arm.setTargetPosition(target), () -> {}), "Set target position to: " + target);
 	}
 
 	public Command setTargetPosition(Supplier<Rotation2d> target) {

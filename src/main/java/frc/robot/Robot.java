@@ -11,8 +11,7 @@ import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.subsystems.swerve.factories.constants.SimulationSwerveConstants;
-import frc.robot.subsystems.swerve.factories.imu.SimulationIMUBuilder;
+import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
@@ -34,12 +33,12 @@ public class Robot {
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 
-		IIMU imu = SimulationIMUBuilder.buildIMU(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve/IMU");
+		IIMU imu = IMUFactory.createIMU(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(
-			SimulationSwerveConstants.getSwerveConstants(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
+			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
 			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
 			imu,
-			SimulationIMUBuilder.buildSignals()
+			IMUFactory.createSignals(imu)
 		);
 
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(

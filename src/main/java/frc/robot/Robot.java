@@ -58,6 +58,7 @@ public class Robot {
 
 		swerve.update();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
+		poseEstimator.log();
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();

@@ -39,7 +39,6 @@ public class Robot {
 	private final Roller intakeRoller;
 	private final Arm hood;
 	private final IDigitalInput intakeRollerSensor;
-	private final ShooterStateHandler shooterStateHandler;
 	private final Roller belly;
 	private final Roller omni;
 	private final IDigitalInput funnelDigitalInput;
@@ -70,7 +69,6 @@ public class Robot {
 		this.funnelDigitalInput = omniAndDigitalInput.getSecond();
 		BrakeStateManager.add(() -> omni.setBrake(true), () -> omni.setBrake(false));
 
-		this.shooterStateHandler = createShooterStateHandler();
 	}
 
 	public void resetSubsystems() {
@@ -104,10 +102,6 @@ public class Robot {
 			IntakeRollerConstants.IS_FORWARD_LIMIT_SWITCH,
 			IntakeRollerConstants.IS_SENSOR_INVERTED
 		);
-	}
-
-	private ShooterStateHandler createShooterStateHandler() {
-		return new ShooterStateHandler(turret, hood, flyWheel, () -> 3.0);
 	}
 
 	private Arm createTurret() {

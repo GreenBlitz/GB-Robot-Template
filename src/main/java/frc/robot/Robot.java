@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.statemachine.shooterStateHandler.ShooterStateHandler;
 import frc.robot.subsystems.constants.intakeRollers.IntakeRollerConstants;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.TalonFXArmBuilder;
@@ -38,7 +39,7 @@ public class Robot {
 	private final Roller intakeRoller;
 	private final Arm hood;
 	private final IDigitalInput intakeRollerSensor;
-
+	private final ShooterStateHandler shooterStateHandler;
 	private final Roller belly;
 	private final Roller omni;
 	private final IDigitalInput funnelDigitalInput;
@@ -68,6 +69,8 @@ public class Robot {
 		this.omni = omniAndDigitalInput.getFirst();
 		this.funnelDigitalInput = omniAndDigitalInput.getSecond();
 		BrakeStateManager.add(() -> omni.setBrake(true), () -> omni.setBrake(false));
+
+		this.shooterStateHandler = createShooterStateHandler();
 	}
 
 	public void resetSubsystems() {
@@ -101,6 +104,10 @@ public class Robot {
 			IntakeRollerConstants.IS_FORWARD_LIMIT_SWITCH,
 			IntakeRollerConstants.IS_SENSOR_INVERTED
 		);
+	}
+
+	private ShooterStateHandler createShooterStateHandler() {
+		return new ShooterStateHandler(turret, hood, flyWheel, () -> 3.0);
 	}
 
 	private Arm createTurret() {

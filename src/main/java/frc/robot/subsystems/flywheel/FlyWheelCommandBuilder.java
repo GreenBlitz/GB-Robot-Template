@@ -31,6 +31,14 @@ public class FlyWheelCommandBuilder extends GBCommandsBuilder {
 		);
 	}
 
+	public Command setVoltage(Double voltage) {
+		return flyWheel.asSubsystemCommand(new RunCommand(() -> flyWheel.setVoltage(voltage)), "set voltage to " + voltage + " volts");
+	}
+
+	public Command setVoltageAsSupplier(Supplier<Double> voltage) {
+		return flyWheel.asSubsystemCommand(new RunCommand(() -> flyWheel.setVoltage(voltage.get())), "set voltage to " + voltage + " volts");
+	}
+
 	public Command stop() {
 		return flyWheel.asSubsystemCommand(new RunCommand(flyWheel::stop), "stop");
 	}

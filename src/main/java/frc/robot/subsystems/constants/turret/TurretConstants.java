@@ -37,7 +37,7 @@ public class TurretConstants {
 		SIMULATION_SLOTS_CONFIG.kA = 0;
 
 		FEEDBACK_CONFIGS.SensorToMechanismRatio = 79.2;
-        TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
+		TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
 	}
 
 	public static final double CURRENT_LIMIT = 40;

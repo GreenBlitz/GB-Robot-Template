@@ -326,6 +326,11 @@ public class Swerve extends GBSubsystem {
 		return isAtHeading && isStopping;
 	}
 
+	public boolean collisionDetection() {
+		return imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d().getNorm()
+			> 2 * RobotConstants.GRAVITATIONAL_ACCELERATION_METERS_PER_SECOND_SQUARED_ISRAEL;
+	}
+
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {
 		joystick.START.onTrue(new InstantCommand(() -> commandsBuilder.setIsSubsystemRunningIndependently(true)));
 		joystick.BACK.onTrue(new InstantCommand(() -> commandsBuilder.setIsSubsystemRunningIndependently(false)));

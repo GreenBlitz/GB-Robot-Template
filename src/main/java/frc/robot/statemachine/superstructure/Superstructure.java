@@ -4,6 +4,10 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Robot;
 import frc.robot.statemachine.RobotState;
 
+import frc.robot.statemachine.funnelstatehandler.FunnelState;
+import frc.robot.statemachine.funnelstatehandler.FunnelStateHandler;
+import frc.robot.statemachine.intakestatehandler.IntakeStateHandler;
+import frc.robot.statemachine.shooterstatehandler.ShooterStateHandler;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
@@ -67,49 +71,49 @@ public class Superstructure {
 
 	private Command stayInPlace() {
 		return new ParallelCommandGroup(
-			shooterStateHandler.setState(ShooterState.STAY_IN_PLACE),
+			shooterStateHandler.setState(ShooterStateHandler.ShooterState.STAY_IN_PLACE),
 			funnelStateHandler.setState(FunnelState.STAY_IN_PLACE),
-			intakeStateHandler.setState(IntakeState.STAY_IN_PLACE)
+			intakeStateHandler.setState(IntakeStateHandler.IntakeState.STAY_IN_PLACE)
 		);
 	}
 
 	private Command idle() {
 		return new ParallelCommandGroup(
-			shooterStateHandler.setState(ShooterState.IDLE),
+			shooterStateHandler.setState(ShooterStateHandler.ShooterState.IDLE),
 			funnelStateHandler.setState(FunnelState.DRIVE),
-			intakeStateHandler.setState(IntakeState.CLOSED)
+			intakeStateHandler.setState(IntakeStateHandler.IntakeState.CLOSED)
 		);
 	}
 
 	private Command intake() {
 		return new ParallelCommandGroup(
-			shooterStateHandler.setState(ShooterState.IDLE),
+			shooterStateHandler.setState(ShooterStateHandler.ShooterState.IDLE),
 			funnelStateHandler.setState(FunnelState.INTAKE),
-			intakeStateHandler.setState(IntakeState.INTAKE)
+			intakeStateHandler.setState(IntakeStateHandler.IntakeState.INTAKE)
 		);
 	}
 
 	private Command preShoot() {
 		return new ParallelCommandGroup(
-			shooterStateHandler.setState(ShooterState.SHOOT),
+			shooterStateHandler.setState(ShooterStateHandler.ShooterState.PRE_SHOOT),
 			funnelStateHandler.setState(FunnelState.DRIVE),
-			intakeStateHandler.setState(IntakeState.CLOSED)
+			intakeStateHandler.setState(IntakeStateHandler.IntakeState.CLOSED)
 		);
 	}
 
 	private Command shoot() {
 		return new ParallelCommandGroup(
-			shooterStateHandler.setState(ShooterState.SHOOT),
+			shooterStateHandler.setState(ShooterStateHandler.ShooterState.SHOOT),
 			funnelStateHandler.setState(FunnelState.SHOOT),
-			intakeStateHandler.setState(IntakeState.CLOSED)
+			intakeStateHandler.setState(IntakeStateHandler.IntakeState.CLOSED)
 		);
 	}
 
 	private Command shootAndIntake() {
 		return new ParallelCommandGroup(
-			shooterStateHandler.setState(ShooterState.SHOOT),
+			shooterStateHandler.setState(ShooterStateHandler.ShooterState.SHOOT),
 			funnelStateHandler.setState(FunnelState.SHOOT),
-			intakeStateHandler.setState(IntakeState.INTAKE)
+			intakeStateHandler.setState(IntakeStateHandler.IntakeState.INTAKE)
 		);
 	}
 

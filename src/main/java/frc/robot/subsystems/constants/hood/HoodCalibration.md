@@ -9,6 +9,8 @@ Hood calibrations
 - [ ] Current limit
 - [ ] Forward limit
 - [ ] Backwards limit
+- [ ] Max position
+- [ ] Min position
 
 #### Motor config
 - [ ] Gear ratio
@@ -41,3 +43,4 @@ Hood calibrations
 
 #### Simulation Constants
 - [ ] Moment of inertia
+- [ ] Is starting position max or min

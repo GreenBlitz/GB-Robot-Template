@@ -1,7 +1,9 @@
 package frc.robot.subsystems.swerve.factories.imu;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.IDs;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.interfaces.IIMU;
@@ -12,6 +14,7 @@ import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.hardware.signal.AngleSignal;
 import frc.robot.hardware.signal.DoubleSignal;
 import frc.robot.subsystems.swerve.IMUSignals;
+import frc.utils.LimelightHelpers;
 import frc.utils.alerts.Alert;
 import frc.utils.AngleUnit;
 
@@ -42,15 +45,19 @@ class Pigeon2IMUBuilder {
 		return Phoenix6SignalBuilder.build(signal, RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.DEGREES, BusChain.ROBORIO);
 	}
 
+	private static AngleSignal buildAnglePigeonSignal(StatusSignal<?> signal, StatusSignal<?> signalSlope){
+		return Phoenix6SignalBuilder.build(signal, signalSlope, RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.DEGREES, BusChain.ROBORIO);
+	}
+
 	private static DoubleSignal buildDoublePigeonSignal(StatusSignal<?> signal) {
 		return Phoenix6SignalBuilder.build(signal, RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
 	}
 
 	static IMUSignals buildSignals(Pigeon2IMU pigeon2imu) {
 		return new IMUSignals(
-			buildAnglePigeonSignal(pigeon2imu.getDevice().getRoll()),
-			buildAnglePigeonSignal(pigeon2imu.getDevice().getPitch()),
-			buildAnglePigeonSignal(pigeon2imu.getDevice().getYaw()),
+			buildAnglePigeonSignal(pigeon2imu.getDevice().getRoll(), pigeon2imu.getDevice().getAngularVelocityXWorld()),
+			buildAnglePigeonSignal(pigeon2imu.getDevice().getPitch(), pigeon2imu.getDevice().getAngularVelocityYWorld()),
+			buildAnglePigeonSignal(pigeon2imu.getDevice().getYaw(), pigeon2imu.getDevice().getAngularVelocityZWorld()),
 			buildAnglePigeonSignal(pigeon2imu.getDevice().getAngularVelocityXWorld()),
 			buildAnglePigeonSignal(pigeon2imu.getDevice().getAngularVelocityYWorld()),
 			buildAnglePigeonSignal(pigeon2imu.getDevice().getAngularVelocityZWorld()),

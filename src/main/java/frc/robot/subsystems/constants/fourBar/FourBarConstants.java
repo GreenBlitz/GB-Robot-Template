@@ -32,7 +32,7 @@ public class FourBarConstants {
 		REAL_SLOT.kA = 0.5209;
 		REAL_SLOT.GravityType = GravityTypeValue.Arm_Cosine;
 
-		SIMULATION_SLOT.kP = 70;
+		SIMULATION_SLOT.kP = 50;
 		SIMULATION_SLOT.kI = 0;
 		SIMULATION_SLOT.kD = 0;
 		SIMULATION_SLOT.kG = 0;

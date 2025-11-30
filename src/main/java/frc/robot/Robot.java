@@ -142,6 +142,13 @@ public class Robot {
 	}
 
 	private Arm createFourBar() {
+		ArmSimulationConstants fourBarSimConstant = new ArmSimulationConstants(
+			FourBarConstants.MAXIMUM_POSITION,
+			FourBarConstants.MINIMUM_POSITION,
+			FourBarConstants.MAXIMUM_POSITION,
+			FourBarConstants.MOMENT_OF_INERTIA,
+			FourBarConstants.FOUR_BAR_LENGTH
+		);
 		return TalonFXArmBuilder.buildDynamicMotionMagicArm(
 			FourBarConstants.LOG_PATH,
 			IDs.TalonFXIDs.FOUR_BAR,
@@ -153,11 +160,10 @@ public class Robot {
 			FourBarConstants.SIMULATION_SLOT,
 			FourBarConstants.CURRENT_LIMIT,
 			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-			FourBarConstants.MOMENT_OF_INERTIA,
-			FourBarConstants.FOUR_BAR_LENGTH,
 			FourBarConstants.ARBITRARY_FEED_FORWARD,
 			FourBarConstants.FORWARD_SOFTWARE_LIMITS,
 			FourBarConstants.BACKWARD_SOFTWARE_LIMITS,
+			fourBarSimConstant,
 			FourBarConstants.MAX_ACCELERATION_ROTATION2D_PER_SECONDS_SQUARE,
 			FourBarConstants.MAX_VELOCITY_ROTATION2D_PER_SECONDS
 		);
@@ -173,6 +179,7 @@ public class Robot {
 			BellyConstants.MOMENT_OF_INERTIA
 		);
 	}
+
 	private Arm createHood() {
 		ArmSimulationConstants hoodSimulationConstatns = new ArmSimulationConstants(
 			HoodConstants.MAXIMUM_POSITION,

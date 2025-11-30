@@ -68,7 +68,6 @@ public class Robot {
 		this.omni = omniAndDigitalInput.getFirst();
 		this.funnelDigitalInput = omniAndDigitalInput.getSecond();
 		BrakeStateManager.add(() -> omni.setBrake(true), () -> omni.setBrake(false));
-
 	}
 
 	public void resetSubsystems() {

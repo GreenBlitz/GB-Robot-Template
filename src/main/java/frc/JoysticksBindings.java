@@ -91,6 +91,19 @@ public class JoysticksBindings {
 		joystick.POV_LEFT.onTrue(turret.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(50)));
 	}
 
+	private static void applyFourBarCalibrationBindings(Arm fourBar, SmartJoystick joystick, double calibrationMaxPower) {
+		joystick.POV_DOWN.onTrue(new InstantCommand(() -> fourBar.getCommandsBuilder().setIsSubsystemRunningIndependently(true)));
+		joystick.POV_UP.onTrue(new InstantCommand(() -> fourBar.getCommandsBuilder().setIsSubsystemRunningIndependently(false)));
+
+		// Check limits
+		joystick.R1.whileTrue(fourBar.getCommandsBuilder().setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * calibrationMaxPower));
+
+		fourBar.getSysIdCalibrator().setAllButtonsForCalibration(joystick);
+
+		joystick.POV_RIGHT.onTrue(fourBar.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(20)));
+		joystick.POV_LEFT.onTrue(fourBar.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(50)));
+	}
+
 	private static void applyHoodCalibrationBindings(Arm hood, SmartJoystick joystick, double calibrationMaxPower) {
 		joystick.POV_DOWN.onTrue(new InstantCommand(() -> hood.getCommandsBuilder().setIsSubsystemRunningIndependently(true)));
 		joystick.POV_UP.onTrue(new InstantCommand(() -> hood.getCommandsBuilder().setIsSubsystemRunningIndependently(false)));

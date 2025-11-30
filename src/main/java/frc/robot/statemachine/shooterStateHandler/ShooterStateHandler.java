@@ -2,14 +2,12 @@ package frc.robot.statemachine.shooterStateHandler;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.constants.turret.TurretConstants;
 import frc.robot.subsystems.flywheel.FlyWheel;
-import frc.utils.InterpolationMap;
 import org.littletonrobotics.junction.Logger;
 
-import java.util.Map;
 import java.util.function.Supplier;
 
 public class ShooterStateHandler {
@@ -19,15 +17,13 @@ public class ShooterStateHandler {
 	private final FlyWheel flyWheel;
 	private ShooterState currentState;
 	private final Supplier<Double> distanceFromTower;
-	public ShooterState currentState;
 
-	public ShooterStateHandler(Arm turret, Arm hood, FlyWheel flyWheel, Supplier<Double> distanceFromTower, String logPath) {
+	public ShooterStateHandler(Arm turret, Arm hood, FlyWheel flyWheel, Supplier<Double> distanceFromTower) {
 		this.turret = turret;
 		this.hood = hood;
 		this.flyWheel = flyWheel;
 		this.distanceFromTower = distanceFromTower;
 		this.currentState = ShooterState.STAY_IN_PLACE;
-		this.logPath = logPath;
 	}
 
 	public ShooterState getCurrentState() {
@@ -92,20 +88,24 @@ public class ShooterStateHandler {
 
 	public Command lookAtTower(Translation2d target, Pose2d robotPose) {
 		Rotation2d finalLocation = getLookAtTowerAngleForTurret(target, robotPose);
-		if (Math.abs(finalLocation.getDegrees() - turret.getPosition().getDegrees()) > 30 || Math.abs(ShooterConstants.SCREW_LOCATION.getDegrees() - turret.getPosition().getDegrees()) > 30) {
+		if (
+			turret.getPosition().getDegrees() + robotPose.getRotation().getDegrees() - finalLocation.getDegrees() < 360 - ShooterConstants.LENGTH_NOT_TO_TURN.getDegrees()
+		) {
 			return new ParallelCommandGroup(
 				turret.getCommandsBuilder().setTargetPosition(finalLocation),
-				new InstantCommand(() -> Logger.recordOutput(logPath + "/TurretTarget", finalLocation))
+				new InstantCommand(() -> Logger.recordOutput(ShooterConstants.LOG_PATH + "/TurretTarget", finalLocation))
 			);
 		}
 		return new ParallelCommandGroup(
 			turret.getCommandsBuilder().stayInPlace(),
-			new InstantCommand(() -> Logger.recordOutput(logPath + "/TurretTarget", finalLocation))
+			new InstantCommand(() -> Logger.recordOutput(ShooterConstants.LOG_PATH + "/TurretTarget", finalLocation))
 		);
 	}
 
 	public void Logger() {
-		Logger.recordOutput(logPath + "/CurrentState", currentState);
+		Logger.recordOutput(ShooterConstants.LOG_PATH + "/CurrentState", currentState);
+	}
+
 	private Command calibration() {
 		return new ParallelCommandGroup(
 			turret.getCommandsBuilder().setVoltage(ShooterConstants.turretCalibrationVoltage::get),

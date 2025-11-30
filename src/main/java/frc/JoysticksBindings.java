@@ -1,12 +1,13 @@
 package frc;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
-import frc.robot.statemachine.shooterStateHandler.ShooterState;
 import frc.robot.statemachine.shooterStateHandler.ShooterStateHandler;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.roller.Roller;
@@ -55,9 +56,12 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		ShooterStateHandler shooterStateHandler = new ShooterStateHandler(robot.getTurret(), robot.getHood(), robot.getFlyWheel(), () -> 9.0);
-		usedJoystick.A.onTrue(shooterStateHandler.setState(ShooterState.IDLE));
-		usedJoystick.B.onTrue(shooterStateHandler.setState(ShooterState.SHOOT));
-		usedJoystick.X.onTrue(shooterStateHandler.setState(ShooterState.STAY_IN_PLACE));
+		Pose2d robotPose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+		usedJoystick.Y.onTrue(shooterStateHandler.lookAtTower(new Translation2d(5, 5), robotPose));
+		usedJoystick.X.onTrue(shooterStateHandler.lookAtTower(new Translation2d(10, 5), robotPose));
+		usedJoystick.B.onTrue(shooterStateHandler.lookAtTower(new Translation2d(10, 50000), robotPose));
+		usedJoystick.A.onTrue(shooterStateHandler.lookAtTower(new Translation2d(100, 5), robotPose));
+		usedJoystick.POV_RIGHT.onTrue(shooterStateHandler.lookAtTower(new Translation2d(1000, 5), robotPose));
 		// bindings...
 	}
 

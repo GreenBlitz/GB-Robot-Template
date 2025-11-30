@@ -28,4 +28,7 @@ public class ShooterConstants {
 	public static final LoggedNetworkNumber hoodCalibrationVoltage = new LoggedNetworkNumber("HoodPower", 0);
 	public static final LoggedNetworkNumber flywheelCalibrationVoltage = new LoggedNetworkNumber("FlywheelPower", 0);
 
+	public static final Rotation2d SCREW_LOCATION = Rotation2d.fromDegrees(0);
+	public static final Rotation2d LENGTH_NOT_TO_TURN = Rotation2d.fromDegrees(30);
+
 }

@@ -1,5 +1,6 @@
 package frc.robot.statemachine.shooterStateHandler;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -83,6 +84,18 @@ public class ShooterStateHandler {
 			flyWheel.getCommandBuilder().setTargetVelocity(flywheelInterpolation(distanceFromTower))
 		);
 	}
+
+    private Rotation2d getLookAtTowerAngle(Pose2d target,Pose2d robotPose){
+        return Rotation2d.fromRadians(Math.atan2(Math.abs(target.getY()-robotPose.getY()),Math.abs(target.getX()-robotPose.getX())));
+    }
+
+    private Command lookAtTower(Pose2d target,Pose2d robotPose){
+        Rotation2d finalLocation = getLookAtTowerAngle(target,robotPose);
+        if (Math.abs(ShooterConstants.SCREW_LOCATION.getDegrees()-turret.getPosition().getDegrees())>30){
+            return turret.getCommandsBuilder().setTargetPosition(finalLocation);
+        }
+        return turret.getCommandsBuilder().stayInPlace();
+    }
 
 	public void Logger() {
 		Logger.recordOutput("stateHandler", currentState);

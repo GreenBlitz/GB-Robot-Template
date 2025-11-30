@@ -56,35 +56,28 @@ public class RobotManager extends LoggedRobot {
         Threads.setCurrentThreadPriority(true, 10);
 
         Pose3d left = new Pose3d(
-                new Translation3d(0.25009637774388915, -0.08377962196450461, 0.488331232141548),
-                new Rotation3d(Units.Degrees.of(-8.554321498008184), Units.Degrees.of(-25.954173697872232), Units.Degrees.of(-20.586967248503125))
+                new Translation3d(0.24245668657511033, -0.08451057552544228, 0.48844084314396247),
+                new Rotation3d(Units.Degrees.of(-8.550453726734322), Units.Degrees.of(-25.91720586111036), Units.Degrees.of(-20.54651677467569))
         );
         Pose3d right = new Pose3d(
-                new Translation3d(0.2311823642106896, 0.13741969562525957, 0.49612288118246956),
-                new Rotation3d(Units.Degrees.of(9.665914695321458), Units.Degrees.of(-26.155805464156003), Units.Degrees.of(21.681047144853935))
+                new Translation3d(0.22926275481791158, 0.1526994057877764, 0.49590391545576756),
+                new Rotation3d(Units.Degrees.of(9.741728172948926), Units.Degrees.of(-26.15536373056771), Units.Degrees.of(22.857542294746807))
         );
 
-        // minus the y and pitch
-
-        LimelightHelpers.setCameraPose_RobotSpace("limelight-left", 0, 0, 0, 0, 0, 0);
-
-        LimelightHelpers.setCameraPose_RobotSpace("limelight", 0, 0, 0, 0, 0, 0);
-
-
-//		LimelightHelpers.setCameraPose_RobotSpace(
-//				"limelight-left",
-//				left.getX(), left.getY(), left.getZ(),
-//				Math.toDegrees(left.getRotation().getX()),
-//				Math.toDegrees(left.getRotation().getY()),
-//				Math.toDegrees(left.getRotation().getZ())
-//		);
-//		LimelightHelpers.setCameraPose_RobotSpace(
-//				"limelight",
-//				right.getX(), right.getY(), right.getZ(),
-//				Math.toDegrees(right.getRotation().getX()),
-//				Math.toDegrees(right.getRotation().getY()),
-//				Math.toDegrees(right.getRotation().getZ())
-//		);
+		LimelightHelpers.setCameraPose_RobotSpace(
+				"limelight-left",
+				left.getX(), left.getY(), left.getZ(),
+				Math.toDegrees(left.getRotation().getX()),
+				Math.toDegrees(left.getRotation().getY()),
+				Math.toDegrees(left.getRotation().getZ())
+		);
+		LimelightHelpers.setCameraPose_RobotSpace(
+				"limelight",
+				right.getX(), right.getY(), right.getZ(),
+				Math.toDegrees(right.getRotation().getX()),
+				Math.toDegrees(right.getRotation().getY()),
+				Math.toDegrees(right.getRotation().getZ())
+		);
     }
 
     @Override
@@ -128,6 +121,8 @@ public class RobotManager extends LoggedRobot {
      * - you work with the newest tags map
      */
     public void logCameraPose(String PathPrefix, String cameraName, int tagID, double xRobotDistanceFromTag, double middleOfTagHeight) {
+        LimelightHelpers.setCameraPose_RobotSpace(cameraName, 0, 0, 0, 0, 0, 0);
+
         Pose3d tagPoseFieldRelative = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded).getTagPose(tagID).get();
         Pose3d cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
 

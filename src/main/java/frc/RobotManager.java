@@ -121,6 +121,8 @@ public class RobotManager extends LoggedRobot {
      * - you work with the newest tags map
      */
     public void logCameraPose(String PathPrefix, String cameraName, int tagID, double xRobotDistanceFromTag, double middleOfTagHeight) {
+       // TODO - make a command, do an average, make field param, add option to tags that are not perfectly aligned
+
         LimelightHelpers.setCameraPose_RobotSpace(cameraName, 0, 0, 0, 0, 0, 0);
 
         Pose3d tagPoseFieldRelative = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded).getTagPose(tagID).get();

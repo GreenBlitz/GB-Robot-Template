@@ -24,14 +24,6 @@ public class ShooterStateHandler {
 		this.currentState = ShooterState.STAY_IN_PLACE;
 	}
 
-	public ShooterState getCurrentState() {
-		return currentState;
-	}
-
-	public void setCurrentState(ShooterState currentState) {
-		this.currentState = currentState;
-	}
-
 	public static Supplier<Rotation2d> hoodInterpolation(Supplier<Double> distanceFromTower) {
 		return () -> ShooterConstants.HOOD_INTERPOLATION_MAP.get(distanceFromTower.get());
 	}

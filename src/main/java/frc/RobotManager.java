@@ -123,20 +123,9 @@ public class RobotManager extends LoggedRobot {
 		// robot.getSwerve().getCommandsBuilder().setIsSubsystemRunningIndependently(false);
 	}
 
-	TestInputsAutoLogged testInputs = new TestInputsAutoLogged();
-
-	public void code(String pathaddition, String cameraName) {
-		int tagID = 18;
-		double xRobotDistanceFromTag = (0.82 + 0.30833);
-		double tagHeight = 0.08255+0.05;
-
-
-		Pose3d tagPoseFieldRelative = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded).getTagPose(tagID).get();
-
-		testInputs.cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
-		Logger.processInputs(pathaddition + "Test/InputsForReplay", testInputs);
-
-		Pose3d cameraPoseFieldRelative = testInputs.cameraPoseFieldRelative;
+	public void code(String PathPrefix, String cameraName, int tagID, double xRobotDistanceFromTag, double tagHeight) {
+		Pose3d tagPoseFieldRelative = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField).getTagPose(tagID).get();
+		Pose3d cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
 
 		// tag - robotToTagFieldRelative = robot
 		Pose3d robotToTagFieldRelative = new Pose3d(
@@ -170,17 +159,17 @@ public class RobotManager extends LoggedRobot {
 				cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + tagHeight
 		);
 
-		Logger.recordOutput(pathaddition + "Test/tag/TagPoseFieldRelative", tagPoseFieldRelative);
-		printRot3d(pathaddition + "Test/tag/Rotation", tagPoseFieldRelative.getRotation());
+		Logger.recordOutput(PathPrefix + "/CameraCalibration/tag/TagPoseFieldRelative", tagPoseFieldRelative);
+		printRot3d(PathPrefix + "/CameraCalibration/tag/Rotation", tagPoseFieldRelative.getRotation());
 
-		Logger.recordOutput(pathaddition + "Test/cam/cameraPoseFieldRelative", cameraPoseFieldRelative);
-		printRot3d(pathaddition + "Test/cam/camRot", cameraPoseFieldRelative.getRotation());
+		Logger.recordOutput(PathPrefix + "/CameraCalibration/cam/cameraPoseFieldRelative", cameraPoseFieldRelative);
+		printRot3d(PathPrefix + "/CameraCalibration/cam/camRot", cameraPoseFieldRelative.getRotation());
 
-		Logger.recordOutput(pathaddition + "Test/robot/robotToTagFieldRelative", robotToTagFieldRelative);
-		Logger.recordOutput(pathaddition + "Test/robot/robotFieldRelative", robotPoseFieldRelative);
+		Logger.recordOutput(PathPrefix + "/CameraCalibration/robot/robotToTagFieldRelative", robotToTagFieldRelative);
+		Logger.recordOutput(PathPrefix + "/CameraCalibration/robot/robotFieldRelative", robotPoseFieldRelative);
 
-		printRot3d(pathaddition + "Test/solution/endRot", endRot);
-		Logger.recordOutput(pathaddition + "Test/solution/endTranslation", endTranslation);
+		printRot3d(PathPrefix + "/CameraCalibration/solution/endRot", endRot);
+		Logger.recordOutput(PathPrefix + "/CameraCalibration/solution/endTranslation", endTranslation);
 	}
 
 	@Override
@@ -190,8 +179,12 @@ public class RobotManager extends LoggedRobot {
 		robot.periodic();
 		AlertManager.reportAlerts();
 
-		code("Left/", "limelight-left");
-		code("Right/", "limelight");
+		int tagID = 18;
+		double xRobotDistanceFromTag = (0.82 + 0.30833);
+		double tagHeight = 0.08255+0.05;
+
+		code("Left", "limelight-left", tagID, xRobotDistanceFromTag, tagHeight);
+		code("Right", "limelight", tagID, xRobotDistanceFromTag, tagHeight);
 
 		Logger.recordOutput("PoseCheck/Right", 	LimelightHelpers.getBotPose3d_wpiBlue("limelight"));
 		Logger.recordOutput("PoseCheck/Left", 	LimelightHelpers.getBotPose3d_wpiBlue("limelight-left"));

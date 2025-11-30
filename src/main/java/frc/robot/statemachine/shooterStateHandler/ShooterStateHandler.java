@@ -8,7 +8,6 @@ import org.littletonrobotics.junction.Logger;
 
 import java.util.function.Supplier;
 
-
 public class ShooterStateHandler {
 
 	private final Arm turret;
@@ -54,7 +53,6 @@ public class ShooterStateHandler {
 			command
 		);
 	}
-
 
 	private Command stayInPlace() {
 		return new ParallelCommandGroup(

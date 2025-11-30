@@ -2,11 +2,7 @@ package frc.robot.statemachine.shooterStateHandler;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.interpolation.InverseInterpolator;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.constants.turret.TurretConstants;
 import frc.robot.subsystems.flywheel.FlyWheel;
@@ -22,26 +18,15 @@ public class ShooterStateHandler {
 	private final Arm hood;
 	private final FlyWheel flyWheel;
 	private ShooterState currentState;
-	private final String logPath;
 	private final Supplier<Double> distanceFromTower;
-
-	public static final InterpolationMap<Double, Rotation2d> HOOD_INTERPOLATION_MAP = new InterpolationMap<Double, Rotation2d>(
-		InverseInterpolator.forDouble(),
-		InterpolationMap.interpolatorForRotation2d(),
-		Map.of()
-	);
-
-	public static final InterpolationMap<Double, Rotation2d> FLYWHEEL_INTERPOLATION_MAP = new InterpolationMap<Double, Rotation2d>(
-		InverseInterpolator.forDouble(),
-		InterpolationMap.interpolatorForRotation2d(),
-		Map.of()
-	);
+	public ShooterState currentState;
 
 	public ShooterStateHandler(Arm turret, Arm hood, FlyWheel flyWheel, Supplier<Double> distanceFromTower, String logPath) {
 		this.turret = turret;
 		this.hood = hood;
 		this.flyWheel = flyWheel;
 		this.distanceFromTower = distanceFromTower;
+		this.currentState = ShooterState.STAY_IN_PLACE;
 		this.logPath = logPath;
 	}
 
@@ -49,20 +34,30 @@ public class ShooterStateHandler {
 		return currentState;
 	}
 
+	public void setCurrentState(ShooterState currentState) {
+		this.currentState = currentState;
+	}
+
 	public static Rotation2d hoodInterpolation(Supplier<Double> distanceFromTower) {
-		return HOOD_INTERPOLATION_MAP.get(distanceFromTower.get());
+		return ShooterConstants.HOOD_INTERPOLATION_MAP.get(distanceFromTower.get());
 	}
 
 	public static Rotation2d flywheelInterpolation(Supplier<Double> distanceFromTower) {
-		return FLYWHEEL_INTERPOLATION_MAP.get(distanceFromTower.get());
+		return ShooterConstants.FLYWHEEL_INTERPOLATION_MAP.get(distanceFromTower.get());
 	}
 
 	public Command setState(ShooterState shooterState) {
-		return new ParallelCommandGroup(new InstantCommand(() -> currentState = shooterState), switch (shooterState) {
+		Command command = switch (shooterState) {
 			case STAY_IN_PLACE -> stayInPlace();
 			case IDLE -> idle();
 			case SHOOT -> shoot();
-		});
+			case CALIBRATION -> calibration();
+		};
+		return new ParallelCommandGroup(
+			new InstantCommand(() -> Logger.recordOutput(ShooterConstants.LOG_PATH + "/currentState", shooterState.name())),
+			new InstantCommand(() -> currentState = shooterState),
+			command
+		);
 	}
 
 	private Command stayInPlace() {
@@ -111,6 +106,12 @@ public class ShooterStateHandler {
 
 	public void Logger() {
 		Logger.recordOutput(logPath + "/CurrentState", currentState);
+	private Command calibration() {
+		return new ParallelCommandGroup(
+			turret.getCommandsBuilder().setVoltage(ShooterConstants.turretCalibrationVoltage::get),
+			hood.getCommandsBuilder().setVoltage(ShooterConstants.hoodCalibrationVoltage::get),
+			flyWheel.getCommandBuilder().setVoltageAsSupplier(ShooterConstants.flywheelCalibrationVoltage::get)
+		);
 	}
 
 }

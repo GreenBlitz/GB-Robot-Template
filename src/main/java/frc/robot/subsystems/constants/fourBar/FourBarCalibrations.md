@@ -1,9 +1,9 @@
-Hood calibrations
----------------------
+FourBar calibrations
+--------------------
 
 #### IDs
-- [ ] Motor id
-- [ ] Motor buschain
+- [ ] motor id
+- [ ] motor BusChain
 
 #### Limits
 - [ ] Current limit
@@ -13,15 +13,12 @@ Hood calibrations
 - [ ] Min position
 
 #### Motor config
-- [ ] Gear ratio
-- [ ] Neutral mode
+- [ ] Sensor to mechanism ratio
 - [ ] Is Inverted
 
 #### General Constants
-- [ ] Arm length
-- [ ] Arm weight
+- [ ] FourBar length
 - [ ] SysIdRoutineConfig
-- [ ] Starting position
 
 #### PID
 - [ ] kP
@@ -36,11 +33,9 @@ Hood calibrations
 #### FeedForward
 - [ ] kS
 - [ ] kG
+- [ ] kA
+- [ ] kV
 
 #### MotionMagic
 - [ ] Default max acceleration per meter square
 - [ ] Default max velocity per meter
-
-#### Simulation Constants
-- [ ] Moment of inertia
-- [ ] Is starting position max or min

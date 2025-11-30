@@ -7,8 +7,10 @@ package frc.robot;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
+import frc.robot.subsystems.constants.fourBar.FourBarConstants;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.subsystems.arm.ArmSimulationConstants;
 import frc.robot.subsystems.constants.intakeRollers.IntakeRollerConstants;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.TalonFXArmBuilder;
@@ -36,9 +38,9 @@ public class Robot {
 	private final Arm turret;
 	private final FlyWheel flyWheel;
 	private final Roller intakeRoller;
+	private final Arm fourBar;
 	private final Arm hood;
 	private final IDigitalInput intakeRollerSensor;
-
 	private final Roller belly;
 	private final Roller omni;
 	private final IDigitalInput funnelDigitalInput;
@@ -51,6 +53,10 @@ public class Robot {
 		BrakeStateManager.add(() -> turret.setBrake(true), () -> turret.setBrake(false));
 
 		this.flyWheel = KrakenX60FlyWheelBuilder.build("Subsystems/FlyWheel", IDs.TalonFXIDs.FLYWHEEL);
+
+		this.fourBar = createFourBar();
+		fourBar.setPosition(FourBarConstants.MAXIMUM_POSITION);
+		BrakeStateManager.add(() -> fourBar.setBrake(true), () -> fourBar.setBrake(false));
 
 		this.hood = createHood();
 		hood.setPosition(HoodConstants.MINIMUM_POSITION);
@@ -76,6 +82,9 @@ public class Robot {
 		}
 		if (TurretConstants.MIN_POSITION.getRadians() > turret.getPosition().getRadians()) {
 			turret.setPosition(TurretConstants.MIN_POSITION);
+		}
+		if (FourBarConstants.MAXIMUM_POSITION.getRadians() < fourBar.getPosition().getRadians()) {
+			fourBar.setPosition(FourBarConstants.MAXIMUM_POSITION);
 		}
 	}
 
@@ -104,6 +113,13 @@ public class Robot {
 	}
 
 	private Arm createTurret() {
+		ArmSimulationConstants turretSimulationConstants = new ArmSimulationConstants(
+			TurretConstants.MAX_POSITION,
+			TurretConstants.MIN_POSITION,
+			TurretConstants.MIN_POSITION,
+			TurretConstants.MOMENT_OF_INERTIA,
+			TurretConstants.TURRET_RADIUS
+		);
 		return TalonFXArmBuilder.buildMotionMagicArm(
 			TurretConstants.LOG_PATH,
 			IDs.TalonFXIDs.TURRET,
@@ -115,13 +131,40 @@ public class Robot {
 			TurretConstants.SIMULATION_SLOTS_CONFIG,
 			TurretConstants.CURRENT_LIMIT,
 			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-			TurretConstants.MOMENT_OF_INERTIA,
-			TurretConstants.TURRET_RADIUS,
 			TurretConstants.ARBITRARY_FEED_FORWARD,
 			TurretConstants.FORWARD_SOFTWARE_LIMIT,
 			TurretConstants.BACKWARDS_SOFTWARE_LIMIT,
+			turretSimulationConstants,
 			TurretConstants.DEFAULT_MAX_ACCELERATION_PER_SECOND_SQUARE,
 			TurretConstants.DEFAULT_MAX_VELOCITY_PER_SECOND
+		);
+	}
+
+	private Arm createFourBar() {
+		ArmSimulationConstants fourBarSimConstant = new ArmSimulationConstants(
+			FourBarConstants.MAXIMUM_POSITION,
+			FourBarConstants.MINIMUM_POSITION,
+			FourBarConstants.MAXIMUM_POSITION,
+			FourBarConstants.MOMENT_OF_INERTIA,
+			FourBarConstants.FOUR_BAR_LENGTH
+		);
+		return TalonFXArmBuilder.buildDynamicMotionMagicArm(
+			FourBarConstants.LOG_PATH,
+			IDs.TalonFXIDs.FOUR_BAR,
+			FourBarConstants.IS_INVERTED,
+			FourBarConstants.TALON_FX_FOLLOWER_CONFIG,
+			FourBarConstants.SYS_ID_ROUTINE,
+			FourBarConstants.FEEDBACK_CONFIGS,
+			FourBarConstants.REAL_SLOT,
+			FourBarConstants.SIMULATION_SLOT,
+			FourBarConstants.CURRENT_LIMIT,
+			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+			FourBarConstants.ARBITRARY_FEED_FORWARD,
+			FourBarConstants.FORWARD_SOFTWARE_LIMITS,
+			FourBarConstants.BACKWARD_SOFTWARE_LIMITS,
+			fourBarSimConstant,
+			FourBarConstants.MAX_ACCELERATION_ROTATION2D_PER_SECONDS_SQUARE,
+			FourBarConstants.MAX_VELOCITY_ROTATION2D_PER_SECONDS
 		);
 	}
 
@@ -136,44 +179,15 @@ public class Robot {
 		);
 	}
 
-	public Roller getBelly() {
-		return belly;
-	}
-
-	public Arm getTurret() {
-		return turret;
-	}
-
-	public FlyWheel getFlyWheel() {
-		return flyWheel;
-	}
-
-	public IDigitalInput getIntakeRollerSensor() {
-		return intakeRollerSensor;
-	}
-
-	public Roller getIntakeRoller() {
-		return intakeRoller;
-	}
-
-	public Roller getOmni() {
-		return omni;
-	}
-
-	public IDigitalInput getFunnelDigitalInput() {
-		return funnelDigitalInput;
-	}
-
-	public Arm getHood() {
-		return hood;
-	}
-
-	public PathPlannerAutoWrapper getAutonomousCommand() {
-		return new PathPlannerAutoWrapper();
-	}
-
 	private Arm createHood() {
-		return TalonFXArmBuilder.buildMotionMagicArm(
+		ArmSimulationConstants hoodSimulationConstatns = new ArmSimulationConstants(
+			HoodConstants.MAXIMUM_POSITION,
+			HoodConstants.MINIMUM_POSITION,
+			HoodConstants.MINIMUM_POSITION,
+			HoodConstants.MOMENT_OF_INERTIA,
+			HoodConstants.HOOD_LENGTH_METERS
+		);
+		return TalonFXArmBuilder.buildDynamicMotionMagicArm(
 			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Hood",
 			IDs.TalonFXIDs.HOOD,
 			HoodConstants.IS_INVERTED,
@@ -184,11 +198,10 @@ public class Robot {
 			HoodConstants.SIMULATION_SLOT,
 			HoodConstants.CURRENT_LIMIT,
 			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-			HoodConstants.MOMENT_OF_INERTIA,
-			HoodConstants.HOOD_LENGTH_METERS,
 			HoodConstants.ARBITRARY_FEEDFORWARD,
 			HoodConstants.FORWARD_SOFTWARE_LIMIT,
 			HoodConstants.BACKWARD_SOFTWARE_LIMIT,
+			hoodSimulationConstatns,
 			HoodConstants.DEFAULT_MAX_ACCELERATION_PER_SECOND_SQUARE,
 			HoodConstants.DEFAULT_MAX_VELOCITY_PER_SECOND
 		);
@@ -207,6 +220,46 @@ public class Robot {
 			OmniConstant.IS_FORWARD_LIMIT_SWITCH,
 			OmniConstant.IS_FORWARD_LIMIT_SWITCH_INVERTED
 		);
+	}
+
+	public IDigitalInput getIntakeRollerSensor() {
+		return intakeRollerSensor;
+	}
+
+	public Roller getIntakeRoller() {
+		return intakeRoller;
+	}
+
+	public Roller getBelly() {
+		return belly;
+	}
+
+	public Arm getTurret() {
+		return turret;
+	}
+
+	public FlyWheel getFlyWheel() {
+		return flyWheel;
+	}
+
+	public Arm getFourBar() {
+		return fourBar;
+	}
+
+	public Roller getOmni() {
+		return omni;
+	}
+
+	public IDigitalInput getFunnelDigitalInput() {
+		return funnelDigitalInput;
+	}
+
+	public Arm getHood() {
+		return hood;
+	}
+
+	public PathPlannerAutoWrapper getAutonomousCommand() {
+		return new PathPlannerAutoWrapper();
 	}
 
 }

@@ -23,6 +23,8 @@ import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.logger.LoggerFactory;
+import frc.utils.math.AngleTransform;
+import frc.utils.math.FieldMath;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -54,6 +56,37 @@ public class RobotManager extends LoggedRobot {
 		JoysticksBindings.configureBindings(robot);
 
 		Threads.setCurrentThreadPriority(true, 10);
+
+		Pose3d left = new Pose3d(
+				new Translation3d(0.25009637774388915, -0.08377962196450461, 0.488331232141548),
+				new Rotation3d(Units.Degrees.of(-8.554321498008184), Units.Degrees.of(-25.954173697872232), Units.Degrees.of(-20.586967248503125))
+		);
+		Pose3d right = new Pose3d(
+				new Translation3d(0.2311823642106896, 0.13741969562525957, 0.49612288118246956),
+				new Rotation3d(Units.Degrees.of(9.665914695321458), Units.Degrees.of(-26.155805464156003), Units.Degrees.of(21.681047144853935))
+		);
+
+		// minus the y and pitch
+
+//		LimelightHelpers.setCameraPose_RobotSpace("limelight-left", 0, 0, 0, 0, 0, 0);
+//
+//		LimelightHelpers.setCameraPose_RobotSpace("limelight", 0, 0, 0, 0, 0, 0);
+
+
+		LimelightHelpers.setCameraPose_RobotSpace(
+				"limelight-left",
+				left.getX(), left.getY(), left.getZ(),
+				Math.toDegrees(left.getRotation().getX()),
+				Math.toDegrees(left.getRotation().getY()),
+				Math.toDegrees(left.getRotation().getZ())
+		);
+		LimelightHelpers.setCameraPose_RobotSpace(
+				"limelight",
+				right.getX(), right.getY(), right.getZ(),
+				Math.toDegrees(right.getRotation().getX()),
+				Math.toDegrees(right.getRotation().getY()),
+				Math.toDegrees(right.getRotation().getZ())
+		);
 	}
 
 	@Override
@@ -92,6 +125,64 @@ public class RobotManager extends LoggedRobot {
 
 	TestInputsAutoLogged testInputs = new TestInputsAutoLogged();
 
+	public void code(String pathaddition, String cameraName) {
+		int tagID = 18;
+		double xRobotDistanceFromTag = (0.82 + 0.30833);
+		double tagHeight = 0.08255+0.05;
+
+
+		Pose3d tagPoseFieldRelative = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded).getTagPose(tagID).get();
+
+		testInputs.cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
+		Logger.processInputs(pathaddition + "Test/InputsForReplay", testInputs);
+
+		Pose3d cameraPoseFieldRelative = testInputs.cameraPoseFieldRelative;
+
+		// tag - robotToTagFieldRelative = robot
+		Pose3d robotToTagFieldRelative = new Pose3d(
+				xRobotDistanceFromTag,
+				0,
+				tagPoseFieldRelative.getZ() - tagHeight,
+				new Rotation3d(0, 0, 180)
+		);
+
+		Pose3d robotPoseFieldRelative = new Pose3d(
+				tagPoseFieldRelative.getX() - robotToTagFieldRelative.getX(),
+				tagPoseFieldRelative.getY() - robotToTagFieldRelative.getY(),
+				tagPoseFieldRelative.getZ() - robotToTagFieldRelative.getZ(),
+				FieldMath.transformAngle(
+						tagPoseFieldRelative.getRotation(),
+						AngleTransform.KEEP,
+						AngleTransform.KEEP,
+						AngleTransform.INVERT)
+		);
+
+		// when robot looks at tag yaw 0 its yaw is 180 (so we invert yaw)
+		Rotation3d endRot = new Rotation3d(
+				cameraPoseFieldRelative.getRotation().getX(),
+				cameraPoseFieldRelative.getRotation().getY(),
+				cameraPoseFieldRelative.getRotation().getZ() - (Math.PI + tagPoseFieldRelative.getRotation().getZ())
+		);
+
+		Translation3d endTranslation = new Translation3d(
+				cameraPoseFieldRelative.getX() - robotPoseFieldRelative.getX(),
+				cameraPoseFieldRelative.getY() - robotPoseFieldRelative.getY(),
+				cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + tagHeight
+		);
+
+		Logger.recordOutput(pathaddition + "Test/tag/TagPoseFieldRelative", tagPoseFieldRelative);
+		printRot3d(pathaddition + "Test/tag/Rotation", tagPoseFieldRelative.getRotation());
+
+		Logger.recordOutput(pathaddition + "Test/cam/cameraPoseFieldRelative", cameraPoseFieldRelative);
+		printRot3d(pathaddition + "Test/cam/camRot", cameraPoseFieldRelative.getRotation());
+
+		Logger.recordOutput(pathaddition + "Test/robot/robotToTagFieldRelative", robotToTagFieldRelative);
+		Logger.recordOutput(pathaddition + "Test/robot/robotFieldRelative", robotPoseFieldRelative);
+
+		printRot3d(pathaddition + "Test/solution/endRot", endRot);
+		Logger.recordOutput(pathaddition + "Test/solution/endTranslation", endTranslation);
+	}
+
 	@Override
 	public void robotPeriodic() {
 		updateTimeRelatedData(); // Better to be first
@@ -99,72 +190,11 @@ public class RobotManager extends LoggedRobot {
 		robot.periodic();
 		AlertManager.reportAlerts();
 
-		// todo calibrate - tagID [ ] , camera name - [X], expected pose - [X] , xRobotDistanceFromTag [ ] , tagHeight [ ]
+		code("Left/", "limelight-left");
+		code("Right/", "limelight");
 
-		String cameraName = "limelight-left";
-		int tagID = 13;
-		double xRobotDistanceFromTag = 1;
-		double tagHeight = 0.2;
-
-		LimelightHelpers.setCameraPose_RobotSpace(cameraName, 0, 0, 0, 0, 0, 0);
-
-		Pose3d tagPoseFieldRelative = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded).getTagPose(tagID).get();
-
-		testInputs.cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
-		Logger.processInputs("Test/InputsForReplay", testInputs);
-
-		Pose3d cameraPoseFieldRelative = testInputs.cameraPoseFieldRelative;
-
-		// tag - robotToTagFieldRelative = robot
-		Pose3d robotToTagFieldRelative = new Pose3d(
-			xRobotDistanceFromTag * Math.cos(tagPoseFieldRelative.getRotation().getZ()),
-			xRobotDistanceFromTag * Math.sin(tagPoseFieldRelative.getRotation().getZ()),
-			tagPoseFieldRelative.getZ() - tagHeight,
-			new Rotation3d(0, 0, 0)
-		);
-
-		Pose3d robotPoseFieldRelative = new Pose3d(
-			tagPoseFieldRelative.getX() - robotToTagFieldRelative.getX(),
-			tagPoseFieldRelative.getY() - robotToTagFieldRelative.getY(),
-			tagPoseFieldRelative.getZ() - robotToTagFieldRelative.getZ(),
-			tagPoseFieldRelative.getRotation().minus(robotToTagFieldRelative.getRotation())
-		);
-
-		// when robot looks at tag yaw 0 its yaw is 180 (so we invert yaw)
-		Rotation3d endRot = new Rotation3d(
-			cameraPoseFieldRelative.getRotation().getX(),
-			cameraPoseFieldRelative.getRotation().getY(),
-			cameraPoseFieldRelative.getRotation().getZ() - (Math.PI + tagPoseFieldRelative.getRotation().getZ())
-		);
-
-		double distanceCameraToRobotXY = cameraPoseFieldRelative.toPose2d()
-			.getTranslation()
-			.getDistance(robotPoseFieldRelative.toPose2d().getTranslation());
-		Translation3d endTranslation = new Translation3d(
-			distanceCameraToRobotXY * Math.cos(robotPoseFieldRelative.getRotation().getZ()),
-			distanceCameraToRobotXY * Math.sin(robotPoseFieldRelative.getRotation().getZ()),
-			cameraPoseFieldRelative.getZ() - robotPoseFieldRelative.getZ()
-		);
-
-		Pose3d expected = new Pose3d(
-			new Translation3d(0.215, -0.11, 0.508),
-			new Rotation3d(Units.Degrees.of(-8.06180374425555), Units.Degrees.of(-27.07784559039065), Units.Degrees.of(-22.52372569716833))
-		);
-
-		Logger.recordOutput("Test/tag/TagPoseFieldRelative", tagPoseFieldRelative);
-		printRot3d("Test/tag/Rotation", tagPoseFieldRelative.getRotation());
-
-		Logger.recordOutput("Test/cam/cameraPoseFieldRelative", cameraPoseFieldRelative);
-		printRot3d("Test/cam/camRot", cameraPoseFieldRelative.getRotation());
-
-		Logger.recordOutput("Test/robot/robotToTagFieldRelative", robotToTagFieldRelative);
-		Logger.recordOutput("Test/robot/robotFieldRelative", robotPoseFieldRelative);
-
-		printRot3d("Test/solution/endRot", endRot);
-		Logger.recordOutput("Test/solution/endTranslation", endTranslation);
-
-		Logger.recordOutput("Test/expected/expected", expected.getTranslation());
-		printRot3d("Test/expected/expectedRot", expected.getRotation());
+		Logger.recordOutput("PoseCheck/Right", 	LimelightHelpers.getBotPose3d_wpiBlue("limelight"));
+		Logger.recordOutput("PoseCheck/Left", 	LimelightHelpers.getBotPose3d_wpiBlue("limelight-left"));
 	}
 
 	public static void printRot3d(String path, Rotation3d rotation3d) {

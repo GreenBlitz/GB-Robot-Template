@@ -37,7 +37,7 @@ public class Superstructure {
 		this.isSubsystemRunningIndependently = false;
 		this.logPath = logPath;
 
-		this.funnelStateHandler = new FunnelStateHandler();
+		this.funnelStateHandler = new FunnelStateHandler(robot.getOmni(), robot.getBelly(), logPath, robot.getFunnelDigitalInput());
 		this.intakeStateHandler = new IntakeStateHandler();
 		this.shooterStateHandler = new ShooterStateHandler();
 	}
@@ -72,7 +72,7 @@ public class Superstructure {
 	private Command stayInPlace() {
 		return new ParallelCommandGroup(
 			shooterStateHandler.setState(ShooterStateHandler.ShooterState.STAY_IN_PLACE),
-			funnelStateHandler.setState(FunnelState.STAY_IN_PLACE),
+			funnelStateHandler.setState(FunnelState.STOP),
 			intakeStateHandler.setState(IntakeStateHandler.IntakeState.STAY_IN_PLACE)
 		);
 	}

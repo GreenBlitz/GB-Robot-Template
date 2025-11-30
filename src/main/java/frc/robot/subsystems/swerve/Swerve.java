@@ -326,7 +326,7 @@ public class Swerve extends GBSubsystem {
 		return isAtHeading && isStopping;
 	}
 
-	public boolean collisionDetection() {
+	public boolean isCollisionDetected() {
 		return imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d().getNorm() > 2;
 	}
 

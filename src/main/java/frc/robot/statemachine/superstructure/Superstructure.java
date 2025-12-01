@@ -7,10 +7,18 @@ import frc.robot.statemachine.RobotState;
 import frc.robot.statemachine.funnelstatehandler.FunnelState;
 import frc.robot.statemachine.funnelstatehandler.FunnelStateHandler;
 import frc.robot.statemachine.intakestatehandler.IntakeStateHandler;
+import frc.robot.statemachine.shooterstatehandler.ShooterState;
+import frc.robot.statemachine.shooterstatehandler.ShooterStateHandler;
+import frc.robot.statemachine.funnelstatehandler.FunnelState;
+import frc.robot.statemachine.funnelstatehandler.FunnelStateHandler;
+import frc.robot.statemachine.intakestatehandler.IntakeStateHandler;
 import frc.robot.statemachine.shooterstatehandler.ShooterStateHandler;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
+
+import static frc.robot.statemachine.RobotState.SHOOT_AND_INTAKE;
+import static frc.robot.statemachine.RobotState.STAY_IN_PLACE;
 
 public class Superstructure {
 
@@ -39,7 +47,7 @@ public class Superstructure {
 
 		this.funnelStateHandler = new FunnelStateHandler(robot.getOmni(), robot.getBelly(), logPath, robot.getFunnelDigitalInput());
 		this.intakeStateHandler = new IntakeStateHandler();
-		this.shooterStateHandler = new ShooterStateHandler();
+		this.shooterStateHandler = new ShooterStateHandler(robot.getTurret(), robot.getHood(), robot.getFlyWheel(), () -> 0.0);
 	}
 
 	public boolean isSubsystemRunningIndependently() {
@@ -59,19 +67,24 @@ public class Superstructure {
 	}
 
 	public Command setState(RobotState robotState) {
-		return switch (robotState) {
-			case STAY_IN_PLACE -> stayInPlace();
-			case DRIVE -> idle();
-			case INTAKE -> intake();
-			case PRE_SHOOT -> preShoot();
-			case SHOOT -> shoot();
-			case SHOOT_AND_INTAKE -> shootAndIntake();
-		};
+		return new ParallelCommandGroup(
+			new InstantCommand(() -> currentState = robotState),
+			new InstantCommand(() -> Logger.recordOutput(logPath + "/currentState", getCurrentState())),
+			switch (robotState) {
+				case STAY_IN_PLACE -> stayInPlace();
+				case DRIVE -> idle();
+				case INTAKE -> intake();
+				case PRE_SHOOT -> preShoot();
+				case SHOOT -> shoot();
+				case SHOOT_AND_INTAKE -> shootAndIntake();
+			}
+
+		);
 	}
 
 	private Command stayInPlace() {
 		return new ParallelCommandGroup(
-			shooterStateHandler.setState(ShooterStateHandler.ShooterState.STAY_IN_PLACE),
+			shooterStateHandler.setState(ShooterState.STAY_IN_PLACE),
 			funnelStateHandler.setState(FunnelState.STOP),
 			intakeStateHandler.setState(IntakeStateHandler.IntakeState.STAY_IN_PLACE)
 		);
@@ -79,7 +92,7 @@ public class Superstructure {
 
 	private Command idle() {
 		return new ParallelCommandGroup(
-			shooterStateHandler.setState(ShooterStateHandler.ShooterState.IDLE),
+			shooterStateHandler.setState(ShooterState.IDLE),
 			funnelStateHandler.setState(FunnelState.DRIVE),
 			intakeStateHandler.setState(IntakeStateHandler.IntakeState.CLOSED)
 		);
@@ -87,7 +100,7 @@ public class Superstructure {
 
 	private Command intake() {
 		return new ParallelCommandGroup(
-			shooterStateHandler.setState(ShooterStateHandler.ShooterState.IDLE),
+			shooterStateHandler.setState(ShooterState.IDLE),
 			funnelStateHandler.setState(FunnelState.INTAKE),
 			intakeStateHandler.setState(IntakeStateHandler.IntakeState.INTAKE)
 		);
@@ -95,7 +108,7 @@ public class Superstructure {
 
 	private Command preShoot() {
 		return new ParallelCommandGroup(
-			shooterStateHandler.setState(ShooterStateHandler.ShooterState.PRE_SHOOT),
+			shooterStateHandler.setState(ShooterState.SHOOT),
 			funnelStateHandler.setState(FunnelState.DRIVE),
 			intakeStateHandler.setState(IntakeStateHandler.IntakeState.CLOSED)
 		);
@@ -103,7 +116,7 @@ public class Superstructure {
 
 	private Command shoot() {
 		return new ParallelCommandGroup(
-			shooterStateHandler.setState(ShooterStateHandler.ShooterState.SHOOT),
+			shooterStateHandler.setState(ShooterState.SHOOT),
 			funnelStateHandler.setState(FunnelState.SHOOT),
 			intakeStateHandler.setState(IntakeStateHandler.IntakeState.CLOSED)
 		);
@@ -111,7 +124,7 @@ public class Superstructure {
 
 	private Command shootAndIntake() {
 		return new ParallelCommandGroup(
-			shooterStateHandler.setState(ShooterStateHandler.ShooterState.SHOOT),
+			shooterStateHandler.setState(ShooterState.SHOOT),
 			funnelStateHandler.setState(FunnelState.SHOOT),
 			intakeStateHandler.setState(IntakeStateHandler.IntakeState.INTAKE)
 		);

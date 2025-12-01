@@ -11,6 +11,7 @@ import frc.robot.subsystems.constants.fourBar.FourBarConstants;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.subsystems.arm.ArmSimulationConstants;
+import frc.robot.statemachine.superstructure.Superstructure;
 import frc.robot.subsystems.constants.intakeRollers.IntakeRollerConstants;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.TalonFXArmBuilder;
@@ -41,9 +42,12 @@ public class Robot {
 	private final Arm fourBar;
 	private final Arm hood;
 	private final IDigitalInput intakeRollerSensor;
+
 	private final Roller belly;
 	private final Roller omni;
 	private final IDigitalInput funnelDigitalInput;
+
+	private Superstructure superstructure;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -74,6 +78,8 @@ public class Robot {
 		this.omni = omniAndDigitalInput.getFirst();
 		this.funnelDigitalInput = omniAndDigitalInput.getSecond();
 		BrakeStateManager.add(() -> omni.setBrake(true), () -> omni.setBrake(false));
+
+		this.superstructure = new Superstructure("/superstructure", this);
 	}
 
 	public void resetSubsystems() {
@@ -256,6 +262,10 @@ public class Robot {
 
 	public Arm getHood() {
 		return hood;
+	}
+
+	public Superstructure getSuperstructure() {
+		return this.superstructure;
 	}
 
 	public PathPlannerAutoWrapper getAutonomousCommand() {

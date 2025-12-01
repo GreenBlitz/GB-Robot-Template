@@ -6,6 +6,7 @@ import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
+import frc.robot.statemachine.RobotState;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.roller.Roller;
 import frc.robot.subsystems.swerve.ChassisPowers;
@@ -52,6 +53,11 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+		usedJoystick.A.onTrue(robot.getSuperstructure().setState(RobotState.SHOOT));
+		usedJoystick.B.onTrue(robot.getSuperstructure().setState(RobotState.PRE_SHOOT));
+		usedJoystick.X.onTrue(robot.getSuperstructure().setState(RobotState.DRIVE));
+		usedJoystick.Y.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE));
+		usedJoystick.POV_DOWN.onTrue(robot.getSuperstructure().setState(RobotState.STAY_IN_PLACE));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

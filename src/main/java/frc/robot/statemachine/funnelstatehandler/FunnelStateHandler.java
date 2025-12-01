@@ -7,6 +7,7 @@ import frc.robot.subsystems.roller.Roller;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
+
 public class FunnelStateHandler {
 
 	private final Roller omni;

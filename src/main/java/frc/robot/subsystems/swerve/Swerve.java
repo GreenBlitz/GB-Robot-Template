@@ -3,6 +3,7 @@ package frc.robot.subsystems.swerve;
 import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -324,6 +325,27 @@ public class Swerve extends GBSubsystem {
 		boolean isStopping = Math.abs(rotationVelocityRadiansPerSecond) < velocityDeadbandAnglesPerSecond.getRadians();
 
 		return isAtHeading && isStopping;
+	}
+
+	public boolean isSkidding(){
+		double robotVelocity = getRobotRelativeVelocity().omegaRadiansPerSecond;
+		SwerveModuleState[] statesRotation =  kinematics.toSwerveModuleStates(new ChassisSpeeds(0,0, robotVelocity),new Translation2d()); //rotation
+		SwerveModuleState[] statesAll = modules.getCurrentStates();
+		double[] translations = new double[statesAll.length];
+		for (int i = 0; i <translations.length ; i++) {
+			translations[i] = unfinished;
+		}
+		double toCompare = translations[0];
+		boolean isEqual = true;
+		int placeSkidding = -1;
+		for (int i = 1; i < translations.length; i++) {
+			isEqual = isEqual && toCompare==translations[i];
+			if(toCompare!=translations[i])
+				placeSkidding = i;
+		}
+		if(!isEqual)
+			Logger.recordOutput("Skidding module", placeSkidding);
+		return isEqual;
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {

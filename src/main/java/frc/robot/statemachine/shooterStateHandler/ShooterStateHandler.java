@@ -21,8 +21,7 @@ public class ShooterStateHandler {
 		this.hood = hood;
 		this.flyWheel = flyWheel;
 		this.distanceFromTower = distanceFromTower;
-		this.currentState = ShooterState
-				.STAY_IN_PLACE;
+		this.currentState = ShooterState.STAY_IN_PLACE;
 	}
 
 	public static Supplier<Rotation2d> hoodInterpolation(Supplier<Double> distanceFromTower) {

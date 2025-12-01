@@ -53,11 +53,6 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-		usedJoystick.A.onTrue(robot.getSuperstructure().setState(RobotState.SHOOT));
-		usedJoystick.B.onTrue(robot.getSuperstructure().setState(RobotState.PRE_SHOOT));
-		usedJoystick.X.onTrue(robot.getSuperstructure().setState(RobotState.DRIVE));
-		usedJoystick.Y.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE));
-		usedJoystick.POV_DOWN.onTrue(robot.getSuperstructure().setState(RobotState.STAY_IN_PLACE));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
@@ -83,6 +78,14 @@ public class JoysticksBindings {
 	private static void sixthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SIXTH_JOYSTICK;
 		// bindings...
+	}
+
+	private static void applySuperstructureCalibrationBindings(SmartJoystick joystick, Robot robot) {
+		joystick.A.onTrue(robot.getSuperstructure().setState(RobotState.SHOOT));
+		joystick.B.onTrue(robot.getSuperstructure().setState(RobotState.PRE_SHOOT));
+		joystick.X.onTrue(robot.getSuperstructure().setState(RobotState.DRIVE));
+		joystick.Y.onTrue(robot.getSuperstructure().setState(RobotState.INTAKE));
+		joystick.POV_DOWN.onTrue(robot.getSuperstructure().setState(RobotState.STAY_IN_PLACE));
 	}
 
 	private static void applyTurretCalibrationBindings(Arm turret, SmartJoystick joystick, double calibrationMaxPower) {

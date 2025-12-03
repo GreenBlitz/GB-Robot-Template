@@ -8,37 +8,37 @@ import frc.utils.math.FieldMath;
 
 public class IsReady {
 
-	private static boolean isInRangeForShouting(Translation2d position, double maxShoutingRangeMeters, Translation2d closestGoal) {
-		return position.getDistance(closestGoal) <= maxShoutingRangeMeters;
+	private static boolean isInRangeForShooting(Translation2d position, double maxShootingRangeMeters, Translation2d closestGoal) {
+		return position.getDistance(closestGoal) <= maxShootingRangeMeters;
 	}
 
-	private static boolean isInPositionToShout(
+	private static boolean isInPositionToShoot(
 		Translation2d position,
 		Pose2d closestGoal,
 		Rotation2d maxAngleFromCenter,
-		double maxShoutingRangeMeters
+		double maxShootingRangeMeters
 	) {
-		Rotation2d robotAngleComperedToGoal = FieldMath.getRelativeTranslation(closestGoal, position).getAngle();
-		return Math.abs(robotAngleComperedToGoal.getDegrees()) <= maxAngleFromCenter.getDegrees()
-			&& isInRangeForShouting(position, maxShoutingRangeMeters, closestGoal.getTranslation());
+		Rotation2d robotAngleComparedToGoal = FieldMath.getRelativeTranslation(closestGoal, position).getAngle();
+		return Math.abs(robotAngleComparedToGoal.getDegrees()) <= maxAngleFromCenter.getDegrees()
+			&& isInRangeForShooting(position, maxShootingRangeMeters, closestGoal.getTranslation());
 	}
 
-	private static boolean isInHeadingToShout(Pose2d pose, Translation2d closestGoal, Rotation2d tolerance, Rotation2d turretPose) {
+	private static boolean isInHeadingToShoot(Pose2d pose, Translation2d closestGoal, Rotation2d tolerance, Rotation2d turretPose) {
 		Rotation2d wantedAngle = FieldMath.getRelativeTranslation(pose, closestGoal).getAngle();
 		Rotation2d turretHeading = Rotation2d.fromDegrees(pose.getRotation().getDegrees() + turretPose.getDegrees());
 		return MathUtil.isNear(wantedAngle.getDegrees(), turretHeading.getDegrees(), tolerance.getDegrees());
 	}
 
-	private static boolean isInPoseToShout(
+	private static boolean isInPoseToShoot(
 		Pose2d pose,
 		Pose2d closestGoal,
 		Rotation2d headingTolerance,
 		Rotation2d maxAngleFromGoalCenter,
 		Rotation2d turretPosition,
-		double maxShoutingRangeMeters
+		double maxShootingRangeMeters
 	) {
-		return isInPositionToShout(pose.getTranslation(), closestGoal, maxAngleFromGoalCenter, maxShoutingRangeMeters)
-			&& isInHeadingToShout(pose, closestGoal.getTranslation(), headingTolerance, turretPosition);
+		return isInPositionToShoot(pose.getTranslation(), closestGoal, maxAngleFromGoalCenter, maxShootingRangeMeters)
+			&& isInHeadingToShoot(pose, closestGoal.getTranslation(), headingTolerance, turretPosition);
 	}
 
 	private static boolean isFlywheelAtSpeed(Rotation2d wantedFlywheelVelocity, Rotation2d flywheelVelocity, Rotation2d tolerance) {
@@ -49,22 +49,22 @@ public class IsReady {
 		return MathUtil.isNear(wantedPosition.getDegrees(), hoodPosition.getDegrees(), tolerance.getDegrees());
 	}
 
-	private static boolean isShouterReedyToShout(
+	private static boolean isShooterReedyToShoot(
 		Rotation2d wantedFlywheelVelocity,
 		Rotation2d flywheelVelocity,
-		Rotation2d shouterSpeedTolerance,
+		Rotation2d shooterSpeedTolerance,
 		Rotation2d wantedHoodPosition,
 		Rotation2d hoodPosition,
 		Rotation2d hoodPositionTolerance
 	) {
-		return isFlywheelAtSpeed(wantedFlywheelVelocity, flywheelVelocity, shouterSpeedTolerance)
+		return isFlywheelAtSpeed(wantedFlywheelVelocity, flywheelVelocity, shooterSpeedTolerance)
 			&& isHoodAtPositon(wantedHoodPosition, hoodPosition, hoodPositionTolerance);
 	}
 
-	public static boolean isReadyToShout(
+	public static boolean isReadyToShoot(
 		Rotation2d wantedFlywheelVelocity,
 		Rotation2d flywheelVelocity,
-		Rotation2d shouterSpeedTolerance,
+		Rotation2d shooterSpeedTolerance,
 		Rotation2d wantedHoodPosition,
 		Rotation2d hoodPosition,
 		Rotation2d hoodPositionTolerance,
@@ -73,25 +73,25 @@ public class IsReady {
 		Rotation2d turretPosition,
 		Pose2d pose,
 		Pose2d closestGoal,
-		double maxShoutingRangeMeters
+		double maxShootingRangeMeters
 	) {
-		boolean isInPoseToShout = isInPoseToShout(
+		boolean isInPoseToShoot = isInPoseToShoot(
 			pose,
 			closestGoal,
 			headingTolerance,
 			maxAngleFromGoalCenter,
 			turretPosition,
-			maxShoutingRangeMeters
+                maxShootingRangeMeters
 		);
-		boolean isShouterReedyToShout = isShouterReedyToShout(
+		boolean isShooterReedyToShoot = isShooterReedyToShoot(
 			wantedFlywheelVelocity,
 			flywheelVelocity,
-			shouterSpeedTolerance,
+			shooterSpeedTolerance,
 			wantedHoodPosition,
 			hoodPosition,
 			hoodPositionTolerance
 		);
-		return isShouterReedyToShout && isInPoseToShout;
+		return isShooterReedyToShoot && isInPoseToShoot;
 	}
 
 }

@@ -9,17 +9,13 @@ public class IMUFactory {
 	public static IIMU createIMU(String logPath) {
 		logPath += "/IMU";
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> null;
-			case SIMULATION -> SimulationIMUBuilder.buildIMU(logPath);
-			case REPLAY -> null;
+			case REAL, REPLAY, SIMULATION -> SimulationIMUBuilder.buildIMU(logPath);
 		};
 	}
 
 	public static IMUSignals createSignals(IIMU gyro) {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> null;
-			case SIMULATION -> SimulationIMUBuilder.buildSignals();
-			case REPLAY -> null;
+			case REAL, REPLAY, SIMULATION -> SimulationIMUBuilder.buildSignals();
 		};
 	}
 

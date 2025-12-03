@@ -81,7 +81,7 @@ public class IsReady {
 			headingTolerance,
 			maxAngleFromGoalCenter,
 			turretPosition,
-                maxShootingRangeMeters
+			maxShootingRangeMeters
 		);
 		boolean isShooterReedyToShoot = isShooterReedyToShoot(
 			wantedFlywheelVelocity,

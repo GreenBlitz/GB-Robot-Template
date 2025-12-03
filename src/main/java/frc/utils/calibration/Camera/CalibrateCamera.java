@@ -18,11 +18,22 @@ public class CalibrateCamera extends Command {
   private int tagID;
   private double xRobotDistanceFromTag;
   private double middleOfTagHeight;
-
+  private AprilTagFields field;
+  private Pose3d tagPoseFieldRelative;
+  private Pose3d cameraPoseFieldRelative;
+  private Pose2d robotPoseFieldRelative ;
+  private Rotation3d endRot;
+  private Translation3d endTranslation;
    public CalibrateCamera(AprilTagFields field , String PathPrefix ,String cameraName,int tagID , double xRobotDistanceFromTag ,double middleOfTagHeight  ){
-
+    this.cameraName = cameraName;
+    this.middleOfTagHeight = middleOfTagHeight;
+    this.field = field;
+    this.PathPrefix = PathPrefix;
+    this.tagID = tagID;
+    this.xRobotDistanceFromTag = xRobotDistanceFromTag;
+    logCameraPose(PathPrefix ,  cameraName ,  tagID,  xRobotDistanceFromTag,  middleOfTagHeight);
    }
-    private
+
 
     private void logFunction(){
        Logger.recordOutput("CameraCalibration/" + PathPrefix + "/tag/TagPoseFieldRelative", tagPoseFieldRelative);
@@ -34,7 +45,7 @@ public class CalibrateCamera extends Command {
        Logger.recordOutput("CameraCalibration/" + PathPrefix + "/solution/endTranslation", endTranslation);
    }
     public void initialize(){
-        logCameraPose();
+
     }
 
     public void execute(){
@@ -52,24 +63,24 @@ public class CalibrateCamera extends Command {
 
         LimelightHelpers.setCameraPose_RobotSpace(cameraName, 0, 0, 0, 0, 0, 0);
 
-        Pose3d tagPoseFieldRelative = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded).getTagPose(tagID).get();
-        Pose3d cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
+         this.tagPoseFieldRelative = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded).getTagPose(tagID).get();
+        this.cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
 
-        Pose2d robotPoseFieldRelative = new Pose2d(
+         this.robotPoseFieldRelative = new Pose2d(
                 tagPoseFieldRelative.getX() - xRobotDistanceFromTag,
                 tagPoseFieldRelative.getY(),
                 FieldMath.transformAngle(tagPoseFieldRelative.getRotation().toRotation2d(), AngleTransform.INVERT)
         );
 
         // limelight is funny so we invert pitch
-        Rotation3d endRot = new Rotation3d(
+         this.endRot = new Rotation3d(
                 cameraPoseFieldRelative.getRotation().getX(),
                 -cameraPoseFieldRelative.getRotation().getY(),
                 cameraPoseFieldRelative.getRotation().getZ() - robotPoseFieldRelative.getRotation().getRadians()
         );
 
         // limelight is funny so we invert y-axis
-        Translation3d endTranslation = new Translation3d(
+         this.endTranslation = new Translation3d(
                 cameraPoseFieldRelative.getX() - robotPoseFieldRelative.getX(),
                 -(cameraPoseFieldRelative.getY() - robotPoseFieldRelative.getY()),
                 cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + middleOfTagHeight

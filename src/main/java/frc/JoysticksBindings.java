@@ -14,7 +14,6 @@ import frc.robot.subsystems.roller.Roller;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.utils.battery.BatteryUtil;
 
-
 public class JoysticksBindings {
 
 	private static final SmartJoystick MAIN_JOYSTICK = new SmartJoystick(JoystickPorts.MAIN);
@@ -89,6 +88,19 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = SIXTH_JOYSTICK;
 		// bindings...
 	}
+
+    private static void applyFourBarCalibrationBindings(Arm fourBar, SmartJoystick joystick, double calibrationMaxPower) {
+        joystick.POV_DOWN.onTrue(new InstantCommand(() -> fourBar.getCommandsBuilder().setIsSubsystemRunningIndependently(true)));
+        joystick.POV_UP.onTrue(new InstantCommand(() -> fourBar.getCommandsBuilder().setIsSubsystemRunningIndependently(false)));
+
+        // Check limits
+        joystick.R1.whileTrue(fourBar.getCommandsBuilder().setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * calibrationMaxPower));
+
+        fourBar.getSysIdCalibrator().setAllButtonsForCalibration(joystick);
+
+        joystick.POV_RIGHT.onTrue(fourBar.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(20)));
+        joystick.POV_LEFT.onTrue(fourBar.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(50)));
+    }
 
 	private static void applyTurretCalibrationBindings(Arm turret, SmartJoystick joystick, double calibrationMaxPower) {
 		joystick.POV_DOWN.onTrue(new InstantCommand(() -> turret.getCommandsBuilder().setIsSubsystemRunningIndependently(true)));

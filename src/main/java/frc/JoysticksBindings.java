@@ -57,10 +57,10 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		ShooterStateHandler shooterStateHandler = new ShooterStateHandler(robot.getTurret(), robot.getHood(), robot.getFlyWheel(), () -> 9.0);
 		Pose2d robotPose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
-		usedJoystick.Y.onTrue(shooterStateHandler.lookAtTower(new Translation2d(5, 5), robotPose));
+		usedJoystick.Y.onTrue(shooterStateHandler.lookAtTower(new Translation2d(1, Rotation2d.fromDegrees(320)), robotPose));
+		usedJoystick.A.onTrue(shooterStateHandler.lookAtTower(new Translation2d(1, Rotation2d.fromDegrees(340)), robotPose));
 		usedJoystick.X.onTrue(shooterStateHandler.lookAtTower(new Translation2d(10, 5), robotPose));
 		usedJoystick.B.onTrue(shooterStateHandler.lookAtTower(new Translation2d(10, 50000), robotPose));
-		usedJoystick.A.onTrue(shooterStateHandler.lookAtTower(new Translation2d(100, 5), robotPose));
 		usedJoystick.POV_RIGHT.onTrue(shooterStateHandler.lookAtTower(new Translation2d(1000, 5), robotPose));
 		// bindings...
 	}

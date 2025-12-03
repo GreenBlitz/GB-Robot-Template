@@ -6,6 +6,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.flywheel.FlyWheel;
+import frc.utils.math.FieldMath;
+import frc.utils.pose.PoseUtil;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.function.Supplier;
@@ -80,26 +82,26 @@ public class ShooterStateHandler {
 		);
 	}
 
-	private Rotation2d getLookAtTowerAngleForTurret(Translation2d target, Pose2d robotPose) {
-		double finalTargetRadians = (robotPose.getRotation().getRadians()
-			+ Math.atan2(Math.abs(target.getY() - robotPose.getY()), Math.abs(target.getX() - robotPose.getX()))) % 360;
-		return Rotation2d.fromRadians(finalTargetRadians);
+	private Rotation2d getLookAtTowerAngleForTurretRobotRelative(Translation2d target, Pose2d robotTranslation) {
+		return FieldMath.getRelativeTranslation(robotTranslation,target).getAngle();
 	}
 
 	public Command lookAtTower(Translation2d target, Pose2d robotPose) {
-		Rotation2d finalLocation = getLookAtTowerAngleForTurret(target, robotPose);
+		Rotation2d turretTargetRobotRelative = getLookAtTowerAngleForTurretRobotRelative(target, robotPose);
 		if (
-			turret.getPosition().getDegrees() + robotPose.getRotation().getDegrees() - finalLocation.getDegrees() < 360 - ShooterConstants.LENGTH_NOT_TO_TURN.getDegrees()
+                Math.abs(turretTargetRobotRelative.getDegrees() - turret.getPosition().getDegrees()) < 360 - ShooterConstants.LENGTH_NOT_TO_TURN.getDegrees()
 		) {
 			return new ParallelCommandGroup(
-				turret.getCommandsBuilder().setTargetPosition(finalLocation),
-				new InstantCommand(() -> Logger.recordOutput(ShooterConstants.LOG_PATH + "/TurretTarget", finalLocation))
+				turret.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(turretTargetRobotRelative.getDegrees()%360)),
+            new InstantCommand(() -> Logger.recordOutput(ShooterConstants.LOG_PATH + "/TurretTargetRobotRelative", Rotation2d.fromDegrees(turretTargetRobotRelative.getDegrees())))
 			);
 		}
-		return new ParallelCommandGroup(
-			turret.getCommandsBuilder().stayInPlace(),
-			new InstantCommand(() -> Logger.recordOutput(ShooterConstants.LOG_PATH + "/TurretTarget", finalLocation))
-		);
+        else {
+            return new ParallelCommandGroup(
+                    turret.getCommandsBuilder().stayInPlace(),
+                    new InstantCommand(() -> Logger.recordOutput(ShooterConstants.LOG_PATH + "/TurretTargetRobotRelative", turretTargetRobotRelative))
+            );
+        }
 	}
 
 	public void Logger() {

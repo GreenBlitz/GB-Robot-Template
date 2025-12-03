@@ -76,21 +76,21 @@ public class Robot {
 		BrakeStateManager.add(() -> omni.setBrake(true), () -> omni.setBrake(false));
 	}
 
-	public void resetSubsystems() {
-		if (HoodConstants.MINIMUM_POSITION.getRadians() > hood.getPosition().getRadians()) {
-			hood.setPosition(HoodConstants.MINIMUM_POSITION);
-		}
-		if (TurretConstants.MIN_POSITION.getRadians() > turret.getPosition().getRadians()) {
-			turret.setPosition(TurretConstants.MIN_POSITION);
-		}
-		if (FourBarConstants.MAXIMUM_POSITION.getRadians() < fourBar.getPosition().getRadians()) {
-			fourBar.setPosition(FourBarConstants.MAXIMUM_POSITION);
-		}
-	}
+//	public void resetSubsystems() {
+//		if (HoodConstants.MINIMUM_POSITION.getRadians() > hood.getPosition().getRadians()) {
+//			hood.setPosition(HoodConstants.MINIMUM_POSITION);
+//		}
+//		if (TurretConstants.MIN_POSITION.getRadians() > turret.getPosition().getRadians()) {
+//			turret.setPosition(TurretConstants.MIN_POSITION);
+//		}
+//		if (FourBarConstants.MAXIMUM_POSITION.getRadians() < fourBar.getPosition().getRadians()) {
+//			fourBar.setPosition(FourBarConstants.MAXIMUM_POSITION);
+//		}
+//	}
 
 	public void periodic() {
 		BusChain.refreshAll();
-		resetSubsystems();
+//		resetSubsystems();
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();

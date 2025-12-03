@@ -19,7 +19,6 @@ import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
-import frc.utils.TimedValue;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.math.StandardDeviations2D;
@@ -61,8 +60,8 @@ public class Robot {
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
 			swerve.getKinematics(),
 			swerve.getModules().getWheelPositions(0),
-				swerve.getGyroAbsoluteYaw().getValue(),
-				swerve.getGyroAbsoluteYaw().getTimestamp()
+			swerve.getGyroAbsoluteYaw().getValue(),
+			swerve.getGyroAbsoluteYaw().getTimestamp()
 		);
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());

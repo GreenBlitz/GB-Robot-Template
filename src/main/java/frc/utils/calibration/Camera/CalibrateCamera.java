@@ -49,10 +49,11 @@ public class CalibrateCamera extends Command {
     public void initialize() {
 
     }
-
+    @Override
     public void execute() {
         logCameraPose(PathPrefix, cameraName, tagID, xRobotDistanceFromTag, middleOfTagHeight);
         logFunction();
+        counter +=1;
     }
 
     public void end() {

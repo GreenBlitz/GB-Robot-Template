@@ -40,7 +40,6 @@ public class Robot {
 	private final Limelight limelightObjectDetector;
 	private final RobotCommander robotCommander;
 
-
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 
@@ -181,6 +180,7 @@ public class Robot {
 		limelightThreeGB.getIndependentRobotPose().ifPresent(poseEstimator::updateVision);
 
 		limelightObjectDetector.updateObjectDetection();
+
 		poseEstimator.log();
 
 		BatteryUtil.logStatus();

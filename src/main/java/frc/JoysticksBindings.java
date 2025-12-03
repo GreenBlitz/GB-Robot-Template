@@ -1,14 +1,11 @@
 package frc;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
-import frc.robot.statemachine.shooterStateHandler.ShooterStateHandler;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.roller.Roller;
 import frc.robot.subsystems.swerve.ChassisPowers;
@@ -54,13 +51,6 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		ShooterStateHandler shooterStateHandler = new ShooterStateHandler(robot.getTurret(), robot.getHood(), robot.getFlyWheel(), () -> 9.0);
-		Pose2d robotPose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
-		usedJoystick.Y.onTrue(shooterStateHandler.lookAtTower(new Translation2d(1, Rotation2d.fromDegrees(320)), robotPose));
-		usedJoystick.A.onTrue(shooterStateHandler.lookAtTower(new Translation2d(1, Rotation2d.fromDegrees(340)), robotPose));
-		usedJoystick.X.onTrue(shooterStateHandler.lookAtTower(new Translation2d(1, Rotation2d.fromDegrees(90)), robotPose));
-		usedJoystick.B.onTrue(shooterStateHandler.lookAtTower(new Translation2d(1, Rotation2d.fromDegrees(0)), robotPose));
-		usedJoystick.POV_RIGHT.onTrue(shooterStateHandler.lookAtTower(new Translation2d(1, Rotation2d.fromDegrees(1)), robotPose));
 		// bindings...
 	}
 
@@ -89,18 +79,18 @@ public class JoysticksBindings {
 		// bindings...
 	}
 
-    private static void applyFourBarCalibrationBindings(Arm fourBar, SmartJoystick joystick, double calibrationMaxPower) {
-        joystick.POV_DOWN.onTrue(new InstantCommand(() -> fourBar.getCommandsBuilder().setIsSubsystemRunningIndependently(true)));
-        joystick.POV_UP.onTrue(new InstantCommand(() -> fourBar.getCommandsBuilder().setIsSubsystemRunningIndependently(false)));
+	private static void applyFourBarCalibrationBindings(Arm fourBar, SmartJoystick joystick, double calibrationMaxPower) {
+		joystick.POV_DOWN.onTrue(new InstantCommand(() -> fourBar.getCommandsBuilder().setIsSubsystemRunningIndependently(true)));
+		joystick.POV_UP.onTrue(new InstantCommand(() -> fourBar.getCommandsBuilder().setIsSubsystemRunningIndependently(false)));
 
-        // Check limits
-        joystick.R1.whileTrue(fourBar.getCommandsBuilder().setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * calibrationMaxPower));
+		// Check limits
+		joystick.R1.whileTrue(fourBar.getCommandsBuilder().setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * calibrationMaxPower));
 
-        fourBar.getSysIdCalibrator().setAllButtonsForCalibration(joystick);
+		fourBar.getSysIdCalibrator().setAllButtonsForCalibration(joystick);
 
-        joystick.POV_RIGHT.onTrue(fourBar.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(20)));
-        joystick.POV_LEFT.onTrue(fourBar.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(50)));
-    }
+		joystick.POV_RIGHT.onTrue(fourBar.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(20)));
+		joystick.POV_LEFT.onTrue(fourBar.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(50)));
+	}
 
 	private static void applyTurretCalibrationBindings(Arm turret, SmartJoystick joystick, double calibrationMaxPower) {
 		joystick.POV_DOWN.onTrue(new InstantCommand(() -> turret.getCommandsBuilder().setIsSubsystemRunningIndependently(true)));

@@ -38,6 +38,10 @@ public class ShooterStateHandler {
 		return () -> ShooterConstants.FLYWHEEL_INTERPOLATION_MAP.get(distanceFromTower.get());
 	}
 
+	public ShooterState getCurrentState() {
+		return currentState;
+	}
+
 	public Command setState(ShooterState shooterState) {
 		Command command = switch (shooterState) {
 			case STAY_IN_PLACE -> stayInPlace();

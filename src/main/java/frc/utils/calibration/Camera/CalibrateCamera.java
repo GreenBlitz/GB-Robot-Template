@@ -13,8 +13,16 @@ import frc.utils.math.FieldMath;
 import org.littletonrobotics.junction.Logger;
 
 public class CalibrateCamera extends Command {
-   public CalibrateCamera()
+  private String PathPrefix;
+  private String cameraName;
+  private int tagID;
+  private double xRobotDistanceFromTag;
+  private double middleOfTagHeight;
 
+   public CalibrateCamera(AprilTagFields field , String PathPrefix ,String cameraName,int tagID , double xRobotDistanceFromTag ,double middleOfTagHeight  ){
+
+   }
+    private
 
     private void logFunction(){
        Logger.recordOutput("CameraCalibration/" + PathPrefix + "/tag/TagPoseFieldRelative", tagPoseFieldRelative);
@@ -26,7 +34,7 @@ public class CalibrateCamera extends Command {
        Logger.recordOutput("CameraCalibration/" + PathPrefix + "/solution/endTranslation", endTranslation);
    }
     public void initialize(){
-
+        logCameraPose();
     }
 
     public void execute(){
@@ -37,9 +45,9 @@ public class CalibrateCamera extends Command {
 
     }
     public boolean isFinished(){
-
+    return true; // TEMP
     }
-    public void logCameraPose(String PathPrefix, String cameraName, int tagID, double xRobotDistanceFromTag, double middleOfTagHeight) {
+    private void logCameraPose(String PathPrefix, String cameraName, int tagID, double xRobotDistanceFromTag, double middleOfTagHeight) {
         // TODO - make a command, do an average, make field param, add option to tags that are not perfectly aligned
 
         LimelightHelpers.setCameraPose_RobotSpace(cameraName, 0, 0, 0, 0, 0, 0);

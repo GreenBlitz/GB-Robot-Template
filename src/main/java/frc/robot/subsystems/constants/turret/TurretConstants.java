@@ -2,7 +2,6 @@ package frc.robot.subsystems.constants.turret;
 
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotConstants;
@@ -37,7 +36,6 @@ public class TurretConstants {
 		SIMULATION_SLOTS_CONFIG.kA = 0;
 
 		FEEDBACK_CONFIGS.SensorToMechanismRatio = 79.2;
-		TalonFXConfiguration talonFXConfiguration = new TalonFXConfiguration();
 	}
 
 	public static final double CURRENT_LIMIT = 40;
@@ -50,5 +48,6 @@ public class TurretConstants {
 	public static final Rotation2d MAX_POSITION = Rotation2d.fromRotations(1);
 	public static final Rotation2d DEFAULT_MAX_ACCELERATION_PER_SECOND_SQUARE = Rotation2d.fromRotations(3.0);
 	public static final Rotation2d DEFAULT_MAX_VELOCITY_PER_SECOND = Rotation2d.fromRotations(3.0);
+	public static final boolean IS_CONTINUOUS_RAP = false;
 
 }

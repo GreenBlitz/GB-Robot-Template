@@ -30,7 +30,6 @@ public class ShooterConstants {
 		"FlywheelRotations",
 		Rotation2d.fromRotations(0.0)
 	);
-
 	public static final Rotation2d SCREW_LOCATION = Rotation2d.fromDegrees(0);
 	public static final Rotation2d LENGTH_NOT_TO_TURN = Rotation2d.fromDegrees(30);
 

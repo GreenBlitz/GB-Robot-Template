@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.math.Pair;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.subsystems.constants.fourBar.FourBarConstants;
@@ -50,7 +49,7 @@ public class Robot {
 		BatteryUtil.scheduleLimiter();
 
 		this.turret = createTurret();
-		turret.setPosition(Rotation2d.kZero);
+		turret.setPosition(TurretConstants.MIN_POSITION);
 		BrakeStateManager.add(() -> turret.setBrake(true), () -> turret.setBrake(false));
 
 		this.flyWheel = KrakenX60FlyWheelBuilder.build("Subsystems/FlyWheel", IDs.TalonFXIDs.FLYWHEEL);
@@ -77,21 +76,21 @@ public class Robot {
 		BrakeStateManager.add(() -> omni.setBrake(true), () -> omni.setBrake(false));
 	}
 
-//	public void resetSubsystems() {
-//		if (HoodConstants.MINIMUM_POSITION.getRadians() > hood.getPosition().getRadians()) {
-//			hood.setPosition(HoodConstants.MINIMUM_POSITION);
-//		}
-//		if (TurretConstants.MIN_POSITION.getRadians() > turret.getPosition().getRadians()) {
-//			turret.setPosition(TurretConstants.MIN_POSITION);
-//		}
-//		if (FourBarConstants.MAXIMUM_POSITION.getRadians() < fourBar.getPosition().getRadians()) {
-//			fourBar.setPosition(FourBarConstants.MAXIMUM_POSITION);
-//		}
-//	}
+	public void resetSubsystems() {
+		if (HoodConstants.MINIMUM_POSITION.getRadians() > hood.getPosition().getRadians()) {
+			hood.setPosition(HoodConstants.MINIMUM_POSITION);
+		}
+		if (TurretConstants.MIN_POSITION.getRadians() > turret.getPosition().getRadians()) {
+			turret.setPosition(TurretConstants.MIN_POSITION);
+		}
+		if (FourBarConstants.MAXIMUM_POSITION.getRadians() < fourBar.getPosition().getRadians()) {
+			fourBar.setPosition(FourBarConstants.MAXIMUM_POSITION);
+		}
+	}
 
 	public void periodic() {
 		BusChain.refreshAll();
-//		resetSubsystems();
+		resetSubsystems();
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
@@ -117,7 +116,7 @@ public class Robot {
 		ArmSimulationConstants turretSimulationConstants = new ArmSimulationConstants(
 			TurretConstants.MAX_POSITION,
 			TurretConstants.MIN_POSITION,
-			Rotation2d.kZero,
+			TurretConstants.MIN_POSITION,
 			TurretConstants.MOMENT_OF_INERTIA,
 			TurretConstants.TURRET_RADIUS
 		);
@@ -125,7 +124,7 @@ public class Robot {
 			TurretConstants.LOG_PATH,
 			IDs.TalonFXIDs.TURRET,
 			TurretConstants.IS_INVERTED,
-			false,
+			TurretConstants.IS_CONTINUOUS_RAP,
 			TurretConstants.TALON_FX_FOLLOWER_CONFIG,
 			TurretConstants.SYS_ID_ROUTINE_CONFIG,
 			TurretConstants.FEEDBACK_CONFIGS,
@@ -154,7 +153,7 @@ public class Robot {
 			FourBarConstants.LOG_PATH,
 			IDs.TalonFXIDs.FOUR_BAR,
 			FourBarConstants.IS_INVERTED,
-			false,
+			FourBarConstants.IS_CONTINUOUS_RAP,
 			FourBarConstants.TALON_FX_FOLLOWER_CONFIG,
 			FourBarConstants.SYS_ID_ROUTINE,
 			FourBarConstants.FEEDBACK_CONFIGS,
@@ -194,7 +193,7 @@ public class Robot {
 			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Hood",
 			IDs.TalonFXIDs.HOOD,
 			HoodConstants.IS_INVERTED,
-			false,
+			HoodConstants.IS_CONTINUOUS_RAP,
 			new TalonFXFollowerConfig(),
 			HoodConstants.SYSIDROUTINE_CONFIG,
 			HoodConstants.FEEDBACK_CONFIGS,

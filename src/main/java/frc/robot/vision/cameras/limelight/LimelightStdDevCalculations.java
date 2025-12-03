@@ -10,15 +10,17 @@ public class LimelightStdDevCalculations {
 
 	public static Supplier<StandardDeviations2D> getMT1StdDevsCalculation(
 		Limelight limelight,
-		StandardDeviations2D stdDevExponents,
+		StandardDeviations2D tagDistanceFactors,
 		StandardDeviations2D stdDevFactors,
+		StandardDeviations2D visibleTagsExponents,
 		StandardDeviations2D stdDevAdditions
 	) {
-		return () -> exponentialTagDistanceDividedByVisibleTags(
+		return () -> byExponentialTagDistanceDividedByPoweredVisibleTags(
 			limelight.getMT1RawData().tagCount(),
-			limelight.getMT1RawData().avgTagDist(),
-			stdDevExponents,
+			limelight.getMT1PrimaryTagPoseInCameraSpace().getTranslation().getNorm(),
+			tagDistanceFactors,
 			stdDevFactors,
+			visibleTagsExponents,
 			stdDevAdditions
 		);
 	}
@@ -28,45 +30,47 @@ public class LimelightStdDevCalculations {
 		StandardDeviations2D minStdDevs,
 		StandardDeviations2D stdDevFactors
 	) {
-		return () -> averageTagDistanceParabola(limelight.getMT2RawData().avgTagDist(), minStdDevs, stdDevFactors);
-	}
-
-	private static StandardDeviations2D averageTagDistanceParabola(
-		double averageTagDistance,
-		StandardDeviations2D minStandardDeviations,
-		StandardDeviations2D standardDeviationFactors
-	) {
-		double averageTagDistanceSquared = Math.pow(averageTagDistance, 2);
-		return new StandardDeviations2D(
-			Math.max(minStandardDeviations.xStandardDeviations(), standardDeviationFactors.xStandardDeviations() * averageTagDistanceSquared),
-			Math.max(minStandardDeviations.yStandardDeviations(), standardDeviationFactors.yStandardDeviations() * averageTagDistanceSquared),
-			Math.max(
-				minStandardDeviations.angleStandardDeviations(),
-				standardDeviationFactors.angleStandardDeviations() * averageTagDistanceSquared
-			)
+		return () -> byPrimaryTagDistanceSquared(
+			limelight.getMT2PrimaryTagPoseInCameraSpace().getTranslation().getNorm(),
+			minStdDevs,
+			stdDevFactors
 		);
 	}
 
-	private static StandardDeviations2D exponentialTagDistanceDividedByVisibleTags(
+	private static StandardDeviations2D byPrimaryTagDistanceSquared(
+		double primaryTagDistanceFromCamera,
+		StandardDeviations2D minStdDevs,
+		StandardDeviations2D stdDevFactors
+	) {
+		double primaryTagDistanceSquared = Math.pow(primaryTagDistanceFromCamera, 2);
+		return new StandardDeviations2D(
+			Math.max(minStdDevs.xStandardDeviations(), stdDevFactors.xStandardDeviations() * primaryTagDistanceSquared),
+			Math.max(minStdDevs.yStandardDeviations(), stdDevFactors.yStandardDeviations() * primaryTagDistanceSquared),
+			Math.max(minStdDevs.angleStandardDeviations(), stdDevFactors.angleStandardDeviations() * primaryTagDistanceSquared)
+		);
+	}
+
+	private static StandardDeviations2D byExponentialTagDistanceDividedByPoweredVisibleTags(
 		double numberOfVisibleTags,
-		double averageTagDistance,
-		StandardDeviations2D standardDeviationExponents,
-		StandardDeviations2D standardDeviationFactors,
-		StandardDeviations2D standardDeviationAdditions
+		double primaryTagDistanceFromCamera,
+		StandardDeviations2D tagDistanceFactors,
+		StandardDeviations2D stdDevFactors,
+		StandardDeviations2D visibleTagsExponents,
+		StandardDeviations2D stdDevAdditions
 	) {
 		return new StandardDeviations2D(
-			Math.exp(standardDeviationExponents.xStandardDeviations() * averageTagDistance)
-				* standardDeviationFactors.xStandardDeviations()
-				/ numberOfVisibleTags
-				+ standardDeviationAdditions.xStandardDeviations(),
-			Math.exp(standardDeviationExponents.yStandardDeviations() * averageTagDistance)
-				* standardDeviationFactors.yStandardDeviations()
-				/ numberOfVisibleTags
-				+ standardDeviationAdditions.yStandardDeviations(),
-			Math.exp(standardDeviationExponents.angleStandardDeviations() * averageTagDistance)
-				* standardDeviationFactors.angleStandardDeviations()
-				/ numberOfVisibleTags
-				+ standardDeviationAdditions.angleStandardDeviations()
+			Math.exp(tagDistanceFactors.xStandardDeviations() * primaryTagDistanceFromCamera)
+				* stdDevFactors.xStandardDeviations()
+				/ Math.pow(numberOfVisibleTags, visibleTagsExponents.xStandardDeviations())
+				+ stdDevAdditions.xStandardDeviations(),
+			Math.exp(tagDistanceFactors.yStandardDeviations() * primaryTagDistanceFromCamera)
+				* stdDevFactors.yStandardDeviations()
+				/ Math.pow(numberOfVisibleTags, visibleTagsExponents.yStandardDeviations())
+				+ stdDevAdditions.yStandardDeviations(),
+			Math.exp(tagDistanceFactors.angleStandardDeviations() * primaryTagDistanceFromCamera)
+				* stdDevFactors.angleStandardDeviations()
+				/ Math.pow(numberOfVisibleTags, visibleTagsExponents.angleStandardDeviations())
+				+ stdDevAdditions.angleStandardDeviations()
 		);
 	}
 

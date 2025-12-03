@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.Pair;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.subsystems.constants.fourBar.FourBarConstants;
@@ -49,7 +50,7 @@ public class Robot {
 		BatteryUtil.scheduleLimiter();
 
 		this.turret = createTurret();
-		turret.setPosition(TurretConstants.MIN_POSITION);
+		turret.setPosition(Rotation2d.kZero);
 		BrakeStateManager.add(() -> turret.setBrake(true), () -> turret.setBrake(false));
 
 		this.flyWheel = KrakenX60FlyWheelBuilder.build("Subsystems/FlyWheel", IDs.TalonFXIDs.FLYWHEEL);
@@ -116,7 +117,7 @@ public class Robot {
 		ArmSimulationConstants turretSimulationConstants = new ArmSimulationConstants(
 			TurretConstants.MAX_POSITION,
 			TurretConstants.MIN_POSITION,
-			TurretConstants.MIN_POSITION,
+			Rotation2d.kZero,
 			TurretConstants.MOMENT_OF_INERTIA,
 			TurretConstants.TURRET_RADIUS
 		);
@@ -124,6 +125,7 @@ public class Robot {
 			TurretConstants.LOG_PATH,
 			IDs.TalonFXIDs.TURRET,
 			TurretConstants.IS_INVERTED,
+			false,
 			TurretConstants.TALON_FX_FOLLOWER_CONFIG,
 			TurretConstants.SYS_ID_ROUTINE_CONFIG,
 			TurretConstants.FEEDBACK_CONFIGS,
@@ -152,6 +154,7 @@ public class Robot {
 			FourBarConstants.LOG_PATH,
 			IDs.TalonFXIDs.FOUR_BAR,
 			FourBarConstants.IS_INVERTED,
+			false,
 			FourBarConstants.TALON_FX_FOLLOWER_CONFIG,
 			FourBarConstants.SYS_ID_ROUTINE,
 			FourBarConstants.FEEDBACK_CONFIGS,
@@ -191,6 +194,7 @@ public class Robot {
 			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Hood",
 			IDs.TalonFXIDs.HOOD,
 			HoodConstants.IS_INVERTED,
+			false,
 			new TalonFXFollowerConfig(),
 			HoodConstants.SYSIDROUTINE_CONFIG,
 			HoodConstants.FEEDBACK_CONFIGS,

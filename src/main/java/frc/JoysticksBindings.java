@@ -59,9 +59,9 @@ public class JoysticksBindings {
 		Pose2d robotPose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
 		usedJoystick.Y.onTrue(shooterStateHandler.lookAtTower(new Translation2d(1, Rotation2d.fromDegrees(320)), robotPose));
 		usedJoystick.A.onTrue(shooterStateHandler.lookAtTower(new Translation2d(1, Rotation2d.fromDegrees(340)), robotPose));
-		usedJoystick.X.onTrue(shooterStateHandler.lookAtTower(new Translation2d(10, 5), robotPose));
-		usedJoystick.B.onTrue(shooterStateHandler.lookAtTower(new Translation2d(10, 50000), robotPose));
-		usedJoystick.POV_RIGHT.onTrue(shooterStateHandler.lookAtTower(new Translation2d(1000, 5), robotPose));
+		usedJoystick.X.onTrue(shooterStateHandler.lookAtTower(new Translation2d(1, Rotation2d.fromDegrees(90)), robotPose));
+		usedJoystick.B.onTrue(shooterStateHandler.lookAtTower(new Translation2d(1,Rotation2d.fromDegrees(0)), robotPose));
+		usedJoystick.POV_RIGHT.onTrue(shooterStateHandler.lookAtTower(new Translation2d(1, Rotation2d.fromDegrees(1)), robotPose));
 		// bindings...
 	}
 

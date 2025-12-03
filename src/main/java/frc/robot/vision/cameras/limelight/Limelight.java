@@ -237,7 +237,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	private static boolean doesObservationExist(DetectedObjectObservation detectedObjectObservation) {
-		return !detectedObjectObservation.robotRelativeObjectTranslation().equals(Translation2d.kZero);
+		return !detectedObjectObservation.robotRelativeObjectTranslation().equals(Translation3d.kZero);
 	}
 
 	private static boolean doesObservationExist(RobotPoseObservation robotPoseObservation) {

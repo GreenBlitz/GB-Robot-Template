@@ -5,7 +5,7 @@ import frc.robot.subsystems.swerve.factories.constants.SimulationSwerveConstants
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.records.ModuleSpecificConstants;
 
-class SimulationModuleConstants {
+public class SimulationModuleConstants {
 
 	private static final double WHEEL_DIAMETER_METERS = 0.048359 * 2;
 	private static final double COUPLING_RATIO = 0;
@@ -34,7 +34,7 @@ class SimulationModuleConstants {
 		BACK_LEFT_TRANSLATION2D,
 		BACK_RIGHT_TRANSLATION2D,};
 
-	static ModuleSpecificConstants getModuleSpecificConstants(String logPath, ModuleUtil.ModulePosition modulePosition) {
+	public static ModuleSpecificConstants getModuleSpecificConstants(String logPath, ModuleUtil.ModulePosition modulePosition) {
 		return new ModuleSpecificConstants(
 			modulePosition,
 			logPath,

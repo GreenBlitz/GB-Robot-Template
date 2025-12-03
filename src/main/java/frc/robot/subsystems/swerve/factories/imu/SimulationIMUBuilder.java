@@ -10,9 +10,9 @@ import frc.utils.TimedValue;
 import frc.utils.AngleUnit;
 import frc.utils.time.TimeUtil;
 
-class SimulationIMUBuilder {
+public class SimulationIMUBuilder {
 
-	static IIMU buildIMU(String logPath) {
+	public static IIMU buildIMU(String logPath) {
 		return new EmptyIMU(logPath);
 	}
 
@@ -40,7 +40,7 @@ class SimulationIMUBuilder {
 		};
 	}
 
-	static IMUSignals buildSignals() {
+	public static IMUSignals buildSignals() {
 		return new IMUSignals(
 			buildEmptyAngleSignal("roll"),
 			buildEmptyAngleSignal("pitch"),

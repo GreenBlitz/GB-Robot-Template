@@ -9,7 +9,8 @@ import java.util.Optional;
 public enum LimelightPipeline {
 
 	APRIL_TAG(0, true),
-	OBJECT_DETECTION(1, false, new DetectedObjectType[0]);
+	OBJECT_DETECTION(1, false, new DetectedObjectType[0]),
+	COLOR_DETECTION(2, false, new DetectedObjectType[0]);
 
 	private final int pipelineIndex;
 	private final boolean isUsingMT;

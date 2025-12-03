@@ -19,8 +19,8 @@ public class ShooterStateHandler {
 	private final Arm turret;
 	private final Arm hood;
 	private final FlyWheel flyWheel;
-	private ShooterState currentState;
 	private final Supplier<Double> distanceFromTower;
+	private ShooterState currentState;
 
 	public ShooterStateHandler(Arm turret, Arm hood, FlyWheel flyWheel, Supplier<Double> distanceFromTower) {
 		this.turret = turret;

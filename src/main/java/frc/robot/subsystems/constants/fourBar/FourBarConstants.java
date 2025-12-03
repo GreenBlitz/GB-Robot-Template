@@ -49,6 +49,6 @@ public class FourBarConstants {
 	public static final Rotation2d MINIMUM_POSITION = Rotation2d.fromDegrees(-30);
 	public static final Rotation2d MAX_ACCELERATION_ROTATION2D_PER_SECONDS_SQUARE = Rotation2d.fromRotations(3);
 	public static final Rotation2d MAX_VELOCITY_ROTATION2D_PER_SECONDS = Rotation2d.fromRotations(3);
-	public static final boolean IS_CONTINUOUS_RAP = false;
+	public static final boolean IS_CONTINUOUS_WRAP = false;
 
 }

@@ -11,17 +11,13 @@ public class EncoderFactory {
 	public static IAngleEncoder createEncoder(String logPath, ModuleUtil.ModulePosition modulePosition) {
 		logPath += ModuleConstants.MODULES_LOG_PATH_ADDITION + "/" + modulePosition + "/Encoder";
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> null;
-			case SIMULATION -> SimulationEncoderBuilder.buildEncoder(logPath);
-			case REPLAY -> null;
+			case REAL, REPLAY, SIMULATION -> SimulationEncoderBuilder.buildEncoder(logPath);
 		};
 	}
 
 	public static EncoderSignals createSignals(IAngleEncoder angleEncoder) {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL -> null;
-			case SIMULATION -> SimulationEncoderBuilder.buildSignals();
-			case REPLAY -> null;
+			case REAL, REPLAY, SIMULATION -> SimulationEncoderBuilder.buildSignals();
 		};
 	}
 

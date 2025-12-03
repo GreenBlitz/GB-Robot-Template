@@ -17,7 +17,6 @@ import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.robot.hardware.interfaces.IIMU;
-import frc.utils.time.TimeUtil;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -47,7 +46,7 @@ public class Robot {
 			swerve.getKinematics(),
 			swerve.getModules().getWheelPositions(0),
 			swerve.getGyroAbsoluteYaw().getValue(),
-			TimeUtil.getCurrentTimeSeconds()
+			swerve.getGyroAbsoluteYaw().getTimestamp()
 		);
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());

@@ -27,20 +27,12 @@ public class ShooterStateHandler {
 		this.currentState = ShooterState.STAY_IN_PLACE;
 	}
 
-	public ShooterState getCurrentState() {
-		return currentState;
+	public static Supplier<Rotation2d> hoodInterpolation(Supplier<Double> distanceFromTower) {
+		return () -> ShooterConstants.HOOD_INTERPOLATION_MAP.get(distanceFromTower.get());
 	}
 
-	public void setCurrentState(ShooterState currentState) {
-		this.currentState = currentState;
-	}
-
-	public static Rotation2d hoodInterpolation(Supplier<Double> distanceFromTower) {
-		return ShooterConstants.HOOD_INTERPOLATION_MAP.get(distanceFromTower.get());
-	}
-
-	public static Rotation2d flywheelInterpolation(Supplier<Double> distanceFromTower) {
-		return ShooterConstants.FLYWHEEL_INTERPOLATION_MAP.get(distanceFromTower.get());
+	public static Supplier<Rotation2d> flywheelInterpolation(Supplier<Double> distanceFromTower) {
+		return () -> ShooterConstants.FLYWHEEL_INTERPOLATION_MAP.get(distanceFromTower.get());
 	}
 
 	public Command setState(ShooterState shooterState) {
@@ -77,7 +69,7 @@ public class ShooterStateHandler {
 		return new ParallelCommandGroup(
 			turret.getCommandsBuilder().stayInPlace(),
 			hood.getCommandsBuilder().setTargetPosition(hoodInterpolation(distanceFromTower)),
-			flyWheel.getCommandBuilder().setTargetVelocity(flywheelInterpolation(distanceFromTower))
+			flyWheel.getCommandBuilder().setVelocityAsSupplier(flywheelInterpolation(distanceFromTower))
 		);
 	}
 
@@ -121,9 +113,9 @@ public class ShooterStateHandler {
 
 	private Command calibration() {
 		return new ParallelCommandGroup(
-			turret.getCommandsBuilder().setVoltage(ShooterConstants.turretCalibrationVoltage::get),
-			hood.getCommandsBuilder().setVoltage(ShooterConstants.hoodCalibrationVoltage::get),
-			flyWheel.getCommandBuilder().setVoltageAsSupplier(ShooterConstants.flywheelCalibrationVoltage::get)
+			turret.getCommandsBuilder().setTargetPosition(ShooterConstants.turretCalibrationAngle::get),
+			hood.getCommandsBuilder().setTargetPosition(ShooterConstants.hoodCalibrationAngle::get),
+			flyWheel.getCommandBuilder().setVelocityAsSupplier(ShooterConstants.flywheelCalibrationRotations::get)
 		);
 	}
 

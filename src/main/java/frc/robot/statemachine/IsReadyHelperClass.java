@@ -7,7 +7,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import frc.utils.math.FieldMath;
 
 
-public class IsReady {
+public class IsReadyHelperClass {
 
 	private static boolean isInRangeForShooting(Translation2d position, double maxShootingRangeMeters, Translation2d closestGoal) {
 		return position.getDistance(closestGoal) <= maxShootingRangeMeters;

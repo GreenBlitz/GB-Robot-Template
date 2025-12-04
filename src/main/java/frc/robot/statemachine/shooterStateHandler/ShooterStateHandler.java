@@ -7,7 +7,9 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.constants.MathConstants;
 import frc.constants.field.Tower;
+import frc.robot.statemachine.ScoringHelpers;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.flywheel.FlyWheel;
 import frc.utils.math.FieldMath;
@@ -67,17 +69,20 @@ public class ShooterStateHandler {
 
 	private Command idle() {
 		return new ParallelCommandGroup(
-			aimAtTower(getClosestTower().getTower(), robotPose.get()),
-			hood.getCommandsBuilder().setTargetPosition(hoodInterpolation(() -> getDistanceFromTower(getClosestTower()))),
+			aimAtTower(ScoringHelpers.getClosestTower(robotPose.get()).getTower(), robotPose.get()),
+			hood.getCommandsBuilder()
+				.setTargetPosition(hoodInterpolation(() -> getDistanceFromTower(ScoringHelpers.getClosestTower(robotPose.get())))),
 			flyWheel.getCommandBuilder().setTargetVelocity(ShooterConstants.DEFAULT_FLYWHEEL_ROTATIONS_PER_SECOND)
 		);
 	}
 
 	private Command shoot() {
 		return new ParallelCommandGroup(
-			aimAtTower(getClosestTower().getTower(), robotPose.get()),
-			hood.getCommandsBuilder().setTargetPosition(hoodInterpolation(() -> getDistanceFromTower(getClosestTower()))),
-			flyWheel.getCommandBuilder().setVelocityAsSupplier(flywheelInterpolation(() -> getDistanceFromTower(getClosestTower())))
+			aimAtTower(ScoringHelpers.getClosestTower(robotPose.get()).getTower(), robotPose.get()),
+			hood.getCommandsBuilder()
+				.setTargetPosition(hoodInterpolation(() -> getDistanceFromTower(ScoringHelpers.getClosestTower(robotPose.get())))),
+			flyWheel.getCommandBuilder()
+				.setVelocityAsSupplier(flywheelInterpolation(() -> getDistanceFromTower(ScoringHelpers.getClosestTower(robotPose.get()))))
 		);
 	}
 
@@ -85,28 +90,19 @@ public class ShooterStateHandler {
 		return getNormalizedAngle(FieldMath.getRelativeTranslation(robotTranslation, target).getAngle());
 	}
 
-	public Tower getClosestTower() {
-		Tower smallestDistanceTower = Tower.CLOSE_TOWER;
-		for (Tower tower : Tower.values()) {
-			if (getDistanceFromTower(smallestDistanceTower) < getDistanceFromTower(tower))
-				smallestDistanceTower = tower;
-		}
-		return smallestDistanceTower;
-	}
-
 	public double getDistanceFromTower(Tower tower) {
 		return tower.getTower().getDistance(robotPose.get().getTranslation());
 	}
 
-	private boolean isAngleForTowerTooBig(Rotation2d targetRobotRelative) {
+	private boolean isTurretMoveIllegal(Rotation2d targetRobotRelative) {
 		return Math.abs(targetRobotRelative.getDegrees() - turret.getPosition().getDegrees())
-			< 360 - ShooterConstants.ANGLE_FOR_TURRET_NOT_TO_LOOK_AT_TOWER.getDegrees();
+			< MathConstants.FULL_CIRCLE.getDegrees() - ShooterConstants.MAX_DISTANCE_FROM_SCREW_NOT_TO_ROTATE.getDegrees();
 	}
 
 	private static Rotation2d getNormalizedAngle(Rotation2d angle) {
-		double degrees = angle.getDegrees() % 360;
+		double degrees = angle.getDegrees() % MathConstants.FULL_CIRCLE.getDegrees();
 		while (degrees < 0)
-			degrees += 360;
+			degrees += MathConstants.FULL_CIRCLE.getDegrees();
 		return Rotation2d.fromDegrees(degrees);
 	}
 
@@ -120,7 +116,7 @@ public class ShooterStateHandler {
 				turret.getCommandsBuilder().stayInPlace(),
 				new InstantCommand(() -> Logger.recordOutput(ShooterConstants.LOG_PATH + "/IsTurretGoingToPosition", false))
 			),
-			() -> isAngleForTowerTooBig(getRobotRelativeLookAtTowerAngleForTurret(target, robotPose))
+			() -> isTurretMoveIllegal(getRobotRelativeLookAtTowerAngleForTurret(target, robotPose))
 		);
 	}
 

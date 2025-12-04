@@ -81,35 +81,26 @@ public class ShooterStateHandler {
 		);
 	}
 
-	private Rotation2d getLookAtTowerAngleForTurretRobotRelative(Translation2d target, Pose2d robotTranslation) {
+	private Rotation2d getRobotRelativeLookAtTowerAngleForTurret(Translation2d target, Pose2d robotTranslation) {
 		return getNormalizedAngle(FieldMath.getRelativeTranslation(robotTranslation, target).getAngle());
 	}
 
 	public Tower getClosestTower() {
-		double smallestDistance = Math.min(
-			Math.min(
-				Math.min(getDistanceFromTower(Tower.LEFT_TOWER), getDistanceFromTower(Tower.RIGHT_TOWER)),
-				getDistanceFromTower(Tower.FAR_TOWER)
-			),
-			getDistanceFromTower(Tower.CLOSE_TOWER)
-		);
-		if (getDistanceFromTower(Tower.LEFT_TOWER) == smallestDistance)
-			return Tower.LEFT_TOWER;
-		else if (getDistanceFromTower(Tower.RIGHT_TOWER) == smallestDistance)
-			return Tower.RIGHT_TOWER;
-		else if (getDistanceFromTower(Tower.CLOSE_TOWER) == smallestDistance)
-			return Tower.CLOSE_TOWER;
-		else
-			return Tower.FAR_TOWER;
+		Tower smallestDistanceTower = Tower.CLOSE_TOWER;
+		for (Tower tower : Tower.values()) {
+			if (getDistanceFromTower(smallestDistanceTower) < getDistanceFromTower(tower))
+				smallestDistanceTower = tower;
+		}
+		return smallestDistanceTower;
 	}
 
 	public double getDistanceFromTower(Tower tower) {
 		return tower.getTower().getDistance(robotPose.get().getTranslation());
 	}
 
-	private boolean isLookAtTowerTooBigToLook(Rotation2d targetRobotRelative) {
+	private boolean isAngleForTowerTooBig(Rotation2d targetRobotRelative) {
 		return Math.abs(targetRobotRelative.getDegrees() - turret.getPosition().getDegrees())
-			< 360 - ShooterConstants.ANGLE_FOR_LOOK_AT_TOWER_NOT_TO_LOOK.getDegrees();
+			< 360 - ShooterConstants.ANGLE_FOR_TURRET_NOT_TO_LOOK_AT_TOWER.getDegrees();
 	}
 
 	private static Rotation2d getNormalizedAngle(Rotation2d angle) {
@@ -122,14 +113,14 @@ public class ShooterStateHandler {
 	public Command aimAtTower(Translation2d target, Pose2d robotPose) {
 		return new ConditionalCommand(
 			new ParallelCommandGroup(
-				turret.getCommandsBuilder().setTargetPosition(getLookAtTowerAngleForTurretRobotRelative(target, robotPose)),
+				turret.getCommandsBuilder().setTargetPosition(getRobotRelativeLookAtTowerAngleForTurret(target, robotPose)),
 				new InstantCommand(() -> Logger.recordOutput(ShooterConstants.LOG_PATH + "/IsTurretGoingToPosition", true))
 			),
 			new ParallelCommandGroup(
 				turret.getCommandsBuilder().stayInPlace(),
 				new InstantCommand(() -> Logger.recordOutput(ShooterConstants.LOG_PATH + "/IsTurretGoingToPosition", false))
 			),
-			() -> isLookAtTowerTooBigToLook(getLookAtTowerAngleForTurretRobotRelative(target, robotPose))
+			() -> isAngleForTowerTooBig(getRobotRelativeLookAtTowerAngleForTurret(target, robotPose))
 		);
 	}
 

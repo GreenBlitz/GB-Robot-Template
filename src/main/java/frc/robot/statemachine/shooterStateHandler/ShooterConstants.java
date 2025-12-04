@@ -30,6 +30,6 @@ public class ShooterConstants {
 		"FlywheelRotations",
 		Rotation2d.fromRotations(0.0)
 	);
-	public static final Rotation2d ANGLE_FOR_LOOK_AT_TOWER_NOT_TO_LOOK = Rotation2d.fromDegrees(30);
+	public static final Rotation2d ANGLE_FOR_TURRET_NOT_TO_LOOK_AT_TOWER = Rotation2d.fromDegrees(30);
 
 }

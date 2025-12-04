@@ -65,12 +65,13 @@ public class CalibrateCamera extends Command {
     public void execute() {
         // logCameraPose(PathPrefix, cameraName, tagID, xRobotDistanceFromTag, middleOfTagHeight);
         logFunction();
-        logCameraPose(this.PathPrefix , this.cameraName,this)
+        logCameraPose(this.PathPrefix, this.cameraName, this.tagID, this.xRobotDistanceFromTag, this.middleOfTagHeight);
         counter += 1;
     }
 
     @Override
     public void end(boolean interrupted) {
+        this.endTranslation = new Translation3d(sumX / this.numberOfCycles, sumY / this.numberOfCycles, this.sumZ / this.numberOfCycles);
         super.end(interrupted);
     }
 

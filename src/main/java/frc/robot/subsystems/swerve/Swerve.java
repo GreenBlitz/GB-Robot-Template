@@ -344,9 +344,8 @@ public class Swerve extends GBSubsystem {
 		for (int i = 1; i < translations.length; i++) {
 			areModulesSkidding[i] = robotRotationalVelocityX!=translations[i].getX()|| robotRotationalVelocityY!=translations[i].getY();
 		}
-//		Logger.recordOutput("is front-left skidding");
 		for (int i = 0; i < areModulesSkidding.length; i++) {
-//			Logger.recordOutput("is "+modules.getModule(ModuleUtil.ModulePosition.)+"skidding", areModulesSkidding[i]);
+			Logger.recordOutput("is"+ ModuleUtil.ModulePosition.values()[i].toString() +"Skidding", areModulesSkidding[i]);
 		}
 		return areModulesSkidding;
 	}

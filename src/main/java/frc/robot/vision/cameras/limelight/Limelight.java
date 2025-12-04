@@ -8,7 +8,7 @@ import frc.robot.vision.interfaces.ObjectDetector;
 import frc.robot.vision.interfaces.OrientationRequiringRobotPoseSupplier;
 import frc.robot.vision.interfaces.IndependentRobotPoseSupplier;
 import frc.utils.Conversions;
-import frc.utils.LimelightHelpers;
+import frc.utils.limelight.LimelightHelpers;
 import frc.utils.filter.Filter;
 import frc.utils.math.StandardDeviations2D;
 import frc.utils.time.TimeUtil;

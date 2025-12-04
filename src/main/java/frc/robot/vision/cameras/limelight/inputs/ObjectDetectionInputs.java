@@ -1,7 +1,7 @@
 package frc.robot.vision.cameras.limelight.inputs;
 
 import frc.robot.vision.cameras.limelight.LimelightTarget2dValues;
-import frc.utils.LimelightHelpers;
+import frc.utils.limelight.LimelightHelpers;
 import org.littletonrobotics.junction.AutoLog;
 
 @AutoLog

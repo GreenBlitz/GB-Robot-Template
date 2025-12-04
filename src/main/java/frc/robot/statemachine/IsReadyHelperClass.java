@@ -23,10 +23,15 @@ public class IsReadyHelperClass {
 			&& isInRangeForShooting(robotPosition, maxShootingRangeMeters, closestGoal.getTranslation());
 	}
 
-	private static boolean isAtHeadingToShoot(Pose2d robotPose, Translation2d closestGoal, Rotation2d tolerance, Rotation2d turretHeading) {
+	private static boolean isAtHeadingToShoot(
+		Pose2d robotPose,
+		Translation2d closestGoal,
+		Rotation2d headingTolerance,
+		Rotation2d turretHeading
+	) {
 		Rotation2d wantedAngle = FieldMath.getRelativeTranslation(robotPose, closestGoal).getAngle();
 		Rotation2d shooterHeading = Rotation2d.fromDegrees(robotPose.getRotation().getDegrees() + turretHeading.getDegrees());
-		return MathUtil.isNear(wantedAngle.getDegrees(), shooterHeading.getDegrees(), tolerance.getDegrees());
+		return MathUtil.isNear(wantedAngle.getDegrees(), shooterHeading.getDegrees(), headingTolerance.getDegrees());
 	}
 
 	private static boolean isAtPoseToShoot(
@@ -64,15 +69,15 @@ public class IsReadyHelperClass {
 		double maxShootingRangeMeters
 	) {
 		boolean isInPoseToShoot = isAtPoseToShoot(
-                robotPose,
+			robotPose,
 			closestGoal,
 			headingTolerance,
 			maxAngleFromGoalCenter,
-                turretHeading,
+			turretHeading,
 			maxShootingRangeMeters
 		);
 		boolean isShooterReedyToShoot = isFlywheelAtSpeed(wantedFlywheelVelocity, flywheelVelocity, shooterSpeedTolerance)
-                && isHoodAtPositon(wantedHoodPosition, hoodPosition, hoodPositionTolerance);
+			&& isHoodAtPositon(wantedHoodPosition, hoodPosition, hoodPositionTolerance);
 		return isShooterReedyToShoot && isInPoseToShoot;
 	}
 

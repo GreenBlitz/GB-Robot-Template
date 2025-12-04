@@ -100,6 +100,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	public void updateMT1() {
 		if (pipeline.isUsingMT()) {
 			inputs.mt1Inputs().mtRawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
+			inputs.mt1Inputs().primaryTagPoseInCameraSpace = LimelightHelpers.getTargetPose3d_CameraSpace(name);
 			Logger.processInputs(logPath + "/mt1Inputs", inputs.mt1Inputs());
 
 			mt1PoseObservation = new RobotPoseObservation(getMT1RawData().timestampSeconds(), getMT1RawData().pose(), calculateMT1StdDevs.get());
@@ -112,6 +113,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	public void updateMT2() {
 		if (pipeline.isUsingMT()) {
 			inputs.mt2Inputs().mtRawData = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
+			inputs.mt2Inputs().primaryTagPoseInCameraSpace = LimelightHelpers.getTargetPose3d_CameraSpace(name);
 			Logger.processInputs(logPath + "/mt2Inputs", inputs.mt2Inputs());
 
 			mt2PoseObservation = new RobotPoseObservation(getMT2RawData().timestampSeconds(), getMT2RawData().pose(), calculateMT2StdDevs.get());
@@ -211,6 +213,14 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		return inputs.ObjectDetectionInputs().rawDetections;
 	}
 
+	protected Pose3d getMT1PrimaryTagPoseInCameraSpace() {
+		return inputs.mt1Inputs().primaryTagPoseInCameraSpace;
+	}
+
+	protected Pose3d getMT2PrimaryTagPoseInCameraSpace() {
+		return inputs.mt2Inputs().primaryTagPoseInCameraSpace;
+	}
+
 	protected LimelightHelpers.PoseEstimate getMT1RawData() {
 		return inputs.mt1Inputs().mtRawData;
 	}
@@ -237,7 +247,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	private static boolean doesObservationExist(DetectedObjectObservation detectedObjectObservation) {
-		return !detectedObjectObservation.robotRelativeObjectTranslation().equals(Translation2d.kZero);
+		return !detectedObjectObservation.robotRelativeObjectTranslation().equals(Translation3d.kZero);
 	}
 
 	private static boolean doesObservationExist(RobotPoseObservation robotPoseObservation) {

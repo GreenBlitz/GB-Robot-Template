@@ -7,22 +7,30 @@ package frc.robot;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
-import frc.robot.subsystems.constants.fourBar.FourBarConstants;
 import frc.robot.hardware.digitalinput.IDigitalInput;
+import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.phoenix6.BusChain;
-import frc.robot.subsystems.arm.ArmSimulationConstants;
-import frc.robot.subsystems.constants.intakeRollers.IntakeRollerConstants;
+import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
+import frc.robot.poseestimator.IPoseEstimator;
+import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
+import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmSimulationConstants;
 import frc.robot.subsystems.arm.TalonFXArmBuilder;
 import frc.robot.subsystems.constants.belly.BellyConstants;
-import frc.robot.subsystems.constants.turret.TurretConstants;
-import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
+import frc.robot.subsystems.constants.fourBar.FourBarConstants;
 import frc.robot.subsystems.constants.hood.HoodConstants;
+import frc.robot.subsystems.constants.intakeRollers.IntakeRollerConstants;
 import frc.robot.subsystems.constants.omni.OmniConstant;
+import frc.robot.subsystems.constants.turret.TurretConstants;
 import frc.robot.subsystems.flywheel.FlyWheel;
 import frc.robot.subsystems.flywheel.KrakenX60FlyWheelBuilder;
 import frc.robot.subsystems.roller.Roller;
 import frc.robot.subsystems.roller.SparkMaxRollerBuilder;
+import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
+import frc.robot.subsystems.swerve.factories.imu.IMUFactory;
+import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.brakestate.BrakeStateManager;
@@ -44,6 +52,9 @@ public class Robot {
 	private final Roller belly;
 	private final Roller omni;
 	private final IDigitalInput funnelDigitalInput;
+
+	private final Swerve swerve;
+	private final IPoseEstimator poseEstimator;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -74,6 +85,24 @@ public class Robot {
 		this.omni = omniAndDigitalInput.getFirst();
 		this.funnelDigitalInput = omniAndDigitalInput.getSecond();
 		BrakeStateManager.add(() -> omni.setBrake(true), () -> omni.setBrake(false));
+
+		IIMU imu = IMUFactory.createIMU(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
+		this.swerve = new Swerve(
+			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
+			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
+			imu,
+			IMUFactory.createSignals(imu)
+		);
+
+		this.poseEstimator = new WPILibPoseEstimatorWrapper(
+			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
+			swerve.getKinematics(),
+			swerve.getModules().getWheelPositions(0),
+			swerve.getGyroAbsoluteYaw().getValue(),
+			swerve.getGyroAbsoluteYaw().getTimestamp()
+		);
+
+		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 	}
 
 	public void resetSubsystems() {
@@ -91,6 +120,10 @@ public class Robot {
 	public void periodic() {
 		BusChain.refreshAll();
 		resetSubsystems();
+
+		swerve.update();
+		poseEstimator.updateOdometry(swerve.getAllOdometryData());
+		poseEstimator.log();
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
@@ -256,6 +289,14 @@ public class Robot {
 
 	public Arm getHood() {
 		return hood;
+	}
+
+	public IPoseEstimator getPoseEstimator() {
+		return poseEstimator;
+	}
+
+	public Swerve getSwerve() {
+		return swerve;
 	}
 
 	public PathPlannerAutoWrapper getAutonomousCommand() {

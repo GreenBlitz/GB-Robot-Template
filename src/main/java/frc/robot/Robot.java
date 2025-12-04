@@ -46,6 +46,7 @@ public class Robot {
 	private final Roller belly;
 	private final Roller omni;
 	private final IDigitalInput funnelDigitalInput;
+	private final SimulationManager simulationManager;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -78,6 +79,8 @@ public class Robot {
 		this.omni = omniAndDigitalInput.getFirst();
 		this.funnelDigitalInput = omniAndDigitalInput.getSecond();
 		BrakeStateManager.add(() -> omni.setBrake(true), () -> omni.setBrake(false));
+
+		simulationManager = new SimulationManager("SimulationManager", this);
 	}
 
 	public void resetSubsystems() {
@@ -95,6 +98,7 @@ public class Robot {
 	public void periodic() {
 		BusChain.refreshAll();
 		resetSubsystems();
+		simulationManager.logPoses();
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();

@@ -5,6 +5,7 @@ import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
+import frc.utils.calibration.Camera.CalibrateCamera;
 
 public class JoysticksBindings {
 
@@ -46,7 +47,7 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		// bindings...
+		usedJoystick.A.onTrue(new CalibrateCamera());
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

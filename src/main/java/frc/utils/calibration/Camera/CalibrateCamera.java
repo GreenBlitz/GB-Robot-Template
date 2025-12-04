@@ -72,10 +72,7 @@ public class CalibrateCamera extends Command {
     }
 
     public boolean isFinished() {
-        if (counter == numberOfCycles) {
-            return true;
-        }
-        return false;
+        return counter == numberOfCycles;
     }
 
     private void logCameraPose(String PathPrefix, String cameraName, int tagID, double xRobotDistanceFromTag, double middleOfTagHeight) {
@@ -87,6 +84,7 @@ public class CalibrateCamera extends Command {
         );
 
         // limelight is funny so we invert pitch
+      // represents make average
         this.endRot = new Rotation3d(
                 cameraPoseFieldRelative.getRotation().getX(),
                 -cameraPoseFieldRelative.getRotation().getY(),
@@ -97,7 +95,7 @@ public class CalibrateCamera extends Command {
         sumY += -(cameraPoseFieldRelative.getY() - robotPoseFieldRelative.getY());
         sumZ += cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + middleOfTagHeight;
         //  );
-
+// return the thing that creats the object every time         divide the some to a different function
 
     }
 

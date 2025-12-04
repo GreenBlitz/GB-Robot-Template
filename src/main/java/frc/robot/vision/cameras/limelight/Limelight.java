@@ -102,7 +102,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	public void updateColorDetection() {
-		if (pipeline.isDetectingObjects()) {
+		if (pipeline.isDetectingColors()) {
 			colorDetections.clear();
 
 			inputs.colorDetectionInputs().target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
@@ -192,7 +192,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	public List<DetectedObjectObservation> getRobotRelativeColorDetections() {
-		if (pipeline.isDetectingObjects()) {
+		if (pipeline.isDetectingColors()) {
 			return (ArrayList<DetectedObjectObservation>) colorDetections.clone();
 		}
 		return new ArrayList<>();

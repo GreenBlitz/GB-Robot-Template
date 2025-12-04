@@ -98,6 +98,7 @@ public class Robot {
 				limelightFour,
 				new StandardDeviations2D(0.5),
 				new StandardDeviations2D(0.05),
+				new StandardDeviations2D(0.5),
 				new StandardDeviations2D(-0.02)
 			)
 		);
@@ -141,6 +142,7 @@ public class Robot {
 				limelightThreeGB,
 				new StandardDeviations2D(0.5),
 				new StandardDeviations2D(0.05),
+				new StandardDeviations2D(0.5),
 				new StandardDeviations2D(-0.02)
 			)
 		);

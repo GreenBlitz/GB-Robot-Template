@@ -24,14 +24,17 @@ public class CalibrateCamera extends Command {
     private Pose2d robotPoseFieldRelative;
     private Rotation3d endRot;
     private Translation3d endTranslation;
+    private int numberOfCycles;
+    private int counter;
 
-    public CalibrateCamera(AprilTagFields field, String PathPrefix, String cameraName, int tagID, double xRobotDistanceFromTag, double middleOfTagHeight) {
+    public CalibrateCamera(AprilTagFields field, String PathPrefix, String cameraName, int tagID, double xRobotDistanceFromTag, double middleOfTagHeight,int numberOfCycles) {
         this.cameraName = cameraName;
         this.middleOfTagHeight = middleOfTagHeight;
         this.field = field;
         this.PathPrefix = PathPrefix;
         this.tagID = tagID;
         this.xRobotDistanceFromTag = xRobotDistanceFromTag;
+        this.numberOfCycles = numberOfCycles;
         logCameraPose(PathPrefix, cameraName, tagID, xRobotDistanceFromTag, middleOfTagHeight);
     }
 
@@ -61,7 +64,9 @@ public class CalibrateCamera extends Command {
     }
 
     public boolean isFinished() {
-        return true; // TEMP
+      if (counter== numberOfCycles){
+        return true;} // TEMP
+        return false;
     }
 
     private void logCameraPose(String PathPrefix, String cameraName, int tagID, double xRobotDistanceFromTag, double middleOfTagHeight) {

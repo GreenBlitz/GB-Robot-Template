@@ -3,13 +3,12 @@ package frc.robot.statemachine.shooterStateHandler;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.constants.MathConstants;
 import frc.constants.field.Tower;
+import frc.robot.Robot;
 import frc.robot.statemachine.ScoringHelpers;
+import frc.robot.statemachine.superstructure.TurretAimAtTowerCommand;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.flywheel.FlyWheel;
 import frc.utils.math.FieldMath;
@@ -69,7 +68,7 @@ public class ShooterStateHandler {
 
 	private Command idle() {
 		return new ParallelCommandGroup(
-			aimAtTower(ScoringHelpers.getClosestTower(robotPose.get()).getTower(), robotPose.get()),
+			aimAtTower(ScoringHelpers.getClosestTower(robotPose.get()).getTower()),
 			hood.getCommandsBuilder()
 				.setTargetPosition(hoodInterpolation(() -> getDistanceFromTower(ScoringHelpers.getClosestTower(robotPose.get())))),
 			flyWheel.getCommandBuilder().setTargetVelocity(ShooterConstants.DEFAULT_FLYWHEEL_ROTATIONS_PER_SECOND)
@@ -78,7 +77,7 @@ public class ShooterStateHandler {
 
 	private Command shoot() {
 		return new ParallelCommandGroup(
-			aimAtTower(ScoringHelpers.getClosestTower(robotPose.get()).getTower(), robotPose.get()),
+			aimAtTower(ScoringHelpers.getClosestTower(robotPose.get()).getTower()),
 			hood.getCommandsBuilder()
 				.setTargetPosition(hoodInterpolation(() -> getDistanceFromTower(ScoringHelpers.getClosestTower(robotPose.get())))),
 			flyWheel.getCommandBuilder()
@@ -86,16 +85,16 @@ public class ShooterStateHandler {
 		);
 	}
 
-	private Rotation2d getRobotRelativeLookAtTowerAngleForTurret(Translation2d target, Pose2d robotTranslation) {
-		return getNormalizedAngle(FieldMath.getRelativeTranslation(robotTranslation, target).getAngle());
+	public static Supplier<Rotation2d> getRobotRelativeLookAtTowerAngleForTurret(Translation2d target, Pose2d robotPose) {
+		return () -> getNormalizedAngle(FieldMath.getRelativeTranslation(robotPose, target).getAngle());
 	}
 
 	public double getDistanceFromTower(Tower tower) {
 		return tower.getTower().getDistance(robotPose.get().getTranslation());
 	}
 
-	private boolean isTurretMoveIllegal(Rotation2d targetRobotRelative) {
-		return Math.abs(targetRobotRelative.getDegrees() - turret.getPosition().getDegrees())
+	public static boolean isTurretMoveLegal(Supplier<Rotation2d> targetRobotRelative,Arm turret) {
+		return Math.abs(targetRobotRelative.get().getDegrees() - turret.getPosition().getDegrees())
 			< MathConstants.FULL_CIRCLE.getDegrees() - ShooterConstants.MAX_DISTANCE_FROM_SCREW_NOT_TO_ROTATE.getDegrees();
 	}
 
@@ -106,18 +105,8 @@ public class ShooterStateHandler {
 		return Rotation2d.fromDegrees(degrees);
 	}
 
-	public Command aimAtTower(Translation2d target, Pose2d robotPose) {
-		return new ConditionalCommand(
-			new ParallelCommandGroup(
-				turret.getCommandsBuilder().setTargetPosition(getRobotRelativeLookAtTowerAngleForTurret(target, robotPose)),
-				new InstantCommand(() -> Logger.recordOutput(ShooterConstants.LOG_PATH + "/IsTurretGoingToPosition", true))
-			),
-			new ParallelCommandGroup(
-				turret.getCommandsBuilder().stayInPlace(),
-				new InstantCommand(() -> Logger.recordOutput(ShooterConstants.LOG_PATH + "/IsTurretGoingToPosition", false))
-			),
-			() -> isTurretMoveIllegal(getRobotRelativeLookAtTowerAngleForTurret(target, robotPose))
-		);
+	public Command aimAtTower(Translation2d target) {
+		return new TurretAimAtTowerCommand(turret,() -> target,robotPose);
 	}
 
 	public void Log() {

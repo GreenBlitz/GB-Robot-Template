@@ -3,7 +3,6 @@ package frc.robot.subsystems.swerve;
 import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -33,6 +32,7 @@ import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.Vector;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -331,11 +331,11 @@ public class Swerve extends GBSubsystem {
 		double robotVelocity = getRobotRelativeVelocity().omegaRadiansPerSecond;
 		SwerveModuleState[] statesRotation =  kinematics.toSwerveModuleStates(new ChassisSpeeds(0,0, robotVelocity),new Translation2d()); //rotation
 		SwerveModuleState[] statesAll = modules.getCurrentStates();
-		double[] translations = new double[statesAll.length];
+		Translation2d[] translations = new Translation2d[statesAll.length];
 		for (int i = 0; i <translations.length ; i++) {
-			translations[i] = unfinished;
+			translations[i] = new Translation2d(statesRotation[i].speedMetersPerSecond, statesRotation[i].angle.getRotations()).minus(new Translation2d(statesAll[i].speedMetersPerSecond, statesAll[i].angle.getRotations()));
 		}
-		double toCompare = translations[0];
+		Translation2d toCompare = translations[0];
 		boolean isEqual = true;
 		int placeSkidding = -1;
 		for (int i = 1; i < translations.length; i++) {

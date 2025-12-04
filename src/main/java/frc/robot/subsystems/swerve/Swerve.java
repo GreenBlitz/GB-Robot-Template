@@ -326,6 +326,19 @@ public class Swerve extends GBSubsystem {
 		return isAtHeading && isStopping;
 	}
 
+	public boolean isCollisionDetected() {
+		Logger.recordOutput(getLogPath() + "isCollisionDetected", imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d().getNorm() > 2);
+		return imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d().getNorm() > 2;
+	}
+
+	public Optional<Translation2d> getCurrentCollision(){
+		if(isCollisionDetected()){
+			Logger.recordOutput(getLogPath() + "collision", imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d());
+			return Optional.of(imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d());
+		}
+		return Optional.empty();
+	}
+
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {
 		joystick.START.onTrue(new InstantCommand(() -> commandsBuilder.setIsSubsystemRunningIndependently(true)));
 		joystick.BACK.onTrue(new InstantCommand(() -> commandsBuilder.setIsSubsystemRunningIndependently(false)));

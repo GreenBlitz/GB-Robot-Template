@@ -19,6 +19,7 @@ import frc.robot.hardware.empties.EmptyIMU;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.poseestimator.OdometryData;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.states.DriveRelative;
 import frc.robot.subsystems.swerve.states.LoopMode;
@@ -32,7 +33,6 @@ import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.Vector;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -327,25 +327,28 @@ public class Swerve extends GBSubsystem {
 		return isAtHeading && isStopping;
 	}
 
-	public boolean isSkidding(){
-		double robotVelocity = getRobotRelativeVelocity().omegaRadiansPerSecond;
-		SwerveModuleState[] statesRotation =  kinematics.toSwerveModuleStates(new ChassisSpeeds(0,0, robotVelocity),new Translation2d()); //rotation
-		SwerveModuleState[] statesAll = modules.getCurrentStates();
-		Translation2d[] translations = new Translation2d[statesAll.length];
-		for (int i = 0; i <translations.length ; i++) {
-			translations[i] = new Translation2d(statesRotation[i].speedMetersPerSecond, statesRotation[i].angle.getRotations()).minus(new Translation2d(statesAll[i].speedMetersPerSecond, statesAll[i].angle.getRotations()));
+	public boolean[] isSkidding() {
+		double robotRotationalVelocity = getRobotRelativeVelocity().omegaRadiansPerSecond;
+		SwerveModuleState[] currentModuleRotations = kinematics
+			.toSwerveModuleStates(new ChassisSpeeds(0, 0, robotRotationalVelocity), new Translation2d()); // rotation
+		SwerveModuleState[] currentModuleStates = modules.getCurrentStates();
+		Translation2d[] translations = new Translation2d[currentModuleStates.length];
+		for (int i = 0; i < translations.length; i++) {
+			translations[i] = new Translation2d(currentModuleRotations[i].speedMetersPerSecond, currentModuleRotations[i].angle.getRotations())
+				.minus(new Translation2d(currentModuleStates[i].speedMetersPerSecond, currentModuleStates[i].angle.getRotations()));
 		}
-		Translation2d toCompare = translations[0];
-		boolean isEqual = true;
-		int placeSkidding = -1;
+		boolean[] areModulesSkidding = new boolean[translations.length];
+		double robotRotationalVelocityX = getRobotRelativeVelocity().vxMetersPerSecond;
+		double robotRotationalVelocityY = getRobotRelativeVelocity().vyMetersPerSecond;
+
 		for (int i = 1; i < translations.length; i++) {
-			isEqual = isEqual && toCompare==translations[i];
-			if(toCompare!=translations[i])
-				placeSkidding = i;
+			areModulesSkidding[i] = robotRotationalVelocityX!=translations[i].getX()|| robotRotationalVelocityY!=translations[i].getY();
 		}
-		if(!isEqual)
-			Logger.recordOutput("Skidding module", placeSkidding);
-		return isEqual;
+//		Logger.recordOutput("is front-left skidding");
+		for (int i = 0; i < areModulesSkidding.length; i++) {
+//			Logger.recordOutput("is "+modules.getModule(ModuleUtil.ModulePosition.)+"skidding", areModulesSkidding[i]);
+		}
+		return areModulesSkidding;
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {

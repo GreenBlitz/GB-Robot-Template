@@ -13,6 +13,9 @@ import frc.utils.math.FieldMath;
 import org.littletonrobotics.junction.Logger;
 
 public class CalibrateCamera extends Command {
+    private int sumX = 0;
+    private int sumY = 0;
+    private int sumZ = 0;
     private String PathPrefix;
     private String cameraName;
     private int tagID;
@@ -25,9 +28,9 @@ public class CalibrateCamera extends Command {
     private Rotation3d endRot;
     private Translation3d endTranslation;
     private int numberOfCycles;
-    private int counter;
+    private int counter = 0;
 
-    public CalibrateCamera(AprilTagFields field, String PathPrefix, String cameraName, int tagID, double xRobotDistanceFromTag, double middleOfTagHeight,int numberOfCycles) {
+    public CalibrateCamera(AprilTagFields field, String PathPrefix, String cameraName, int tagID, double xRobotDistanceFromTag, double middleOfTagHeight, int numberOfCycles) {
         this.cameraName = cameraName;
         this.middleOfTagHeight = middleOfTagHeight;
         this.field = field;
@@ -35,7 +38,12 @@ public class CalibrateCamera extends Command {
         this.tagID = tagID;
         this.xRobotDistanceFromTag = xRobotDistanceFromTag;
         this.numberOfCycles = numberOfCycles;
-        logCameraPose(PathPrefix, cameraName, tagID, xRobotDistanceFromTag, middleOfTagHeight);
+        LimelightHelpers.setCameraPose_RobotSpace(cameraName, 0, 0, 0, 0, 0, 0);
+        this.tagPoseFieldRelative = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded).getTagPose(tagID).get();
+        this.cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
+        // logCameraPose(PathPrefix, cameraName, tagID, xRobotDistanceFromTag, middleOfTagHeight);
+
+
     }
 
 
@@ -52,31 +60,29 @@ public class CalibrateCamera extends Command {
     public void initialize() {
 
     }
+
     @Override
     public void execute() {
-        logCameraPose(PathPrefix, cameraName, tagID, xRobotDistanceFromTag, middleOfTagHeight);
+        // logCameraPose(PathPrefix, cameraName, tagID, xRobotDistanceFromTag, middleOfTagHeight);
         logFunction();
-        counter +=1;
+        logCameraPose(this.PathPrefix , this.cameraName,this)
+        counter += 1;
     }
 
-    public void end() {
-
+    @Override
+    public void end(boolean interrupted) {
+        super.end(interrupted);
     }
 
     public boolean isFinished() {
-      if (counter== numberOfCycles){
-        return true;} // TEMP
+        if (counter == numberOfCycles) {
+            return true;
+        } // TEMP
         return false;
     }
 
     private void logCameraPose(String PathPrefix, String cameraName, int tagID, double xRobotDistanceFromTag, double middleOfTagHeight) {
         // TODO - make a command, do an average, make field param, add option to tags that are not perfectly aligned
-
-        LimelightHelpers.setCameraPose_RobotSpace(cameraName, 0, 0, 0, 0, 0, 0);
-
-        this.tagPoseFieldRelative = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded).getTagPose(tagID).get();
-        this.cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
-
         this.robotPoseFieldRelative = new Pose2d(
                 tagPoseFieldRelative.getX() - xRobotDistanceFromTag,
                 tagPoseFieldRelative.getY(),
@@ -90,11 +96,11 @@ public class CalibrateCamera extends Command {
                 cameraPoseFieldRelative.getRotation().getZ() - robotPoseFieldRelative.getRotation().getRadians()
         );
         // limelight is funny so we invert y-axis
-        this.endTranslation = new Translation3d(
-                cameraPoseFieldRelative.getX() - robotPoseFieldRelative.getX(),
-                -(cameraPoseFieldRelative.getY() - robotPoseFieldRelative.getY()),
-                cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + middleOfTagHeight
-        );
+        // this.endTranslation = new Translation3d(
+        sumX += cameraPoseFieldRelative.getX() - robotPoseFieldRelative.getX();
+        sumY += -(cameraPoseFieldRelative.getY() - robotPoseFieldRelative.getY());
+        sumZ += cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + middleOfTagHeight;
+        //  );
 
 
     }

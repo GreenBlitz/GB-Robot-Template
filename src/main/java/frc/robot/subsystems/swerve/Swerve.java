@@ -175,11 +175,10 @@ public class Swerve extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/OdometrySamples", getNumberOfOdometrySamples());
 
 		Logger.recordOutput(getLogPath() + "/IMU/Acceleration", getAccelerationFromIMUMetersPerSecondSquared());
-		boolean[] modulesIsSkidding = isSkidding();
+		boolean[] modulesIsSkidding = areWheelsSkidding();
 		for (int i = 0; i < modulesIsSkidding.length; i++) {
-			Logger.recordOutput("is"+ ModuleUtil.ModulePosition.values()[i].toString() +"Skidding", modulesIsSkidding[i]);
+			Logger.recordOutput("is" + ModuleUtil.ModulePosition.values()[i].toString() + "Skidding", modulesIsSkidding[i]);
 		}
-
 	}
 
 
@@ -332,21 +331,29 @@ public class Swerve extends GBSubsystem {
 		return isAtHeading && isStopping;
 	}
 
-	public boolean[] isSkidding() {
+	public boolean[] areWheelsSkidding() {
 		double robotRotationalVelocity = getRobotRelativeVelocity().omegaRadiansPerSecond;
 		SwerveModuleState[] currentModuleRotationalStates = kinematics
-			.toSwerveModuleStates(new ChassisSpeeds(0, 0, robotRotationalVelocity), new Translation2d()); // rotation
+			.toSwerveModuleStates(new ChassisSpeeds(0, 0, robotRotationalVelocity), new Translation2d());
 		SwerveModuleState[] currentModuleStates = modules.getCurrentStates();
-		Translation2d[] currentModelTranslationalStates = new Translation2d[currentModuleStates.length];
-		for (int i = 0; i < currentModelTranslationalStates.length; i++) {
-			currentModelTranslationalStates[i] = new Translation2d(currentModuleRotationalStates[i].speedMetersPerSecond, currentModuleRotationalStates[i].angle)
-				.minus(new Translation2d(currentModuleStates[i].speedMetersPerSecond, currentModuleStates[i].angle.getRotations()));
-		}
-		boolean[] areWheelsSkidding = new boolean[currentModelTranslationalStates.length];
-		Translation2d robotRotationalVelocityTranslation = new Translation2d(getRobotRelativeVelocity().vxMetersPerSecond, getRobotRelativeVelocity().vyMetersPerSecond);
+		Translation2d[] currentModuleTranslationalStates = new Translation2d[currentModuleStates.length];
 
-		for (int i = 1; i < currentModelTranslationalStates.length; i++) {
-			areWheelsSkidding[i] = robotRotationalVelocityTranslation.getX()!= currentModelTranslationalStates[i].getX()|| robotRotationalVelocityTranslation.getY()!= currentModelTranslationalStates[i].getY();
+		for (int i = 0; i < currentModuleTranslationalStates.length; i++) {
+			currentModuleTranslationalStates[i] = new Translation2d(
+				currentModuleRotationalStates[i].speedMetersPerSecond,
+				currentModuleRotationalStates[i].angle
+			).minus(new Translation2d(currentModuleStates[i].speedMetersPerSecond, currentModuleStates[i].angle.getRotations()));
+		}
+
+		boolean[] areWheelsSkidding = new boolean[currentModuleTranslationalStates.length];
+		Translation2d robotTranslationalVelocity = new Translation2d(
+			getRobotRelativeVelocity().vxMetersPerSecond,
+			getRobotRelativeVelocity().vyMetersPerSecond
+		);
+
+		for (int i = 1; i < currentModuleTranslationalStates.length; i++) {
+			areWheelsSkidding[i] = robotTranslationalVelocity.getX() != currentModuleTranslationalStates[i].getX()
+				|| robotTranslationalVelocity.getY() != currentModuleTranslationalStates[i].getY();
 		}
 		return areWheelsSkidding;
 	}

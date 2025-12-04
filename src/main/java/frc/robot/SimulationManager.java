@@ -19,7 +19,7 @@ public class SimulationManager {
 
 	public void logPoses() {
 		logIntakePosition3d();
-//		logTurretPosition3d();
+		logTurretPosition3d();
 //		logHoodPosition3d();
 	}
 

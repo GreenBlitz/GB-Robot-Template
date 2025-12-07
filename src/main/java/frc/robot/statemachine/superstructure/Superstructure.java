@@ -30,9 +30,17 @@ public class Superstructure {
 	public Superstructure(String logPath, Robot robot, Supplier<Double> distanceFromTower) {
 		this.robot = robot;
 
-		this.currentState = null;
+		this.currentState = RobotState.STAY_IN_PLACE;
 
-		this.subsystems = Set.of();
+		this.subsystems = Set.of(
+			robot.getFlyWheel(),
+			robot.getBelly(),
+			robot.getTurret(),
+			robot.getOmni(),
+			robot.getFourBar(),
+			robot.getIntakeRoller(),
+			robot.getHood()
+		);
 
 		this.targetChecks = new TargetChecks(this);
 

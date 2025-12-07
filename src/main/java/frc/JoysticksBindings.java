@@ -49,7 +49,7 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		usedJoystick.A.onTrue(new InstantCommand(()->robot.getPoseEstimator().resetPose(new Pose2d())));
+		usedJoystick.A.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d())));
 		usedJoystick.A.onTrue(new InstantCommand(() -> robot.getSwerve().setHeading(new Rotation2d())));
 		// bindings...
 	}

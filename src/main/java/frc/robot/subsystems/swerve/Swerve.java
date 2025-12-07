@@ -52,8 +52,6 @@ public class Swerve extends GBSubsystem {
 	private Supplier<Rotation2d> headingSupplier;
 	private ChassisPowers driversPowerInputs;
 
-	private Optional<Translation2d> collision;
-
 	public Swerve(SwerveConstants constants, Modules modules, IIMU imu, IMUSignals imuSignals) {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
@@ -70,7 +68,6 @@ public class Swerve extends GBSubsystem {
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
 		this.stateHandler = new SwerveStateHandler(this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
-		this.collision = Optional.empty();
 
 		update();
 		setDefaultCommand(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
@@ -178,7 +175,7 @@ public class Swerve extends GBSubsystem {
 
 		Logger.recordOutput(getLogPath() + "/IMU/Acceleration", getAccelerationFromIMUMetersPerSecondSquared());
 
-		getCurrentCollision().ifPresent((currentCollision) -> Logger.recordOutput(getLogPath() + "/robotCollision", currentCollision));
+		Logger.recordOutput(getLogPath() + "/isCollisionDetected", isCollisionDetected());
 	}
 
 
@@ -331,13 +328,8 @@ public class Swerve extends GBSubsystem {
 		return isAtHeading && isStopping;
 	}
 
-	public Optional<Translation2d> getCurrentCollision() {
-		if (imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d().getNorm() > 2) {
-			collision = Optional.of(imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d());
-		} else {
-			collision = Optional.empty();
-		}
-		return collision;
+	public boolean isCollisionDetected() {
+		return imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d().getNorm() > 2;
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {

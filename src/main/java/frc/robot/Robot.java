@@ -300,6 +300,8 @@ public class Robot {
 
 	public Superstructure getSuperstructure() {
 		return this.superstructure;
+	}
+
 	public IPoseEstimator getPoseEstimator() {
 		return poseEstimator;
 	}

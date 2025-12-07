@@ -87,7 +87,6 @@ public class Robot {
 		this.funnelDigitalInput = omniAndDigitalInput.getSecond();
 		BrakeStateManager.add(() -> omni.setBrake(true), () -> omni.setBrake(false));
 
-		simulationManager = new SimulationManager("SimulationManager", this);
 		IIMU imu = IMUFactory.createIMU(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
@@ -105,6 +104,8 @@ public class Robot {
 		);
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+
+		simulationManager = new SimulationManager("SimulationManager", this);
 	}
 
 	public void resetSubsystems() {

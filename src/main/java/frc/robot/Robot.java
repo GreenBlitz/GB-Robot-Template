@@ -65,9 +65,7 @@ public class Robot {
 		this.turret = createTurret();
 		turret.setPosition(TurretConstants.MIN_POSITION);
 		BrakeStateManager.add(() -> turret.setBrake(true), () -> turret.setBrake(false));
-
-		Logger.recordOutput("aaa", new Pose3d());
-
+		
 		this.flyWheel = KrakenX60FlyWheelBuilder.build("Subsystems/FlyWheel", IDs.TalonFXIDs.FLYWHEEL);
 
 		this.fourBar = createFourBar();

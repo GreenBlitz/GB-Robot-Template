@@ -19,7 +19,7 @@ public class SimulationManager {
 	public void logPoses() {
 		logIntakePosition3d();
 		logTurretPosition3d();
-//		logHoodPosition3d();
+		logHoodPosition3d();
 	}
 
 	private void logIntakePosition3d() {
@@ -31,15 +31,11 @@ public class SimulationManager {
 	}
 
 	public void logTurretPosition3d() {
-		Logger.recordOutput(logPath + "/Turret/Plate/Position", getTurretPlatePosition3d(robot.getTurret().getPosition()));
 		Logger.recordOutput(logPath + "/Turret/Position", getTurretPosition3d(robot.getTurret().getPosition()));
 	}
-
-	public Pose3d getTurretPlatePosition3d(Rotation2d yaw) {
-		return new Pose3d(new Translation3d(0.0, -0.0, 0.0), new Rotation3d(0.0, 0.0, 0));
-	}
+	
 	public Pose3d getTurretPosition3d(Rotation2d yaw) {
-		return new Pose3d(new Translation3d(0.0, -0.17, 0.0), new Rotation3d(0.0, 0.0, yaw.getRadians()));
+		return new Pose3d(new Translation3d(0.0, -0.25, 0.0), new Rotation3d(0.0, 0.0, yaw.getRadians()));
 	}
 	
 	
@@ -48,10 +44,10 @@ public class SimulationManager {
 		Logger.recordOutput(logPath + "/Hood/Position", getHoodPosition3d(robot.getHood().getPosition()));
 	}
 
-	public Pose3d getHoodPosition3d(Rotation2d pitch) {
+	public Pose3d getHoodPosition3d(Rotation2d roll) {
 		return new Pose3d(
-			new Translation3d(0.0, 0.0, 0.0),
-			new Rotation3d(0.0, pitch.getRadians(), robot.getTurret().getPosition().getRadians())
+			new Translation3d(0.0, -0.25, 0.4),
+			new Rotation3d(Rotation2d.fromDegrees(50.0).minus(roll).getRadians(), 0.0, robot.getTurret().getPosition().getRadians())
 		);
 	}
 

@@ -27,7 +27,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	private final String logPath;
 	private final Pose3d robotRelativeCameraPose;
 
-	private final ArrayList<DetectedObjectObservation> nuralDetectionObservations;
+	private final ArrayList<DetectedObjectObservation> nuralDetections;
 	private final ArrayList<DetectedObjectObservation> colorDetections;
 
 	private final LimelightInputsSet inputs;
@@ -52,7 +52,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		this.robotRelativeCameraPose = robotRelativeCameraPose;
 		setRobotRelativeCameraPose(robotRelativeCameraPose);
 
-		this.nuralDetectionObservations = new ArrayList<>();
+		this.nuralDetections = new ArrayList<>();
 		this.colorDetections = new ArrayList<>();
 
 		this.mt1PoseObservation = new RobotPoseObservation();
@@ -71,9 +71,9 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		setPipeline(pipeline);
 	}
 
-	public void updateObjectDetection() {
+	public void updateNuralDetection() {
 		if (pipeline.isNuralDetecting()) {
-			nuralDetectionObservations.clear();
+			nuralDetections.clear();
 
 			inputs.nuralDetectionInputs().target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
 			inputs.nuralDetectionInputs().rawDetections = LimelightHelpers.getRawDetections(name);
@@ -92,18 +92,18 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 							);
 
 							if (doesObservationExist(observation)) {
-								nuralDetectionObservations.add(observation);
+								nuralDetections.add(observation);
 							}
 						});
 					}
 				}
 			}
-			Logger.recordOutput(logPath + "/nuralDetectionObservations", nuralDetectionObservations.toArray(new DetectedObjectObservation[0]));
+			Logger.recordOutput(logPath + "/nuralDetections", nuralDetections.toArray(new DetectedObjectObservation[0]));
 		}
 	}
 
 	public void updateColorDetection() {
-		if (pipeline.isDetectingColors()) {
+		if (pipeline.isColorDetecting()) {
 			colorDetections.clear();
 
 			inputs.colorDetectionInputs().target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
@@ -171,7 +171,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	@Override
 	public List<DetectedObjectObservation> getRobotRelativeObjectTranslations() {
 		if (pipeline.isNuralDetecting()) {
-			return (ArrayList<DetectedObjectObservation>) nuralDetectionObservations.clone();
+			return (ArrayList<DetectedObjectObservation>) nuralDetections.clone();
 		}
 		return new ArrayList<>();
 	}
@@ -193,7 +193,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	public List<DetectedObjectObservation> getRobotRelativeColorDetections() {
-		if (pipeline.isDetectingColors()) {
+		if (pipeline.isColorDetecting()) {
 			return (ArrayList<DetectedObjectObservation>) colorDetections.clone();
 		}
 		return new ArrayList<>();

@@ -15,20 +15,20 @@ public enum LimelightPipeline {
 	private final int pipelineIndex;
 	private final boolean isUsingMT;
 	private final boolean isNuralDetecting;
-	private final boolean isDetectingColors;
+	private final boolean isColorDetecting;
 	private final DetectedObjectType[] detectedObjectTypes;
 
 	LimelightPipeline(
 		int pipelineIndex,
 		boolean isUsingMT,
 		boolean isNuralDetecting,
-		boolean isDetectingColors,
+		boolean isColorDetecting,
 		DetectedObjectType[] detectedObjectTypes
 	) {
 		this.pipelineIndex = pipelineIndex;
 		this.isUsingMT = isUsingMT;
 		this.isNuralDetecting = isNuralDetecting;
-		this.isDetectingColors = isDetectingColors;
+		this.isColorDetecting = isColorDetecting;
 		this.detectedObjectTypes = detectedObjectTypes;
 	}
 
@@ -48,8 +48,8 @@ public enum LimelightPipeline {
 		return isNuralDetecting;
 	}
 
-	public boolean isDetectingColors() {
-		return isDetectingColors;
+	public boolean isColorDetecting() {
+		return isColorDetecting;
 	}
 
 	public Optional<DetectedObjectType> getDetectedObjectType(int index) {

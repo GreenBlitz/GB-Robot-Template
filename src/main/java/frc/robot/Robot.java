@@ -19,11 +19,15 @@ import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
-import frc.utils.TimedValue;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.math.StandardDeviations2D;
-
+import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
+import frc.robot.subsystems.swerve.factories.imu.IMUFactory;
+import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
+import frc.utils.auto.PathPlannerAutoWrapper;
+import frc.utils.battery.BatteryUtil;
+import frc.robot.hardware.interfaces.IIMU;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -52,14 +56,15 @@ public class Robot {
 			IMUFactory.createSignals(imu)
 		);
 
-		TimedValue<Rotation2d> gyroAbsoluteYaw = swerve.getGyroAbsoluteYaw();
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
 			swerve.getKinematics(),
 			swerve.getModules().getWheelPositions(0),
-			gyroAbsoluteYaw.getValue(),
-			gyroAbsoluteYaw.getTimestamp()
+			swerve.getGyroAbsoluteYaw().getValue(),
+			swerve.getGyroAbsoluteYaw().getTimestamp()
 		);
+
+		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 
 		this.limelightFour = new Limelight(
 			"limelight-left",
@@ -93,6 +98,7 @@ public class Robot {
 				limelightFour,
 				new StandardDeviations2D(0.5),
 				new StandardDeviations2D(0.05),
+				new StandardDeviations2D(0.5),
 				new StandardDeviations2D(-0.02)
 			)
 		);
@@ -136,6 +142,7 @@ public class Robot {
 				limelightThreeGB,
 				new StandardDeviations2D(0.5),
 				new StandardDeviations2D(0.05),
+				new StandardDeviations2D(0.5),
 				new StandardDeviations2D(-0.02)
 			)
 		);
@@ -156,8 +163,6 @@ public class Robot {
 			),
 			LimelightPipeline.COLOR_DETECTION
 		);
-
-		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
 	}
@@ -190,20 +195,21 @@ public class Robot {
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 
-	public PathPlannerAutoWrapper getAutonomousCommand() {
-		return new PathPlannerAutoWrapper();
+	public IPoseEstimator getPoseEstimator() {
+		return poseEstimator;
 	}
 
 	public Swerve getSwerve() {
 		return swerve;
 	}
 
-	public RobotCommander getRobotCommander() {
-		return robotCommander;
+	public PathPlannerAutoWrapper getAutonomousCommand() {
+		return new PathPlannerAutoWrapper();
 	}
 
-	public IPoseEstimator getPoseEstimator() {
-		return poseEstimator;
+
+	public RobotCommander getRobotCommander() {
+		return robotCommander;
 	}
 
 }

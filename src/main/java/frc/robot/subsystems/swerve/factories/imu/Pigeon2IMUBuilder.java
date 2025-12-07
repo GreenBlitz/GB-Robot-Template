@@ -8,7 +8,9 @@ import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.imu.Pigeon2IMU;
 import frc.robot.hardware.phoenix6.imu.Pigeon2Wrapper;
+import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
+import frc.robot.hardware.phoenix6.signal.SignalGetter;
 import frc.robot.hardware.signal.AngleSignal;
 import frc.robot.hardware.signal.DoubleSignal;
 import frc.robot.subsystems.swerve.IMUSignals;
@@ -38,8 +40,13 @@ class Pigeon2IMUBuilder {
 		return new Pigeon2IMU(logPath, pigeon2Wrapper);
 	}
 
-	private static AngleSignal buildAnglePigeonSignal(StatusSignal<?> signal) {
+	private static Phoenix6AngleSignal buildAnglePigeonSignal(StatusSignal<?> signal) {
 		return Phoenix6SignalBuilder.build(signal, RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.DEGREES, BusChain.ROBORIO);
+	}
+
+	private static AngleSignal buildAnglePigeonSignal(StatusSignal<?> signal, SignalGetter signalSlope) {
+		return Phoenix6SignalBuilder
+			.build(signal, signalSlope, RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.DEGREES, BusChain.ROBORIO);
 	}
 
 	private static DoubleSignal buildDoublePigeonSignal(StatusSignal<?> signal) {
@@ -47,13 +54,16 @@ class Pigeon2IMUBuilder {
 	}
 
 	static IMUSignals buildSignals(Pigeon2IMU pigeon2imu) {
+		Phoenix6AngleSignal angularVelocityXWorld = buildAnglePigeonSignal(pigeon2imu.getDevice().getAngularVelocityXWorld());
+		Phoenix6AngleSignal angularVelocityYWorld = buildAnglePigeonSignal(pigeon2imu.getDevice().getAngularVelocityYWorld());
+		Phoenix6AngleSignal angularVelocityZWorld = buildAnglePigeonSignal(pigeon2imu.getDevice().getAngularVelocityZWorld());
 		return new IMUSignals(
-			buildAnglePigeonSignal(pigeon2imu.getDevice().getRoll()),
-			buildAnglePigeonSignal(pigeon2imu.getDevice().getPitch()),
-			buildAnglePigeonSignal(pigeon2imu.getDevice().getYaw()),
-			buildAnglePigeonSignal(pigeon2imu.getDevice().getAngularVelocityXWorld()),
-			buildAnglePigeonSignal(pigeon2imu.getDevice().getAngularVelocityYWorld()),
-			buildAnglePigeonSignal(pigeon2imu.getDevice().getAngularVelocityZWorld()),
+			buildAnglePigeonSignal(pigeon2imu.getDevice().getRoll(), angularVelocityXWorld),
+			buildAnglePigeonSignal(pigeon2imu.getDevice().getPitch(), angularVelocityYWorld),
+			buildAnglePigeonSignal(pigeon2imu.getDevice().getYaw(), angularVelocityZWorld),
+			angularVelocityXWorld,
+			angularVelocityYWorld,
+			angularVelocityZWorld,
 			buildDoublePigeonSignal(pigeon2imu.getDevice().getAccelerationX()),
 			buildDoublePigeonSignal(pigeon2imu.getDevice().getAccelerationY()),
 			buildDoublePigeonSignal(pigeon2imu.getDevice().getAccelerationZ())

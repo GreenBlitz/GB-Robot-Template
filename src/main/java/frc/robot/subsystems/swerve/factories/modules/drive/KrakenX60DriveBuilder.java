@@ -110,8 +110,7 @@ public class KrakenX60DriveBuilder {
 
 	static DriveRequests buildRequests() {
 		return new DriveRequests(
-			Phoenix6RequestBuilder
-				.build(new VelocityTorqueCurrentFOC(0).withUpdateFreqHz(RobotConstants.DEFAULT_REQUEST_FREQUENCY_HERTZ).withSlot(1), 0),
+			Phoenix6RequestBuilder.build(new VelocityTorqueCurrentFOC(0).withSlot(1), 0),
 			Phoenix6RequestBuilder.build(new VoltageOut(0), true),
 			Phoenix6RequestBuilder.build(new TorqueCurrentFOC(0))
 		);

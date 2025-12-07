@@ -7,7 +7,6 @@ import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.constants.fourBar.FourBarConstants;
 import frc.robot.subsystems.roller.Roller;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.utils.battery.BatteryUtil;

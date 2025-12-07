@@ -10,7 +10,7 @@ import frc.robot.vision.interfaces.IndependentRobotPoseSupplier;
 import frc.utils.Conversions;
 import frc.utils.limelight.LimelightHelpers;
 import frc.utils.filter.Filter;
-import frc.utils.limelight.LimelightLimelightHelpersHelpers;
+import frc.utils.limelight.GBLimelightHelpers;
 import frc.utils.math.StandardDeviations2D;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
@@ -36,7 +36,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	private RobotPoseObservation mt2PoseObservation;
 
 	private Function<LimelightHelpers.RawDetection, Boolean> nuralDetectionFilter;
-	private Function<LimelightLimelightHelpersHelpers.RawTarget, Boolean> colorDetectionFilter;
+	private Function<GBLimelightHelpers.RawTarget, Boolean> colorDetectionFilter;
 	private Filter mt1PoseFilter;
 	private Filter mt2PoseFilter;
 
@@ -107,11 +107,11 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 			colorDetections.clear();
 
 			inputs.colorDetectionInputs().target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
-			inputs.colorDetectionInputs().rawTargets = LimelightLimelightHelpersHelpers.getRawTargets(name);
+			inputs.colorDetectionInputs().rawTargets = GBLimelightHelpers.getRawTargets(name);
 			Logger.processInputs(logPath + "/colorDetectionInputs", inputs.colorDetectionInputs());
 
 			if (getTarget2dValues().isValid()) {
-				for (LimelightLimelightHelpersHelpers.RawTarget rawTarget : getRawTargets()) {
+				for (GBLimelightHelpers.RawTarget rawTarget : getRawTargets()) {
 					if (colorDetectionFilter.apply(rawTarget)) {
 						pipeline.getDetectedObjectType(0).ifPresent(objectType -> {
 							DetectedObjectObservation observation = ObjectDetectionMath.getDetectedObjectObservation(
@@ -203,7 +203,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		return nuralDetectionFilter;
 	}
 
-	public Function<LimelightLimelightHelpersHelpers.RawTarget, Boolean> getColorDetectionFilter() {
+	public Function<GBLimelightHelpers.RawTarget, Boolean> getColorDetectionFilter() {
 		return colorDetectionFilter;
 	}
 
@@ -237,7 +237,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		this.nuralDetectionFilter = nuralDetectionFilter;
 	}
 
-	public void setColorDetectionFilter(Function<LimelightLimelightHelpersHelpers.RawTarget, Boolean> colorDetectionFilter) {
+	public void setColorDetectionFilter(Function<GBLimelightHelpers.RawTarget, Boolean> colorDetectionFilter) {
 		this.colorDetectionFilter = colorDetectionFilter;
 	}
 
@@ -265,7 +265,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		return inputs.nuralDetectionInputs().rawDetections;
 	}
 
-	protected LimelightLimelightHelpersHelpers.RawTarget[] getRawTargets() {
+	protected GBLimelightHelpers.RawTarget[] getRawTargets() {
 		return inputs.colorDetectionInputs().rawTargets;
 	}
 

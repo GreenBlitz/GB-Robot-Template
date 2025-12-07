@@ -170,10 +170,13 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	@Override
 	public List<DetectedObjectObservation> getRobotRelativeObjectTranslations() {
-		if (pipeline.isNuralDetecting()) {
-			return (ArrayList<DetectedObjectObservation>) nuralDetections.clone();
+		List<DetectedObjectObservation> robotRelativeNuralDetections = getRobotRelativeNuralDetections();
+		List<DetectedObjectObservation> robotRelativeColorDetections = getRobotRelativeColorDetections();
+		if (!robotRelativeNuralDetections.isEmpty()) {
+			return robotRelativeNuralDetections;
+		} else {
+			return robotRelativeColorDetections;
 		}
-		return new ArrayList<>();
 	}
 
 	@Override
@@ -190,6 +193,13 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 			return Optional.of(mt2PoseObservation);
 		}
 		return Optional.empty();
+	}
+
+	public List<DetectedObjectObservation> getRobotRelativeNuralDetections() {
+		if (pipeline.isNuralDetecting()) {
+			return (ArrayList<DetectedObjectObservation>) nuralDetections.clone();
+		}
+		return new ArrayList<>();
 	}
 
 	public List<DetectedObjectObservation> getRobotRelativeColorDetections() {

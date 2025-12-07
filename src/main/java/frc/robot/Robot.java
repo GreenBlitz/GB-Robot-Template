@@ -57,9 +57,11 @@ public class Robot {
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
 			swerve.getKinematics(),
 			swerve.getModules().getWheelPositions(0),
-			gyroAbsoluteYaw.getValue(),
-			gyroAbsoluteYaw.getTimestamp()
+			swerve.getGyroAbsoluteYaw().getValue(),
+			swerve.getGyroAbsoluteYaw().getTimestamp()
 		);
+
+		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 
 		this.limelightFour = new Limelight(
 			"limelight-left",
@@ -93,6 +95,7 @@ public class Robot {
 				limelightFour,
 				new StandardDeviations2D(0.5),
 				new StandardDeviations2D(0.05),
+				new StandardDeviations2D(0.5),
 				new StandardDeviations2D(-0.02)
 			)
 		);
@@ -136,6 +139,7 @@ public class Robot {
 				limelightThreeGB,
 				new StandardDeviations2D(0.5),
 				new StandardDeviations2D(0.05),
+				new StandardDeviations2D(0.5),
 				new StandardDeviations2D(-0.02)
 			)
 		);
@@ -156,8 +160,6 @@ public class Robot {
 			),
 			LimelightPipeline.OBJECT_DETECTION
 		);
-
-		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);
 	}
@@ -189,20 +191,15 @@ public class Robot {
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 
-	public PathPlannerAutoWrapper getAutonomousCommand() {
-		return new PathPlannerAutoWrapper();
-	}
-
+public IPoseEstimator getPoseEstimator(){
+		return poseEstimator;
+}
 	public Swerve getSwerve() {
 		return swerve;
 	}
 
 	public RobotCommander getRobotCommander() {
 		return robotCommander;
-	}
-
-	public IPoseEstimator getPoseEstimator() {
-		return poseEstimator;
 	}
 
 }

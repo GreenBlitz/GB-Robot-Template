@@ -49,6 +49,7 @@ public class Swerve extends GBSubsystem {
 	private final SwerveCommandsBuilder commandsBuilder;
 	private final SwerveStateHandler stateHandler;
 
+	private boolean[] modulesIsSkidding = new boolean[getNumberOfOdometrySamples()];
 	private SwerveState currentState;
 	private Supplier<Rotation2d> headingSupplier;
 	private ChassisPowers driversPowerInputs;
@@ -72,6 +73,10 @@ public class Swerve extends GBSubsystem {
 
 		update();
 		setDefaultCommand(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
+	}
+
+	public boolean[] getIsSkidding() {
+		return modulesIsSkidding;
 	}
 
 	public String getLogPath() {
@@ -175,7 +180,7 @@ public class Swerve extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/OdometrySamples", getNumberOfOdometrySamples());
 
 		Logger.recordOutput(getLogPath() + "/IMU/Acceleration", getAccelerationFromIMUMetersPerSecondSquared());
-		boolean[] modulesIsSkidding = areWheelsSkidding();
+		modulesIsSkidding = areWheelsSkidding();
 		for (int i = 0; i < modulesIsSkidding.length; i++) {
 			Logger.recordOutput("is" + ModuleUtil.ModulePosition.values()[i].toString() + "Skidding", modulesIsSkidding[i]);
 		}
@@ -352,8 +357,10 @@ public class Swerve extends GBSubsystem {
 		);
 
 		for (int i = 1; i < currentModuleTranslationalStates.length; i++) {
-			areWheelsSkidding[i] = robotTranslationalVelocity.getX() != currentModuleTranslationalStates[i].getX()
-				|| robotTranslationalVelocity.getY() != currentModuleTranslationalStates[i].getY();
+			Logger.recordOutput("robotTranslational Velocity", robotTranslationalVelocity);
+			Logger.recordOutput("currentModuleTrabskatuinalState" + ModuleUtil.ModulePosition.values()[i].toString(), currentModuleRotationalStates);
+			areWheelsSkidding[i] = MathUtil.isNear(robotTranslationalVelocity.getX(), currentModuleTranslationalStates[i].getX(), 0.1)
+				|| MathUtil.isNear(robotTranslationalVelocity.getY(), currentModuleTranslationalStates[i].getY(), 0.1);
 		}
 		return areWheelsSkidding;
 	}

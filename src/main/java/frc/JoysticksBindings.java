@@ -1,5 +1,8 @@
 package frc;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
@@ -46,12 +49,13 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
+		usedJoystick.A.onTrue(new InstantCommand(()->robot.getPoseEstimator().resetPose(new Pose2d())));
+		usedJoystick.A.onTrue(new InstantCommand(() -> robot.getSwerve().setHeading(new Rotation2d())));
 		// bindings...
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
-		// bindings...
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {

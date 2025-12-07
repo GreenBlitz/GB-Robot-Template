@@ -10,6 +10,7 @@ import frc.RobotManager;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.statemachine.RobotCommander;
 import frc.robot.subsystems.arm.ArmSimulationConstants;
 import frc.robot.subsystems.constants.intakeRollers.IntakeRollerConstants;
 import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
@@ -49,10 +50,11 @@ public class Robot {
 	private final Arm fourBar;
 	private final Arm hood;
 	private final IDigitalInput intakeRollerSensor;
-
 	private final Roller belly;
 	private final Roller omni;
 	private final IDigitalInput funnelDigitalInput;
+
+	private final RobotCommander robotCommander;
 
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
@@ -86,6 +88,8 @@ public class Robot {
 		this.omni = omniAndDigitalInput.getFirst();
 		this.funnelDigitalInput = omniAndDigitalInput.getSecond();
 		BrakeStateManager.add(() -> omni.setBrake(true), () -> omni.setBrake(false));
+
+		robotCommander = new RobotCommander("/robotCommander", this);
 
 		IIMU imu = IMUFactory.createIMU(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(
@@ -298,6 +302,10 @@ public class Robot {
 
 	public Swerve getSwerve() {
 		return swerve;
+	}
+
+	public RobotCommander getRobotCommander() {
+		return robotCommander;
 	}
 
 	public PathPlannerAutoWrapper getAutonomousCommand() {

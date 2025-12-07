@@ -13,7 +13,6 @@ public class TargetChecks {
 	private final Superstructure superstructure;
 	private static final String logPath = "Statemachine/TargetChecks";
 
-
 	public TargetChecks(Superstructure superstructure) {
 		this.superstructure = superstructure;
 	}

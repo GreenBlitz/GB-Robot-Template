@@ -22,7 +22,6 @@ public class Modules {
 		return modules[modulePosition.getIndex()];
 	}
 
-
 	public void updateInputs() {
 		for (Module currentModule : modules) {
 			currentModule.updateInputs();
@@ -90,6 +89,9 @@ public class Modules {
 		}
 	}
 
+	public int getNumberOfModules(){
+		return modules.length;
+	}
 
 	public Translation2d[] getModulePositionsFromCenterMeters() {
 		return Arrays.stream(modules).map(Module::getPositionFromCenterMeters).toArray(Translation2d[]::new);

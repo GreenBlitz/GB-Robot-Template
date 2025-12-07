@@ -170,12 +170,10 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	@Override
 	public List<DetectedObjectObservation> getRobotRelativeObjectTranslations() {
-		List<DetectedObjectObservation> robotRelativeNeuralDetections = getRobotRelativeNeuralDetections();
-		List<DetectedObjectObservation> robotRelativeColorDetections = getRobotRelativeColorDetections();
 		if (pipeline.isNeuralDetecting()) {
-			return robotRelativeNeuralDetections;
+			return getRobotRelativeNeuralDetections();
 		} else {
-			return robotRelativeColorDetections;
+			return getRobotRelativeColorDetections();
 		}
 	}
 

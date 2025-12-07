@@ -13,9 +13,15 @@ import frc.utils.math.FieldMath;
 import org.littletonrobotics.junction.Logger;
 
 public class CalibrateCamera extends Command {
-    private int sumX = 0;
-    private int sumY = 0;
-    private int sumZ = 0;
+    private double sumTranslationX = 0;
+    private double sumTranslationY = 0;
+    private double sumTranslationZ = 0;
+    private double sumPose2DX =0;
+    private double sumPose2Dy =0;
+    private
+    private double sumRotation3DX =0;
+    private double sumRotation3DY =0;
+    private double getSumRotation3DZ =0;
     private String PathPrefix;
     private String cameraName;
     private int tagID;
@@ -67,7 +73,7 @@ public class CalibrateCamera extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        this.endTranslation = new Translation3d(sumX / this.numberOfCycles, sumY / this.numberOfCycles, this.sumZ / this.numberOfCycles);
+        this.endTranslation = new Translation3d(sumTranslationX / this.numberOfCycles, sumTranslationY / this.numberOfCycles, this.sumTranslationZ / this.numberOfCycles);
         super.end(interrupted);
     }
 
@@ -86,18 +92,27 @@ public class CalibrateCamera extends Command {
         // limelight is funny so we invert pitch
       // represents make average
         this.endRot = new Rotation3d(
+              // represents three degrees
                 cameraPoseFieldRelative.getRotation().getX(),
                 -cameraPoseFieldRelative.getRotation().getY(),
                 cameraPoseFieldRelative.getRotation().getZ() - robotPoseFieldRelative.getRotation().getRadians()
         );
         // limelight is funny so we invert y-axis
-        sumX += cameraPoseFieldRelative.getX() - robotPoseFieldRelative.getX();
-        sumY += -(cameraPoseFieldRelative.getY() - robotPoseFieldRelative.getY());
-        sumZ += cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + middleOfTagHeight;
+        Translation3d endTranslation = new Translation3d(
+                cameraPoseFieldRelative.getX() - robotPoseFieldRelative.getX(),
+                -(cameraPoseFieldRelative.getY() - robotPoseFieldRelative.getY()),
+                cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + middleOfTagHeight
+        );
         //  );
 // return the thing that creats the object every time         divide the some to a different function
 
     }
-
+private void  sumObjectsValues(){
+    sumTranslationX += cameraPoseFieldRelative.getX() - robotPoseFieldRelative.getX();
+    sumTranslationY += -(cameraPoseFieldRelative.getY() - robotPoseFieldRelative.getY());
+    sumTranslationZ += cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + middleOfTagHeight;
+    sumPose2DX =tagPoseFieldRelative.getX() - xRobotDistanceFromTag;
+    sumPose2Dy =
+}
 
 }

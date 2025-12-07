@@ -17,12 +17,7 @@ public class IsReadyHelperClass {
 		return isInRangeForShooting;
 	}
 
-	private static boolean isInRangeToShoot(
-		Translation2d robotPosition,
-		Pose2d closestGoal,
-		Rotation2d maxAngleFromCenter,
-		double maxShootingRangeMeters
-	) {
+	private static boolean isInRangeToShoot(Translation2d robotPosition, Pose2d closestGoal, Rotation2d maxAngleFromCenter) {
 		Rotation2d AngleBetweenRobotAndGoal = FieldMath.getRelativeTranslation(closestGoal, robotPosition).getAngle();
 		boolean isInRangeToShoot = Math.abs(AngleBetweenRobotAndGoal.getDegrees()) <= maxAngleFromCenter.getDegrees();
 		Logger.recordOutput(isReadyToShootLogPath + "/isInRange", isInRangeToShoot);
@@ -50,14 +45,18 @@ public class IsReadyHelperClass {
 		Rotation2d turretHeading,
 		double maxShootingRangeMeters
 	) {
-		return isInRangeToShoot(robotPose.getTranslation(), closestGoal, maxAngleFromGoalCenter, maxShootingRangeMeters)
+		return isInRangeToShoot(robotPose.getTranslation(), closestGoal, maxAngleFromGoalCenter)
 			&& isAtHeadingToShoot(robotPose, closestGoal.getTranslation(), headingTolerance, turretHeading)
 			&& isInDistanceForShooting(robotPose.getTranslation(), maxShootingRangeMeters, closestGoal.getTranslation());
 	}
 
-	private static boolean isFlywheelAtVelocity(Rotation2d wantedFlywheelVelocity, Rotation2d flywheelVelocity, Rotation2d tolerance) {
+	private static boolean isFlywheelAtVelocity(
+		Rotation2d wantedFlywheelVelocityRPS,
+		Rotation2d flywheelVelocityRPS,
+		Rotation2d flywheelVelocityToleranceRPS
+	) {
 		boolean isFlywheelAtVelocity = MathUtil
-			.isNear(wantedFlywheelVelocity.getDegrees(), flywheelVelocity.getDegrees(), tolerance.getDegrees());
+			.isNear(wantedFlywheelVelocityRPS.getDegrees(), flywheelVelocityRPS.getDegrees(), flywheelVelocityToleranceRPS.getDegrees());
 		Logger.recordOutput(isReadyToShootLogPath + "/isFlywheelAtVelocity", isFlywheelAtVelocity);
 		return isFlywheelAtVelocity;
 	}
@@ -69,9 +68,9 @@ public class IsReadyHelperClass {
 	}
 
 	public static boolean isReadyToShoot(
-		Rotation2d wantedFlywheelVelocity,
-		Rotation2d flywheelVelocity,
-		Rotation2d shooterSpeedTolerance,
+		Rotation2d wantedFlywheelVelocityRPS,
+		Rotation2d flywheelVelocityRPS,
+		Rotation2d flywheelVelocityToleranceRPS,
 		Rotation2d wantedHoodPosition,
 		Rotation2d hoodPosition,
 		Rotation2d hoodPositionTolerance,
@@ -90,7 +89,7 @@ public class IsReadyHelperClass {
 			turretHeading,
 			maxShootingRangeMeters
 		);
-		boolean isFlywheelReadyToShoot = isFlywheelAtVelocity(wantedFlywheelVelocity, flywheelVelocity, shooterSpeedTolerance);
+		boolean isFlywheelReadyToShoot = isFlywheelAtVelocity(wantedFlywheelVelocityRPS, flywheelVelocityRPS, flywheelVelocityToleranceRPS);
 		boolean isHoodAtPosition = isHoodAtPositon(wantedHoodPosition, hoodPosition, hoodPositionTolerance);
 		return isFlywheelReadyToShoot && isHoodAtPosition && isInPoseToShoot;
 	}

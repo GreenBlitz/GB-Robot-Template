@@ -178,7 +178,7 @@ public class Swerve extends GBSubsystem {
 
 		Logger.recordOutput(getLogPath() + "/IMU/Acceleration", getAccelerationFromIMUMetersPerSecondSquared());
 
-		Logger.recordOutput(getLogPath() + "/robotCollision", collision.get());
+		Logger.recordOutput(getLogPath() + "/robotCollision", getCurrentCollision().get());
 	}
 
 
@@ -331,16 +331,8 @@ public class Swerve extends GBSubsystem {
 		return isAtHeading && isStopping;
 	}
 
-	public boolean isCollisionDetected() {
-		Logger.recordOutput(
-			getLogPath() + "isCollisionDetected",
-			imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d().getNorm() > 2
-		);
-		return imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d().getNorm() > 2;
-	}
-
 	public Optional<Translation2d> getCurrentCollision() {
-		if (isCollisionDetected()) {
+		if (imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d().getNorm() > 2) {
 			collision = Optional.of(imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d());
 		}else {
 			collision = Optional.empty();

@@ -53,8 +53,13 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-        ShooterStateHandler stateHandler = new ShooterStateHandler(robot.getTurret(),robot.getHood(),robot.getFlyWheel(),() -> robot.getPoseEstimator().getEstimatedPose());
-        usedJoystick.A.onTrue(stateHandler.setState(ShooterState.IDLE));
+		ShooterStateHandler stateHandler = new ShooterStateHandler(
+			robot.getTurret(),
+			robot.getHood(),
+			robot.getFlyWheel(),
+			() -> robot.getPoseEstimator().getEstimatedPose()
+		);
+		usedJoystick.A.onTrue(stateHandler.setState(ShooterState.IDLE));
 		// bindings...
 	}
 

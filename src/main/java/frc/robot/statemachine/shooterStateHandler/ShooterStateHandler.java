@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.constants.MathConstants;
 import frc.constants.field.Tower;
-import frc.robot.Robot;
 import frc.robot.statemachine.ScoringHelpers;
 import frc.robot.statemachine.superstructure.TurretAimAtTowerCommand;
 import frc.robot.subsystems.arm.Arm;
@@ -79,7 +78,7 @@ public class ShooterStateHandler {
 
 	private Command shoot() {
 		return new ParallelCommandGroup(
-			aimAtTower(() ->ScoringHelpers.getClosestTower(robotPose.get()).getTower()),
+			aimAtTower(() -> ScoringHelpers.getClosestTower(robotPose.get()).getTower()),
 			hood.getCommandsBuilder()
 				.setTargetPosition(hoodInterpolation(() -> getDistanceFromTower(ScoringHelpers.getClosestTower(robotPose.get())))),
 			flyWheel.getCommandBuilder()
@@ -95,13 +94,43 @@ public class ShooterStateHandler {
 		return tower.getTower().getDistance(robotPose.get().getTranslation());
 	}
 
-	public static boolean isTurretMoveLegal(Supplier<Rotation2d> targetRobotRelative,Arm turret) {
-		return !(
-                (ToleranceMath.isInRange(turret.getPosition().getDegrees(),TurretConstants.SCREW_POSITION.getDegrees(),TurretConstants.SCREW_POSITION.getDegrees()+ShooterConstants.MAX_DISTANCE_FROM_SCREW_NOT_TO_ROTATE.getDegrees())
-                &&
-                ToleranceMath.isInRange(targetRobotRelative.get().getDegrees(),TurretConstants.SCREW_POSITION.getDegrees()-ShooterConstants.MAX_DISTANCE_FROM_SCREW_NOT_TO_ROTATE.getDegrees(),TurretConstants.SCREW_POSITION.getDegrees()))
-        ||
-                );
+	public static boolean isTurretMoveLegal(Supplier<Rotation2d> targetRobotRelative, Arm turret) {
+		double screwPositionDegrees = TurretConstants.SCREW_POSITION.getDegrees(),
+			screwMaxToleranceDegrees = Math.max(
+				getNormalizedAngle(
+					Rotation2d.fromDegrees(
+						TurretConstants.SCREW_POSITION.getDegrees() - ShooterConstants.MAX_DISTANCE_FROM_SCREW_NOT_TO_ROTATE.getDegrees()
+					)
+				).getDegrees(),
+				getNormalizedAngle(
+					Rotation2d.fromDegrees(
+						TurretConstants.SCREW_POSITION.getDegrees() - ShooterConstants.MAX_DISTANCE_FROM_SCREW_NOT_TO_ROTATE.getDegrees()
+					)
+				).getDegrees()
+			),
+			screwMinToleranceDegrees = Math.min(
+				getNormalizedAngle(
+					Rotation2d.fromDegrees(
+						TurretConstants.SCREW_POSITION.getDegrees() - ShooterConstants.MAX_DISTANCE_FROM_SCREW_NOT_TO_ROTATE.getDegrees()
+					)
+				).getDegrees(),
+				getNormalizedAngle(
+					Rotation2d.fromDegrees(
+						TurretConstants.SCREW_POSITION.getDegrees() - ShooterConstants.MAX_DISTANCE_FROM_SCREW_NOT_TO_ROTATE.getDegrees()
+					)
+				).getDegrees()
+			);
+        Logger.recordOutput(ShooterConstants.LOG_PATH + "/target",targetRobotRelative.get());
+        Logger.recordOutput(ShooterConstants.LOG_PATH + "/curretPosition",turret.getPosition());
+        Logger.recordOutput(ShooterConstants.LOG_PATH + "/screwMinusConst",screwMinToleranceDegrees);
+        Logger.recordOutput(ShooterConstants.LOG_PATH + "/screwPlusConst",screwMaxToleranceDegrees);
+        Logger.recordOutput(ShooterConstants.LOG_PATH + "/maxPosition",TurretConstants.MAX_POSITION);
+        Logger.recordOutput(ShooterConstants.LOG_PATH + "/minPosition",TurretConstants.MIN_POSITION);
+		return !((ToleranceMath.isInRange(targetRobotRelative.get().getDegrees(), TurretConstants.MIN_POSITION.getDegrees(), screwMinToleranceDegrees)
+			&& ToleranceMath.isInRange(turret.getPosition().getDegrees(), screwMaxToleranceDegrees,TurretConstants.MAX_POSITION.getDegrees() )) ||
+
+			(ToleranceMath.isInRange(turret.getPosition().getDegrees(), TurretConstants.MIN_POSITION.getDegrees(), screwMaxToleranceDegrees)
+				&& ToleranceMath.isInRange(targetRobotRelative.get().getDegrees(),screwMaxToleranceDegrees , TurretConstants.MAX_POSITION.getDegrees())));
 	}
 
 	private static Rotation2d getNormalizedAngle(Rotation2d angle) {
@@ -112,7 +141,7 @@ public class ShooterStateHandler {
 	}
 
 	public Command aimAtTower(Supplier<Translation2d> target) {
-		return new TurretAimAtTowerCommand(turret,target,robotPose);
+		return new TurretAimAtTowerCommand(turret, target, robotPose);
 	}
 
 	public void Log() {

@@ -178,7 +178,7 @@ public class Swerve extends GBSubsystem {
 
 		Logger.recordOutput(getLogPath() + "/IMU/Acceleration", getAccelerationFromIMUMetersPerSecondSquared());
 
-		Logger.recordOutput(getLogPath() + "/robotCollision", getCurrentCollision().get());
+		getCurrentCollision().ifPresent((currentCollision) -> Logger.recordOutput(getLogPath() + "/robotCollision", currentCollision));
 	}
 
 

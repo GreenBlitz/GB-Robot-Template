@@ -73,6 +73,18 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command endState(RobotState state) {
 		return switch (state) {
+            case STAY_IN_PLACE -> driveWith(RobotState.STAY_IN_PLACE);
+
+            case DRIVE -> driveWith(RobotState.DRIVE);
+
+            case INTAKE -> driveWith(RobotState.DRIVE);
+
+            case PRE_SHOOT -> driveWith(RobotState.PRE_SHOOT);
+
+            case SHOOT -> driveWith(RobotState.DRIVE);
+
+            case SHOOT_AND_INTAKE -> driveWith(RobotState.DRIVE);
+
 			default -> new InstantCommand();
 		};
 	}

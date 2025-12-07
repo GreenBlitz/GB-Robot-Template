@@ -9,25 +9,25 @@ import java.util.Optional;
 public enum LimelightPipeline {
 
 	APRIL_TAG(0, true),
-	OBJECT_DETECTION(1, false, true, false, new DetectedObjectType[0]),
+	NURAL_DETECTION(1, false, true, false, new DetectedObjectType[0]),
 	COLOR_DETECTION(2, false, false, true, new DetectedObjectType[0]);
 
 	private final int pipelineIndex;
 	private final boolean isUsingMT;
-	private final boolean isDetectingObjects;
+	private final boolean isNuralDetecting;
 	private final boolean isDetectingColors;
 	private final DetectedObjectType[] detectedObjectTypes;
 
 	LimelightPipeline(
 		int pipelineIndex,
 		boolean isUsingMT,
-		boolean isDetectingObjects,
+		boolean isNuralDetecting,
 		boolean isDetectingColors,
 		DetectedObjectType[] detectedObjectTypes
 	) {
 		this.pipelineIndex = pipelineIndex;
 		this.isUsingMT = isUsingMT;
-		this.isDetectingObjects = isDetectingObjects;
+		this.isNuralDetecting = isNuralDetecting;
 		this.isDetectingColors = isDetectingColors;
 		this.detectedObjectTypes = detectedObjectTypes;
 	}
@@ -44,8 +44,8 @@ public enum LimelightPipeline {
 		return isUsingMT;
 	}
 
-	public boolean isDetectingObjects() {
-		return isDetectingObjects;
+	public boolean isNuralDetecting() {
+		return isNuralDetecting;
 	}
 
 	public boolean isDetectingColors() {

@@ -11,7 +11,7 @@ import org.littletonrobotics.junction.Logger;
 public class TargetChecks {
 
 	private final Superstructure superstructure;
-	private static final String logPath = "Statemachine/IsReadyToShoot";
+	private static final String logPath = "Statemachine/TargetChecks";
 
 
 	public TargetChecks(Superstructure superstructure) {
@@ -71,23 +71,23 @@ public class TargetChecks {
 			maxShootingDistanceFromTargetMeters,
 			closestGoal.getTranslation()
 		);
-		Logger.recordOutput(logPath + "/isInDistance", isWithinDistance);
+		Logger.recordOutput(logPath + "/isReadyToShoot/isInDistance", isWithinDistance);
 
 		boolean isInRange = isInAngleRange(robotPose.getTranslation(), closestGoal, maxAngleFromGoalCenter);
-		Logger.recordOutput(logPath + "/isInRange", isInRange);
+		Logger.recordOutput(logPath + "/isReadyToShoot/isInRange", isInRange);
 
 		boolean isAtHeading = isAtHeading(robotPose, closestGoal.getTranslation(), headingTolerance, turretHeading);
-		Logger.recordOutput(logPath + "/isAthHeading", isAtHeading);
+		Logger.recordOutput(logPath + "/isReadyToShoot/isAthHeading", isAtHeading);
 
 		boolean isFlywheelReadyToShoot = isFlywheelAtVelocity(
 			wantedFlywheelVelocityRPS,
 			flywheelVelocityRotation2dPerSecond,
 			flywheelVelocityToleranceRPS
 		);
-		Logger.recordOutput(logPath + "/isFlywheelAtVelocity", isFlywheelReadyToShoot);
+		Logger.recordOutput(logPath + "/isReadyToShoot/isFlywheelAtVelocity", isFlywheelReadyToShoot);
 
 		boolean isHoodAtPosition = isHoodAtPositon(wantedHoodPosition, hoodPosition, hoodPositionTolerance);
-		Logger.recordOutput(logPath + "/isHoodAtPositon", isHoodAtPosition);
+		Logger.recordOutput(logPath + "/isReadyToShoot/isHoodAtPositon", isHoodAtPosition);
 
 		return isFlywheelReadyToShoot && isHoodAtPosition && isInRange && isWithinDistance && isAtHeading;
 	}

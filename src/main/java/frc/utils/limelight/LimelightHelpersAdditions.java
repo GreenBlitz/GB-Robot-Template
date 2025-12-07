@@ -1,6 +1,6 @@
 package frc.utils.limelight;
 
-public class LimelightHelpersSupplements {
+public class LimelightHelpersAdditions {
 
 	public record RawTarget(double txnc, double tync, double ta) {
 

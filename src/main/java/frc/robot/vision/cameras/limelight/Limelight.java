@@ -75,9 +75,9 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		if (pipeline.isNuralDetecting()) {
 			nuralDetectionObservations.clear();
 
-			inputs.objectDetectionInputs().target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
-			inputs.objectDetectionInputs().rawDetections = LimelightHelpers.getRawDetections(name);
-			Logger.processInputs(logPath + "/objectDetectionInputs", inputs.objectDetectionInputs());
+			inputs.nuralDetectionInputs().target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
+			inputs.nuralDetectionInputs().rawDetections = LimelightHelpers.getRawDetections(name);
+			Logger.processInputs(logPath + "/nuralDetectionInputs", inputs.nuralDetectionInputs());
 
 			if (getTarget2dValues().isValid()) {
 				for (LimelightHelpers.RawDetection rawDetection : getRawDetections()) {
@@ -98,7 +98,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 					}
 				}
 			}
-			Logger.recordOutput(logPath + "/detectedObjectObservations", nuralDetectionObservations.toArray(new DetectedObjectObservation[0]));
+			Logger.recordOutput(logPath + "/nuralDetectionObservations", nuralDetectionObservations.toArray(new DetectedObjectObservation[0]));
 		}
 	}
 
@@ -258,11 +258,11 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	protected LimelightTarget2dValues getTarget2dValues() {
-		return inputs.objectDetectionInputs().target2dValues;
+		return inputs.nuralDetectionInputs().target2dValues;
 	}
 
 	protected LimelightHelpers.RawDetection[] getRawDetections() {
-		return inputs.objectDetectionInputs().rawDetections;
+		return inputs.nuralDetectionInputs().rawDetections;
 	}
 
 	protected LimelightLimelightHelpersHelpers.RawTarget[] getRawTargets() {

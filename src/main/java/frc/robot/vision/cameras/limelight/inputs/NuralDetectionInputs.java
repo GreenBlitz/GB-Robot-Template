@@ -5,7 +5,7 @@ import frc.utils.limelight.LimelightHelpers;
 import org.littletonrobotics.junction.AutoLog;
 
 @AutoLog
-public class ObjectDetectionInputs {
+public class NuralDetectionInputs {
 
 	public LimelightTarget2dValues target2dValues = new LimelightTarget2dValues();
 

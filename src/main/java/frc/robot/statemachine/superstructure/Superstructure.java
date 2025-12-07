@@ -69,7 +69,6 @@ public class Superstructure {
 				case SHOOT -> shoot();
 				case SHOOT_AND_INTAKE -> shootAndIntake();
 			}
-
 		);
 	}
 

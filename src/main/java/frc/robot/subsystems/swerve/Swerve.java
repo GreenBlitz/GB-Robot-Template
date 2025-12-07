@@ -52,6 +52,8 @@ public class Swerve extends GBSubsystem {
 	private Supplier<Rotation2d> headingSupplier;
 	private ChassisPowers driversPowerInputs;
 
+	private Optional<Translation2d> collision;
+
 	public Swerve(SwerveConstants constants, Modules modules, IIMU imu, IMUSignals imuSignals) {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
@@ -68,6 +70,7 @@ public class Swerve extends GBSubsystem {
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
 		this.stateHandler = new SwerveStateHandler(this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
+		this.collision = Optional.empty();
 
 		update();
 		setDefaultCommand(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
@@ -174,6 +177,9 @@ public class Swerve extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/OdometrySamples", getNumberOfOdometrySamples());
 
 		Logger.recordOutput(getLogPath() + "/IMU/Acceleration", getAccelerationFromIMUMetersPerSecondSquared());
+
+		collision = getCurrentCollision();
+		Logger.recordOutput(getLogPath() + "/robotCollision", collision.get());
 	}
 
 
@@ -327,12 +333,15 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public boolean isCollisionDetected() {
-		Logger.recordOutput(getLogPath() + "isCollisionDetected", imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d().getNorm() > 2);
+		Logger.recordOutput(
+			getLogPath() + "isCollisionDetected",
+			imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d().getNorm() > 2
+		);
 		return imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d().getNorm() > 2;
 	}
 
-	public Optional<Translation2d> getCurrentCollision(){
-		if(isCollisionDetected()){
+	public Optional<Translation2d> getCurrentCollision() {
+		if (isCollisionDetected()) {
 			Logger.recordOutput(getLogPath() + "collision", imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d());
 			return Optional.of(imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d());
 		}

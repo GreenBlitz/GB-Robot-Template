@@ -9,6 +9,7 @@ import frc.robot.statemachine.intakestatehandler.IntakeStateHandler;
 import frc.robot.statemachine.shooterstatehandler.ShooterState;
 import frc.robot.statemachine.shooterstatehandler.ShooterStateHandler;
 import org.littletonrobotics.junction.Logger;
+
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -43,7 +44,14 @@ public class Superstructure {
 	}
 
 	public boolean isSubsystemRunningIndependently() {
-		return isSubsystemRunningIndependently;
+		return isSubsystemRunningIndependently
+			|| robot.getIntakeRoller().getCommandsBuilder().isSubsystemRunningIndependently()
+			|| robot.getFlyWheel().getCommandBuilder().isSubsystemRunningIndependently()
+			|| robot.getBelly().getCommandsBuilder().isSubsystemRunningIndependently()
+			|| robot.getHood().getCommandsBuilder().isSubsystemRunningIndependently()
+			|| robot.getOmni().getCommandsBuilder().isSubsystemRunningIndependently()
+			|| robot.getTurret().getCommandsBuilder().isSubsystemRunningIndependently()
+			|| robot.getFourBar().getCommandsBuilder().isSubsystemRunningIndependently();
 	}
 
 	public void setIsSubsystemRunningIndependently(boolean isSubsystemRunningIndependently) {

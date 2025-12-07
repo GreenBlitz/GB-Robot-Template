@@ -1,6 +1,5 @@
 package frc.robot.statemachine;
 
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.constants.field.Field;
 import frc.robot.Robot;
@@ -24,7 +23,11 @@ public class RobotCommander extends GBSubsystem {
 //        this.swerve = robot.getSwerve();
 		this.swerve = null;
 		this.positionTargets = new PositionTargets(robot);
-		this.superstructure = new Superstructure("StateMachine/Superstructure", robot,() -> Field.Tower.getDistance(robot.getPoseEstimator().getEstimatedPose().getTranslation()));
+		this.superstructure = new Superstructure(
+			"StateMachine/Superstructure",
+			robot,
+			() -> Field.Tower.getDistance(robot.getPoseEstimator().getEstimatedPose().getTranslation())
+		);
 		this.currentState = null;
 
 		setDefaultCommand(

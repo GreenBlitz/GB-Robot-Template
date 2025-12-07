@@ -14,7 +14,7 @@ import frc.utils.math.FieldMath;
 
 public class Field {
 
-	public static final Translation2d Tower  = new Translation2d(0,0);
+	public static final Translation2d Tower = new Translation2d(0, 0);
 
 	public static final DriverStation.Alliance RELATIVE_FIELD_CONVENTION_ALLIANCE = DriverStation.Alliance.Blue;
 

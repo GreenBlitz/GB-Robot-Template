@@ -11,7 +11,6 @@ import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.subsystems.arm.ArmSimulationConstants;
-import frc.robot.statemachine.superstructure.Superstructure;
 import frc.robot.subsystems.constants.intakeRollers.IntakeRollerConstants;
 import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
 import frc.robot.poseestimator.IPoseEstimator;
@@ -55,8 +54,6 @@ public class Robot {
 	private final Roller omni;
 	private final IDigitalInput funnelDigitalInput;
 
-	private Superstructure superstructure;
-
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
 
@@ -90,7 +87,6 @@ public class Robot {
 		this.funnelDigitalInput = omniAndDigitalInput.getSecond();
 		BrakeStateManager.add(() -> omni.setBrake(true), () -> omni.setBrake(false));
 
-		this.superstructure = new Superstructure("/superstructure", this, );
 		IIMU imu = IMUFactory.createIMU(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
@@ -294,10 +290,6 @@ public class Robot {
 
 	public Arm getHood() {
 		return hood;
-	}
-
-	public Superstructure getSuperstructure() {
-		return this.superstructure;
 	}
 
 	public IPoseEstimator getPoseEstimator() {

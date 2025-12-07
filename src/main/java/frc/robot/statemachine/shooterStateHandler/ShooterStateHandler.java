@@ -10,8 +10,10 @@ import frc.robot.Robot;
 import frc.robot.statemachine.ScoringHelpers;
 import frc.robot.statemachine.superstructure.TurretAimAtTowerCommand;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.constants.turret.TurretConstants;
 import frc.robot.subsystems.flywheel.FlyWheel;
 import frc.utils.math.FieldMath;
+import frc.utils.math.ToleranceMath;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.function.Supplier;
@@ -68,7 +70,7 @@ public class ShooterStateHandler {
 
 	private Command idle() {
 		return new ParallelCommandGroup(
-			aimAtTower(ScoringHelpers.getClosestTower(robotPose.get()).getTower()),
+			aimAtTower(() -> ScoringHelpers.getClosestTower(robotPose.get()).getTower()),
 			hood.getCommandsBuilder()
 				.setTargetPosition(hoodInterpolation(() -> getDistanceFromTower(ScoringHelpers.getClosestTower(robotPose.get())))),
 			flyWheel.getCommandBuilder().setTargetVelocity(ShooterConstants.DEFAULT_FLYWHEEL_ROTATIONS_PER_SECOND)
@@ -77,7 +79,7 @@ public class ShooterStateHandler {
 
 	private Command shoot() {
 		return new ParallelCommandGroup(
-			aimAtTower(ScoringHelpers.getClosestTower(robotPose.get()).getTower()),
+			aimAtTower(() ->ScoringHelpers.getClosestTower(robotPose.get()).getTower()),
 			hood.getCommandsBuilder()
 				.setTargetPosition(hoodInterpolation(() -> getDistanceFromTower(ScoringHelpers.getClosestTower(robotPose.get())))),
 			flyWheel.getCommandBuilder()
@@ -94,8 +96,12 @@ public class ShooterStateHandler {
 	}
 
 	public static boolean isTurretMoveLegal(Supplier<Rotation2d> targetRobotRelative,Arm turret) {
-		return Math.abs(targetRobotRelative.get().getDegrees() - turret.getPosition().getDegrees())
-			< MathConstants.FULL_CIRCLE.getDegrees() - ShooterConstants.MAX_DISTANCE_FROM_SCREW_NOT_TO_ROTATE.getDegrees();
+		return !(
+                (ToleranceMath.isInRange(turret.getPosition().getDegrees(),TurretConstants.SCREW_POSITION.getDegrees(),TurretConstants.SCREW_POSITION.getDegrees()+ShooterConstants.MAX_DISTANCE_FROM_SCREW_NOT_TO_ROTATE.getDegrees())
+                &&
+                ToleranceMath.isInRange(targetRobotRelative.get().getDegrees(),TurretConstants.SCREW_POSITION.getDegrees()-ShooterConstants.MAX_DISTANCE_FROM_SCREW_NOT_TO_ROTATE.getDegrees(),TurretConstants.SCREW_POSITION.getDegrees()))
+        ||
+                );
 	}
 
 	private static Rotation2d getNormalizedAngle(Rotation2d angle) {
@@ -105,8 +111,8 @@ public class ShooterStateHandler {
 		return Rotation2d.fromDegrees(degrees);
 	}
 
-	public Command aimAtTower(Translation2d target) {
-		return new TurretAimAtTowerCommand(turret,() -> target,robotPose);
+	public Command aimAtTower(Supplier<Translation2d> target) {
+		return new TurretAimAtTowerCommand(turret,target,robotPose);
 	}
 
 	public void Log() {

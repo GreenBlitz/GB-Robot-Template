@@ -1,12 +1,14 @@
 package frc.robot.statemachine.superstructure;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.statemachine.shooterStateHandler.ShooterConstants;
 import frc.robot.statemachine.shooterStateHandler.ShooterStateHandler;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.constants.turret.TurretConstants;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.function.Supplier;
@@ -26,12 +28,14 @@ public class TurretAimAtTowerCommand extends Command {
     }
     @Override
     public void execute() {
-        if (ShooterStateHandler.isTurretMoveLegal(ShooterStateHandler.getRobotRelativeLookAtTowerAngleForTurret(target.get(),robotPose.get()),turret)) {
+        Supplier<Rotation2d> targetAngle = ShooterStateHandler.getRobotRelativeLookAtTowerAngleForTurret(target.get(),robotPose.get());
+        if (ShooterStateHandler.isTurretMoveLegal(targetAngle)) {
             turret.setTargetPosition(ShooterStateHandler.getRobotRelativeLookAtTowerAngleForTurret(target.get(),robotPose.get()).get());
             Logger.recordOutput(ShooterConstants.LOG_PATH + "/IsTurretGoingToPosition", true);
         } else {
             turret.stayInPlace();
             Logger.recordOutput(ShooterConstants.LOG_PATH + "/IsTurretGoingToPosition", false);
+            Logger.recordOutput(TurretConstants.LOG_PATH + "/PositionTarget", targetAngle.get());
         }
     }
 }

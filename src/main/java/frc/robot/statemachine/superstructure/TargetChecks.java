@@ -4,6 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.constants.MathConstants;
 import frc.robot.Robot;
 import frc.utils.math.FieldMath;
 import org.littletonrobotics.junction.Logger;
@@ -29,7 +30,7 @@ public class TargetChecks {
 	private static boolean isAtHeading(Pose2d robotPose, Translation2d closestGoal, Rotation2d headingTolerance, Rotation2d currentTurretAngle) {
 		Rotation2d wantedAngle = FieldMath.getRelativeTranslation(robotPose, closestGoal).getAngle();
 		Rotation2d currentFieldRelativeTurretAngle = Rotation2d
-			.fromDegrees((robotPose.getRotation().getDegrees() + currentTurretAngle.getDegrees()) % 360);
+			.fromDegrees((robotPose.getRotation().getDegrees() + currentTurretAngle.getDegrees()) % MathConstants.FULL_CIRCLE.getDegrees());
 		return MathUtil.isNear(wantedAngle.getDegrees(), currentFieldRelativeTurretAngle.getDegrees(), headingTolerance.getDegrees());
 	}
 

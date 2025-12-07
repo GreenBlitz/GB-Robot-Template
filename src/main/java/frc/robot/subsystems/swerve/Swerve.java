@@ -59,10 +59,10 @@ public class Swerve extends GBSubsystem {
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 		this.driversPowerInputs = new ChassisPowers();
 
-		this.modulesIsSkidding = new boolean[getNumberOfOdometrySamples()];
 		this.constants = constants;
 		this.modules = modules;
 		this.driveRadiusMeters = SwerveMath.calculateDriveRadiusMeters(modules.getModulePositionsFromCenterMeters());
+		this.modulesIsSkidding = new boolean[modules.getNumberOfModules()];
 		this.imu = imu;
 		this.imuSignals = imuSignals;
 
@@ -348,7 +348,7 @@ public class Swerve extends GBSubsystem {
 			currentModuleTranslationalStates[i] = new Translation2d(
 				currentModuleRotationalStates[i].speedMetersPerSecond,
 				currentModuleRotationalStates[i].angle
-			).minus(new Translation2d(currentModuleStates[i].speedMetersPerSecond, currentModuleStates[i].angle.getRotations()));
+			).minus(new Translation2d(currentModuleStates[i].speedMetersPerSecond, currentModuleStates[i].angle));
 		}
 
 		boolean[] areWheelsSkidding = new boolean[currentModuleTranslationalStates.length];

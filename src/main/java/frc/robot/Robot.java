@@ -89,7 +89,7 @@ public class Robot {
 		this.funnelDigitalInput = omniAndDigitalInput.getSecond();
 		BrakeStateManager.add(() -> omni.setBrake(true), () -> omni.setBrake(false));
 
-		robotCommander = new RobotCommander("/robotCommander", this);
+		robotCommander = new RobotCommander("/RobotCommander", this);
 
 		IIMU imu = IMUFactory.createIMU(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(

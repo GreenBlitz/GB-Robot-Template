@@ -38,8 +38,8 @@ public class HoodConstants {
 	public static final double CURRENT_LIMIT = 40;
 	public static final double MOMENT_OF_INERTIA = 0.001;
 	public static final double HOOD_LENGTH_METERS = 0.3;
-	public static final Rotation2d FORWARD_SOFTWARE_LIMIT = Rotation2d.fromDegrees(209 - 16);
-	public static final Rotation2d BACKWARD_SOFTWARE_LIMIT = Rotation2d.fromDegrees(-40);
+	public static final Rotation2d FORWARD_SOFTWARE_LIMIT = Rotation2d.fromDegrees(50);
+	public static final Rotation2d BACKWARD_SOFTWARE_LIMIT = Rotation2d.fromDegrees(-50);
 	public static final Rotation2d MINIMUM_POSITION = Rotation2d.fromDegrees(BACKWARD_SOFTWARE_LIMIT.getDegrees() - 3);
 	public static final Rotation2d MAXIMUM_POSITION = Rotation2d.fromDegrees(FORWARD_SOFTWARE_LIMIT.getDegrees() + 3);
 	public static final Rotation2d DEFAULT_MAX_ACCELERATION_PER_SECOND_SQUARE = Rotation2d.fromRotations(3);

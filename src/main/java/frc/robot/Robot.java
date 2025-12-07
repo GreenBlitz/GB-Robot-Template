@@ -52,6 +52,7 @@ public class Robot {
 	private final Roller belly;
 	private final Roller omni;
 	private final IDigitalInput funnelDigitalInput;
+	private final SimulationManager simulationManager;
 
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
@@ -103,6 +104,8 @@ public class Robot {
 		);
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+
+		simulationManager = new SimulationManager("SimulationManager", this);
 	}
 
 	public void resetSubsystems() {
@@ -120,6 +123,7 @@ public class Robot {
 	public void periodic() {
 		BusChain.refreshAll();
 		resetSubsystems();
+		simulationManager.logPoses();
 
 		swerve.update();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());

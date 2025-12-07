@@ -2,6 +2,7 @@ package frc.robot.statemachine.superstructure;
 
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Robot;
+import frc.robot.statemachine.RobotState;
 import frc.robot.statemachine.funnelstatehandler.FunnelState;
 import frc.robot.statemachine.funnelstatehandler.FunnelStateHandler;
 import frc.robot.statemachine.intakestatehandler.IntakeStateHandler;
@@ -20,12 +21,16 @@ public class Superstructure {
 	private boolean isSubsystemRunningIndependently;
 	private String logPath;
 
+	private RobotState currentState;
+
 	private final IntakeStateHandler intakeStateHandler;
 	private final FunnelStateHandler funnelStateHandler;
 	private final ShooterStateHandler shooterStateHandler;
 
 	public Superstructure(String logPath, Robot robot, Supplier<Double> distanceFromTower) {
 		this.robot = robot;
+
+		this.currentState = null;
 
 		this.subsystems = Set.of();
 
@@ -37,6 +42,11 @@ public class Superstructure {
 		this.funnelStateHandler = new FunnelStateHandler(robot.getOmni(), robot.getBelly(), logPath, robot.getFunnelDigitalInput());
 		this.intakeStateHandler = new IntakeStateHandler();
 		this.shooterStateHandler = new ShooterStateHandler(robot.getTurret(), robot.getHood(), robot.getFlyWheel(), distanceFromTower);
+	}
+
+
+	public RobotState getCurrentState() {
+		return currentState;
 	}
 
 	public boolean isSubsystemRunningIndependently() {
@@ -63,6 +73,21 @@ public class Superstructure {
 
 	public TargetChecks getTargetChecks() {
 		return targetChecks;
+	}
+
+	public Command setState(RobotState robotState) {
+		return new ParallelCommandGroup(
+			new InstantCommand(() -> currentState = robotState),
+			new InstantCommand(() -> Logger.recordOutput(logPath + "/currentState", getCurrentState())),
+			switch (robotState) {
+				case STAY_IN_PLACE -> stayInPlace();
+				case DRIVE -> idle();
+				case INTAKE -> intake();
+				case PRE_SHOOT -> preShoot();
+				case SHOOT -> shoot();
+				case SHOOT_AND_INTAKE -> shootAndIntake();
+			}
+		);
 	}
 
 	private Command stayInPlace() {
@@ -127,6 +152,10 @@ public class Superstructure {
 
 	public void log() {
 		Logger.recordOutput(logPath + "/IsSubsystemRunningIndependently", isSubsystemRunningIndependently());
+	}
+
+	private Command asSubsystemCommand(Command command, RobotState state) {
+		return new ParallelCommandGroup(asSubsystemCommand(command, state), new InstantCommand(() -> currentState = state));
 	}
 
 }

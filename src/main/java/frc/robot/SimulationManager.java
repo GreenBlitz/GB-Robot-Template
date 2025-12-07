@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
-import frc.robot.subsystems.arm.Arm;
 import org.littletonrobotics.junction.Logger;
 
 public class SimulationManager {
@@ -32,13 +31,19 @@ public class SimulationManager {
 	}
 
 	public void logTurretPosition3d() {
+		Logger.recordOutput(logPath + "/Turret/Plate/Position", getTurretPlatePosition3d(robot.getTurret().getPosition()));
 		Logger.recordOutput(logPath + "/Turret/Position", getTurretPosition3d(robot.getTurret().getPosition()));
 	}
 
-	public Pose3d getTurretPosition3d(Rotation2d yaw) {
-		return new Pose3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0.0, 0.0, yaw.getRadians()));
+	public Pose3d getTurretPlatePosition3d(Rotation2d yaw) {
+		return new Pose3d(new Translation3d(0.0, -0.0, 0.0), new Rotation3d(0.0, 0.0, 0));
 	}
-
+	public Pose3d getTurretPosition3d(Rotation2d yaw) {
+		return new Pose3d(new Translation3d(0.0, -0.17, 0.0), new Rotation3d(0.0, 0.0, yaw.getRadians()));
+	}
+	
+	
+	
 	public void logHoodPosition3d() {
 		Logger.recordOutput(logPath + "/Hood/Position", getHoodPosition3d(robot.getHood().getPosition()));
 	}

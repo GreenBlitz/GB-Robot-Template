@@ -348,7 +348,7 @@ public class Swerve extends GBSubsystem {
 			currentModuleTranslationalStates[i] = new Translation2d(
 				currentModuleRotationalStates[i].speedMetersPerSecond,
 				currentModuleRotationalStates[i].angle
-			).minus(new Translation2d(currentModuleStates[i].speedMetersPerSecond, currentModuleStates[i].angle.getRotations()));
+			).minus(new Translation2d(currentModuleStates[i].speedMetersPerSecond, currentModuleStates[i].angle));
 		}
 
 		boolean[] areWheelsSkidding = new boolean[currentModuleTranslationalStates.length];
@@ -363,8 +363,8 @@ public class Swerve extends GBSubsystem {
 				"currentModuleTrabskatuinalState" + ModuleUtil.ModulePosition.values()[i].toString(),
 				currentModuleRotationalStates
 			);
-			areWheelsSkidding[i] = MathUtil.isNear(robotTranslationalVelocity.getX(), currentModuleTranslationalStates[i].getX(), 0.1)
-				|| MathUtil.isNear(robotTranslationalVelocity.getY(), currentModuleTranslationalStates[i].getY(), 0.1);
+			areWheelsSkidding[i] = !MathUtil.isNear(robotTranslationalVelocity.getX(), currentModuleTranslationalStates[i].getX(), 0.1)
+				|| !MathUtil.isNear(robotTranslationalVelocity.getY(), currentModuleTranslationalStates[i].getY(), 0.1);
 		}
 		return areWheelsSkidding;
 	}

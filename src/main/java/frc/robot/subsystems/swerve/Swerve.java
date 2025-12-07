@@ -342,7 +342,6 @@ public class Swerve extends GBSubsystem {
 
 	public Optional<Translation2d> getCurrentCollision() {
 		if (isCollisionDetected()) {
-			Logger.recordOutput(getLogPath() + "collision", imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d());
 			return Optional.of(imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d());
 		}
 		return Optional.empty();

@@ -10,6 +10,7 @@ import frc.robot.statemachine.shooterstatehandler.ShooterState;
 import frc.robot.statemachine.shooterstatehandler.ShooterStateHandler;
 import org.littletonrobotics.junction.Logger;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public class Superstructure {
 
@@ -25,7 +26,7 @@ public class Superstructure {
 
 	private RobotState currentState;
 
-	public Superstructure(String logPath, Robot robot) {
+	public Superstructure(String logPath, Robot robot, Supplier<Double> distanceFromTower) {
 		this.robot = robot;
 
 		this.subsystems = Set.of();
@@ -38,7 +39,7 @@ public class Superstructure {
 
 		this.funnelStateHandler = new FunnelStateHandler(robot.getOmni(), robot.getBelly(), logPath, robot.getFunnelDigitalInput());
 		this.intakeStateHandler = new IntakeStateHandler();
-		this.shooterStateHandler = new ShooterStateHandler(robot.getTurret(), robot.getHood(), robot.getFlyWheel(), () -> 0.0);
+		this.shooterStateHandler = new ShooterStateHandler(robot.getTurret(), robot.getHood(), robot.getFlyWheel(), distanceFromTower);
 	}
 
 	public boolean isSubsystemRunningIndependently() {

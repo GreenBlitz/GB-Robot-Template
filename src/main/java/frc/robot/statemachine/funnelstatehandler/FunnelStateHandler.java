@@ -1,4 +1,4 @@
-package frc.robot.statemachine.superstructure.funnelStateHandler;
+package frc.robot.statemachine.funnelstatehandler;
 
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;

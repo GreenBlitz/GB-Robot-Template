@@ -6,6 +6,7 @@ import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
+import frc.robot.statemachine.RobotState;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.roller.Roller;
 import frc.robot.subsystems.swerve.ChassisPowers;
@@ -77,6 +78,14 @@ public class JoysticksBindings {
 	private static void sixthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SIXTH_JOYSTICK;
 		// bindings...
+	}
+
+	private static void applySuperstructureCalibrationBindings(SmartJoystick joystick, Robot robot) {
+		joystick.A.onTrue(robot.getRobotCommander().getSuperstructure().setState(RobotState.SHOOT));
+		joystick.B.onTrue(robot.getRobotCommander().getSuperstructure().setState(RobotState.PRE_SHOOT));
+		joystick.X.onTrue(robot.getRobotCommander().getSuperstructure().setState(RobotState.DRIVE));
+		joystick.Y.onTrue(robot.getRobotCommander().getSuperstructure().setState(RobotState.INTAKE));
+		joystick.POV_DOWN.onTrue(robot.getRobotCommander().getSuperstructure().setState(RobotState.STAY_IN_PLACE));
 	}
 
 	private static void applyTurretCalibrationBindings(Arm turret, SmartJoystick joystick, double calibrationMaxPower) {

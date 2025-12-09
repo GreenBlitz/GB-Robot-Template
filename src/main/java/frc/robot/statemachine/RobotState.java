@@ -4,7 +4,12 @@ import frc.robot.subsystems.swerve.states.SwerveState;
 
 public enum RobotState {
 
-	;
+	STAY_IN_PLACE,
+	DRIVE,
+	INTAKE,
+	PRE_SHOOT,
+	SHOOT,
+	SHOOT_AND_INTAKE;
 
 	private final SwerveState swerveState;
 	private boolean swerveStateActive;

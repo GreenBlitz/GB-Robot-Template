@@ -1,4 +1,4 @@
-package frc.robot.statemachine.shooterStateHandler;
+package frc.robot.statemachine.shooterstatehandler;
 
 public enum ShooterState {
 

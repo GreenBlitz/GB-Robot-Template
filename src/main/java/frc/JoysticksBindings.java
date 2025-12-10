@@ -89,9 +89,9 @@ public class JoysticksBindings {
 	}
 
 	private static void applyRobotCommanderCalibrationsBinding(SmartJoystick joystick, Robot robot) {
-		joystick.A.onTrue(robot.getRobotCommander().driveWith(RobotState.SHOOT));
+		joystick.A.onTrue(robot.getRobotCommander().driveWith(RobotState.DRIVE));
 		joystick.B.onTrue(robot.getRobotCommander().driveWith(RobotState.PRE_SHOOT));
-		joystick.X.onTrue(robot.getRobotCommander().driveWith(RobotState.DRIVE));
+		joystick.X.onTrue(robot.getRobotCommander().driveWith(RobotState.SHOOT));
 		joystick.Y.onTrue(robot.getRobotCommander().driveWith(RobotState.SHOOT_AND_INTAKE));
 		joystick.POV_DOWN.onTrue(robot.getRobotCommander().driveWith(RobotState.STAY_IN_PLACE));
 		joystick.POV_UP.onTrue(robot.getRobotCommander().driveWith(RobotState.INTAKE));

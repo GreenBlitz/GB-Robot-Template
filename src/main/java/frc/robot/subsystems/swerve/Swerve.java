@@ -357,7 +357,7 @@ public class Swerve extends GBSubsystem {
 			getRobotRelativeVelocity().vyMetersPerSecond
 		);
 
-		for (int i = 1; i < currentModuleTranslationalStates.length; i++) {
+		for (int i = 0; i < currentModuleTranslationalStates.length; i++) {
 			Logger.recordOutput("robotTranslational Velocity", robotTranslationalVelocity);
 			Logger.recordOutput(
 				"currentModuleTrabskatuinalState" + ModuleUtil.ModulePosition.values()[i].toString(),

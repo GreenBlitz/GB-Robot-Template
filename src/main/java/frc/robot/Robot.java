@@ -6,6 +6,9 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.revrobotics.spark.SparkLowLevel;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
@@ -27,6 +30,7 @@ import org.littletonrobotics.junction.Logger;
  * actually be handled in the {@link RobotManager} periodic methods (other than the scheduler calls). Instead, the structure of the robot
  * (including subsystems, commands, and trigger mappings) should be declared here.
  */
+
 public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
@@ -64,11 +68,11 @@ public class Robot {
 				TalonSRX frontRight = new TalonSRX(1);
 				TalonSRX rearRight = new TalonSRX(2);
 				tankDrive = new DifferentialDrive(power -> {
-					frontLeft.set(ControlMode.PercentOutput, power * 1.5);
-					rearLeft.set(ControlMode.PercentOutput, power * 1.5);
+					frontLeft.set(ControlMode.PercentOutput, power);
+					rearLeft.set(ControlMode.PercentOutput, power);
 				}, power -> {
-					frontRight.set(ControlMode.PercentOutput, -power * 1.5);
-					rearRight.set(ControlMode.PercentOutput, -power * 1.5);
+					frontRight.set(ControlMode.PercentOutput, -power );
+					rearRight.set(ControlMode.PercentOutput, -power);
 				});
 				config = new SparkMaxConfig();
 				config.closedLoop.p(0.1);
@@ -98,6 +102,18 @@ public class Robot {
 				}, power -> {
 					frontRight.set(-power);
 					rearRight.set(-power);
+				});
+				config = new SparkMaxConfig();
+				config.closedLoop.p(0.2);
+				endEffector.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig(config));
+			}
+			case 4 -> {
+				VictorSPX rearLeft = new VictorSPX(4);
+				SparkMax rearRight = new SparkMax(1, SparkLowLevel.MotorType.kBrushed);
+				tankDrive = new DifferentialDrive(power -> {
+					rearLeft.set(ControlMode.PercentOutput, power);
+				}, power -> {
+					rearRight.setVoltage(12*power);
 				});
 				config = new SparkMaxConfig();
 				config.closedLoop.p(0.2);

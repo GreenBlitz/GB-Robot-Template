@@ -10,7 +10,7 @@ import frc.robot.subsystems.swerve.ChassisPowers;
 
 public class JoysticksBindings {
 
-	private static final double POWER_SCALING = 0.5;
+	private static final double POWER_SCALING = 0.7;
 
 	private static final SmartJoystick MAIN_JOYSTICK = new SmartJoystick(JoystickPorts.MAIN);
 	private static final SmartJoystick SECOND_JOYSTICK = new SmartJoystick(JoystickPorts.SECOND);

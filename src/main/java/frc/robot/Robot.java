@@ -11,7 +11,6 @@ import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.statemachine.RobotCommander;
-import frc.robot.statemachine.RobotState;
 import frc.robot.subsystems.arm.ArmSimulationConstants;
 import frc.robot.subsystems.constants.intakeRollers.IntakeRollerConstants;
 import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
@@ -107,12 +106,12 @@ public class Robot {
 			swerve.getGyroAbsoluteYaw().getTimestamp()
 		);
 
-        robotCommander = new RobotCommander("/RobotCommander", this);
+		robotCommander = new RobotCommander("/RobotCommander", this);
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 
 		simulationManager = new SimulationManager("SimulationManager", this);
-    }
+	}
 
 	public void resetSubsystems() {
 		if (HoodConstants.MINIMUM_POSITION.getRadians() > hood.getPosition().getRadians()) {

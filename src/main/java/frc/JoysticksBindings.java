@@ -88,15 +88,14 @@ public class JoysticksBindings {
 		joystick.POV_DOWN.onTrue(robot.getRobotCommander().getSuperstructure().setState(RobotState.STAY_IN_PLACE));
 	}
 
-    private static void applyRobotCommanderCalibrationsBinding(SmartJoystick joystick, Robot robot){
-        joystick.A.whileTrue(robot.getRobotCommander().driveWith(RobotState.SHOOT));
-        joystick.B.whileTrue(robot.getRobotCommander().driveWith(RobotState.PRE_SHOOT));
-        joystick.X.whileTrue(robot.getRobotCommander().driveWith(RobotState.DRIVE));
-        joystick.Y.whileTrue(robot.getRobotCommander().driveWith(RobotState.SHOOT_AND_INTAKE));
-        joystick.POV_DOWN.onTrue(robot.getRobotCommander().driveWith(RobotState.STAY_IN_PLACE));
-        joystick.POV_UP.onTrue(robot.getRobotCommander().driveWith(RobotState.INTAKE));
-
-    }
+	private static void applyRobotCommanderCalibrationsBinding(SmartJoystick joystick, Robot robot) {
+		joystick.A.whileTrue(robot.getRobotCommander().driveWith(RobotState.SHOOT));
+		joystick.B.whileTrue(robot.getRobotCommander().driveWith(RobotState.PRE_SHOOT));
+		joystick.X.whileTrue(robot.getRobotCommander().driveWith(RobotState.DRIVE));
+		joystick.Y.whileTrue(robot.getRobotCommander().driveWith(RobotState.SHOOT_AND_INTAKE));
+		joystick.POV_DOWN.onTrue(robot.getRobotCommander().driveWith(RobotState.STAY_IN_PLACE));
+		joystick.POV_UP.onTrue(robot.getRobotCommander().driveWith(RobotState.INTAKE));
+	}
 
 	private static void applyTurretCalibrationBindings(Arm turret, SmartJoystick joystick, double calibrationMaxPower) {
 		joystick.POV_DOWN.onTrue(new InstantCommand(() -> turret.getCommandsBuilder().setIsSubsystemRunningIndependently(true)));

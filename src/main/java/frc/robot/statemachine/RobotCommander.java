@@ -39,13 +39,13 @@ public class RobotCommander extends GBSubsystem {
 						Set.of(
 							this,
 							swerve,
-                            robot.getIntakeRoller(),
-                            robot.getTurret(),
-                            robot.getFourBar(),
-                            robot.getBelly(),
-                            robot.getHood(),
-                            robot.getOmni(),
-                            robot.getFlyWheel()
+							robot.getIntakeRoller(),
+							robot.getTurret(),
+							robot.getFourBar(),
+							robot.getBelly(),
+							robot.getHood(),
+							robot.getOmni(),
+							robot.getFlyWheel()
 						)
 					).schedule()
 				),

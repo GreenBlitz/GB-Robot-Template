@@ -364,7 +364,10 @@ public class Swerve extends GBSubsystem {
 				currentModuleRotationalStates
 			);
 			areWheelsSkidding[i] = !MathUtil.isNear(robotTranslationalVelocity.getX(), currentModuleTranslationalStates[i].getX(), 0.1)
-				|| !MathUtil.isNear(robotTranslationalVelocity.getY(), currentModuleTranslationalStates[i].getY(), 0.1);
+				|| !MathUtil.isNear(robotTranslationalVelocity.getY(), currentModuleTranslationalStates[i].getY(), 0.1); //this is testing it just for the robot, ignoring the second type of skiddign.... i hope i did not bs mysrlg...
+			if(!areWheelsSkidding[i]){
+				areWheelsSkidding[i]= !MathUtil.isNear(currentModuleRotationalStates[i].speedMetersPerSecond, currentModuleStates[i].speedMetersPerSecond, 0.1);
+			}
 		}
 		return areWheelsSkidding;
 	}

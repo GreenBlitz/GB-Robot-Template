@@ -266,7 +266,11 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	protected LimelightTarget2dValues getTarget2dValues() {
-		return inputs.neuralDetectionInputs().target2dValues;
+		if (pipeline.isNeuralDetecting()) {
+			return inputs.neuralDetectionInputs().target2dValues;
+		} else {
+			return inputs.colorDetectionInputs().target2dValues;
+		}
 	}
 
 	protected LimelightHelpers.RawDetection[] getRawDetections() {

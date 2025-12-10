@@ -224,7 +224,7 @@ public class Robot {
 	}
 
 	private Arm createHood() {
-		ArmSimulationConstants hoodSimulationConstatns = new ArmSimulationConstants(
+		ArmSimulationConstants hoodSimulationConstants = new ArmSimulationConstants(
 			HoodConstants.MAXIMUM_POSITION,
 			HoodConstants.MINIMUM_POSITION,
 			HoodConstants.MINIMUM_POSITION,
@@ -246,7 +246,7 @@ public class Robot {
 			HoodConstants.ARBITRARY_FEEDFORWARD,
 			HoodConstants.FORWARD_SOFTWARE_LIMIT,
 			HoodConstants.BACKWARD_SOFTWARE_LIMIT,
-			hoodSimulationConstatns,
+			hoodSimulationConstants,
 			HoodConstants.DEFAULT_MAX_ACCELERATION_PER_SECOND_SQUARE,
 			HoodConstants.DEFAULT_MAX_VELOCITY_PER_SECOND
 		);

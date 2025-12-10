@@ -21,13 +21,32 @@ public class RobotCommander extends GBSubsystem {
 		this.robot = robot;
 		this.swerve = robot.getSwerve();
 		this.positionTargets = new PositionTargets(robot);
-		this.superstructure = new Superstructure("StateMachine/Superstructure", robot, () -> robot.getPoseEstimator().getEstimatedPose());
+		this.superstructure = new Superstructure(
+			"StateMachine/Superstructure",
+			robot,
+                () -> robot.getPoseEstimator().getEstimatedPose()
+		);
 		this.currentState = RobotState.STAY_IN_PLACE;
 
 		setDefaultCommand(
 			new ConditionalCommand(
 				asSubsystemCommand(Commands.none(), "Disabled"),
-				new InstantCommand(() -> new DeferredCommand(() -> endState(currentState), Set.of(this, swerve)).schedule()),
+				new InstantCommand(
+					() -> new DeferredCommand(
+						() -> endState(currentState),
+						Set.of(
+							this,
+							swerve,
+							robot.getIntakeRoller(),
+							robot.getTurret(),
+							robot.getFourBar(),
+							robot.getBelly(),
+							robot.getHood(),
+							robot.getOmni(),
+							robot.getFlyWheel()
+						)
+					).schedule()
+				),
 				this::isSubsystemRunningIndependently
 			)
 
@@ -67,7 +86,9 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command endState(RobotState state) {
 		return switch (state) {
-			default -> new InstantCommand();
+			case STAY_IN_PLACE -> driveWith(RobotState.STAY_IN_PLACE);
+			case DRIVE, INTAKE, SHOOT, SHOOT_AND_INTAKE -> driveWith(RobotState.DRIVE);
+			case PRE_SHOOT -> driveWith(RobotState.PRE_SHOOT);
 		};
 	}
 

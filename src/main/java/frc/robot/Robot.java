@@ -90,8 +90,6 @@ public class Robot {
 		this.funnelDigitalInput = omniAndDigitalInput.getSecond();
 		BrakeStateManager.add(() -> omni.setBrake(true), () -> omni.setBrake(false));
 
-		robotCommander = new RobotCommander("/RobotCommander", this);
-
 		IIMU imu = IMUFactory.createIMU(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
@@ -107,6 +105,8 @@ public class Robot {
 			swerve.getGyroAbsoluteYaw().getValue(),
 			swerve.getGyroAbsoluteYaw().getTimestamp()
 		);
+
+		robotCommander = new RobotCommander("/RobotCommander", this);
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 
@@ -222,7 +222,7 @@ public class Robot {
 	}
 
 	private Arm createHood() {
-		ArmSimulationConstants hoodSimulationConstatns = new ArmSimulationConstants(
+		ArmSimulationConstants hoodSimulationConstants = new ArmSimulationConstants(
 			HoodConstants.MAXIMUM_POSITION,
 			HoodConstants.MINIMUM_POSITION,
 			HoodConstants.MINIMUM_POSITION,
@@ -243,7 +243,7 @@ public class Robot {
 			HoodConstants.ARBITRARY_FEEDFORWARD,
 			HoodConstants.FORWARD_SOFTWARE_LIMIT,
 			HoodConstants.BACKWARD_SOFTWARE_LIMIT,
-			hoodSimulationConstatns,
+			hoodSimulationConstants,
 			HoodConstants.DEFAULT_MAX_ACCELERATION_PER_SECOND_SQUARE,
 			HoodConstants.DEFAULT_MAX_VELOCITY_PER_SECOND
 		);

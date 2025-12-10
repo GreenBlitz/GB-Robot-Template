@@ -6,6 +6,7 @@ import frc.robot.Robot;
 import frc.robot.statemachine.superstructure.Superstructure;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.Swerve;
+
 import java.util.Set;
 
 public class RobotCommander extends GBSubsystem {
@@ -20,20 +21,34 @@ public class RobotCommander extends GBSubsystem {
 	public RobotCommander(String logPath, Robot robot) {
 		super(logPath);
 		this.robot = robot;
-//        this.swerve = robot.getSwerve();
-		this.swerve = null;
+		this.swerve = robot.getSwerve();
 		this.positionTargets = new PositionTargets(robot);
 		this.superstructure = new Superstructure(
 			"StateMachine/Superstructure",
 			robot,
 			() -> Field.Tower.getDistance(robot.getPoseEstimator().getEstimatedPose().getTranslation())
 		);
-		this.currentState = null;
+		this.currentState = RobotState.STAY_IN_PLACE;
 
 		setDefaultCommand(
 			new ConditionalCommand(
 				asSubsystemCommand(Commands.none(), "Disabled"),
-				new InstantCommand(() -> new DeferredCommand(() -> endState(currentState), Set.of(this, swerve)).schedule()),
+				new InstantCommand(
+					() -> new DeferredCommand(
+						() -> endState(currentState),
+						Set.of(
+							this,
+							swerve,
+							robot.getIntakeRoller(),
+							robot.getTurret(),
+							robot.getFourBar(),
+							robot.getBelly(),
+							robot.getHood(),
+							robot.getOmni(),
+							robot.getFlyWheel()
+						)
+					).schedule()
+				),
 				this::isSubsystemRunningIndependently
 			)
 
@@ -73,7 +88,9 @@ public class RobotCommander extends GBSubsystem {
 
 	private Command endState(RobotState state) {
 		return switch (state) {
-			default -> new InstantCommand();
+			case STAY_IN_PLACE -> driveWith(RobotState.STAY_IN_PLACE);
+			case DRIVE, INTAKE, SHOOT, SHOOT_AND_INTAKE -> driveWith(RobotState.DRIVE);
+			case PRE_SHOOT -> driveWith(RobotState.PRE_SHOOT);
 		};
 	}
 

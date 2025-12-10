@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.constants.turret.TurretConstants;
 import org.littletonrobotics.junction.Logger;
-
 import java.util.function.Supplier;
 
 public class TurretAimAtTowerCommand extends Command {

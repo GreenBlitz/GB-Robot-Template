@@ -52,7 +52,6 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		usedJoystick.A.onTrue(robot.getRobotCommander().driveWith(RobotState.SHOOT));
 		// bindings...
 	}
 

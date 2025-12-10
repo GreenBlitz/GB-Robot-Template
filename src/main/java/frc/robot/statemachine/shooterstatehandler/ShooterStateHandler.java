@@ -107,7 +107,7 @@ public class ShooterStateHandler {
 				MathUtil.angleModulus(
 					Rotation2d
 						.fromDegrees(
-							TurretConstants.MAX_POSITION.getDegrees() - ShooterConstants.MAX_DISTANCE_FROM_SCREW_NOT_TO_ROTATE.getDegrees()
+							TurretConstants.MAX_POSITION.getDegrees() - ShooterConstants.MAX_DISTANCE_FROM_MAX_OR_MIN_POSITION_NOT_TO_ROTATE.getDegrees()
 						)
 						.getRadians()
 				)
@@ -116,7 +116,7 @@ public class ShooterStateHandler {
 			screwMinToleranceDegrees = Rotation2d
 				.fromRadians(
 					MathUtil.angleModulus(
-						TurretConstants.MIN_POSITION.getRadians() + ShooterConstants.MAX_DISTANCE_FROM_SCREW_NOT_TO_ROTATE.getRadians()
+						TurretConstants.MIN_POSITION.getRadians() + ShooterConstants.MAX_DISTANCE_FROM_MAX_OR_MIN_POSITION_NOT_TO_ROTATE.getRadians()
 					)
 				)
 				.getDegrees();

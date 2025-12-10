@@ -345,10 +345,8 @@ public class Swerve extends GBSubsystem {
 		Translation2d[] currentModuleTranslationalStates = new Translation2d[currentModuleStates.length];
 
 		for (int i = 0; i < currentModuleTranslationalStates.length; i++) {
-			currentModuleTranslationalStates[i] = new Translation2d(
-				currentModuleRotationalStates[i].speedMetersPerSecond,
-				currentModuleRotationalStates[i].angle
-			).minus(new Translation2d(currentModuleStates[i].speedMetersPerSecond, currentModuleStates[i].angle));
+			currentModuleTranslationalStates[i] = new Translation2d(currentModuleStates[i].speedMetersPerSecond, currentModuleStates[i].angle)
+				.minus(new Translation2d(currentModuleRotationalStates[i].speedMetersPerSecond, currentModuleRotationalStates[i].angle));
 		}
 
 		boolean[] areWheelsSkidding = new boolean[currentModuleTranslationalStates.length];
@@ -358,11 +356,12 @@ public class Swerve extends GBSubsystem {
 		);
 
 		for (int i = 0; i < currentModuleTranslationalStates.length; i++) {
-			Logger.recordOutput("robotTranslational Velocity", robotTranslationalVelocity);
+			Logger.recordOutput("robotTranslationalVelocity", robotTranslationalVelocity);
 			Logger.recordOutput(
-				"currentModuleTrabskatuinalState" + ModuleUtil.ModulePosition.values()[i].toString(),
+				"currentModuleTranslationalState" + ModuleUtil.ModulePosition.values()[i].toString(),
 				currentModuleRotationalStates
 			);
+
 			areWheelsSkidding[i] = !MathUtil.isNear(robotTranslationalVelocity.getX(), currentModuleTranslationalStates[i].getX(), 0.1)
 				|| !MathUtil.isNear(robotTranslationalVelocity.getY(), currentModuleTranslationalStates[i].getY(), 0.1);
 		}

@@ -89,7 +89,7 @@ public class Modules {
 		}
 	}
 
-	public int getNumberOfModules(){
+	public int getNumberOfModules() {
 		return modules.length;
 	}
 

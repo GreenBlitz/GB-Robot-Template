@@ -52,6 +52,10 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
+        usedJoystick.A.whileTrue(robot.getRobotCommander().getSuperstructure().setState(RobotState.SHOOT));
+        usedJoystick.B.whileTrue(robot.getRobotCommander().getSuperstructure().setState(RobotState.PRE_SHOOT));
+        usedJoystick.X.whileTrue(robot.getRobotCommander().getSuperstructure().setState(RobotState.DRIVE));
+        usedJoystick.Y.whileTrue(robot.getRobotCommander().getSuperstructure().setState(RobotState.SHOOT_AND_INTAKE));
 		// bindings...
 	}
 

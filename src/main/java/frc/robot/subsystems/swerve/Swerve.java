@@ -354,14 +354,16 @@ public class Swerve extends GBSubsystem {
 			getRobotRelativeVelocity().vxMetersPerSecond,
 			getRobotRelativeVelocity().vyMetersPerSecond
 		);
-
+		Logger.recordOutput("robotTranslationalVelocity", robotTranslationalVelocity);
 		for (int i = 0; i < currentModuleTranslationalStates.length; i++) {
-			Logger.recordOutput("robotTranslationalVelocity", robotTranslationalVelocity);
 			Logger.recordOutput(
-				"currentModuleTranslationalState" + ModuleUtil.ModulePosition.values()[i].toString(),
-				currentModuleRotationalStates
+				"currentModuleTranslationalStates/" + ModuleUtil.ModulePosition.values()[i].toString(),
+				currentModuleTranslationalStates[i]
 			);
-
+			Logger.recordOutput(
+					"currentModuleRotationalStates/" + ModuleUtil.ModulePosition.values()[i].toString(),
+					currentModuleRotationalStates[i].speedMetersPerSecond
+			);
 			areWheelsSkidding[i] = !MathUtil.isNear(robotTranslationalVelocity.getX(), currentModuleTranslationalStates[i].getX(), 0.1)
 				|| !MathUtil.isNear(robotTranslationalVelocity.getY(), currentModuleTranslationalStates[i].getY(), 0.1);
 		}

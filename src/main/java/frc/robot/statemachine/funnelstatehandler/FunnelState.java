@@ -1,4 +1,4 @@
-package frc.robot.statemachine.superstructure.funnelStateHandler;
+package frc.robot.statemachine.funnelstatehandler;
 
 public enum FunnelState {
 

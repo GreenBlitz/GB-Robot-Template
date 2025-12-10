@@ -1,13 +1,11 @@
 package frc.robot.statemachine.shooterStateHandler;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.*;
-import frc.constants.MathConstants;
-import frc.constants.field.Tower;
 import frc.robot.statemachine.ScoringHelpers;
-import frc.robot.statemachine.superstructure.TurretAimAtTowerCommand;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.constants.turret.TurretConstants;
 import frc.robot.subsystems.flywheel.FlyWheel;
@@ -70,8 +68,7 @@ public class ShooterStateHandler {
 	private Command idle() {
 		return new ParallelCommandGroup(
 			aimAtTower(() -> ScoringHelpers.getClosestTower(robotPose.get()).getTower()),
-			hood.getCommandsBuilder()
-				.setTargetPosition(hoodInterpolation(() -> getDistanceFromTower(ScoringHelpers.getClosestTower(robotPose.get())))),
+			hood.getCommandsBuilder().setTargetPosition(hoodInterpolation(() -> ScoringHelpers.getDistanceFromClosestTower(robotPose.get()))),
 			flyWheel.getCommandBuilder().setTargetVelocity(ShooterConstants.DEFAULT_FLYWHEEL_ROTATIONS_PER_SECOND)
 		);
 	}
@@ -79,65 +76,47 @@ public class ShooterStateHandler {
 	private Command shoot() {
 		return new ParallelCommandGroup(
 			aimAtTower(() -> ScoringHelpers.getClosestTower(robotPose.get()).getTower()),
-			hood.getCommandsBuilder()
-				.setTargetPosition(hoodInterpolation(() -> getDistanceFromTower(ScoringHelpers.getClosestTower(robotPose.get())))),
+			hood.getCommandsBuilder().setTargetPosition(hoodInterpolation(() -> ScoringHelpers.getDistanceFromClosestTower(robotPose.get()))),
 			flyWheel.getCommandBuilder()
-				.setVelocityAsSupplier(flywheelInterpolation(() -> getDistanceFromTower(ScoringHelpers.getClosestTower(robotPose.get()))))
+				.setVelocityAsSupplier(
+					flywheelInterpolation(
+						() -> ScoringHelpers.getDistanceFromTower(ScoringHelpers.getClosestTower(robotPose.get()), robotPose.get())
+					)
+				)
 		);
 	}
 
 	public static Supplier<Rotation2d> getRobotRelativeLookAtTowerAngleForTurret(Translation2d target, Pose2d robotPose) {
-		return () -> getNormalizedAngle(FieldMath.getRelativeTranslation(robotPose, target).getAngle());
-	}
-
-	public double getDistanceFromTower(Tower tower) {
-		return tower.getTower().getDistance(robotPose.get().getTranslation());
+		return () -> Rotation2d.fromRadians(MathUtil.angleModulus(FieldMath.getRelativeTranslation(robotPose, target).getAngle().getRadians()));
 	}
 
 	public static boolean isTurretMoveLegal(Supplier<Rotation2d> targetRobotRelative, Arm turret) {
-		double screwPositionDegrees = TurretConstants.SCREW_POSITION.getDegrees(),
-			screwMaxToleranceDegrees = Math.max(
-				getNormalizedAngle(
-					Rotation2d.fromDegrees(
-						TurretConstants.SCREW_POSITION.getDegrees() - ShooterConstants.MAX_DISTANCE_FROM_SCREW_NOT_TO_ROTATE.getDegrees()
+		double screwMaxToleranceDegrees = Rotation2d
+			.fromRadians(
+				MathUtil.angleModulus(
+					Rotation2d
+						.fromDegrees(
+							TurretConstants.MAX_POSITION.getDegrees() - ShooterConstants.MAX_DISTANCE_FROM_SCREW_NOT_TO_ROTATE.getDegrees()
+						)
+						.getRadians()
+				)
+			)
+			.getDegrees(),
+			screwMinToleranceDegrees = Rotation2d
+				.fromRadians(
+					MathUtil.angleModulus(
+						TurretConstants.MIN_POSITION.getRadians() + ShooterConstants.MAX_DISTANCE_FROM_SCREW_NOT_TO_ROTATE.getRadians()
 					)
-				).getDegrees(),
-				getNormalizedAngle(
-					Rotation2d.fromDegrees(
-						TurretConstants.SCREW_POSITION.getDegrees() - ShooterConstants.MAX_DISTANCE_FROM_SCREW_NOT_TO_ROTATE.getDegrees()
-					)
-				).getDegrees()
-			),
-			screwMinToleranceDegrees = Math.min(
-				getNormalizedAngle(
-					Rotation2d.fromDegrees(
-						TurretConstants.SCREW_POSITION.getDegrees() - ShooterConstants.MAX_DISTANCE_FROM_SCREW_NOT_TO_ROTATE.getDegrees()
-					)
-				).getDegrees(),
-				getNormalizedAngle(
-					Rotation2d.fromDegrees(
-						TurretConstants.SCREW_POSITION.getDegrees() - ShooterConstants.MAX_DISTANCE_FROM_SCREW_NOT_TO_ROTATE.getDegrees()
-					)
-				).getDegrees()
-			);
-        Logger.recordOutput(ShooterConstants.LOG_PATH + "/target",targetRobotRelative.get());
-        Logger.recordOutput(ShooterConstants.LOG_PATH + "/curretPosition",turret.getPosition());
-        Logger.recordOutput(ShooterConstants.LOG_PATH + "/screwMinusConst",screwMinToleranceDegrees);
-        Logger.recordOutput(ShooterConstants.LOG_PATH + "/screwPlusConst",screwMaxToleranceDegrees);
-        Logger.recordOutput(ShooterConstants.LOG_PATH + "/maxPosition",TurretConstants.MAX_POSITION);
-        Logger.recordOutput(ShooterConstants.LOG_PATH + "/minPosition",TurretConstants.MIN_POSITION);
-		return !((ToleranceMath.isInRange(targetRobotRelative.get().getDegrees(), TurretConstants.MIN_POSITION.getDegrees(), screwMinToleranceDegrees)
-			&& ToleranceMath.isInRange(turret.getPosition().getDegrees(), screwMaxToleranceDegrees,TurretConstants.MAX_POSITION.getDegrees() )) ||
+				)
+				.getDegrees();
+		return !((ToleranceMath
+			.isInRange(targetRobotRelative.get().getDegrees(), TurretConstants.MIN_POSITION.getDegrees(), screwMinToleranceDegrees)
+			&& ToleranceMath.isInRange(turret.getPosition().getDegrees(), screwMaxToleranceDegrees, TurretConstants.MAX_POSITION.getDegrees()))
+			||
 
 			(ToleranceMath.isInRange(turret.getPosition().getDegrees(), TurretConstants.MIN_POSITION.getDegrees(), screwMaxToleranceDegrees)
-				&& ToleranceMath.isInRange(targetRobotRelative.get().getDegrees(),screwMaxToleranceDegrees , TurretConstants.MAX_POSITION.getDegrees())));
-	}
-
-	private static Rotation2d getNormalizedAngle(Rotation2d angle) {
-		double degrees = angle.getDegrees() % MathConstants.FULL_CIRCLE.getDegrees();
-		while (degrees < 0)
-			degrees += MathConstants.FULL_CIRCLE.getDegrees();
-		return Rotation2d.fromDegrees(degrees);
+				&& ToleranceMath
+					.isInRange(targetRobotRelative.get().getDegrees(), screwMaxToleranceDegrees, TurretConstants.MAX_POSITION.getDegrees())));
 	}
 
 	public Command aimAtTower(Supplier<Translation2d> target) {

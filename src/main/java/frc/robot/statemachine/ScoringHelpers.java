@@ -17,4 +17,12 @@ public class ScoringHelpers {
 		return smallestDistanceTower;
 	}
 
+	public static double getDistanceFromTower(Tower tower, Pose2d robotPose) {
+		return tower.getTower().getDistance(robotPose.getTranslation());
+	}
+
+	public static double getDistanceFromClosestTower(Pose2d robotPose) {
+		return getDistanceFromTower(getClosestTower(robotPose), robotPose);
+	}
+
 }

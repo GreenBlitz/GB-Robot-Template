@@ -52,10 +52,6 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-        usedJoystick.A.whileTrue(robot.getRobotCommander().getSuperstructure().setState(RobotState.SHOOT));
-        usedJoystick.B.whileTrue(robot.getRobotCommander().getSuperstructure().setState(RobotState.PRE_SHOOT));
-        usedJoystick.X.whileTrue(robot.getRobotCommander().getSuperstructure().setState(RobotState.DRIVE));
-        usedJoystick.Y.whileTrue(robot.getRobotCommander().getSuperstructure().setState(RobotState.SHOOT_AND_INTAKE));
 		// bindings...
 	}
 
@@ -91,6 +87,16 @@ public class JoysticksBindings {
 		joystick.Y.onTrue(robot.getRobotCommander().getSuperstructure().setState(RobotState.INTAKE));
 		joystick.POV_DOWN.onTrue(robot.getRobotCommander().getSuperstructure().setState(RobotState.STAY_IN_PLACE));
 	}
+
+    private static void applyRobotCommanderCalibrationsBinding(SmartJoystick joystick, Robot robot){
+        joystick.A.whileTrue(robot.getRobotCommander().driveWith(RobotState.SHOOT));
+        joystick.B.whileTrue(robot.getRobotCommander().driveWith(RobotState.PRE_SHOOT));
+        joystick.X.whileTrue(robot.getRobotCommander().driveWith(RobotState.DRIVE));
+        joystick.Y.whileTrue(robot.getRobotCommander().driveWith(RobotState.SHOOT_AND_INTAKE));
+        joystick.POV_DOWN.onTrue(robot.getRobotCommander().driveWith(RobotState.STAY_IN_PLACE));
+        joystick.POV_UP.onTrue(robot.getRobotCommander().driveWith(RobotState.INTAKE));
+
+    }
 
 	private static void applyTurretCalibrationBindings(Arm turret, SmartJoystick joystick, double calibrationMaxPower) {
 		joystick.POV_DOWN.onTrue(new InstantCommand(() -> turret.getCommandsBuilder().setIsSubsystemRunningIndependently(true)));

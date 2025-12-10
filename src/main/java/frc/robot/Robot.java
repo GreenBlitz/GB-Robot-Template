@@ -11,6 +11,7 @@ import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.statemachine.RobotCommander;
+import frc.robot.statemachine.RobotState;
 import frc.robot.subsystems.arm.ArmSimulationConstants;
 import frc.robot.subsystems.constants.intakeRollers.IntakeRollerConstants;
 import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
@@ -90,8 +91,6 @@ public class Robot {
 		this.funnelDigitalInput = omniAndDigitalInput.getSecond();
 		BrakeStateManager.add(() -> omni.setBrake(true), () -> omni.setBrake(false));
 
-		robotCommander = new RobotCommander("/RobotCommander", this);
-
 		IIMU imu = IMUFactory.createIMU(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
@@ -108,10 +107,12 @@ public class Robot {
 			swerve.getGyroAbsoluteYaw().getTimestamp()
 		);
 
+        robotCommander = new RobotCommander("/RobotCommander", this);
+
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 
 		simulationManager = new SimulationManager("SimulationManager", this);
-	}
+    }
 
 	public void resetSubsystems() {
 		if (HoodConstants.MINIMUM_POSITION.getRadians() > hood.getPosition().getRadians()) {
@@ -222,7 +223,7 @@ public class Robot {
 	}
 
 	private Arm createHood() {
-		ArmSimulationConstants hoodSimulationConstatns = new ArmSimulationConstants(
+		ArmSimulationConstants hoodSimulationConstants = new ArmSimulationConstants(
 			HoodConstants.MAXIMUM_POSITION,
 			HoodConstants.MINIMUM_POSITION,
 			HoodConstants.MINIMUM_POSITION,
@@ -243,7 +244,7 @@ public class Robot {
 			HoodConstants.ARBITRARY_FEEDFORWARD,
 			HoodConstants.FORWARD_SOFTWARE_LIMIT,
 			HoodConstants.BACKWARD_SOFTWARE_LIMIT,
-			hoodSimulationConstatns,
+			hoodSimulationConstants,
 			HoodConstants.DEFAULT_MAX_ACCELERATION_PER_SECOND_SQUARE,
 			HoodConstants.DEFAULT_MAX_VELOCITY_PER_SECOND
 		);

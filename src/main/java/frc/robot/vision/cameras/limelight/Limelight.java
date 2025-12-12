@@ -173,9 +173,8 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 			return getRobotRelativeNeuralDetections();
 		} else if (pipeline.isColorDetecting()) {
 			return getRobotRelativeColorDetections();
-		} else {
-			return new ArrayList<>();
 		}
+		return new ArrayList<>();
 	}
 
 	@Override
@@ -271,9 +270,8 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 			return inputs.neuralDetectionInputs().target2dValues;
 		} else if (pipeline.isColorDetecting()) {
 			return inputs.colorDetectionInputs().target2dValues;
-		} else {
-			return new LimelightTarget2dValues();
 		}
+		return new LimelightTarget2dValues();
 	}
 
 	protected LimelightHelpers.RawDetection[] getRawDetections() {

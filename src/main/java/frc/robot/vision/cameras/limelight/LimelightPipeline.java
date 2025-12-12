@@ -10,7 +10,7 @@ public enum LimelightPipeline {
 
 	APRIL_TAG(0, true),
 	NEURAL_DETECTION(1, false, true, false, new DetectedObjectType[] {DetectedObjectType.ALGAE}),
-	COLOR_DETECTION(2, false, false, true, new DetectedObjectType[0]);
+	COLOR_DETECTION(2, false, false, true, new DetectedObjectType[] {DetectedObjectType.POWER_CELL});
 
 	private final int pipelineIndex;
 	private final boolean isUsingMT;

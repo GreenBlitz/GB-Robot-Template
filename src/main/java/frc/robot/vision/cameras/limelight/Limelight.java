@@ -129,7 +129,6 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 					}
 				}
 			}
-
 			Logger.recordOutput(logPath + "/colorDetections", colorDetections.toArray(new DetectedObjectObservation[0]));
 		}
 	}

@@ -102,41 +102,37 @@ public class ShooterStateHandler {
 	}
 
 	public static boolean isTurretMoveLegal(Supplier<Rotation2d> targetRobotRelative, Arm turret) {
-		double screwMaxToleranceDegrees = Rotation2d.fromRadians(
-			MathUtil.angleModulus(
-				Rotation2d
-					.fromDegrees(
-						TurretConstants.MAX_POSITION.getDegrees()
-							- ShooterConstants.MAX_DISTANCE_FROM_MAX_OR_MIN_POSITION_NOT_TO_ROTATE.getDegrees()
-					)
-					.getRadians()
-			)
-		).getDegrees(),
-			screwMinToleranceDegrees = Rotation2d
-				.fromRadians(
-					MathUtil.angleModulus(
-						TurretConstants.MIN_POSITION.getRadians()
-							+ ShooterConstants.MAX_DISTANCE_FROM_MAX_OR_MIN_POSITION_NOT_TO_ROTATE.getRadians()
-					)
-				)
-				.getDegrees();
-		if (screwMinToleranceDegrees < 0)
-			screwMinToleranceDegrees += MathConstants.FULL_CIRCLE.getDegrees();
-		if (screwMaxToleranceDegrees < 0)
-			screwMaxToleranceDegrees += MathConstants.FULL_CIRCLE.getDegrees();
-		Logger.recordOutput(TurretConstants.LOG_PATH + "/maxScrewTolerance", screwMaxToleranceDegrees);
-		Logger.recordOutput(TurretConstants.LOG_PATH + "/minScrewTolerance", screwMinToleranceDegrees);
-		Logger.recordOutput(TurretConstants.LOG_PATH + "/Target", targetRobotRelative.get());
-		return ((!(targetRobotRelative.get().getDegrees() > screwMaxToleranceDegrees
-			&& turret.getPosition().getDegrees() < screwMinToleranceDegrees)
-			&& !(targetRobotRelative.get().getDegrees() < screwMinToleranceDegrees
-				&& turret.getPosition().getDegrees() > screwMaxToleranceDegrees)))
-			&& (ToleranceMath.isInRange(
-				targetRobotRelative.get().getDegrees(),
-				TurretConstants.BACKWARDS_SOFTWARE_LIMIT.getDegrees(),
-				TurretConstants.FORWARD_SOFTWARE_LIMIT.getDegrees()
-			));
+		double screwMaxToleranceDegrees = getToleranceAngle(TurretConstants.MAX_POSITION,ShooterConstants.MAX_DISTANCE_FROM_MAX_OR_MIN_POSITION_NOT_TO_ROTATE.times(-1)).getDegrees();
+        double screwMinToleranceDegrees = getToleranceAngle(TurretConstants.MIN_POSITION,ShooterConstants.MAX_DISTANCE_FROM_MAX_OR_MIN_POSITION_NOT_TO_ROTATE).getDegrees();
+
+		screwMinToleranceDegrees += screwMinToleranceDegrees<0 ? MathConstants.FULL_CIRCLE.getDegrees() : 0;
+        screwMaxToleranceDegrees += screwMaxToleranceDegrees<0 ? MathConstants.FULL_CIRCLE.getDegrees() : 0;
+
+        boolean isTargetInMaxTolerance = !(targetRobotRelative.get().getDegrees() > screwMaxToleranceDegrees
+                && turret.getPosition().getDegrees() < screwMinToleranceDegrees);
+
+        boolean isTargetInMinTolerance = !(targetRobotRelative.get().getDegrees() < screwMinToleranceDegrees
+                        && turret.getPosition().getDegrees() > screwMaxToleranceDegrees);
+
+        boolean isTargetBehindSoftwareLimits = ToleranceMath.isInRange(
+                        targetRobotRelative.get().getDegrees(),
+                        TurretConstants.BACKWARDS_SOFTWARE_LIMIT.getDegrees(),
+                        TurretConstants.FORWARD_SOFTWARE_LIMIT.getDegrees());
+
+        return isTargetInMaxTolerance
+			&& isTargetInMinTolerance
+			&& isTargetBehindSoftwareLimits;
 	}
+
+    public static Rotation2d getToleranceAngle (Rotation2d angle,Rotation2d tolerance){
+        return Rotation2d
+                .fromRadians(
+                        MathUtil.angleModulus(
+                                angle.getRadians()
+                                        + tolerance.getRadians()
+                        )
+                );
+    }
 
 	public Command aimAtTower(Supplier<Translation2d> target) {
 		return new TurretAimAtTowerCommand(turret, target, robotPose);

@@ -92,7 +92,6 @@ public class ShooterStateHandler {
 	public static Supplier<Rotation2d> getRobotRelativeLookAtTowerAngleForTurret(Translation2d target, Pose2d robotPose) {
 		Supplier<Rotation2d> targetAngle = () -> (Rotation2d
 			.fromRadians(MathUtil.angleModulus((FieldMath.getRelativeTranslation(robotPose, target).getAngle().getRadians()))));
-		Logger.recordOutput(ShooterConstants.LOG_PATH + "RawTarget", FieldMath.getRelativeTranslation(robotPose, target).getAngle());
 		Supplier<Rotation2d> finalTargetAngle = targetAngle;
 		targetAngle = () -> Rotation2d.fromDegrees(
 			finalTargetAngle.get().getDegrees() < 0

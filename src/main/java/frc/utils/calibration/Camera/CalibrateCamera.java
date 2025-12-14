@@ -11,14 +11,12 @@ import org.littletonrobotics.junction.Logger;
 
 public class CalibrateCamera extends Command {
 
-    private double cosX3DSum = 0, sumSinX3D = 0;
+    private double cosX3DSum = 0, sinX3DSum = 0;
     private double sumCosY3D = 0, sumSinY3D = 0;
     private double sumCosZ3D = 0, sumSinZ3D = 0;
     private double sumCosPose = 0, sumSinPose = 0;
 
-    private double sumTranslationX = 0;
-    private double sumTranslationY = 0;
-    private double sumTranslationZ = 0;
+    private Translation3d translationSum = new Translation3d();
 
     private double sumPose2DX = 0;
     private double sumPose2Dy = 0;
@@ -70,24 +68,20 @@ public class CalibrateCamera extends Command {
 
     @Override
     public void execute() {
-        logCameraPose(this.logPathPrefix, this.cameraName, this.tagID, this.robotXAxisDistanceFromTag, this.middleOfTagHeight);
+        calculateRobotRelativeCameraPosition(this.logPathPrefix, this.cameraName, this.tagID, this.robotXAxisDistanceFromTag, this.middleOfTagHeight);
         currentCycle += 1;
     }
 
     @Override
     public void end(boolean interrupted) {
-        this.finalCameraTranslation = new Translation3d(
-                sumTranslationX / this.neededNumberOfCycles,
-                sumTranslationY / this.neededNumberOfCycles,
-                this.sumTranslationZ / this.neededNumberOfCycles
-        );
+        this.finalCameraTranslation = translationSum.div(neededNumberOfCycles);
         this.robotPoseFieldRelative = new Pose2d(
                 sumPose2DX / this.neededNumberOfCycles,
                 sumPose2Dy / this.neededNumberOfCycles,
                 Rotation2d.fromRadians(Math.atan2(sumSinPose / this.neededNumberOfCycles, sumCosPose / this.neededNumberOfCycles))
         );
         this.finalCameraRotation = new Rotation3d(
-                Math.atan2(sumSinX3D / this.neededNumberOfCycles, cosX3DSum / this.neededNumberOfCycles),
+                Math.atan2(sinX3DSum / this.neededNumberOfCycles, cosX3DSum / this.neededNumberOfCycles),
                 Math.atan2(sumSinY3D / this.neededNumberOfCycles, sumCosY3D / this.neededNumberOfCycles),
                 Math.atan2(sumSinZ3D / this.neededNumberOfCycles, sumCosZ3D / this.neededNumberOfCycles)
         );
@@ -98,7 +92,7 @@ public class CalibrateCamera extends Command {
         return currentCycle == neededNumberOfCycles;
     }
 
-    private void logCameraPose() {
+    private void calculateRobotRelativeCameraPosition() {
         // add option to tags that are not perfectly aligned
         this.robotPoseFieldRelative = new Pose2d(
                 // pose i combined from translation 2d the x and y of the filed and an angle / what angle ?
@@ -124,15 +118,13 @@ public class CalibrateCamera extends Command {
     }
 
     private void sumObjectsValues() {
-        sumTranslationX += cameraPoseFieldRelative.getX() - robotPoseFieldRelative.getX();
-        sumTranslationY += -(cameraPoseFieldRelative.getY() - robotPoseFieldRelative.getY());
-        sumTranslationZ += cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + middleOfTagHeight;
+        translationSum.plus(new Translation3d(cameraPoseFieldRelative.getX() - robotPoseFieldRelative.getX(), -(cameraPoseFieldRelative.getY() - robotPoseFieldRelative.getY()), cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + middleOfTagHeight));
 
         sumPose2DX += tagPoseFieldRelative.getX() - robotXAxisDistanceFromTag;
         sumPose2Dy += tagPoseFieldRelative.getY();
 
         cosX3DSum += Math.cos(cameraPoseFieldRelative.getRotation().getX());
-        sumSinX3D += Math.sin(cameraPoseFieldRelative.getRotation().getX());
+        sinX3DSum += Math.sin(cameraPoseFieldRelative.getRotation().getX());
         sumCosY3D += Math.cos(-cameraPoseFieldRelative.getRotation().getY());
         sumSinY3D += Math.sin(-cameraPoseFieldRelative.getRotation().getY());
         sumCosZ3D += Math.cos(cameraPoseFieldRelative.getRotation().getZ() - robotPoseFieldRelative.getRotation().getRadians());

@@ -30,6 +30,6 @@ public class ShooterConstants {
 		"FlywheelRotations",
 		Rotation2d.fromRotations(0.0)
 	);
-	public static final Rotation2d MAX_DISTANCE_FROM_MAX_OR_MIN_POSITION_NOT_TO_ROTATE = Rotation2d.fromDegrees(30);
+	public static final Rotation2d MAX_DISTANCE_FROM_MAX_OR_MIN_POSITION_NOT_TO_ROTATE = Rotation2d.fromDegrees(7);
 
 }

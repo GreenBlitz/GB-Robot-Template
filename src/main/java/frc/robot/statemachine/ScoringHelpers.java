@@ -2,6 +2,8 @@ package frc.robot.statemachine;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.constants.field.Tower;
+import frc.robot.statemachine.shooterstatehandler.ShooterConstants;
+import org.littletonrobotics.junction.Logger;
 
 public class ScoringHelpers {
 
@@ -9,20 +11,17 @@ public class ScoringHelpers {
 		Tower smallestDistanceTower = Tower.CLOSE_TOWER;
 		for (Tower tower : Tower.values()) {
 			if (
-				robotPose.getTranslation().getDistance(smallestDistanceTower.getTower().getTranslation())
-					> robotPose.getTranslation().getDistance(tower.getTower().getTranslation())
+				robotPose.getTranslation().getDistance(smallestDistanceTower.getPose().getTranslation())
+					> robotPose.getTranslation().getDistance(tower.getPose().getTranslation())
 			)
 				smallestDistanceTower = tower;
 		}
+		Logger.recordOutput(ShooterConstants.LOG_PATH + "/ClosestTower", smallestDistanceTower);
 		return smallestDistanceTower;
 	}
 
-	public static double getDistanceFromTower(Tower tower, Pose2d robotPose) {
-		return tower.getTower().getTranslation().getDistance(robotPose.getTranslation());
-	}
-
 	public static double getDistanceFromClosestTower(Pose2d robotPose) {
-		return getDistanceFromTower(getClosestTower(robotPose), robotPose);
+		return getClosestTower(robotPose).getPose().getTranslation().getDistance(robotPose.getTranslation());
 	}
 
 }

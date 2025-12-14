@@ -4,9 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.statemachine.ScoringHelpers;
 import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.constants.turret.TurretConstants;
 import org.littletonrobotics.junction.Logger;
 import java.util.function.Supplier;
 
@@ -32,10 +30,7 @@ public class TurretAimAtTowerCommand extends Command {
 		} else {
 			turret.stayInPlace();
 			Logger.recordOutput(ShooterConstants.LOG_PATH + "/IsTurretGoingToPosition", false);
-			Logger.recordOutput(TurretConstants.LOG_PATH + "/PositionTarget", targetAngle.get());
 		}
-		Logger.recordOutput(ShooterConstants.LOG_PATH + "/TurretOnRobot", new Pose2d(robotPose.get().getTranslation(), turret.getPosition()));
-		Logger.recordOutput(ShooterConstants.LOG_PATH + "/ClosestTower", ScoringHelpers.getClosestTower(robotPose.get()).getTower());
 	}
 
 }

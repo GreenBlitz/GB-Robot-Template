@@ -16,7 +16,7 @@ public enum Tower {
 		this.tower = tower;
 	}
 
-	public Pose2d getTower() {
+	public Pose2d getPose() {
 		return tower;
 	}
 

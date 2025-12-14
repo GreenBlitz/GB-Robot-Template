@@ -13,15 +13,19 @@ import frc.utils.math.FieldMath;
 import org.littletonrobotics.junction.Logger;
 
 public class CalibrateCamera extends Command {
+    private double sumCosX3D = 0, sumSinX3D = 0;
+    private double sumCosY3D = 0, sumSinY3D = 0;
+    private double sumCosZ3D = 0, sumSinZ = 0;
+    private double sumCosPose =0,sumSinPose =0;
     private double sumTranslationX = 0;
     private double sumTranslationY = 0;
     private double sumTranslationZ = 0;
-    private double sumPose2DX =0;
-    private double sumPose2Dy =0;
-    private
-    private double sumRotation3DX =0;
-    private double sumRotation3DY =0;
-    private double getSumRotation3DZ =0;
+    private double sumPose2DX = 0;
+    private double sumPose2Dy = 0;
+    // add somthing for the average of rot
+    private double sumRotation3DX = 0;
+    private double sumRotation3DY = 0;
+    private double getSumRotation3DZ = 0;
     private String PathPrefix;
     private String cameraName;
     private int tagID;
@@ -84,15 +88,16 @@ public class CalibrateCamera extends Command {
     private void logCameraPose(String PathPrefix, String cameraName, int tagID, double xRobotDistanceFromTag, double middleOfTagHeight) {
         // add option to tags that are not perfectly aligned
         this.robotPoseFieldRelative = new Pose2d(
+               // pose i combined from translation 2d the x and y of the filed and an angle / what angle ?
                 tagPoseFieldRelative.getX() - xRobotDistanceFromTag,
                 tagPoseFieldRelative.getY(),
                 FieldMath.transformAngle(tagPoseFieldRelative.getRotation().toRotation2d(), AngleTransform.INVERT)
         );
 
         // limelight is funny so we invert pitch
-      // represents make average
+        // represents make average
         this.endRot = new Rotation3d(
-              // represents three degrees
+                // represents three degrees
                 cameraPoseFieldRelative.getRotation().getX(),
                 -cameraPoseFieldRelative.getRotation().getY(),
                 cameraPoseFieldRelative.getRotation().getZ() - robotPoseFieldRelative.getRotation().getRadians()
@@ -105,14 +110,18 @@ public class CalibrateCamera extends Command {
         );
         //  );
 // return the thing that creats the object every time         divide the some to a different function
+    // at the end of log camera pose i want to call the sum method
+        // the sum isnt finished
+        sumObjectsValues();
+    }
+
+    private void sumObjectsValues() {
+        sumTranslationX += cameraPoseFieldRelative.getX() - robotPoseFieldRelative.getX();
+        sumTranslationY += -(cameraPoseFieldRelative.getY() - robotPoseFieldRelative.getY());
+        sumTranslationZ += cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + middleOfTagHeight;
+        sumPose2DX += tagPoseFieldRelative.getX() - xRobotDistanceFromTag;
+        sumPose2Dy += tagPoseFieldRelative.getY();
 
     }
-private void  sumObjectsValues(){
-    sumTranslationX += cameraPoseFieldRelative.getX() - robotPoseFieldRelative.getX();
-    sumTranslationY += -(cameraPoseFieldRelative.getY() - robotPoseFieldRelative.getY());
-    sumTranslationZ += cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + middleOfTagHeight;
-    sumPose2DX =tagPoseFieldRelative.getX() - xRobotDistanceFromTag;
-    sumPose2Dy =
-}
 
 }

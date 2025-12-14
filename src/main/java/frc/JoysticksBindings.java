@@ -47,7 +47,7 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		usedJoystick.A.onTrue(new CalibrateCamera());
+//		usedJoystick.A.onTrue(new CalibrateCamera());
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

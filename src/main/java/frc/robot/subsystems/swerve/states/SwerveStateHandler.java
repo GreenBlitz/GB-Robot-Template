@@ -9,6 +9,7 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
+import frc.utils.alerts.Alert;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -33,9 +34,19 @@ public class SwerveStateHandler {
 		if (swerveState.getAimAssist() == AimAssist.NONE) {
 			return speeds;
 		}
+		if (robotPoseSupplier.isEmpty()) {
+			reportMissingSupplier("robot pose");
+			return speeds;
+		}
+		if (swerveState.getAimAssist() == AimAssist.LOOK_AT_TOWER) {
+
+		}
 		return speeds;
 	}
 
+	private ChassisSpeeds handleLookAtTowerAimAssist(ChassisSpeeds speeds, SwerveState swerveState) {
+
+	}
 
 	public Translation2d getRotationAxis(RotateAxis rotationAxisState) {
 		return switch (rotationAxisState) {
@@ -63,6 +74,10 @@ public class SwerveStateHandler {
 		}
 		// -45 >= x >= -135
 		return isLeft ? RotateAxis.BACK_LEFT_MODULE : RotateAxis.FRONT_LEFT_MODULE;
+	}
+
+	private void reportMissingSupplier(String supplierName) {
+		new Alert(Alert.AlertType.WARNING, swerve.getLogPath() + "/AimAssist/missing" + supplierName + " supplier").report();
 	}
 
 	public RotateAxis getFarRightRotateAxis() {

@@ -339,31 +339,30 @@ public class Swerve extends GBSubsystem {
 
 	public boolean[] areWheelsSkidding() {
 		double robotRotationalVelocity = getRobotRelativeVelocity().omegaRadiansPerSecond;
+		Logger.recordOutput("robotRotationalVelocity", robotRotationalVelocity);
+
+		Translation2d robotTranslationalVelocity = new Translation2d(
+				getRobotRelativeVelocity().vxMetersPerSecond,
+				getRobotRelativeVelocity().vyMetersPerSecond
+		);
+		Logger.recordOutput("robotTranslationalVelocity", robotTranslationalVelocity);
+
 		SwerveModuleState[] currentModuleRotationalStates = kinematics
 			.toSwerveModuleStates(new ChassisSpeeds(0, 0, robotRotationalVelocity), new Translation2d());
-		SwerveModuleState[] currentModuleStates = modules.getCurrentStates();
-		Translation2d[] currentModuleTranslationalStates = new Translation2d[currentModuleStates.length];
+		Logger.recordOutput("currentModuleRotationalStates", currentModuleRotationalStates);
 
+		SwerveModuleState[] currentModuleStates = modules.getCurrentStates();
+		Logger.recordOutput("currentModuleStates", currentModuleStates);
+
+		Translation2d[] currentModuleTranslationalStates = new Translation2d[currentModuleStates.length];
 		for (int i = 0; i < currentModuleTranslationalStates.length; i++) {
 			currentModuleTranslationalStates[i] = new Translation2d(currentModuleStates[i].speedMetersPerSecond, currentModuleStates[i].angle)
 				.minus(new Translation2d(currentModuleRotationalStates[i].speedMetersPerSecond, currentModuleRotationalStates[i].angle));
 		}
+		Logger.recordOutput("currentModuleTranslationalStates", currentModuleTranslationalStates);
 
 		boolean[] areWheelsSkidding = new boolean[currentModuleTranslationalStates.length];
-		Translation2d robotTranslationalVelocity = new Translation2d(
-			getRobotRelativeVelocity().vxMetersPerSecond,
-			getRobotRelativeVelocity().vyMetersPerSecond
-		);
-		Logger.recordOutput("robotTranslationalVelocity", robotTranslationalVelocity);
 		for (int i = 0; i < currentModuleTranslationalStates.length; i++) {
-			Logger.recordOutput(
-				"currentModuleTranslationalStates/" + ModuleUtil.ModulePosition.values()[i].toString(),
-				currentModuleTranslationalStates[i]
-			);
-			Logger.recordOutput(
-					"currentModuleRotationalStates/" + ModuleUtil.ModulePosition.values()[i].toString(),
-					currentModuleRotationalStates[i].speedMetersPerSecond
-			);
 			areWheelsSkidding[i] = !MathUtil.isNear(robotTranslationalVelocity.getX(), currentModuleTranslationalStates[i].getX(), 0.1)
 				|| !MathUtil.isNear(robotTranslationalVelocity.getY(), currentModuleTranslationalStates[i].getY(), 0.1);
 		}

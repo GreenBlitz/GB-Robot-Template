@@ -11,7 +11,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class CalibrateCamera extends Command {
 
-    private double sumCosX3D = 0, sumSinX3D = 0;
+    private double cosX3DSum = 0, sumSinX3D = 0;
     private double sumCosY3D = 0, sumSinY3D = 0;
     private double sumCosZ3D = 0, sumSinZ3D = 0;
     private double sumCosPose = 0, sumSinPose = 0;
@@ -33,8 +33,8 @@ public class CalibrateCamera extends Command {
     private Pose2d robotPoseFieldRelative;
     private Rotation3d finalCameraRotation;
     private Translation3d finalCameraTranslation;
-    private final int numberOfCycles;
-    private int counter = 0;
+    private final int neededNumberOfCycles;
+    private int currentCycle = 0;
 
     public CalibrateCamera(
             AprilTagFields field,
@@ -43,14 +43,14 @@ public class CalibrateCamera extends Command {
             int tagID,
             double robotXAxisDistanceFromTag,
             double middleOfTagHeight,
-            int numberOfCycles
+            int neededNumberOfCycles
     ) {
         this.cameraName = cameraName;
         this.middleOfTagHeight = middleOfTagHeight;
         this.logPathPrefix = logPathPrefix;
         this.tagID = tagID;
         this.robotXAxisDistanceFromTag = robotXAxisDistanceFromTag;
-        this.numberOfCycles = numberOfCycles;
+        this.neededNumberOfCycles = neededNumberOfCycles;
         LimelightHelpers.setCameraPose_RobotSpace(cameraName, 0, 0, 0, 0, 0, 0);
         this.tagPoseFieldRelative = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded).getTagPose(tagID).get();
         this.cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
@@ -64,44 +64,45 @@ public class CalibrateCamera extends Command {
     }
 
     public void initialize() {
+        logFunction();
+
     }
 
     @Override
     public void execute() {
         logCameraPose(this.logPathPrefix, this.cameraName, this.tagID, this.robotXAxisDistanceFromTag, this.middleOfTagHeight);
-        logFunction();
-        counter += 1;
+        currentCycle += 1;
     }
 
     @Override
     public void end(boolean interrupted) {
         this.finalCameraTranslation = new Translation3d(
-                sumTranslationX / this.numberOfCycles,
-                sumTranslationY / this.numberOfCycles,
-                this.sumTranslationZ / this.numberOfCycles
+                sumTranslationX / this.neededNumberOfCycles,
+                sumTranslationY / this.neededNumberOfCycles,
+                this.sumTranslationZ / this.neededNumberOfCycles
         );
         this.robotPoseFieldRelative = new Pose2d(
-                sumPose2DX / this.numberOfCycles,
-                sumPose2Dy / this.numberOfCycles,
-                Rotation2d.fromRadians(Math.atan2(sumSinPose / this.numberOfCycles, sumCosPose / this.numberOfCycles))
+                sumPose2DX / this.neededNumberOfCycles,
+                sumPose2Dy / this.neededNumberOfCycles,
+                Rotation2d.fromRadians(Math.atan2(sumSinPose / this.neededNumberOfCycles, sumCosPose / this.neededNumberOfCycles))
         );
         this.finalCameraRotation = new Rotation3d(
-                Math.atan2(sumSinX3D / this.numberOfCycles, sumCosX3D / this.numberOfCycles),
-                Math.atan2(sumSinY3D / this.numberOfCycles, sumCosY3D / this.numberOfCycles),
-                Math.atan2(sumSinZ3D / this.numberOfCycles, sumCosZ3D / this.numberOfCycles)
+                Math.atan2(sumSinX3D / this.neededNumberOfCycles, cosX3DSum / this.neededNumberOfCycles),
+                Math.atan2(sumSinY3D / this.neededNumberOfCycles, sumCosY3D / this.neededNumberOfCycles),
+                Math.atan2(sumSinZ3D / this.neededNumberOfCycles, sumCosZ3D / this.neededNumberOfCycles)
         );
         super.end(interrupted);
     }
 
     public boolean isFinished() {
-        return counter == numberOfCycles;
+        return currentCycle == neededNumberOfCycles;
     }
 
-    private void logCameraPose(String PathPrefix, String cameraName, int tagID, double xRobotDistanceFromTag, double middleOfTagHeight) {
+    private void logCameraPose() {
         // add option to tags that are not perfectly aligned
         this.robotPoseFieldRelative = new Pose2d(
                 // pose i combined from translation 2d the x and y of the filed and an angle / what angle ?
-                tagPoseFieldRelative.getX() - xRobotDistanceFromTag,
+                tagPoseFieldRelative.getX() - robotXAxisDistanceFromTag,
                 tagPoseFieldRelative.getY(),
                 FieldMath.transformAngle(tagPoseFieldRelative.getRotation().toRotation2d(), AngleTransform.INVERT)
         );
@@ -130,7 +131,7 @@ public class CalibrateCamera extends Command {
         sumPose2DX += tagPoseFieldRelative.getX() - robotXAxisDistanceFromTag;
         sumPose2Dy += tagPoseFieldRelative.getY();
 
-        sumCosX3D += Math.cos(cameraPoseFieldRelative.getRotation().getX());
+        cosX3DSum += Math.cos(cameraPoseFieldRelative.getRotation().getX());
         sumSinX3D += Math.sin(cameraPoseFieldRelative.getRotation().getX());
         sumCosY3D += Math.cos(-cameraPoseFieldRelative.getRotation().getY());
         sumSinY3D += Math.sin(-cameraPoseFieldRelative.getRotation().getY());

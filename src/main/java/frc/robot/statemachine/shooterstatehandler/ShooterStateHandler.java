@@ -70,7 +70,7 @@ public class ShooterStateHandler {
 
 	private Command idle() {
 		return new ParallelCommandGroup(
-			aimAtTower(() -> ScoringHelpers.getClosestTower(robotPose.get()).getTower()),
+			aimAtTower(() -> ScoringHelpers.getClosestTower(robotPose.get()).getTower().getTranslation()),
 			hood.getCommandsBuilder().setTargetPosition(hoodInterpolation(() -> ScoringHelpers.getDistanceFromClosestTower(robotPose.get()))),
 			flyWheel.getCommandBuilder().setTargetVelocity(ShooterConstants.DEFAULT_FLYWHEEL_ROTATIONS_PER_SECOND)
 		);
@@ -78,7 +78,7 @@ public class ShooterStateHandler {
 
 	private Command shoot() {
 		return new ParallelCommandGroup(
-			aimAtTower(() -> ScoringHelpers.getClosestTower(robotPose.get()).getTower()),
+			aimAtTower(() -> ScoringHelpers.getClosestTower(robotPose.get()).getTower().getTranslation()),
 			hood.getCommandsBuilder().setTargetPosition(hoodInterpolation(() -> ScoringHelpers.getDistanceFromClosestTower(robotPose.get()))),
 			flyWheel.getCommandBuilder()
 				.setVelocityAsSupplier(
@@ -91,7 +91,7 @@ public class ShooterStateHandler {
 
 	public static Supplier<Rotation2d> getRobotRelativeLookAtTowerAngleForTurret(Translation2d target, Pose2d robotPose) {
 		Supplier<Rotation2d> targetAngle = () -> (Rotation2d
-			.fromRadians(MathUtil.angleModulus(FieldMath.getRelativeTranslation(robotPose, target).getAngle().getRadians())));
+			.fromRadians(MathUtil.angleModulus((FieldMath.getRelativeTranslation(robotPose, target).getAngle().getRadians()))));
 		Supplier<Rotation2d> finalTargetAngle = targetAngle;
 		targetAngle = () -> Rotation2d.fromDegrees(
 			finalTargetAngle.get().getDegrees() < 0

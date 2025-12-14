@@ -9,8 +9,8 @@ public class ScoringHelpers {
 		Tower smallestDistanceTower = Tower.CLOSE_TOWER;
 		for (Tower tower : Tower.values()) {
 			if (
-				robotPose.getTranslation().getDistance(smallestDistanceTower.getTower())
-					< robotPose.getTranslation().getDistance(tower.getTower())
+				robotPose.getTranslation().getDistance(smallestDistanceTower.getTower().getTranslation())
+					> robotPose.getTranslation().getDistance(tower.getTower().getTranslation())
 			)
 				smallestDistanceTower = tower;
 		}
@@ -18,7 +18,7 @@ public class ScoringHelpers {
 	}
 
 	public static double getDistanceFromTower(Tower tower, Pose2d robotPose) {
-		return tower.getTower().getDistance(robotPose.getTranslation());
+		return tower.getTower().getTranslation().getDistance(robotPose.getTranslation());
 	}
 
 	public static double getDistanceFromClosestTower(Pose2d robotPose) {

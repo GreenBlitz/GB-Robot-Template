@@ -67,7 +67,7 @@ public class Swerve extends GBSubsystem {
 		this.imuSignals = imuSignals;
 
 		this.kinematics = new SwerveDriveKinematics(modules.getModulePositionsFromCenterMeters());
-		this.headingSupplier = () -> getGyroAbsoluteYaw().getValue();
+		this.headingSupplier = () -> getIMUAbsoluteYaw().getValue();
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
 		this.stateHandler = new SwerveStateHandler(this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
@@ -210,7 +210,7 @@ public class Swerve extends GBSubsystem {
 		return driveRadiusMeters;
 	}
 
-	public TimedValue<Rotation2d> getGyroAbsoluteYaw() {
+	public TimedValue<Rotation2d> getIMUAbsoluteYaw() {
 		TimedValue<Rotation2d> latestGyroYaw = imuSignals.yawSignal().getLatestTimedValue();
 		Rotation2d latestGyroAbsoluteYaw = Rotation2d.fromRadians(MathUtil.angleModulus(latestGyroYaw.getValue().getRadians()));
 		return new TimedValue<>(latestGyroAbsoluteYaw, latestGyroYaw.getTimestamp());
@@ -338,12 +338,11 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public boolean[] areWheelsSkidding() {
-		double robotRotationalVelocity = getRobotRelativeVelocity().omegaRadiansPerSecond;
+		double robotRotationalVelocity = imuSignals.getAngularVelocity().toRotation2d().getRadians();
 		Logger.recordOutput("robotRotationalVelocity", robotRotationalVelocity);
-
 		Translation2d robotTranslationalVelocity = new Translation2d(
-				getRobotRelativeVelocity().vxMetersPerSecond,
-				getRobotRelativeVelocity().vyMetersPerSecond
+				imuSignals.getAccelerationEarthGravitationalAcceleration().getX(),
+				imuSignals.getAccelerationEarthGravitationalAcceleration().getY()
 		);
 		Logger.recordOutput("robotTranslationalVelocity", robotTranslationalVelocity);
 
@@ -363,8 +362,8 @@ public class Swerve extends GBSubsystem {
 
 		boolean[] areWheelsSkidding = new boolean[currentModuleTranslationalStates.length];
 		for (int i = 0; i < currentModuleTranslationalStates.length; i++) {
-			areWheelsSkidding[i] = !MathUtil.isNear(robotTranslationalVelocity.getX(), currentModuleTranslationalStates[i].getX(), 0.1)
-				|| !MathUtil.isNear(robotTranslationalVelocity.getY(), currentModuleTranslationalStates[i].getY(), 0.1);
+			areWheelsSkidding[i] = !MathUtil.isNear(robotTranslationalVelocity.getX(), currentModuleTranslationalStates[i].getX(), 0.06) //magic numbers
+				|| !MathUtil.isNear(robotTranslationalVelocity.getY(), currentModuleTranslationalStates[i].getY(), 0.06);
 		}
 		return areWheelsSkidding;
 	}

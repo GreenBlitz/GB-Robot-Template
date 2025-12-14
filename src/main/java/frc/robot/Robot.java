@@ -22,12 +22,6 @@ import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.math.StandardDeviations2D;
-import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
-import frc.robot.subsystems.swerve.factories.imu.IMUFactory;
-import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
-import frc.utils.auto.PathPlannerAutoWrapper;
-import frc.utils.battery.BatteryUtil;
-import frc.robot.hardware.interfaces.IIMU;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -60,8 +54,8 @@ public class Robot {
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
 			swerve.getKinematics(),
 			swerve.getModules().getWheelPositions(0),
-			swerve.getGyroAbsoluteYaw().getValue(),
-			swerve.getGyroAbsoluteYaw().getTimestamp()
+			swerve.getIMUAbsoluteYaw().getValue(),
+			swerve.getIMUAbsoluteYaw().getTimestamp()
 		);
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());

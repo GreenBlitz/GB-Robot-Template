@@ -7,8 +7,6 @@ import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.statemachine.RobotState;
-import frc.robot.statemachine.shooterstatehandler.ShooterState;
-import frc.robot.statemachine.shooterstatehandler.ShooterStateHandler;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.roller.Roller;
 import frc.robot.subsystems.swerve.ChassisPowers;
@@ -16,7 +14,7 @@ import frc.utils.battery.BatteryUtil;
 
 public class JoysticksBindings {
 
-	private static final SmartJoystick MAIN_JOYSTICK = new SmartJoystick(JoystickPorts.MAIN, 0.1);
+	private static final SmartJoystick MAIN_JOYSTICK = new SmartJoystick(JoystickPorts.MAIN, 0.2);
 	private static final SmartJoystick SECOND_JOYSTICK = new SmartJoystick(JoystickPorts.SECOND);
 	private static final SmartJoystick THIRD_JOYSTICK = new SmartJoystick(JoystickPorts.THIRD);
 	private static final SmartJoystick FOURTH_JOYSTICK = new SmartJoystick(JoystickPorts.FOURTH);
@@ -54,8 +52,8 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-        usedJoystick.A.onTrue(robot.getRobotCommander().driveWith(RobotState.SHOOT));
-    		// bindings...
+		usedJoystick.A.onTrue(robot.getRobotCommander().driveWith(RobotState.SHOOT));
+		// bindings...
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

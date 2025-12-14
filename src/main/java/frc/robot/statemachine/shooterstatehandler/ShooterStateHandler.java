@@ -92,6 +92,7 @@ public class ShooterStateHandler {
 	public static Supplier<Rotation2d> getRobotRelativeLookAtTowerAngleForTurret(Translation2d target, Pose2d robotPose) {
 		Supplier<Rotation2d> targetAngle = () -> (Rotation2d
 			.fromRadians(MathUtil.angleModulus((FieldMath.getRelativeTranslation(robotPose, target).getAngle().getRadians()))));
+		Logger.recordOutput(ShooterConstants.LOG_PATH + "RawTarget", FieldMath.getRelativeTranslation(robotPose, target).getAngle());
 		Supplier<Rotation2d> finalTargetAngle = targetAngle;
 		targetAngle = () -> Rotation2d.fromDegrees(
 			finalTargetAngle.get().getDegrees() < 0
@@ -102,21 +103,21 @@ public class ShooterStateHandler {
 	}
 
 	public static boolean isTurretMoveLegal(Supplier<Rotation2d> targetRobotRelative, Arm turret) {
-		double screwMaxToleranceDegrees = Rotation2d
-			.fromRadians(
-				MathUtil.angleModulus(
-					Rotation2d
-						.fromDegrees(
-							TurretConstants.MAX_POSITION.getDegrees() - ShooterConstants.MAX_DISTANCE_FROM_MAX_OR_MIN_POSITION_NOT_TO_ROTATE.getDegrees()
-						)
-						.getRadians()
-				)
+		double screwMaxToleranceDegrees = Rotation2d.fromRadians(
+			MathUtil.angleModulus(
+				Rotation2d
+					.fromDegrees(
+						TurretConstants.MAX_POSITION.getDegrees()
+							- ShooterConstants.MAX_DISTANCE_FROM_MAX_OR_MIN_POSITION_NOT_TO_ROTATE.getDegrees()
+					)
+					.getRadians()
 			)
-			.getDegrees(),
+		).getDegrees(),
 			screwMinToleranceDegrees = Rotation2d
 				.fromRadians(
 					MathUtil.angleModulus(
-						TurretConstants.MIN_POSITION.getRadians() + ShooterConstants.MAX_DISTANCE_FROM_MAX_OR_MIN_POSITION_NOT_TO_ROTATE.getRadians()
+						TurretConstants.MIN_POSITION.getRadians()
+							+ ShooterConstants.MAX_DISTANCE_FROM_MAX_OR_MIN_POSITION_NOT_TO_ROTATE.getRadians()
 					)
 				)
 				.getDegrees();

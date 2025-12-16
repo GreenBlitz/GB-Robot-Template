@@ -84,14 +84,14 @@ public class ShooterStateHandler {
 				.setVelocityAsSupplier(flywheelInterpolation(() -> ScoringHelpers.getDistanceFromClosestTower(robotPose.get())))
 		);
 	}
-    
-    private Command calibration() {
-        return new ParallelCommandGroup(
-                turret.getCommandsBuilder().setTargetPosition(ShooterConstants.turretCalibrationAngle::get),
-                hood.getCommandsBuilder().setTargetPosition(ShooterConstants.hoodCalibrationAngle::get),
-                flyWheel.getCommandBuilder().setVelocityAsSupplier(ShooterConstants.flywheelCalibrationRotations::get)
-        );
-    }
+
+	private Command calibration() {
+		return new ParallelCommandGroup(
+			turret.getCommandsBuilder().setTargetPosition(ShooterConstants.turretCalibrationAngle::get),
+			hood.getCommandsBuilder().setTargetPosition(ShooterConstants.hoodCalibrationAngle::get),
+			flyWheel.getCommandBuilder().setVelocityAsSupplier(ShooterConstants.flywheelCalibrationRotations::get)
+		);
+	}
 
 	public static Supplier<Rotation2d> getRobotRelativeLookAtTowerAngleForTurret(Translation2d target, Pose2d robotPose) {
 		Supplier<Rotation2d> targetAngle = () -> (Rotation2d
@@ -142,4 +142,5 @@ public class ShooterStateHandler {
 	public void Log() {
 		Logger.recordOutput(ShooterConstants.LOG_PATH + "/CurrentState", currentState);
 	}
+
 }

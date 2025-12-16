@@ -84,6 +84,14 @@ public class ShooterStateHandler {
 				.setVelocityAsSupplier(flywheelInterpolation(() -> ScoringHelpers.getDistanceFromClosestTower(robotPose.get())))
 		);
 	}
+    
+    private Command calibration() {
+        return new ParallelCommandGroup(
+                turret.getCommandsBuilder().setTargetPosition(ShooterConstants.turretCalibrationAngle::get),
+                hood.getCommandsBuilder().setTargetPosition(ShooterConstants.hoodCalibrationAngle::get),
+                flyWheel.getCommandBuilder().setVelocityAsSupplier(ShooterConstants.flywheelCalibrationRotations::get)
+        );
+    }
 
 	public static Supplier<Rotation2d> getRobotRelativeLookAtTowerAngleForTurret(Translation2d target, Pose2d robotPose) {
 		Supplier<Rotation2d> targetAngle = () -> (Rotation2d
@@ -94,11 +102,11 @@ public class ShooterStateHandler {
 	}
 
 	public static boolean isTurretMoveLegal(Supplier<Rotation2d> targetRobotRelative, Arm turret) {
-		double screwMaxToleranceDegrees = getToleranceEdgeAngle(
+		double screwMaxToleranceDegrees = getToleranceEdge(
 			TurretConstants.MAX_POSITION,
 			ShooterConstants.MAX_DISTANCE_FROM_MAX_OR_MIN_POSITION_NOT_TO_ROTATE.times(-1)
 		).getDegrees();
-		double screwMinToleranceDegrees = getToleranceEdgeAngle(
+		double screwMinToleranceDegrees = getToleranceEdge(
 			TurretConstants.MIN_POSITION,
 			ShooterConstants.MAX_DISTANCE_FROM_MAX_OR_MIN_POSITION_NOT_TO_ROTATE
 		).getDegrees();
@@ -123,7 +131,7 @@ public class ShooterStateHandler {
 		return isTargetInMaxTolerance && isTargetInMinTolerance && isTargetBehindSoftwareLimits;
 	}
 
-	public static Rotation2d getToleranceEdgeAngle(Rotation2d angle, Rotation2d tolerance) {
+	public static Rotation2d getToleranceEdge(Rotation2d angle, Rotation2d tolerance) {
 		return Rotation2d.fromRadians(angle.getRadians() + tolerance.getRadians());
 	}
 
@@ -134,13 +142,4 @@ public class ShooterStateHandler {
 	public void Log() {
 		Logger.recordOutput(ShooterConstants.LOG_PATH + "/CurrentState", currentState);
 	}
-
-	private Command calibration() {
-		return new ParallelCommandGroup(
-			turret.getCommandsBuilder().setTargetPosition(ShooterConstants.turretCalibrationAngle::get),
-			hood.getCommandsBuilder().setTargetPosition(ShooterConstants.hoodCalibrationAngle::get),
-			flyWheel.getCommandBuilder().setVelocityAsSupplier(ShooterConstants.flywheelCalibrationRotations::get)
-		);
-	}
-
 }

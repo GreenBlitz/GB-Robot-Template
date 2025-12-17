@@ -46,11 +46,11 @@ public class ShooterStateHandler {
 		return currentState;
 	}
 
-    public void Log() {
-        Logger.recordOutput(ShooterConstants.LOG_PATH + "/CurrentState", currentState);
-    }
+	public void Log() {
+		Logger.recordOutput(ShooterConstants.LOG_PATH + "/CurrentState", currentState);
+	}
 
-    public Command setState(ShooterState shooterState) {
+	public Command setState(ShooterState shooterState) {
 		Command command = switch (shooterState) {
 			case STAY_IN_PLACE -> stayInPlace();
 			case IDLE -> idle();
@@ -97,17 +97,15 @@ public class ShooterStateHandler {
 		);
 	}
 
-    public Command aimAtTower(Supplier<Translation2d> target) {
-        Logger.recordOutput("t",5);
-        return new TurretAimAtTowerCommand(turret, target, robotPose);
-    }
+	public Command aimAtTower(Supplier<Translation2d> target) {
+		Logger.recordOutput("t", 5);
+		return new TurretAimAtTowerCommand(turret, target, robotPose);
+	}
 
 	public static Rotation2d getRobotRelativeLookAtTowerAngleForTurret(Translation2d target, Pose2d robotPose) {
-		Rotation2d targetAngle = Rotation2d
-			.fromRadians(FieldMath.getRelativeTranslation(robotPose, target).getAngle().getRadians());
-		return Rotation2d.fromDegrees(
-			MathUtil.inputModulus(targetAngle.getDegrees(), Rotation2d.kZero.getDegrees(), MathConstants.FULL_CIRCLE.getDegrees())
-		);
+		Rotation2d targetAngle = Rotation2d.fromRadians(FieldMath.getRelativeTranslation(robotPose, target).getAngle().getRadians());
+		return Rotation2d
+			.fromDegrees(MathUtil.inputModulus(targetAngle.getDegrees(), Rotation2d.kZero.getDegrees(), MathConstants.FULL_CIRCLE.getDegrees()));
 	}
 
 	public static boolean isTurretMoveLegal(Rotation2d targetRobotRelative, Arm turret) {
@@ -136,7 +134,10 @@ public class ShooterStateHandler {
 	}
 
 	public static Rotation2d getRangeEdge(Rotation2d angle, Rotation2d tolerance) {
-		return Rotation2d.fromRadians(MathUtil.inputModulus(angle.getRadians() + tolerance.getRadians(),Rotation2d.kZero.getRadians(),MathConstants.FULL_CIRCLE.getRadians()));
+		return Rotation2d.fromRadians(
+			MathUtil
+				.inputModulus(angle.getRadians() + tolerance.getRadians(), Rotation2d.kZero.getRadians(), MathConstants.FULL_CIRCLE.getRadians())
+		);
 	}
 
 }

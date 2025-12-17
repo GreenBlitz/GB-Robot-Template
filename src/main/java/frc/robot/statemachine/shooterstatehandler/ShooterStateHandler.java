@@ -46,7 +46,11 @@ public class ShooterStateHandler {
 		return currentState;
 	}
 
-	public Command setState(ShooterState shooterState) {
+    public void Log() {
+        Logger.recordOutput(ShooterConstants.LOG_PATH + "/CurrentState", currentState);
+    }
+
+    public Command setState(ShooterState shooterState) {
 		Command command = switch (shooterState) {
 			case STAY_IN_PLACE -> stayInPlace();
 			case IDLE -> idle();
@@ -93,37 +97,37 @@ public class ShooterStateHandler {
 		);
 	}
 
-	public static Supplier<Rotation2d> getRobotRelativeLookAtTowerAngleForTurret(Translation2d target, Pose2d robotPose) {
-		Supplier<Rotation2d> targetAngle = () -> (Rotation2d
-			.fromRadians(FieldMath.getRelativeTranslation(robotPose, target).getAngle().getRadians()));
-		return () -> Rotation2d.fromDegrees(
-			MathUtil.inputModulus(targetAngle.get().getDegrees(), Rotation2d.kZero.getDegrees(), MathConstants.FULL_CIRCLE.getDegrees())
+    public Command aimAtTower(Supplier<Translation2d> target) {
+        Logger.recordOutput("t",5);
+        return new TurretAimAtTowerCommand(turret, target, robotPose);
+    }
+
+	public static Rotation2d getRobotRelativeLookAtTowerAngleForTurret(Translation2d target, Pose2d robotPose) {
+		Rotation2d targetAngle = Rotation2d
+			.fromRadians(FieldMath.getRelativeTranslation(robotPose, target).getAngle().getRadians());
+		return Rotation2d.fromDegrees(
+			MathUtil.inputModulus(targetAngle.getDegrees(), Rotation2d.kZero.getDegrees(), MathConstants.FULL_CIRCLE.getDegrees())
 		);
 	}
 
-	public static boolean isTurretMoveLegal(Supplier<Rotation2d> targetRobotRelative, Arm turret) {
-		double screwMaxToleranceDegrees = getToleranceEdge(
+	public static boolean isTurretMoveLegal(Rotation2d targetRobotRelative, Arm turret) {
+		double screwMaxRangeEdgeDegrees = getRangeEdge(
 			TurretConstants.MAX_POSITION,
 			ShooterConstants.MAX_DISTANCE_FROM_MAX_OR_MIN_POSITION_NOT_TO_ROTATE.times(-1)
 		).getDegrees();
-		double screwMinToleranceDegrees = getToleranceEdge(
+		double screwMinRangeEdgeDegrees = getRangeEdge(
 			TurretConstants.MIN_POSITION,
 			ShooterConstants.MAX_DISTANCE_FROM_MAX_OR_MIN_POSITION_NOT_TO_ROTATE
 		).getDegrees();
 
-		screwMinToleranceDegrees = MathUtil
-			.inputModulus(screwMinToleranceDegrees, Rotation2d.kZero.getDegrees(), MathConstants.FULL_CIRCLE.getDegrees());
-		screwMaxToleranceDegrees = MathUtil
-			.inputModulus(screwMaxToleranceDegrees, Rotation2d.kZero.getDegrees(), MathConstants.FULL_CIRCLE.getDegrees());
+		boolean isTargetInMaxTolerance = !(targetRobotRelative.getDegrees() > screwMaxRangeEdgeDegrees
+			&& turret.getPosition().getDegrees() < screwMinRangeEdgeDegrees);
 
-		boolean isTargetInMaxTolerance = !(targetRobotRelative.get().getDegrees() > screwMaxToleranceDegrees
-			&& turret.getPosition().getDegrees() < screwMinToleranceDegrees);
-
-		boolean isTargetInMinTolerance = !(targetRobotRelative.get().getDegrees() < screwMinToleranceDegrees
-			&& turret.getPosition().getDegrees() > screwMaxToleranceDegrees);
+		boolean isTargetInMinTolerance = !(targetRobotRelative.getDegrees() < screwMinRangeEdgeDegrees
+			&& turret.getPosition().getDegrees() > screwMaxRangeEdgeDegrees);
 
 		boolean isTargetBehindSoftwareLimits = ToleranceMath.isInRange(
-			targetRobotRelative.get().getDegrees(),
+			targetRobotRelative.getDegrees(),
 			TurretConstants.BACKWARDS_SOFTWARE_LIMIT.getDegrees(),
 			TurretConstants.FORWARD_SOFTWARE_LIMIT.getDegrees()
 		);
@@ -131,16 +135,8 @@ public class ShooterStateHandler {
 		return isTargetInMaxTolerance && isTargetInMinTolerance && isTargetBehindSoftwareLimits;
 	}
 
-	public static Rotation2d getToleranceEdge(Rotation2d angle, Rotation2d tolerance) {
-		return Rotation2d.fromRadians(angle.getRadians() + tolerance.getRadians());
-	}
-
-	public Command aimAtTower(Supplier<Translation2d> target) {
-		return new TurretAimAtTowerCommand(turret, target, robotPose);
-	}
-
-	public void Log() {
-		Logger.recordOutput(ShooterConstants.LOG_PATH + "/CurrentState", currentState);
+	public static Rotation2d getRangeEdge(Rotation2d angle, Rotation2d tolerance) {
+		return Rotation2d.fromRadians(MathUtil.inputModulus(angle.getRadians() + tolerance.getRadians(),Rotation2d.kZero.getRadians(),MathConstants.FULL_CIRCLE.getRadians()));
 	}
 
 }

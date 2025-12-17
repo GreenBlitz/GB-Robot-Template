@@ -23,9 +23,9 @@ public class TurretAimAtTowerCommand extends Command {
 
 	@Override
 	public void execute() {
-		Supplier<Rotation2d> targetAngle = ShooterStateHandler.getRobotRelativeLookAtTowerAngleForTurret(target.get(), robotPose.get());
+		Rotation2d targetAngle = ShooterStateHandler.getRobotRelativeLookAtTowerAngleForTurret(target.get(), robotPose.get());
 		if (ShooterStateHandler.isTurretMoveLegal(targetAngle, turret)) {
-			turret.setTargetPosition(targetAngle.get());
+			turret.setTargetPosition(targetAngle);
 			Logger.recordOutput(ShooterConstants.LOG_PATH + "/IsTurretGoingToPosition", true);
 		} else {
 			turret.stayInPlace();

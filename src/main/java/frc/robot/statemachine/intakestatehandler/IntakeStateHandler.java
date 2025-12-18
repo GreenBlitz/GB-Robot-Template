@@ -1,22 +1,64 @@
 package frc.robot.statemachine.intakestatehandler;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
+import frc.robot.hardware.digitalinput.IDigitalInput;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.roller.Roller;
+import frc.utils.LoggedNetworkRotation2d;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class IntakeStateHandler {
 
-	public IntakeStateHandler() {}
+	private final Arm fourBar;
+	private final Roller rollers;
+	private final IDigitalInput bb;
+	private final String logPath;
+	private final DigitalInputInputsAutoLogged bbInputs;
+	private final LoggedNetworkNumber rollersCalibrationPower = new LoggedNetworkNumber("Tunable/IntakeRollerPower");
+	private final LoggedNetworkRotation2d fourbarCalibrationPosition = new LoggedNetworkRotation2d("Tunable/FourBarPosition", new Rotation2d());
 
-	public Command setState(IntakeState intakeState) {
-		return new InstantCommand();
+	private IntakeState currentState;
+
+	public IntakeStateHandler(Arm fourBar, Roller rollers, IDigitalInput bb, String logPath) {
+		this.fourBar = fourBar;
+		this.rollers = rollers;
+		this.bb = bb;
+		this.bbInputs = new DigitalInputInputsAutoLogged();
+		this.logPath = logPath;
+		this.currentState = IntakeState.STAY_IN_PLACE;
 	}
 
-	public enum IntakeState {
+	public void periodic() {
+		bb.updateInputs(bbInputs);
+		Logger.recordOutput(logPath + "/IsObjectIn", bbInputs.debouncedValue);
+	}
 
-		CLOSED,
-		INTAKE,
-		STAY_IN_PLACE;
+	public Command setState(IntakeState intakeState) {
+		Command command;
+		if (intakeState == IntakeState.CALIBRATION) {
+			command = new ParallelCommandGroup(
+				fourBar.getCommandsBuilder().setTargetPosition(fourbarCalibrationPosition::get),
+				rollers.getCommandsBuilder().setPower(rollersCalibrationPower::get)
+			);
+		} else if (intakeState == IntakeState.STAY_IN_PLACE) {
+			command = new ParallelCommandGroup(fourBar.getCommandsBuilder().stayInPlace(), rollers.getCommandsBuilder().stop());
+		} else {
+			command = new ParallelCommandGroup(
+				fourBar.getCommandsBuilder().setTargetPosition(intakeState.getFourBarPosition()),
+				rollers.getCommandsBuilder().setPower(intakeState.getIntakePower())
+			);
+		}
 
+		return new ParallelCommandGroup(
+			command,
+			new InstantCommand(() -> Logger.recordOutput(logPath + "/CurrentState", intakeState.name())),
+			new InstantCommand(() -> currentState = intakeState)
+		);
 	}
 
 }

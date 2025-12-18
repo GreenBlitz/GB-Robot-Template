@@ -49,7 +49,7 @@ public class Superstructure {
 		this.logPath = logPath;
 
 		this.funnelStateHandler = new FunnelStateHandler(robot.getOmni(), robot.getBelly(), logPath, robot.getFunnelDigitalInput());
-		this.intakeStateHandler = new IntakeStateHandler();
+		this.intakeStateHandler = new IntakeStateHandler(robot.getFourBar(), robot.getIntakeRoller(), robot.getIntakeRollerSensor());
 		this.shooterStateHandler = new ShooterStateHandler(robot.getTurret(), robot.getHood(), robot.getFlyWheel(), robotPose);
 	}
 
@@ -143,6 +143,8 @@ public class Superstructure {
 	}
 
 	public void log() {
+		funnelStateHandler.periodic();
+		intakeStateHandler.periodic();
 		Logger.recordOutput(logPath + "/IsSubsystemRunningIndependently", isSubsystemRunningIndependently());
 	}
 

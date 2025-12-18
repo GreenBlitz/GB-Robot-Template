@@ -6,6 +6,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
+import frc.robot.statemachine.shooterstatehandler.ShooterConstants;
+
+import static frc.robot.statemachine.shooterstatehandler.ShooterStateHandler.getRangeEdge;
 
 public class TurretConstants {
 
@@ -42,6 +45,14 @@ public class TurretConstants {
 	public static final double MOMENT_OF_INERTIA = 0.001;
 	public static final double TURRET_RADIUS = 0.0;
 	public static final double ARBITRARY_FEED_FORWARD = 0.0;
+	public static final Rotation2d SCREW_MAX_RANGE_EDGE = getRangeEdge(
+		TurretConstants.MAX_POSITION,
+		ShooterConstants.MAX_DISTANCE_FROM_MAX_OR_MIN_POSITION_NOT_TO_ROTATE.times(-1)
+	);
+	public static final Rotation2d SCREW_MIN_RANGE_EDGE = getRangeEdge(
+		TurretConstants.MIN_POSITION,
+		ShooterConstants.MAX_DISTANCE_FROM_MAX_OR_MIN_POSITION_NOT_TO_ROTATE
+	);
 	public static final Rotation2d FORWARD_SOFTWARE_LIMIT = Rotation2d.fromDegrees(355);
 	public static final Rotation2d BACKWARDS_SOFTWARE_LIMIT = Rotation2d.fromDegrees(5);
 	public static final Rotation2d MIN_POSITION = Rotation2d.fromDegrees(5);

@@ -74,7 +74,7 @@ public class ShooterStateHandler {
 
 	private Command idle() {
 		return new ParallelCommandGroup(
-			aimAtTower(() -> ScoringHelpers.getClosestTower(robotPose.get()).getPose().getTranslation()),
+			aimAtTower(),
 			hood.getCommandsBuilder().setTargetPosition(hoodInterpolation(() -> ScoringHelpers.getDistanceFromClosestTower(robotPose.get()))),
 			flyWheel.getCommandBuilder().setTargetVelocity(ShooterConstants.DEFAULT_FLYWHEEL_ROTATIONS_PER_SECOND)
 		);
@@ -82,7 +82,7 @@ public class ShooterStateHandler {
 
 	private Command shoot() {
 		return new ParallelCommandGroup(
-			aimAtTower(() -> ScoringHelpers.getClosestTower(robotPose.get()).getPose().getTranslation()),
+			aimAtTower(),
 			hood.getCommandsBuilder().setTargetPosition(hoodInterpolation(() -> ScoringHelpers.getDistanceFromClosestTower(robotPose.get()))),
 			flyWheel.getCommandBuilder()
 				.setVelocityAsSupplier(flywheelInterpolation(() -> ScoringHelpers.getDistanceFromClosestTower(robotPose.get())))
@@ -97,9 +97,8 @@ public class ShooterStateHandler {
 		);
 	}
 
-	public Command aimAtTower(Supplier<Translation2d> target) {
-		Logger.recordOutput("t", 5);
-		return new TurretAimAtTowerCommand(turret, target, robotPose);
+	public Command aimAtTower() {
+		return new TurretAimAtTowerCommand(turret, robotPose);
 	}
 
 	public static Rotation2d getRobotRelativeLookAtTowerAngleForTurret(Translation2d target, Pose2d robotPose) {
@@ -109,20 +108,11 @@ public class ShooterStateHandler {
 	}
 
 	public static boolean isTurretMoveLegal(Rotation2d targetRobotRelative, Arm turret) {
-		double screwMaxRangeEdgeDegrees = getRangeEdge(
-			TurretConstants.MAX_POSITION,
-			ShooterConstants.MAX_DISTANCE_FROM_MAX_OR_MIN_POSITION_NOT_TO_ROTATE.times(-1)
-		).getDegrees();
-		double screwMinRangeEdgeDegrees = getRangeEdge(
-			TurretConstants.MIN_POSITION,
-			ShooterConstants.MAX_DISTANCE_FROM_MAX_OR_MIN_POSITION_NOT_TO_ROTATE
-		).getDegrees();
+		boolean isTargetInMaxRange = !(targetRobotRelative.getDegrees() > TurretConstants.SCREW_MAX_RANGE_EDGE.getDegrees()
+			&& turret.getPosition().getDegrees() < TurretConstants.SCREW_MIN_RANGE_EDGE.getDegrees());
 
-		boolean isTargetInMaxTolerance = !(targetRobotRelative.getDegrees() > screwMaxRangeEdgeDegrees
-			&& turret.getPosition().getDegrees() < screwMinRangeEdgeDegrees);
-
-		boolean isTargetInMinTolerance = !(targetRobotRelative.getDegrees() < screwMinRangeEdgeDegrees
-			&& turret.getPosition().getDegrees() > screwMaxRangeEdgeDegrees);
+		boolean isTargetInMinRange = !(targetRobotRelative.getDegrees() < TurretConstants.SCREW_MIN_RANGE_EDGE.getDegrees()
+			&& turret.getPosition().getDegrees() > TurretConstants.SCREW_MAX_RANGE_EDGE.getDegrees());
 
 		boolean isTargetBehindSoftwareLimits = ToleranceMath.isInRange(
 			targetRobotRelative.getDegrees(),
@@ -130,7 +120,7 @@ public class ShooterStateHandler {
 			TurretConstants.FORWARD_SOFTWARE_LIMIT.getDegrees()
 		);
 
-		return isTargetInMaxTolerance && isTargetInMinTolerance && isTargetBehindSoftwareLimits;
+		return isTargetInMaxRange && isTargetInMinRange && isTargetBehindSoftwareLimits;
 	}
 
 	public static Rotation2d getRangeEdge(Rotation2d angle, Rotation2d tolerance) {

@@ -2,7 +2,6 @@ package frc.robot.statemachine;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.constants.field.TowerSide;
-import frc.robot.statemachine.shooterstatehandler.ShooterConstants;
 import org.littletonrobotics.junction.Logger;
 
 public class ScoringHelpers {

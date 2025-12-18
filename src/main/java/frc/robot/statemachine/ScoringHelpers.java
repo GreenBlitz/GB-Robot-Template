@@ -16,7 +16,7 @@ public class ScoringHelpers {
 			)
 				smallestDistanceTower = tower;
 		}
-		Logger.recordOutput(ShooterConstants.LOG_PATH + "/ClosestTower", smallestDistanceTower.getPose());
+		Logger.recordOutput("ScoringHelpers/ClosestTower", smallestDistanceTower.getPose());
 		return smallestDistanceTower;
 	}
 

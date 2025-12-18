@@ -181,6 +181,8 @@ public class Swerve extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/OdometrySamples", getNumberOfOdometrySamples());
 
 		Logger.recordOutput(getLogPath() + "/IMU/Acceleration", getAccelerationFromIMUMetersPerSecondSquared());
+
+		Logger.recordOutput(getLogPath() + "/isCollisionDetected", isCollisionDetected());
 		modulesIsSkidding = areWheelsSkidding();
 		for (int i = 0; i < modulesIsSkidding.length; i++) {
 			Logger.recordOutput("is" + ModuleUtil.ModulePosition.values()[i].toString() + "Skidding", modulesIsSkidding[i]);
@@ -335,6 +337,10 @@ public class Swerve extends GBSubsystem {
 		boolean isStopping = Math.abs(rotationVelocityRadiansPerSecond) < velocityDeadbandAnglesPerSecond.getRadians();
 
 		return isAtHeading && isStopping;
+	}
+
+	public boolean isCollisionDetected() {
+		return imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d().getNorm() > SwerveConstants.MIN_COLLISION_G_FORCE;
 	}
 
 	public boolean[] areWheelsSkidding() {

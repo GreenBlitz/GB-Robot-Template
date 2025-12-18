@@ -1,7 +1,10 @@
 package frc.robot.poseestimator.WPILibPoseEstimator;
 
 import edu.wpi.first.math.estimator.PoseEstimator;
-import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Twist2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -15,6 +18,7 @@ import frc.utils.math.StatisticsMath;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 
@@ -134,20 +138,24 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		Logger.recordOutput(logPath + "/isIMUOffsetCalibrated", isIMUOffsetCalibrated);
 	}
 
-	public double getPoseReliabilityAtTimestamp(double timestamp) {
-//        return calculatePoseReliability(getEstimatedPoseAtTimestamp(timestamp), );
-		return 0;
-	}
+	public double getCurrentPoseReliability() {}
 
 	public static double calculatePoseReliability(
-		Translation2d estimatedTranslation,
-		Translation2d visionEstimatedTranslation,
-		StandardDeviations2D visionStdDevs
+		RobotPoseObservation lastVisionObservation,
+		Function<Double, Pose2d> getEstimatedPoseAtTmestampFunc,
+		double currentTimestamp
 	) {
-		return Math.max(
-			estimatedTranslation.minus(visionEstimatedTranslation).getNorm(),
+		Pose2d estimatedPose = getEstimatedPoseAtTmestampFunc.apply(lastVisionObservation.timestampSeconds());
+		Pose2d visionEstimatedPose = lastVisionObservation.robotPose();
+		StandardDeviations2D visionStdDevs = lastVisionObservation.stdDevs();
+
+		double translationReliability = Math.max(
+			estimatedPose.getTranslation().minus(visionEstimatedPose.getTranslation()).getNorm(),
 			new Translation2d(visionStdDevs.xStandardDeviations(), visionStdDevs.yStandardDeviations()).getNorm()
 		);
+		double rotationReliability = Math
+			.max(estimatedPose.getRotation().minus(visionEstimatedPose.getRotation()).getRadians(), visionStdDevs.angleStandardDeviations());
+		return Math.max(translationReliability, rotationReliability);
 	}
 
 	public void resetIsIMUOffsetCalibrated() {

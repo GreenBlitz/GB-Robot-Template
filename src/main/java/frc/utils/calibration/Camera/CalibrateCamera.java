@@ -10,7 +10,7 @@ import frc.utils.math.FieldMath;
 import org.littletonrobotics.junction.Logger;
 
 public class CalibrateCamera extends Command {
-	private AprilTagFields FIELD;
+	private AprilTagFields field;
 	private final String logPathPrefix;
 	private final String cameraName;
 	private final int tagID;
@@ -29,7 +29,8 @@ public class CalibrateCamera extends Command {
 	private double cosZ3DSum = 0, sinZ3DSum = 0;
 
 	private Translation3d translationSum = new Translation3d();
-
+    private Translation3d currentCameraTrans;
+    private  Rotation3d currentCameraRot;
 
 	public CalibrateCamera(
 		AprilTagFields field,
@@ -40,7 +41,7 @@ public class CalibrateCamera extends Command {
 		double middleOfTagHeight,
 		int neededNumberOfCycles
 	) {
-        this.FIELD = field;
+        this.field = field;
 		this.cameraName = cameraName;
 		this.middleOfTagHeight = middleOfTagHeight;
 		this.logPathPrefix = logPathPrefix;
@@ -48,7 +49,7 @@ public class CalibrateCamera extends Command {
 		this.robotXAxisDistanceFromTag = robotXAxisDistanceFromTag;
 		this.neededNumberOfCycles = neededNumberOfCycles;
 		LimelightHelpers.setCameraPose_RobotSpace(cameraName, 0, 0, 0, 0, 0, 0);
-		this.tagPoseFieldRelative = AprilTagFieldLayout.loadField(AprilTagFields.FIELD).getTagPose(tagID).get();
+		this.tagPoseFieldRelative = AprilTagFieldLayout.loadField(field).getTagPose(tagID).get();
 		this.cameraPoseFieldRelative = new Pose3d(LimelightHelpers.getBotPose3d_wpiBlue(cameraName).toMatrix()); // ask dana
 		this.robotPoseFieldRelative = new Pose2d(
 				//tag must be either 180 or 0 deg to the filed
@@ -93,13 +94,13 @@ public class CalibrateCamera extends Command {
 
 	private void calculateRobotRelativeCameraPosition() {
 		// add option to tags that are not perfectly aligned
-		finalCameraRotation = new Rotation3d(
+		currentCameraRot = new Rotation3d(
 			cameraPoseFieldRelative.getRotation().getX(),
 			-cameraPoseFieldRelative.getRotation().getY(),
 			cameraPoseFieldRelative.getRotation().getZ() - robotPoseFieldRelative.getRotation().getRadians()
 		);
 		// limelight is funny so we invert y-axis
-		finalCameraTranslation = new Translation3d(
+		currentCameraTrans = new Translation3d(
 			cameraPoseFieldRelative.getX() - robotPoseFieldRelative.getX(),
 			-(cameraPoseFieldRelative.getY() - robotPoseFieldRelative.getY()),
 			cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + middleOfTagHeight
@@ -109,18 +110,13 @@ public class CalibrateCamera extends Command {
 
 	private void sumObjectsValues() {
 		translationSum.plus(
-			new Translation3d(
-				cameraPoseFieldRelative.getX() - robotPoseFieldRelative.getX(),
-				-(cameraPoseFieldRelative.getY() - robotPoseFieldRelative.getY()),
-				cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + middleOfTagHeight
-			)
-		);
-		cosX3DSum += Math.cos(cameraPoseFieldRelative.getRotation().getX());
-		sinX3DSum += Math.sin(cameraPoseFieldRelative.getRotation().getX());
-		cosY3DSum += Math.cos(-cameraPoseFieldRelative.getRotation().getY());
-		sinY3DSum += Math.sin(-cameraPoseFieldRelative.getRotation().getY());
-		cosZ3DSum += Math.cos(cameraPoseFieldRelative.getRotation().getZ() - robotPoseFieldRelative.getRotation().getRadians());
-		sinZ3DSum += Math.sin(cameraPoseFieldRelative.getRotation().getZ() - robotPoseFieldRelative.getRotation().getRadians());
+			new Translation3d(currentCameraTrans.getX(), currentCameraTrans.getY(), currentCameraTrans.getZ()));
+		cosX3DSum += Math.cos(currentCameraRot.getX());
+		sinX3DSum += Math.sin(currentCameraRot.getX());
+		cosY3DSum += Math.cos(-currentCameraRot.getY());
+		sinY3DSum += Math.sin(-currentCameraRot.getY());
+		cosZ3DSum += Math.cos(currentCameraRot.getZ());
+		sinZ3DSum += Math.sin(currentCameraRot.getZ());
 	}
 
 }

@@ -28,40 +28,40 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);
 
-	private final Swerve swerve;
-	private final IPoseEstimator poseEstimator;
+	private Swerve swerve;
+	private IPoseEstimator poseEstimator;
 	private final TalonFXSysid talonFXSysid;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 
-		IIMU imu = IMUFactory.createIMU(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
-		this.swerve = new Swerve(
-			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
-			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
-			imu,
-			IMUFactory.createSignals(imu)
-		);
+//		IIMU imu = IMUFactory.createIMU(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
+//		this.swerve = new Swerve(
+//			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
+//			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
+//			imu,
+//			IMUFactory.createSignals(imu)
+//		);
 
-		this.poseEstimator = new WPILibPoseEstimatorWrapper(
-			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
-			swerve.getKinematics(),
-			swerve.getModules().getWheelPositions(0),
-			swerve.getGyroAbsoluteYaw().getValue(),
-			swerve.getGyroAbsoluteYaw().getTimestamp()
-		);
+//		this.poseEstimator = new WPILibPoseEstimatorWrapper(
+//			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
+//			swerve.getKinematics(),
+//			swerve.getModules().getWheelPositions(0),
+//			swerve.getGyroAbsoluteYaw().getValue(),
+//			swerve.getGyroAbsoluteYaw().getTimestamp()
+//		);
 
-		this.talonFXSysid = new TalonFXSysid(new Phoenix6DeviceID(5), 1, 7);
+		this.talonFXSysid = new TalonFXSysid(new Phoenix6DeviceID(10), 1, 7);
 
-		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+//		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 	}
 
 	public void periodic() {
 		BusChain.refreshAll();
 
-		swerve.update();
-		poseEstimator.updateOdometry(swerve.getAllOdometryData());
-		poseEstimator.log();
+//		swerve.update();
+//		poseEstimator.updateOdometry(swerve.getAllOdometryData());
+//		poseEstimator.log();
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();

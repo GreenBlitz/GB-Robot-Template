@@ -135,6 +135,10 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		Logger.recordOutput(logPath + "/isIMUOffsetCalibrated", isIMUOffsetCalibrated);
 	}
 
+    public double getPoseReliabilityAtTimestamp() {
+        return 0;
+    }
+
 	public void resetIsIMUOffsetCalibrated() {
 		poseToIMUYawDifferenceBuffer.clear();
 		isIMUOffsetCalibrated = false;

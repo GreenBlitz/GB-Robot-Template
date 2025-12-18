@@ -155,7 +155,7 @@ public class Robot {
 				new Translation3d(-0.08, 0.23, 0.865),
 				new Rotation3d(Units.Degrees.of(0), Units.Degrees.of(-27), Units.Degrees.of(-176.67))
 			),
-			LimelightPipeline.OBJECT_DETECTION
+			LimelightPipeline.NEURAL_DETECTION
 		);
 
 		this.robotCommander = new RobotCommander("StateMachine/RobotCommander", this);

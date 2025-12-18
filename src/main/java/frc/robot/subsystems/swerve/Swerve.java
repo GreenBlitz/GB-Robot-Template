@@ -328,7 +328,6 @@ public class Swerve extends GBSubsystem {
 		modules.setTargetStates(moduleStates, isClosedLoop);
 	}
 
-
 	public boolean isAtHeading(Rotation2d targetHeading, Rotation2d tolerance, Rotation2d velocityDeadbandAnglesPerSecond) {
 		double headingDeltaDegrees = Math.abs(targetHeading.minus(headingSupplier.get()).getDegrees());
 		boolean isAtHeading = headingDeltaDegrees < tolerance.getDegrees();
@@ -346,11 +345,11 @@ public class Swerve extends GBSubsystem {
 	public boolean[] areWheelsSkidding() {
 		double robotRotationalVelocity = imuSignals.getAngularVelocity().toRotation2d().getRadians();
 		Logger.recordOutput("robotRotationalVelocity", robotRotationalVelocity);
-		Translation2d robotTranslationalVelocity = new Translation2d(
+		Translation2d robotTranslationalAcceleration = new Translation2d(
 			imuSignals.getAccelerationEarthGravitationalAcceleration().getX(),
 			imuSignals.getAccelerationEarthGravitationalAcceleration().getY()
 		);
-		Logger.recordOutput("robotTranslationalVelocity", robotTranslationalVelocity);
+		Logger.recordOutput("robotTranslationalAcceleration", robotTranslationalAcceleration);
 
 		SwerveModuleState[] currentModuleRotationalStates = kinematics
 			.toSwerveModuleStates(new ChassisSpeeds(0, 0, robotRotationalVelocity), new Translation2d());
@@ -368,9 +367,9 @@ public class Swerve extends GBSubsystem {
 
 		boolean[] areWheelsSkidding = new boolean[currentModuleTranslationalStates.length];
 		for (int i = 0; i < currentModuleTranslationalStates.length; i++) {
-			areWheelsSkidding[i] = !MathUtil.isNear(robotTranslationalVelocity.getX(), currentModuleTranslationalStates[i].getX(), 0.06) // magic
+			areWheelsSkidding[i] = !MathUtil.isNear(robotTranslationalAcceleration.getX(), currentModuleTranslationalStates[i].getX(), 0.06) // magic
 				// numbers
-				|| !MathUtil.isNear(robotTranslationalVelocity.getY(), currentModuleTranslationalStates[i].getY(), 0.06);
+				|| !MathUtil.isNear(robotTranslationalAcceleration.getY(), currentModuleTranslationalStates[i].getY(), 0.06);
 		}
 		return areWheelsSkidding;
 	}

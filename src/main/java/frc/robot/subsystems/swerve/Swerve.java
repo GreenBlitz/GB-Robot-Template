@@ -346,8 +346,8 @@ public class Swerve extends GBSubsystem {
 		double robotRotationalVelocity = imuSignals.getAngularVelocity().toRotation2d().getRadians();
 		Logger.recordOutput("robotRotationalVelocity", robotRotationalVelocity);
 		Translation2d robotTranslationalAcceleration = new Translation2d(
-			imuSignals.getAccelerationEarthGravitationalAcceleration().getX(),
-			imuSignals.getAccelerationEarthGravitationalAcceleration().getY()
+			kinematics.toChassisSpeeds(modules.getTargetStates()).vxMetersPerSecond,
+				kinematics.toChassisSpeeds(modules.getCurrentStates()).vyMetersPerSecond
 		);
 		Logger.recordOutput("robotTranslationalAcceleration", robotTranslationalAcceleration);
 

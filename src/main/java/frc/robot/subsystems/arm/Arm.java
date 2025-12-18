@@ -116,7 +116,7 @@ public class Arm extends GBSubsystem {
 		positionRequest.withArbitraryFeedForward(arbitraryFeedForward);
 	}
 
-	protected void stayInPlace() {
+	public void stayInPlace() {
 		setTargetPosition(signals.position().getLatestValue());
 	}
 

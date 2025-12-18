@@ -1,12 +1,10 @@
 package frc.robot.statemachine;
 
 import edu.wpi.first.wpilibj2.command.*;
-import frc.constants.field.Field;
 import frc.robot.Robot;
 import frc.robot.statemachine.superstructure.Superstructure;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.Swerve;
-
 import java.util.Set;
 
 public class RobotCommander extends GBSubsystem {
@@ -23,11 +21,7 @@ public class RobotCommander extends GBSubsystem {
 		this.robot = robot;
 		this.swerve = robot.getSwerve();
 		this.positionTargets = new PositionTargets(robot);
-		this.superstructure = new Superstructure(
-			"StateMachine/Superstructure",
-			robot,
-			() -> Field.Tower.getDistance(robot.getPoseEstimator().getEstimatedPose().getTranslation())
-		);
+		this.superstructure = new Superstructure("StateMachine/Superstructure", robot, () -> robot.getPoseEstimator().getEstimatedPose());
 		this.currentState = RobotState.STAY_IN_PLACE;
 
 		setDefaultCommand(

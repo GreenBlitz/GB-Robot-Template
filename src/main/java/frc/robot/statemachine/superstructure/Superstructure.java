@@ -1,5 +1,6 @@
 package frc.robot.statemachine.superstructure;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Robot;
 import frc.robot.statemachine.RobotState;
@@ -27,7 +28,7 @@ public class Superstructure {
 	private final FunnelStateHandler funnelStateHandler;
 	private final ShooterStateHandler shooterStateHandler;
 
-	public Superstructure(String logPath, Robot robot, Supplier<Double> distanceFromTower) {
+	public Superstructure(String logPath, Robot robot, Supplier<Pose2d> robotPose) {
 		this.robot = robot;
 
 		this.currentState = RobotState.STAY_IN_PLACE;
@@ -49,7 +50,7 @@ public class Superstructure {
 
 		this.funnelStateHandler = new FunnelStateHandler(robot.getOmni(), robot.getBelly(), logPath, robot.getFunnelDigitalInput());
 		this.intakeStateHandler = new IntakeStateHandler();
-		this.shooterStateHandler = new ShooterStateHandler(robot.getTurret(), robot.getHood(), robot.getFlyWheel(), distanceFromTower);
+		this.shooterStateHandler = new ShooterStateHandler(robot.getTurret(), robot.getHood(), robot.getFlyWheel(), robotPose);
 	}
 
 

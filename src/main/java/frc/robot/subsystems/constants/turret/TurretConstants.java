@@ -54,12 +54,12 @@ public class TurretConstants {
 	public static final boolean IS_CONTINUOUS_WRAP = false;
 
 	public static final Rotation2d SCREW_MAX_RANGE_EDGE = getRangeEdge(
-			TurretConstants.MAX_POSITION,
-			ShooterConstants.MAX_DISTANCE_FROM_MAX_OR_MIN_POSITION_NOT_TO_ROTATE.times(-1)
+		TurretConstants.MAX_POSITION,
+		ShooterConstants.MAX_DISTANCE_FROM_MAX_OR_MIN_POSITION_NOT_TO_ROTATE.times(-1)
 	);
 	public static final Rotation2d SCREW_MIN_RANGE_EDGE = getRangeEdge(
-			TurretConstants.MIN_POSITION,
-			ShooterConstants.MAX_DISTANCE_FROM_MAX_OR_MIN_POSITION_NOT_TO_ROTATE
+		TurretConstants.MIN_POSITION,
+		ShooterConstants.MAX_DISTANCE_FROM_MAX_OR_MIN_POSITION_NOT_TO_ROTATE
 	);
 
 }

@@ -179,7 +179,7 @@ public class Robot {
 		limelightFour.getIndependentRobotPose().ifPresent(poseEstimator::updateVision);
 		limelightThreeGB.getIndependentRobotPose().ifPresent(poseEstimator::updateVision);
 
-		limelightObjectDetector.updateObjectDetection();
+		limelightObjectDetector.updateNeuralDetection();
 
 		poseEstimator.log();
 

@@ -62,7 +62,7 @@ public class Swerve extends GBSubsystem {
 		this.constants = constants;
 		this.modules = modules;
 		this.driveRadiusMeters = SwerveMath.calculateDriveRadiusMeters(modules.getModulePositionsFromCenterMeters());
-		this.modulesIsSkidding = new boolean[modules.getNumberOfModules()];
+		this.modulesIsSkidding = new boolean[ModuleUtil.ModulePosition.values().length];
 		this.imu = imu;
 		this.imuSignals = imuSignals;
 

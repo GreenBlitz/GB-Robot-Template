@@ -1,9 +1,7 @@
 package frc.robot.poseestimator.WPILibPoseEstimator;
 
 import edu.wpi.first.math.estimator.PoseEstimator;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Twist2d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -12,6 +10,7 @@ import frc.robot.vision.RobotPoseObservation;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.OdometryData;
 import frc.utils.buffers.RingBuffer.RingBuffer;
+import frc.utils.math.StandardDeviations2D;
 import frc.utils.math.StatisticsMath;
 import org.littletonrobotics.junction.Logger;
 
@@ -135,9 +134,21 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		Logger.recordOutput(logPath + "/isIMUOffsetCalibrated", isIMUOffsetCalibrated);
 	}
 
-    public double getPoseReliabilityAtTimestamp() {
-        return 0;
-    }
+	public double getPoseReliabilityAtTimestamp(double timestamp) {
+//        return calculatePoseReliability(getEstimatedPoseAtTimestamp(timestamp), );
+		return 0;
+	}
+
+	public static double calculatePoseReliability(
+		Translation2d estimatedTranslation,
+		Translation2d visionEstimatedTranslation,
+		StandardDeviations2D visionStdDevs
+	) {
+		return Math.max(
+			estimatedTranslation.minus(visionEstimatedTranslation).getNorm(),
+			new Translation2d(visionStdDevs.xStandardDeviations(), visionStdDevs.yStandardDeviations()).getNorm()
+		);
+	}
 
 	public void resetIsIMUOffsetCalibrated() {
 		poseToIMUYawDifferenceBuffer.clear();

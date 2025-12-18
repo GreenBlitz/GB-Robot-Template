@@ -153,17 +153,15 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 				updateIsIMUOffsetCalibrated();
 			}
 		});
-
-		if (lastOdometryData.getCollision()) {
-			poseEstimator.setVisionMeasurementStdDevs(WPILibPoseEstimatorConstants.COLLISION_VISION_STD_DEV.asColumnVector());
-		}
 	}
 
 	private void addVisionMeasurement(RobotPoseObservation visionObservation) {
 		poseEstimator.addVisionMeasurement(
 			visionObservation.robotPose(),
 			visionObservation.timestampSeconds(),
-			visionObservation.stdDevs().asColumnVector()
+			lastOdometryData.getCollision()
+				? visionObservation.stdDevs().asColumnVector().minus(WPILibPoseEstimatorConstants.COLLISION_VISION_STD_DEV.asColumnVector())
+				: visionObservation.stdDevs().asColumnVector()
 		);
 		this.lastVisionObservation = visionObservation;
 	}

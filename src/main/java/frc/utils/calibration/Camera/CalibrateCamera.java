@@ -10,6 +10,19 @@ import frc.utils.math.FieldMath;
 import org.littletonrobotics.junction.Logger;
 
 public class CalibrateCamera extends Command {
+	private AprilTagFields FIELD;
+	private final String logPathPrefix;
+	private final String cameraName;
+	private final int tagID;
+	private final double robotXAxisDistanceFromTag;
+	private final double middleOfTagHeight;
+	private final Pose3d tagPoseFieldRelative;
+	private  Pose3d cameraPoseFieldRelative;
+	private Pose2d robotPoseFieldRelative;
+	private Rotation3d finalCameraRotation;
+	private Translation3d finalCameraTranslation;
+	private final int neededNumberOfCycles;
+	private int currentCycle = 0;
 
 	private double cosX3DSum = 0, sinX3DSum = 0;
 	private double cosY3DSum = 0, sinY3DSum = 0;
@@ -17,18 +30,6 @@ public class CalibrateCamera extends Command {
 
 	private Translation3d translationSum = new Translation3d();
 
-	private final String logPathPrefix;
-	private final String cameraName;
-	private final int tagID;
-	private final double robotXAxisDistanceFromTag;
-	private final double middleOfTagHeight;
-	private final Pose3d tagPoseFieldRelative;
-	private final Pose3d cameraPoseFieldRelative;
-	private Pose2d robotPoseFieldRelative;
-	private Rotation3d finalCameraRotation;
-	private Translation3d finalCameraTranslation;
-	private final int neededNumberOfCycles;
-	private int currentCycle = 0;
 
 	public CalibrateCamera(
 		AprilTagFields field,
@@ -39,6 +40,7 @@ public class CalibrateCamera extends Command {
 		double middleOfTagHeight,
 		int neededNumberOfCycles
 	) {
+        this.FIELD = field;
 		this.cameraName = cameraName;
 		this.middleOfTagHeight = middleOfTagHeight;
 		this.logPathPrefix = logPathPrefix;
@@ -46,10 +48,10 @@ public class CalibrateCamera extends Command {
 		this.robotXAxisDistanceFromTag = robotXAxisDistanceFromTag;
 		this.neededNumberOfCycles = neededNumberOfCycles;
 		LimelightHelpers.setCameraPose_RobotSpace(cameraName, 0, 0, 0, 0, 0, 0);
-		this.tagPoseFieldRelative = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded).getTagPose(tagID).get();
-		this.cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
+		this.tagPoseFieldRelative = AprilTagFieldLayout.loadField(AprilTagFields.FIELD).getTagPose(tagID).get();
+		this.cameraPoseFieldRelative = new Pose3d(LimelightHelpers.getBotPose3d_wpiBlue(cameraName).toMatrix()); // ask dana
 		this.robotPoseFieldRelative = new Pose2d(
-			// pose i combined from translation 2d the x and y of the filed and an angle / what angle ?
+				//tag must be either 180 or 0 deg to the filed
 			tagPoseFieldRelative.getX() - robotXAxisDistanceFromTag,
 			tagPoseFieldRelative.getY(),
 			FieldMath.transformAngle(tagPoseFieldRelative.getRotation().toRotation2d(), AngleTransform.INVERT)
@@ -57,19 +59,20 @@ public class CalibrateCamera extends Command {
 	}
 
 	private void logFunction() {
-		Logger.recordOutput("CameraCalibration/" + logPathPrefix + "/tag/TagPoseFieldRelative", tagPoseFieldRelative);
+		Logger.recordOutput("CameraCalibrateCamera", logPathPrefix+"/solution/Rotations"+finalCameraRotation );
 		Logger.recordOutput("CameraCalibration/" + logPathPrefix + "/cam/cameraPoseFieldRelative", cameraPoseFieldRelative);
 		Logger.recordOutput("CameraCalibration/" + logPathPrefix + "/robot/robotFieldRelative", robotPoseFieldRelative);
 		Logger.recordOutput("CameraCalibration/" + logPathPrefix + "/solution/endTranslation", finalCameraTranslation);
 	}
 
 	public void initialize() {
-		logFunction();
+		Logger.recordOutput("CameraCalibration/" + logPathPrefix + "/tag/TagPoseFieldRelative", tagPoseFieldRelative);
 	}
 
 	@Override
 	public void execute() {
 		calculateRobotRelativeCameraPosition();
+
 		currentCycle += 1;
 	}
 

@@ -20,7 +20,7 @@ public class IntakeStateHandler {
 	private final String logPath;
 	private final DigitalInputInputsAutoLogged bbInputs;
 	private final LoggedNetworkNumber rollersCalibrationPower = new LoggedNetworkNumber("Tunable/IntakeRollerPower");
-	private final LoggedNetworkRotation2d fourbarCalibrationPosition = new LoggedNetworkRotation2d("Tunable/FourBarPosition", new Rotation2d());
+	private final LoggedNetworkRotation2d fourBarCalibrationPosition = new LoggedNetworkRotation2d("Tunable/FourBarPosition", new Rotation2d());
 
 	private IntakeState currentState;
 
@@ -29,7 +29,7 @@ public class IntakeStateHandler {
 		this.rollers = rollers;
 		this.bb = bb;
 		this.bbInputs = new DigitalInputInputsAutoLogged();
-		this.logPath = logPath;
+		this.logPath = logPath + "/IntakeStateHandler";
 		this.currentState = IntakeState.STAY_IN_PLACE;
 	}
 
@@ -42,7 +42,7 @@ public class IntakeStateHandler {
 		Command command;
 		if (intakeState == IntakeState.CALIBRATION) {
 			command = new ParallelCommandGroup(
-				fourBar.getCommandsBuilder().setTargetPosition(fourbarCalibrationPosition::get),
+				fourBar.getCommandsBuilder().setTargetPosition(fourBarCalibrationPosition::get),
 				rollers.getCommandsBuilder().setPower(rollersCalibrationPower::get)
 			);
 		} else if (intakeState == IntakeState.STAY_IN_PLACE) {

@@ -6,6 +6,7 @@ import frc.robot.Robot;
 import frc.robot.statemachine.RobotState;
 import frc.robot.statemachine.funnelstatehandler.FunnelState;
 import frc.robot.statemachine.funnelstatehandler.FunnelStateHandler;
+import frc.robot.statemachine.intakestatehandler.IntakeState;
 import frc.robot.statemachine.intakestatehandler.IntakeStateHandler;
 import frc.robot.statemachine.shooterstatehandler.ShooterState;
 import frc.robot.statemachine.shooterstatehandler.ShooterStateHandler;
@@ -49,7 +50,7 @@ public class Superstructure {
 		this.logPath = logPath;
 
 		this.funnelStateHandler = new FunnelStateHandler(robot.getOmni(), robot.getBelly(), logPath, robot.getFunnelDigitalInput());
-		this.intakeStateHandler = new IntakeStateHandler(robot.getFourBar(), robot.getIntakeRoller(), robot.getIntakeRollerSensor());
+		this.intakeStateHandler = new IntakeStateHandler(robot.getFourBar(), robot.getIntakeRoller(), robot.getIntakeRollerSensor(), logPath);
 		this.shooterStateHandler = new ShooterStateHandler(robot.getTurret(), robot.getHood(), robot.getFlyWheel(), robotPose);
 	}
 
@@ -98,7 +99,7 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 			shooterStateHandler.setState(ShooterState.STAY_IN_PLACE),
 			funnelStateHandler.setState(FunnelState.STOP),
-			intakeStateHandler.setState(IntakeStateHandler.IntakeState.STAY_IN_PLACE)
+			intakeStateHandler.setState(IntakeState.STAY_IN_PLACE)
 		);
 	}
 
@@ -106,7 +107,7 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 			shooterStateHandler.setState(ShooterState.IDLE),
 			funnelStateHandler.setState(FunnelState.DRIVE),
-			intakeStateHandler.setState(IntakeStateHandler.IntakeState.CLOSED)
+			intakeStateHandler.setState(IntakeState.CLOSED)
 		);
 	}
 
@@ -114,7 +115,7 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 			shooterStateHandler.setState(ShooterState.IDLE),
 			funnelStateHandler.setState(FunnelState.INTAKE),
-			intakeStateHandler.setState(IntakeStateHandler.IntakeState.INTAKE)
+			intakeStateHandler.setState(IntakeState.INTAKE)
 		);
 	}
 
@@ -122,7 +123,7 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 			shooterStateHandler.setState(ShooterState.SHOOT),
 			funnelStateHandler.setState(FunnelState.DRIVE),
-			intakeStateHandler.setState(IntakeStateHandler.IntakeState.CLOSED)
+			intakeStateHandler.setState(IntakeState.CLOSED)
 		);
 	}
 
@@ -130,7 +131,7 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 			shooterStateHandler.setState(ShooterState.SHOOT),
 			funnelStateHandler.setState(FunnelState.SHOOT),
-			intakeStateHandler.setState(IntakeStateHandler.IntakeState.CLOSED)
+			intakeStateHandler.setState(IntakeState.CLOSED)
 		);
 	}
 
@@ -138,7 +139,7 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 			shooterStateHandler.setState(ShooterState.SHOOT),
 			funnelStateHandler.setState(FunnelState.SHOOT),
-			intakeStateHandler.setState(IntakeStateHandler.IntakeState.INTAKE)
+			intakeStateHandler.setState(IntakeState.INTAKE)
 		);
 	}
 

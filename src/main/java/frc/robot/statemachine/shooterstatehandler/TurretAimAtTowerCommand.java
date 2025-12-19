@@ -13,10 +13,12 @@ public class TurretAimAtTowerCommand extends Command {
 
 	private final Arm turret;
 	private final Supplier<Pose2d> robotPose;
+	private final String logPath;
 
-	public TurretAimAtTowerCommand(Arm turret, Supplier<Pose2d> robotPose) {
+	public TurretAimAtTowerCommand(Arm turret, Supplier<Pose2d> robotPose, String logPath) {
 		this.turret = turret;
 		this.robotPose = robotPose;
+		this.logPath = logPath;
 		addRequirements(turret);
 	}
 
@@ -26,10 +28,10 @@ public class TurretAimAtTowerCommand extends Command {
 		Rotation2d targetAngle = ShooterStateHandler.getRobotRelativeLookAtTowerAngleForTurret(target, robotPose.get());
 		if (ShooterStateHandler.isTurretMoveLegal(targetAngle, turret)) {
 			turret.setTargetPosition(targetAngle);
-			Logger.recordOutput(ShooterConstants.LOG_PATH + "/IsTurretGoingToPosition", true);
+			Logger.recordOutput(logPath + "/IsTurretGoingToPosition", true);
 		} else {
 			turret.stayInPlace();
-			Logger.recordOutput(ShooterConstants.LOG_PATH + "/IsTurretGoingToPosition", false);
+			Logger.recordOutput(logPath + "/IsTurretGoingToPosition", false);
 		}
 	}
 

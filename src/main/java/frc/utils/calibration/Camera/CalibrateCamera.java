@@ -51,7 +51,7 @@ public class CalibrateCamera extends Command {
 		this.neededNumberOfCycles = neededNumberOfCycles;
 		LimelightHelpers.setCameraPose_RobotSpace(cameraName, 0, 0, 0, 0, 0, 0);
 		this.tagPoseFieldRelative = AprilTagFieldLayout.loadField(field).getTagPose(tagID).get();
-		this.cameraPoseFieldRelative = new Pose3d(LimelightHelpers.getBotPose3d_wpiBlue(cameraName).toMatrix()); // ask dana // ask
+		this.cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName); // ask dana // ask
 		this.robotPoseFieldRelative = new Pose2d(
 			// tag must be either 180 or 0 deg to the filed
 			tagPoseFieldRelative.getX() - robotXAxisDistanceFromTag,
@@ -73,7 +73,7 @@ public class CalibrateCamera extends Command {
 
 	@Override
 	public void execute() {
-		cameraPoseFieldRelative = new Pose3d(LimelightHelpers.getBotPose3d_wpiBlue(cameraName).toMatrix());
+		cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
 		calculateRobotRelativeCameraPosition();
 		currentCycle += 1;
 	}
@@ -101,6 +101,7 @@ public class CalibrateCamera extends Command {
 			cameraPoseFieldRelative.getRotation().getZ() - robotPoseFieldRelative.getRotation().getRadians()
 		);
 		// limelight is funny so we invert y-axis
+
 		currentCameraTrans = new Translation3d(
 			cameraPoseFieldRelative.getX() - robotPoseFieldRelative.getX(),
 			-(cameraPoseFieldRelative.getY() - robotPoseFieldRelative.getY()),

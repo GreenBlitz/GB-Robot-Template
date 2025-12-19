@@ -72,8 +72,8 @@ public class CalibrateCamera extends Command {
 
     @Override
     public void execute() {
+        cameraPoseFieldRelative = new Pose3d(LimelightHelpers.getBotPose3d_wpiBlue(cameraName).toMatrix());
         calculateRobotRelativeCameraPosition();
-
         currentCycle += 1;
     }
 

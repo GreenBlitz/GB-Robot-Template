@@ -12,16 +12,14 @@ import frc.robot.statemachine.shooterstatehandler.ShooterState;
 import frc.robot.statemachine.shooterstatehandler.ShooterStateHandler;
 import org.littletonrobotics.junction.Logger;
 
-import java.util.Set;
 import java.util.function.Supplier;
 
 public class Superstructure {
 
 	private final Robot robot;
-	private final Set<Subsystem> subsystems;
 	private final TargetChecks targetChecks;
 	private boolean isSubsystemRunningIndependently;
-	private String logPath;
+	private final String logPath;
 
 	private RobotState currentState;
 
@@ -29,29 +27,18 @@ public class Superstructure {
 	private final FunnelStateHandler funnelStateHandler;
 	private final ShooterStateHandler shooterStateHandler;
 
-	public Superstructure(String logPath, Robot robot, Supplier<Pose2d> robotPose) {
+	public Superstructure(String logPath, Robot robot, Supplier<Pose2d> robotPoseSupplier) {
 		this.robot = robot;
-
-		this.currentState = RobotState.STAY_IN_PLACE;
-
-		this.subsystems = Set.of(
-			robot.getFlyWheel(),
-			robot.getBelly(),
-			robot.getTurret(),
-			robot.getOmni(),
-			robot.getFourBar(),
-			robot.getIntakeRoller(),
-			robot.getHood()
-		);
-
-		this.targetChecks = new TargetChecks(this);
-
-		this.isSubsystemRunningIndependently = false;
 		this.logPath = logPath;
 
 		this.funnelStateHandler = new FunnelStateHandler(robot.getOmni(), robot.getBelly(), logPath, robot.getFunnelDigitalInput());
 		this.intakeStateHandler = new IntakeStateHandler(robot.getFourBar(), robot.getIntakeRoller(), robot.getIntakeRollerSensor(), logPath);
-		this.shooterStateHandler = new ShooterStateHandler(robot.getTurret(), robot.getHood(), robot.getFlyWheel(), robotPose);
+		this.shooterStateHandler = new ShooterStateHandler(robot.getTurret(), robot.getHood(), robot.getFlyWheel(), robotPoseSupplier, logPath);
+
+		this.targetChecks = new TargetChecks(this);
+
+		this.currentState = RobotState.STAY_IN_PLACE;
+		this.isSubsystemRunningIndependently = false;
 	}
 
 
@@ -79,9 +66,9 @@ public class Superstructure {
 	}
 
 	public Command setState(RobotState robotState) {
-		ParallelCommandGroup parallelCommandGroup = new ParallelCommandGroup(
+		return new ParallelCommandGroup(
 			new InstantCommand(() -> currentState = robotState),
-			new InstantCommand(() -> Logger.recordOutput(logPath + "/currentState", robotState)),
+			new InstantCommand(() -> Logger.recordOutput(logPath + "/CurrentState", robotState)),
 			switch (robotState) {
 				case STAY_IN_PLACE -> stayInPlace();
 				case DRIVE -> idle();
@@ -91,8 +78,6 @@ public class Superstructure {
 				case SHOOT_AND_INTAKE -> shootAndIntake();
 			}
 		);
-		parallelCommandGroup.addRequirements(subsystems);
-		return parallelCommandGroup;
 	}
 
 	private Command stayInPlace() {

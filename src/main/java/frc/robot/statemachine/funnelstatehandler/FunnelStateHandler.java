@@ -28,8 +28,8 @@ public class FunnelStateHandler {
 		this.sensor = sensor;
 		this.logPath = logPath + "/FunnelStateHandler";
 		this.currentState = FunnelState.STOP;
-		this.omniCalibrationVoltage = new LoggedNetworkNumber("OmniPower", 0);
-		this.bellyCalibrationVoltage = new LoggedNetworkNumber("BellyPower", 0);
+		this.omniCalibrationVoltage = new LoggedNetworkNumber("Tunable/OmniPower", 0);
+		this.bellyCalibrationVoltage = new LoggedNetworkNumber("Tunable/BellyPower", 0);
 		this.sensorInputsAutoLogged = new DigitalInputInputsAutoLogged();
 		Logger.recordOutput(logPath + "/CurrentState", currentState.name());
 		sensor.updateInputs(sensorInputsAutoLogged);
@@ -88,6 +88,7 @@ public class FunnelStateHandler {
 
 	public void periodic() {
 		sensor.updateInputs(sensorInputsAutoLogged);
+		Logger.processInputs(logPath, sensorInputsAutoLogged);
 	}
 
 }

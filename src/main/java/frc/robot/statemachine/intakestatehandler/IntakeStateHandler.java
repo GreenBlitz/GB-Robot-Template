@@ -35,7 +35,7 @@ public class IntakeStateHandler {
 
 	public void periodic() {
 		bb.updateInputs(bbInputs);
-		Logger.recordOutput(logPath + "/IsObjectIn", bbInputs.debouncedValue);
+		Logger.processInputs(logPath, bbInputs);
 	}
 
 	public Command setState(IntakeState intakeState) {

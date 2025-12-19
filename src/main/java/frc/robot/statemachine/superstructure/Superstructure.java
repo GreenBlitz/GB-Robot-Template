@@ -41,6 +41,17 @@ public class Superstructure {
 		this.isSubsystemRunningIndependently = false;
 	}
 
+	public FunnelStateHandler getFunnelStateHandler() {
+		return funnelStateHandler;
+	}
+
+	public IntakeStateHandler getIntakeStateHandler() {
+		return intakeStateHandler;
+	}
+
+	public ShooterStateHandler getShooterStateHandler() {
+		return shooterStateHandler;
+	}
 
 	public RobotState getCurrentState() {
 		return currentState;

@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public enum IntakeState {
 
 	CLOSED(Rotation2d.fromDegrees(50), 0),
-	INTAKE(Rotation2d.fromDegrees(15), 0.8),
+	INTAKE(Rotation2d.fromDegrees(25), 0.8),
 	CALIBRATION(Rotation2d.fromRotations(Double.NaN), Double.NaN),
 	STAY_IN_PLACE(Rotation2d.fromRotations(Double.NaN), Double.NaN);
 

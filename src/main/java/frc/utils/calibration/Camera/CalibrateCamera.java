@@ -11,7 +11,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class CalibrateCamera extends Command {
 
-	private AprilTagFields field;
+	private final AprilTagFields field;
 	private final String logPathPrefix;
 	private final String cameraName;
 	private final int tagID;
@@ -111,7 +111,7 @@ public class CalibrateCamera extends Command {
 	}
 
 	private void sumObjectsValues() {
-		// it just creates another object and throwes it away , should update the original that is the cause of the change
+		// it just creates another object and throws it away , should update the original that is the cause of the change
 
 		translationSum = translationSum.plus(new Translation3d(currentCameraTrans.getX(), currentCameraTrans.getY(), currentCameraTrans.getZ()));
 		cosX3DSum += Math.cos(currentCameraRot.getX());

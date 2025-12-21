@@ -65,7 +65,7 @@ public class TargetChecks {
 	}
 
 	private static boolean isHoodAtPositon(Rotation2d wantedPosition, Rotation2d hoodPosition, Rotation2d tolerance) {
-		boolean isHoodAtPosition = isNear(wantedPosition.getDegrees(), hoodPosition.getDegrees(), tolerance.getDegrees());
+		boolean isHoodAtPosition = MathUtil.isNear(wantedPosition.getDegrees(), hoodPosition.getDegrees(), tolerance.getDegrees());
 		Logger.recordOutput(isReadyToShootLogPath + "/isHoodAtPositon", isHoodAtPosition);
 		return isHoodAtPosition;
 	}

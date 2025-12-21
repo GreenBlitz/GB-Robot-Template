@@ -368,7 +368,8 @@ public class Swerve extends GBSubsystem {
 
 		boolean[] areWheelsSkidding = new boolean[currentModuleTranslationalStates.length];
 		for (int i = 0; i < currentModuleTranslationalStates.length; i++) {
-			areWheelsSkidding[i] = !ToleranceMath.isNear(robotTranslationalVelocity, currentModuleTranslationalStates[i], SwerveConstants.SKID_TOLERANCE);
+			areWheelsSkidding[i] = !ToleranceMath
+				.isNear(robotTranslationalVelocity, currentModuleTranslationalStates[i], SwerveConstants.SKID_TOLERANCE);
 		}
 		return areWheelsSkidding;
 	}

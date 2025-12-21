@@ -29,6 +29,7 @@ import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.TimedValue;
 import frc.utils.auto.PathPlannerUtil;
+import frc.utils.math.ToleranceMath;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
@@ -37,6 +38,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class Swerve extends GBSubsystem {
+
+	public static final double skidTolerance = 0.06;
 
 	private final SwerveConstants constants;
 	private final double driveRadiusMeters;
@@ -367,9 +370,8 @@ public class Swerve extends GBSubsystem {
 
 		boolean[] areWheelsSkidding = new boolean[currentModuleTranslationalStates.length];
 		for (int i = 0; i < currentModuleTranslationalStates.length; i++) {
-			areWheelsSkidding[i] = !MathUtil.isNear(robotTranslationalAcceleration.getX(), currentModuleTranslationalStates[i].getX(), 0.06) // magic
-				// numbers
-				|| !MathUtil.isNear(robotTranslationalAcceleration.getY(), currentModuleTranslationalStates[i].getY(), 0.06);
+			areWheelsSkidding[i] = !ToleranceMath.isNear(robotTranslationalAcceleration.getX(), currentModuleTranslationalStates[i].getX(), skidTolerance)
+				|| !ToleranceMath.isNear(robotTranslationalAcceleration.getY(), currentModuleTranslationalStates[i].getY(), skidTolerance);
 		}
 		return areWheelsSkidding;
 	}

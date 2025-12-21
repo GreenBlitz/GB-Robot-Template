@@ -16,14 +16,10 @@ import org.littletonrobotics.junction.Logger;
 public class CameraPositionCalibration extends Command {
 
 	private final static int NEEDED_NUMBER_OF_CYCLES = 100; // PLACE HOLDER
-	private final String commandLogPath = "/cameraPositionCalibration";
+	private final static String commandLogPath = "/cameraPositionCalibration";
 	private final String logPathPrefix;
 	private final String cameraName;
 
-	private final AprilTagFields field;
-	private final int tagID;
-
-	private final double robotXAxisDistanceFromTag;
 	private final double middleOfTagHeight;
 	private final Pose3d tagPoseFieldRelative;
 	private Pose3d cameraPoseFieldRelative;
@@ -32,9 +28,9 @@ public class CameraPositionCalibration extends Command {
 	private Rotation3d finalCameraRotation;
 	private Translation3d finalCameraTranslation;
 	private int currentCycle;
-	private double cosX3DSum = 0, sinX3DSum = 0;
-	private double cosY3DSum = 0, sinY3DSum = 0;
-	private double cosZ3DSum = 0, sinZ3DSum = 0;
+	private double cosXRotation3DSum = 0, sinXRotation3DSum = 0;
+	private double cosYRotation3DSum = 0, sinYRotation3DSum = 0;
+	private double cosZRotation3DSum = 0, sinZRotation3DSum = 0;
 
 	private Translation3d translationSum;
 	private Translation3d currentCameraTranslation;
@@ -48,12 +44,9 @@ public class CameraPositionCalibration extends Command {
 		double robotXAxisDistanceFromTag,
 		double middleOfTagHeight
 	) {
-		this.field = field;
 		this.cameraName = cameraName;
 		this.middleOfTagHeight = middleOfTagHeight;
 		this.logPathPrefix = logPathPrefix;
-		this.tagID = tagID;
-		this.robotXAxisDistanceFromTag = robotXAxisDistanceFromTag;
 		this.tagPoseFieldRelative = AprilTagFieldLayout.loadField(field).getTagPose(tagID).get();
 		this.robotPoseFieldRelative = new Pose2d(
 			// tag must be either 180 or 0 deg to the filed
@@ -75,6 +68,7 @@ public class CameraPositionCalibration extends Command {
 		Logger.recordOutput(logPathPrefix + commandLogPath + "/cameraPoseFieldRelative", cameraPoseFieldRelative);
 	}
 
+	@Override
 	public void initialize() {
 		Logger.recordOutput(logPathPrefix + commandLogPath + "/tag/TagPoseFieldRelative", tagPoseFieldRelative);
 		Logger.recordOutput(logPathPrefix + commandLogPath + "/robot/robotFieldRelative", robotPoseFieldRelative);
@@ -92,9 +86,9 @@ public class CameraPositionCalibration extends Command {
 	public void end(boolean interrupted) {
 		finalCameraTranslation = translationSum.div(NEEDED_NUMBER_OF_CYCLES);
 		finalCameraRotation = new Rotation3d(
-			Math.atan2(sinX3DSum / NEEDED_NUMBER_OF_CYCLES, cosX3DSum / NEEDED_NUMBER_OF_CYCLES),
-			Math.atan2(sinY3DSum / NEEDED_NUMBER_OF_CYCLES, cosY3DSum / NEEDED_NUMBER_OF_CYCLES),
-			Math.atan2(sinZ3DSum / NEEDED_NUMBER_OF_CYCLES, cosZ3DSum / NEEDED_NUMBER_OF_CYCLES)
+			Math.atan2(sinXRotation3DSum / NEEDED_NUMBER_OF_CYCLES, cosXRotation3DSum / NEEDED_NUMBER_OF_CYCLES),
+			Math.atan2(sinYRotation3DSum / NEEDED_NUMBER_OF_CYCLES, cosYRotation3DSum / NEEDED_NUMBER_OF_CYCLES),
+			Math.atan2(sinZRotation3DSum / NEEDED_NUMBER_OF_CYCLES, cosZRotation3DSum / NEEDED_NUMBER_OF_CYCLES)
 		);
 
 
@@ -103,6 +97,7 @@ public class CameraPositionCalibration extends Command {
 		super.end(interrupted);
 	}
 
+	@Override
 	public boolean isFinished() {
 		return currentCycle >= NEEDED_NUMBER_OF_CYCLES;
 	}
@@ -126,12 +121,12 @@ public class CameraPositionCalibration extends Command {
 	private void sumObjectsValues() {
 		translationSum = translationSum
 			.plus(new Translation3d(currentCameraTranslation.getX(), currentCameraTranslation.getY(), currentCameraTranslation.getZ()));
-		cosX3DSum += Math.cos(currentCameraRotation.getX());
-		sinX3DSum += Math.sin(currentCameraRotation.getX());
-		cosY3DSum += Math.cos(-currentCameraRotation.getY());
-		sinY3DSum += Math.sin(-currentCameraRotation.getY());
-		cosZ3DSum += Math.cos(currentCameraRotation.getZ());
-		sinZ3DSum += Math.sin(currentCameraRotation.getZ());
+		cosXRotation3DSum += Math.cos(currentCameraRotation.getX());
+		sinXRotation3DSum += Math.sin(currentCameraRotation.getX());
+		cosYRotation3DSum += Math.cos(-currentCameraRotation.getY());
+		sinYRotation3DSum += Math.sin(-currentCameraRotation.getY());
+		cosZRotation3DSum += Math.cos(currentCameraRotation.getZ());
+		sinZRotation3DSum += Math.sin(currentCameraRotation.getZ());
 	}
 
 }

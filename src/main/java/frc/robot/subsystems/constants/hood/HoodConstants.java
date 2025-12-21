@@ -44,6 +44,7 @@ public class HoodConstants {
 	public static final Rotation2d MAXIMUM_POSITION = Rotation2d.fromDegrees(FORWARD_SOFTWARE_LIMIT.getDegrees() + 3);
 	public static final Rotation2d DEFAULT_MAX_ACCELERATION_PER_SECOND_SQUARE = Rotation2d.fromRotations(3);
 	public static final Rotation2d DEFAULT_MAX_VELOCITY_PER_SECOND = Rotation2d.fromRotations(3);
+	public static final Rotation2d HOOD_POSITION_TOLERANCE = Rotation2d.fromDegrees(5);
 	public static final SysIdRoutine.Config SYSIDROUTINE_CONFIG = new SysIdRoutine.Config();
 	public static final boolean IS_CONTINUOUS_WRAP = false;
 

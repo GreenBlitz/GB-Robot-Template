@@ -4,11 +4,15 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Robot;
 import frc.robot.statemachine.RobotState;
+import frc.robot.statemachine.ScoringHelpers;
+import frc.robot.statemachine.StateMachineConstants;
 import frc.robot.statemachine.funnelstatehandler.FunnelState;
 import frc.robot.statemachine.funnelstatehandler.FunnelStateHandler;
 import frc.robot.statemachine.intakestatehandler.IntakeStateHandler;
 import frc.robot.statemachine.shooterstatehandler.ShooterState;
 import frc.robot.statemachine.shooterstatehandler.ShooterStateHandler;
+import frc.robot.subsystems.constants.flywheel.Constants;
+import frc.robot.subsystems.constants.hood.HoodConstants;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
@@ -134,11 +138,22 @@ public class Superstructure {
 		);
 	}
 
+    private boolean isReadyToShoot(){
+        Supplier<Double> distanceFromTower = () -> ScoringHelpers.getDistanceFromClosestTower(robot.getPoseEstimator().getEstimatedPose());
+        return TargetChecks.isReadyToShoot(
+                robot,
+                ShooterStateHandler.flywheelInterpolation(distanceFromTower).get(),
+                Constants.FLYWHEEL_VELOCITY_TOLERANCE_RPS,ShooterStateHandler.hoodInterpolation((distanceFromTower)).get(),
+                HoodConstants.HOOD_POSITION_TOLERANCE, StateMachineConstants.HEADING_TOLERANCE,StateMachineConstants.MAX_ANGLE_FROM_GOAL_CENTER,ScoringHelpers.getClosestTower(robot.getPoseEstimator().getEstimatedPose()).getPose(),
+                StateMachineConstants.MAX_DISTANCE_TO_SHOOT_METERS);
+
+
+    }
+
 	private Command shootAndIntake() {
-		return new ParallelCommandGroup(
-			shooterStateHandler.setState(ShooterState.SHOOT),
-			funnelStateHandler.setState(FunnelState.SHOOT),
-			intakeStateHandler.setState(IntakeStateHandler.IntakeState.INTAKE)
+		return new SequentialCommandGroup(
+			preShoot().until(this::isReadyToShoot),
+            shoot().until(funnelStateHandler::isBallAtSensor)
 		);
 	}
 

@@ -1,3 +1,5 @@
 - [ ] AutonomousInit/Exit independence
 - [ ] RobotCommander current state in constructor
 - [ ] Swerve setting in RobotCommander constructor
+- [ ] Max angle from goal center
+- [ ] Max distance to shoot

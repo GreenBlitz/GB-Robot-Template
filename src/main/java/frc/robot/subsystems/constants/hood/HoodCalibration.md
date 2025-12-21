@@ -22,6 +22,7 @@ Hood calibrations
 - [ ] Arm weight
 - [ ] SysIdRoutineConfig
 - [ ] Starting position
+- [ ] Hood position tolerance
 
 #### PID
 - [ ] kP

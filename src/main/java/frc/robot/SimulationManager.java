@@ -11,7 +11,7 @@ public class SimulationManager {
 
 	private final String logPath;
 	private final Robot robot;
-    public static final double TURRET_DISTANCE_FROM_ROBOT_ON_X_AXIS = 0.25;
+	public static final double TURRET_DISTANCE_FROM_ROBOT_ON_X_AXIS = 0.25;
 
 	public SimulationManager(String logPath, Robot robot) {
 		this.logPath = logPath;

@@ -4,7 +4,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import frc.constants.MathConstants;
 import frc.robot.Robot;
 import frc.robot.SimulationManager;
 import frc.robot.statemachine.ScoringHelpers;
@@ -31,9 +30,12 @@ public class TargetChecks {
 		return Math.abs(AngleBetweenRobotAndGoal.getDegrees()) <= maxAngleFromCenter.getDegrees();
 	}
 
-	private static boolean isAtHeading(Pose2d robotPose, Arm turret,double headingToleranceDegrees) {
-		Rotation2d wantedAngle = ShooterStateHandler.getRobotRelativeLookAtTowerAngleForTurret(ScoringHelpers.getClosestTower(robotPose).getPose().getTranslation(),new Pose2d(robotPose.getX()+ SimulationManager.TURRET_DISTANCE_FROM_ROBOT_ON_X_AXIS, robotPose.getY(), robotPose.getRotation()));
-		return MathUtil.isNear(wantedAngle.getDegrees(),turret.getPosition().getDegrees(),headingToleranceDegrees);
+	private static boolean isAtHeading(Pose2d robotPose, Arm turret, double headingToleranceDegrees) {
+		Rotation2d wantedAngle = ShooterStateHandler.getRobotRelativeLookAtTowerAngleForTurret(
+			ScoringHelpers.getClosestTower(robotPose).getPose().getTranslation(),
+			new Pose2d(robotPose.getX() + SimulationManager.TURRET_DISTANCE_FROM_ROBOT_ON_X_AXIS, robotPose.getY(), robotPose.getRotation())
+		);
+		return MathUtil.isNear(wantedAngle.getDegrees(), turret.getPosition().getDegrees(), headingToleranceDegrees);
 	}
 
 	private static boolean isFlywheelAtVelocity(
@@ -77,7 +79,7 @@ public class TargetChecks {
 		boolean isInRange = isInAngleRange(robotPose.getTranslation(), closestGoal, maxAngleFromGoalCenter);
 		Logger.recordOutput(isReadyToShootLogPath + "/isInRange", isInRange);
 
-		boolean isAtHeading = isAtHeading(robotPose, robot.getTurret(),headingTolerance.getDegrees());
+		boolean isAtHeading = isAtHeading(robotPose, robot.getTurret(), headingTolerance.getDegrees());
 		Logger.recordOutput(isReadyToShootLogPath + "/isAthHeading", isAtHeading);
 
 		boolean isFlywheelReadyToShoot = isFlywheelAtVelocity(

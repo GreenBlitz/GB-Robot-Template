@@ -8,6 +8,7 @@ import frc.robot.statemachine.ScoringHelpers;
 import frc.robot.statemachine.StateMachineConstants;
 import frc.robot.statemachine.funnelstatehandler.FunnelState;
 import frc.robot.statemachine.funnelstatehandler.FunnelStateHandler;
+import frc.robot.statemachine.intakestatehandler.IntakeState;
 import frc.robot.statemachine.intakestatehandler.IntakeStateHandler;
 import frc.robot.statemachine.shooterstatehandler.ShooterState;
 import frc.robot.statemachine.shooterstatehandler.ShooterStateHandler;
@@ -15,16 +16,14 @@ import frc.robot.subsystems.constants.flywheel.Constants;
 import frc.robot.subsystems.constants.hood.HoodConstants;
 import org.littletonrobotics.junction.Logger;
 
-import java.util.Set;
 import java.util.function.Supplier;
 
 public class Superstructure {
 
 	private final Robot robot;
-	private final Set<Subsystem> subsystems;
 	private final TargetChecks targetChecks;
 	private boolean isSubsystemRunningIndependently;
-	private String logPath;
+	private final String logPath;
 
 	private RobotState currentState;
 
@@ -32,31 +31,31 @@ public class Superstructure {
 	private final FunnelStateHandler funnelStateHandler;
 	private final ShooterStateHandler shooterStateHandler;
 
-	public Superstructure(String logPath, Robot robot, Supplier<Pose2d> robotPose) {
+	public Superstructure(String logPath, Robot robot, Supplier<Pose2d> robotPoseSupplier) {
 		this.robot = robot;
-
-		this.currentState = RobotState.STAY_IN_PLACE;
-
-		this.subsystems = Set.of(
-			robot.getFlyWheel(),
-			robot.getBelly(),
-			robot.getTurret(),
-			robot.getOmni(),
-			robot.getFourBar(),
-			robot.getIntakeRoller(),
-			robot.getHood()
-		);
-
-		this.targetChecks = new TargetChecks(this);
-
-		this.isSubsystemRunningIndependently = false;
 		this.logPath = logPath;
 
 		this.funnelStateHandler = new FunnelStateHandler(robot.getOmni(), robot.getBelly(), logPath, robot.getFunnelDigitalInput());
-		this.intakeStateHandler = new IntakeStateHandler();
-		this.shooterStateHandler = new ShooterStateHandler(robot.getTurret(), robot.getHood(), robot.getFlyWheel(), robotPose);
+		this.intakeStateHandler = new IntakeStateHandler(robot.getFourBar(), robot.getIntakeRoller(), robot.getIntakeRollerSensor(), logPath);
+		this.shooterStateHandler = new ShooterStateHandler(robot.getTurret(), robot.getHood(), robot.getFlyWheel(), robotPoseSupplier, logPath);
+
+		this.targetChecks = new TargetChecks(this);
+
+		this.currentState = RobotState.STAY_IN_PLACE;
+		this.isSubsystemRunningIndependently = false;
 	}
 
+	public FunnelStateHandler getFunnelStateHandler() {
+		return funnelStateHandler;
+	}
+
+	public IntakeStateHandler getIntakeStateHandler() {
+		return intakeStateHandler;
+	}
+
+	public ShooterStateHandler getShooterStateHandler() {
+		return shooterStateHandler;
+	}
 
 	public RobotState getCurrentState() {
 		return currentState;
@@ -82,9 +81,9 @@ public class Superstructure {
 	}
 
 	public Command setState(RobotState robotState) {
-		ParallelCommandGroup parallelCommandGroup = new ParallelCommandGroup(
+		return new ParallelCommandGroup(
 			new InstantCommand(() -> currentState = robotState),
-			new InstantCommand(() -> Logger.recordOutput(logPath + "/currentState", robotState)),
+			new InstantCommand(() -> Logger.recordOutput(logPath + "/CurrentState", robotState)),
 			switch (robotState) {
 				case STAY_IN_PLACE -> stayInPlace();
 				case DRIVE -> idle();
@@ -94,15 +93,13 @@ public class Superstructure {
 				case SHOOT_AND_INTAKE -> shootAndIntake();
 			}
 		);
-		parallelCommandGroup.addRequirements(subsystems);
-		return parallelCommandGroup;
 	}
 
 	private Command stayInPlace() {
 		return new ParallelCommandGroup(
 			shooterStateHandler.setState(ShooterState.STAY_IN_PLACE),
 			funnelStateHandler.setState(FunnelState.STOP),
-			intakeStateHandler.setState(IntakeStateHandler.IntakeState.STAY_IN_PLACE)
+			intakeStateHandler.setState(IntakeState.STAY_IN_PLACE)
 		);
 	}
 
@@ -110,7 +107,7 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 			shooterStateHandler.setState(ShooterState.IDLE),
 			funnelStateHandler.setState(FunnelState.DRIVE),
-			intakeStateHandler.setState(IntakeStateHandler.IntakeState.CLOSED)
+			intakeStateHandler.setState(IntakeState.CLOSED)
 		);
 	}
 
@@ -118,7 +115,7 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 			shooterStateHandler.setState(ShooterState.IDLE),
 			funnelStateHandler.setState(FunnelState.INTAKE),
-			intakeStateHandler.setState(IntakeStateHandler.IntakeState.INTAKE)
+			intakeStateHandler.setState(IntakeState.INTAKE)
 		);
 	}
 
@@ -126,7 +123,7 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 			shooterStateHandler.setState(ShooterState.SHOOT),
 			funnelStateHandler.setState(FunnelState.DRIVE),
-			intakeStateHandler.setState(IntakeStateHandler.IntakeState.CLOSED)
+			intakeStateHandler.setState(IntakeState.CLOSED)
 		);
 	}
 
@@ -134,7 +131,7 @@ public class Superstructure {
 		return new ParallelCommandGroup(
 			shooterStateHandler.setState(ShooterState.SHOOT),
 			funnelStateHandler.setState(FunnelState.SHOOT),
-			intakeStateHandler.setState(IntakeStateHandler.IntakeState.CLOSED)
+			intakeStateHandler.setState(IntakeState.CLOSED)
 		);
 	}
 
@@ -151,6 +148,10 @@ public class Superstructure {
     }
 
 	private Command shootAndIntake() {
+		return new ParallelCommandGroup(
+			shooterStateHandler.setState(ShooterState.SHOOT),
+			funnelStateHandler.setState(FunnelState.SHOOT),
+			intakeStateHandler.setState(IntakeState.INTAKE)
 		return new SequentialCommandGroup(
 			preShoot().until(this::isReadyToShoot),
             shoot().until(funnelStateHandler::isBallAtSensor)
@@ -158,6 +159,8 @@ public class Superstructure {
 	}
 
 	public void log() {
+		funnelStateHandler.periodic();
+		intakeStateHandler.periodic();
 		Logger.recordOutput(logPath + "/IsSubsystemRunningIndependently", isSubsystemRunningIndependently());
 	}
 

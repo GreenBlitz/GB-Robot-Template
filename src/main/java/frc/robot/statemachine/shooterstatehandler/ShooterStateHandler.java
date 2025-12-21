@@ -24,14 +24,16 @@ public class ShooterStateHandler {
 	private final Arm hood;
 	private final FlyWheel flyWheel;
 	private final Supplier<Pose2d> robotPose;
+	private final String logPath;
 	private ShooterState currentState;
 
-	public ShooterStateHandler(Arm turret, Arm hood, FlyWheel flyWheel, Supplier<Pose2d> robotPose) {
+	public ShooterStateHandler(Arm turret, Arm hood, FlyWheel flyWheel, Supplier<Pose2d> robotPose, String logPath) {
 		this.turret = turret;
 		this.hood = hood;
 		this.flyWheel = flyWheel;
 		this.robotPose = robotPose;
 		this.currentState = ShooterState.STAY_IN_PLACE;
+		this.logPath = logPath + "/ShooterStateHandler";
 	}
 
 	public static Supplier<Rotation2d> hoodInterpolation(Supplier<Double> distanceFromTower) {
@@ -46,10 +48,6 @@ public class ShooterStateHandler {
 		return currentState;
 	}
 
-	public void Log() {
-		Logger.recordOutput(ShooterConstants.LOG_PATH + "/CurrentState", currentState);
-	}
-
 	public Command setState(ShooterState shooterState) {
 		Command command = switch (shooterState) {
 			case STAY_IN_PLACE -> stayInPlace();
@@ -58,7 +56,7 @@ public class ShooterStateHandler {
 			case CALIBRATION -> calibration();
 		};
 		return new ParallelCommandGroup(
-			new InstantCommand(() -> Logger.recordOutput(ShooterConstants.LOG_PATH + "/currentState", shooterState.name())),
+			new InstantCommand(() -> Logger.recordOutput(logPath + "/CurrentState", shooterState.name())),
 			new InstantCommand(() -> currentState = shooterState),
 			command
 		);
@@ -98,7 +96,7 @@ public class ShooterStateHandler {
 	}
 
 	public Command aimAtTower() {
-		return new TurretAimAtTowerCommand(turret, robotPose);
+		return new TurretAimAtTowerCommand(turret, robotPose, logPath);
 	}
 
 	public static Rotation2d getRobotRelativeLookAtTowerAngleForTurret(Translation2d target, Pose2d robotPose) {

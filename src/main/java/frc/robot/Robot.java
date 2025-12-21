@@ -139,7 +139,7 @@ public class Robot {
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 
-	public Pair<Roller, IDigitalInput> createIntakeRollers() {
+	private Pair<Roller, IDigitalInput> createIntakeRollers() {
 		return SparkMaxRollerBuilder.buildWithDigitalInput(
 			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/IntakeRollers",
 			IDs.SparkMAXIDs.INTAKE_ROLLERS,

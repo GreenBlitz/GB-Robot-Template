@@ -365,7 +365,8 @@ public class Swerve extends GBSubsystem {
 		for (int i = 0; i < currentModuleTranslationalStates.length; i++) {
 			areModulesSkidding[i] = !ToleranceMath
 				.isNear(robotTranslationalVelocityMetersPerSecond, currentModuleTranslationalStates[i], SwerveConstants.SKID_TOLERANCE);
-		};
+		}
+		;
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {

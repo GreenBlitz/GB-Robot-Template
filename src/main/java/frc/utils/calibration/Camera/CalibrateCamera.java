@@ -61,7 +61,7 @@ public class CalibrateCamera extends Command {
 	}
 
 	private void logFunction() {
-		Logger.recordOutput("CameraCalibrateCamera"+ logPathPrefix + "/solution/Rotations" , finalCameraRotation);
+		Logger.recordOutput("CameraCalibrateCamera" + logPathPrefix + "/solution/Rotations", finalCameraRotation);
 		Logger.recordOutput("CameraCalibration" + logPathPrefix + "/camera/cameraPoseFieldRelative", cameraPoseFieldRelative);
 		Logger.recordOutput("CameraCalibration" + logPathPrefix + "/robot/robotFieldRelative", robotPoseFieldRelative);
 		Logger.recordOutput("CameraCalibration" + logPathPrefix + "/solution/endTranslation", finalCameraTranslation);

@@ -39,8 +39,6 @@ import java.util.function.Supplier;
 
 public class Swerve extends GBSubsystem {
 
-	public static final double skidTolerance = 0.06;
-
 	private final SwerveConstants constants;
 	private final double driveRadiusMeters;
 	private final Modules modules;
@@ -371,8 +369,8 @@ public class Swerve extends GBSubsystem {
 		boolean[] areWheelsSkidding = new boolean[currentModuleTranslationalStates.length];
 		for (int i = 0; i < currentModuleTranslationalStates.length; i++) {
 			areWheelsSkidding[i] = !ToleranceMath
-				.isNear(robotTranslationalVelocity.getX(), currentModuleTranslationalStates[i].getX(), skidTolerance)
-				|| !ToleranceMath.isNear(robotTranslationalVelocity.getY(), currentModuleTranslationalStates[i].getY(), skidTolerance);
+				.isNear(robotTranslationalVelocity.getX(), currentModuleTranslationalStates[i].getX(), SwerveConstants.SKID_TOLERANCE)
+				|| !ToleranceMath.isNear(robotTranslationalVelocity.getY(), currentModuleTranslationalStates[i].getY(), SwerveConstants.SKID_TOLERANCE);
 		}
 		return areWheelsSkidding;
 	}

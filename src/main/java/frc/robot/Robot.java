@@ -51,7 +51,7 @@ public class Robot {
 //			swerve.getGyroAbsoluteYaw().getTimestamp()
 //		);
 
-		this.talonFXSysid = new TalonFXSysid(new Phoenix6DeviceID(10, BusChain.ROBORIO), 1, 7);
+			this.talonFXSysid = new TalonFXSysid(new Phoenix6DeviceID(10, BusChain.SUPERSTRUCTURE), 0.7, 4);
 
 //		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 	}

@@ -345,26 +345,21 @@ public class Swerve extends GBSubsystem {
 
 	private void calculateAreModulesSkidding() {
 		double robotYawAngularVelocityRadiansPerSecond = getRobotRelativeVelocity().omegaRadiansPerSecond;
-		Logger.recordOutput("robotYawAngularVelocityRadiansPerSecond", robotYawAngularVelocityRadiansPerSecond);
 		Translation2d robotTranslationalVelocityMetersPerSecond = new Translation2d(
 			getRobotRelativeVelocity().vxMetersPerSecond,
 			getRobotRelativeVelocity().vyMetersPerSecond
 		);
-		Logger.recordOutput("robotTranslationalVelocityMetersPerSecond", robotTranslationalVelocityMetersPerSecond);
 
 		SwerveModuleState[] currentModuleRotationalStates = kinematics
 			.toSwerveModuleStates(new ChassisSpeeds(0, 0, robotYawAngularVelocityRadiansPerSecond), new Translation2d());
-		Logger.recordOutput("currentModuleRotationalStates", currentModuleRotationalStates);
 
 		SwerveModuleState[] currentModuleStates = modules.getCurrentStates();
-		Logger.recordOutput("currentModuleStates", currentModuleStates);
 
 		Translation2d[] currentModuleTranslationalStates = new Translation2d[currentModuleStates.length];
 		for (int i = 0; i < currentModuleTranslationalStates.length; i++) {
 			currentModuleTranslationalStates[i] = new Translation2d(currentModuleStates[i].speedMetersPerSecond, currentModuleStates[i].angle)
 				.minus(new Translation2d(currentModuleRotationalStates[i].speedMetersPerSecond, currentModuleRotationalStates[i].angle));
 		}
-		Logger.recordOutput("currentModuleTranslationalStates", currentModuleTranslationalStates);
 
 		areModulesSkidding = new boolean[currentModuleTranslationalStates.length];
 		for (int i = 0; i < currentModuleTranslationalStates.length; i++) {

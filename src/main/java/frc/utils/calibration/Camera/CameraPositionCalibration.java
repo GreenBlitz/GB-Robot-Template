@@ -9,34 +9,34 @@ import frc.utils.math.AngleTransform;
 import frc.utils.math.FieldMath;
 import org.littletonrobotics.junction.Logger;
 
-public class CameraPositionCalibration  extends Command {
+public class CameraPositionCalibration extends Command {
 
-    private final String logPathPrefix;
-    private final String cameraName;
+	private final String logPathPrefix;
+	private final String cameraName;
 
-    private final AprilTagFields field;
-    private final int tagID;
+	private final AprilTagFields field;
+	private final int tagID;
 
-    private final double robotXAxisDistanceFromTag;
-    private final double middleOfTagHeight;
-    private final Pose3d tagPoseFieldRelative;
-    private final int neededNumberOfCycles;
+	private final double robotXAxisDistanceFromTag;
+	private final double middleOfTagHeight;
+	private final Pose3d tagPoseFieldRelative;
+	private final int neededNumberOfCycles;
 
-    private Pose3d cameraPoseFieldRelative;
-    private Pose2d robotPoseFieldRelative;
+	private Pose3d cameraPoseFieldRelative;
+	private Pose2d robotPoseFieldRelative;
 
-    private Rotation3d finalCameraRotation;
-    private Translation3d finalCameraTranslation;
-    private int currentCycle;
+	private Rotation3d finalCameraRotation;
+	private Translation3d finalCameraTranslation;
+	private int currentCycle;
 	private double cosX3DSum = 0, sinX3DSum = 0;
 	private double cosY3DSum = 0, sinY3DSum = 0;
 	private double cosZ3DSum = 0, sinZ3DSum = 0;
 
-    private Translation3d translationSum;
-    private Translation3d currentCameraTranslation;
+	private Translation3d translationSum;
+	private Translation3d currentCameraTranslation;
 	private Rotation3d currentCameraRotation;
 
-	public CameraPositionCalibration (
+	public CameraPositionCalibration(
 		AprilTagFields field,
 		String logPathPrefix,
 		String cameraName,
@@ -52,38 +52,38 @@ public class CameraPositionCalibration  extends Command {
 		this.tagID = tagID;
 		this.robotXAxisDistanceFromTag = robotXAxisDistanceFromTag;
 		this.neededNumberOfCycles = neededNumberOfCycles;
-        this.tagPoseFieldRelative = AprilTagFieldLayout.loadField(field).getTagPose(tagID).get();
-        this.robotPoseFieldRelative = new Pose2d(
-                // tag must be either 180 or 0 deg to the filed
-                tagPoseFieldRelative.getX() - robotXAxisDistanceFromTag,
-                tagPoseFieldRelative.getY(),
-                FieldMath.transformAngle(tagPoseFieldRelative.getRotation().toRotation2d(), AngleTransform.INVERT)
-        );
+		this.tagPoseFieldRelative = AprilTagFieldLayout.loadField(field).getTagPose(tagID).get();
+		this.robotPoseFieldRelative = new Pose2d(
+			// tag must be either 180 or 0 deg to the filed
+			tagPoseFieldRelative.getX() - robotXAxisDistanceFromTag,
+			tagPoseFieldRelative.getY(),
+			FieldMath.transformAngle(tagPoseFieldRelative.getRotation().toRotation2d(), AngleTransform.INVERT)
+		);
 
-        LimelightHelpers.setCameraPose_RobotSpace(cameraName, 0, 0, 0, 0, 0, 0);
-        this.cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
-        this.translationSum = new Translation3d();
-        this.currentCameraTranslation = new Translation3d();
-        this.currentCameraRotation = new Rotation3d();
+		LimelightHelpers.setCameraPose_RobotSpace(cameraName, 0, 0, 0, 0, 0, 0);
+		this.cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
+		this.translationSum = new Translation3d();
+		this.currentCameraTranslation = new Translation3d();
+		this.currentCameraRotation = new Rotation3d();
 	}
 
 	private void logFunction() {
-        Logger.recordOutput("CameraCalibration" + logPathPrefix + "/solution/endRotation", finalCameraRotation);
-        Logger.recordOutput("CameraCalibration" + logPathPrefix + "/solution/endTranslation", finalCameraTranslation);
-        Logger.recordOutput("CameraCalibration" + logPathPrefix + "/cameraPoseFieldRelative", cameraPoseFieldRelative);
-
-    }
+		Logger.recordOutput("CameraCalibration" + logPathPrefix + "/solution/endRotation", finalCameraRotation);
+		Logger.recordOutput("CameraCalibration" + logPathPrefix + "/solution/endTranslation", finalCameraTranslation);
+		Logger.recordOutput("CameraCalibration" + logPathPrefix + "/cameraPoseFieldRelative", cameraPoseFieldRelative);
+	}
 
 	public void initialize() {
-        Logger.recordOutput("CameraCalibration/" + logPathPrefix + "/tag/TagPoseFieldRelative", tagPoseFieldRelative);
-        Logger.recordOutput("CameraCalibration" + logPathPrefix + "/robot/robotFieldRelative", robotPoseFieldRelative);	}
+		Logger.recordOutput("CameraCalibration/" + logPathPrefix + "/tag/TagPoseFieldRelative", tagPoseFieldRelative);
+		Logger.recordOutput("CameraCalibration" + logPathPrefix + "/robot/robotFieldRelative", robotPoseFieldRelative);
+	}
 
 	@Override
 	public void execute() {
 		cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
 		calculateRobotRelativeCameraPosition();
-        sumObjectsValues();
-        currentCycle += 1;
+		sumObjectsValues();
+		currentCycle += 1;
 	}
 
 	@Override
@@ -94,8 +94,8 @@ public class CameraPositionCalibration  extends Command {
 			Math.atan2(sinY3DSum / neededNumberOfCycles, cosY3DSum / neededNumberOfCycles),
 			Math.atan2(sinZ3DSum / neededNumberOfCycles, cosZ3DSum / neededNumberOfCycles)
 		);
-        Logger.recordOutput("CameraCalibration" + logPathPrefix + "/solution/endTranslation", finalCameraTranslation);
-        Logger.recordOutput("CameraCalibration" + logPathPrefix + "/solution/endRotation", finalCameraRotation);
+		Logger.recordOutput("CameraCalibration" + logPathPrefix + "/solution/endTranslation", finalCameraTranslation);
+		Logger.recordOutput("CameraCalibration" + logPathPrefix + "/solution/endRotation", finalCameraRotation);
 		super.end(interrupted);
 	}
 
@@ -122,7 +122,8 @@ public class CameraPositionCalibration  extends Command {
 	private void sumObjectsValues() {
 		// it just creates another object and throws it away , should update the original that is the cause of the change
 
-		translationSum = translationSum.plus(new Translation3d(currentCameraTranslation.getX(), currentCameraTranslation.getY(), currentCameraTranslation.getZ()));
+		translationSum = translationSum
+			.plus(new Translation3d(currentCameraTranslation.getX(), currentCameraTranslation.getY(), currentCameraTranslation.getZ()));
 		cosX3DSum += Math.cos(currentCameraRotation.getX());
 		sinX3DSum += Math.sin(currentCameraRotation.getX());
 		cosY3DSum += Math.cos(-currentCameraRotation.getY());

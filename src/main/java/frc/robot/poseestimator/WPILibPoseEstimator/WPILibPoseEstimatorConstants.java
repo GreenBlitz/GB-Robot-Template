@@ -25,4 +25,6 @@ public class WPILibPoseEstimatorConstants {
 
 	public static double IMU_YAW_BUFFER_SIZE_SECONDS = 2;
 
+	public static double ACCELIRATION_BUFFER_SIZE_SECONDS = 2;
+
 }

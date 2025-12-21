@@ -28,9 +28,9 @@ public class CameraPositionCalibration extends Command {
 	private Rotation3d finalCameraRotation;
 	private Translation3d finalCameraTranslation;
 	private int currentCycle;
-	private double cosXRotation3DSum = 0, sinXRotation3DSum = 0;
-	private double cosYRotation3DSum = 0, sinYRotation3DSum = 0;
-	private double cosZRotation3DSum = 0, sinZRotation3DSum = 0;
+	private double cosYawRotation3DSum = 0, sinYawRotation3DSum = 0;
+	private double cosPitchRotation3DSum = 0, sinPitchRotation3DSum = 0;
+	private double cosRollRotation3DSum = 0, sinRollRotation3DSum = 0;
 
 	private Translation3d translationSum;
 	private Translation3d currentCameraTranslation;
@@ -86,9 +86,9 @@ public class CameraPositionCalibration extends Command {
 	public void end(boolean interrupted) {
 		finalCameraTranslation = translationSum.div(NEEDED_NUMBER_OF_CYCLES);
 		finalCameraRotation = new Rotation3d(
-			Math.atan2(sinXRotation3DSum / NEEDED_NUMBER_OF_CYCLES, cosXRotation3DSum / NEEDED_NUMBER_OF_CYCLES),
-			Math.atan2(sinYRotation3DSum / NEEDED_NUMBER_OF_CYCLES, cosYRotation3DSum / NEEDED_NUMBER_OF_CYCLES),
-			Math.atan2(sinZRotation3DSum / NEEDED_NUMBER_OF_CYCLES, cosZRotation3DSum / NEEDED_NUMBER_OF_CYCLES)
+			Math.atan2(sinYawRotation3DSum / NEEDED_NUMBER_OF_CYCLES, cosYawRotation3DSum / NEEDED_NUMBER_OF_CYCLES),
+			Math.atan2(sinPitchRotation3DSum / NEEDED_NUMBER_OF_CYCLES, cosPitchRotation3DSum / NEEDED_NUMBER_OF_CYCLES),
+			Math.atan2(sinRollRotation3DSum / NEEDED_NUMBER_OF_CYCLES, cosRollRotation3DSum / NEEDED_NUMBER_OF_CYCLES)
 		);
 
 
@@ -121,12 +121,12 @@ public class CameraPositionCalibration extends Command {
 	private void sumObjectsValues() {
 		translationSum = translationSum
 			.plus(new Translation3d(currentCameraTranslation.getX(), currentCameraTranslation.getY(), currentCameraTranslation.getZ()));
-		cosXRotation3DSum += Math.cos(currentCameraRotation.getX());
-		sinXRotation3DSum += Math.sin(currentCameraRotation.getX());
-		cosYRotation3DSum += Math.cos(-currentCameraRotation.getY());
-		sinYRotation3DSum += Math.sin(-currentCameraRotation.getY());
-		cosZRotation3DSum += Math.cos(currentCameraRotation.getZ());
-		sinZRotation3DSum += Math.sin(currentCameraRotation.getZ());
+		cosYawRotation3DSum += Math.cos(currentCameraRotation.getX());
+		sinYawRotation3DSum += Math.sin(currentCameraRotation.getX());
+		cosPitchRotation3DSum += Math.cos(-currentCameraRotation.getY());
+		sinPitchRotation3DSum += Math.sin(-currentCameraRotation.getY());
+		cosRollRotation3DSum += Math.cos(currentCameraRotation.getZ());
+		sinRollRotation3DSum += Math.sin(currentCameraRotation.getZ());
 	}
 
 }

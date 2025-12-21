@@ -12,7 +12,7 @@ import org.littletonrobotics.junction.Logger;
 public class CameraPositionCalibration extends Command {
 
 	private final static int NEEDED_NUMBER_OF_CYCLES = 100; // PLACE HOLDER
-
+	private final String commandLogPath = "/cameraPositionCalibration";
 	private final String logPathPrefix;
 	private final String cameraName;
 
@@ -66,14 +66,14 @@ public class CameraPositionCalibration extends Command {
 	}
 
 	private void logFunction() {
-		Logger.recordOutput("CameraCalibration" + logPathPrefix + "/solution/endRotation", finalCameraRotation);
-		Logger.recordOutput("CameraCalibration" + logPathPrefix + "/solution/endTranslation", finalCameraTranslation);
-		Logger.recordOutput("CameraCalibration" + logPathPrefix + "/cameraPoseFieldRelative", cameraPoseFieldRelative);
+		Logger.recordOutput(logPathPrefix + commandLogPath + "/solution/currentRotation", currentCameraRotation);
+		Logger.recordOutput(logPathPrefix + commandLogPath + "/solution/currentTranslation", currentCameraTranslation);
+		Logger.recordOutput(logPathPrefix + commandLogPath + "/cameraPoseFieldRelative", cameraPoseFieldRelative);
 	}
 
 	public void initialize() {
-		Logger.recordOutput("CameraCalibration/" + logPathPrefix + "/tag/TagPoseFieldRelative", tagPoseFieldRelative);
-		Logger.recordOutput("CameraCalibration" + logPathPrefix + "/robot/robotFieldRelative", robotPoseFieldRelative);
+		Logger.recordOutput(logPathPrefix + commandLogPath + "/tag/TagPoseFieldRelative", tagPoseFieldRelative);
+		Logger.recordOutput(logPathPrefix + commandLogPath + "/robot/robotFieldRelative", robotPoseFieldRelative);
 	}
 
 	@Override
@@ -92,8 +92,10 @@ public class CameraPositionCalibration extends Command {
 			Math.atan2(sinY3DSum / NEEDED_NUMBER_OF_CYCLES, cosY3DSum / NEEDED_NUMBER_OF_CYCLES),
 			Math.atan2(sinZ3DSum / NEEDED_NUMBER_OF_CYCLES, cosZ3DSum / NEEDED_NUMBER_OF_CYCLES)
 		);
-		Logger.recordOutput("CameraCalibration" + logPathPrefix + "/solution/endTranslation", finalCameraTranslation);
-		Logger.recordOutput("CameraCalibration" + logPathPrefix + "/solution/endRotation", finalCameraRotation);
+
+
+		Logger.recordOutput(logPathPrefix + commandLogPath + "/solution/endTranslation", finalCameraTranslation);
+		Logger.recordOutput(logPathPrefix + commandLogPath + "/solution/endRotation", finalCameraRotation);
 		super.end(interrupted);
 	}
 
@@ -118,8 +120,6 @@ public class CameraPositionCalibration extends Command {
 	}
 
 	private void sumObjectsValues() {
-		// it just creates another object and throws it away , should update the original that is the cause of the change
-
 		translationSum = translationSum
 			.plus(new Translation3d(currentCameraTranslation.getX(), currentCameraTranslation.getY(), currentCameraTranslation.getZ()));
 		cosX3DSum += Math.cos(currentCameraRotation.getX());

@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.constants.MathConstants;
+import frc.robot.statemachine.ScoringHelpers;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
@@ -45,7 +46,7 @@ public class SwerveStateHandler {
 	}
 
 	private ChassisSpeeds handleLookAtTowerAimAssist(ChassisSpeeds speeds, SwerveState swerveState) {
-		YLength
+	 double	YLengthTowerAndRobot = robotPoseSupplier.get().get().getY() - ScoringHelpers.
 	}
 
 	public Translation2d getRotationAxis(RotateAxis rotationAxisState) {

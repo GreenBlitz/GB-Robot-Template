@@ -2,10 +2,14 @@ package frc.robot;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.TalonFXWrapper;
 import frc.robot.subsystems.GBSubsystem;
@@ -36,7 +40,14 @@ public class TalonFXSysid extends GBSubsystem {
 
         /* Optimize out the other signals, since they're not useful for SysId */
         motor.optimizeBusUtilization();
-        
+
+        TalonFXConfiguration configuration = new TalonFXConfiguration();
+        configuration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        configuration.Feedback.SensorToMechanismRatio = (63.0 / 17.0);
+
+
+        TalonFXWrapper follower = new TalonFXWrapper(new Phoenix6DeviceID(11, BusChain.SUPERSTRUCTURE));
+        follower.setControl(new Follower(deviceID.id(), false));
     }
 
     private SysIdRoutine.Config buildSysidConfig(double rampRate, double stepVoltage) {

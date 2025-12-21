@@ -184,7 +184,7 @@ public class Swerve extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/IMU/Acceleration", getAccelerationFromIMUMetersPerSecondSquared());
 
 		Logger.recordOutput(getLogPath() + "/isCollisionDetected", isCollisionDetected());
-		areModulesSkidding = areWheelsSkidding();
+		calculateAreModulesSkidding();
 		for (int i = 0; i < areModulesSkidding.length; i++) {
 			Logger.recordOutput(getLogPath() + "/isSkidding/" + ModuleUtil.ModulePosition.values()[i].toString(), areModulesSkidding[i]);
 		}
@@ -343,9 +343,9 @@ public class Swerve extends GBSubsystem {
 		return imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d().getNorm() > SwerveConstants.MIN_COLLISION_G_FORCE;
 	}
 
-	private boolean[] areWheelsSkidding() {
-		double robotYawAngularVelocityRadians = getRobotRelativeVelocity().omegaRadiansPerSecond;
-		Logger.recordOutput("robotYawAngularVelocityRadians", robotYawAngularVelocityRadians);
+	private void calculateAreModulesSkidding() {
+		double robotYawAngularVelocityRadiansPerSecond = getRobotRelativeVelocity().omegaRadiansPerSecond;
+		Logger.recordOutput("robotYawAngularVelocityRadiansPerSecond", robotYawAngularVelocityRadiansPerSecond);
 		Translation2d robotTranslationalVelocity = new Translation2d(
 			getRobotRelativeVelocity().vxMetersPerSecond,
 			getRobotRelativeVelocity().vyMetersPerSecond
@@ -353,7 +353,7 @@ public class Swerve extends GBSubsystem {
 		Logger.recordOutput("robotTranslationalVelocity", robotTranslationalVelocity);
 
 		SwerveModuleState[] currentModuleRotationalStates = kinematics
-			.toSwerveModuleStates(new ChassisSpeeds(0, 0, robotYawAngularVelocityRadians), new Translation2d());
+			.toSwerveModuleStates(new ChassisSpeeds(0, 0, robotYawAngularVelocityRadiansPerSecond), new Translation2d());
 		Logger.recordOutput("currentModuleRotationalStates", currentModuleRotationalStates);
 
 		SwerveModuleState[] currentModuleStates = modules.getCurrentStates();
@@ -366,12 +366,11 @@ public class Swerve extends GBSubsystem {
 		}
 		Logger.recordOutput("currentModuleTranslationalStates", currentModuleTranslationalStates);
 
-		boolean[] areWheelsSkidding = new boolean[currentModuleTranslationalStates.length];
+		areModulesSkidding = new boolean[currentModuleTranslationalStates.length];
 		for (int i = 0; i < currentModuleTranslationalStates.length; i++) {
-			areWheelsSkidding[i] = !ToleranceMath
+			areModulesSkidding[i] = !ToleranceMath
 				.isNear(robotTranslationalVelocity, currentModuleTranslationalStates[i], SwerveConstants.SKID_TOLERANCE);
-		}
-		return areWheelsSkidding;
+		};
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {

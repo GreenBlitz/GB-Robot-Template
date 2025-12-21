@@ -63,9 +63,9 @@ public class FunnelStateHandler {
 	}
 
 	private Command shoot() {
-		return new ParallelCommandGroup(
-			omni.getCommandsBuilder().setVoltage(FunnelState.SHOOT.getOmniVoltage()),
-			belly.getCommandsBuilder().rollRotationsAtVoltageForwards(1,FunnelState.SHOOT.getBellyVoltage())
+		return new ParallelDeadlineGroup(
+            belly.getCommandsBuilder().rollRotationsAtVoltageForwards(1,FunnelState.SHOOT.getBellyVoltage()),
+            omni.getCommandsBuilder().setVoltage(FunnelState.SHOOT.getOmniVoltage())
 		);
 	}
 

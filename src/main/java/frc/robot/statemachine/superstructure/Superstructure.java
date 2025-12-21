@@ -89,8 +89,8 @@ public class Superstructure {
 				case DRIVE -> idle();
 				case INTAKE -> intake();
 				case PRE_SHOOT -> preShoot();
-				case SHOOT -> shoot();
-				case SHOOT_AND_INTAKE -> shootAndIntake();
+				case SHOOT -> shootSequence();
+				case SHOOT_AND_INTAKE -> shootWhileIntakeSequence();
 			}
 		);
 	}
@@ -128,10 +128,18 @@ public class Superstructure {
 	}
 
 	private Command shoot() {
+		return new ParallelDeadlineGroup(
+            funnelStateHandler.setState(FunnelState.SHOOT),
+            shooterStateHandler.setState(ShooterState.SHOOT),
+			intakeStateHandler.setState(IntakeState.CLOSED)
+		);
+	}
+
+	private Command shootWhileIntake() {
 		return new ParallelCommandGroup(
 			shooterStateHandler.setState(ShooterState.SHOOT),
-			funnelStateHandler.setState(FunnelState.SHOOT),
-			intakeStateHandler.setState(IntakeState.CLOSED)
+			funnelStateHandler.setState(FunnelState.SHOOT_WHILE_INTAKE),
+			intakeStateHandler.setState(IntakeState.INTAKE)
 		);
 	}
 
@@ -143,22 +151,23 @@ public class Superstructure {
                 Constants.FLYWHEEL_VELOCITY_TOLERANCE_RPS,ShooterStateHandler.hoodInterpolation((distanceFromTower)).get(),
                 HoodConstants.HOOD_POSITION_TOLERANCE, StateMachineConstants.HEADING_TOLERANCE,StateMachineConstants.MAX_ANGLE_FROM_GOAL_CENTER,ScoringHelpers.getClosestTower(robot.getPoseEstimator().getEstimatedPose()).getPose(),
                 StateMachineConstants.MAX_DISTANCE_TO_SHOOT_METERS);
-
-
     }
 
-	private Command shootAndIntake() {
-		return new ParallelCommandGroup(
-			shooterStateHandler.setState(ShooterState.SHOOT),
-			funnelStateHandler.setState(FunnelState.SHOOT),
-			intakeStateHandler.setState(IntakeState.INTAKE)
+	private Command shootSequence() {
 		return new SequentialCommandGroup(
 			preShoot().until(this::isReadyToShoot),
-            shoot().until(funnelStateHandler::isBallAtSensor)
+            shoot()
 		);
 	}
 
-	public void log() {
+	private Command shootWhileIntakeSequence() {
+		return new SequentialCommandGroup(
+			preShoot().until(this::isReadyToShoot),
+            shootWhileIntake()
+		);
+	}
+
+	public void periodic() {
 		funnelStateHandler.periodic();
 		intakeStateHandler.periodic();
 		Logger.recordOutput(logPath + "/IsSubsystemRunningIndependently", isSubsystemRunningIndependently());

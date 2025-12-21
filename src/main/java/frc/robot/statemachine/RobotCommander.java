@@ -63,7 +63,7 @@ public class RobotCommander extends GBSubsystem {
 
 	@Override
 	protected void subsystemPeriodic() {
-		superstructure.log();
+		superstructure.periodic();
 	}
 
 	public Command driveWith(RobotState state, Command command) {

@@ -346,11 +346,11 @@ public class Swerve extends GBSubsystem {
 	private void calculateAreModulesSkidding() {
 		double robotYawAngularVelocityRadiansPerSecond = getRobotRelativeVelocity().omegaRadiansPerSecond;
 		Logger.recordOutput("robotYawAngularVelocityRadiansPerSecond", robotYawAngularVelocityRadiansPerSecond);
-		Translation2d robotTranslationalVelocity = new Translation2d(
+		Translation2d robotTranslationalVelocityMetersPerSecond = new Translation2d(
 			getRobotRelativeVelocity().vxMetersPerSecond,
 			getRobotRelativeVelocity().vyMetersPerSecond
 		);
-		Logger.recordOutput("robotTranslationalVelocity", robotTranslationalVelocity);
+		Logger.recordOutput("robotTranslationalVelocityMetersPerSecond", robotTranslationalVelocityMetersPerSecond);
 
 		SwerveModuleState[] currentModuleRotationalStates = kinematics
 			.toSwerveModuleStates(new ChassisSpeeds(0, 0, robotYawAngularVelocityRadiansPerSecond), new Translation2d());
@@ -369,7 +369,7 @@ public class Swerve extends GBSubsystem {
 		areModulesSkidding = new boolean[currentModuleTranslationalStates.length];
 		for (int i = 0; i < currentModuleTranslationalStates.length; i++) {
 			areModulesSkidding[i] = !ToleranceMath
-				.isNear(robotTranslationalVelocity, currentModuleTranslationalStates[i], SwerveConstants.SKID_TOLERANCE);
+				.isNear(robotTranslationalVelocityMetersPerSecond, currentModuleTranslationalStates[i], SwerveConstants.SKID_TOLERANCE);
 		};
 	}
 

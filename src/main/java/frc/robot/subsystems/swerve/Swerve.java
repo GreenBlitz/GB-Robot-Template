@@ -77,7 +77,7 @@ public class Swerve extends GBSubsystem {
 		setDefaultCommand(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
 	}
 
-	public boolean[] getIsSkidding() {
+	public boolean[] getAreModulesSkidding() {
 		return areModulesSkidding;
 	}
 

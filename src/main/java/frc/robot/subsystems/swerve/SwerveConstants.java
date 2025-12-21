@@ -44,7 +44,11 @@ public record SwerveConstants(
 
 	static final Rotation2d WHEEL_RADIUS_CALIBRATION_VELOCITY_PER_SECOND = Rotation2d.fromRotations(0.5);
 
+	public static final double SKID_TOLERANCE = 0.06;
+
 	public static final double AIM_ASSIST_MAGNITUDE_FACTOR = 4;
+
+	public static final double MIN_COLLISION_G_FORCE = 2;
 
 	public static final Pose2d DEADBANDS = new Pose2d(0.0092, 0.0092, Rotation2d.fromRadians(0.0115));
 	static final Rotation2d CALIBRATION_MODULE_ANGLE_TOLERANCE = Rotation2d.fromDegrees(3);

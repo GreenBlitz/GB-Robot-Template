@@ -26,10 +26,10 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
 	private final RingBuffer<Rotation2d> poseToIMUYawDifferenceBuffer;
 	private final TimeInterpolatableBuffer<Rotation2d> imuYawBuffer;
+	private final TimeInterpolatableBuffer<Double> imuAccelerationBuffer;
 	private RobotPoseObservation lastVisionObservation;
 	private OdometryData lastOdometryData;
 	private boolean isIMUOffsetCalibrated;
-	private final TimeInterpolatableBuffer<Double> accelerationBuffer;
 
 	public WPILibPoseEstimatorWrapper(
 		String logPath,
@@ -37,7 +37,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		SwerveModulePosition[] initialModulePositions,
 		Rotation2d initialIMUYaw,
 		double initialTimestampSeconds,
-		double initialAcceleration
+		double initialImuAcceleration
 	) {
 		this.logPath = logPath;
 		this.kinematics = kinematics;
@@ -53,11 +53,11 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 			WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STD_DEV.asColumnVector(),
 			WPILibPoseEstimatorConstants.DEFAULT_VISION_STD_DEV.asColumnVector()
 		);
-		this.lastOdometryData = new OdometryData(initialTimestampSeconds, initialModulePositions, Optional.of(initialIMUYaw), Optional.of(initialAcceleration));
+		this.lastOdometryData = new OdometryData(initialTimestampSeconds, initialModulePositions, Optional.of(initialIMUYaw), Optional.of(initialImuAcceleration));
 		this.isIMUOffsetCalibrated = false;
 		this.poseToIMUYawDifferenceBuffer = new RingBuffer<>(WPILibPoseEstimatorConstants.POSE_TO_IMU_YAW_DIFFERENCE_BUFFER_SIZE);
 		this.imuYawBuffer = TimeInterpolatableBuffer.createBuffer(WPILibPoseEstimatorConstants.IMU_YAW_BUFFER_SIZE_SECONDS);
-		this.accelerationBuffer = TimeInterpolatableBuffer.createDoubleBuffer(WPILibPoseEstimatorConstants.ACCELERATION_BUFFER_SIZE_SECONDS);
+		this.imuAccelerationBuffer = TimeInterpolatableBuffer.createDoubleBuffer(WPILibPoseEstimatorConstants.ACCELERATION_BUFFER_SIZE_SECONDS);
 	}
 
 
@@ -94,9 +94,9 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		lastOdometryData.setWheelPositions(data.getWheelPositions());
 		lastOdometryData.setIMUYaw(data.getIMUYaw());
 		lastOdometryData.setTimestamp(data.getTimestampSeconds());
-		lastOdometryData.setAcceleration(data.getAcceleration());
+		lastOdometryData.setImuAcceleration(data.getImuAcceleration());
 
-		data.getAcceleration().ifPresent((acceleration) -> accelerationBuffer.addSample(lastOdometryData.getTimestampSeconds(), acceleration));
+		data.getImuAcceleration().ifPresent((acceleration) -> imuAccelerationBuffer.addSample(lastOdometryData.getTimestampSeconds(), acceleration));
 	}
 
 	@Override
@@ -166,8 +166,8 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		poseEstimator.addVisionMeasurement(
 			visionObservation.robotPose(),
 			visionObservation.timestampSeconds(),
-			accelerationBuffer.getSample(visionObservation.timestampSeconds()).isPresent()
-				&& accelerationBuffer.getSample(visionObservation.timestampSeconds()).get() >= SwerveConstants.MIN_COLLISION_G_FORCE
+			imuAccelerationBuffer.getSample(visionObservation.timestampSeconds()).isPresent()
+				&& imuAccelerationBuffer.getSample(visionObservation.timestampSeconds()).get() >= SwerveConstants.MIN_COLLISION_G_FORCE
 					? WPILibPoseEstimatorConstants.DEFAULT_VISION_STD_DEV.asColumnVector()
 						.minus(WPILibPoseEstimatorConstants.COLLISION_VISION_STD_DEV_REDUCTION.asColumnVector())
 					: WPILibPoseEstimatorConstants.DEFAULT_VISION_STD_DEV.asColumnVector()

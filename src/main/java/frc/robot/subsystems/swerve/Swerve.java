@@ -191,7 +191,7 @@ public class Swerve extends GBSubsystem {
 				imuSignals.yawSignal().getTimestamps()[i],
 				modules.getWheelPositions(i),
 				imu instanceof EmptyIMU ? Optional.empty() : Optional.of(imuSignals.yawSignal().asArray()[i]),
-					Optional.of(getAcceleration())
+				imu instanceof EmptyIMU ? Optional.empty() :	Optional.of(getImuAcceleration())
 			);
 		}
 
@@ -333,7 +333,7 @@ public class Swerve extends GBSubsystem {
 		return imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d().getNorm() > SwerveConstants.MIN_COLLISION_G_FORCE;
 	}
 
-	public double getAcceleration() {
+	public double getImuAcceleration() {
 		return imuSignals.getAccelerationEarthGravitationalAcceleration().getNorm();
 	}
 

@@ -53,7 +53,12 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 			WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STD_DEV.asColumnVector(),
 			WPILibPoseEstimatorConstants.DEFAULT_VISION_STD_DEV.asColumnVector()
 		);
-		this.lastOdometryData = new OdometryData(initialTimestampSeconds, initialModulePositions, Optional.of(initialIMUYaw), Optional.of(initialImuAcceleration));
+		this.lastOdometryData = new OdometryData(
+			initialTimestampSeconds,
+			initialModulePositions,
+			Optional.of(initialIMUYaw),
+			Optional.of(initialImuAcceleration)
+		);
 		this.isIMUOffsetCalibrated = false;
 		this.poseToIMUYawDifferenceBuffer = new RingBuffer<>(WPILibPoseEstimatorConstants.POSE_TO_IMU_YAW_DIFFERENCE_BUFFER_SIZE);
 		this.imuYawBuffer = TimeInterpolatableBuffer.createBuffer(WPILibPoseEstimatorConstants.IMU_YAW_BUFFER_SIZE_SECONDS);
@@ -96,7 +101,8 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		lastOdometryData.setTimestamp(data.getTimestampSeconds());
 		lastOdometryData.setImuAcceleration(data.getImuAcceleration());
 
-		data.getImuAcceleration().ifPresent((acceleration) -> imuAccelerationBuffer.addSample(lastOdometryData.getTimestampSeconds(), acceleration));
+		data.getImuAcceleration()
+			.ifPresent((acceleration) -> imuAccelerationBuffer.addSample(lastOdometryData.getTimestampSeconds(), acceleration));
 	}
 
 	@Override

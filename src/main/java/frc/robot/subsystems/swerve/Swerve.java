@@ -191,7 +191,7 @@ public class Swerve extends GBSubsystem {
 				imuSignals.yawSignal().getTimestamps()[i],
 				modules.getWheelPositions(i),
 				imu instanceof EmptyIMU ? Optional.empty() : Optional.of(imuSignals.yawSignal().asArray()[i]),
-				imu instanceof EmptyIMU ? Optional.empty() :	Optional.of(getImuAcceleration())
+				imu instanceof EmptyIMU ? Optional.empty() : Optional.of(getImuAcceleration())
 			);
 		}
 

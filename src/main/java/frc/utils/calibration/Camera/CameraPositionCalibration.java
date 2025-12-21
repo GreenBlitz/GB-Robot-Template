@@ -11,6 +11,8 @@ import org.littletonrobotics.junction.Logger;
 
 public class CameraPositionCalibration extends Command {
 
+	private final static int NEEDED_NUMBER_OF_CYCLES = 100; // PLACE HOLDER
+
 	private final String logPathPrefix;
 	private final String cameraName;
 
@@ -20,8 +22,6 @@ public class CameraPositionCalibration extends Command {
 	private final double robotXAxisDistanceFromTag;
 	private final double middleOfTagHeight;
 	private final Pose3d tagPoseFieldRelative;
-	private final int neededNumberOfCycles;
-
 	private Pose3d cameraPoseFieldRelative;
 	private Pose2d robotPoseFieldRelative;
 
@@ -42,8 +42,7 @@ public class CameraPositionCalibration extends Command {
 		String cameraName,
 		int tagID,
 		double robotXAxisDistanceFromTag,
-		double middleOfTagHeight,
-		int neededNumberOfCycles
+		double middleOfTagHeight
 	) {
 		this.field = field;
 		this.cameraName = cameraName;
@@ -51,7 +50,6 @@ public class CameraPositionCalibration extends Command {
 		this.logPathPrefix = logPathPrefix;
 		this.tagID = tagID;
 		this.robotXAxisDistanceFromTag = robotXAxisDistanceFromTag;
-		this.neededNumberOfCycles = neededNumberOfCycles;
 		this.tagPoseFieldRelative = AprilTagFieldLayout.loadField(field).getTagPose(tagID).get();
 		this.robotPoseFieldRelative = new Pose2d(
 			// tag must be either 180 or 0 deg to the filed
@@ -88,11 +86,11 @@ public class CameraPositionCalibration extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		finalCameraTranslation = translationSum.div(neededNumberOfCycles);
+		finalCameraTranslation = translationSum.div(NEEDED_NUMBER_OF_CYCLES);
 		finalCameraRotation = new Rotation3d(
-			Math.atan2(sinX3DSum / neededNumberOfCycles, cosX3DSum / neededNumberOfCycles),
-			Math.atan2(sinY3DSum / neededNumberOfCycles, cosY3DSum / neededNumberOfCycles),
-			Math.atan2(sinZ3DSum / neededNumberOfCycles, cosZ3DSum / neededNumberOfCycles)
+			Math.atan2(sinX3DSum / NEEDED_NUMBER_OF_CYCLES, cosX3DSum / NEEDED_NUMBER_OF_CYCLES),
+			Math.atan2(sinY3DSum / NEEDED_NUMBER_OF_CYCLES, cosY3DSum / NEEDED_NUMBER_OF_CYCLES),
+			Math.atan2(sinZ3DSum / NEEDED_NUMBER_OF_CYCLES, cosZ3DSum / NEEDED_NUMBER_OF_CYCLES)
 		);
 		Logger.recordOutput("CameraCalibration" + logPathPrefix + "/solution/endTranslation", finalCameraTranslation);
 		Logger.recordOutput("CameraCalibration" + logPathPrefix + "/solution/endRotation", finalCameraRotation);
@@ -100,7 +98,7 @@ public class CameraPositionCalibration extends Command {
 	}
 
 	public boolean isFinished() {
-		return currentCycle >= neededNumberOfCycles;
+		return currentCycle >= NEEDED_NUMBER_OF_CYCLES;
 	}
 
 	private void calculateRobotRelativeCameraPosition() {

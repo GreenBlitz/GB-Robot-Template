@@ -40,8 +40,8 @@ public class TargetChecks {
 		Rotation2d wantedAngle = ShooterStateHandler.getRobotRelativeLookAtTowerAngleForTurret(
 			ScoringHelpers.getClosestTower(robotPose).getPose().getTranslation(),
 			new Pose2d(
-				robotPose.getX() + Math.cos(robotPose.getRotation().getRadians()) * SimulationManager.TURRET_DISTANCE_FROM_ROBOT_ON_X_AXIS,
-				robotPose.getY() + Math.sin(robotPose.getRotation().getRadians()) * SimulationManager.TURRET_DISTANCE_FROM_ROBOT_ON_X_AXIS,
+				robotPose.getX() + robotPose.getRotation().getCos() * SimulationManager.TURRET_DISTANCE_FROM_ROBOT_ON_X_AXIS,
+				robotPose.getY() + robotPose.getRotation().getSin() * SimulationManager.TURRET_DISTANCE_FROM_ROBOT_ON_X_AXIS,
 				robotPose.getRotation()
 			)
 		);

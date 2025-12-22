@@ -27,9 +27,9 @@ public class TurretAimAtTowerCommand extends Command {
 	public void execute() {
 		Pose2d turretOnField = new Pose2d(
 			robotPose.get().getX()
-				+ Math.cos(robotPose.get().getRotation().getRadians()) * SimulationManager.TURRET_DISTANCE_FROM_ROBOT_ON_X_AXIS,
+				+ robotPose.get().getRotation().getCos() * SimulationManager.TURRET_DISTANCE_FROM_ROBOT_ON_X_AXIS,
 			robotPose.get().getY()
-				+ Math.sin(robotPose.get().getRotation().getRadians()) * SimulationManager.TURRET_DISTANCE_FROM_ROBOT_ON_X_AXIS,
+				+ robotPose.get().getRotation().getSin() * SimulationManager.TURRET_DISTANCE_FROM_ROBOT_ON_X_AXIS,
 			robotPose.get().getRotation()
 		);
 		Translation2d target = ScoringHelpers.getClosestTower(turretOnField).getPose().getTranslation();

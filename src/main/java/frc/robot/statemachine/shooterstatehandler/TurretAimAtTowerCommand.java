@@ -16,18 +16,12 @@ public class TurretAimAtTowerCommand extends Command {
 	private final Arm turret;
 	private final Supplier<Pose2d> robotPose;
 	private final String logPath;
-	private boolean wasLastCheckLegal = true;
 
 	public TurretAimAtTowerCommand(Arm turret, Supplier<Pose2d> robotPose, String logPath) {
 		this.turret = turret;
 		this.robotPose = robotPose;
 		this.logPath = logPath;
 		addRequirements(turret);
-	}
-
-	@Override
-	public void initialize() {
-		wasLastCheckLegal = true;
 	}
 
 	@Override

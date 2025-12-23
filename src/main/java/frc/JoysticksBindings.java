@@ -1,5 +1,8 @@
 package frc;
 
+import com.therekrab.autopilot.APTarget;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
@@ -8,7 +11,7 @@ import frc.robot.subsystems.swerve.ChassisPowers;
 
 public class JoysticksBindings {
 
-	private static final SmartJoystick MAIN_JOYSTICK = new SmartJoystick(JoystickPorts.MAIN);
+	private static final SmartJoystick MAIN_JOYSTICK = new SmartJoystick(JoystickPorts.MAIN, 0.15);
 	private static final SmartJoystick SECOND_JOYSTICK = new SmartJoystick(JoystickPorts.SECOND);
 	private static final SmartJoystick THIRD_JOYSTICK = new SmartJoystick(JoystickPorts.THIRD);
 	private static final SmartJoystick FOURTH_JOYSTICK = new SmartJoystick(JoystickPorts.FOURTH);
@@ -47,6 +50,13 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+		APTarget target = new APTarget(new Pose2d(5, 5, new Rotation2d(Math.PI / 2)));
+
+		usedJoystick.A
+			.onTrue(robot.getSwerve().getCommandsBuilder().getAutoPilotCommand(target, () -> robot.getPoseEstimator().getEstimatedPose()));
+
+		usedJoystick.Y
+			.onTrue(robot.getSwerve().getCommandsBuilder().driveToPose(() -> robot.getPoseEstimator().getEstimatedPose(), target::getReference));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

@@ -2,10 +2,15 @@ package frc.robot.subsystems.swerve;
 
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.therekrab.autopilot.APConstraints;
+import com.therekrab.autopilot.APProfile;
+import com.therekrab.autopilot.APTarget;
+import com.therekrab.autopilot.Autopilot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.constants.field.Field;
@@ -20,9 +25,14 @@ import frc.utils.auto.PathPlannerUtil;
 import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.utilcommands.InitExecuteCommand;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 import java.util.function.Supplier;
+
+import static edu.wpi.first.units.Units.Centimeters;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 public class SwerveCommandsBuilder extends GBCommandsBuilder {
 
@@ -47,6 +57,38 @@ public class SwerveCommandsBuilder extends GBCommandsBuilder {
 			ModuleConstants.IS_CURRENT_CONTROL ? modules::setDrivesCurrent : modules::setDrivesVoltage
 		);
 	}
+
+	public Command getAutoPilotCommand(APTarget target, Supplier<Pose2d> robotPose) {
+		return new RunCommand(() -> {
+			ChassisSpeeds robotRelativeSpeeds = swerve.getRobotRelativeVelocity();
+			Pose2d pose = robotPose.get();
+
+			Autopilot.APResult output = kAutopilot.calculate(pose, robotRelativeSpeeds, target);
+
+			/* these speeds are field relative */
+			LinearVelocity veloX = output.vx();
+			LinearVelocity veloY = output.vy();
+			Rotation2d headingReference = output.targetAngle();
+
+			/* This is where you should apply these speeds to the drivetrain */
+			swerve.driveByState(new ChassisSpeeds(veloX, veloY, RotationsPerSecond.of(0)), headingReference);
+			Logger.recordOutput("AutoPilot/Target", target.getReference());
+		}, swerve).until(() -> kAutopilot.atTarget(robotPose.get(), target));
+	}
+
+	private static final APConstraints kConstraints = new APConstraints().withAcceleration(3.5).withJerk(2.0);
+	private static final PathConstraints pConstarints = new PathConstraints(
+		4,
+		3.5,
+		Rotation2d.fromDegrees(720).getRadians(),
+		Rotation2d.fromDegrees(540).getRadians()
+	);
+
+	private static final APProfile kProfile = new APProfile(kConstraints).withErrorXY(Centimeters.of(2))
+		.withErrorTheta(Degrees.of(0.5))
+		.withBeelineRadius(Centimeters.of(8));
+
+	public static final Autopilot kAutopilot = new Autopilot(kProfile);
 
 	public Command steerCalibration(boolean isQuasistatic, SysIdRoutine.Direction direction) {
 		return swerve.asSubsystemCommand(steerCalibrator.getSysIdCommand(isQuasistatic, direction), "Steer calibration");
@@ -173,11 +215,11 @@ public class SwerveCommandsBuilder extends GBCommandsBuilder {
 	}
 
 
-	public Command driveToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose, PathConstraints pathfindingConstraints) {
+	public Command driveToPose(Supplier<Pose2d> currentPose, Supplier<Pose2d> targetPose) {
 		return swerve.asSubsystemCommand(
 			new DeferredCommand(
 				() -> new SequentialCommandGroup(
-					pathToPose(currentPose.get(), targetPose.get(), pathfindingConstraints),
+					pathToPose(currentPose.get(), targetPose.get(), pConstarints),
 					moveToPoseByPID(currentPose, targetPose.get())
 				),
 				Set.of(swerve)

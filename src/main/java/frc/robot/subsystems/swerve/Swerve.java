@@ -228,6 +228,8 @@ public class Swerve extends GBSubsystem {
 	private ChassisSpeeds getDriveModeRelativeSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
 		if (swerveState.getDriveRelative() == DriveRelative.ROBOT_RELATIVE) {
 			return speeds;
+		} else if (swerveState.getDriveRelative() == DriveRelative.FIELD_RELATIVE) {
+			return SwerveMath.allianceToRobotRelativeSpeeds(speeds, headingSupplier.get());
 		}
 		return SwerveMath.allianceToRobotRelativeSpeeds(speeds, getAllianceRelativeHeading());
 	}
@@ -267,6 +269,13 @@ public class Swerve extends GBSubsystem {
 	protected void driveByState(ChassisPowers powers, SwerveState swerveState) {
 		ChassisSpeeds speedsFromPowers = SwerveMath.powersToSpeeds(powers, constants);
 		driveByState(speedsFromPowers, swerveState);
+	}
+
+	protected void driveByState(ChassisSpeeds speeds, Rotation2d heading) {
+		speeds.omegaRadiansPerSecond = Rotation2d
+			.fromDegrees(constants.rotationDegreesPIDController().calculate(headingSupplier.get().getDegrees(), heading.getDegrees()))
+			.getRadians();
+		driveByState(speeds, SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.FIELD_RELATIVE));
 	}
 
 	protected void driveByState(ChassisSpeeds speeds, SwerveState swerveState) {

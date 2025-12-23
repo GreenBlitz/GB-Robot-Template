@@ -56,6 +56,7 @@ public class AimAssistMath {
 		Rotation2d targetHeadingHingeSystemAngle = switch (swerveState.getDriveRelative()) {
 			case ALLIANCE_RELATIVE -> Field.getAllianceRelative(allianceRelativeTargetHeading);
 			case ROBOT_RELATIVE -> allianceRelativeTargetHeading.minus(robotPose.getRotation());
+			case FIELD_RELATIVE -> allianceRelativeTargetHeading.minus(robotPose.getRotation());
 		};
 
 		ChassisSpeeds targetHeadingRelativeSpeeds = SwerveMath.allianceToRobotRelativeSpeeds(speeds, targetHeadingHingeSystemAngle);

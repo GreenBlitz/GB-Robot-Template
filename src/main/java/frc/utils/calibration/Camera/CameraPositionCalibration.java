@@ -50,7 +50,7 @@ public class CameraPositionCalibration extends Command {
 		this.tagPoseFieldRelative = AprilTagFieldLayout.loadField(field).getTagPose(tagID).get();
 		this.robotPoseFieldRelative = new Pose2d(
 			// tag must be either 180 or 0 deg to the filed
-                //  Y difference from the tag is 0
+			// Y difference from the tag is 0
 			tagPoseFieldRelative.getX() - robotXAxisDistanceFromTag,
 			tagPoseFieldRelative.getY(),
 			FieldMath.transformAngle(tagPoseFieldRelative.getRotation().toRotation2d(), AngleTransform.INVERT)
@@ -63,16 +63,11 @@ public class CameraPositionCalibration extends Command {
 		this.currentCameraRotation = new Rotation3d();
 	}
 
-	private void logFunction() {
-		Logger.recordOutput(logPathPrefix + commandLogPath + "/solution/currentRotation", currentCameraRotation);
-		Logger.recordOutput(logPathPrefix + commandLogPath + "/solution/currentTranslation", currentCameraTranslation);
-		Logger.recordOutput(logPathPrefix + commandLogPath + "/cameraPoseFieldRelative", cameraPoseFieldRelative);
-	}
 
 	@Override
 	public void initialize() {
-		Logger.recordOutput(logPathPrefix + commandLogPath + "/tag/TagPoseFieldRelative", tagPoseFieldRelative);
-		Logger.recordOutput(logPathPrefix + commandLogPath + "/robot/robotFieldRelative", robotPoseFieldRelative);
+		Logger.recordOutput(logPathPrefix + commandLogPath + "/tag/tagPoseFieldRelative", tagPoseFieldRelative);
+		Logger.recordOutput(logPathPrefix + commandLogPath + "/robot/robotPoseFieldRelative", robotPoseFieldRelative);
 	}
 
 	@Override
@@ -80,7 +75,12 @@ public class CameraPositionCalibration extends Command {
 		cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
 		calculateRobotRelativeCameraPosition();
 		sumObjectsValues();
-		currentCycle ++;
+		currentCycle++;
+	}
+
+	@Override
+	public boolean isFinished() {
+		return currentCycle >= NEEDED_NUMBER_OF_CYCLES;
 	}
 
 	@Override
@@ -92,16 +92,11 @@ public class CameraPositionCalibration extends Command {
 			Math.atan2(sinRollRotation3DSum / NEEDED_NUMBER_OF_CYCLES, cosRollRotation3DSum / NEEDED_NUMBER_OF_CYCLES)
 		);
 
-
 		Logger.recordOutput(logPathPrefix + commandLogPath + "/solution/endTranslation", finalCameraTranslation);
 		Logger.recordOutput(logPathPrefix + commandLogPath + "/solution/endRotation", finalCameraRotation);
 		super.end(interrupted);
 	}
 
-	@Override
-	public boolean isFinished() {
-		return currentCycle >= NEEDED_NUMBER_OF_CYCLES;
-	}
 
 	private void calculateRobotRelativeCameraPosition() {
 		// add option to tags that are not perfectly aligned
@@ -128,6 +123,12 @@ public class CameraPositionCalibration extends Command {
 		sinPitchRotation3DSum += Math.sin(-currentCameraRotation.getY());
 		cosRollRotation3DSum += Math.cos(currentCameraRotation.getZ());
 		sinRollRotation3DSum += Math.sin(currentCameraRotation.getZ());
+	}
+
+	private void logFunction() {
+		Logger.recordOutput(logPathPrefix + commandLogPath + "/solution/currentRotation", currentCameraRotation);
+		Logger.recordOutput(logPathPrefix + commandLogPath + "/solution/currentTranslation", currentCameraTranslation);
+		Logger.recordOutput(logPathPrefix + commandLogPath + "/cameraPoseFieldRelative", cameraPoseFieldRelative);
 	}
 
 }

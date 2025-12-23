@@ -4,10 +4,15 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import frc.constants.MathConstants;
 import frc.robot.Robot;
+import frc.robot.SimulationManager;
+import frc.robot.statemachine.ScoringHelpers;
+import frc.robot.statemachine.shooterstatehandler.ShooterStateHandler;
+import frc.robot.subsystems.arm.Arm;
 import frc.utils.math.FieldMath;
 import org.littletonrobotics.junction.Logger;
+
+import static edu.wpi.first.math.MathUtil.isNear;
 
 public class TargetChecks {
 
@@ -19,19 +24,30 @@ public class TargetChecks {
 	}
 
 	private static boolean isWithinDistance(Translation2d robotPosition, double maxShootingDistanceFromTargetMeters, Translation2d closestGoal) {
-		return robotPosition.getDistance(closestGoal) <= maxShootingDistanceFromTargetMeters;
+		boolean isWithinDistance = robotPosition.getDistance(closestGoal) <= maxShootingDistanceFromTargetMeters;
+		Logger.recordOutput(isReadyToShootLogPath + "/isInDistance", isWithinDistance);
+		return isWithinDistance;
 	}
 
 	private static boolean isInAngleRange(Translation2d robotPosition, Pose2d closestGoal, Rotation2d maxAngleFromCenter) {
 		Rotation2d AngleBetweenRobotAndGoal = FieldMath.getRelativeTranslation(closestGoal, robotPosition).getAngle();
-		return Math.abs(AngleBetweenRobotAndGoal.getDegrees()) <= maxAngleFromCenter.getDegrees();
+		boolean isInAngleRange = Math.abs(AngleBetweenRobotAndGoal.getDegrees()) <= maxAngleFromCenter.getDegrees();
+		Logger.recordOutput(isReadyToShootLogPath + "/isInRange", isInAngleRange);
+		return isInAngleRange;
 	}
 
-	private static boolean isAtHeading(Pose2d robotPose, Translation2d closestGoal, Rotation2d headingTolerance, Rotation2d currentTurretAngle) {
-		Rotation2d wantedAngle = FieldMath.getRelativeTranslation(robotPose, closestGoal).getAngle();
-		Rotation2d currentFieldRelativeTurretAngle = Rotation2d
-			.fromDegrees((robotPose.getRotation().getDegrees() + currentTurretAngle.getDegrees()) % MathConstants.FULL_CIRCLE.getDegrees());
-		return MathUtil.isNear(wantedAngle.getDegrees(), currentFieldRelativeTurretAngle.getDegrees(), headingTolerance.getDegrees());
+	private static boolean isTurretAtTarget(Pose2d robotPose, Arm turret, double tolerance) {
+		Rotation2d wantedAngle = ShooterStateHandler.getRobotRelativeLookAtTowerAngleForTurret(
+			ScoringHelpers.getClosestTower(robotPose).getPose().getTranslation(),
+			new Pose2d(
+				robotPose.getX() + robotPose.getRotation().getCos() * SimulationManager.TURRET_DISTANCE_FROM_ROBOT_ON_X_AXIS,
+				robotPose.getY() + robotPose.getRotation().getSin() * SimulationManager.TURRET_DISTANCE_FROM_ROBOT_ON_X_AXIS,
+				robotPose.getRotation()
+			)
+		);
+		boolean isAtHeading = MathUtil.isNear(wantedAngle.getDegrees(), turret.getPosition().getDegrees(), tolerance);
+		Logger.recordOutput(isReadyToShootLogPath + "/isAtHeading", isAtHeading);
+		return isAtHeading;
 	}
 
 	private static boolean isFlywheelAtVelocity(
@@ -39,15 +55,19 @@ public class TargetChecks {
 		Rotation2d flywheelVelocityRotation2dPerSecond,
 		Rotation2d flywheelVelocityToleranceRotation2dPerSecond
 	) {
-		return MathUtil.isNear(
+		boolean isFlywheelAtVelocity = isNear(
 			wantedFlywheelVelocityRotation2dPerSecond.getDegrees(),
 			flywheelVelocityRotation2dPerSecond.getDegrees(),
 			flywheelVelocityToleranceRotation2dPerSecond.getDegrees()
 		);
+		Logger.recordOutput(isReadyToShootLogPath + "/isFlywheelAtVelocity", isFlywheelAtVelocity);
+		return isFlywheelAtVelocity;
 	}
 
 	private static boolean isHoodAtPositon(Rotation2d wantedPosition, Rotation2d hoodPosition, Rotation2d tolerance) {
-		return MathUtil.isNear(wantedPosition.getDegrees(), hoodPosition.getDegrees(), tolerance.getDegrees());
+		boolean isHoodAtPosition = MathUtil.isNear(wantedPosition.getDegrees(), hoodPosition.getDegrees(), tolerance.getDegrees());
+		Logger.recordOutput(isReadyToShootLogPath + "/isHoodAtPositon", isHoodAtPosition);
+		return isHoodAtPosition;
 	}
 
 	public static boolean isReadyToShoot(
@@ -62,7 +82,6 @@ public class TargetChecks {
 		double maxShootingDistanceFromTargetMeters
 	) {
 		Pose2d robotPose = robot.getPoseEstimator().getEstimatedPose();
-		Rotation2d turretHeading = robot.getTurret().getPosition();
 		Rotation2d flywheelVelocityRotation2dPerSecond = robot.getFlyWheel().getVelocity();
 		Rotation2d hoodPosition = robot.getHood().getPosition();
 
@@ -71,23 +90,18 @@ public class TargetChecks {
 			maxShootingDistanceFromTargetMeters,
 			closestGoal.getTranslation()
 		);
-		Logger.recordOutput(isReadyToShootLogPath + "/isInDistance", isWithinDistance);
 
 		boolean isInRange = isInAngleRange(robotPose.getTranslation(), closestGoal, maxAngleFromGoalCenter);
-		Logger.recordOutput(isReadyToShootLogPath + "/isInRange", isInRange);
 
-		boolean isAtHeading = isAtHeading(robotPose, closestGoal.getTranslation(), headingTolerance, turretHeading);
-		Logger.recordOutput(isReadyToShootLogPath + "/isAthHeading", isAtHeading);
+		boolean isAtHeading = isTurretAtTarget(robotPose, robot.getTurret(), headingTolerance.getDegrees());
 
 		boolean isFlywheelReadyToShoot = isFlywheelAtVelocity(
 			wantedFlywheelVelocityRPS,
 			flywheelVelocityRotation2dPerSecond,
 			flywheelVelocityToleranceRPS
 		);
-		Logger.recordOutput(isReadyToShootLogPath + "/isFlywheelAtVelocity", isFlywheelReadyToShoot);
 
 		boolean isHoodAtPosition = isHoodAtPositon(wantedHoodPosition, hoodPosition, hoodPositionTolerance);
-		Logger.recordOutput(isReadyToShootLogPath + "/isHoodAtPositon", isHoodAtPosition);
 
 		return isFlywheelReadyToShoot && isHoodAtPosition && isInRange && isWithinDistance && isAtHeading;
 	}

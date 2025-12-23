@@ -6,12 +6,12 @@ import org.littletonrobotics.junction.Logger;
 
 public class ScoringHelpers {
 
-	public static TowerSide getClosestTower(Pose2d robotPose) {
+	public static TowerSide getClosestTower(Pose2d pose) {
 		TowerSide smallestDistanceTower = TowerSide.CLOSE_TOWER;
 		for (TowerSide tower : TowerSide.values()) {
 			if (
-				robotPose.getTranslation().getDistance(smallestDistanceTower.getPose().getTranslation())
-					> robotPose.getTranslation().getDistance(tower.getPose().getTranslation())
+				pose.getTranslation().getDistance(smallestDistanceTower.getPose().getTranslation())
+					> pose.getTranslation().getDistance(tower.getPose().getTranslation())
 			)
 				smallestDistanceTower = tower;
 		}
@@ -19,8 +19,8 @@ public class ScoringHelpers {
 		return smallestDistanceTower;
 	}
 
-	public static double getDistanceFromClosestTower(Pose2d robotPose) {
-		return getClosestTower(robotPose).getPose().getTranslation().getDistance(robotPose.getTranslation());
+	public static double getDistanceFromClosestTower(Pose2d pose) {
+		return getClosestTower(pose).getPose().getTranslation().getDistance(pose.getTranslation());
 	}
 
 }

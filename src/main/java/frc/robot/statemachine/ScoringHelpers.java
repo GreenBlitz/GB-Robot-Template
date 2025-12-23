@@ -1,15 +1,10 @@
 package frc.robot.statemachine;
 
-import edu.wpi.first.math.geometry.Rotation2d;import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose2d;
 import frc.constants.field.TowerSide;
 import org.littletonrobotics.junction.Logger;
 
 public class ScoringHelpers {
-
-    public Rotation2d getNeededSwerveAngleForAimAssist(Rotation2d robotAngle, Rotation2d turretAngle) {
-        return null;
-    }
-
 
 	public static TowerSide getClosestTower(Pose2d robotPose) {
 		TowerSide smallestDistanceTower = TowerSide.CLOSE_TOWER;

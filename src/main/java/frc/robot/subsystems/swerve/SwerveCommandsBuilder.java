@@ -217,4 +217,8 @@ public class SwerveCommandsBuilder extends GBCommandsBuilder {
 		);
 	}
 
+	public Command changeIsMoveLegal(boolean isMoveLegal) {
+		return new InstantCommand(() -> swerve.getStateHandler().setIsTurretMoveLegalSupplier(() -> isMoveLegal), swerve);
+	}
+
 }

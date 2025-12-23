@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import frc.constants.MathConstants;
+import frc.constants.field.Field;
 import org.littletonrobotics.junction.Logger;
 
 public class SimulationManager {
@@ -21,6 +22,7 @@ public class SimulationManager {
 		logIntakePosition3d();
 		logTurretPosition3d();
 		logHoodPosition3d();
+		logTowerPosition3d();
 	}
 
 	private void logIntakePosition3d() {
@@ -33,6 +35,10 @@ public class SimulationManager {
 
 	public void logHoodPosition3d() {
 		Logger.recordOutput(logPath + "/Hood", getHoodPosition3d(robot.getHood().getPosition()));
+	}
+
+	public void logTowerPosition3d() {
+		Logger.recordOutput(logPath + "/Tower", getTowerPosition3d());
 	}
 
 	public Pose3d getIntakePosition3d(Rotation2d intakePosition) {
@@ -58,6 +64,10 @@ public class SimulationManager {
 				robot.getTurret().getPosition().getRadians() + MathConstants.QUARTER_CIRCLE.getRadians()
 			)
 		);
+	}
+
+	public Pose3d getTowerPosition3d() {
+		return new Pose3d(new Translation3d(Field.Tower.getX(), Field.Tower.getY(), 0), new Rotation3d());
 	}
 
 }

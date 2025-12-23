@@ -34,7 +34,6 @@ public class TurretAimAtTowerCommand extends Command {
 		Translation2d target = ScoringHelpers.getClosestTower(turretOnField).getPose().getTranslation();
 		Rotation2d targetAngle = ShooterStateHandler.getRobotRelativeLookAtTowerAngleForTurret(target, turretOnField);
 
-
 		if (ShooterStateHandler.isTurretMoveLegal(targetAngle, turret)) {
 			Logger.recordOutput(logPath + "/IsTurretGoingToPosition", true);
 		} else {

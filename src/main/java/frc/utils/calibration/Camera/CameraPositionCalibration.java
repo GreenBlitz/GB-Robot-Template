@@ -50,6 +50,7 @@ public class CameraPositionCalibration extends Command {
 		this.tagPoseFieldRelative = AprilTagFieldLayout.loadField(field).getTagPose(tagID).get();
 		this.robotPoseFieldRelative = new Pose2d(
 			// tag must be either 180 or 0 deg to the filed
+                //  Y difference from the tag is 0
 			tagPoseFieldRelative.getX() - robotXAxisDistanceFromTag,
 			tagPoseFieldRelative.getY(),
 			FieldMath.transformAngle(tagPoseFieldRelative.getRotation().toRotation2d(), AngleTransform.INVERT)
@@ -79,7 +80,7 @@ public class CameraPositionCalibration extends Command {
 		cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
 		calculateRobotRelativeCameraPosition();
 		sumObjectsValues();
-		currentCycle += 1;
+		currentCycle ++;
 	}
 
 	@Override

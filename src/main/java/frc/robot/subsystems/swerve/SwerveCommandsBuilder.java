@@ -76,10 +76,10 @@ public class SwerveCommandsBuilder extends GBCommandsBuilder {
 		}, swerve).until(() -> kAutopilot.atTarget(robotPose.get(), target));
 	}
 
-	private static final APConstraints kConstraints = new APConstraints().withAcceleration(3.5).withJerk(2.0);
+	private static final APConstraints kConstraints = new APConstraints().withAcceleration(9).withJerk(2.0);
 	private static final PathConstraints pConstarints = new PathConstraints(
 		4,
-		3.5,
+		9,
 		Rotation2d.fromDegrees(720).getRadians(),
 		Rotation2d.fromDegrees(540).getRadians()
 	);

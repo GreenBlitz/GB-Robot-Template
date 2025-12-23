@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.RobotConfig;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -14,7 +17,11 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.imu.IMUFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
+import frc.robot.subsystems.swerve.factories.modules.drive.KrakenX60DriveBuilder;
+import frc.robot.subsystems.swerve.module.ModuleConstants;
+import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.utils.auto.PathPlannerAutoWrapper;
+import frc.utils.auto.PathPlannerUtil;
 import frc.utils.battery.BatteryUtil;
 import frc.robot.hardware.interfaces.IIMU;
 
@@ -51,6 +58,12 @@ public class Robot {
 		);
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+
+		swerve.configPathPlanner(
+			poseEstimator::getEstimatedPose,
+			poseEstimator::resetPose,
+			PathPlannerUtil.getGuiRobotConfig().orElse(getRobotConfig())
+		);
 	}
 
 	public void periodic() {
@@ -75,6 +88,23 @@ public class Robot {
 
 	public PathPlannerAutoWrapper getAutonomousCommand() {
 		return new PathPlannerAutoWrapper();
+	}
+
+	public RobotConfig getRobotConfig() {
+		return new RobotConfig(
+			68,
+			6.375,
+			new ModuleConfig(
+				0.048359,
+				swerve.getConstants().velocityAt12VoltsMetersPerSecond(),
+				0.96,
+				DCMotor.getKrakenX60Foc(1),
+				KrakenX60DriveBuilder.GEAR_RATIO,
+				KrakenX60DriveBuilder.SLIP_CURRENT,
+				1
+			),
+			swerve.getModules().getModulePositionsFromCenterMeters()
+		);
 	}
 
 }

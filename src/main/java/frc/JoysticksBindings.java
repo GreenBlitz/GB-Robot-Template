@@ -3,6 +3,7 @@ package frc;
 import com.therekrab.autopilot.APTarget;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.units.Units;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
@@ -50,7 +51,9 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-		APTarget target = new APTarget(new Pose2d(5, 5, new Rotation2d(Math.PI / 2)));
+		APTarget target =
+			new APTarget(new Pose2d(5.12, 5.1, Rotation2d.fromDegrees(-120))).withEntryAngle(Rotation2d.fromDegrees(-120)).withRotationRadius(
+				Units.Meter.of(0.5));
 
 		usedJoystick.A
 			.onTrue(robot.getSwerve().getCommandsBuilder().getAutoPilotCommand(target, () -> robot.getPoseEstimator().getEstimatedPose()));

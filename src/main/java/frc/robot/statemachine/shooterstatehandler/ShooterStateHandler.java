@@ -99,8 +99,9 @@ public class ShooterStateHandler {
 		return new TurretAimAtTowerCommand(turret, robotPose, logPath);
 	}
 
-	public static Rotation2d getRobotRelativeLookAtTowerAngleForTurret(Translation2d target, Pose2d robotPose) {
-		Rotation2d targetAngle = Rotation2d.fromRadians(FieldMath.getRelativeTranslation(robotPose, target).getAngle().getRadians());
+	public static Rotation2d getRobotRelativeLookAtTowerAngleForTurret(Translation2d target, Pose2d fieldRelativeTurretPose) {
+		Rotation2d targetAngle = Rotation2d
+			.fromRadians(FieldMath.getRelativeTranslation(fieldRelativeTurretPose, target).getAngle().getRadians());
 		return Rotation2d
 			.fromDegrees(MathUtil.inputModulus(targetAngle.getDegrees(), Rotation2d.kZero.getDegrees(), MathConstants.FULL_CIRCLE.getDegrees()));
 	}

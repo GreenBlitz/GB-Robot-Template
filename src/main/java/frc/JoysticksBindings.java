@@ -58,11 +58,11 @@ public class JoysticksBindings {
 
 
 		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d())));
-		usedJoystick.A.whileTrue(
+		usedJoystick.A.onTrue(
 			robot.getSwerve()
 				.getCommandsBuilder()
 				.driveByState(() -> chassisPowersA, SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE))
-				.withTimeout(6)
+				.withTimeout(8)
 				.andThen(
 					robot.getSwerve()
 						.getCommandsBuilder()
@@ -73,11 +73,11 @@ public class JoysticksBindings {
 						.withTimeout(0.3)
 				)
 		);
-		usedJoystick.X.whileTrue(
+		usedJoystick.X.onTrue(
 			robot.getSwerve()
 				.getCommandsBuilder()
 				.driveByState(() -> chassisPowersB, SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE))
-				.withTimeout(6)
+				.withTimeout(8)
 				.andThen(
 					robot.getSwerve()
 						.getCommandsBuilder()

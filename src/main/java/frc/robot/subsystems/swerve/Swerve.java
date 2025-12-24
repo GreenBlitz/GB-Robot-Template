@@ -176,6 +176,10 @@ public class Swerve extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/IMU/Acceleration", getAccelerationFromIMUMetersPerSecondSquared());
 
 		Logger.recordOutput(getLogPath() + "/isCollisionDetected", isCollisionDetected());
+		
+		ChassisSpeeds speeds = new ChassisSpeeds(0.1 * getConstants().velocityAt12VoltsMetersPerSecond(), 0, 0.0065846515);
+		SwerveModuleState[] states = kinematics.toSwerveModuleStates(speeds, new Translation2d());
+		Logger.recordOutput("AreOurEncodersLying?FindOutNow!", states);
 	}
 
 

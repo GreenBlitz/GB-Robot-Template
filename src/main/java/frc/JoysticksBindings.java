@@ -1,6 +1,7 @@
 package frc;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
@@ -55,38 +56,37 @@ public class JoysticksBindings {
 		chassisPowersA.xPower = 0.1;
 		ChassisPowers chassisPowersB = new ChassisPowers();
 		chassisPowersB.xPower = -chassisPowersA.xPower;
-
-
+		
 		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d())));
 		usedJoystick.A.onTrue(
 			robot.getSwerve()
 				.getCommandsBuilder()
 				.driveByState(() -> chassisPowersA, SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE))
 				.withTimeout(8)
-				.andThen(
-					robot.getSwerve()
-						.getCommandsBuilder()
-						.driveByState(
-							() -> chassisPowersA,
-							SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE).withDriveSpeed(DriveSpeed.SLOW)
-						)
-						.withTimeout(0.3)
-				)
+//				.andThen(
+//					robot.getSwerve()
+//						.getCommandsBuilder()
+//						.driveByState(
+//							() -> chassisPowersA,
+//							SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE).withDriveSpeed(DriveSpeed.SLOW)
+//						)
+//						.withTimeout(0.3)
+//				)
 		);
 		usedJoystick.X.onTrue(
 			robot.getSwerve()
 				.getCommandsBuilder()
 				.driveByState(() -> chassisPowersB, SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE))
 				.withTimeout(8)
-				.andThen(
-					robot.getSwerve()
-						.getCommandsBuilder()
-						.driveByState(
-							() -> chassisPowersB,
-							SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE).withDriveSpeed(DriveSpeed.SLOW)
-						)
-						.withTimeout(0.3)
-				)
+//				.andThen(
+//					robot.getSwerve()
+//						.getCommandsBuilder()
+//						.driveByState(
+//							() -> chassisPowersB,
+//							SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE).withDriveSpeed(DriveSpeed.SLOW)
+//						)
+//						.withTimeout(0.3)
+//				)
 		);
 		usedJoystick.B.whileTrue(robot.getSwerve().getCommandsBuilder().driveByState(() -> chassisPowersA, SwerveState.DEFAULT_DRIVE));
 

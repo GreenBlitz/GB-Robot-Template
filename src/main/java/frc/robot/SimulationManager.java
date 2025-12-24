@@ -12,6 +12,7 @@ public class SimulationManager {
 
 	private final String logPath;
 	private final Robot robot;
+	public static final double TURRET_DISTANCE_FROM_ROBOT_ON_X_AXIS = 0.25;
 
 	public SimulationManager(String logPath, Robot robot) {
 		this.logPath = logPath;
@@ -50,7 +51,7 @@ public class SimulationManager {
 
 	public Pose3d getTurretPosition3d(Rotation2d turretPosition) {
 		return new Pose3d(
-			new Translation3d(0.25, 0, 0.0),
+			new Translation3d(TURRET_DISTANCE_FROM_ROBOT_ON_X_AXIS, 0, 0.0),
 			new Rotation3d(0.0, 0.0, turretPosition.getRadians() + MathConstants.QUARTER_CIRCLE.getRadians())
 		);
 	}

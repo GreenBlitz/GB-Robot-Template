@@ -54,8 +54,15 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 		usedJoystick.A.onTrue(robot.getRobotCommander().driveWith(RobotState.DRIVE));
-		usedJoystick.B.onTrue(robot.getRobotCommander().driveWith(RobotState.SHOOT)); // todo - pre then shoot until no balls
-		usedJoystick.X.onTrue(robot.getBelly().getCommandsBuilder().rollRotationsAtVoltageForwards(1,3)); // todo - pre then shoot until no balls
+		usedJoystick.B
+			.onTrue(robot.getRobotCommander().driveWith(RobotState.SHOOT, robot.getRobotCommander().getSuperstructure().shootSequence())); // todo
+																																			// -
+																																			// pre
+																																			// then
+																																			// shoot
+																																			// until
+																																			// no
+																																			// balls
 		usedJoystick.L1.onTrue(robot.getRobotCommander().driveWith(RobotState.INTAKE));
 		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getRobotCommander().driveWith(RobotState.SHOOT_AND_INTAKE));
 	}

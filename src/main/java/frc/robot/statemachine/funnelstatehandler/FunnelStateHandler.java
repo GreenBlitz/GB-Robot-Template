@@ -39,7 +39,7 @@ public class FunnelStateHandler {
 		Command command = switch (state) {
 			case DRIVE -> drive();
 			case SHOOT -> shoot();
-            case SHOOT_WHILE_INTAKE -> shootWhileIntake();
+			case SHOOT_WHILE_INTAKE -> shootWhileIntake();
 			case INTAKE -> intake();
 			case STOP -> stop();
 			case CALIBRATION -> calibration();
@@ -56,16 +56,19 @@ public class FunnelStateHandler {
 	}
 
 	private Command drive() {
-		return new ParallelDeadlineGroup(
-			belly.getCommandsBuilder().rollRotationsAtVoltageForwards(1, FunnelState.DRIVE.getBellyVoltage()).until(this::isBallAtSensor),
-			omni.getCommandsBuilder().stop()
+		return new SequentialCommandGroup(
+			new ParallelDeadlineGroup(
+				belly.getCommandsBuilder().rollRotationsAtVoltageForwards(1, FunnelState.DRIVE.getBellyVoltage()).until(this::isBallAtSensor),
+				omni.getCommandsBuilder().stop()
+			),
+			belly.getCommandsBuilder().stop()
 		);
 	}
 
 	private Command shoot() {
 		return new ParallelDeadlineGroup(
-            belly.getCommandsBuilder().rollRotationsAtVoltageForwards(1,FunnelState.SHOOT.getBellyVoltage()),
-            omni.getCommandsBuilder().setVoltage(FunnelState.SHOOT.getOmniVoltage())
+			belly.getCommandsBuilder().rollRotationsAtVoltageForwards(1, FunnelState.SHOOT.getBellyVoltage()),
+			omni.getCommandsBuilder().setVoltage(FunnelState.SHOOT.getOmniVoltage())
 		);
 	}
 

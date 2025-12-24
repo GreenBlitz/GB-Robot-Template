@@ -89,8 +89,8 @@ public class Superstructure {
 				case DRIVE -> idle();
 				case INTAKE -> intake();
 				case PRE_SHOOT -> preShoot();
-				case SHOOT -> shootSequence();
-				case SHOOT_AND_INTAKE -> shootWhileIntakeSequence();
+				case SHOOT -> shoot();
+				case SHOOT_AND_INTAKE -> shootWhileIntake();
 			}
 		);
 	}
@@ -128,10 +128,17 @@ public class Superstructure {
 	}
 
 	private Command shoot() {
-		return new ParallelDeadlineGroup(
-            funnelStateHandler.setState(FunnelState.SHOOT),
-            shooterStateHandler.setState(ShooterState.SHOOT),
-			intakeStateHandler.setState(IntakeState.CLOSED)
+		return new SequentialCommandGroup(
+			new ParallelDeadlineGroup(
+				funnelStateHandler.setState(FunnelState.SHOOT),
+				shooterStateHandler.setState(ShooterState.SHOOT),
+				intakeStateHandler.setState(IntakeState.CLOSED)
+			),
+			new ParallelDeadlineGroup(
+				intakeStateHandler.setState(IntakeState.CLOSED),
+				funnelStateHandler.setState(FunnelState.SHOOT),
+				shooterStateHandler.setState(ShooterState.SHOOT)
+			).withTimeout(StateMachineConstants.SECONDS_TO_WAIT_AFTER_SHOOT)
 		);
 	}
 
@@ -143,28 +150,27 @@ public class Superstructure {
 		);
 	}
 
-    private boolean isReadyToShoot(){
-        Supplier<Double> distanceFromTower = () -> ScoringHelpers.getDistanceFromClosestTower(robot.getPoseEstimator().getEstimatedPose());
-        return TargetChecks.isReadyToShoot(
-                robot,
-                ShooterStateHandler.flywheelInterpolation(distanceFromTower).get(),
-                Constants.FLYWHEEL_VELOCITY_TOLERANCE_RPS,ShooterStateHandler.hoodInterpolation((distanceFromTower)).get(),
-                HoodConstants.HOOD_POSITION_TOLERANCE, StateMachineConstants.HEADING_TOLERANCE,StateMachineConstants.MAX_ANGLE_FROM_GOAL_CENTER,ScoringHelpers.getClosestTower(robot.getPoseEstimator().getEstimatedPose()).getPose(),
-                StateMachineConstants.MAX_DISTANCE_TO_SHOOT_METERS);
-    }
-
-	private Command shootSequence() {
-		return new SequentialCommandGroup(
-			preShoot().until(this::isReadyToShoot),
-            shoot()
+	private boolean isReadyToShoot() {
+		Supplier<Double> distanceFromTower = () -> ScoringHelpers.getDistanceFromClosestTower(robot.getPoseEstimator().getEstimatedPose());
+		return TargetChecks.isReadyToShoot(
+			robot,
+			ShooterStateHandler.flywheelInterpolation(distanceFromTower).get(),
+			Constants.FLYWHEEL_VELOCITY_TOLERANCE_RPS,
+			ShooterStateHandler.hoodInterpolation((distanceFromTower)).get(),
+			HoodConstants.HOOD_POSITION_TOLERANCE,
+			StateMachineConstants.HEADING_TOLERANCE,
+			StateMachineConstants.MAX_ANGLE_FROM_GOAL_CENTER,
+			ScoringHelpers.getClosestTower(robot.getPoseEstimator().getEstimatedPose()).getPose(),
+			StateMachineConstants.MAX_DISTANCE_TO_SHOOT_METERS
 		);
 	}
 
+	public Command shootSequence() {
+		return new SequentialCommandGroup(setState(RobotState.PRE_SHOOT).until(this::isReadyToShoot), setState(RobotState.SHOOT));
+	}
+
 	private Command shootWhileIntakeSequence() {
-		return new SequentialCommandGroup(
-			preShoot().until(this::isReadyToShoot),
-            shootWhileIntake()
-		);
+		return new SequentialCommandGroup(preShoot().until(this::isReadyToShoot), shootWhileIntake());
 	}
 
 	public void periodic() {

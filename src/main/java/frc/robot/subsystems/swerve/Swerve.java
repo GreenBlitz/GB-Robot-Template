@@ -353,16 +353,18 @@ public class Swerve extends GBSubsystem {
 
 		Translation2d[] moduleTranslationalStates = new Translation2d[moduleStates.length];
 		Translation2d robotTranslationalVelocityMetersPerSecond = new Translation2d(
-				getRobotRelativeVelocity().vxMetersPerSecond,
-				getRobotRelativeVelocity().vyMetersPerSecond
+			getRobotRelativeVelocity().vxMetersPerSecond,
+			getRobotRelativeVelocity().vyMetersPerSecond
 		);
 		for (int i = 0; i < moduleTranslationalStates.length; i++) {
 			moduleTranslationalStates[i] = new Translation2d(moduleStates[i].speedMetersPerSecond, moduleStates[i].angle)
 				.minus(new Translation2d(moduleRotationalStates[i].speedMetersPerSecond, moduleRotationalStates[i].angle));
-			areModulesSkidding[i] = !ToleranceMath
-				.isNear(robotTranslationalVelocityMetersPerSecond, moduleTranslationalStates[i], SwerveConstants.SKID_TOLERANCE_VELOCITY_METERS_PER_SECOND);
+			areModulesSkidding[i] = !ToleranceMath.isNear(
+				robotTranslationalVelocityMetersPerSecond,
+				moduleTranslationalStates[i],
+				SwerveConstants.SKID_TOLERANCE_VELOCITY_METERS_PER_SECOND
+			);
 		}
-
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {

@@ -1,10 +1,15 @@
 package frc;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
+import frc.robot.subsystems.swerve.states.DriveRelative;
+import frc.robot.subsystems.swerve.states.DriveSpeed;
+import frc.robot.subsystems.swerve.states.SwerveState;
 
 public class JoysticksBindings {
 
@@ -46,6 +51,45 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
+		ChassisPowers chassisPowersA = new ChassisPowers();
+		chassisPowersA.xPower = 0.1;
+		ChassisPowers chassisPowersB = new ChassisPowers();
+		chassisPowersB.xPower = -chassisPowersA.xPower;
+
+
+		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getPoseEstimator().resetPose(new Pose2d())));
+		usedJoystick.A.whileTrue(
+			robot.getSwerve()
+				.getCommandsBuilder()
+				.driveByState(() -> chassisPowersA, SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE))
+				.withTimeout(6)
+				.andThen(
+					robot.getSwerve()
+						.getCommandsBuilder()
+						.driveByState(
+							() -> chassisPowersA,
+							SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE).withDriveSpeed(DriveSpeed.SLOW)
+						)
+						.withTimeout(0.3)
+				)
+		);
+		usedJoystick.X.whileTrue(
+			robot.getSwerve()
+				.getCommandsBuilder()
+				.driveByState(() -> chassisPowersB, SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE))
+				.withTimeout(6)
+				.andThen(
+					robot.getSwerve()
+						.getCommandsBuilder()
+						.driveByState(
+							() -> chassisPowersB,
+							SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE).withDriveSpeed(DriveSpeed.SLOW)
+						)
+						.withTimeout(0.3)
+				)
+		);
+		usedJoystick.B.whileTrue(robot.getSwerve().getCommandsBuilder().driveByState(() -> chassisPowersA, SwerveState.DEFAULT_DRIVE));
+
 		// bindings...
 	}
 

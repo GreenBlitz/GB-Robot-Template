@@ -43,6 +43,8 @@ public class RobotManager extends LoggedRobot {
 		this.roborioCycles = 0;
 		this.robot = new Robot();
 
+		robot.getSwerve().getCommandsBuilder().setIsSubsystemRunningIndependently(true);
+
 		createAutoReadyForConstructionChooser();
 		JoysticksBindings.configureBindings(robot);
 

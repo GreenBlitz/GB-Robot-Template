@@ -61,8 +61,7 @@ public class FunnelStateHandler {
 				belly.getCommandsBuilder().rollRotationsAtVoltageForwards(1, FunnelState.DRIVE.getBellyVoltage()).until(this::isBallAtSensor),
 				omni.getCommandsBuilder().stop()
 			),
-			belly.getCommandsBuilder().stop(),
-            omni.getCommandsBuilder().stop()
+			new ParallelCommandGroup(belly.getCommandsBuilder().stop(), omni.getCommandsBuilder().stop())
 		);
 	}
 

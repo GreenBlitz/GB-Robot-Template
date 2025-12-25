@@ -16,6 +16,7 @@ import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.states.RotateAxis;
 import frc.robot.subsystems.swerve.states.SwerveState;
+import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
 import frc.utils.calibration.sysid.SysIdCalibrator;
@@ -217,8 +218,25 @@ public class SwerveCommandsBuilder extends GBCommandsBuilder {
 		);
 	}
 
+	public Command aimAssistTrying(ChassisSpeeds speeds) {
+		return new InstantCommand(
+			() -> swerve.getStateHandler()
+				.applyAimAssistOnChassisSpeeds(speeds, SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.LOOK_AT_TOWER)),
+			swerve
+		);
+	}
+
+
+	public Command applyAimAssist(ChassisSpeeds speeds) {
+		return new InitExecuteCommand(
+			() -> {},
+			() -> swerve.getStateHandler()
+				.applyAimAssistOnChassisSpeeds(speeds, SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.LOOK_AT_TOWER))
+		);
+	}
+
 	public Command changeIsMoveLegal(boolean isMoveLegal) {
-		return new InstantCommand(() -> swerve.getStateHandler().setIsTurretMoveLegalSupplier(() -> isMoveLegal), swerve);
+		return new RunCommand(() -> swerve.getStateHandler().setIsTurretMoveLegalSupplier(() -> isMoveLegal));
 	}
 
 }

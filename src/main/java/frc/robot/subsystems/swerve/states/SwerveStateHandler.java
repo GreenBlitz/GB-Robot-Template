@@ -12,6 +12,7 @@ import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssistMath;
 import frc.utils.alerts.Alert;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -38,6 +39,10 @@ public class SwerveStateHandler {
 		this.isTurretMoveLegalSupplier = Optional.of(isTurretMoveLegalSupplier);
 	}
 
+	public void logIsTurretMoveLegalSupplier() {
+		Logger.recordOutput("SwerveStateHandler/IsTurretMoveLegalSupplier", String.valueOf(isTurretMoveLegalSupplier));
+	}
+
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
 		if (swerveState.getAimAssist() == AimAssist.NONE) {
 			return speeds;
@@ -47,18 +52,28 @@ public class SwerveStateHandler {
 			return speeds;
 		}
 		if (swerveState.getAimAssist() == AimAssist.LOOK_AT_TOWER) {
-			if (isTurretMoveLegalSupplier.get().equals(false)) {
-				handleLookAtTowerAimAssist(speeds);
+			if (isTurretMoveLegalSupplier.isEmpty()) {
+				reportMissingSupplier("is move legal");
+				return speeds;
+			}
+			if (isTurretMoveLegalSupplier.get().get() == false) {
+				return handleLookAtTowerAimAssist(speeds);
 			}
 		}
 		return speeds;
 	}
 
 	private ChassisSpeeds handleLookAtTowerAimAssist(ChassisSpeeds speeds) {
-		double YLength = robotPoseSupplier.get().get().getY() - ScoringHelpers.getClosestTower(robotPoseSupplier.get().get()).getPose().getY();
-		double XLength = robotPoseSupplier.get().get().getX() - ScoringHelpers.getClosestTower(robotPoseSupplier.get().get()).getPose().getX();
-		Rotation2d targetHeading = Rotation2d.fromDegrees(Math.atan2(YLength, XLength));
-		return AimAssistMath.getRotationAssistedSpeeds(speeds, robotPoseSupplier.get().get().getRotation(), targetHeading, swerveConstants);
+		Pose2d robotPose = robotPoseSupplier.get().get();
+
+		Pose2d towerPose = ScoringHelpers.getClosestTower(robotPose).getPose();
+
+		double YLength = robotPose.getY() - towerPose.getY();
+		double XLength = robotPose.getX() - towerPose.getX();
+
+		Rotation2d targetHeading = Rotation2d.fromRadians(Math.atan2(YLength, XLength));
+
+		return AimAssistMath.getRotationAssistedSpeeds(speeds, robotPose.getRotation(), targetHeading, swerveConstants);
 	}
 
 	public Translation2d getRotationAxis(RotateAxis rotationAxisState) {

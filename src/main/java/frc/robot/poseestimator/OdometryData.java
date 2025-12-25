@@ -10,7 +10,7 @@ public class OdometryData {
 	private double timestampSeconds = 0;
 	private SwerveModulePosition[] wheelPositions = new SwerveModulePosition[4];
 	private Optional<Rotation2d> imuYaw = Optional.empty();
-	private Optional<Double> imuAcceleration;
+	private Optional<Double> imuAcceleration = Optional.empty();
 
 	public OdometryData() {}
 

@@ -52,6 +52,8 @@ public class Swerve extends GBSubsystem {
 	private final boolean[] areModulesSkidding;
 	private final Translation2d[] moduleTranslationalStates;
 
+	private SwerveModuleState[] moduleStates;
+	private SwerveModuleState[] moduleRotationalStates;
 	private SwerveState currentState;
 	private Supplier<Rotation2d> headingSupplier;
 	private ChassisPowers driversPowerInputs;
@@ -60,12 +62,14 @@ public class Swerve extends GBSubsystem {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 		this.driversPowerInputs = new ChassisPowers();
+		this.moduleStates = new SwerveModuleState[ModuleUtil.ModulePosition.values().length];
+		this.moduleRotationalStates = new SwerveModuleState[moduleStates.length];
 
 		this.constants = constants;
 		this.driveRadiusMeters = SwerveMath.calculateDriveRadiusMeters(modules.getModulePositionsFromCenterMeters());
 		this.modules = modules;
-		this.areModulesSkidding = new boolean[ModuleUtil.ModulePosition.values().length];
-		this.moduleTranslationalState = new Translation2d[areModulesSkidding.length];
+		this.areModulesSkidding = new boolean[moduleStates.length];
+		this.moduleTranslationalStates = new Translation2d[areModulesSkidding.length];
 		this.imu = imu;
 		this.imuSignals = imuSignals;
 
@@ -348,10 +352,10 @@ public class Swerve extends GBSubsystem {
 	private void checkSkidding() {
 		double robotYawAngularVelocityRadiansPerSecond = getRobotRelativeVelocity().omegaRadiansPerSecond;
 
-		SwerveModuleState[] moduleRotationalStates = kinematics
+		moduleRotationalStates = kinematics
 			.toSwerveModuleStates(new ChassisSpeeds(0, 0, robotYawAngularVelocityRadiansPerSecond), new Translation2d());
 
-		SwerveModuleState[] moduleStates = modules.getCurrentStates();
+		moduleStates = modules.getCurrentStates();
 
 		Translation2d robotTranslationalVelocityMetersPerSecond = new Translation2d(
 			getRobotRelativeVelocity().vxMetersPerSecond,

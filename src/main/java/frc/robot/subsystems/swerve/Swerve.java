@@ -186,7 +186,7 @@ public class Swerve extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/isCollisionDetected", isCollisionDetected());
 		checkSkidding();
 		for (int i = 0; i < areModulesSkidding.length; i++) {
-			Logger.recordOutput(getLogPath() + "/isSkidding/" + ModuleUtil.ModulePosition.values()[i].toString(), areModulesSkidding[i]);
+			Logger.recordOutput(getLogPath() + "/isSkidding/" + ModuleUtil.ModulePosition.values()[i], areModulesSkidding[i]);
 		}
 	}
 

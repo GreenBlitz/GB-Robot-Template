@@ -22,6 +22,7 @@ public class SwerveStateHandler {
 	private final SwerveConstants swerveConstants;
 	private Optional<Supplier<Pose2d>> robotPoseSupplier;
 	private Optional<Supplier<Boolean>> isTurretMoveLegalSupplier;
+	private Optional<Supplier<Rotation2d>> turretAngleSupplier;
 
 	public SwerveStateHandler(Swerve swerve) {
 		this.swerve = swerve;
@@ -38,6 +39,10 @@ public class SwerveStateHandler {
 		this.isTurretMoveLegalSupplier = Optional.of(isTurretMoveLegalSupplier);
 	}
 
+	public void setTurretAngleSupplier(Supplier<Rotation2d> turretAngleSupplier) {
+		this.turretAngleSupplier = Optional.of(turretAngleSupplier);
+	}
+
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
 		if (swerveState.getAimAssist() == AimAssist.NONE) {
 			return speeds;
@@ -51,6 +56,9 @@ public class SwerveStateHandler {
 				reportMissingSupplier("is turret move legal");
 				return speeds;
 			}
+			if (turretAngleSupplier.isEmpty()) {
+				reportMissingSupplier("turret position");
+			}
 			if (isTurretMoveLegalSupplier.get().get() == false) {
 				return handleLookAtTowerAimAssist(speeds);
 			}
@@ -61,13 +69,15 @@ public class SwerveStateHandler {
 	private ChassisSpeeds handleLookAtTowerAimAssist(ChassisSpeeds speeds) {
 		Pose2d robotPose = robotPoseSupplier.get().get();
 		Pose2d towerPose = ScoringHelpers.getClosestTower(robotPose).getPose();
+		Rotation2d turretAngle = turretAngleSupplier.get().get();
 
-		double dY = robotPose.getY() - towerPose.getY();
-		double dX = robotPose.getX() - towerPose.getX();
+		double dY = towerPose.getY() - robotPose.getY();
+		double dX = towerPose.getX() - robotPose.getX();
 
+		Rotation2d fieldRelativeTurretPosition = turretAngle.plus(robotPose.getRotation());
 		Rotation2d targetHeading = Rotation2d.fromRadians(Math.atan2(dY, dX));
 
-		return AimAssistMath.getRotationAssistedSpeeds(speeds, robotPose.getRotation(), targetHeading, swerveConstants);
+		return AimAssistMath.getRotationAssistedSpeeds(speeds, fieldRelativeTurretPosition, targetHeading, swerveConstants);
 	}
 
 	public Translation2d getRotationAxis(RotateAxis rotationAxisState) {

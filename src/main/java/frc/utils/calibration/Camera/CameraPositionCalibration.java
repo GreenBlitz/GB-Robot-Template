@@ -33,8 +33,7 @@ public class CameraPositionCalibration extends Command {
 	private double cosRollRotation3DSum = 0, sinRollRotation3DSum = 0;
 
 	private Translation3d translationSum;
-	private Translation3d currentCameraTranslation;
-	private Rotation3d currentCameraRotation;
+	private Pose3d currentPose;
 
 	public CameraPositionCalibration(
 		AprilTagFields field,
@@ -59,8 +58,7 @@ public class CameraPositionCalibration extends Command {
 		LimelightHelpers.setCameraPose_RobotSpace(cameraName, 0, 0, 0, 0, 0, 0);
 		this.cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
 		this.translationSum = new Translation3d();
-		this.currentCameraTranslation = new Translation3d();
-		this.currentCameraRotation = new Rotation3d();
+		this.currentPose = new Pose3d();
 	}
 
 
@@ -99,33 +97,32 @@ public class CameraPositionCalibration extends Command {
 
 	private void calculateRobotRelativeCameraPosition() {
 		// add option to tags that are not perfectly aligned
-		currentCameraRotation = new Rotation3d(
-			cameraPoseFieldRelative.getRotation().getX(),
-			-cameraPoseFieldRelative.getRotation().getY(),
-			cameraPoseFieldRelative.getRotation().getZ() - robotPoseFieldRelative.getRotation().getRadians()
-		);
-		// limelight is funny so we invert y-axis
-
-		currentCameraTranslation = new Translation3d(
+		currentPose = new Pose3d(
 			cameraPoseFieldRelative.getX() - robotPoseFieldRelative.getX(),
 			-(cameraPoseFieldRelative.getY() - robotPoseFieldRelative.getY()),
-			cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + middleOfTagHeight
+			cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + middleOfTagHeight,
+			new Rotation3d(
+				cameraPoseFieldRelative.getRotation().getX(),
+				-cameraPoseFieldRelative.getRotation().getY(),
+				cameraPoseFieldRelative.getRotation().getZ() - robotPoseFieldRelative.getRotation().getRadians()
+			)
 		);
+		// limelight is funny so we invert y-axis
 	}
 
 	private void sumMeasurementsValues() {
-		translationSum = translationSum.plus(currentCameraTranslation);
-		cosYawRotation3DSum += Math.cos(currentCameraRotation.getX());
-		sinYawRotation3DSum += Math.sin(currentCameraRotation.getX());
-		cosPitchRotation3DSum += Math.cos(-currentCameraRotation.getY());
-		sinPitchRotation3DSum += Math.sin(-currentCameraRotation.getY());
-		cosRollRotation3DSum += Math.cos(currentCameraRotation.getZ());
-		sinRollRotation3DSum += Math.sin(currentCameraRotation.getZ());
+		translationSum = translationSum.plus(currentPose.getTranslation());
+		cosYawRotation3DSum += Math.cos(currentPose.getRotation().getX());
+		sinYawRotation3DSum += Math.sin(currentPose.getRotation().getX());
+		cosPitchRotation3DSum += Math.cos(-currentPose.getRotation().getY());
+		sinPitchRotation3DSum += Math.sin(-currentPose.getRotation().getY());
+		cosRollRotation3DSum += Math.cos(currentPose.getRotation().getZ());
+		sinRollRotation3DSum += Math.sin(currentPose.getRotation().getZ());
 	}
 
 	private void logFunction() {
-		Logger.recordOutput(logPathPrefix + commandLogPath + "/solution/currentRotation", currentCameraRotation);
-		Logger.recordOutput(logPathPrefix + commandLogPath + "/solution/currentTranslation", currentCameraTranslation);
+		Logger.recordOutput(logPathPrefix + commandLogPath + "/solution/currentRotation", currentPose.getRotation());
+		Logger.recordOutput(logPathPrefix + commandLogPath + "/solution/currentTranslation", currentPose.getTranslation());
 		Logger.recordOutput(logPathPrefix + commandLogPath + "/cameraPoseFieldRelative", cameraPoseFieldRelative);
 	}
 

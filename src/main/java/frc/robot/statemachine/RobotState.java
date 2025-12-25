@@ -10,7 +10,7 @@ public enum RobotState {
 	INTAKE,
 	PRE_SHOOT(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.LOOK_AT_TOWER)),
 	SHOOT(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.LOOK_AT_TOWER)),
-	SHOOT_AND_INTAKE(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.LOOK_AT_TOWER));
+	SHOOT_WHILE_INTAKE(SwerveState.DEFAULT_DRIVE.withAimAssist(AimAssist.LOOK_AT_TOWER));
 
 	private final SwerveState swerveState;
 	private boolean swerveStateActive;

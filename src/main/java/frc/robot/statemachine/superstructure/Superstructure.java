@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Robot;
 import frc.robot.statemachine.RobotState;
+import frc.robot.statemachine.StateMachineConstants;
 import frc.robot.statemachine.funnelstatehandler.FunnelState;
 import frc.robot.statemachine.funnelstatehandler.FunnelStateHandler;
 import frc.robot.statemachine.intakestatehandler.IntakeState;
@@ -86,7 +87,7 @@ public class Superstructure {
 				case INTAKE -> intake();
 				case PRE_SHOOT -> preShoot();
 				case SHOOT -> shoot();
-				case SHOOT_AND_INTAKE -> shootAndIntake();
+				case SHOOT_WHILE_INTAKE -> shootWhileIntake();
 			}
 		);
 	}
@@ -124,22 +125,29 @@ public class Superstructure {
 	}
 
 	private Command shoot() {
-		return new ParallelCommandGroup(
-			shooterStateHandler.setState(ShooterState.SHOOT),
-			funnelStateHandler.setState(FunnelState.SHOOT),
-			intakeStateHandler.setState(IntakeState.CLOSED)
+		return new SequentialCommandGroup(
+			new ParallelDeadlineGroup(
+				funnelStateHandler.setState(FunnelState.SHOOT),
+				shooterStateHandler.setState(ShooterState.SHOOT),
+				intakeStateHandler.setState(IntakeState.CLOSED)
+			),
+			new ParallelCommandGroup(
+				intakeStateHandler.setState(IntakeState.CLOSED),
+				funnelStateHandler.setState(FunnelState.SHOOT),
+				shooterStateHandler.setState(ShooterState.SHOOT)
+			).withTimeout(StateMachineConstants.SECONDS_TO_WAIT_AFTER_SHOOT)
 		);
 	}
 
-	private Command shootAndIntake() {
+	private Command shootWhileIntake() {
 		return new ParallelCommandGroup(
 			shooterStateHandler.setState(ShooterState.SHOOT),
-			funnelStateHandler.setState(FunnelState.SHOOT),
+			funnelStateHandler.setState(FunnelState.SHOOT_WHILE_INTAKE),
 			intakeStateHandler.setState(IntakeState.INTAKE)
 		);
 	}
 
-	public void log() {
+	public void periodic() {
 		funnelStateHandler.periodic();
 		intakeStateHandler.periodic();
 		Logger.recordOutput(logPath + "/IsSubsystemRunningIndependently", isSubsystemRunningIndependently());

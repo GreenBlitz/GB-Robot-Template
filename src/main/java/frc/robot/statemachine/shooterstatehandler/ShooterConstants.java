@@ -9,18 +9,36 @@ import java.util.Map;
 
 public class ShooterConstants {
 
-	public static final Rotation2d DEFAULT_FLYWHEEL_ROTATIONS_PER_SECOND = Rotation2d.fromRotations(40.0);
+	public static final Rotation2d DEFAULT_FLYWHEEL_ROTATIONS_PER_SECOND = Rotation2d.fromRotations(10);
 
 	public static final InterpolationMap<Double, Rotation2d> HOOD_INTERPOLATION_MAP = new InterpolationMap<Double, Rotation2d>(
 		InverseInterpolator.forDouble(),
 		InterpolationMap.interpolatorForRotation2d(),
-		Map.of(2.0, Rotation2d.fromDegrees(5.0))
+		Map.of(
+			0.8,
+			Rotation2d.fromDegrees(67),
+			1.5,
+			Rotation2d.fromDegrees(60),
+			2.5,
+			Rotation2d.fromDegrees(43),
+			3.7,
+			Rotation2d.fromDegrees(33)
+		)
 	);
 
 	public static final InterpolationMap<Double, Rotation2d> FLYWHEEL_INTERPOLATION_MAP = new InterpolationMap<Double, Rotation2d>(
 		InverseInterpolator.forDouble(),
 		InterpolationMap.interpolatorForRotation2d(),
-		Map.of(2.0, Rotation2d.fromDegrees(5.0))
+		Map.of(
+			0.8,
+			Rotation2d.fromDegrees(7000),
+			1.5,
+			Rotation2d.fromDegrees(7800),
+			2.5,
+			Rotation2d.fromDegrees(10000),
+			3.7,
+			Rotation2d.fromDegrees(12000)
+		)
 	);
 
 	public static final LoggedNetworkRotation2d turretCalibrationAngle = new LoggedNetworkRotation2d(

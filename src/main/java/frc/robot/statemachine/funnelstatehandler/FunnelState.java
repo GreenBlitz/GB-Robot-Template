@@ -5,6 +5,7 @@ public enum FunnelState {
 	STOP,
 	INTAKE(3),
 	SHOOT(3, 3),
+	SHOOT_WHILE_INTAKE(3, 3),
 	DRIVE(3),
 	CALIBRATION;
 

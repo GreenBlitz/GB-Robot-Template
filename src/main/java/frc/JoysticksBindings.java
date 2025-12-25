@@ -54,9 +54,9 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 		usedJoystick.A.onTrue(robot.getRobotCommander().driveWith(RobotState.DRIVE));
-		usedJoystick.R1.onTrue(robot.getRobotCommander().driveWith(RobotState.SHOOT)); // todo - pre then shoot until no balls
+		usedJoystick.R1.onTrue(robot.getRobotCommander().shootSequence());
 		usedJoystick.L1.onTrue(robot.getRobotCommander().driveWith(RobotState.INTAKE));
-		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getRobotCommander().driveWith(RobotState.SHOOT_AND_INTAKE));
+		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getRobotCommander().shootWhileIntakeSequence());
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
@@ -96,7 +96,7 @@ public class JoysticksBindings {
 		joystick.A.onTrue(robot.getRobotCommander().driveWith(RobotState.DRIVE));
 		joystick.B.onTrue(robot.getRobotCommander().driveWith(RobotState.PRE_SHOOT));
 		joystick.X.onTrue(robot.getRobotCommander().driveWith(RobotState.SHOOT));
-		joystick.Y.onTrue(robot.getRobotCommander().driveWith(RobotState.SHOOT_AND_INTAKE));
+		joystick.Y.onTrue(robot.getRobotCommander().driveWith(RobotState.SHOOT_WHILE_INTAKE));
 		joystick.POV_DOWN.onTrue(robot.getRobotCommander().driveWith(RobotState.STAY_IN_PLACE));
 		joystick.POV_UP.onTrue(robot.getRobotCommander().driveWith(RobotState.INTAKE));
 	}

@@ -2,10 +2,15 @@ package frc.robot.statemachine;
 
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Robot;
+import frc.robot.statemachine.shooterstatehandler.ShooterStateHandler;
 import frc.robot.statemachine.superstructure.Superstructure;
+import frc.robot.statemachine.superstructure.TargetChecks;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.subsystems.constants.flywheel.Constants;
+import frc.robot.subsystems.constants.hood.HoodConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public class RobotCommander extends GBSubsystem {
 
@@ -63,7 +68,7 @@ public class RobotCommander extends GBSubsystem {
 
 	@Override
 	protected void subsystemPeriodic() {
-		superstructure.log();
+		superstructure.periodic();
 	}
 
 	public Command driveWith(RobotState state, Command command) {
@@ -76,6 +81,29 @@ public class RobotCommander extends GBSubsystem {
 		return driveWith(state, superstructure.setState(state));
 	}
 
+	private boolean isReadyToShoot() {
+		Supplier<Double> distanceFromTower = () -> ScoringHelpers.getDistanceFromClosestTower(robot.getPoseEstimator().getEstimatedPose());
+		return TargetChecks.isReadyToShoot(
+			robot,
+			ShooterStateHandler.flywheelInterpolation(distanceFromTower).get(),
+			Constants.FLYWHEEL_VELOCITY_TOLERANCE_RPS,
+			ShooterStateHandler.hoodInterpolation((distanceFromTower)).get(),
+			HoodConstants.HOOD_POSITION_TOLERANCE,
+			StateMachineConstants.TURRET_LOOK_AT_TOWER_TOLERANCE,
+			StateMachineConstants.MAX_ANGLE_FROM_GOAL_CENTER,
+			ScoringHelpers.getClosestTower(robot.getPoseEstimator().getEstimatedPose()).getPose(),
+			StateMachineConstants.MAX_DISTANCE_TO_SHOOT_METERS
+		);
+	}
+
+	public Command shootSequence() {
+		return new SequentialCommandGroup(driveWith(RobotState.PRE_SHOOT).until(this::isReadyToShoot), driveWith(RobotState.SHOOT));
+	}
+
+	public Command shootWhileIntakeSequence() {
+		return new SequentialCommandGroup(driveWith(RobotState.PRE_SHOOT).until(this::isReadyToShoot), driveWith(RobotState.SHOOT_WHILE_INTAKE));
+	}
+
 	private Command asSubsystemCommand(Command command, RobotState state) {
 		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
 	}
@@ -83,7 +111,7 @@ public class RobotCommander extends GBSubsystem {
 	private Command endState(RobotState state) {
 		return switch (state) {
 			case STAY_IN_PLACE -> driveWith(RobotState.STAY_IN_PLACE);
-			case DRIVE, INTAKE, SHOOT, SHOOT_AND_INTAKE -> driveWith(RobotState.DRIVE);
+			case DRIVE, INTAKE, SHOOT, SHOOT_WHILE_INTAKE -> driveWith(RobotState.DRIVE);
 			case PRE_SHOOT -> driveWith(RobotState.PRE_SHOOT);
 		};
 	}

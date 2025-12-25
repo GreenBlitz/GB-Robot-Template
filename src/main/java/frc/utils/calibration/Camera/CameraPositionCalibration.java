@@ -19,7 +19,7 @@ public class CameraPositionCalibration extends Command {
 	private final String logPathPrefix;
 	private final String cameraName;
 
-	private final double middleOfTagHeight;
+	private final double tagZ;
 	private final Pose3d tagPoseFieldRelative;
 	private Pose3d cameraPoseFieldRelative;
 	private Pose2d robotPoseFieldRelative;
@@ -40,11 +40,11 @@ public class CameraPositionCalibration extends Command {
 		String cameraName,
 		int tagID,
 		double robotXAxisDistanceFromTag,
-		double middleOfTagHeight,
+		double tagZ,
 		Pose3d tagPoseFieldRelative
 	) {
 		this.cameraName = cameraName;
-		this.middleOfTagHeight = middleOfTagHeight;
+		this.tagZ = tagZ;
 		this.logPathPrefix = logPathPrefix;
 		this.tagPoseFieldRelative = tagPoseFieldRelative;
 		this.robotPoseFieldRelative = new Pose2d(
@@ -100,7 +100,7 @@ public class CameraPositionCalibration extends Command {
 		currentPose = new Pose3d(
 			cameraPoseFieldRelative.getX() - robotPoseFieldRelative.getX(),
 			-(cameraPoseFieldRelative.getY() - robotPoseFieldRelative.getY()),
-			cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + middleOfTagHeight,
+			cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + tagZ,
 			new Rotation3d(
 				cameraPoseFieldRelative.getRotation().getX(),
 				-cameraPoseFieldRelative.getRotation().getY(),

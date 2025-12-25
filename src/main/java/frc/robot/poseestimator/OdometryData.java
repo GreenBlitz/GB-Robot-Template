@@ -38,7 +38,7 @@ public class OdometryData {
 		return imuYaw;
 	}
 
-	public Optional<Double> getImuAcceleration() {
+	public Optional<Double> getIMUAcceleration() {
 		return imuAcceleration;
 	}
 
@@ -58,8 +58,10 @@ public class OdometryData {
 		setIMUYaw(Optional.of(imuYaw));
 	}
 
-	public void setImuAcceleration(Optional<Double> imuAcceleration) {
+	public void setIMUAcceleration(Optional<Double> imuAcceleration) {
 		this.imuAcceleration = imuAcceleration;
 	}
+
+	public void setIMUAcceleration(double imuAcceleration) { this.imuAcceleration = Optional.of(imuAcceleration); }
 
 }

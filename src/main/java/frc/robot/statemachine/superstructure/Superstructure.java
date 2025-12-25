@@ -131,7 +131,7 @@ public class Superstructure {
 				shooterStateHandler.setState(ShooterState.SHOOT),
 				intakeStateHandler.setState(IntakeState.CLOSED)
 			),
-			new ParallelDeadlineGroup(
+			new ParallelCommandGroup(
 				intakeStateHandler.setState(IntakeState.CLOSED),
 				funnelStateHandler.setState(FunnelState.SHOOT),
 				shooterStateHandler.setState(ShooterState.SHOOT)

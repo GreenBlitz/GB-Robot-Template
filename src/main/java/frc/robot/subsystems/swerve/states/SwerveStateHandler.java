@@ -48,7 +48,7 @@ public class SwerveStateHandler {
 		}
 		if (swerveState.getAimAssist() == AimAssist.LOOK_AT_TOWER) {
 			if (isTurretMoveLegalSupplier.isEmpty()) {
-				reportMissingSupplier("is move legal");
+				reportMissingSupplier("is turret move legal");
 				return speeds;
 			}
 			if (isTurretMoveLegalSupplier.get().get() == false) {
@@ -60,13 +60,12 @@ public class SwerveStateHandler {
 
 	private ChassisSpeeds handleLookAtTowerAimAssist(ChassisSpeeds speeds) {
 		Pose2d robotPose = robotPoseSupplier.get().get();
-
 		Pose2d towerPose = ScoringHelpers.getClosestTower(robotPose).getPose();
 
-		double YLength = robotPose.getY() - towerPose.getY();
-		double XLength = robotPose.getX() - towerPose.getX();
+		double dX = robotPose.getY() - towerPose.getY();
+		double dY = robotPose.getX() - towerPose.getX();
 
-		Rotation2d targetHeading = Rotation2d.fromRadians(Math.atan2(YLength, XLength));
+		Rotation2d targetHeading = Rotation2d.fromRadians(Math.atan2(dY, dX));
 
 		return AimAssistMath.getRotationAssistedSpeeds(speeds, robotPose.getRotation(), targetHeading, swerveConstants);
 	}

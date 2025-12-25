@@ -112,7 +112,7 @@ public class Robot {
 		robotCommander = new RobotCommander("/RobotCommander", this);
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
-		// swerve.getStateHandler().setIsTurretMoveLegalSupplier(() -> isTurretMoveLegal());
+		swerve.getStateHandler().setIsTurretMoveLegalSupplier(() -> isTurretMoveLegal());
 		swerve.getStateHandler().setRobotPoseSupplier(() -> poseEstimator.getEstimatedPose());
 
 		simulationManager = new SimulationManager("SimulationManager", this);

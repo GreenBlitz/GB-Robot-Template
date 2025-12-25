@@ -16,7 +16,6 @@ import frc.robot.vision.RobotPoseObservation;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.OdometryData;
 import frc.utils.buffers.RingBuffer.RingBuffer;
-import frc.utils.math.StandardDeviations2D;
 import frc.utils.math.StatisticsMath;
 import org.littletonrobotics.junction.Logger;
 
@@ -119,8 +118,8 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	@Override
 	public void resetPose(
 		double timestampSeconds,
-		Rotation2d imuYaw,
 		double imuAcceleration,
+		Rotation2d imuYaw,
 		SwerveModulePosition[] wheelPositions,
 		Pose2d poseMeters
 	) {
@@ -189,15 +188,15 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		poseEstimator.addVisionMeasurement(
 			visionObservation.robotPose(),
 			visionObservation.timestampSeconds(),
-			getFixedStdDev(visionObservation)
+			getFixedStdDevs(visionObservation)
 		);
 		this.lastVisionObservation = visionObservation;
 	}
 
-	private Matrix<N3, N1> getFixedStdDev(RobotPoseObservation visionObservation){
+	private Matrix<N3, N1> getFixedStdDevs(RobotPoseObservation visionObservation){
 		return imuAccelerationBuffer.getSample(visionObservation.timestampSeconds()).isPresent()
 				&& imuAccelerationBuffer.getSample(visionObservation.timestampSeconds()).get() >= SwerveConstants.MIN_COLLISION_G_FORCE
-				?  WPILibPoseEstimatorConstants.DEFAULT_VISION_STD_DEV.asColumnVector().minus(WPILibPoseEstimatorConstants.COLLISION_VISION_STD_DEV_REDUCTION.asColumnVector())
+				?  WPILibPoseEstimatorConstants.DEFAULT_VISION_STD_DEV.asColumnVector().minus(WPILibPoseEstimatorConstants.VISION_STD_DEV_COLLISION_REDUCTION.asColumnVector())
 				:  WPILibPoseEstimatorConstants.DEFAULT_VISION_STD_DEV.asColumnVector();
 	}
 

@@ -62,8 +62,8 @@ public class SwerveStateHandler {
 		Pose2d robotPose = robotPoseSupplier.get().get();
 		Pose2d towerPose = ScoringHelpers.getClosestTower(robotPose).getPose();
 
-		double dX = robotPose.getY() - towerPose.getY();
-		double dY = robotPose.getX() - towerPose.getX();
+		double dY = robotPose.getY() - towerPose.getY();
+		double dX = robotPose.getX() - towerPose.getX();
 
 		Rotation2d targetHeading = Rotation2d.fromRadians(Math.atan2(dY, dX));
 

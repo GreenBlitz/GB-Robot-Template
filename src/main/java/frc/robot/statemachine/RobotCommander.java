@@ -98,15 +98,15 @@ public class RobotCommander extends GBSubsystem {
 
 	public Command shootSequence() {
 		return new SequentialCommandGroup(
-			superstructure.setState(RobotState.PRE_SHOOT).until(this::isReadyToShoot),
-			superstructure.setState(RobotState.SHOOT)
+			driveWith(RobotState.PRE_SHOOT).until(this::isReadyToShoot),
+			driveWith(RobotState.SHOOT)
 		);
 	}
 
 	private Command shootWhileIntakeSequence() {
 		return new SequentialCommandGroup(
-			superstructure.setState(RobotState.PRE_SHOOT).until(this::isReadyToShoot),
-			superstructure.setState(RobotState.SHOOT_WHILE_INTAKE)
+			driveWith(RobotState.PRE_SHOOT).until(this::isReadyToShoot),
+			driveWith(RobotState.SHOOT_WHILE_INTAKE)
 		);
 	}
 

@@ -65,7 +65,8 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		this.isIMUOffsetCalibrated = false;
 		this.poseToIMUYawDifferenceBuffer = new RingBuffer<>(WPILibPoseEstimatorConstants.POSE_TO_IMU_YAW_DIFFERENCE_BUFFER_SIZE);
 		this.imuYawBuffer = TimeInterpolatableBuffer.createBuffer(WPILibPoseEstimatorConstants.IMU_YAW_BUFFER_SIZE_SECONDS);
-		this.imuAccelerationBuffer = TimeInterpolatableBuffer.createDoubleBuffer(WPILibPoseEstimatorConstants.IMU_ACCELERATION_BUFFER_SIZE_SECONDS);
+		this.imuAccelerationBuffer = TimeInterpolatableBuffer
+			.createDoubleBuffer(WPILibPoseEstimatorConstants.IMU_ACCELERATION_BUFFER_SIZE_SECONDS);
 	}
 
 
@@ -136,8 +137,8 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		resetPose(
 			lastOdometryData.getTimestampSeconds(),
 			lastOdometryData.getIMUYaw().get(),
-				lastOdometryData.getIMUAcceleration().get(),
-				lastOdometryData.getWheelPositions(),
+			lastOdometryData.getIMUAcceleration().get(),
+			lastOdometryData.getWheelPositions(),
 			poseMeters
 		);
 	}
@@ -193,11 +194,12 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		this.lastVisionObservation = visionObservation;
 	}
 
-	private Matrix<N3, N1> getCorrectedVisionStdDevs(RobotPoseObservation visionObservation){
+	private Matrix<N3, N1> getCorrectedVisionStdDevs(RobotPoseObservation visionObservation) {
 		return imuAccelerationBuffer.getSample(visionObservation.timestampSeconds()).isPresent()
-				&& imuAccelerationBuffer.getSample(visionObservation.timestampSeconds()).get() >= SwerveConstants.MIN_COLLISION_G_FORCE
-				?  WPILibPoseEstimatorConstants.DEFAULT_VISION_STD_DEV.asColumnVector().minus(WPILibPoseEstimatorConstants.VISION_STD_DEV_COLLISION_REDUCTION.asColumnVector())
-				:  WPILibPoseEstimatorConstants.DEFAULT_VISION_STD_DEV.asColumnVector();
+			&& imuAccelerationBuffer.getSample(visionObservation.timestampSeconds()).get() >= SwerveConstants.MIN_COLLISION_G_FORCE
+				? WPILibPoseEstimatorConstants.DEFAULT_VISION_STD_DEV.asColumnVector()
+					.minus(WPILibPoseEstimatorConstants.VISION_STD_DEV_COLLISION_REDUCTION.asColumnVector())
+				: WPILibPoseEstimatorConstants.DEFAULT_VISION_STD_DEV.asColumnVector();
 	}
 
 	private void updateIsIMUOffsetCalibrated() {

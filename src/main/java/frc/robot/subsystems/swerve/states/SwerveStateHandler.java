@@ -58,6 +58,7 @@ public class SwerveStateHandler {
 			}
 			if (turretAngleSupplier.isEmpty()) {
 				reportMissingSupplier("turret position");
+				return speeds;
 			}
 			if (isTurretMoveLegalSupplier.get().get() == false) {
 				return handleLookAtTowerAimAssist(speeds);

@@ -74,7 +74,7 @@ public class CameraPositionCalibration extends Command {
 	public void execute() {
 		cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
 		calculateRobotRelativeCameraPosition();
-		sumObjectsValues();
+		sumMeasurementsValues();
 		currentCycle++;
 	}
 
@@ -85,16 +85,15 @@ public class CameraPositionCalibration extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		finalCameraTranslation = translationSum.div(NEEDED_NUMBER_OF_CYCLES);
+		finalCameraTranslation = translationSum.div(currentCycle);
 		finalCameraRotation = new Rotation3d(
-			Math.atan2(sinYawRotation3DSum / NEEDED_NUMBER_OF_CYCLES, cosYawRotation3DSum / NEEDED_NUMBER_OF_CYCLES),
-			Math.atan2(sinPitchRotation3DSum / NEEDED_NUMBER_OF_CYCLES, cosPitchRotation3DSum / NEEDED_NUMBER_OF_CYCLES),
-			Math.atan2(sinRollRotation3DSum / NEEDED_NUMBER_OF_CYCLES, cosRollRotation3DSum / NEEDED_NUMBER_OF_CYCLES)
+			Math.atan2(sinYawRotation3DSum / currentCycle, cosYawRotation3DSum / currentCycle),
+			Math.atan2(sinPitchRotation3DSum / currentCycle, cosPitchRotation3DSum / currentCycle),
+			Math.atan2(sinRollRotation3DSum / currentCycle, cosRollRotation3DSum / currentCycle)
 		);
 
 		Logger.recordOutput(logPathPrefix + commandLogPath + "/solution/endTranslation", finalCameraTranslation);
 		Logger.recordOutput(logPathPrefix + commandLogPath + "/solution/endRotation", finalCameraRotation);
-		super.end(interrupted);
 	}
 
 
@@ -114,9 +113,8 @@ public class CameraPositionCalibration extends Command {
 		);
 	}
 
-	private void sumObjectsValues() {
-		translationSum = translationSum
-			.plus(new Translation3d(currentCameraTranslation.getX(), currentCameraTranslation.getY(), currentCameraTranslation.getZ()));
+	private void sumMeasurementsValues() {
+		translationSum = translationSum.plus(currentCameraTranslation);
 		cosYawRotation3DSum += Math.cos(currentCameraRotation.getX());
 		sinYawRotation3DSum += Math.sin(currentCameraRotation.getX());
 		cosPitchRotation3DSum += Math.cos(-currentCameraRotation.getY());

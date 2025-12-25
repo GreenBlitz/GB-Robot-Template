@@ -11,6 +11,8 @@ import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.statemachine.RobotCommander;
+import frc.robot.statemachine.ScoringHelpers;
+import frc.robot.statemachine.shooterstatehandler.ShooterStateHandler;
 import frc.robot.subsystems.arm.ArmSimulationConstants;
 import frc.robot.subsystems.constants.intakeRollers.IntakeRollerConstants;
 import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
@@ -109,6 +111,9 @@ public class Robot {
 		robotCommander = new RobotCommander("/RobotCommander", this);
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+		swerve.getStateHandler().setIsTurretMoveLegalSupplier(() -> isTurretMoveLegal());
+		swerve.getStateHandler().setRobotPoseSupplier(() -> poseEstimator.getEstimatedPose());
+		swerve.getStateHandler().setTurretAngleSupplier(() -> turret.getPosition());
 
 		simulationManager = new SimulationManager("SimulationManager", this);
 	}
@@ -123,6 +128,16 @@ public class Robot {
 		if (FourBarConstants.MAXIMUM_POSITION.getRadians() < fourBar.getPosition().getRadians()) {
 			fourBar.setPosition(FourBarConstants.MAXIMUM_POSITION);
 		}
+	}
+
+	public boolean isTurretMoveLegal() {
+		return ShooterStateHandler.isTurretMoveLegal(
+			ShooterStateHandler.getRobotRelativeLookAtTowerAngleForTurret(
+				ScoringHelpers.getClosestTower(poseEstimator.getEstimatedPose()).getPose().getTranslation(),
+				poseEstimator.getEstimatedPose()
+			),
+			turret
+		);
 	}
 
 	public void periodic() {

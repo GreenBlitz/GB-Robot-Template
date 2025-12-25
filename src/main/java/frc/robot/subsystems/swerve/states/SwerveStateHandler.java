@@ -5,10 +5,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.constants.MathConstants;
+import frc.robot.statemachine.ScoringHelpers;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
+import frc.robot.subsystems.swerve.states.aimassist.AimAssistMath;
+import frc.utils.alerts.Alert;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -18,24 +21,65 @@ public class SwerveStateHandler {
 	private final Swerve swerve;
 	private final SwerveConstants swerveConstants;
 	private Optional<Supplier<Pose2d>> robotPoseSupplier;
+	private Optional<Supplier<Boolean>> isTurretMoveLegalSupplier;
+	private Optional<Supplier<Rotation2d>> turretAngleSupplier;
 
 	public SwerveStateHandler(Swerve swerve) {
 		this.swerve = swerve;
 		this.swerveConstants = swerve.getConstants();
 		this.robotPoseSupplier = Optional.empty();
+		this.isTurretMoveLegalSupplier = Optional.empty();
 	}
 
 	public void setRobotPoseSupplier(Supplier<Pose2d> robotPoseSupplier) {
 		this.robotPoseSupplier = Optional.of(robotPoseSupplier);
 	}
 
+	public void setIsTurretMoveLegalSupplier(Supplier<Boolean> isTurretMoveLegalSupplier) {
+		this.isTurretMoveLegalSupplier = Optional.of(isTurretMoveLegalSupplier);
+	}
+
+	public void setTurretAngleSupplier(Supplier<Rotation2d> turretAngleSupplier) {
+		this.turretAngleSupplier = Optional.of(turretAngleSupplier);
+	}
+
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
 		if (swerveState.getAimAssist() == AimAssist.NONE) {
 			return speeds;
 		}
+		if (robotPoseSupplier.isEmpty()) {
+			reportMissingSupplier("robot pose");
+			return speeds;
+		}
+		if (swerveState.getAimAssist() == AimAssist.LOOK_AT_TOWER) {
+			if (isTurretMoveLegalSupplier.isEmpty()) {
+				reportMissingSupplier("is turret move legal");
+				return speeds;
+			}
+			if (turretAngleSupplier.isEmpty()) {
+				reportMissingSupplier("turret angle");
+				return speeds;
+			}
+			if (isTurretMoveLegalSupplier.get().get() == false) {
+				return handleLookAtTowerAimAssist(speeds);
+			}
+		}
 		return speeds;
 	}
 
+	private ChassisSpeeds handleLookAtTowerAimAssist(ChassisSpeeds speeds) {
+		Pose2d robotPose = robotPoseSupplier.get().get();
+		Pose2d towerPose = ScoringHelpers.getClosestTower(robotPose).getPose();
+		Rotation2d turretAngle = turretAngleSupplier.get().get();
+
+		double dY = towerPose.getY() - robotPose.getY();
+		double dX = towerPose.getX() - robotPose.getX();
+
+		Rotation2d fieldRelativeTurretAngle = turretAngle.plus(robotPose.getRotation());
+		Rotation2d targetHeading = Rotation2d.fromRadians(Math.atan2(dY, dX));
+
+		return AimAssistMath.getRotationAssistedSpeeds(speeds, fieldRelativeTurretAngle, targetHeading, swerveConstants);
+	}
 
 	public Translation2d getRotationAxis(RotateAxis rotationAxisState) {
 		return switch (rotationAxisState) {
@@ -63,6 +107,10 @@ public class SwerveStateHandler {
 		}
 		// -45 >= x >= -135
 		return isLeft ? RotateAxis.BACK_LEFT_MODULE : RotateAxis.FRONT_LEFT_MODULE;
+	}
+
+	private void reportMissingSupplier(String supplierName) {
+		new Alert(Alert.AlertType.WARNING, swerve.getLogPath() + "/AimAssist/missing" + supplierName + " supplier").report();
 	}
 
 	public RotateAxis getFarRightRotateAxis() {

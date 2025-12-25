@@ -44,7 +44,7 @@ public record SwerveConstants(
 
 	static final Rotation2d WHEEL_RADIUS_CALIBRATION_VELOCITY_PER_SECOND = Rotation2d.fromRotations(0.5);
 
-	public static final double SKID_TOLERANCE = 0.1;
+	public static final double SKID_TOLERANCE = 0.1m;
 
 	public static final double AIM_ASSIST_MAGNITUDE_FACTOR = 4;
 

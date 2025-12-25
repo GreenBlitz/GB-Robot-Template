@@ -71,8 +71,10 @@ public class CameraPositionCalibration extends Command {
 	@Override
 	public void execute() {
 		cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
+		Logger.recordOutput("AAAAAAAAAAAAAAAAAAAAAAAAAa", cameraPoseFieldRelative);
 		calculateRobotRelativeCameraPosition();
 		sumMeasurementsValues();
+		logFunction();
 		currentCycle++;
 	}
 
@@ -89,9 +91,12 @@ public class CameraPositionCalibration extends Command {
 			Math.atan2(sinPitchRotation3DSum / currentCycle, cosPitchRotation3DSum / currentCycle),
 			Math.atan2(sinRollRotation3DSum / currentCycle, cosRollRotation3DSum / currentCycle)
 		);
+		Pose3d p = new Pose3d(finalCameraTranslation, finalCameraRotation);
 
 		Logger.recordOutput(logPathPrefix + commandLogPath + "/solution/endTranslation", finalCameraTranslation);
 		Logger.recordOutput(logPathPrefix + commandLogPath + "/solution/endRotation", finalCameraRotation);
+		Logger.recordOutput(logPathPrefix + commandLogPath + "/solution/endPose", p);
+		Logger.recordOutput(logPathPrefix + commandLogPath + "/solution/endPose2d", p.toPose2d());
 	}
 
 
@@ -121,9 +126,12 @@ public class CameraPositionCalibration extends Command {
 	}
 
 	private void logFunction() {
-		Logger.recordOutput(logPathPrefix + commandLogPath + "/solution/currentRotation", currentPose.getRotation());
-		Logger.recordOutput(logPathPrefix + commandLogPath + "/solution/currentTranslation", currentPose.getTranslation());
+		Logger.recordOutput(logPathPrefix + commandLogPath + "/current/currentRotation", currentPose.getRotation());
+		Logger.recordOutput(logPathPrefix + commandLogPath + "/current/currentTranslation", currentPose.getTranslation());
 		Logger.recordOutput(logPathPrefix + commandLogPath + "/cameraPoseFieldRelative", cameraPoseFieldRelative);
+		
+		Logger.recordOutput(logPathPrefix + commandLogPath + "/current/currentPose", currentPose);
+		Logger.recordOutput(logPathPrefix + commandLogPath + "/current/currentPose2d", currentPose.toPose2d());
 	}
 
 }

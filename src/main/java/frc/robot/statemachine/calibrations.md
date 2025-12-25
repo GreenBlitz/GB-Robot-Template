@@ -3,3 +3,4 @@
 - [ ] Swerve setting in RobotCommander constructor
 - [ ] Max angle from goal center
 - [ ] Max distance to shoot
+- [ ] Seconds to wait after shoot

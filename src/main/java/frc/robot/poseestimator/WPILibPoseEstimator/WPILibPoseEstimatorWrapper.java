@@ -118,8 +118,8 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	@Override
 	public void resetPose(
 		double timestampSeconds,
-		double imuAcceleration,
 		Rotation2d imuYaw,
+		double imuAcceleration,
 		SwerveModulePosition[] wheelPositions,
 		Pose2d poseMeters
 	) {
@@ -188,12 +188,12 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		poseEstimator.addVisionMeasurement(
 			visionObservation.robotPose(),
 			visionObservation.timestampSeconds(),
-			getFixedStdDevs(visionObservation)
+			getCorrectedVisionStdDevs(visionObservation)
 		);
 		this.lastVisionObservation = visionObservation;
 	}
 
-	private Matrix<N3, N1> getFixedStdDevs(RobotPoseObservation visionObservation){
+	private Matrix<N3, N1> getCorrectedVisionStdDevs(RobotPoseObservation visionObservation){
 		return imuAccelerationBuffer.getSample(visionObservation.timestampSeconds()).isPresent()
 				&& imuAccelerationBuffer.getSample(visionObservation.timestampSeconds()).get() >= SwerveConstants.MIN_COLLISION_G_FORCE
 				?  WPILibPoseEstimatorConstants.DEFAULT_VISION_STD_DEV.asColumnVector().minus(WPILibPoseEstimatorConstants.VISION_STD_DEV_COLLISION_REDUCTION.asColumnVector())

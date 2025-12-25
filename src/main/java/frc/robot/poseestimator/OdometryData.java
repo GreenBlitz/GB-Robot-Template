@@ -62,6 +62,6 @@ public class OdometryData {
 		this.imuAcceleration = imuAcceleration;
 	}
 
-	public void setIMUAcceleration(double imuAcceleration) { this.imuAcceleration = Optional.of(imuAcceleration); }
+	public void setIMUAcceleration(double imuAcceleration) { setIMUAcceleration(Optional.of(imuAcceleration)); }
 
 }

@@ -50,6 +50,7 @@ public class Swerve extends GBSubsystem {
 	private final SwerveCommandsBuilder commandsBuilder;
 	private final SwerveStateHandler stateHandler;
 	private final boolean[] areModulesSkidding;
+	private final Translation2d[] moduleTranslationalStates;
 
 	private SwerveState currentState;
 	private Supplier<Rotation2d> headingSupplier;
@@ -64,6 +65,7 @@ public class Swerve extends GBSubsystem {
 		this.driveRadiusMeters = SwerveMath.calculateDriveRadiusMeters(modules.getModulePositionsFromCenterMeters());
 		this.modules = modules;
 		this.areModulesSkidding = new boolean[ModuleUtil.ModulePosition.values().length];
+		this.moduleTranslationalState = new Translation2d[areModulesSkidding.length];
 		this.imu = imu;
 		this.imuSignals = imuSignals;
 
@@ -351,7 +353,6 @@ public class Swerve extends GBSubsystem {
 
 		SwerveModuleState[] moduleStates = modules.getCurrentStates();
 
-		Translation2d[] moduleTranslationalStates = new Translation2d[moduleStates.length];
 		Translation2d robotTranslationalVelocityMetersPerSecond = new Translation2d(
 			getRobotRelativeVelocity().vxMetersPerSecond,
 			getRobotRelativeVelocity().vyMetersPerSecond

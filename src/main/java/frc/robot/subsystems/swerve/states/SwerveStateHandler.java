@@ -57,7 +57,7 @@ public class SwerveStateHandler {
 				return speeds;
 			}
 			if (turretAngleSupplier.isEmpty()) {
-				reportMissingSupplier("turret position");
+				reportMissingSupplier("turret angle");
 				return speeds;
 			}
 			if (isTurretMoveLegalSupplier.get().get() == false) {

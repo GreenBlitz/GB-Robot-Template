@@ -75,10 +75,10 @@ public class SwerveStateHandler {
 		double dY = towerPose.getY() - robotPose.getY();
 		double dX = towerPose.getX() - robotPose.getX();
 
-		Rotation2d fieldRelativeTurretPosition = turretAngle.plus(robotPose.getRotation());
+		Rotation2d fieldRelativeTurretAngle = turretAngle.plus(robotPose.getRotation());
 		Rotation2d targetHeading = Rotation2d.fromRadians(Math.atan2(dY, dX));
 
-		return AimAssistMath.getRotationAssistedSpeeds(speeds, fieldRelativeTurretPosition, targetHeading, swerveConstants);
+		return AimAssistMath.getRotationAssistedSpeeds(speeds, fieldRelativeTurretAngle, targetHeading, swerveConstants);
 	}
 
 	public Translation2d getRotationAxis(RotateAxis rotationAxisState) {

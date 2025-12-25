@@ -60,9 +60,8 @@ public class FunnelStateHandler {
 			new ParallelDeadlineGroup(
 				belly.getCommandsBuilder().rollRotationsAtVoltageForwards(1, FunnelState.DRIVE.getBellyVoltage()).until(this::isBallAtSensor),
 				omni.getCommandsBuilder().stop()
-			),
-			belly.getCommandsBuilder().stop()
-		);
+			)
+        );
 	}
 
 	private Command shoot() {

@@ -9,7 +9,7 @@ public enum RobotState {
 	INTAKE,
 	PRE_SHOOT,
 	SHOOT,
-	SHOOT_AND_INTAKE;
+    SHOOT_WHILE_INTAKE;
 
 	private final SwerveState swerveState;
 	private boolean swerveStateActive;

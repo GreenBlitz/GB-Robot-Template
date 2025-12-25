@@ -90,7 +90,7 @@ public class Superstructure {
 				case INTAKE -> intake();
 				case PRE_SHOOT -> preShoot();
 				case SHOOT -> shoot();
-				case SHOOT_AND_INTAKE -> shootWhileIntake();
+				case SHOOT_WHILE_INTAKE -> shootWhileIntake();
 			}
 		);
 	}
@@ -148,29 +148,6 @@ public class Superstructure {
 			funnelStateHandler.setState(FunnelState.SHOOT_WHILE_INTAKE),
 			intakeStateHandler.setState(IntakeState.INTAKE)
 		);
-	}
-
-	private boolean isReadyToShoot() {
-		Supplier<Double> distanceFromTower = () -> ScoringHelpers.getDistanceFromClosestTower(robot.getPoseEstimator().getEstimatedPose());
-		return TargetChecks.isReadyToShoot(
-			robot,
-			ShooterStateHandler.flywheelInterpolation(distanceFromTower).get(),
-			Constants.FLYWHEEL_VELOCITY_TOLERANCE_RPS,
-			ShooterStateHandler.hoodInterpolation((distanceFromTower)).get(),
-			HoodConstants.HOOD_POSITION_TOLERANCE,
-			StateMachineConstants.HEADING_TOLERANCE,
-			StateMachineConstants.MAX_ANGLE_FROM_GOAL_CENTER,
-			ScoringHelpers.getClosestTower(robot.getPoseEstimator().getEstimatedPose()).getPose(),
-			StateMachineConstants.MAX_DISTANCE_TO_SHOOT_METERS
-		);
-	}
-
-	public Command shootSequence() {
-		return new SequentialCommandGroup(setState(RobotState.PRE_SHOOT).until(this::isReadyToShoot), setState(RobotState.SHOOT));
-	}
-
-	private Command shootWhileIntakeSequence() {
-		return new SequentialCommandGroup(preShoot().until(this::isReadyToShoot), shootWhileIntake());
 	}
 
 	public void periodic() {

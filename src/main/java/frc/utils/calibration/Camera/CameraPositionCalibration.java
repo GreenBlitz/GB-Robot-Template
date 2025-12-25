@@ -1,6 +1,5 @@
 package frc.utils.calibration.Camera;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -41,12 +40,13 @@ public class CameraPositionCalibration extends Command {
 		String cameraName,
 		int tagID,
 		double robotXAxisDistanceFromTag,
-		double middleOfTagHeight
+		double middleOfTagHeight,
+		Pose3d tagPoseFieldRelative
 	) {
 		this.cameraName = cameraName;
 		this.middleOfTagHeight = middleOfTagHeight;
 		this.logPathPrefix = logPathPrefix;
-		this.tagPoseFieldRelative = AprilTagFieldLayout.loadField(field).getTagPose(tagID).get();
+		this.tagPoseFieldRelative = tagPoseFieldRelative;
 		this.robotPoseFieldRelative = new Pose2d(
 			// tag must be either 180 or 0 deg to the filed
 			// Y difference from the tag is 0

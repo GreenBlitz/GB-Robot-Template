@@ -175,6 +175,7 @@ public class Swerve extends GBSubsystem {
 
 	public void update() {
 		updateIMU();
+		checkSkidding();
 		modules.updateInputs();
 
 		currentState.log(constants.stateLogPath());
@@ -190,7 +191,6 @@ public class Swerve extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/IMU/Acceleration", getAccelerationFromIMUMetersPerSecondSquared());
 
 		Logger.recordOutput(getLogPath() + "/isCollisionDetected", isCollisionDetected());
-		checkSkidding();
 		for (int i = 0; i < areModulesSkidding.length; i++) {
 			Logger.recordOutput(getLogPath() + "/isSkidding/" + ModuleUtil.ModulePosition.values()[i], areModulesSkidding[i]);
 		}
@@ -354,7 +354,6 @@ public class Swerve extends GBSubsystem {
 
 		moduleRotationalStates = kinematics
 			.toSwerveModuleStates(new ChassisSpeeds(0, 0, robotYawAngularVelocityRadiansPerSecond), new Translation2d());
-
 		moduleStates = modules.getCurrentStates();
 
 		Translation2d robotTranslationalVelocityMetersPerSecond = new Translation2d(

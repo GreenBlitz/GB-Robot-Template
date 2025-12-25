@@ -144,7 +144,6 @@ public class Robot {
 		BusChain.refreshAll();
 		resetSubsystems();
 		simulationManager.logPoses();
-		swerve.getStateHandler().logIsTurretMoveLegalSupplier();
 
 		swerve.update();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());

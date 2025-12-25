@@ -12,7 +12,6 @@ import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssistMath;
 import frc.utils.alerts.Alert;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -37,10 +36,6 @@ public class SwerveStateHandler {
 
 	public void setIsTurretMoveLegalSupplier(Supplier<Boolean> isTurretMoveLegalSupplier) {
 		this.isTurretMoveLegalSupplier = Optional.of(isTurretMoveLegalSupplier);
-	}
-
-	public void logIsTurretMoveLegalSupplier() {
-		Logger.recordOutput("SwerveStateHandler/IsTurretMoveLegalSupplier", String.valueOf(isTurretMoveLegalSupplier));
 	}
 
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {

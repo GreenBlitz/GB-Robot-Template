@@ -81,28 +81,34 @@ public class RobotCommander extends GBSubsystem {
 		return driveWith(state, superstructure.setState(state));
 	}
 
-    private boolean isReadyToShoot() {
-        Supplier<Double> distanceFromTower = () -> ScoringHelpers.getDistanceFromClosestTower(robot.getPoseEstimator().getEstimatedPose());
-        return TargetChecks.isReadyToShoot(
-                robot,
-                ShooterStateHandler.flywheelInterpolation(distanceFromTower).get(),
-                Constants.FLYWHEEL_VELOCITY_TOLERANCE_RPS,
-                ShooterStateHandler.hoodInterpolation((distanceFromTower)).get(),
-                HoodConstants.HOOD_POSITION_TOLERANCE,
-                StateMachineConstants.TURRET_LOOK_AT_TOWER_TOLERANCE,
-                StateMachineConstants.MAX_ANGLE_FROM_GOAL_CENTER,
-                ScoringHelpers.getClosestTower(robot.getPoseEstimator().getEstimatedPose()).getPose(),
-                StateMachineConstants.MAX_DISTANCE_TO_SHOOT_METERS
-        );
-    }
+	private boolean isReadyToShoot() {
+		Supplier<Double> distanceFromTower = () -> ScoringHelpers.getDistanceFromClosestTower(robot.getPoseEstimator().getEstimatedPose());
+		return TargetChecks.isReadyToShoot(
+			robot,
+			ShooterStateHandler.flywheelInterpolation(distanceFromTower).get(),
+			Constants.FLYWHEEL_VELOCITY_TOLERANCE_RPS,
+			ShooterStateHandler.hoodInterpolation((distanceFromTower)).get(),
+			HoodConstants.HOOD_POSITION_TOLERANCE,
+			StateMachineConstants.TURRET_LOOK_AT_TOWER_TOLERANCE,
+			StateMachineConstants.MAX_ANGLE_FROM_GOAL_CENTER,
+			ScoringHelpers.getClosestTower(robot.getPoseEstimator().getEstimatedPose()).getPose(),
+			StateMachineConstants.MAX_DISTANCE_TO_SHOOT_METERS
+		);
+	}
 
-    public Command shootSequence() {
-        return new SequentialCommandGroup(superstructure.setState(RobotState.PRE_SHOOT).until(this::isReadyToShoot), superstructure.setState(RobotState.SHOOT));
-    }
+	public Command shootSequence() {
+		return new SequentialCommandGroup(
+			superstructure.setState(RobotState.PRE_SHOOT).until(this::isReadyToShoot),
+			superstructure.setState(RobotState.SHOOT)
+		);
+	}
 
-    private Command shootWhileIntakeSequence() {
-        return new SequentialCommandGroup(superstructure.setState(RobotState.PRE_SHOOT).until(this::isReadyToShoot), superstructure.setState(RobotState.SHOOT_WHILE_INTAKE));
-    }
+	private Command shootWhileIntakeSequence() {
+		return new SequentialCommandGroup(
+			superstructure.setState(RobotState.PRE_SHOOT).until(this::isReadyToShoot),
+			superstructure.setState(RobotState.SHOOT_WHILE_INTAKE)
+		);
+	}
 
 	private Command asSubsystemCommand(Command command, RobotState state) {
 		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));

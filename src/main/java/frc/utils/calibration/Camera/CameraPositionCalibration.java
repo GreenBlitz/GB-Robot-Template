@@ -129,7 +129,7 @@ public class CameraPositionCalibration extends Command {
 		Logger.recordOutput(logPathPrefix + commandLogPath + "/current/currentRotation", currentPose.getRotation());
 		Logger.recordOutput(logPathPrefix + commandLogPath + "/current/currentTranslation", currentPose.getTranslation());
 		Logger.recordOutput(logPathPrefix + commandLogPath + "/cameraPoseFieldRelative", cameraPoseFieldRelative);
-		
+
 		Logger.recordOutput(logPathPrefix + commandLogPath + "/current/currentPose", currentPose);
 		Logger.recordOutput(logPathPrefix + commandLogPath + "/current/currentPose2d", currentPose.toPose2d());
 	}

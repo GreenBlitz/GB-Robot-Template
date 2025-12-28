@@ -51,7 +51,7 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		
+
 		// bindings...
 	}
 
@@ -59,15 +59,15 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
 		usedJoystick.A.onTrue(
-				new CameraPositionCalibration(
-						k2025ReefscapeAndyMark,
-						"GOODmORNING",
-						"limelight-left",
-						18,
-						0.89,
-						0.215,
-						AprilTagFieldLayout.loadField(k2025ReefscapeWelded).getTagPose(18).get()
-				)
+			new CameraPositionCalibration(
+				k2025ReefscapeAndyMark,
+				"GOODmORNING",
+				"limelight-left",
+				18,
+				0.89,
+				0.215,
+				AprilTagFieldLayout.loadField(k2025ReefscapeWelded).getTagPose(18).get()
+			)
 		);
 	}
 

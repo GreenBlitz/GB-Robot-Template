@@ -15,6 +15,8 @@ import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
 import org.ironmaple.simulation.motorsims.SimulatedMotorController;
 import org.littletonrobotics.junction.Logger;
 
+import static edu.wpi.first.units.Units.Amps;
+
 public class MapleControllableModuleMotor implements ControllableMotor {
 
 	private final SimulatedMotorController.GenericMotorController motor;
@@ -24,16 +26,16 @@ public class MapleControllableModuleMotor implements ControllableMotor {
 	private final PIDController positionPIDRotations;
 	private boolean isPositionRequest = false;
 
-	public MapleControllableModuleMotor(
-		String logPath,
-		SwerveModuleSimulation moduleSimulation,
-		SimulatedMotorController.GenericMotorController motor,
-		PIDController positionPIDRotations
-	) {
+	public MapleControllableModuleMotor(String logPath, SwerveModuleSimulation moduleSimulation, PIDController positionPIDRotations) {
 		this.moduleSimulation = moduleSimulation;
-		this.motor = motor;
+		this.motor = moduleSimulation.useGenericMotorControllerForDrive().withCurrentLimit(Amps.of(60));
+		;
 		this.positionPIDRotations = positionPIDRotations;
 		this.logPath = logPath;
+	}
+
+	public SwerveModuleSimulation getModuleSimulation() {
+		return moduleSimulation;
 	}
 
 	@Override

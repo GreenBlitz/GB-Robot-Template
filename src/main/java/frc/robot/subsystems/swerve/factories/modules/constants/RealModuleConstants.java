@@ -5,9 +5,12 @@ import frc.robot.subsystems.swerve.factories.constants.SimulationSwerveConstants
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.records.ModuleSpecificConstants;
 
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
+
 class RealModuleConstants {
 
-	private static final double WHEEL_DIAMETER_METERS = 0.0474588 * 2;
+	private static final double WHEEL_DIAMETER_METERS = Inches.of(2).in(Meters) * 2;
 	private static final double COUPLING_RATIO = 0.4296;
 
 	private static final double MODULE_X_DISTANCE_FROM_CENTER = 0.30833;

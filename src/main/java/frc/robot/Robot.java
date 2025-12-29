@@ -35,6 +35,7 @@ import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.COTS;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
+import org.littletonrobotics.junction.Logger;
 
 import static edu.wpi.first.units.Units.Inches;
 
@@ -53,6 +54,7 @@ public class Robot {
 	private final Limelight limelightThreeGB;
 	private final Limelight limelightObjectDetector;
 	private final RobotCommander robotCommander;
+	private final SwerveDriveSimulation swerveDriveSimulation;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -62,7 +64,7 @@ public class Robot {
 			.withSwerveModule(COTS.ofMark4(DCMotor.getKrakenX60(1), DCMotor.getFalcon500(1), COTS.WHEELS.COLSONS.cof, 3))
 			.withTrackLengthTrackWidth(Inches.of(24), Inches.of(24))
 			.withBumperSize(Inches.of(30), Inches.of(30));
-		SwerveDriveSimulation swerveDriveSimulation = new SwerveDriveSimulation(driveTrainSimulationConfig, new Pose2d(3, 3, new Rotation2d()));
+		swerveDriveSimulation = new SwerveDriveSimulation(driveTrainSimulationConfig, new Pose2d(3, 3, new Rotation2d()));
 		SimulatedArena.getInstance().addDriveTrainSimulation(swerveDriveSimulation);
 
 
@@ -81,6 +83,7 @@ public class Robot {
 			swerve.getGyroAbsoluteYaw().getValue(),
 			swerve.getGyroAbsoluteYaw().getTimestamp()
 		);
+		poseEstimator.resetPose(new Pose2d(3, 3, new Rotation2d()));
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 
@@ -187,6 +190,8 @@ public class Robot {
 
 	public void periodic() {
 		BusChain.refreshAll();
+
+		Logger.recordOutput("SimulationPose", swerveDriveSimulation.getSimulatedDriveTrainPose());
 
 		swerve.update();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());

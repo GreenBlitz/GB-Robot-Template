@@ -8,7 +8,7 @@ public class SwerveState {
 
 	private static final DriveRelative DEFAULT_DRIVE_RELATIVE = DriveRelative.ALLIANCE_RELATIVE;
 	private static final DriveSpeed DEFAULT_DRIVE_SPEED = DriveSpeed.NORMAL;
-	private static final LoopMode DEFAULT_LOOP_MODE = LoopMode.CLOSED;
+	private static final LoopMode DEFAULT_LOOP_MODE = LoopMode.OPEN;
 	private static final RotateAxis DEFAULT_ROTATE_AXIS = RotateAxis.MIDDLE_OF_CHASSIS;
 	private static final AimAssist DEFAULT_AIM_ASSIST = AimAssist.NONE;
 	private static final HeadingControl DEFAULT_HEADING_CONTROL = HeadingControl.NONE;

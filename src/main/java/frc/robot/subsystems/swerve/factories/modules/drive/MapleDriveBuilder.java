@@ -18,7 +18,7 @@ public class MapleDriveBuilder {
 	public static final double SLIP_CURRENT = 60;
 
 	static ControllableMotor buildDrive(String logPath, SwerveModuleSimulation moduleSimulation) {
-		return new MapleControllableModuleMotor(logPath, moduleSimulation, new PIDController(1, 0, 0));
+		return new MapleControllableModuleMotor(false, logPath, moduleSimulation, new PIDController(1, 0, 0));
 	}
 
 	static DriveRequests buildRequests() {

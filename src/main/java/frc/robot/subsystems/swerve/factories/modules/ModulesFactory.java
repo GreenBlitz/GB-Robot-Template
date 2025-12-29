@@ -15,7 +15,7 @@ public class ModulesFactory {
 
 	private static Module createModule(String logPath, ModuleUtil.ModulePosition modulePosition, SwerveDriveSimulation swerveDriveSimulation) {
 		IAngleEncoder angleEncoder = EncoderFactory.createEncoder(logPath, modulePosition);
-		ControllableMotor steer = SteerFactory.createSteer(logPath, modulePosition);
+		ControllableMotor steer = SteerFactory.createSteer(logPath, modulePosition, swerveDriveSimulation);
 		ControllableMotor drive = DriveFactory.createDrive(logPath, modulePosition, swerveDriveSimulation);
 
 		return new Module(

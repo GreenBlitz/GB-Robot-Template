@@ -26,10 +26,16 @@ public class MapleControllableModuleMotor implements ControllableMotor {
 	private final PIDController positionPIDRotations;
 	private boolean isPositionRequest = false;
 
-	public MapleControllableModuleMotor(String logPath, SwerveModuleSimulation moduleSimulation, PIDController positionPIDRotations) {
+	public MapleControllableModuleMotor(
+		boolean steer,
+		String logPath,
+		SwerveModuleSimulation moduleSimulation,
+		PIDController positionPIDRotations
+	) {
 		this.moduleSimulation = moduleSimulation;
-		this.motor = moduleSimulation.useGenericMotorControllerForDrive().withCurrentLimit(Amps.of(60));
-		;
+		this.motor = steer
+			? moduleSimulation.useGenericControllerForSteer().withCurrentLimit(Amps.of(20))
+			: moduleSimulation.useGenericMotorControllerForDrive().withCurrentLimit(Amps.of(60));
 		this.positionPIDRotations = positionPIDRotations;
 		this.logPath = logPath;
 	}

@@ -53,7 +53,6 @@ public class Robot {
 	private final Limelight limelightThreeGB;
 	private final Limelight limelightObjectDetector;
 	private final RobotCommander robotCommander;
-	private final SwerveDriveSimulation swerveDriveSimulation;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -63,7 +62,7 @@ public class Robot {
 			.withSwerveModule(COTS.ofMark4(DCMotor.getKrakenX60(1), DCMotor.getFalcon500(1), COTS.WHEELS.COLSONS.cof, 3))
 			.withTrackLengthTrackWidth(Inches.of(24), Inches.of(24))
 			.withBumperSize(Inches.of(30), Inches.of(30));
-		this.swerveDriveSimulation = new SwerveDriveSimulation(driveTrainSimulationConfig, new Pose2d(3, 3, new Rotation2d()));
+		SwerveDriveSimulation swerveDriveSimulation = new SwerveDriveSimulation(driveTrainSimulationConfig, new Pose2d(3, 3, new Rotation2d()));
 		SimulatedArena.getInstance().addDriveTrainSimulation(swerveDriveSimulation);
 
 

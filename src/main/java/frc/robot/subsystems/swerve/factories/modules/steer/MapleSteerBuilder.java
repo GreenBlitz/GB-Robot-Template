@@ -18,7 +18,9 @@ public class MapleSteerBuilder {
 	public static final double SLIP_CURRENT = 60;
 
 	static ControllableMotor buildSteer(String logPath, SwerveModuleSimulation moduleSimulation) {
-		return new MapleControllableModuleMotor(true, logPath, moduleSimulation, new PIDController(30, 0, 0));
+		PIDController pidController = new PIDController(30, 0, 0);
+		pidController.enableContinuousInput(-0.5, 0.5);
+		return new MapleControllableModuleMotor(true, logPath, moduleSimulation, pidController);
 	}
 
 	static SteerRequests buildRequests() {

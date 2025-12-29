@@ -95,8 +95,6 @@ public class RobotManager extends LoggedRobot {
 	@Override
 	public void simulationPeriodic() {
 		SimulatedArena.getInstance().simulationPeriodic();
-		// todo - fix log path, fix object type SOLID
-		Logger.recordOutput("FieldSimulation/NotesPositions", SimulatedArena.getInstance().getGamePiecesArrayByType("Note"));
 	}
 
 	private void createAutoReadyForConstructionChooser() {

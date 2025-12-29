@@ -27,7 +27,7 @@ public class MapleIMUBuilder {
 			buildEmptyAngleSignal("angularVelocityX"),
 			buildEmptyAngleSignal("angularVelocityY"),
 			new SuppliedAngleSignal(
-				"yaw",
+				"angularVelocityZ",
 				() -> mapleGyro.getGyroSimulation().getMeasuredAngularVelocity().in(Units.RadiansPerSecond),
 				AngleUnit.RADIANS
 			),

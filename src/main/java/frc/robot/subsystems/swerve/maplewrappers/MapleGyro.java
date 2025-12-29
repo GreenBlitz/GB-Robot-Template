@@ -4,13 +4,16 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.interfaces.InputSignal;
 import org.ironmaple.simulation.drivesims.GyroSimulation;
+import org.littletonrobotics.junction.Logger;
 
 public class MapleGyro implements IIMU {
 
 	private final GyroSimulation gyroSimulation;
+	private final String logPath;
 
-	public MapleGyro(GyroSimulation gyroSimulation) {
+	public MapleGyro(String logPath, GyroSimulation gyroSimulation) {
 		this.gyroSimulation = gyroSimulation;
+		this.logPath = logPath;
 	}
 
 	public GyroSimulation getGyroSimulation() {
@@ -29,7 +32,9 @@ public class MapleGyro implements IIMU {
 
 	@Override
 	public void updateInputs(InputSignal<?>... inputSignals) {
-		// trust...
+		for (InputSignal<?> inputSignal : inputSignals) {
+			Logger.processInputs(logPath, inputSignal);
+		}
 	}
 
 }

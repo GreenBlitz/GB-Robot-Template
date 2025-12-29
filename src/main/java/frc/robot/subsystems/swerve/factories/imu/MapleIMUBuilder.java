@@ -15,8 +15,8 @@ import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 
 public class MapleIMUBuilder {
 
-	public static IIMU buildIMU(SwerveDriveSimulation swerveDriveSimulation) {
-		return new MapleGyro(swerveDriveSimulation.getGyroSimulation());
+	public static IIMU buildIMU(String logPath, SwerveDriveSimulation swerveDriveSimulation) {
+		return new MapleGyro(logPath + "/Maple", swerveDriveSimulation.getGyroSimulation());
 	}
 
 	public static IMUSignals buildSignals(MapleGyro mapleGyro) {

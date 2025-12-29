@@ -14,7 +14,7 @@ public class IMUFactory {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL, REPLAY -> Pigeon2IMUBuilder.buildIMU(logPath);
 			case SIMULATION ->
-				swerveDriveSimulation == null ? EmptyIMUBuilder.buildIMU(logPath) : MapleIMUBuilder.buildIMU(swerveDriveSimulation);
+				swerveDriveSimulation == null ? EmptyIMUBuilder.buildIMU(logPath) : MapleIMUBuilder.buildIMU(logPath, swerveDriveSimulation);
 		};
 	}
 

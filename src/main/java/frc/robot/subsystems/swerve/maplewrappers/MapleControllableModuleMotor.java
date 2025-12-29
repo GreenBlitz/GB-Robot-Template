@@ -35,7 +35,7 @@ public class MapleControllableModuleMotor implements ControllableMotor {
 		this.moduleSimulation = moduleSimulation;
 		this.motor = steer
 			? moduleSimulation.useGenericControllerForSteer().withCurrentLimit(Amps.of(20))
-			: moduleSimulation.useGenericMotorControllerForDrive().withCurrentLimit(Amps.of(60));
+			: moduleSimulation.useGenericMotorControllerForDrive().withCurrentLimit(Amps.of(40));
 		this.positionPIDRotations = positionPIDRotations;
 		this.logPath = logPath;
 	}

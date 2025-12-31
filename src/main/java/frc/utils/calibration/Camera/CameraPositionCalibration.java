@@ -61,7 +61,6 @@ public class CameraPositionCalibration extends Command {
 		this.currentPose = new Pose3d();
 	}
 
-
 	@Override
 	public void initialize() {
 		Logger.recordOutput(logPathPrefix + commandLogPath + "/tag/tagPoseFieldRelative", tagPoseFieldRelative);
@@ -119,8 +118,8 @@ public class CameraPositionCalibration extends Command {
 		translationSum = translationSum.plus(currentPose.getTranslation());
 		cosYawRotation3DSum += Math.cos(currentPose.getRotation().getX());
 		sinYawRotation3DSum += Math.sin(currentPose.getRotation().getX());
-		cosPitchRotation3DSum += Math.cos(-currentPose.getRotation().getY());
-		sinPitchRotation3DSum += Math.sin(-currentPose.getRotation().getY());
+		cosPitchRotation3DSum += Math.cos(currentPose.getRotation().getY());
+		sinPitchRotation3DSum += Math.sin(currentPose.getRotation().getY());
 		cosRollRotation3DSum += Math.cos(currentPose.getRotation().getZ());
 		sinRollRotation3DSum += Math.sin(currentPose.getRotation().getZ());
 	}

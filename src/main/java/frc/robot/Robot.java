@@ -25,7 +25,7 @@ import frc.robot.hardware.interfaces.IIMU;
  */
 public class Robot {
 
-	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(true);
+	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);
 
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;

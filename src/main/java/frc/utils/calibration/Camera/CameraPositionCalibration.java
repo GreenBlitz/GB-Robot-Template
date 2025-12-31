@@ -35,10 +35,8 @@ public class CameraPositionCalibration extends Command {
 	private Pose3d currentPose;
 
 	public CameraPositionCalibration(
-		AprilTagFields field,
 		String logPathPrefix,
 		String cameraName,
-		int tagID,
 		double robotXAxisDistanceFromTag,
 		double tagZ,
 		Pose3d tagPoseFieldRelative

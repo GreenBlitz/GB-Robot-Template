@@ -60,10 +60,8 @@ public class JoysticksBindings {
 		// bindings...
 		usedJoystick.A.onTrue(
 			new CameraPositionCalibration(
-				k2025ReefscapeAndyMark,
 				"GOODmORNING",
 				"limelight-left",
-				18,
 				0.89,
 				0.215,
 				AprilTagFieldLayout.loadField(k2025ReefscapeWelded).getTagPose(18).get()

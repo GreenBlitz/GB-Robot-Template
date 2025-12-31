@@ -21,7 +21,7 @@ public class CameraPositionCalibration extends Command {
 
 	private final double tagZ;
 	private final Pose3d tagPoseFieldRelative;
-	private Pose3d cameraPoseFieldRelative;
+	private CameraPositionCalibrationInputsAutoLogged cameraPoseFieldRelativeInputs;
 	private Pose2d robotPoseFieldRelative;
 
 	private Rotation3d finalCameraRotation;
@@ -56,7 +56,7 @@ public class CameraPositionCalibration extends Command {
 		);
 
 		LimelightHelpers.setCameraPose_RobotSpace(cameraName, 0, 0, 0, 0, 0, 0);
-		this.cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
+		this.cameraPoseFieldRelativeInputs.cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
 		this.translationSum = new Translation3d();
 		this.currentPose = new Pose3d();
 	}
@@ -69,8 +69,8 @@ public class CameraPositionCalibration extends Command {
 
 	@Override
 	public void execute() {
-		cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
-		Logger.recordOutput("AAAAAAAAAAAAAAAAAAAAAAAAAa", cameraPoseFieldRelative);
+		cameraPoseFieldRelativeInputs.cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
+		Logger.processInputs("AAAAAAAAAAAAAAAAAAAAAAAAAa", cameraPoseFieldRelativeInputs);
 		calculateRobotRelativeCameraPosition();
 		sumMeasurementsValues();
 		logFunction();
@@ -102,13 +102,13 @@ public class CameraPositionCalibration extends Command {
 	private void calculateRobotRelativeCameraPosition() {
 		// add option to tags that are not perfectly aligned
 		currentPose = new Pose3d(
-			cameraPoseFieldRelative.getX() - robotPoseFieldRelative.getX(),
-			-(cameraPoseFieldRelative.getY() - robotPoseFieldRelative.getY()),
-			cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + tagZ,
+			cameraPoseFieldRelativeInputs.cameraPoseFieldRelative.getX() - robotPoseFieldRelative.getX(),
+			-(cameraPoseFieldRelativeInputs.cameraPoseFieldRelative.getY() - robotPoseFieldRelative.getY()),
+			cameraPoseFieldRelativeInputs.cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + tagZ,
 			new Rotation3d(
-				cameraPoseFieldRelative.getRotation().getX(),
-				-cameraPoseFieldRelative.getRotation().getY(),
-				cameraPoseFieldRelative.getRotation().getZ() - robotPoseFieldRelative.getRotation().getRadians()
+				cameraPoseFieldRelativeInputs.cameraPoseFieldRelative.getRotation().getX(),
+				-cameraPoseFieldRelativeInputs.cameraPoseFieldRelative.getRotation().getY(),
+				cameraPoseFieldRelativeInputs.cameraPoseFieldRelative.getRotation().getZ() - robotPoseFieldRelative.getRotation().getRadians()
 			)
 		);
 		// limelight is funny so we invert y-axis
@@ -127,7 +127,7 @@ public class CameraPositionCalibration extends Command {
 	private void logFunction() {
 		Logger.recordOutput(logPathPrefix + commandLogPath + "/current/currentRotation", currentPose.getRotation());
 		Logger.recordOutput(logPathPrefix + commandLogPath + "/current/currentTranslation", currentPose.getTranslation());
-		Logger.recordOutput(logPathPrefix + commandLogPath + "/cameraPoseFieldRelative", cameraPoseFieldRelative);
+		Logger.recordOutput(logPathPrefix + commandLogPath + "/cameraPoseFieldRelative", cameraPoseFieldRelativeInputs.cameraPoseFieldRelative);
 
 		Logger.recordOutput(logPathPrefix + commandLogPath + "/current/currentPose", currentPose);
 		Logger.recordOutput(logPathPrefix + commandLogPath + "/current/currentPose2d", currentPose.toPose2d());

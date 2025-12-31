@@ -1,6 +1,5 @@
 package frc.utils.calibration.Camera;
 
-import edu.wpi.first.apriltag.AprilTagFields;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;

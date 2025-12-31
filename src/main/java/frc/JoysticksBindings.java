@@ -8,7 +8,6 @@ import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.utils.calibration.Camera.CameraPositionCalibration;
 
-import static edu.wpi.first.apriltag.AprilTagFields.k2025ReefscapeAndyMark;
 import static edu.wpi.first.apriltag.AprilTagFields.k2025ReefscapeWelded;
 
 public class JoysticksBindings {

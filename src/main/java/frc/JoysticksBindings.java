@@ -61,8 +61,8 @@ public class JoysticksBindings {
 			new CameraPositionCalibration(
 				"GOODmORNING",
 				"limelight-left",
-				0.89,
-				0.215,
+				1.595,
+				0.1375,
 				AprilTagFieldLayout.loadField(k2025ReefscapeWelded).getTagPose(18).get()
 			)
 		);

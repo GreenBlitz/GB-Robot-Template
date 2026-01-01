@@ -58,12 +58,12 @@ public class OdometryData {
 		setIMUYaw(Optional.of(imuYaw));
 	}
 
-	public void setIMUAccelerationMagnitudeG(Optional<Double> imuAccelerationMagnitudeG) {
+	public void setIMUAcceleration(Optional<Double> imuAccelerationMagnitudeG) {
 		this.imuAccelerationMagnitudeG = imuAccelerationMagnitudeG;
 	}
 
 	public void setIMUAcceleration(double imuAccelerationMagnitudeG) {
-		setIMUAccelerationMagnitudeG(Optional.of(imuAccelerationMagnitudeG));
+		setIMUAcceleration(Optional.of(imuAccelerationMagnitudeG));
 	}
 
 }

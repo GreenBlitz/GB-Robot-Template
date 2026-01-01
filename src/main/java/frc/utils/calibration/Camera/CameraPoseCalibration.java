@@ -1,6 +1,5 @@
 package frc.utils.calibration.Camera;
 
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -11,17 +10,17 @@ import frc.utils.math.AngleTransform;
 import frc.utils.math.FieldMath;
 import org.littletonrobotics.junction.Logger;
 
-public class CameraPositionCalibration extends Command {
+public class CameraPoseCalibration extends Command {
 
-	private final static int NEEDED_NUMBER_OF_CYCLES = 100; // PLACE HOLDER
-	private final static String commandLogPath = "/cameraPositionCalibration";
+	private final static int NEEDED_NUMBER_OF_CYCLES = 100;
+	private final static String LOG_PATH = "/cameraPositionCalibration";
 	private final String logPathPrefix;
 	private final String cameraName;
 
-	private final double tagZ;
+	private final double tagCenterHeightMeters;
 	private final Pose3d tagPoseFieldRelative;
-	private CameraPositionCalibrationInputsAutoLogged cameraPoseFieldRelativeInputs;
-	private Pose2d robotPoseFieldRelative;
+	private final CameraPositionCalibrationInputsAutoLogged cameraPoseFieldRelativeInputs;
+	private Pose2d measuredRobotPoseFieldRelative;
 
 	private Rotation3d finalCameraRotation;
 	private Translation3d finalCameraTranslation;
@@ -33,20 +32,22 @@ public class CameraPositionCalibration extends Command {
 	private Translation3d translationSum;
 	private Pose3d currentPose;
 
-	public CameraPositionCalibration(
+	public CameraPoseCalibration(
 		String logPathPrefix,
 		String cameraName,
 		double robotXAxisDistanceFromTag,
-		double tagZ,
+		double tagCenterHeightMeters,
 		Pose3d tagPoseFieldRelative
 	) {
 		this.cameraName = cameraName;
-		this.tagZ = tagZ;
+		this.tagCenterHeightMeters = tagCenterHeightMeters;
 		this.logPathPrefix = logPathPrefix;
 		this.tagPoseFieldRelative = tagPoseFieldRelative;
-		this.robotPoseFieldRelative = new Pose2d(
-			// tag must be either 180 or 0 deg to the filed
-			// Y difference from the tag is 0
+		this.measuredRobotPoseFieldRelative = new Pose2d(
+			/**
+			 * // tag must be either 180 or 0 deg to the filed // Y difference from the tag is 0
+			 **/
+
 			tagPoseFieldRelative.getX() - robotXAxisDistanceFromTag,
 			tagPoseFieldRelative.getY(),
 			FieldMath.transformAngle(tagPoseFieldRelative.getRotation().toRotation2d(), AngleTransform.INVERT)
@@ -60,17 +61,17 @@ public class CameraPositionCalibration extends Command {
 
 	@Override
 	public void initialize() {
-		Logger.recordOutput(logPathPrefix + commandLogPath + "/tag/tagPoseFieldRelative", tagPoseFieldRelative);
-		Logger.recordOutput(logPathPrefix + commandLogPath + "/robot/robotPoseFieldRelative", robotPoseFieldRelative);
+		Logger.recordOutput(logPathPrefix + LOG_PATH + "/tag/tagPoseFieldRelative", tagPoseFieldRelative);
+		Logger.recordOutput(logPathPrefix + LOG_PATH + "/robot/robotPoseFieldRelative", measuredRobotPoseFieldRelative);
 	}
 
 	@Override
 	public void execute() {
 		cameraPoseFieldRelativeInputs.cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
-		Logger.processInputs("/camera/currentCameraPose", cameraPoseFieldRelativeInputs);
-		calculateRobotRelativeCameraPosition();
+		Logger.processInputs(logPathPrefix + LOG_PATH + "/camera/currentCameraPose", cameraPoseFieldRelativeInputs);
+		currentPose = calculateRobotRelativeCameraPosition();
 		sumMeasurementsValues();
-		logFunction();
+		logCurrentCameraPose();
 		currentCycle++;
 	}
 
@@ -87,28 +88,26 @@ public class CameraPositionCalibration extends Command {
 			Math.atan2(sinPitchRotation3DSum / currentCycle, cosPitchRotation3DSum / currentCycle),
 			Math.atan2(sinRollRotation3DSum / currentCycle, cosRollRotation3DSum / currentCycle)
 		);
-		Pose3d p = new Pose3d(finalCameraTranslation, finalCameraRotation);
-
-		Logger.recordOutput(logPathPrefix + commandLogPath + "/solution/endTranslation", finalCameraTranslation);
-		Logger.recordOutput(logPathPrefix + commandLogPath + "/solution/endRotation", finalCameraRotation);
-		Logger.recordOutput(logPathPrefix + commandLogPath + "/solution/endPose", p);
-		Logger.recordOutput(logPathPrefix + commandLogPath + "/solution/endPose2d", p.toPose2d());
+		Pose3d averageCameraPoseFieldRelative = new Pose3d(finalCameraTranslation, finalCameraRotation);
+		Logger.recordOutput(logPathPrefix + LOG_PATH + "/solution/endTranslation", finalCameraTranslation);
+		Logger.recordOutput(logPathPrefix + LOG_PATH + "/solution/endRotation", finalCameraRotation);
+		Logger.recordOutput(logPathPrefix + LOG_PATH + "/solution/endPose", averageCameraPoseFieldRelative);
 	}
 
 
-	private void calculateRobotRelativeCameraPosition() {
-		// add option to tags that are not perfectly aligned
-		currentPose = new Pose3d(
-			cameraPoseFieldRelativeInputs.cameraPoseFieldRelative.getX() - robotPoseFieldRelative.getX(),
-			-(cameraPoseFieldRelativeInputs.cameraPoseFieldRelative.getY() - robotPoseFieldRelative.getY()),
-			cameraPoseFieldRelativeInputs.cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + tagZ,
+	private Pose3d calculateRobotRelativeCameraPosition() {
+		// limelight is funny so we invert y-axis
+		return (new Pose3d(
+			cameraPoseFieldRelativeInputs.cameraPoseFieldRelative.getX() - measuredRobotPoseFieldRelative.getX(),
+			-(cameraPoseFieldRelativeInputs.cameraPoseFieldRelative.getY() - measuredRobotPoseFieldRelative.getY()),
+			cameraPoseFieldRelativeInputs.cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + tagCenterHeightMeters,
 			new Rotation3d(
 				cameraPoseFieldRelativeInputs.cameraPoseFieldRelative.getRotation().getX(),
 				-cameraPoseFieldRelativeInputs.cameraPoseFieldRelative.getRotation().getY(),
-				cameraPoseFieldRelativeInputs.cameraPoseFieldRelative.getRotation().getZ() - robotPoseFieldRelative.getRotation().getRadians()
+				cameraPoseFieldRelativeInputs.cameraPoseFieldRelative.getRotation().getZ()
+					- measuredRobotPoseFieldRelative.getRotation().getRadians()
 			)
-		);
-		// limelight is funny so we invert y-axis
+		));
 	}
 
 	private void sumMeasurementsValues() {
@@ -121,13 +120,10 @@ public class CameraPositionCalibration extends Command {
 		sinRollRotation3DSum += Math.sin(currentPose.getRotation().getZ());
 	}
 
-	private void logFunction() {
-		Logger.recordOutput(logPathPrefix + commandLogPath + "/current/currentRotation", currentPose.getRotation());
-		Logger.recordOutput(logPathPrefix + commandLogPath + "/current/currentTranslation", currentPose.getTranslation());
-		Logger.recordOutput(logPathPrefix + commandLogPath + "/cameraPoseFieldRelative", cameraPoseFieldRelativeInputs.cameraPoseFieldRelative);
-
-		Logger.recordOutput(logPathPrefix + commandLogPath + "/current/currentPose", currentPose);
-		Logger.recordOutput(logPathPrefix + commandLogPath + "/current/currentPose2d", currentPose.toPose2d());
+	private void logCurrentCameraPose() {
+		Logger.recordOutput(logPathPrefix + LOG_PATH + "/current/currentRotation", currentPose.getRotation());
+		Logger.recordOutput(logPathPrefix + LOG_PATH + "/current/currentTranslation", currentPose.getTranslation());
+		Logger.recordOutput(logPathPrefix + LOG_PATH + "/current/currentPose", currentPose);
 	}
 
 }

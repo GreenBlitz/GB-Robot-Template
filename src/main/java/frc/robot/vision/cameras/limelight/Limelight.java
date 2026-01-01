@@ -163,11 +163,6 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		}
 	}
 
-	public void updateAndProcessIsConnected() {
-		inputs.connectedInput().connected = LimelightHelpersAdditions.getIsConnected(name);
-		Logger.processInputs(logPath, inputs.connectedInput());
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -317,6 +312,11 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 			Math.toDegrees(robotRelativeCameraPose.getRotation().getY()),
 			Math.toDegrees(robotRelativeCameraPose.getRotation().getZ())
 		);
+	}
+
+	private void updateAndProcessIsConnected() {
+		inputs.connectedInput().connected = LimelightHelpersAdditions.getIsConnected(name);
+		Logger.processInputs(logPath, inputs.connectedInput());
 	}
 
 	private static double getTarget2dTimestampSeconds(LimelightTarget2dValues target2dValues) {

@@ -120,16 +120,16 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	public void resetPose(
 		double timestampSeconds,
 		Rotation2d imuYaw,
-		double imuAcceleration,
+		double imuAccelerationMagnitudeG,
 		SwerveModulePosition[] wheelPositions,
 		Pose2d poseMeters
 	) {
 		Logger.recordOutput(logPath + "/lastPoseResetTo", poseMeters);
 		poseEstimator.resetPosition(imuYaw, wheelPositions, poseMeters);
-		this.lastOdometryData = new OdometryData(timestampSeconds, wheelPositions, Optional.of(imuYaw), Optional.of(imuAcceleration));
+		this.lastOdometryData = new OdometryData(timestampSeconds, wheelPositions, Optional.of(imuYaw), Optional.of(imuAccelerationMagnitudeG));
 		poseToIMUYawDifferenceBuffer.clear();
 		imuYawBuffer.addSample(timestampSeconds, imuYaw);
-		imuAccelerationBuffer.addSample(timestampSeconds, imuAcceleration);
+		imuAccelerationBuffer.addSample(timestampSeconds, imuAccelerationMagnitudeG);
 	}
 
 	@Override
@@ -189,14 +189,16 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		poseEstimator.addVisionMeasurement(
 			visionObservation.robotPose(),
 			visionObservation.timestampSeconds(),
-			getCorrectedVisionStdDevs(visionObservation)
+			getCollisionCompensatedVisionStdDevs(visionObservation)
 		);
 		this.lastVisionObservation = visionObservation;
 	}
 
-	private Matrix<N3, N1> getCorrectedVisionStdDevs(RobotPoseObservation visionObservation) {
-		return imuAccelerationBuffer.getSample(visionObservation.timestampSeconds()).isPresent()
-			&& imuAccelerationBuffer.getSample(visionObservation.timestampSeconds()).get() >= SwerveConstants.MIN_COLLISION_G_FORCE
+	private Matrix<N3, N1> getCollisionCompensatedVisionStdDevs(RobotPoseObservation visionObservation) {
+		Optional<Double> currentSample = imuAccelerationBuffer.getSample(visionObservation.timestampSeconds());
+		boolean isGettingAcceleration = currentSample.isPresent();
+		boolean isColiding = currentSample.get() >= SwerveConstants.MIN_COLLISION_G_FORCE;
+		return isGettingAcceleration && isColiding
 				? WPILibPoseEstimatorConstants.DEFAULT_VISION_STD_DEV.asColumnVector()
 					.minus(WPILibPoseEstimatorConstants.VISION_STD_DEV_COLLISION_REDUCTION.asColumnVector())
 				: WPILibPoseEstimatorConstants.DEFAULT_VISION_STD_DEV.asColumnVector();

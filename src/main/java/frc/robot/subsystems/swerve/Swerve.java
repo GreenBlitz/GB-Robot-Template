@@ -19,6 +19,7 @@ import frc.robot.hardware.empties.EmptyIMU;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.poseestimator.OdometryData;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.states.DriveRelative;
 import frc.robot.subsystems.swerve.states.LoopMode;
@@ -28,6 +29,7 @@ import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.TimedValue;
 import frc.utils.auto.PathPlannerUtil;
+import frc.utils.math.ToleranceMath;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
@@ -47,7 +49,11 @@ public class Swerve extends GBSubsystem {
 	private final HeadingStabilizer headingStabilizer;
 	private final SwerveCommandsBuilder commandsBuilder;
 	private final SwerveStateHandler stateHandler;
+	private final boolean[] areModulesSkidding;
+	private final Translation2d[] moduleTranslationalStates;
 
+	private SwerveModuleState[] moduleStates;
+	private SwerveModuleState[] moduleRotationalStates;
 	private SwerveState currentState;
 	private Supplier<Rotation2d> headingSupplier;
 	private ChassisPowers driversPowerInputs;
@@ -56,21 +62,29 @@ public class Swerve extends GBSubsystem {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 		this.driversPowerInputs = new ChassisPowers();
+		this.moduleStates = new SwerveModuleState[ModuleUtil.ModulePosition.values().length];
+		this.moduleRotationalStates = new SwerveModuleState[moduleStates.length];
 
 		this.constants = constants;
 		this.driveRadiusMeters = SwerveMath.calculateDriveRadiusMeters(modules.getModulePositionsFromCenterMeters());
 		this.modules = modules;
+		this.areModulesSkidding = new boolean[moduleStates.length];
+		this.moduleTranslationalStates = new Translation2d[areModulesSkidding.length];
 		this.imu = imu;
 		this.imuSignals = imuSignals;
 
 		this.kinematics = new SwerveDriveKinematics(modules.getModulePositionsFromCenterMeters());
-		this.headingSupplier = () -> getGyroAbsoluteYaw().getValue();
+		this.headingSupplier = () -> getIMUAbsoluteYaw().getValue();
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
 		this.stateHandler = new SwerveStateHandler(this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 
 		update();
 		setDefaultCommand(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
+	}
+
+	public boolean[] getAreModulesSkidding() {
+		return areModulesSkidding;
 	}
 
 	public String getLogPath() {
@@ -162,6 +176,7 @@ public class Swerve extends GBSubsystem {
 	public void update() {
 		updateIMU();
 		modules.updateInputs();
+		checkSkidding();
 
 		currentState.log(constants.stateLogPath());
 
@@ -176,6 +191,9 @@ public class Swerve extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/IMU/Acceleration", getAccelerationFromIMUMetersPerSecondSquared());
 
 		Logger.recordOutput(getLogPath() + "/isCollisionDetected", isCollisionDetected());
+		for (int i = 0; i < areModulesSkidding.length; i++) {
+			Logger.recordOutput(getLogPath() + "/isSkidding/" + ModuleUtil.ModulePosition.values()[i], areModulesSkidding[i]);
+		}
 	}
 
 
@@ -201,7 +219,7 @@ public class Swerve extends GBSubsystem {
 		return driveRadiusMeters;
 	}
 
-	public TimedValue<Rotation2d> getGyroAbsoluteYaw() {
+	public TimedValue<Rotation2d> getIMUAbsoluteYaw() {
 		TimedValue<Rotation2d> latestGyroYaw = imuSignals.yawSignal().getLatestTimedValue();
 		Rotation2d latestGyroAbsoluteYaw = Rotation2d.fromRadians(MathUtil.angleModulus(latestGyroYaw.getValue().getRadians()));
 		return new TimedValue<>(latestGyroAbsoluteYaw, latestGyroYaw.getTimestamp());
@@ -317,7 +335,6 @@ public class Swerve extends GBSubsystem {
 		modules.setTargetStates(moduleStates, isClosedLoop);
 	}
 
-
 	public boolean isAtHeading(Rotation2d targetHeading, Rotation2d tolerance, Rotation2d velocityDeadbandAnglesPerSecond) {
 		double headingDeltaDegrees = Math.abs(targetHeading.minus(headingSupplier.get()).getDegrees());
 		boolean isAtHeading = headingDeltaDegrees < tolerance.getDegrees();
@@ -330,6 +347,32 @@ public class Swerve extends GBSubsystem {
 
 	public boolean isCollisionDetected() {
 		return imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d().getNorm() > SwerveConstants.MIN_COLLISION_G_FORCE;
+	}
+
+	private void checkSkidding() {
+		double robotYawAngularVelocityRadiansPerSecond = getRobotRelativeVelocity().omegaRadiansPerSecond;
+
+		moduleRotationalStates = kinematics
+			.toSwerveModuleStates(new ChassisSpeeds(0, 0, robotYawAngularVelocityRadiansPerSecond), new Translation2d());
+		moduleStates = modules.getCurrentStates();
+
+		Translation2d robotTranslationalVelocityMetersPerSecond = new Translation2d(
+			getRobotRelativeVelocity().vxMetersPerSecond,
+			getRobotRelativeVelocity().vyMetersPerSecond
+		);
+		Translation2d[] moduleToRobotDifferential = new Translation2d[moduleStates.length];
+
+		for (int i = 0; i < moduleTranslationalStates.length; i++) {
+			moduleTranslationalStates[i] = new Translation2d(moduleStates[i].speedMetersPerSecond, moduleStates[i].angle)
+				.minus(new Translation2d(moduleRotationalStates[i].speedMetersPerSecond, moduleRotationalStates[i].angle));
+			moduleToRobotDifferential[i] = robotTranslationalVelocityMetersPerSecond.minus(moduleTranslationalStates[i]);
+		}
+
+		Translation2d majority = moduleToRobotDifferential[0].equals(moduleToRobotDifferential[1]) || moduleToRobotDifferential[0].equals(moduleToRobotDifferential[2]) ? moduleToRobotDifferential[0] : moduleToRobotDifferential[1];
+		for (int i = 0; i < moduleToRobotDifferential.length; i++) {
+			if(!moduleToRobotDifferential[i].equals(majority))
+				areModulesSkidding[i] =true;
+		}
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {

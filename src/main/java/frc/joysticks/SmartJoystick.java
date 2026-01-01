@@ -14,6 +14,7 @@ public class SmartJoystick {
 	private static final double DEADZONE = 0.07;
 	private static final double DEFAULT_THRESHOLD_FOR_AXIS_BUTTON = 0.1;
 	private static final double SENSITIVE_AXIS_VALUE_POWER = 2;
+
 	public final JoystickButton A, B, X, Y, L1, R1, START, BACK, L3, R3;
 	public final POVButton POV_UP, POV_RIGHT, POV_DOWN, POV_LEFT;
 	private final Joystick joystick;

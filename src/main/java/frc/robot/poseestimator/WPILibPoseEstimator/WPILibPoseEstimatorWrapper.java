@@ -141,35 +141,28 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 
 	public Optional<Double> getCurrentPoseReliability() {
 		if (lastVisionObservation != null) {
-			return calculatePoseReliability(lastVisionObservation, this::getEstimatedPoseAtTimestamp, TimeUtil.getCurrentTimeSeconds());
+			return calculatePoseReliability(lastVisionObservation, this::getEstimatedPoseAtTimestamp);
 		}
 		return Optional.empty();
 	}
 
-	public static Optional<Double> calculatePoseReliability(
-		RobotPoseObservation lastVisionObservation,
-		Function<Double, Optional<Pose2d>> getEstimatedPoseAtTimestampFunc,
-		double currentTimestamp
+	public static Double calculatePoseReliability(
+		RobotPoseObservation visionObservation,
+		Pose2d estimatedPose
 	) {
-		Optional<Pose2d> estimatedPose = getEstimatedPoseAtTimestampFunc.apply(lastVisionObservation.timestampSeconds());
-		if (estimatedPose.isEmpty()) {
-			return Optional.empty();
-		}
-
-		Pose2d visionEstimatedPose = lastVisionObservation.robotPose();
-		StandardDeviations2D visionStdDevs = lastVisionObservation.stdDevs();
+		Pose2d visionEstimatedPose = visionObservation.robotPose();
+		StandardDeviations2D visionStdDevs = visionObservation.stdDevs();
 
 		double translationReliability = Math.max(
-			estimatedPose.get().getTranslation().minus(visionEstimatedPose.getTranslation()).getNorm(),
+			estimatedPose.getTranslation().minus(visionEstimatedPose.getTranslation()).getNorm(),
 			new Translation2d(visionStdDevs.xStandardDeviations(), visionStdDevs.yStandardDeviations()).getNorm()
 		);
 		double rotationReliability = Math.max(
-			estimatedPose.get().getRotation().minus(visionEstimatedPose.getRotation()).getRadians(),
+			estimatedPose.getRotation().minus(visionEstimatedPose.getRotation()).getRadians(),
 			visionStdDevs.angleStandardDeviations()
 		);
-		double timeSinceLastVisionUpdate = currentTimestamp - lastVisionObservation.timestampSeconds();
 
-		return Optional.of(Math.max(translationReliability, rotationReliability) + timeSinceLastVisionUpdate);
+		return Math.max(translationReliability, rotationReliability);
 	}
 
 	public void resetIsIMUOffsetCalibrated() {

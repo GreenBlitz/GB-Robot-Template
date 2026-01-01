@@ -1,7 +1,5 @@
 package frc.utils.limelight;
 
-import org.littletonrobotics.junction.Logger;
-
 public class LimelightHelpersAdditions {
 
 	public record RawTarget(double txnc, double tync, double ta) {
@@ -46,11 +44,7 @@ public class LimelightHelpersAdditions {
 	}
 
 	public static boolean getIsConnected(String limelightName) {
-		if (LimelightHelpers.getLimelightNTTable(limelightName).containsKey("getpipe")) {
-			Logger.recordOutput("AAAAAAAAA", true);
-			return true;
-		}
-		return false;
+		return LimelightHelpers.getLimelightNTTable(limelightName).containsKey("getpipe");
 	}
 
 	private static double extractArrayEntry(double[] inData, int position) {

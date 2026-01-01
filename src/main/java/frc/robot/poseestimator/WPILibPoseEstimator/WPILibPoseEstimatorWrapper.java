@@ -29,7 +29,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	private final PoseEstimator<SwerveModulePosition[]> poseEstimator;
 	private final RingBuffer<Rotation2d> poseToIMUYawDifferenceBuffer;
 	private final TimeInterpolatableBuffer<Rotation2d> imuYawBuffer;
-	private final TimeInterpolatableBuffer<Double> imuAccelerationMagnitudeGBuffer;
+	private final TimeInterpolatableBuffer<Double> imuAccelerationBuffer;
 	private RobotPoseObservation lastVisionObservation;
 	private OdometryData lastOdometryData;
 	private boolean isIMUOffsetCalibrated;
@@ -65,7 +65,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		this.isIMUOffsetCalibrated = false;
 		this.poseToIMUYawDifferenceBuffer = new RingBuffer<>(WPILibPoseEstimatorConstants.POSE_TO_IMU_YAW_DIFFERENCE_BUFFER_SIZE);
 		this.imuYawBuffer = TimeInterpolatableBuffer.createBuffer(WPILibPoseEstimatorConstants.IMU_YAW_BUFFER_SIZE_SECONDS);
-		this.imuAccelerationMagnitudeGBuffer = TimeInterpolatableBuffer
+		this.imuAccelerationBuffer = TimeInterpolatableBuffer
 			.createDoubleBuffer(WPILibPoseEstimatorConstants.IMU_ACCELERATION_BUFFER_SIZE_SECONDS);
 	}
 
@@ -106,7 +106,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		lastOdometryData.setIMUAcceleration(data.getImuAccelerationMagnitudeG());
 
 		data.getImuAccelerationMagnitudeG()
-			.ifPresent((acceleration) -> imuAccelerationMagnitudeGBuffer.addSample(lastOdometryData.getTimestampSeconds(), acceleration));
+			.ifPresent((acceleration) -> imuAccelerationBuffer.addSample(lastOdometryData.getTimestampSeconds(), acceleration));
 	}
 
 	@Override
@@ -129,7 +129,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		this.lastOdometryData = new OdometryData(timestampSeconds, wheelPositions, Optional.of(imuYaw), Optional.of(imuAccelerationMagnitudeG));
 		poseToIMUYawDifferenceBuffer.clear();
 		imuYawBuffer.addSample(timestampSeconds, imuYaw);
-		imuAccelerationMagnitudeGBuffer.addSample(timestampSeconds, imuAccelerationMagnitudeG);
+		imuAccelerationBuffer.addSample(timestampSeconds, imuAccelerationMagnitudeG);
 	}
 
 	@Override
@@ -195,7 +195,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	}
 
 	private Matrix<N3, N1> getCollisionCompensatedVisionStdDevs(RobotPoseObservation visionObservation) {
-		Optional<Double> imuAccelerationAtVisionObservationTimestamp = imuAccelerationMagnitudeGBuffer
+		Optional<Double> imuAccelerationAtVisionObservationTimestamp = imuAccelerationBuffer
 			.getSample(visionObservation.timestampSeconds());
 		boolean isSamplePresent = imuAccelerationAtVisionObservationTimestamp.isPresent();
 		boolean isColliding = imuAccelerationAtVisionObservationTimestamp.get() >= SwerveConstants.MIN_COLLISION_G_FORCE;

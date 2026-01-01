@@ -43,6 +43,9 @@ public class LimelightHelpersAdditions {
 		return rawTargets;
 	}
 
+	public static boolean getIsConnected(String limelightName) {
+		return LimelightHelpers.getLimelightNTTable(limelightName).containsKey("getpipe");
+	}
 
 	private static double extractArrayEntry(double[] inData, int position) {
 		if (inData.length < position + 1) {

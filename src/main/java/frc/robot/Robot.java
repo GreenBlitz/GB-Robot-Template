@@ -17,7 +17,6 @@ import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.robot.hardware.interfaces.IIMU;
-import frc.utils.limelight.LimelightHelpers;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -51,14 +50,11 @@ public class Robot {
 		);
 
 
-
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 	}
 
 	public void periodic() {
 		BusChain.refreshAll();
-		LimelightHelpers.setCameraPose_RobotSpace("limelight-left",0.21,-0.08,0.51,-8.6,-27.06,-19.08);
-
 
 		swerve.update();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());

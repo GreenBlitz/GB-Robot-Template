@@ -49,7 +49,6 @@ public class Robot {
 			swerve.getGyroAbsoluteYaw().getTimestamp()
 		);
 
-
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 	}
 

@@ -360,16 +360,19 @@ public class Swerve extends GBSubsystem {
 			getRobotRelativeVelocity().vxMetersPerSecond,
 			getRobotRelativeVelocity().vyMetersPerSecond
 		);
+		Translation2d[] moduleToRobotDifferential = new Translation2d[moduleStates.length];
+
 		for (int i = 0; i < moduleTranslationalStates.length; i++) {
 			moduleTranslationalStates[i] = new Translation2d(moduleStates[i].speedMetersPerSecond, moduleStates[i].angle)
 				.minus(new Translation2d(moduleRotationalStates[i].speedMetersPerSecond, moduleRotationalStates[i].angle));
-		}
-		Translation2d majority = moduleTranslationalStates[0].equals(moduleTranslationalStates[1]) || moduleTranslationalStates[0].equals(moduleTranslationalStates[2]) ? moduleTranslationalStates[0] : moduleTranslationalStates[1];
-		for (int i = 0; i < moduleTranslationalStates.length; i++) {
-			if(!moduleTranslationalStates[i].equals(majority))
-				areModulesSkidding[i] =true;
+			moduleToRobotDifferential[i] = robotTranslationalVelocityMetersPerSecond.minus(moduleTranslationalStates[i]);
 		}
 
+		Translation2d majority = moduleToRobotDifferential[0].equals(moduleToRobotDifferential[1]) || moduleToRobotDifferential[0].equals(moduleToRobotDifferential[2]) ? moduleToRobotDifferential[0] : moduleToRobotDifferential[1];
+		for (int i = 0; i < moduleToRobotDifferential.length; i++) {
+			if(!moduleToRobotDifferential[i].equals(majority))
+				areModulesSkidding[i] =true;
+		}
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {

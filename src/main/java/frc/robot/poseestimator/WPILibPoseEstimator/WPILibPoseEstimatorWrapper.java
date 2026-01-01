@@ -196,9 +196,9 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 
 	private Matrix<N3, N1> getCollisionCompensatedVisionStdDevs(RobotPoseObservation visionObservation) {
 		Optional<Double> currentSample = imuAccelerationMagnitudeGBuffer.getSample(visionObservation.timestampSeconds());
-		boolean isGettingAcceleration = currentSample.isPresent();
-		boolean isColiding = currentSample.get() >= SwerveConstants.MIN_COLLISION_G_FORCE;
-		return isGettingAcceleration && isColiding
+		boolean isAccelerationPresent = currentSample.isPresent();
+		boolean isColliding = currentSample.get() >= SwerveConstants.MIN_COLLISION_G_FORCE;
+		return isAccelerationPresent && isColliding
 			? WPILibPoseEstimatorConstants.DEFAULT_VISION_STD_DEV.asColumnVector()
 				.minus(WPILibPoseEstimatorConstants.VISION_STD_DEV_COLLISION_REDUCTION.asColumnVector())
 			: WPILibPoseEstimatorConstants.DEFAULT_VISION_STD_DEV.asColumnVector();

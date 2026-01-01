@@ -75,6 +75,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		if (pipeline.isNeuralDetecting()) {
 			neuralDetections.clear();
 
+			updateAndProcessIsConnected();
 			inputs.neuralDetectionInputs().target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
 			inputs.neuralDetectionInputs().rawDetections = LimelightHelpers.getRawDetections(name);
 			Logger.processInputs(logPath + "/neuralDetectionInputs", inputs.neuralDetectionInputs());
@@ -106,6 +107,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		if (pipeline.isColorDetecting()) {
 			colorDetections.clear();
 
+			updateAndProcessIsConnected();
 			inputs.colorDetectionInputs().target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
 			inputs.colorDetectionInputs().rawTargets = LimelightHelpersAdditions.getRawTargets(name);
 			Logger.processInputs(logPath + "/colorDetectionInputs", inputs.colorDetectionInputs());
@@ -135,6 +137,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	public void updateMT1() {
 		if (pipeline.isUsingMT()) {
+			updateAndProcessIsConnected();
 			inputs.mt1Inputs().mtRawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
 			inputs.mt1Inputs().primaryTagPoseInCameraSpace = LimelightHelpers.getTargetPose3d_CameraSpace(name);
 			Logger.processInputs(logPath + "/mt1Inputs", inputs.mt1Inputs());
@@ -148,6 +151,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	public void updateMT2() {
 		if (pipeline.isUsingMT()) {
+			updateAndProcessIsConnected();
 			inputs.mt2Inputs().mtRawData = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
 			inputs.mt2Inputs().primaryTagPoseInCameraSpace = LimelightHelpers.getTargetPose3d_CameraSpace(name);
 			Logger.processInputs(logPath + "/mt2Inputs", inputs.mt2Inputs());
@@ -157,6 +161,11 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 				Logger.recordOutput(logPath + "/megaTag2PoseObservation", mt2PoseObservation);
 			}
 		}
+	}
+
+	public void updateAndProcessIsConnected() {
+		inputs.connectedInput().connected = LimelightHelpersAdditions.getIsConnected(name);
+		Logger.processInputs(logPath, inputs.connectedInput());
 	}
 
 	public String getName() {

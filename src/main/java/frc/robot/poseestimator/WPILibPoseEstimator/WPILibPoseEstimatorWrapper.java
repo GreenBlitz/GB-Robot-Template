@@ -199,9 +199,9 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		boolean isGettingAcceleration = currentSample.isPresent();
 		boolean isColiding = currentSample.get() >= SwerveConstants.MIN_COLLISION_G_FORCE;
 		return isGettingAcceleration && isColiding
-				? WPILibPoseEstimatorConstants.DEFAULT_VISION_STD_DEV.asColumnVector()
-					.minus(WPILibPoseEstimatorConstants.VISION_STD_DEV_COLLISION_REDUCTION.asColumnVector())
-				: WPILibPoseEstimatorConstants.DEFAULT_VISION_STD_DEV.asColumnVector();
+			? WPILibPoseEstimatorConstants.DEFAULT_VISION_STD_DEV.asColumnVector()
+				.minus(WPILibPoseEstimatorConstants.VISION_STD_DEV_COLLISION_REDUCTION.asColumnVector())
+			: WPILibPoseEstimatorConstants.DEFAULT_VISION_STD_DEV.asColumnVector();
 	}
 
 	private void updateIsIMUOffsetCalibrated() {

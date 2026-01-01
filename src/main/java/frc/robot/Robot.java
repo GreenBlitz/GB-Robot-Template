@@ -167,6 +167,10 @@ public class Robot {
 		swerve.update();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 
+		limelightFour.updateIsConnected();
+		limelightThreeGB.updateIsConnected();
+		limelightObjectDetector.updateIsConnected();
+
 		limelightFour.updateMT1();
 		limelightThreeGB.updateMT1();
 

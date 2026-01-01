@@ -47,10 +47,10 @@ public class LimelightHelpersAdditions {
 
 	public static boolean getIsConnected(String limelightName) {
 		if (LimelightHelpers.getLimelightNTTable(limelightName).containsKey("getpipe")) {
-            Logger.recordOutput("AAAAAAAAA", true);
-            return true;
-        }
-        return false;
+			Logger.recordOutput("AAAAAAAAA", true);
+			return true;
+		}
+		return false;
 	}
 
 	private static double extractArrayEntry(double[] inData, int position) {

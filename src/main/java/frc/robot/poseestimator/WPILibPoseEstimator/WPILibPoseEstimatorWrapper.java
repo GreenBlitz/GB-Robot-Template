@@ -198,7 +198,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		Optional<Double> imuAccelerationAtVisionObservationTimestamp = imuAccelerationBuffer.getSample(visionObservation.timestampSeconds());
 		boolean isSamplePresent = imuAccelerationAtVisionObservationTimestamp.isPresent();
 		boolean isColliding = imuAccelerationAtVisionObservationTimestamp.get() >= SwerveConstants.MIN_COLLISION_G_FORCE;
-		
+
 		return isSamplePresent && isColliding
 			? WPILibPoseEstimatorConstants.DEFAULT_VISION_STD_DEV.asColumnVector()
 				.minus(WPILibPoseEstimatorConstants.VISION_STD_DEV_COLLISION_REDUCTION.asColumnVector())

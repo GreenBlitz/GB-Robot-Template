@@ -1,4 +1,4 @@
-package frc.utils.calibration.Camera;
+package frc.utils.calibration.camera;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import org.littletonrobotics.junction.AutoLog;

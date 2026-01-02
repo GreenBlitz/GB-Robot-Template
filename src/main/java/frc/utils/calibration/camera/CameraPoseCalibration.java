@@ -1,4 +1,4 @@
-package frc.utils.calibration.Camera;
+package frc.utils.calibration.camera;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -59,10 +59,9 @@ public class CameraPoseCalibration extends Command {
 			FieldMath.transformAngle(tagPoseFieldRelative.getRotation().toRotation2d(), AngleTransform.INVERT)
 		);
 		this.cameraPoseCalibrationInputs = new CameraPoseCalibrationInputsAutoLogged();
-
-		this.cameraPoseCalibrationInputs.cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
 		this.robotRelativeCameraTranslationSum = new Translation3d();
 		this.currentRobotRelativeCameraPose = new Pose3d();
+
 		LimelightHelpers.setCameraPose_RobotSpace(cameraName, 0, 0, 0, 0, 0, 0);
 	}
 

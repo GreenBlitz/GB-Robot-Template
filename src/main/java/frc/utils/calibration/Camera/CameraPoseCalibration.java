@@ -28,7 +28,7 @@ public class CameraPoseCalibration extends Command {
 	private double cameraRobotRelativePitchCosSum = 0, cameraRobotRelativePitchSinSum = 0;
 	private double cameraRobotRelativeRollCosSum = 0, cameraRobotRelativeRollSinSum = 0;
 
-	private Translation3d translationSum;
+	private Translation3d robotRelativeCameraTranslationSum;
 	private Pose3d currentRobotRelativeCameraPose;
 
 	public CameraPoseCalibration(
@@ -53,7 +53,7 @@ public class CameraPoseCalibration extends Command {
 		this.cameraPoseCalibrationInputs = new CameraPoseCalibrationInputsAutoLogged();
 		LimelightHelpers.setCameraPose_RobotSpace(cameraName, 0, 0, 0, 0, 0, 0);
 		this.cameraPoseCalibrationInputs.cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
-		this.translationSum = new Translation3d();
+		this.robotRelativeCameraTranslationSum = new Translation3d();
 		this.currentRobotRelativeCameraPose = new Pose3d();
 	}
 
@@ -69,7 +69,7 @@ public class CameraPoseCalibration extends Command {
 		Logger.processInputs(LOG_PATH, cameraPoseCalibrationInputs);
 		currentRobotRelativeCameraPose = calculateRobotRelativeCameraPosition();
 		sumMeasurementsValues();
-		currentRobotRelativeCameraPose();
+		logCurrentRobotRelativeCameraPose();
 		currentCycle++;
 	}
 
@@ -80,7 +80,7 @@ public class CameraPoseCalibration extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		finalRobotRelativeCameraTranslation = translationSum.div(currentCycle);
+		finalRobotRelativeCameraTranslation = robotRelativeCameraTranslationSum.div(currentCycle);
 		finalRobotRelativeCameraRotation = new Rotation3d(
 			Math.atan2(cameraRobotRelativeYawSinSum / currentCycle, cameraRobotRelativeYawCosSum / currentCycle),
 			Math.atan2(cameraRobotRelativePitchSinSum / currentCycle, cameraRobotRelativePitchCosSum / currentCycle),
@@ -107,7 +107,7 @@ public class CameraPoseCalibration extends Command {
 	}
 
 	private void sumMeasurementsValues() {
-		translationSum = translationSum.plus(currentRobotRelativeCameraPose.getTranslation());
+		robotRelativeCameraTranslationSum = robotRelativeCameraTranslationSum.plus(currentRobotRelativeCameraPose.getTranslation());
 		cameraRobotRelativeYawCosSum += Math.cos(currentRobotRelativeCameraPose.getRotation().getX());
 		cameraRobotRelativeYawSinSum += Math.sin(currentRobotRelativeCameraPose.getRotation().getX());
 		cameraRobotRelativePitchCosSum += Math.cos(currentRobotRelativeCameraPose.getRotation().getY());
@@ -116,7 +116,7 @@ public class CameraPoseCalibration extends Command {
 		cameraRobotRelativeRollSinSum += Math.sin(currentRobotRelativeCameraPose.getRotation().getZ());
 	}
 
-	private void currentRobotRelativeCameraPose() {
+	private void logCurrentRobotRelativeCameraPose() {
 		Logger.recordOutput(LOG_PATH + "/current/currentPose", currentRobotRelativeCameraPose);
 	}
 

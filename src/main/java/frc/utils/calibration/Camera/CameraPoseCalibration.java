@@ -59,10 +59,11 @@ public class CameraPoseCalibration extends Command {
 			FieldMath.transformAngle(tagPoseFieldRelative.getRotation().toRotation2d(), AngleTransform.INVERT)
 		);
 		this.cameraPoseCalibrationInputs = new CameraPoseCalibrationInputsAutoLogged();
-		LimelightHelpers.setCameraPose_RobotSpace(cameraName, 0, 0, 0, 0, 0, 0);
+
 		this.cameraPoseCalibrationInputs.cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
 		this.robotRelativeCameraTranslationSum = new Translation3d();
 		this.currentRobotRelativeCameraPose = new Pose3d();
+		LimelightHelpers.setCameraPose_RobotSpace(cameraName, 0, 0, 0, 0, 0, 0);
 	}
 
 	@Override

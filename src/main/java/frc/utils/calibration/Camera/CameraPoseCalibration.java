@@ -31,6 +31,21 @@ public class CameraPoseCalibration extends Command {
 	private Translation3d robotRelativeCameraTranslationSum;
 	private Pose3d currentRobotRelativeCameraPose;
 
+    /**
+     *
+     * @param cameraName - the name of the limelight in use
+     * @param robotXAxisDistanceFromTag -themiddle of the robot's distance from the tag , IMPORTANT "real life measurement"
+     * @param tagCenterHeightMeters - IMPORTANT !!! the middle of the tag height relative to THE FLOOR , "real life measurement"
+     * @param tagPoseFieldRelative - synthetic measurement
+     * @param neededNumberOfCycles - number of measurements decided by user
+
+                                        IMPORTANT SPECIFICATIONS
+            limelight is funny so we invert y-axis
+             tag must be either 180 or 0 deg to the field
+            Y difference from the tag is 0
+
+
+     */
 	public CameraPoseCalibration(
 		String logPathPrefix,
 		String cameraName,
@@ -45,7 +60,6 @@ public class CameraPoseCalibration extends Command {
 		this.logPath = logPathPrefix + "/cameraPositionCalibration";
 		this.tagPoseFieldRelative = tagPoseFieldRelative;
 		this.expectedRobotPoseFieldRelative = new Pose2d(
-			// tag must be either 180 or 0 deg to the field, Y difference from the tag is 0
 			tagPoseFieldRelative.getX() - robotXAxisDistanceFromTag,
 			tagPoseFieldRelative.getY(),
 			FieldMath.transformAngle(tagPoseFieldRelative.getRotation().toRotation2d(), AngleTransform.INVERT)
@@ -92,7 +106,6 @@ public class CameraPoseCalibration extends Command {
 
 
 	private Pose3d calculateRobotRelativeCameraPosition() {
-		// limelight is funny so we invert y-axis
 		return new Pose3d(
 			cameraPoseCalibrationInputs.cameraPoseFieldRelative.getX() - expectedRobotPoseFieldRelative.getX(),
 			-(cameraPoseCalibrationInputs.cameraPoseFieldRelative.getY() - expectedRobotPoseFieldRelative.getY()),

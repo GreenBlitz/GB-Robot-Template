@@ -94,17 +94,17 @@ public class CameraPoseCalibration extends Command {
 
 	private Pose3d calculateRobotRelativeCameraPosition() {
 		// limelight is funny so we invert y-axis
-        return new Pose3d(
-                cameraPoseCalibrationInputs.cameraPoseFieldRelative.getX() - expectedRobotPoseFieldRelative.getX(),
-                -(cameraPoseCalibrationInputs.cameraPoseFieldRelative.getY() - expectedRobotPoseFieldRelative.getY()),
-                cameraPoseCalibrationInputs.cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + tagCenterHeightMeters,
-                new Rotation3d(
-                        cameraPoseCalibrationInputs.cameraPoseFieldRelative.getRotation().getX(),
-                        -cameraPoseCalibrationInputs.cameraPoseFieldRelative.getRotation().getY(),
-                        cameraPoseCalibrationInputs.cameraPoseFieldRelative.getRotation().getZ()
-                                - expectedRobotPoseFieldRelative.getRotation().getRadians()
-                )
-        );
+		return new Pose3d(
+			cameraPoseCalibrationInputs.cameraPoseFieldRelative.getX() - expectedRobotPoseFieldRelative.getX(),
+			-(cameraPoseCalibrationInputs.cameraPoseFieldRelative.getY() - expectedRobotPoseFieldRelative.getY()),
+			cameraPoseCalibrationInputs.cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + tagCenterHeightMeters,
+			new Rotation3d(
+				cameraPoseCalibrationInputs.cameraPoseFieldRelative.getRotation().getX(),
+				-cameraPoseCalibrationInputs.cameraPoseFieldRelative.getRotation().getY(),
+				cameraPoseCalibrationInputs.cameraPoseFieldRelative.getRotation().getZ()
+					- expectedRobotPoseFieldRelative.getRotation().getRadians()
+			)
+		);
 	}
 
 	private void sumMeasurementsValues() {

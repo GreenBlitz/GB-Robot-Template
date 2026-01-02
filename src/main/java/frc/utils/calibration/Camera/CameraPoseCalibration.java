@@ -13,8 +13,7 @@ import org.littletonrobotics.junction.Logger;
 public class CameraPoseCalibration extends Command {
 
 	private final int neededNumberOfCycles;
-	private final static String LOG_PATH_ADDITION = "/cameraPositionCalibration";
-	private final String logPathPrefix;
+	private final String LOG_PATH;
 	private final String cameraName;
 	/** height is a real life measurement relative to the FLOOR **/
 	private final double tagCenterHeightMeters;
@@ -43,7 +42,7 @@ public class CameraPoseCalibration extends Command {
 		this.neededNumberOfCycles = neededNumberOfCycles;
 		this.cameraName = cameraName;
 		this.tagCenterHeightMeters = tagCenterHeightMeters;
-		this.logPathPrefix = logPathPrefix;
+		this.LOG_PATH = logPathPrefix + "/cameraPositionCalibration";
 		this.tagPoseFieldRelative = tagPoseFieldRelative;
 		this.expectedRobotPoseFieldRelative = new Pose2d(
 			// tag must be either 180 or 0 deg to the field, Y difference from the tag is 0
@@ -60,14 +59,14 @@ public class CameraPoseCalibration extends Command {
 
 	@Override
 	public void initialize() {
-		Logger.recordOutput(logPathPrefix + LOG_PATH_ADDITION + "/tag/tagPoseFieldRelative", tagPoseFieldRelative);
-		Logger.recordOutput(logPathPrefix + LOG_PATH_ADDITION + "/robot/robotPoseFieldRelative", expectedRobotPoseFieldRelative);
+		Logger.recordOutput(LOG_PATH + "/tag/tagPoseFieldRelative", tagPoseFieldRelative);
+		Logger.recordOutput(LOG_PATH + "/robot/robotPoseFieldRelative", expectedRobotPoseFieldRelative);
 	}
 
 	@Override
 	public void execute() {
 		cameraPoseCalibrationInputs.cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
-		Logger.processInputs(logPathPrefix + LOG_PATH_ADDITION, cameraPoseCalibrationInputs);
+		Logger.processInputs(LOG_PATH, cameraPoseCalibrationInputs);
 		currentRobotRelativeCameraPose = calculateRobotRelativeCameraPosition();
 		sumMeasurementsValues();
 		currentRobotRelativeCameraPose();
@@ -88,7 +87,7 @@ public class CameraPoseCalibration extends Command {
 			Math.atan2(cameraRobotRelativeRollSinSum / currentCycle, cameraRobotRelativeRollCosSum / currentCycle)
 		);
 		Pose3d averageCameraPoseFieldRelative = new Pose3d(finalRobotRelativeCameraTranslation, finalRobotRelativeCameraRotation);
-		Logger.recordOutput(logPathPrefix + LOG_PATH_ADDITION + "/solution/endPose", averageCameraPoseFieldRelative);
+		Logger.recordOutput(LOG_PATH + "/solution/endPose", averageCameraPoseFieldRelative);
 	}
 
 
@@ -118,7 +117,7 @@ public class CameraPoseCalibration extends Command {
 	}
 
 	private void currentRobotRelativeCameraPose() {
-		Logger.recordOutput(logPathPrefix + LOG_PATH_ADDITION + "/current/currentPose", currentRobotRelativeCameraPose);
+		Logger.recordOutput(LOG_PATH + "/current/currentPose", currentRobotRelativeCameraPose);
 	}
 
 }

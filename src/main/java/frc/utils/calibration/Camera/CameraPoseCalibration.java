@@ -15,8 +15,7 @@ public class CameraPoseCalibration extends Command {
 	private final int neededNumberOfCycles;
 	private final String logPath;
 	private final String cameraName;
-	/** height is a real life measurement relative to the FLOOR **/
-	private final double tagCenterHeightMeters;
+	private final double tagCenterHeightFromGroundInMeters;
 	private final Pose3d tagPoseFieldRelative;
 	private final CameraPoseCalibrationInputsAutoLogged cameraPoseCalibrationInputs;
 	private final Pose2d expectedRobotPoseFieldRelative;
@@ -37,8 +36,8 @@ public class CameraPoseCalibration extends Command {
 	 * @param tagPoseFieldRelative              - synthetic measurement
 	 * @param neededNumberOfCycles              - number of measurements decided by user
 	 *
-	 *                                          IMPORTANT SPECIFICATIONS; limelight is funny so we invert y-axis; tag must be either 180 or 0 deg
-	 *                                          to the field.; Y difference from the tag is 0.;
+	 *                                          IMPORTANT SPECIFICATIONS; limelight is funny so we invert y-axis; tag must be 180 to the field.;
+	 *                                          Y difference from the tag is 0.;
 	 *
 	 */
 	public CameraPoseCalibration(
@@ -51,7 +50,7 @@ public class CameraPoseCalibration extends Command {
 	) {
 		this.neededNumberOfCycles = neededNumberOfCycles;
 		this.cameraName = cameraName;
-		this.tagCenterHeightMeters = tagCenterHeightFromGroundInMeters;
+		this.tagCenterHeightFromGroundInMeters = tagCenterHeightFromGroundInMeters;
 		this.logPath = logPathPrefix + "/cameraPositionCalibration";
 		this.tagPoseFieldRelative = tagPoseFieldRelative;
 		this.expectedRobotPoseFieldRelative = new Pose2d(
@@ -104,7 +103,7 @@ public class CameraPoseCalibration extends Command {
 		return new Pose3d(
 			cameraPoseCalibrationInputs.cameraPoseFieldRelative.getX() - expectedRobotPoseFieldRelative.getX(),
 			-(cameraPoseCalibrationInputs.cameraPoseFieldRelative.getY() - expectedRobotPoseFieldRelative.getY()),
-			cameraPoseCalibrationInputs.cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + tagCenterHeightMeters,
+			cameraPoseCalibrationInputs.cameraPoseFieldRelative.getZ() - tagPoseFieldRelative.getZ() + tagCenterHeightFromGroundInMeters,
 			new Rotation3d(
 				cameraPoseCalibrationInputs.cameraPoseFieldRelative.getRotation().getX(),
 				-cameraPoseCalibrationInputs.cameraPoseFieldRelative.getRotation().getY(),

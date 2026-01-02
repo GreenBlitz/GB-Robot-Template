@@ -4,24 +4,40 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.phoenix6.BusChain;
-import frc.robot.statemachine.RobotCommander;
-import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
-import frc.robot.subsystems.swerve.factories.imu.IMUFactory;
-import frc.robot.vision.cameras.limelight.*;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
+import frc.robot.statemachine.RobotCommander;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
+import frc.robot.subsystems.swerve.factories.imu.IMUFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
+import frc.robot.vision.cameras.limelight.Limelight;
+import frc.robot.vision.cameras.limelight.LimelightFilters;
+import frc.robot.vision.cameras.limelight.LimelightPipeline;
+import frc.robot.vision.cameras.limelight.LimelightStdDevCalculations;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.math.StandardDeviations2D;
+import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.drivesims.COTS;
+import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
+import org.littletonrobotics.junction.Logger;
+
+import static edu.wpi.first.units.Units.Inches;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -38,14 +54,24 @@ public class Robot {
 	private final Limelight limelightThreeGB;
 	private final Limelight limelightObjectDetector;
 	private final RobotCommander robotCommander;
+	private final SwerveDriveSimulation swerveDriveSimulation;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 
-		IIMU imu = IMUFactory.createIMU(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
+		DriveTrainSimulationConfig driveTrainSimulationConfig = DriveTrainSimulationConfig.Default()
+			.withGyro(COTS.ofPigeon2())
+			.withSwerveModule(COTS.ofMark4(DCMotor.getKrakenX60(1), DCMotor.getFalcon500(1), COTS.WHEELS.COLSONS.cof, 3))
+			.withTrackLengthTrackWidth(Inches.of(24), Inches.of(24))
+			.withBumperSize(Inches.of(30), Inches.of(30));
+		swerveDriveSimulation = new SwerveDriveSimulation(driveTrainSimulationConfig, new Pose2d(3, 3, new Rotation2d()));
+		SimulatedArena.getInstance().addDriveTrainSimulation(swerveDriveSimulation);
+
+
+		IIMU imu = IMUFactory.createIMU(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve", swerveDriveSimulation);
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
-			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
+			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve", swerveDriveSimulation),
 			imu,
 			IMUFactory.createSignals(imu)
 		);
@@ -58,6 +84,7 @@ public class Robot {
 			swerve.getGyroAbsoluteYaw().getTimestamp(),
 			swerve.getIMUAcceleration()
 		);
+		poseEstimator.resetPose(new Pose2d(3, 3, new Rotation2d()));
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 
@@ -164,6 +191,8 @@ public class Robot {
 
 	public void periodic() {
 		BusChain.refreshAll();
+
+		Logger.recordOutput("SimulationPose", swerveDriveSimulation.getSimulatedDriveTrainPose());
 
 		swerve.update();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());

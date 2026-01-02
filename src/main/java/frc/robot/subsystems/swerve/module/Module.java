@@ -218,7 +218,7 @@ public class Module {
 		}
 	}
 
-	public void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond) {
+	private void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond) {
 		setClosedLoop(true);
 		Rotation2d targetVelocityPerSecond = Conversions.distanceToAngle(targetVelocityMetersPerSecond, constants.wheelDiameterMeters());
 		Rotation2d coupledVelocityPerSecond = ModuleUtil
@@ -226,7 +226,7 @@ public class Module {
 		drive.applyRequest(driveRequests.velocity().withSetPoint(coupledVelocityPerSecond));
 	}
 
-	public void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
+	private void setTargetOpenLoopVelocity(double targetVelocityMetersPerSecond) {
 		double voltage = ModuleUtil.velocityToOpenLoopVoltage(
 			targetVelocityMetersPerSecond,
 			steerSignals.velocity().getLatestValue(),

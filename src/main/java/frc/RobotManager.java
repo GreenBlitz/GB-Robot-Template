@@ -17,6 +17,7 @@ import frc.utils.auto.PathPlannerUtil;
 import frc.utils.brakestate.BrakeStateManager;
 import frc.utils.logger.LoggerFactory;
 import frc.utils.time.TimeUtil;
+import org.ironmaple.simulation.SimulatedArena;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 
@@ -89,6 +90,11 @@ public class RobotManager extends LoggedRobot {
 		JoysticksBindings.updateChassisDriverInputs();
 		robot.periodic();
 		AlertManager.reportAlerts();
+	}
+
+	@Override
+	public void simulationPeriodic() {
+		SimulatedArena.getInstance().simulationPeriodic();
 	}
 
 	private void createAutoReadyForConstructionChooser() {

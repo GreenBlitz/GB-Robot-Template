@@ -1,17 +1,32 @@
 package frc.robot.subsystems.swerve.factories.modules.steer;
 
 import frc.robot.IDs;
+import frc.robot.Robot;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
+import frc.robot.subsystems.swerve.maplewrappers.MapleControllableModuleMotor;
 import frc.robot.subsystems.swerve.module.ModuleConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.records.SteerRequests;
 import frc.robot.subsystems.swerve.module.records.SteerSignals;
+import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 
 public class SteerFactory {
 
-	public static ControllableMotor createSteer(String logPath, ModuleUtil.ModulePosition modulePosition) {
+	public static ControllableMotor createSteer(
+		String logPath,
+		ModuleUtil.ModulePosition modulePosition,
+		SwerveDriveSimulation swerveDriveSimulation
+	) {
 		logPath += ModuleConstants.MODULES_LOG_PATH_ADDITION + "/" + modulePosition + "/Steer";
+		if (Robot.ROBOT_TYPE.isSimulation()) {
+			return switch (modulePosition) {
+				case FRONT_LEFT -> MapleSteerBuilder.buildSteer(logPath, swerveDriveSimulation.getModules()[0]);
+				case FRONT_RIGHT -> MapleSteerBuilder.buildSteer(logPath, swerveDriveSimulation.getModules()[1]);
+				case BACK_LEFT -> MapleSteerBuilder.buildSteer(logPath, swerveDriveSimulation.getModules()[2]);
+				case BACK_RIGHT -> MapleSteerBuilder.buildSteer(logPath, swerveDriveSimulation.getModules()[3]);
+			};
+		}
 		return switch (modulePosition) {
 			case FRONT_LEFT ->
 				KrakenX60SteerBuilder.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_FRONT_LEFT_STEER, IDs.CANCoderIDs.SWERVE_FRONT_LEFT, false);
@@ -25,11 +40,13 @@ public class SteerFactory {
 	}
 
 	public static SteerRequests createRequests() {
-		return KrakenX60SteerBuilder.buildRequests();
+		return Robot.ROBOT_TYPE.isSimulation() ? MapleSteerBuilder.buildRequests() : KrakenX60SteerBuilder.buildRequests();
 	}
 
 	public static SteerSignals createSignals(ControllableMotor steer) {
-		return KrakenX60SteerBuilder.buildSignals((TalonFXMotor) steer);
+		return Robot.ROBOT_TYPE.isSimulation()
+			? MapleSteerBuilder.buildSignals((MapleControllableModuleMotor) steer)
+			: KrakenX60SteerBuilder.buildSignals((TalonFXMotor) steer);
 	}
 
 }

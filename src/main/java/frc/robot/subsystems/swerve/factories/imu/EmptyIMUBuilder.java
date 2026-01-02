@@ -10,7 +10,7 @@ import frc.utils.TimedValue;
 import frc.utils.AngleUnit;
 import frc.utils.time.TimeUtil;
 
-public class SimulationIMUBuilder {
+public class EmptyIMUBuilder {
 
 	public static IIMU buildIMU(String logPath) {
 		return new EmptyIMU(logPath);

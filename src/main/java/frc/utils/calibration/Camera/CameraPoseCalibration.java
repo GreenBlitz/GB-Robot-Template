@@ -19,7 +19,7 @@ public class CameraPoseCalibration extends Command {
 
 	private final double tagCenterHeightMeters;
 	private final Pose3d tagPoseFieldRelative;
-	private final CameraPositionCalibrationInputsAutoLogged cameraPoseFieldRelativeInputs;
+	private final CameraPoseCalibrationInputsAutoLogged cameraPoseFieldRelativeInputs;
 	private Pose2d measuredRobotPoseFieldRelative;
 
 	private Rotation3d finalCameraRotation;
@@ -52,7 +52,7 @@ public class CameraPoseCalibration extends Command {
 			tagPoseFieldRelative.getY(),
 			FieldMath.transformAngle(tagPoseFieldRelative.getRotation().toRotation2d(), AngleTransform.INVERT)
 		);
-		this.cameraPoseFieldRelativeInputs = new CameraPositionCalibrationInputsAutoLogged();
+		this.cameraPoseFieldRelativeInputs = new CameraPoseCalibrationInputsAutoLogged();
 		LimelightHelpers.setCameraPose_RobotSpace(cameraName, 0, 0, 0, 0, 0, 0);
 		this.cameraPoseFieldRelativeInputs.cameraPoseFieldRelative = LimelightHelpers.getBotPose3d_wpiBlue(cameraName);
 		this.translationSum = new Translation3d();

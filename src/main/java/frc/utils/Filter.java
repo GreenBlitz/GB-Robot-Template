@@ -1,4 +1,4 @@
-package frc.utils.filter;
+package frc.utils;
 
 @FunctionalInterface
 public interface Filter {

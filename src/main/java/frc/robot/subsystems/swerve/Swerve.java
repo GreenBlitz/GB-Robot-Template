@@ -37,6 +37,8 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import static frc.utils.pose.swerveUtil.getMajority;
+
 public class Swerve extends GBSubsystem {
 
 	private final SwerveConstants constants;
@@ -368,7 +370,7 @@ public class Swerve extends GBSubsystem {
 			moduleToRobotDifferential[i] = robotTranslationalVelocityMetersPerSecond.minus(moduleTranslationalStates[i]);
 		}
 
-		Translation2d majority = moduleToRobotDifferential[0].equals(moduleToRobotDifferential[1]) || moduleToRobotDifferential[0].equals(moduleToRobotDifferential[2]) ? moduleToRobotDifferential[0] : moduleToRobotDifferential[1];
+		Translation2d majority = getMajority(moduleToRobotDifferential);
 		for (int i = 0; i < moduleToRobotDifferential.length; i++) {
 			if(!moduleToRobotDifferential[i].equals(majority))
 				areModulesSkidding[i] =true;

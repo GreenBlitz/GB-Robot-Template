@@ -2,10 +2,15 @@ package frc.robot.statemachine;
 
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Robot;
+import frc.robot.statemachine.shooterstatehandler.ShooterStateHandler;
 import frc.robot.statemachine.superstructure.Superstructure;
+import frc.robot.statemachine.superstructure.TargetChecks;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.subsystems.constants.flywheel.Constants;
+import frc.robot.subsystems.constants.hood.HoodConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public class RobotCommander extends GBSubsystem {
 
@@ -19,16 +24,30 @@ public class RobotCommander extends GBSubsystem {
 	public RobotCommander(String logPath, Robot robot) {
 		super(logPath);
 		this.robot = robot;
-//        this.swerve = robot.getSwerve();
-		this.swerve = null;
+		this.swerve = robot.getSwerve();
 		this.positionTargets = new PositionTargets(robot);
-		this.superstructure = new Superstructure("StateMachine/Superstructure", robot);
-		this.currentState = null;
+		this.superstructure = new Superstructure("StateMachine/Superstructure", robot, () -> robot.getPoseEstimator().getEstimatedPose());
+		this.currentState = RobotState.STAY_IN_PLACE;
 
 		setDefaultCommand(
 			new ConditionalCommand(
 				asSubsystemCommand(Commands.none(), "Disabled"),
-				new InstantCommand(() -> new DeferredCommand(() -> endState(currentState), Set.of(this, swerve)).schedule()),
+				new InstantCommand(
+					() -> new DeferredCommand(
+						() -> endState(currentState),
+						Set.of(
+							this,
+							swerve,
+							robot.getIntakeRoller(),
+							robot.getTurret(),
+							robot.getFourBar(),
+							robot.getBelly(),
+							robot.getHood(),
+							robot.getOmni(),
+							robot.getFlyWheel()
+						)
+					).schedule()
+				),
 				this::isSubsystemRunningIndependently
 			)
 
@@ -49,7 +68,7 @@ public class RobotCommander extends GBSubsystem {
 
 	@Override
 	protected void subsystemPeriodic() {
-		superstructure.log();
+		superstructure.periodic();
 	}
 
 	public Command driveWith(RobotState state, Command command) {
@@ -62,13 +81,38 @@ public class RobotCommander extends GBSubsystem {
 		return driveWith(state, superstructure.setState(state));
 	}
 
+	private boolean isReadyToShoot() {
+		Supplier<Double> distanceFromTower = () -> ScoringHelpers.getDistanceFromClosestTower(robot.getPoseEstimator().getEstimatedPose());
+		return TargetChecks.isReadyToShoot(
+			robot,
+			ShooterStateHandler.flywheelInterpolation(distanceFromTower).get(),
+			Constants.FLYWHEEL_VELOCITY_TOLERANCE_RPS,
+			ShooterStateHandler.hoodInterpolation((distanceFromTower)).get(),
+			HoodConstants.HOOD_POSITION_TOLERANCE,
+			StateMachineConstants.TURRET_LOOK_AT_TOWER_TOLERANCE,
+			StateMachineConstants.MAX_ANGLE_FROM_GOAL_CENTER,
+			ScoringHelpers.getClosestTower(robot.getPoseEstimator().getEstimatedPose()).getPose(),
+			StateMachineConstants.MAX_DISTANCE_TO_SHOOT_METERS
+		);
+	}
+
+	public Command shootSequence() {
+		return new SequentialCommandGroup(driveWith(RobotState.PRE_SHOOT).until(this::isReadyToShoot), driveWith(RobotState.SHOOT));
+	}
+
+	public Command shootWhileIntakeSequence() {
+		return new SequentialCommandGroup(driveWith(RobotState.PRE_SHOOT).until(this::isReadyToShoot), driveWith(RobotState.SHOOT_WHILE_INTAKE));
+	}
+
 	private Command asSubsystemCommand(Command command, RobotState state) {
 		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
 	}
 
 	private Command endState(RobotState state) {
 		return switch (state) {
-			default -> new InstantCommand();
+			case STAY_IN_PLACE -> driveWith(RobotState.STAY_IN_PLACE);
+			case DRIVE, INTAKE, SHOOT, SHOOT_WHILE_INTAKE -> driveWith(RobotState.DRIVE);
+			case PRE_SHOOT -> driveWith(RobotState.PRE_SHOOT);
 		};
 	}
 

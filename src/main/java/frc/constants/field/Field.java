@@ -14,6 +14,10 @@ import frc.utils.math.FieldMath;
 
 public class Field {
 
+	public static final Translation2d Tower = new Translation2d(6.5, 4);
+
+	public static final double TOWER_SIDES_DISTANCE_FROM_MIDDLE_METERS = 0.27;
+
 	public static final DriverStation.Alliance RELATIVE_FIELD_CONVENTION_ALLIANCE = DriverStation.Alliance.Blue;
 
 	public static boolean isFieldConventionAlliance() {

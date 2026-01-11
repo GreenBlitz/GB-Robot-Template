@@ -1,10 +1,16 @@
 package frc;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
+import frc.robot.statemachine.RobotState;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.roller.Roller;
 import frc.robot.subsystems.swerve.ChassisPowers;
+import frc.utils.battery.BatteryUtil;
 
 public class JoysticksBindings {
 
@@ -47,6 +53,10 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+		usedJoystick.A.onTrue(robot.getRobotCommander().driveWith(RobotState.DRIVE));
+		usedJoystick.R1.onTrue(robot.getRobotCommander().shootSequence());
+		usedJoystick.L1.onTrue(robot.getRobotCommander().driveWith(RobotState.INTAKE));
+		usedJoystick.getAxisAsButton(Axis.LEFT_TRIGGER).onTrue(robot.getRobotCommander().shootWhileIntakeSequence());
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
@@ -72,6 +82,90 @@ public class JoysticksBindings {
 	private static void sixthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SIXTH_JOYSTICK;
 		// bindings...
+	}
+
+	private static void applySuperstructureCalibrationBindings(SmartJoystick joystick, Robot robot) {
+		joystick.A.onTrue(robot.getRobotCommander().getSuperstructure().setState(RobotState.SHOOT));
+		joystick.B.onTrue(robot.getRobotCommander().getSuperstructure().setState(RobotState.PRE_SHOOT));
+		joystick.X.onTrue(robot.getRobotCommander().getSuperstructure().setState(RobotState.DRIVE));
+		joystick.Y.onTrue(robot.getRobotCommander().getSuperstructure().setState(RobotState.INTAKE));
+		joystick.POV_DOWN.onTrue(robot.getRobotCommander().getSuperstructure().setState(RobotState.STAY_IN_PLACE));
+	}
+
+	private static void applyRobotCommanderCalibrationsBinding(SmartJoystick joystick, Robot robot) {
+		joystick.A.onTrue(robot.getRobotCommander().driveWith(RobotState.DRIVE));
+		joystick.B.onTrue(robot.getRobotCommander().driveWith(RobotState.PRE_SHOOT));
+		joystick.X.onTrue(robot.getRobotCommander().driveWith(RobotState.SHOOT));
+		joystick.Y.onTrue(robot.getRobotCommander().driveWith(RobotState.SHOOT_WHILE_INTAKE));
+		joystick.POV_DOWN.onTrue(robot.getRobotCommander().driveWith(RobotState.STAY_IN_PLACE));
+		joystick.POV_UP.onTrue(robot.getRobotCommander().driveWith(RobotState.INTAKE));
+	}
+
+	private static void applyTurretCalibrationBindings(Arm turret, SmartJoystick joystick, double calibrationMaxPower) {
+		joystick.POV_DOWN.onTrue(new InstantCommand(() -> turret.getCommandsBuilder().setIsSubsystemRunningIndependently(true)));
+		joystick.POV_UP.onTrue(new InstantCommand(() -> turret.getCommandsBuilder().setIsSubsystemRunningIndependently(false)));
+
+		// Check limits
+		joystick.R1.whileTrue(turret.getCommandsBuilder().setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * calibrationMaxPower));
+		turret.getSysIdCalibrator().setAllButtonsForCalibration(joystick);
+
+		joystick.POV_RIGHT.onTrue(turret.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(20)));
+		joystick.POV_LEFT.onTrue(turret.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(50)));
+	}
+
+	private static void applyFourBarCalibrationBindings(Arm fourBar, SmartJoystick joystick, double calibrationMaxPower) {
+		joystick.POV_DOWN.onTrue(new InstantCommand(() -> fourBar.getCommandsBuilder().setIsSubsystemRunningIndependently(true)));
+		joystick.POV_UP.onTrue(new InstantCommand(() -> fourBar.getCommandsBuilder().setIsSubsystemRunningIndependently(false)));
+
+		// Check limits
+		joystick.R1.whileTrue(fourBar.getCommandsBuilder().setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * calibrationMaxPower));
+
+		fourBar.getSysIdCalibrator().setAllButtonsForCalibration(joystick);
+
+		joystick.POV_RIGHT.onTrue(fourBar.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(20)));
+		joystick.POV_LEFT.onTrue(fourBar.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(50)));
+	}
+
+	private static void applyHoodCalibrationBindings(Arm hood, SmartJoystick joystick, double calibrationMaxPower) {
+		joystick.POV_DOWN.onTrue(new InstantCommand(() -> hood.getCommandsBuilder().setIsSubsystemRunningIndependently(true)));
+		joystick.POV_UP.onTrue(new InstantCommand(() -> hood.getCommandsBuilder().setIsSubsystemRunningIndependently(false)));
+
+		// Check limits
+		joystick.R1.whileTrue(
+			hood.getCommandsBuilder()
+				.setPower(
+					() -> joystick.getAxisValue(Axis.LEFT_Y) * calibrationMaxPower + (hood.getKgVoltage() / BatteryUtil.getCurrentVoltage())
+				)
+		);
+
+		hood.getSysIdCalibrator().setAllButtonsForCalibration(joystick);
+
+		joystick.POV_RIGHT.onTrue(hood.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(100)));
+		joystick.POV_LEFT.onTrue(hood.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(5)));
+	}
+
+	public static void applyIntakeRollerCalibrationsBindings(SmartJoystick joystick, Robot robot) {
+		joystick.L1.onTrue(new InstantCommand(() -> robot.getIntakeRoller().getCommandsBuilder().setIsSubsystemRunningIndependently(true)));
+		joystick.L3.onTrue(new InstantCommand(() -> robot.getIntakeRoller().getCommandsBuilder().setIsSubsystemRunningIndependently(false)));
+
+		joystick.POV_UP.onTrue(robot.getIntakeRoller().getCommandsBuilder().setVoltage(6));
+		joystick.POV_DOWN.onTrue(robot.getIntakeRoller().getCommandsBuilder().setVoltage(-6));
+	}
+
+	private static void applyBellyCalibrationBindings(Roller belly, SmartJoystick joystick, double calibrationMaxPower) {
+		joystick.POV_DOWN.onTrue(new InstantCommand(() -> belly.getCommandsBuilder().setIsSubsystemRunningIndependently(true)));
+		joystick.POV_UP.onTrue(new InstantCommand(() -> belly.getCommandsBuilder().setIsSubsystemRunningIndependently(false)));
+
+		joystick.POV_RIGHT.onTrue(belly.getCommandsBuilder().rollRotationsAtVoltageForwards(1, 1));
+		joystick.POV_LEFT.onTrue(belly.getCommandsBuilder().setVoltage(2));
+	}
+
+	private static void applyOmniCalibrationBindings(Roller omni, SmartJoystick joystick, double maxCalibrationPower) {
+		joystick.POV_DOWN.onTrue(new InstantCommand(() -> omni.getCommandsBuilder().setIsSubsystemRunningIndependently(true)));
+		joystick.POV_UP.onTrue(new InstantCommand(() -> omni.getCommandsBuilder().setIsSubsystemRunningIndependently(false)));
+
+		joystick.X.onTrue(omni.getCommandsBuilder().setPower(0.5));
+		joystick.Y.onTrue(omni.getCommandsBuilder().setPower(-0.5));
 	}
 
 }

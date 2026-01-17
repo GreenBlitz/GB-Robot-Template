@@ -45,7 +45,7 @@ public class BrushlessSparkMAXMotor extends SparkMaxMotor implements Controllabl
 	public void applyRequest(IRequest<?> request) {
 		if (request instanceof SparkMaxRequest<?> sparkMaxRequest) {
 			motor.getClosedLoopController()
-				.setReference(
+				.setSetpoint(
 					sparkMaxRequest.getSparkMaxCompatibleSetPoint(),
 					sparkMaxRequest.getControlType(),
 					sparkMaxRequest.getPidSlot(),

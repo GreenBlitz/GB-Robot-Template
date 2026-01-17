@@ -68,8 +68,7 @@ public class TalonFXArmBuilder {
 			new DynamicMotionMagicVoltage(
 				signals.position().getLatestValue().getRotations(),
 				defaultMaxVelocityRotation2dPerSecond.getRotations(),
-				defaultMaxAccelerationRotation2dPerSecondSquare.getRotations(),
-				0
+				defaultMaxAccelerationRotation2dPerSecondSquare.getRotations()
 			),
 			arbitraryFeedForward,
 			true

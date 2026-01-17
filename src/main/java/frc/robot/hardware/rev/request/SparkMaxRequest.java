@@ -1,5 +1,6 @@
 package frc.robot.hardware.rev.request;
 
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.IRequest;
@@ -10,7 +11,7 @@ import java.util.function.Function;
 public class SparkMaxRequest<T> implements IRequest<T> {
 
 	private final SparkBase.ControlType controlType;
-	private final int pidSlot;
+	private final ClosedLoopSlot pidSlot;
 	private final Function<T, Double> feedforwardCalculator;
 	private final Function<T, Double> setPointToDoubleConverter;
 	private T setPoint;
@@ -18,7 +19,7 @@ public class SparkMaxRequest<T> implements IRequest<T> {
 	SparkMaxRequest(
 		T setPoint,
 		SparkBase.ControlType controlType,
-		int pidSlot,
+		ClosedLoopSlot pidSlot,
 		Function<T, Double> feedforwardCalculator,
 		Function<T, Double> setPointToDoubleConverter
 	) {
@@ -29,7 +30,7 @@ public class SparkMaxRequest<T> implements IRequest<T> {
 		this.setPointToDoubleConverter = setPointToDoubleConverter;
 	}
 
-	SparkMaxRequest(T setPoint, SparkBase.ControlType controlType, int pidSlot, Function<T, Double> setPointToDoubleConverter) {
+	SparkMaxRequest(T setPoint, SparkBase.ControlType controlType, ClosedLoopSlot pidSlot, Function<T, Double> setPointToDoubleConverter) {
 		this(setPoint, controlType, pidSlot, CANSparkMAX -> 0.0, setPointToDoubleConverter);
 	}
 
@@ -55,7 +56,7 @@ public class SparkMaxRequest<T> implements IRequest<T> {
 		return controlType;
 	}
 
-	public int getPidSlot() {
+	public ClosedLoopSlot getPidSlot() {
 		return pidSlot;
 	}
 

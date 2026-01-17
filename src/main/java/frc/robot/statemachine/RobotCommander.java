@@ -28,7 +28,9 @@ public class RobotCommander extends GBSubsystem {
 		setDefaultCommand(
 			new ConditionalCommand(
 				asSubsystemCommand(Commands.none(), "Disabled"),
-				new InstantCommand(() -> new DeferredCommand(() -> endState(currentState), Set.of(this, swerve)).schedule()),
+				new InstantCommand(
+					() -> CommandScheduler.getInstance().schedule(new DeferredCommand(() -> endState(currentState), Set.of(this, swerve)))
+				),
 				this::isSubsystemRunningIndependently
 			)
 

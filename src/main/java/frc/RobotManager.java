@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.utils.DriverStationUtil;
@@ -71,7 +72,7 @@ public class RobotManager extends LoggedRobot {
 		if (autonomousCommand == null) {
 			this.autonomousCommand = robot.getAutonomousCommand();
 		}
-		autonomousCommand.schedule();
+		CommandScheduler.getInstance().schedule(autonomousCommand);
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package frc.robot.subsystems.roller;
 
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.filter.Debouncer;
@@ -52,7 +53,7 @@ public class SparkMaxRollerBuilder {
 
 		roller.applyConfiguration(buildConfiguration(inverted, gearRatio, currentLimit));
 
-		SparkMaxRequest<Double> voltageRequest = SparkMaxRequestBuilder.build(0.0, SparkBase.ControlType.kVoltage, 0);
+		SparkMaxRequest<Double> voltageRequest = SparkMaxRequestBuilder.build(0.0, SparkBase.ControlType.kVoltage, ClosedLoopSlot.kSlot0);
 
 		return new Roller(logPath, roller, voltageSignal, currentSignal, positionSignal, voltageRequest);
 	}

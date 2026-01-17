@@ -25,7 +25,7 @@ public enum BusChain {
 
 	BusChain(String chainName) {
 		this.canBus = new CANBus(chainName);
-		this.logPath = LOG_PATH_PREFIX + "/" + getChainName();
+		this.logPath = LOG_PATH_PREFIX + "/" + getCANBus().getName();
 		this.currentBusStatus = canBus.getStatus();
 		this.lastBusStatus = new CANBusStatus();
 		this.signals = new BaseStatusSignal[0];
@@ -82,8 +82,8 @@ public enum BusChain {
 		//@formatter:on
 	}
 
-	public String getChainName() {
-		return canBus.getName();
+	public CANBus getCANBus() {
+		return canBus;
 	}
 
 	public void updateStatus() {

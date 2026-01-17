@@ -2,6 +2,7 @@ package frc.utils.battery;
 
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.Logger;
 
 public class BatteryUtil {
@@ -17,7 +18,7 @@ public class BatteryUtil {
 
 	public static void scheduleLimiter() {
 		if (!limiter.isScheduled()) {
-			limiter.schedule();
+			CommandScheduler.getInstance().schedule(limiter);
 		}
 	}
 

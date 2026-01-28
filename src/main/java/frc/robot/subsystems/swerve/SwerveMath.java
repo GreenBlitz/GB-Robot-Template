@@ -4,6 +4,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.states.DriveSpeed;
 import frc.utils.math.ToleranceMath;
 import frc.utils.time.TimeUtil;
@@ -53,6 +55,33 @@ public class SwerveMath {
 			.applyDeadband(chassisSpeeds.omegaRadiansPerSecond, deadbands.getRotation().getRadians());
 
 		return new ChassisSpeeds(xVelocityMetersPerSecond, yVelocityMetersPerSecond, rotationalVelocityRadiansPerSecond);
+	}
+
+	private static Translation2d getSwerveTranslationalMotionAccountableModuleVelocity(
+			int moduleIndex,
+			double swerveRotationalVelocityRadiansPerSecond,
+			SwerveModuleState[] swerveRotationalAccountableModuleStates,
+			SwerveModuleState[] moduleStates
+	) {
+		SwerveModuleState swerveRotationalAccountableModuleState = swerveRotationalAccountableModuleStates[moduleIndex];
+		SwerveModuleState moduleState = moduleStates[moduleIndex];
+
+		return new Translation2d(
+				moduleState.speedMetersPerSecond - swerveRotationalAccountableModuleState.speedMetersPerSecond,
+				moduleState.angle.minus(swerveRotationalAccountableModuleState.angle)
+		);
+	}
+
+	public static void updateSwerveTranslationalMotionAccountableModuleVelocities(int numOfModules, double swerveRotationalVelocityRadiansPerSecond, SwerveModuleState[] swerveRotationalAccountableModuleStates, SwerveModuleState[] moduleStates) {
+		Translation2d[] swerveTranslationalMotionAccountableModuleVelocities = new Translation2d[numOfModules];
+		for (int i = 0; i < ModuleUtil.ModulePosition.values().length; i++) {
+			swerveTranslationalMotionAccountableModuleVelocities[i] = getSwerveTranslationalMotionAccountableModuleVelocity(
+					i,
+					swerveRotationalVelocityRadiansPerSecond,
+					swerveRotationalAccountableModuleStates,
+					moduleStates
+			);
+		}
 	}
 
 	public static boolean getAreModulesSkidding(

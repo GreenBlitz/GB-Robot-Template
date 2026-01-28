@@ -167,7 +167,8 @@ public class Swerve extends GBSubsystem {
 	public void update() {
 		updateIMU();
 		modules.updateInputs();
-		updateSwerveTranslationalMotionAccountableModuleVelocities();
+		SwerveMath.updateSwerveTranslationalMotionAccountableModuleVelocities(ModuleUtil.ModulePosition.values().length, getRobotRelativeVelocity().omegaRadiansPerSecond,  kinematics
+				.toSwerveModuleStates(new ChassisSpeeds(0, 0, getRobotRelativeVelocity().omegaRadiansPerSecond), new Translation2d()), modules.getCurrentStates());
 		Logger.recordOutput(getLogPath() + "/isSkidding", SwerveMath.getAreModulesSkidding(
 			getRobotRelativeVelocity(),
 			swerveTranslationalMotionAccountableModuleVelocities, SwerveConstants.ONE_MODULE_SKID_VELOCITY_TOLERANCE_METERS_PER_SECOND
@@ -343,30 +344,6 @@ public class Swerve extends GBSubsystem {
 
 	public boolean isCollisionDetected() {
 		return imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d().getNorm() > SwerveConstants.MIN_COLLISION_G_FORCE;
-	}
-
-	private Translation2d getSwerveTranslationalMotionAccountableModuleVelocity(
-		int moduleIndex,
-		double swerveRotationalVelocityRadiansPerSecond
-	) {
-		SwerveModuleState swerveRotationalAccountableModuleState = kinematics
-			.toSwerveModuleStates(new ChassisSpeeds(0, 0, swerveRotationalVelocityRadiansPerSecond), new Translation2d())[moduleIndex];
-		SwerveModuleState moduleState = modules.getCurrentStates()[moduleIndex];
-
-		return new Translation2d(
-			moduleState.speedMetersPerSecond - swerveRotationalAccountableModuleState.speedMetersPerSecond,
-			moduleState.angle.minus(swerveRotationalAccountableModuleState.angle)
-		);
-	}
-
-	private void updateSwerveTranslationalMotionAccountableModuleVelocities() {
-		double swerveRotationalVelocityRadiansPerSecond = getRobotRelativeVelocity().omegaRadiansPerSecond;
-		for (int i = 0; i < ModuleUtil.ModulePosition.values().length; i++) {
-			swerveTranslationalMotionAccountableModuleVelocities[i] = getSwerveTranslationalMotionAccountableModuleVelocity(
-				i,
-				swerveRotationalVelocityRadiansPerSecond
-			);
-		}
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {

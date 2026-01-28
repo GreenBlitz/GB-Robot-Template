@@ -353,13 +353,13 @@ public class Swerve extends GBSubsystem {
 	}
 
 	private Translation2d getSwerveTranslationalMotionAccountableModuleVelocity(int moduleIndex, double robotYawAngularVelocityRadiansPerSecond) {
-		SwerveModuleState moduleRotationalState = kinematics
+		SwerveModuleState swerveRotationalAccountableModuleState = kinematics
 			.toSwerveModuleStates(new ChassisSpeeds(0, 0, robotYawAngularVelocityRadiansPerSecond), new Translation2d())[moduleIndex];
 		SwerveModuleState moduleState = modules.getCurrentStates()[moduleIndex];
 
 		return new Translation2d(
-			moduleState.speedMetersPerSecond - moduleRotationalState.speedMetersPerSecond,
-			moduleState.angle.minus(moduleRotationalState.angle)
+			moduleState.speedMetersPerSecond - swerveRotationalAccountableModuleState.speedMetersPerSecond,
+			moduleState.angle.minus(swerveRotationalAccountableModuleState.angle)
 		);
 	}
 

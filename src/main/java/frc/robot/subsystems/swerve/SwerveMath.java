@@ -55,6 +55,25 @@ public class SwerveMath {
 		return new ChassisSpeeds(xVelocityMetersPerSecond, yVelocityMetersPerSecond, rotationalVelocityRadiansPerSecond);
 	}
 
+	public static boolean getAreModulesSkidding(
+			ChassisSpeeds robotRelativeVelocity,
+			Translation2d[] swerveTranslationalMotionAccountableModuleVelocities,
+			double skidVelocityToleranceMetersPerSecond
+	) {
+		Translation2d robotTranslationalVelocityMetersPerSecond = new Translation2d(robotRelativeVelocity.vxMetersPerSecond, robotRelativeVelocity.vyMetersPerSecond);
+		for (Translation2d swerveTranslationalMotionAccountableModuleVelocity : swerveTranslationalMotionAccountableModuleVelocities) {
+			if (
+					!ToleranceMath.isNear(
+							robotTranslationalVelocityMetersPerSecond,
+							swerveTranslationalMotionAccountableModuleVelocity,
+							skidVelocityToleranceMetersPerSecond
+					)
+			)
+				return true;
+		}
+		return false;
+	}
+
 	public static boolean isStill(ChassisSpeeds chassisSpeeds, Pose2d deadbands) {
 		return Math.abs(chassisSpeeds.vxMetersPerSecond) <= deadbands.getX()
 			&& Math.abs(chassisSpeeds.vyMetersPerSecond) <= deadbands.getY()

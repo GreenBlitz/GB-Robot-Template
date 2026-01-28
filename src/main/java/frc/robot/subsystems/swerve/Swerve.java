@@ -168,7 +168,7 @@ public class Swerve extends GBSubsystem {
 		updateIMU();
 		modules.updateInputs();
 		updateSwerveTranslationalMotionAccountableModuleVelocities();
-		Logger.recordOutput(getLogPath() + "/isSkidding", getAreModulesSkidding(
+		Logger.recordOutput(getLogPath() + "/isSkidding", SwerveMath.getAreModulesSkidding(
 			getRobotRelativeVelocity(),
 			swerveTranslationalMotionAccountableModuleVelocities, SwerveConstants.ONE_MODULE_SKID_VELOCITY_TOLERANCE_METERS_PER_SECOND
 		));
@@ -367,24 +367,6 @@ public class Swerve extends GBSubsystem {
 				swerveRotationalVelocityRadiansPerSecond
 			);
 		}
-	}
-
-	private static boolean getAreModulesSkidding(
-		ChassisSpeeds robotRelativeVelocity,
-		Translation2d[] swerveTranslationalMotionAccountableModuleVelocities,
-		double tolerance
-	) {
-		for (Translation2d swerveTranslationalMotionAccountableModuleVelocity : swerveTranslationalMotionAccountableModuleVelocities) {
-			if (
-				!ToleranceMath.isNear(
-					new Translation2d(robotRelativeVelocity.vxMetersPerSecond, robotRelativeVelocity.vyMetersPerSecond),
-					swerveTranslationalMotionAccountableModuleVelocity,
-					tolerance
-				)
-			)
-				return true;
-		}
-		return false;
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {

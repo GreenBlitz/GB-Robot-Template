@@ -352,9 +352,9 @@ public class Swerve extends GBSubsystem {
 		return imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d().getNorm() > SwerveConstants.MIN_COLLISION_G_FORCE;
 	}
 
-	private Translation2d getSwerveTranslationalMotionAccountableModuleVelocity(int moduleIndex, double robotYawAngularVelocityRadiansPerSecond) {
+	private Translation2d getSwerveTranslationalMotionAccountableModuleVelocity(int moduleIndex, double swerveRotationalVelocityRadiansPerSecond) {
 		SwerveModuleState swerveRotationalAccountableModuleState = kinematics
-			.toSwerveModuleStates(new ChassisSpeeds(0, 0, robotYawAngularVelocityRadiansPerSecond), new Translation2d())[moduleIndex];
+			.toSwerveModuleStates(new ChassisSpeeds(0, 0, swerveRotationalVelocityRadiansPerSecond), new Translation2d())[moduleIndex];
 		SwerveModuleState moduleState = modules.getCurrentStates()[moduleIndex];
 
 		return new Translation2d(
@@ -364,11 +364,11 @@ public class Swerve extends GBSubsystem {
 	}
 
 	private void updateSwerveTranslationalMotionAccountableModuleVelocities() {
-		double robotYawAngularVelocityRadiansPerSecond = getRobotRelativeVelocity().omegaRadiansPerSecond;
+		double swerveRotationalVelocityRadiansPerSecond = getRobotRelativeVelocity().omegaRadiansPerSecond;
 		for (int i = 0; i < ModuleUtil.ModulePosition.values().length; i++) {
 			swerveTranslationalMotionAccountableModuleVelocities[i] = getSwerveTranslationalMotionAccountableModuleVelocity(
 				i,
-				robotYawAngularVelocityRadiansPerSecond
+					swerveRotationalVelocityRadiansPerSecond
 			);
 		}
 	}

@@ -51,7 +51,6 @@ public class Swerve extends GBSubsystem {
 	private final SwerveStateHandler stateHandler;
 
 	private final Translation2d[] swerveTranslationalMotionAccountableModuleVelocities;
-	private boolean isSkidding;
 
 	private SwerveState currentState;
 	private Supplier<Rotation2d> headingSupplier;
@@ -69,8 +68,6 @@ public class Swerve extends GBSubsystem {
 		this.imuSignals = imuSignals;
 
 		swerveTranslationalMotionAccountableModuleVelocities = new Translation2d[ModuleUtil.ModulePosition.values().length];
-		isSkidding = false;
-
 		this.kinematics = new SwerveDriveKinematics(modules.getModulePositionsFromCenterMeters());
 		this.headingSupplier = () -> getIMUAbsoluteYaw().getValue();
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
@@ -79,10 +76,6 @@ public class Swerve extends GBSubsystem {
 
 		update();
 		setDefaultCommand(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
-	}
-
-	public boolean getIsSkidding() {
-		return isSkidding;
 	}
 
 	public String getLogPath() {
@@ -175,7 +168,10 @@ public class Swerve extends GBSubsystem {
 		updateIMU();
 		modules.updateInputs();
 		updateSwerveTranslationalMotionAccountableModuleVelocities();
-		updateAreModulesSkidding();
+		Logger.recordOutput(getLogPath() + "/isSkidding", getAreModulesSkidding(
+			new Translation2d(getRobotRelativeVelocity().vxMetersPerSecond, getRobotRelativeVelocity().vyMetersPerSecond),
+			swerveTranslationalMotionAccountableModuleVelocities
+		));
 
 		currentState.log(constants.stateLogPath());
 
@@ -190,8 +186,6 @@ public class Swerve extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/IMU/Acceleration", getAccelerationFromIMUMetersPerSecondSquared());
 
 		Logger.recordOutput(getLogPath() + "/isCollisionDetected", isCollisionDetected());
-
-		Logger.recordOutput(getLogPath() + "/isSkidding", isSkidding);
 	}
 
 
@@ -376,20 +370,21 @@ public class Swerve extends GBSubsystem {
 		}
 	}
 
-	private void updateAreModulesSkidding() {
-		Translation2d swerveTranslationalVelocityMetersPerSecond = new Translation2d(
-			getRobotRelativeVelocity().vxMetersPerSecond,
-			getRobotRelativeVelocity().vyMetersPerSecond
-		);
-
-		isSkidding = false;
+	private static boolean getAreModulesSkidding(
+		Translation2d swerveTranslationalVelocityMetersPerSecond,
+		Translation2d[] swerveTranslationalMotionAccountableModuleVelocities
+	) {
 		for (Translation2d swerveTranslationalMotionAccountableModuleVelocity : swerveTranslationalMotionAccountableModuleVelocities) {
-			isSkidding |= !ToleranceMath.isNear(
-				swerveTranslationalVelocityMetersPerSecond,
-				swerveTranslationalMotionAccountableModuleVelocity,
-				SwerveConstants.MODULE_TO_ROBOT_SKID_VELOCITY_TOLERANCE_METERS_PER_SECOND
-			);
+			if (
+				!ToleranceMath.isNear(
+					swerveTranslationalVelocityMetersPerSecond,
+					swerveTranslationalMotionAccountableModuleVelocity,
+					SwerveConstants.ONE_MODULE_SKID_VELOCITY_TOLERANCE_METERS_PER_SECOND
+				)
+			)
+				return true;
 		}
+		return false;
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {

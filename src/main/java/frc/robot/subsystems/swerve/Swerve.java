@@ -366,7 +366,10 @@ public class Swerve extends GBSubsystem {
 	private void updateRobotTranslationalMovingModuleVelocities() {
 		double robotYawAngularVelocityRadiansPerSecond = getRobotRelativeVelocity().omegaRadiansPerSecond;
 		for (int i = 0; i < ModuleUtil.ModulePosition.values().length; i++) {
-			swerveTranslationalMotionAccountableModuleVelocities[i] = getRobotTranslationalMovingModuleVelocity(i, robotYawAngularVelocityRadiansPerSecond);
+			swerveTranslationalMotionAccountableModuleVelocities[i] = getRobotTranslationalMovingModuleVelocity(
+				i,
+				robotYawAngularVelocityRadiansPerSecond
+			);
 		}
 	}
 
@@ -377,7 +380,7 @@ public class Swerve extends GBSubsystem {
 		);
 
 		isSkidding = false;
-		for (Translation2d robotTranslationalMovingModuleVelocity: swerveTranslationalMotionAccountableModuleVelocities) {
+		for (Translation2d robotTranslationalMovingModuleVelocity : swerveTranslationalMotionAccountableModuleVelocities) {
 			isSkidding |= !ToleranceMath.isNear(
 				robotTranslationalVelocityMetersPerSecond,
 				robotTranslationalMovingModuleVelocity,

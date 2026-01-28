@@ -169,12 +169,11 @@ public class Swerve extends GBSubsystem {
 		modules.updateInputs();
 		updateSwerveTranslationalMotionAccountableModuleVelocities();
 		Logger.recordOutput(getLogPath() + "/isSkidding", getAreModulesSkidding(
-			new Translation2d(getRobotRelativeVelocity().vxMetersPerSecond, getRobotRelativeVelocity().vyMetersPerSecond),
-			swerveTranslationalMotionAccountableModuleVelocities
+			getRobotRelativeVelocity(),
+			swerveTranslationalMotionAccountableModuleVelocities, SwerveConstants.ONE_MODULE_SKID_VELOCITY_TOLERANCE_METERS_PER_SECOND
 		));
 
 		currentState.log(constants.stateLogPath());
-
 		ChassisSpeeds allianceRelativeSpeeds = getAllianceRelativeVelocity();
 		Logger.recordOutput(constants.velocityLogPath() + "/Rotation", allianceRelativeSpeeds.omegaRadiansPerSecond);
 		Logger.recordOutput(constants.velocityLogPath() + "/X", allianceRelativeSpeeds.vxMetersPerSecond);
@@ -371,15 +370,16 @@ public class Swerve extends GBSubsystem {
 	}
 
 	private static boolean getAreModulesSkidding(
-		Translation2d swerveTranslationalVelocityMetersPerSecond,
-		Translation2d[] swerveTranslationalMotionAccountableModuleVelocities
+		ChassisSpeeds robotRelativeVelocity,
+		Translation2d[] swerveTranslationalMotionAccountableModuleVelocities,
+		double tolerance
 	) {
 		for (Translation2d swerveTranslationalMotionAccountableModuleVelocity : swerveTranslationalMotionAccountableModuleVelocities) {
 			if (
 				!ToleranceMath.isNear(
-					swerveTranslationalVelocityMetersPerSecond,
+					new Translation2d(robotRelativeVelocity.vxMetersPerSecond, robotRelativeVelocity.vyMetersPerSecond),
 					swerveTranslationalMotionAccountableModuleVelocity,
-					SwerveConstants.ONE_MODULE_SKID_VELOCITY_TOLERANCE_METERS_PER_SECOND
+					tolerance
 				)
 			)
 				return true;

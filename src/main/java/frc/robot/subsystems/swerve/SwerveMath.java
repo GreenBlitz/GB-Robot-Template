@@ -59,7 +59,6 @@ public class SwerveMath {
 
 	private static Translation2d getSwerveTranslationalMotionAccountableModuleVelocity(
 		int moduleIndex,
-		double swerveRotationalVelocityRadiansPerSecond,
 		SwerveModuleState[] swerveRotationalAccountableModuleStates,
 		SwerveModuleState[] moduleStates
 	) {
@@ -72,9 +71,8 @@ public class SwerveMath {
 		);
 	}
 
-	public static void updateSwerveTranslationalMotionAccountableModuleVelocities(
+	public static Translation2d[] getSwerveTranslationalMotionAccountableModuleVelocities(
 		int numOfModules,
-		double swerveRotationalVelocityRadiansPerSecond,
 		SwerveModuleState[] swerveRotationalAccountableModuleStates,
 		SwerveModuleState[] moduleStates
 	) {
@@ -82,25 +80,23 @@ public class SwerveMath {
 		for (int i = 0; i < ModuleUtil.ModulePosition.values().length; i++) {
 			swerveTranslationalMotionAccountableModuleVelocities[i] = getSwerveTranslationalMotionAccountableModuleVelocity(
 				i,
-				swerveRotationalVelocityRadiansPerSecond,
 				swerveRotationalAccountableModuleStates,
 				moduleStates
 			);
 		}
+		return swerveTranslationalMotionAccountableModuleVelocities;
 	}
 
 	public static boolean getAreModulesSkidding(
 		int numberOfModules,
 		double swerveRotationalVelocityRadiansPerSecond,
 		ChassisSpeeds robotRelativeVelocity,
-		Translation2d[] swerveTranslationalMotionAccountableModuleVelocities,
 		SwerveModuleState[] swerveRotationalAccountableModuleStates,
 		SwerveModuleState[] moduleStates,
 		double skidVelocityToleranceMetersPerSecond
 	) {
-		updateSwerveTranslationalMotionAccountableModuleVelocities(
+		Translation2d[] swerveTranslationalMotionAccountableModuleVelocities = getSwerveTranslationalMotionAccountableModuleVelocities(
 			numberOfModules,
-			swerveRotationalVelocityRadiansPerSecond,
 			swerveRotationalAccountableModuleStates,
 			moduleStates
 		);

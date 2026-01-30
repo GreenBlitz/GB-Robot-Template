@@ -166,9 +166,8 @@ public class Swerve extends GBSubsystem {
 	public void update() {
 		updateIMU();
 		modules.updateInputs();
-		SwerveMath.updateSwerveTranslationalMotionAccountableModuleVelocities(
+		SwerveMath.getSwerveTranslationalMotionAccountableModuleVelocities(
 			ModuleUtil.ModulePosition.values().length,
-			getRobotRelativeVelocity().omegaRadiansPerSecond,
 			kinematics.toSwerveModuleStates(new ChassisSpeeds(0, 0, getRobotRelativeVelocity().omegaRadiansPerSecond), new Translation2d()),
 			modules.getCurrentStates()
 		);
@@ -178,7 +177,6 @@ public class Swerve extends GBSubsystem {
 				ModuleUtil.ModulePosition.values().length,
 				getRobotRelativeVelocity().omegaRadiansPerSecond,
 				getRobotRelativeVelocity(),
-				swerveTranslationalMotionAccountableModuleVelocities,
 				kinematics.toSwerveModuleStates(new ChassisSpeeds(0, 0, getRobotRelativeVelocity().omegaRadiansPerSecond), new Translation2d()),
 				modules.getCurrentStates(),
 				SwerveConstants.ONE_MODULE_SKID_VELOCITY_TOLERANCE_METERS_PER_SECOND

@@ -90,10 +90,20 @@ public class SwerveMath {
 	}
 
 	public static boolean getAreModulesSkidding(
+		int numberOfModules,
+		double swerveRotationalVelocityRadiansPerSecond,
 		ChassisSpeeds robotRelativeVelocity,
 		Translation2d[] swerveTranslationalMotionAccountableModuleVelocities,
+		SwerveModuleState[] swerveRotationalAccountableModuleStates,
+		SwerveModuleState[] moduleStates,
 		double skidVelocityToleranceMetersPerSecond
 	) {
+		updateSwerveTranslationalMotionAccountableModuleVelocities(
+			numberOfModules,
+			swerveRotationalVelocityRadiansPerSecond,
+			swerveRotationalAccountableModuleStates,
+			moduleStates
+		);
 		Translation2d robotTranslationalVelocityMetersPerSecond = new Translation2d(
 			robotRelativeVelocity.vxMetersPerSecond,
 			robotRelativeVelocity.vyMetersPerSecond

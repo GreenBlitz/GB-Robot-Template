@@ -175,8 +175,12 @@ public class Swerve extends GBSubsystem {
 		Logger.recordOutput(
 			getLogPath() + "/isSkidding",
 			SwerveMath.getAreModulesSkidding(
+				ModuleUtil.ModulePosition.values().length,
+				getRobotRelativeVelocity().omegaRadiansPerSecond,
 				getRobotRelativeVelocity(),
 				swerveTranslationalMotionAccountableModuleVelocities,
+				kinematics.toSwerveModuleStates(new ChassisSpeeds(0, 0, getRobotRelativeVelocity().omegaRadiansPerSecond), new Translation2d()),
+				modules.getCurrentStates(),
 				SwerveConstants.ONE_MODULE_SKID_VELOCITY_TOLERANCE_METERS_PER_SECOND
 			)
 		);

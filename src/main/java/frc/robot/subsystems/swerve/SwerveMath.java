@@ -58,45 +58,53 @@ public class SwerveMath {
 	}
 
 	private static Translation2d getSwerveTranslationalMotionAccountableModuleVelocity(
-			int moduleIndex,
-			double swerveRotationalVelocityRadiansPerSecond,
-			SwerveModuleState[] swerveRotationalAccountableModuleStates,
-			SwerveModuleState[] moduleStates
+		int moduleIndex,
+		double swerveRotationalVelocityRadiansPerSecond,
+		SwerveModuleState[] swerveRotationalAccountableModuleStates,
+		SwerveModuleState[] moduleStates
 	) {
 		SwerveModuleState swerveRotationalAccountableModuleState = swerveRotationalAccountableModuleStates[moduleIndex];
 		SwerveModuleState moduleState = moduleStates[moduleIndex];
 
 		return new Translation2d(
-				moduleState.speedMetersPerSecond - swerveRotationalAccountableModuleState.speedMetersPerSecond,
-				moduleState.angle.minus(swerveRotationalAccountableModuleState.angle)
+			moduleState.speedMetersPerSecond - swerveRotationalAccountableModuleState.speedMetersPerSecond,
+			moduleState.angle.minus(swerveRotationalAccountableModuleState.angle)
 		);
 	}
 
-	public static void updateSwerveTranslationalMotionAccountableModuleVelocities(int numOfModules, double swerveRotationalVelocityRadiansPerSecond, SwerveModuleState[] swerveRotationalAccountableModuleStates, SwerveModuleState[] moduleStates) {
+	public static void updateSwerveTranslationalMotionAccountableModuleVelocities(
+		int numOfModules,
+		double swerveRotationalVelocityRadiansPerSecond,
+		SwerveModuleState[] swerveRotationalAccountableModuleStates,
+		SwerveModuleState[] moduleStates
+	) {
 		Translation2d[] swerveTranslationalMotionAccountableModuleVelocities = new Translation2d[numOfModules];
 		for (int i = 0; i < ModuleUtil.ModulePosition.values().length; i++) {
 			swerveTranslationalMotionAccountableModuleVelocities[i] = getSwerveTranslationalMotionAccountableModuleVelocity(
-					i,
-					swerveRotationalVelocityRadiansPerSecond,
-					swerveRotationalAccountableModuleStates,
-					moduleStates
+				i,
+				swerveRotationalVelocityRadiansPerSecond,
+				swerveRotationalAccountableModuleStates,
+				moduleStates
 			);
 		}
 	}
 
 	public static boolean getAreModulesSkidding(
-			ChassisSpeeds robotRelativeVelocity,
-			Translation2d[] swerveTranslationalMotionAccountableModuleVelocities,
-			double skidVelocityToleranceMetersPerSecond
+		ChassisSpeeds robotRelativeVelocity,
+		Translation2d[] swerveTranslationalMotionAccountableModuleVelocities,
+		double skidVelocityToleranceMetersPerSecond
 	) {
-		Translation2d robotTranslationalVelocityMetersPerSecond = new Translation2d(robotRelativeVelocity.vxMetersPerSecond, robotRelativeVelocity.vyMetersPerSecond);
+		Translation2d robotTranslationalVelocityMetersPerSecond = new Translation2d(
+			robotRelativeVelocity.vxMetersPerSecond,
+			robotRelativeVelocity.vyMetersPerSecond
+		);
 		for (Translation2d swerveTranslationalMotionAccountableModuleVelocity : swerveTranslationalMotionAccountableModuleVelocities) {
 			if (
-					!ToleranceMath.isNear(
-							robotTranslationalVelocityMetersPerSecond,
-							swerveTranslationalMotionAccountableModuleVelocity,
-							skidVelocityToleranceMetersPerSecond
-					)
+				!ToleranceMath.isNear(
+					robotTranslationalVelocityMetersPerSecond,
+					swerveTranslationalMotionAccountableModuleVelocity,
+					skidVelocityToleranceMetersPerSecond
+				)
 			)
 				return true;
 		}

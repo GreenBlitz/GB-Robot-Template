@@ -29,7 +29,6 @@ import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.TimedValue;
 import frc.utils.auto.PathPlannerUtil;
-import frc.utils.math.ToleranceMath;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
@@ -167,12 +166,20 @@ public class Swerve extends GBSubsystem {
 	public void update() {
 		updateIMU();
 		modules.updateInputs();
-		SwerveMath.updateSwerveTranslationalMotionAccountableModuleVelocities(ModuleUtil.ModulePosition.values().length, getRobotRelativeVelocity().omegaRadiansPerSecond,  kinematics
-				.toSwerveModuleStates(new ChassisSpeeds(0, 0, getRobotRelativeVelocity().omegaRadiansPerSecond), new Translation2d()), modules.getCurrentStates());
-		Logger.recordOutput(getLogPath() + "/isSkidding", SwerveMath.getAreModulesSkidding(
-			getRobotRelativeVelocity(),
-			swerveTranslationalMotionAccountableModuleVelocities, SwerveConstants.ONE_MODULE_SKID_VELOCITY_TOLERANCE_METERS_PER_SECOND
-		));
+		SwerveMath.updateSwerveTranslationalMotionAccountableModuleVelocities(
+			ModuleUtil.ModulePosition.values().length,
+			getRobotRelativeVelocity().omegaRadiansPerSecond,
+			kinematics.toSwerveModuleStates(new ChassisSpeeds(0, 0, getRobotRelativeVelocity().omegaRadiansPerSecond), new Translation2d()),
+			modules.getCurrentStates()
+		);
+		Logger.recordOutput(
+			getLogPath() + "/isSkidding",
+			SwerveMath.getAreModulesSkidding(
+				getRobotRelativeVelocity(),
+				swerveTranslationalMotionAccountableModuleVelocities,
+				SwerveConstants.ONE_MODULE_SKID_VELOCITY_TOLERANCE_METERS_PER_SECOND
+			)
+		);
 
 		currentState.log(constants.stateLogPath());
 		ChassisSpeeds allianceRelativeSpeeds = getAllianceRelativeVelocity();

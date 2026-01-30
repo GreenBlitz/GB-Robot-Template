@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.states.DriveSpeed;
@@ -90,10 +91,11 @@ public class SwerveMath {
 	public static boolean getAreModulesSkidding(
 		int numberOfModules,
 		ChassisSpeeds robotRelativeVelocity,
-		SwerveModuleState[] swerveRotationalAccountableModuleStates,
+		SwerveDriveKinematics kinematics,
 		SwerveModuleState[] moduleStates,
 		double skidVelocityToleranceMetersPerSecond
 	) {
+		SwerveModuleState[] swerveRotationalAccountableModuleStates = kinematics.toSwerveModuleStates(new ChassisSpeeds(0, 0, robotRelativeVelocity.omegaRadiansPerSecond), new Translation2d());
 		Translation2d[] swerveTranslationalMotionAccountableModuleVelocities = getSwerveTranslationalMotionAccountableModuleVelocities(
 			numberOfModules,
 			swerveRotationalAccountableModuleStates,

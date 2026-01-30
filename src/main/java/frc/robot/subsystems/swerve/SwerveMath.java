@@ -89,7 +89,6 @@ public class SwerveMath {
 
 	public static boolean getAreModulesSkidding(
 		int numberOfModules,
-		double swerveRotationalVelocityRadiansPerSecond,
 		ChassisSpeeds robotRelativeVelocity,
 		SwerveModuleState[] swerveRotationalAccountableModuleStates,
 		SwerveModuleState[] moduleStates,

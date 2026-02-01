@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.states.DriveSpeed;
 import frc.utils.math.ToleranceMath;
 import frc.utils.time.TimeUtil;
@@ -62,7 +61,6 @@ public class SwerveMath {
 		SwerveModuleState swerveRotationalAccountableModuleState,
 		SwerveModuleState moduleState
 	) {
-
 		return new Translation2d(
 			moduleState.speedMetersPerSecond - swerveRotationalAccountableModuleState.speedMetersPerSecond,
 			moduleState.angle.minus(swerveRotationalAccountableModuleState.angle)

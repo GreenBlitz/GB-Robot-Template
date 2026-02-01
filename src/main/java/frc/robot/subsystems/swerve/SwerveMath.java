@@ -59,12 +59,9 @@ public class SwerveMath {
 	}
 
 	private static Translation2d getSwerveTranslationalMotionAccountableModuleVelocity(
-		int moduleIndex,
-		SwerveModuleState[] swerveRotationalAccountableModuleStates,
-		SwerveModuleState[] moduleStates
+		SwerveModuleState swerveRotationalAccountableModuleState,
+		SwerveModuleState moduleState
 	) {
-		SwerveModuleState swerveRotationalAccountableModuleState = swerveRotationalAccountableModuleStates[moduleIndex];
-		SwerveModuleState moduleState = moduleStates[moduleIndex];
 
 		return new Translation2d(
 			moduleState.speedMetersPerSecond - swerveRotationalAccountableModuleState.speedMetersPerSecond,
@@ -79,9 +76,8 @@ public class SwerveMath {
 		Translation2d[] swerveTranslationalMotionAccountableModuleVelocities = new Translation2d[moduleStates.length];
 		for (int i = 0; i < ModuleUtil.ModulePosition.values().length; i++) {
 			swerveTranslationalMotionAccountableModuleVelocities[i] = getSwerveTranslationalMotionAccountableModuleVelocity(
-				i,
-				swerveRotationalAccountableModuleStates,
-				moduleStates
+				swerveRotationalAccountableModuleStates[i],
+				moduleStates[i]
 			);
 		}
 		return swerveTranslationalMotionAccountableModuleVelocities;

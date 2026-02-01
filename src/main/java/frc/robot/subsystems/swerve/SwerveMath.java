@@ -75,7 +75,7 @@ public class SwerveMath {
 	) {
 		SwerveModuleState[] swerveRotationalAccountableModuleStates = kinematics
 			.toSwerveModuleStates(new ChassisSpeeds(0, 0, robotRelativeVelocity.omegaRadiansPerSecond), new Translation2d());
-		Translation2d[] swerveTranslationalMotionAccountableModuleVelocities = getSwerveTranslationalMotionAccountableModuleVelocities(
+		Translation2d[] swerveTranslationalMotionAccountableModuleVelocities = getModuleTranslationalVelocities(
 			moduleStates,
 			swerveRotationalAccountableModuleStates
 		);
@@ -97,21 +97,21 @@ public class SwerveMath {
 		return false;
 	}
 
-	public static Translation2d[] getSwerveTranslationalMotionAccountableModuleVelocities(
+	public static Translation2d[] getModuleTranslationalVelocities(
 		SwerveModuleState[] moduleStates,
 		SwerveModuleState[] swerveRotationalAccountableModuleStates
 	) {
-		Translation2d[] swerveTranslationalMotionAccountableModuleVelocities = new Translation2d[moduleStates.length];
+		Translation2d[] moduleTranslationalVelocity = new Translation2d[moduleStates.length];
 		for (int i = 0; i < moduleStates.length; i++) {
-			swerveTranslationalMotionAccountableModuleVelocities[i] = getSwerveTranslationalMotionAccountableModuleVelocity(
+			moduleTranslationalVelocity[i] = getModuleTranslationalVelocity(
 				moduleStates[i],
 				swerveRotationalAccountableModuleStates[i]
 			);
 		}
-		return swerveTranslationalMotionAccountableModuleVelocities;
+		return moduleTranslationalVelocity;
 	}
 
-	private static Translation2d getSwerveTranslationalMotionAccountableModuleVelocity(
+	private static Translation2d getModuleTranslationalVelocity(
 		SwerveModuleState moduleState,
 		SwerveModuleState swerveRotationalAccountableModuleState
 	) {

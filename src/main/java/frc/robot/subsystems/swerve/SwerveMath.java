@@ -89,13 +89,14 @@ public class SwerveMath {
 	}
 
 	public static boolean getAreModulesSkidding(
-		int numberOfModules,
 		ChassisSpeeds robotRelativeVelocity,
 		SwerveDriveKinematics kinematics,
 		SwerveModuleState[] moduleStates,
 		double skidVelocityToleranceMetersPerSecond
 	) {
-		SwerveModuleState[] swerveRotationalAccountableModuleStates = kinematics.toSwerveModuleStates(new ChassisSpeeds(0, 0, robotRelativeVelocity.omegaRadiansPerSecond), new Translation2d());
+		int numberOfModules = kinematics.getModules().length;
+		SwerveModuleState[] swerveRotationalAccountableModuleStates = kinematics
+			.toSwerveModuleStates(new ChassisSpeeds(0, 0, robotRelativeVelocity.omegaRadiansPerSecond), new Translation2d());
 		Translation2d[] swerveTranslationalMotionAccountableModuleVelocities = getSwerveTranslationalMotionAccountableModuleVelocities(
 			numberOfModules,
 			swerveRotationalAccountableModuleStates,
@@ -112,8 +113,9 @@ public class SwerveMath {
 					swerveTranslationalMotionAccountableModuleVelocity,
 					skidVelocityToleranceMetersPerSecond
 				)
-			)
+			) {
 				return true;
+			}
 		}
 		return false;
 	}

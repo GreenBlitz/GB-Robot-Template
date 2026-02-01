@@ -19,7 +19,6 @@ import frc.robot.hardware.empties.EmptyIMU;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.poseestimator.OdometryData;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.states.DriveRelative;
 import frc.robot.subsystems.swerve.states.LoopMode;
@@ -166,7 +165,6 @@ public class Swerve extends GBSubsystem {
 		Logger.recordOutput(
 			getLogPath() + "/isSkidding",
 			SwerveMath.getAreModulesSkidding(
-				ModuleUtil.ModulePosition.values().length,
 				getRobotRelativeVelocity(),
 				kinematics,
 				modules.getCurrentStates(),

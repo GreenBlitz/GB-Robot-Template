@@ -46,8 +46,6 @@ public record SwerveConstants(
 
 	public static final double ONE_MODULE_SKID_VELOCITY_TOLERANCE_METERS_PER_SECOND = 0.05;
 
-	public static final double FOUR_MODULES_SKID_VELOCITY_TOLERANCE_METERS_PER_SECOND = 2;
-
 	public static final double AIM_ASSIST_MAGNITUDE_FACTOR = 4;
 
 	public static final double MIN_COLLISION_G_FORCE = 2;

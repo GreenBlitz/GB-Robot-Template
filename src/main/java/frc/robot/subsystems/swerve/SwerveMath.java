@@ -58,8 +58,8 @@ public class SwerveMath {
 	}
 
 	private static Translation2d getSwerveTranslationalMotionAccountableModuleVelocity(
-		SwerveModuleState swerveRotationalAccountableModuleState,
-		SwerveModuleState moduleState
+		SwerveModuleState moduleState,
+		SwerveModuleState swerveRotationalAccountableModuleState
 	) {
 		return new Translation2d(
 			moduleState.speedMetersPerSecond - swerveRotationalAccountableModuleState.speedMetersPerSecond,
@@ -68,30 +68,30 @@ public class SwerveMath {
 	}
 
 	public static Translation2d[] getSwerveTranslationalMotionAccountableModuleVelocities(
-		SwerveModuleState[] swerveRotationalAccountableModuleStates,
-		SwerveModuleState[] moduleStates
+		SwerveModuleState[] moduleStates,
+		SwerveModuleState[] swerveRotationalAccountableModuleStates
 	) {
 		Translation2d[] swerveTranslationalMotionAccountableModuleVelocities = new Translation2d[moduleStates.length];
 		for (int i = 0; i < moduleStates.length; i++) {
 			swerveTranslationalMotionAccountableModuleVelocities[i] = getSwerveTranslationalMotionAccountableModuleVelocity(
-				swerveRotationalAccountableModuleStates[i],
-				moduleStates[i]
+				moduleStates[i],
+				swerveRotationalAccountableModuleStates[i]
 			);
 		}
 		return swerveTranslationalMotionAccountableModuleVelocities;
 	}
 
 	public static boolean getAreModulesSkidding(
-		ChassisSpeeds robotRelativeVelocity,
 		SwerveDriveKinematics kinematics,
+		ChassisSpeeds robotRelativeVelocity,
 		SwerveModuleState[] moduleStates,
 		double skidVelocityToleranceMetersPerSecond
 	) {
 		SwerveModuleState[] swerveRotationalAccountableModuleStates = kinematics
 			.toSwerveModuleStates(new ChassisSpeeds(0, 0, robotRelativeVelocity.omegaRadiansPerSecond), new Translation2d());
 		Translation2d[] swerveTranslationalMotionAccountableModuleVelocities = getSwerveTranslationalMotionAccountableModuleVelocities(
-			swerveRotationalAccountableModuleStates,
-			moduleStates
+			moduleStates,
+			swerveRotationalAccountableModuleStates
 		);
 		Translation2d robotTranslationalVelocityMetersPerSecond = new Translation2d(
 			robotRelativeVelocity.vxMetersPerSecond,

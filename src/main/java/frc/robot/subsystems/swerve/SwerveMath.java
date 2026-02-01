@@ -74,7 +74,7 @@ public class SwerveMath {
 		SwerveModuleState[] moduleStates
 	) {
 		Translation2d[] swerveTranslationalMotionAccountableModuleVelocities = new Translation2d[moduleStates.length];
-		for (int i = 0; i < ModuleUtil.ModulePosition.values().length; i++) {
+		for (int i = 0; i < moduleStates.length; i++) {
 			swerveTranslationalMotionAccountableModuleVelocities[i] = getSwerveTranslationalMotionAccountableModuleVelocity(
 				swerveRotationalAccountableModuleStates[i],
 				moduleStates[i]

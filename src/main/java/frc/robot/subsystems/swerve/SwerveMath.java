@@ -73,9 +73,9 @@ public class SwerveMath {
 		SwerveModuleState[] moduleStates,
 		double skidVelocityToleranceMetersPerSecond
 	) {
-		SwerveModuleState[] swerveRotationalAccountableModuleStates = kinematics
+		SwerveModuleState[] swerveRotationalModuleStates = kinematics
 			.toSwerveModuleStates(new ChassisSpeeds(0, 0, robotRelativeVelocity.omegaRadiansPerSecond), new Translation2d());
-		Translation2d[] moduleTranslationalVelocities = getModuleTranslationalVelocities(moduleStates, swerveRotationalAccountableModuleStates);
+		Translation2d[] moduleTranslationalVelocities = getModuleTranslationalVelocities(moduleStates, swerveRotationalModuleStates);
 		Translation2d robotTranslationalVelocityMetersPerSecond = new Translation2d(
 			robotRelativeVelocity.vxMetersPerSecond,
 			robotRelativeVelocity.vyMetersPerSecond
@@ -96,22 +96,19 @@ public class SwerveMath {
 
 	public static Translation2d[] getModuleTranslationalVelocities(
 		SwerveModuleState[] moduleStates,
-		SwerveModuleState[] swerveRotationalAccountableModuleStates
+		SwerveModuleState[] swerveRotationalModuleStates
 	) {
 		Translation2d[] moduleTranslationalVelocity = new Translation2d[moduleStates.length];
 		for (int i = 0; i < moduleStates.length; i++) {
-			moduleTranslationalVelocity[i] = getModuleTranslationalVelocity(moduleStates[i], swerveRotationalAccountableModuleStates[i]);
+			moduleTranslationalVelocity[i] = getModuleTranslationalVelocity(moduleStates[i], swerveRotationalModuleStates[i]);
 		}
 		return moduleTranslationalVelocity;
 	}
 
-	private static Translation2d getModuleTranslationalVelocity(
-		SwerveModuleState moduleState,
-		SwerveModuleState swerveRotationalAccountableModuleState
-	) {
+	private static Translation2d getModuleTranslationalVelocity(SwerveModuleState moduleState, SwerveModuleState swerveRotationalModuleStates) {
 		return new Translation2d(
-			moduleState.speedMetersPerSecond - swerveRotationalAccountableModuleState.speedMetersPerSecond,
-			moduleState.angle.minus(swerveRotationalAccountableModuleState.angle)
+			moduleState.speedMetersPerSecond - swerveRotationalModuleStates.speedMetersPerSecond,
+			moduleState.angle.minus(swerveRotationalModuleStates.angle)
 		);
 	}
 

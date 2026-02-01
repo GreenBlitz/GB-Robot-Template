@@ -75,15 +75,12 @@ public class SwerveMath {
 	) {
 		SwerveModuleState[] swerveRotationalAccountableModuleStates = kinematics
 			.toSwerveModuleStates(new ChassisSpeeds(0, 0, robotRelativeVelocity.omegaRadiansPerSecond), new Translation2d());
-		Translation2d[] swerveTranslationalMotionAccountableModuleVelocities = getModuleTranslationalVelocities(
-			moduleStates,
-			swerveRotationalAccountableModuleStates
-		);
+		Translation2d[] moduleTranslationalVelocities = getModuleTranslationalVelocities(moduleStates, swerveRotationalAccountableModuleStates);
 		Translation2d robotTranslationalVelocityMetersPerSecond = new Translation2d(
 			robotRelativeVelocity.vxMetersPerSecond,
 			robotRelativeVelocity.vyMetersPerSecond
 		);
-		for (Translation2d swerveTranslationalMotionAccountableModuleVelocity : swerveTranslationalMotionAccountableModuleVelocities) {
+		for (Translation2d swerveTranslationalMotionAccountableModuleVelocity : moduleTranslationalVelocities) {
 			if (
 				!ToleranceMath.isNear(
 					robotTranslationalVelocityMetersPerSecond,

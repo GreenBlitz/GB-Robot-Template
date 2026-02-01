@@ -103,10 +103,7 @@ public class SwerveMath {
 	) {
 		Translation2d[] moduleTranslationalVelocity = new Translation2d[moduleStates.length];
 		for (int i = 0; i < moduleStates.length; i++) {
-			moduleTranslationalVelocity[i] = getModuleTranslationalVelocity(
-				moduleStates[i],
-				swerveRotationalAccountableModuleStates[i]
-			);
+			moduleTranslationalVelocity[i] = getModuleTranslationalVelocity(moduleStates[i], swerveRotationalAccountableModuleStates[i]);
 		}
 		return moduleTranslationalVelocity;
 	}

@@ -1,8 +1,8 @@
 package frc.robot.vision.cameras.limelight;
 
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import org.wpilib.math.geometry.Pose3d;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Translation2d;
 import frc.robot.vision.DetectedObjectObservation;
 import frc.robot.vision.DetectedObjectType;
 import frc.utils.math.FieldMath;

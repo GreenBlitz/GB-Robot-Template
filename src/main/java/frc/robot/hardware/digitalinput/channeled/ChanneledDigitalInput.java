@@ -1,7 +1,7 @@
 package frc.robot.hardware.digitalinput.channeled;
 
-import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.wpilibj.DigitalInput;
+import org.wpilib.math.filter.Debouncer;
+import org.wpilib.hardware.discrete.DigitalInput;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 

@@ -2,12 +2,12 @@ package frc.robot.subsystems.swerve;
 
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj2.command.*;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import org.wpilib.math.geometry.Pose2d;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.kinematics.ChassisVelocities;
+import org.wpilib.math.kinematics.SwerveModuleVelocity;
+import org.wpilib.command2.*;
+import org.wpilib.command2.sysid.SysIdRoutine;
 import frc.constants.field.Field;
 import frc.robot.autonomous.PathFollowingCommandsBuilder;
 import frc.robot.subsystems.GBCommandsBuilder;
@@ -87,9 +87,9 @@ public class SwerveCommandsBuilder extends GBCommandsBuilder {
 	}
 
 
-	public Command setTargetModuleStates(Supplier<SwerveModuleState[]> statesSupplier, boolean isClosedLoop) {
+	public Command setTargetModuleVelocities(Supplier<SwerveModuleVelocity[]> velocitiesSupplier, boolean isClosedLoop) {
 		return swerve.asSubsystemCommand(
-			new RunCommand(() -> modules.setTargetStates(statesSupplier.get(), isClosedLoop)),
+			new RunCommand(() -> modules.setTargetVelocities(velocitiesSupplier.get(), isClosedLoop)),
 			"Set states by " + "supplier"
 		);
 	}
@@ -112,7 +112,7 @@ public class SwerveCommandsBuilder extends GBCommandsBuilder {
 					swerve.getModules()::getDrivesPositions,
 					swerve::getAbsoluteHeading,
 					rotationsPerSecond -> swerve
-						.driveByState(new ChassisSpeeds(0, 0, rotationsPerSecond.getRadians()), SwerveState.DEFAULT_DRIVE),
+						.driveByState(new ChassisVelocities(0, 0, rotationsPerSecond.getRadians()), SwerveState.DEFAULT_DRIVE),
 					swerve.getModules()::stop
 				)
 			),
@@ -165,10 +165,10 @@ public class SwerveCommandsBuilder extends GBCommandsBuilder {
 		);
 	}
 
-	public Command resetTargetSpeeds() {
+	public Command resetTargetVelocities() {
 		return swerve.asSubsystemCommand(
-			new InstantCommand(() -> swerve.driveByState(new ChassisSpeeds(), SwerveState.DEFAULT_DRIVE)),
-			"ResetTargetSpeeds"
+			new InstantCommand(() -> swerve.driveByState(new ChassisVelocities(), SwerveState.DEFAULT_DRIVE)),
+			"ResetTargetVelocities"
 		);
 	}
 

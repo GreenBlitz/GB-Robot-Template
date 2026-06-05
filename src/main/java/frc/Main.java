@@ -4,7 +4,8 @@
 
 package frc;
 
-import edu.wpi.first.wpilibj.RobotBase;
+import org.wpilib.framework.RobotBase;
+import org.wpilib.framework.TimedRobot;
 
 /**
  * Do NOT add any static variables to this class, or any initialization at all. Unless you know what you are doing, do not modify this file
@@ -18,7 +19,7 @@ public final class Main {
 	 * <p>If you change your main robot class, change the parameter type.
 	 */
 	public static void main(String... args) {
-		RobotBase.startRobot(RobotManager::new);
+		RobotBase.startRobot(TimedRobot.class);
 	}
 
 }

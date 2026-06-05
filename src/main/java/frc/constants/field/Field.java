@@ -1,20 +1,19 @@
 package frc.constants.field;
 
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation;
+import org.wpilib.math.geometry.Translation2d;
+import org.wpilib.math.geometry.Rotation3d;
+import org.wpilib.math.geometry.Pose2d;
+import org.wpilib.math.geometry.Translation3d;
+import org.wpilib.math.geometry.Pose3d;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.driverstation.Alliance;
 import frc.utils.DriverStationUtil;
 import frc.utils.math.AngleTransform;
 import frc.utils.math.FieldMath;
 
 public class Field {
 
-	public static final DriverStation.Alliance RELATIVE_FIELD_CONVENTION_ALLIANCE = DriverStation.Alliance.Blue;
+	public static final Alliance RELATIVE_FIELD_CONVENTION_ALLIANCE = Alliance.BLUE;
 
 	public static boolean isFieldConventionAlliance() {
 		return DriverStationUtil.getAlliance() == RELATIVE_FIELD_CONVENTION_ALLIANCE;

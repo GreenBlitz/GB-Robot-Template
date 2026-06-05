@@ -2,14 +2,14 @@ package frc.robot.subsystems.swerve;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.config.RobotConfig;
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.*;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj2.command.DeferredCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import org.wpilib.math.util.MathUtil;
+import org.wpilib.math.geometry.*;
+import org.wpilib.math.kinematics.ChassisVelocities;
+import org.wpilib.math.kinematics.SwerveDriveKinematics;
+import org.wpilib.math.kinematics.SwerveModuleVelocity;
+import org.wpilib.command2.DeferredCommand;
+import org.wpilib.command2.InstantCommand;
+import org.wpilib.command2.sysid.SysIdRoutine;
 import frc.constants.MathConstants;
 import frc.constants.field.Field;
 import frc.joysticks.Axis;
@@ -116,7 +116,7 @@ public class Swerve extends GBSubsystem {
 			currentPoseSupplier,
 			resetPoseConsumer,
 			this::getRobotRelativeVelocity,
-			(speeds) -> driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER),
+			(velocities) -> driveByState(velocities, SwerveState.DEFAULT_PATH_PLANNER),
 			constants.pathPlannerHolonomicDriveController(),
 			robotConfig,
 			() -> !Field.isFieldConventionAlliance(),
@@ -165,11 +165,11 @@ public class Swerve extends GBSubsystem {
 
 		currentState.log(constants.stateLogPath());
 
-		ChassisSpeeds allianceRelativeSpeeds = getAllianceRelativeVelocity();
-		Logger.recordOutput(constants.velocityLogPath() + "/Rotation", allianceRelativeSpeeds.omegaRadiansPerSecond);
-		Logger.recordOutput(constants.velocityLogPath() + "/X", allianceRelativeSpeeds.vxMetersPerSecond);
-		Logger.recordOutput(constants.velocityLogPath() + "/Y", allianceRelativeSpeeds.vyMetersPerSecond);
-		Logger.recordOutput(constants.velocityLogPath() + "/Magnitude", SwerveMath.getDriveMagnitude(allianceRelativeSpeeds));
+		ChassisVelocities allianceRelativeVelocities = getAllianceRelativeVelocity();
+		Logger.recordOutput(constants.velocityLogPath() + "/Rotation", allianceRelativeVelocities.omega);
+		Logger.recordOutput(constants.velocityLogPath() + "/X", allianceRelativeVelocities.vx);
+		Logger.recordOutput(constants.velocityLogPath() + "/Y", allianceRelativeVelocities.vy);
+		Logger.recordOutput(constants.velocityLogPath() + "/Magnitude", SwerveMath.getDriveMagnitude(allianceRelativeVelocities));
 
 		Logger.recordOutput(getLogPath() + "/OdometrySamples", getNumberOfOdometrySamples());
 
@@ -218,19 +218,19 @@ public class Swerve extends GBSubsystem {
 		return Field.isFieldConventionAlliance() ? currentHeading : currentHeading.rotateBy(MathConstants.HALF_CIRCLE);
 	}
 
-	public ChassisSpeeds getRobotRelativeVelocity() {
-		return kinematics.toChassisSpeeds(modules.getCurrentStates());
+	public ChassisVelocities getRobotRelativeVelocity() {
+		return kinematics.toChassisVelocities(modules.getCurrentVelocities());
 	}
 
-	public ChassisSpeeds getAllianceRelativeVelocity() {
-		return SwerveMath.robotToAllianceRelativeSpeeds(getRobotRelativeVelocity(), getAllianceRelativeHeading());
+	public ChassisVelocities getAllianceRelativeVelocity() {
+		return SwerveMath.robotToAllianceRelativeVelocities(getRobotRelativeVelocity(), getAllianceRelativeHeading());
 	}
 
-	private ChassisSpeeds getDriveModeRelativeSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
+	private ChassisVelocities getDriveModeRelativeVelocities(ChassisVelocities velocities, SwerveState swerveState) {
 		if (swerveState.getDriveRelative() == DriveRelative.ROBOT_RELATIVE) {
-			return speeds;
+			return velocities;
 		}
-		return SwerveMath.allianceToRobotRelativeSpeeds(speeds, getAllianceRelativeHeading());
+		return SwerveMath.allianceToRobotRelativeVelocities(velocities, getAllianceRelativeHeading());
 	}
 
 	public double getIMUAcceleration() {
@@ -246,23 +246,23 @@ public class Swerve extends GBSubsystem {
 			constants.rotationDegreesPIDController().calculate(currentPose.getRotation().getDegrees(), targetPose.getRotation().getDegrees())
 		);
 
-		ChassisSpeeds targetAllianceRelativeSpeeds = new ChassisSpeeds(
+		ChassisVelocities targetAllianceRelativeVelocities = new ChassisVelocities(
 			xVelocityMetersPerSecond * direction,
 			yVelocityMetersPerSecond * direction,
 			rotationVelocityPerSecond.getRadians()
 		);
-		driveByState(targetAllianceRelativeSpeeds, SwerveState.DEFAULT_DRIVE);
+		driveByState(targetAllianceRelativeVelocities, SwerveState.DEFAULT_DRIVE);
 	}
 
 	protected void turnToHeading(Rotation2d targetHeading, SwerveState swerveState) {
-		ChassisSpeeds targetSpeeds = new ChassisSpeeds(
+		ChassisVelocities targetVelocities = new ChassisVelocities(
 			0,
 			0,
 			Rotation2d
 				.fromDegrees(constants.rotationDegreesPIDController().calculate(headingSupplier.get().getDegrees(), targetHeading.getDegrees()))
 				.getRadians()
 		);
-		driveByState(targetSpeeds, swerveState);
+		driveByState(targetVelocities, swerveState);
 	}
 
 	protected void driveByDriversTargetsPowers(SwerveState swerveState) {
@@ -270,56 +270,56 @@ public class Swerve extends GBSubsystem {
 	}
 
 	protected void driveByState(ChassisPowers powers, SwerveState swerveState) {
-		ChassisSpeeds speedsFromPowers = SwerveMath.powersToSpeeds(powers, constants);
-		driveByState(speedsFromPowers, swerveState);
+		ChassisVelocities velocitiesFromPowers = SwerveMath.powersToVelocities(powers, constants);
+		driveByState(velocitiesFromPowers, swerveState);
 	}
 
-	protected void driveByState(ChassisSpeeds speeds, SwerveState swerveState) {
+	protected void driveByState(ChassisVelocities velocities, SwerveState swerveState) {
 		this.currentState = swerveState;
 
-		speeds = stateHandler.applyAimAssistOnChassisSpeeds(speeds, swerveState);
-		speeds = handleHeadingControl(speeds, swerveState);
-		if (SwerveMath.isStill(speeds, SwerveConstants.DEADBANDS)) {
+		velocities = stateHandler.applyAimAssistOnChassisVelocities(velocities, swerveState);
+		velocities = handleHeadingControl(velocities, swerveState);
+		if (SwerveMath.isStill(velocities, SwerveConstants.DEADBANDS)) {
 			modules.stop();
 			return;
 		}
 
-		speeds = SwerveMath.factorSpeeds(speeds, swerveState.getDriveSpeed());
-		speeds = SwerveMath.applyDeadband(speeds, SwerveConstants.DEADBANDS);
-		speeds = getDriveModeRelativeSpeeds(speeds, swerveState);
-		speeds = SwerveMath.discretize(speeds);
+		velocities = SwerveMath.factorVelocities(velocities, swerveState.getDriveSpeed());
+		velocities = SwerveMath.applyDeadband(velocities, SwerveConstants.DEADBANDS);
+		velocities = getDriveModeRelativeVelocities(velocities, swerveState);
+		velocities = SwerveMath.discretize(velocities);
 
-		applySpeeds(speeds, swerveState);
+		applyVelocities(velocities, swerveState);
 	}
 
-	private ChassisSpeeds handleHeadingControl(ChassisSpeeds speeds, SwerveState swerveState) {
+	private ChassisVelocities handleHeadingControl(ChassisVelocities velocities, SwerveState swerveState) {
 		if (swerveState.getHeadingControl() == HeadingControl.NONE) {
-			return speeds;
+			return velocities;
 		}
 
-		if (Math.abs(speeds.omegaRadiansPerSecond) > SwerveConstants.DEADBANDS.getRotation().getRadians()) {
+		if (Math.abs(velocities.omega) > SwerveConstants.DEADBANDS.getRotation().getRadians()) {
 			headingStabilizer.unlockTarget();
-			return speeds;
+			return velocities;
 		}
 
 		headingStabilizer.setTargetHeading(headingSupplier.get());
 		headingStabilizer.lockTarget();
-		return new ChassisSpeeds(
-			speeds.vxMetersPerSecond,
-			speeds.vyMetersPerSecond,
+		return new ChassisVelocities(
+			velocities.vx,
+			velocities.vy,
 			headingStabilizer.calculatePIDOutput(headingSupplier.get()).getRadians()
 		);
 	}
 
-	private void applySpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
-		SwerveModuleState[] swerveModuleStates = kinematics
-			.toSwerveModuleStates(speeds, stateHandler.getRotationAxis(swerveState.getRotateAxis()));
-		setTargetModuleStates(swerveModuleStates, swerveState.getLoopMode().isClosedLoop());
+	private void applyVelocities(ChassisVelocities velocities, SwerveState swerveState) {
+		SwerveModuleVelocity[] swerveModuleVelocities = kinematics
+			.toSwerveModuleVelocities(velocities, stateHandler.getRotationAxis(swerveState.getRotateAxis()));
+		setTargetModuleVelocities(swerveModuleVelocities, swerveState.getLoopMode().isClosedLoop());
 	}
 
-	private void setTargetModuleStates(SwerveModuleState[] moduleStates, boolean isClosedLoop) {
-		SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, constants.velocityAt12VoltsMetersPerSecond());
-		modules.setTargetStates(moduleStates, isClosedLoop);
+	private void setTargetModuleVelocities(SwerveModuleVelocity[] moduleVelocities, boolean isClosedLoop) {
+        SwerveModuleVelocity[] desaturatedModuleVelocities = SwerveDriveKinematics.desaturateWheelVelocities(moduleVelocities, constants.velocityAt12VoltsMetersPerSecond());
+		modules.setTargetVelocities(desaturatedModuleVelocities, isClosedLoop);
 	}
 
 
@@ -327,7 +327,7 @@ public class Swerve extends GBSubsystem {
 		double headingDeltaDegrees = Math.abs(targetHeading.minus(headingSupplier.get()).getDegrees());
 		boolean isAtHeading = headingDeltaDegrees < tolerance.getDegrees();
 
-		double rotationVelocityRadiansPerSecond = getRobotRelativeVelocity().omegaRadiansPerSecond;
+		double rotationVelocityRadiansPerSecond = getRobotRelativeVelocity().omega;
 		boolean isStopping = Math.abs(rotationVelocityRadiansPerSecond) < velocityDeadbandAnglesPerSecond.getRadians();
 
 		return isAtHeading && isStopping;

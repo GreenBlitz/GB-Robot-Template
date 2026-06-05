@@ -1,7 +1,7 @@
 package frc.robot.hardware.mechanisms.wpilib;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.simulation.FlywheelSim;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.simulation.FlywheelSim;
 import frc.utils.time.TimeUtil;
 
 public class FlywheelSimulation implements WPILibMechanismSimulation {
@@ -23,7 +23,7 @@ public class FlywheelSimulation implements WPILibMechanismSimulation {
 
 	@Override
 	public Rotation2d getMechanismVelocityAnglesPerSecond() {
-		return Rotation2d.fromRadians(flywheelSimulation.getAngularVelocityRadPerSec());
+		return Rotation2d.fromRadians(flywheelSimulation.getAngularVelocity());
 	}
 
 	@Override

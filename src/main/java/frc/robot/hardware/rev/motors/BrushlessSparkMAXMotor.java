@@ -1,8 +1,8 @@
 package frc.robot.hardware.rev.motors;
 
 import com.revrobotics.spark.SparkLowLevel;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.command2.sysid.SysIdRoutine;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.mechanisms.MechanismSimulation;

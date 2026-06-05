@@ -1,16 +1,16 @@
 package frc.robot.poseestimator.WPILibPoseEstimator;
 
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.estimator.PoseEstimator;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Twist2d;
-import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.Odometry;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
+import org.wpilib.math.linalg.Matrix;
+import org.wpilib.math.estimator.PoseEstimator;
+import org.wpilib.math.geometry.Pose2d;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Twist2d;
+import org.wpilib.math.interpolation.TimeInterpolatableBuffer;
+import org.wpilib.math.kinematics.SwerveDriveKinematics;
+import org.wpilib.math.kinematics.SwerveModulePosition;
+import org.wpilib.math.kinematics.Odometry;
+import org.wpilib.math.numbers.N1;
+import org.wpilib.math.numbers.N3;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.vision.RobotPoseObservation;
 import frc.robot.poseestimator.IPoseEstimator;
@@ -82,7 +82,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 
 	@Override
 	public Pose2d getOdometryPose() {
-		return odometryEstimator.getPoseMeters();
+		return odometryEstimator.getPose();
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package frc.joysticks;
 
-import edu.wpi.first.wpilibj.Joystick;
+import org.wpilib.driverstation.Joystick;
 
 public enum Axis {
 

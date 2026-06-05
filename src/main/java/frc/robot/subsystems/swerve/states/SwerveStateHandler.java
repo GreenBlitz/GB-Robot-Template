@@ -1,9 +1,9 @@
 package frc.robot.subsystems.swerve.states;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import org.wpilib.math.geometry.Pose2d;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Translation2d;
+import org.wpilib.math.kinematics.ChassisVelocities;
 import frc.constants.MathConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
@@ -29,11 +29,11 @@ public class SwerveStateHandler {
 		this.robotPoseSupplier = Optional.of(robotPoseSupplier);
 	}
 
-	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
+	public ChassisVelocities applyAimAssistOnChassisVelocities(ChassisVelocities velocities, SwerveState swerveState) {
 		if (swerveState.getAimAssist() == AimAssist.NONE) {
-			return speeds;
+			return velocities;
 		}
-		return speeds;
+		return velocities;
 	}
 
 

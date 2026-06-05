@@ -1,7 +1,7 @@
 package frc.robot.hardware.rev.motors.simulation;
 
 import com.revrobotics.sim.SparkMaxSim;
-import edu.wpi.first.math.system.plant.DCMotor;
+import org.wpilib.math.system.DCMotor;
 import frc.robot.hardware.mechanisms.MechanismSimulation;
 import frc.robot.hardware.rev.motors.SparkMaxWrapper;
 import frc.utils.Conversions;

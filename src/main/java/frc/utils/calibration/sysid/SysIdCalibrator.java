@@ -1,17 +1,17 @@
 package frc.utils.calibration.sysid;
 
 import com.ctre.phoenix6.SignalLogger;
-import edu.wpi.first.units.measure.Voltage;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import org.wpilib.units.measure.Voltage;
+import org.wpilib.command2.Command;
+import org.wpilib.command2.InstantCommand;
+import org.wpilib.command2.SequentialCommandGroup;
+import org.wpilib.command2.sysid.SysIdRoutine;
 import frc.robot.subsystems.GBSubsystem;
 import frc.joysticks.SmartJoystick;
 
 import java.util.function.Consumer;
 
-import static edu.wpi.first.units.Units.Volts;
+import static org.wpilib.units.Units.Volts;
 
 public class SysIdCalibrator {
 

@@ -1,9 +1,9 @@
 package frc.robot.subsystems.swerve.states.aimassist;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import org.wpilib.math.geometry.Pose2d;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Translation2d;
+import org.wpilib.math.kinematics.ChassisVelocities;
 import frc.constants.field.Field;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveMath;
@@ -13,8 +13,8 @@ import frc.utils.math.ToleranceMath;
 
 public class AimAssistMath {
 
-	public static ChassisSpeeds getRotationAssistedSpeeds(
-		ChassisSpeeds speeds,
+	public static ChassisVelocities getRotationAssistedVelocities(
+        ChassisVelocities velocities,
 		Rotation2d robotHeading,
 		Rotation2d targetHeading,
 		SwerveConstants swerveConstants
@@ -22,17 +22,17 @@ public class AimAssistMath {
 		Rotation2d pidOutputVelocityPerSecond = Rotation2d
 			.fromDegrees(swerveConstants.rotationDegreesPIDController().calculate(robotHeading.getDegrees(), targetHeading.getDegrees()));
 
-		Rotation2d angularVelocityPerSecond = applyMagnitudeCompensation(pidOutputVelocityPerSecond, SwerveMath.getDriveMagnitude(speeds));
+		Rotation2d angularVelocityPerSecond = applyMagnitudeCompensation(pidOutputVelocityPerSecond, SwerveMath.getDriveMagnitude(velocities));
 		Rotation2d clampedAngularVelocityPerSecond = ToleranceMath
 			.clamp(angularVelocityPerSecond, swerveConstants.maxRotationalVelocityPerSecond());
 
-		return new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, clampedAngularVelocityPerSecond.getRadians());
+		return new ChassisVelocities(velocities.vx, velocities.vy, clampedAngularVelocityPerSecond.getRadians());
 	}
 
 	/**
 	 * @formatter:off
-	 * Returns {@link ChassisSpeeds} that aligns you to the object.
-	 * The returned chassis speeds will move you horizontally to the object so your current heading will point to it.
+	 * Returns {@link ChassisVelocities} that aligns you to the object.
+	 * The returned chassis velocities will move you horizontally to the object so your current heading will point to it.
 	 * Example (0 is object, R is robot, > is heading):
 	 * Current Pose:              Ending Pose:
 	 * |            0          |   |   R>       0          |
@@ -41,8 +41,8 @@ public class AimAssistMath {
 	 * |                       |   |                       |
 	 * @formatter:on
 	 */
-	public static ChassisSpeeds getObjectAssistedSpeeds(
-		ChassisSpeeds speeds,
+	public static ChassisVelocities getObjectAssistedVelocities(
+        ChassisVelocities velocities,
 		Pose2d robotPose,
 		Rotation2d allianceRelativeTargetHeading,
 		Translation2d objectTranslation,
@@ -58,13 +58,13 @@ public class AimAssistMath {
 			case ROBOT_RELATIVE -> allianceRelativeTargetHeading.minus(robotPose.getRotation());
 		};
 
-		ChassisSpeeds targetHeadingRelativeSpeeds = SwerveMath.allianceToRobotRelativeSpeeds(speeds, targetHeadingHingeSystemAngle);
-		ChassisSpeeds assistedSpeeds = new ChassisSpeeds(
-			targetHeadingRelativeSpeeds.vxMetersPerSecond,
+        ChassisVelocities targetHeadingRelativeVelocities = SwerveMath.allianceToRobotRelativeVelocities(velocities, targetHeadingHingeSystemAngle);
+        ChassisVelocities assistedVelocities = new ChassisVelocities(
+			targetHeadingRelativeVelocities.vx,
 			neededObjectHorizontalVelocityMetersPerSecond,
-			targetHeadingRelativeSpeeds.omegaRadiansPerSecond
+			targetHeadingRelativeVelocities.omega
 		);
-		return SwerveMath.robotToAllianceRelativeSpeeds(assistedSpeeds, targetHeadingHingeSystemAngle);
+		return SwerveMath.robotToAllianceRelativeVelocities(assistedVelocities, targetHeadingHingeSystemAngle);
 	}
 
 	private static Rotation2d applyMagnitudeCompensation(Rotation2d velocityPerSecond, double magnitude) {

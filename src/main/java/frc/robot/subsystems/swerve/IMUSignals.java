@@ -1,6 +1,6 @@
 package frc.robot.subsystems.swerve;
 
-import edu.wpi.first.math.geometry.*;
+import org.wpilib.math.geometry.*;
 import frc.robot.hardware.interfaces.InputSignal;
 
 public record IMUSignals(

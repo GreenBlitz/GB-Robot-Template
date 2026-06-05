@@ -1,13 +1,14 @@
 package frc.joysticks;
 
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
+import org.wpilib.driverstation.GenericHID;
+import org.wpilib.driverstation.Joystick;
+import org.wpilib.command2.button.JoystickButton;
+import org.wpilib.command2.button.POVButton;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
 import frc.utils.math.ToleranceMath;
+import org.wpilib.driverstation.POVDirection;
 
 public class SmartJoystick {
 
@@ -48,10 +49,10 @@ public class SmartJoystick {
 		this.L3 = new JoystickButton(this.joystick, ButtonID.L3.getId());
 		this.R3 = new JoystickButton(this.joystick, ButtonID.R3.getId());
 
-		this.POV_UP = new POVButton(this.joystick, ButtonID.POV_UP.getId());
-		this.POV_RIGHT = new POVButton(this.joystick, ButtonID.POV_RIGHT.getId());
-		this.POV_DOWN = new POVButton(this.joystick, ButtonID.POV_DOWN.getId());
-		this.POV_LEFT = new POVButton(this.joystick, ButtonID.POV_LEFT.getId());
+		this.POV_UP = new POVButton(this.joystick, POVDirection.UP);
+		this.POV_RIGHT = new POVButton(this.joystick, POVDirection.RIGHT);
+		this.POV_DOWN = new POVButton(this.joystick, POVDirection.DOWN);
+		this.POV_LEFT = new POVButton(this.joystick, POVDirection.LEFT);
 
 		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "/DisconnectedAt", () -> !isConnected()));
 	}

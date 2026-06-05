@@ -1,6 +1,6 @@
 package frc.robot.hardware.mechanisms.wpilib;
 
-import edu.wpi.first.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Rotation2d;
 import frc.robot.hardware.mechanisms.MechanismSimulation;
 
 public interface WPILibMechanismSimulation extends MechanismSimulation {

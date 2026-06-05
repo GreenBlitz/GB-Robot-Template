@@ -4,11 +4,11 @@
 
 package frc;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Threads;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import org.wpilib.driverstation.internal.DriverStationBackend;
+import org.wpilib.system.Threads;
+import org.wpilib.smartdashboard.SendableChooser;
+import org.wpilib.smartdashboard.SmartDashboard;
+import org.wpilib.command2.CommandScheduler;
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.utils.DriverStationUtil;
@@ -36,7 +36,7 @@ public class RobotManager extends LoggedRobot {
 		if (Robot.ROBOT_TYPE.isReplay()) {
 			setUseTiming(false);
 		}
-		DriverStation.silenceJoystickConnectionWarning(true);
+		DriverStationBackend.silenceJoystickConnectionWarning(true);
 		LoggerFactory.initializeLogger();
 		PathPlannerUtil.startPathfinder();
 		PathPlannerUtil.setupPathPlannerLogging();

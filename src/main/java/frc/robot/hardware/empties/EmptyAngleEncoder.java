@@ -1,6 +1,6 @@
 package frc.robot.hardware.empties;
 
-import edu.wpi.first.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 
 public class EmptyAngleEncoder extends EmptyDevice implements IAngleEncoder {

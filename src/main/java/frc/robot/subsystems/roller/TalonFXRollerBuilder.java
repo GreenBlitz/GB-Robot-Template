@@ -2,11 +2,11 @@ package frc.robot.subsystems.roller;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VoltageOut;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.system.DCMotor;
+import org.wpilib.math.system.Models;
+import org.wpilib.simulation.DCMotorSim;
+import org.wpilib.command2.sysid.SysIdRoutine;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
@@ -23,7 +23,7 @@ public class TalonFXRollerBuilder {
 
 	public static Roller build(String logPath, Phoenix6DeviceID id, double gearRatio, int currentLimit, double momentOfInertia) {
 		SimpleMotorSimulation rollerSimulation = new SimpleMotorSimulation(
-			new DCMotorSim(LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60(1), momentOfInertia, gearRatio), DCMotor.getKrakenX60(1))
+			new DCMotorSim(Models.singleJointedArmFromPhysicalConstants(DCMotor.getKrakenX60(1), momentOfInertia, gearRatio), DCMotor.getKrakenX60(1))
 		);
 		TalonFXMotor roller = new TalonFXMotor(logPath, id, new TalonFXFollowerConfig(), new SysIdRoutine.Config(), rollerSimulation);
 

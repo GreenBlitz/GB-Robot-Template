@@ -1,6 +1,6 @@
 package frc.utils.time;
 
-import edu.wpi.first.wpilibj.Timer;
+import org.wpilib.wpilibj.Timer;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;

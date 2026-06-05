@@ -9,11 +9,11 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.system.DCMotor;
+import org.wpilib.math.system.Models;
+import org.wpilib.simulation.SingleJointedArmSim;
+import org.wpilib.command2.sysid.SysIdRoutine;
 import frc.robot.Robot;
 import frc.robot.hardware.interfaces.IDynamicMotionMagicRequest;
 import frc.robot.hardware.mechanisms.wpilib.SingleJointedArmSimulation;
@@ -243,7 +243,7 @@ public class TalonFXArmBuilder {
 	) {
 		return new SingleJointedArmSimulation(
 			new SingleJointedArmSim(
-				LinearSystemId.createDCMotorSystem(
+				Models.singleJointedArmFromPhysicalConstants(
 					DCMotor.getKrakenX60Foc(followerConfig.followerIDs.length + 1),
 					simulationConstants.momentOfInertiaKgMeterSquared(),
 					gearing

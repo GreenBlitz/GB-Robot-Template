@@ -3,12 +3,12 @@ package frc.robot.hardware.phoenix6.imu;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Rotation2d;
+import org.wpilib.math.util.MathUtil;
+import org.wpilib.math.geometry.Rotation2d;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.Phoenix6Util;
 
-import static edu.wpi.first.units.Units.Degrees;
+import static org.wpilib.units.Units.Degrees;
 
 public class Pigeon2Wrapper extends Pigeon2 {
 

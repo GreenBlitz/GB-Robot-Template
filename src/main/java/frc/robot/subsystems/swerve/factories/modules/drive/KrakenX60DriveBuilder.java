@@ -8,11 +8,11 @@ import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.units.Units;
-import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import org.wpilib.math.system.DCMotor;
+import org.wpilib.math.system.Models;
+import org.wpilib.units.Units;
+import org.wpilib.simulation.DCMotorSim;
+import org.wpilib.command2.sysid.SysIdRoutine;
 import frc.robot.Robot;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.interfaces.ControllableMotor;
@@ -47,7 +47,7 @@ public class KrakenX60DriveBuilder {
 	private static SimpleMotorSimulation buildMechanismSimulation() {
 		return new SimpleMotorSimulation(
 			new DCMotorSim(
-				LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), MOMENT_OF_INERTIA_METERS_SQUARED, GEAR_RATIO),
+				Models.singleJointedArmFromPhysicalConstants(DCMotor.getKrakenX60Foc(1), MOMENT_OF_INERTIA_METERS_SQUARED, GEAR_RATIO),
 				DCMotor.getKrakenX60Foc(1)
 			)
 		);
@@ -78,7 +78,7 @@ public class KrakenX60DriveBuilder {
 			// Velocity Torque
 			driveConfig.Slot1.kS = 5.1;
 			driveConfig.Slot1.kV = 0;
-			driveConfig.Slot1.kA = GEAR_RATIO / (1 / DCMotor.getKrakenX60Foc(1).KtNMPerAmp);
+			driveConfig.Slot1.kA = GEAR_RATIO / (1 / DCMotor.getKrakenX60Foc(1).Kt);
 			driveConfig.Slot1.kP = 40;
 			driveConfig.Slot1.kI = 0;
 			driveConfig.Slot1.kD = 0;
@@ -94,7 +94,7 @@ public class KrakenX60DriveBuilder {
 			// Velocity Torque
 			driveConfig.Slot1.kS = 5.1;
 			driveConfig.Slot1.kV = 0;
-			driveConfig.Slot1.kA = GEAR_RATIO / (1 / DCMotor.getKrakenX60Foc(1).KtNMPerAmp);
+			driveConfig.Slot1.kA = GEAR_RATIO / (1 / DCMotor.getKrakenX60Foc(1).Kt);
 			driveConfig.Slot1.kP = 40;
 			driveConfig.Slot1.kI = 0;
 			driveConfig.Slot1.kD = 0;

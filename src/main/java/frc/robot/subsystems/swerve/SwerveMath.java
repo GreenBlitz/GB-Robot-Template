@@ -1,9 +1,9 @@
 package frc.robot.subsystems.swerve;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import org.wpilib.math.geometry.Pose2d;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Translation2d;
+import org.wpilib.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.swerve.states.DriveSpeed;
 import frc.utils.math.ToleranceMath;
 import frc.utils.time.TimeUtil;

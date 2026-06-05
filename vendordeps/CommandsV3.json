@@ -1,0 +1,46 @@
+//{
+//  "fileName": "CommandsV3.json",
+//  "name": "Commands V3",
+//  "version": "1.0.0",
+//  "uuid": "4decdc05-a056-46cf-9561-39449bbb01306",
+//  "wpilibYear": "2027_alpha5",
+//  "mavenUrls": [],
+//  "jsonUrl": "",
+//  "conflictsWith": [
+//    {
+//      "uuid": "111e20f7-815e-48f8-9dd6-e675ce75b266",
+//      "errorMessage": "Users can not have both Commands v2 and Commands v3 vendordeps in their robot program.",
+//      "offlineFileName": "CommandsV2.json"
+//    }
+//  ],
+//  "javaDependencies": [
+//    {
+//      "groupId": "org.wpilib.commandsv3",
+//      "artifactId": "commandsv3-java",
+//      "version": "wpilib"
+//    }
+//  ],
+//  "jniDependencies": [],
+//  "cppDependencies": [
+//    {
+//      "groupId": "org.wpilib.commandsv2",
+//      "artifactId": "commandsv3-cpp",
+//      "version": "wpilib",
+//      "libName": "commandsv3",
+//      "headerClassifier": "headers",
+//      "sourcesClassifier": "sources",
+//      "sharedLibrary": true,
+//      "skipInvalidPlatforms": true,
+//      "binaryPlatforms": [
+//        "linuxsystemcore",
+//        "linuxathena",
+//        "linuxarm32",
+//        "linuxarm64",
+//        "windowsx86-64",
+//        "windowsx86",
+//        "linuxx86-64",
+//        "osxuniversal"
+//      ]
+//    }
+//  ]
+//}

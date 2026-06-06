@@ -7,7 +7,7 @@
 
 package frc.utils.calibration.swervecalibration;
 
-import org.wpilib.math.MathUtil;
+import org.wpilib.math.util.MathUtil;
 import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.command2.Command;
 import frc.constants.MathConstants;

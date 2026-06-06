@@ -1,7 +1,7 @@
 package frc.utils.math;
 
-import org.wpilib.math.Matrix;
-import org.wpilib.math.VecBuilder;
+import org.wpilib.math.linalg.Matrix;
+import org.wpilib.math.linalg.VecBuilder;
 import org.wpilib.math.numbers.N1;
 import org.wpilib.math.numbers.N6;
 import frc.robot.poseestimator.Pose3dComponentsValue;

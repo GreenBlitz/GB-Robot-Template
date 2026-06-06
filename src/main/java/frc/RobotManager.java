@@ -5,7 +5,7 @@
 package frc;
 
 import org.wpilib.driverstation.internal.DriverStationBackend;
-import org.wpilib.system.Threads;
+import org.wpilib.hardware.hal.ThreadsJNI;
 import org.wpilib.smartdashboard.SendableChooser;
 import org.wpilib.smartdashboard.SmartDashboard;
 import org.wpilib.command2.CommandScheduler;
@@ -47,7 +47,7 @@ public class RobotManager extends LoggedRobot {
 		createAutoReadyForConstructionChooser();
 		JoysticksBindings.configureBindings(robot);
 
-		Threads.setCurrentThreadPriority(true, 10);
+		ThreadsJNI.setCurrentThreadPriority(10);
 	}
 
 	@Override

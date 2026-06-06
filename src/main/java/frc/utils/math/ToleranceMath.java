@@ -1,16 +1,16 @@
 package frc.utils.math;
 
-import org.wpilib.math.MathUtil;
+import org.wpilib.math.util.MathUtil;
 import org.wpilib.math.geometry.Pose2d;
 import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.geometry.Translation2d;
-import org.wpilib.math.kinematics.ChassisSpeeds;
+import org.wpilib.math.kinematics.ChassisVelocities;
 import frc.robot.subsystems.swerve.SwerveMath;
 
 public class ToleranceMath {
 
-	public static boolean isAtPose(Pose2d targetPose, Pose2d currentPose, ChassisSpeeds currentSpeeds, Pose2d tolerances, Pose2d deadbands) {
-		return isNear(targetPose, currentPose, tolerances) && SwerveMath.isStill(currentSpeeds, deadbands);
+	public static boolean isAtPose(Pose2d targetPose, Pose2d currentPose, ChassisVelocities currentVelocities, Pose2d tolerances, Pose2d deadbands) {
+		return isNear(targetPose, currentPose, tolerances) && SwerveMath.isStill(currentVelocities, deadbands);
 	}
 
 	public static boolean isNear(Pose2d wantedPose, Pose2d pose, Pose2d tolerance) {
@@ -48,11 +48,11 @@ public class ToleranceMath {
 	}
 
 	public static Rotation2d clamp(Rotation2d angle, Rotation2d maxAngle) {
-		return Rotation2d.fromRadians(MathUtil.clamp(angle.getRadians(), -maxAngle.getRadians(), maxAngle.getRadians()));
+		return Rotation2d.fromRadians(Math.clamp(angle.getRadians(), -maxAngle.getRadians(), maxAngle.getRadians()));
 	}
 
 	public static Rotation2d clamp(Rotation2d angle, Rotation2d minAngle, Rotation2d maxAngle) {
-		return Rotation2d.fromRadians(MathUtil.clamp(angle.getRadians(), minAngle.getRadians(), maxAngle.getRadians()));
+		return Rotation2d.fromRadians(Math.clamp(angle.getRadians(), minAngle.getRadians(), maxAngle.getRadians()));
 	}
 
 }

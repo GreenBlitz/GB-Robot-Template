@@ -13,18 +13,18 @@ import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.PathPlannerLogging;
-import org.wpilib.math.Pair;
+import org.wpilib.math.util.Pair;
 import org.wpilib.math.geometry.Pose2d;
 import org.wpilib.math.geometry.Translation2d;
-import org.wpilib.math.kinematics.ChassisSpeeds;
+import org.wpilib.math.kinematics.ChassisVelocities;
 import org.wpilib.command2.Command;
 import org.wpilib.command2.CommandScheduler;
+import org.wpilib.util.struct.parser.ParseException;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.PathFollowingCommandsBuilder;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.alerts.Alert;
 import frc.utils.math.ToleranceMath;
-import org.json.simple.parser.ParseException;
 import org.littletonrobotics.junction.Logger;
 
 import java.io.IOException;
@@ -42,8 +42,8 @@ public class PathPlannerUtil {
 	public static void configPathPlanner(
 		Supplier<Pose2d> poseSupplier,
 		Consumer<Pose2d> resetPose,
-		Supplier<ChassisSpeeds> robotRelativeSpeedsSupplier,
-		Consumer<ChassisSpeeds> robotRelativeSpeedsSetter,
+		Supplier<ChassisVelocities> robotRelativeVelocitiesSupplier,
+		Consumer<ChassisVelocities> robotRelativeVelocitiesSetter,
 		PPHolonomicDriveController holonomicDriveController,
 		RobotConfig robotConfig,
 		BooleanSupplier shouldFlipPath,
@@ -52,8 +52,8 @@ public class PathPlannerUtil {
 		AutoBuilder.configure(
 			poseSupplier,
 			resetPose,
-			robotRelativeSpeedsSupplier,
-			robotRelativeSpeedsSetter,
+			robotRelativeVelocitiesSupplier,
+			robotRelativeVelocitiesSetter,
 			holonomicDriveController,
 			robotConfig,
 			shouldFlipPath,

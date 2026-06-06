@@ -1,6 +1,6 @@
 package frc.utils.battery;
 
-import org.wpilib.wpilibj.RobotController;
+import org.wpilib.system.RobotController;
 import org.wpilib.command2.Command;
 import org.wpilib.command2.CommandScheduler;
 import org.littletonrobotics.junction.Logger;

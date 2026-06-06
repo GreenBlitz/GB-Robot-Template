@@ -4,6 +4,7 @@
 
 package frc;
 
+import org.wpilib.command3.Command;
 import org.wpilib.framework.RobotBase;
 import org.wpilib.framework.TimedRobot;
 
@@ -19,7 +20,7 @@ public final class Main {
 	 * <p>If you change your main robot class, change the parameter type.
 	 */
 	public static void main(String... args) {
-		RobotBase.startRobot(TimedRobot.class);
+		RobotBase.startRobot(RobotManager.class);
 	}
 
 }

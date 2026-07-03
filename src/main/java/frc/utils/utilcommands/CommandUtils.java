@@ -19,8 +19,8 @@ public class CommandUtils {
 		);
 	}
 
-	public static Command dynamicChooseBetweenTwoCommands(BooleanSupplier commandCondition, Command conditionedCommand, Command defaultCommand) {
-		return dynamicChooseBetweenTwoCommands(commandCondition, () -> !commandCondition.getAsBoolean(), conditionedCommand, defaultCommand);
+	public static Command dynamicChooseBetweenTwoCommands(BooleanSupplier commandCondition, Command onTrue, Command onFalse) {
+		return dynamicChooseBetweenTwoCommands(commandCondition, () -> !commandCondition.getAsBoolean(), onTrue, onFalse);
 	}
 
 }

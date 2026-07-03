@@ -44,10 +44,10 @@ public class SparkMaxRollerBuilder {
 		BrushlessSparkMAXMotor roller = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, rollerSimulation, new SysIdRoutine.Config());
 
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
-		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("current", sparkMaxWrapper::getOutputCurrent);
+		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("current", () -> sparkMaxWrapper.getOutputCurrent().get());
 		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal(
 			"position",
-			() -> sparkMaxWrapper.getEncoder().getPosition(),
+			() -> sparkMaxWrapper.getEncoder().getPosition().get(),
 			AngleUnit.ROTATIONS
 		);
 
@@ -90,13 +90,13 @@ public class SparkMaxRollerBuilder {
 		} else {
 			if (isForwardLimitSwitch) {
 				digitalInput = new SuppliedDigitalInput(
-					() -> sparkMaxWrapper.getForwardLimitSwitch().isPressed(),
+					() -> sparkMaxWrapper.getForwardLimitSwitch().isPressed().get(),
 					new Debouncer(debounceTime),
 					isLimitSwitchInverted
 				);
 			} else {
 				digitalInput = new SuppliedDigitalInput(
-					() -> sparkMaxWrapper.getReverseLimitSwitch().isPressed(),
+					() -> sparkMaxWrapper.getReverseLimitSwitch().isPressed().get(),
 					new Debouncer(debounceTime),
 					isLimitSwitchInverted
 				);

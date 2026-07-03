@@ -157,9 +157,9 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 	@Override
 	public void setBrake(boolean brake) {
 		NeutralModeValue neutralModeValue = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
-		motor.setNeutralMode(neutralModeValue);
+		motor.configNeutralMode(neutralModeValue);
 		for (TalonFXWrapper follower : followers) {
-			follower.setNeutralMode(neutralModeValue);
+			follower.configNeutralMode(neutralModeValue);
 		}
 	}
 
@@ -176,7 +176,7 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 
 	@Override
 	public void setPower(double power) {
-		motor.set(power);
+		motor.setThrottle(power);
 	}
 
 	@Override

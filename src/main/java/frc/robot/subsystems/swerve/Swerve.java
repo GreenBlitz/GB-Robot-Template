@@ -304,11 +304,7 @@ public class Swerve extends GBSubsystem {
 
 		headingStabilizer.setTargetHeading(headingSupplier.get());
 		headingStabilizer.lockTarget();
-		return new ChassisVelocities(
-			velocities.vx,
-			velocities.vy,
-			headingStabilizer.calculatePIDOutput(headingSupplier.get()).getRadians()
-		);
+		return new ChassisVelocities(velocities.vx, velocities.vy, headingStabilizer.calculatePIDOutput(headingSupplier.get()).getRadians());
 	}
 
 	private void applyVelocities(ChassisVelocities velocities, SwerveState swerveState) {
@@ -318,7 +314,8 @@ public class Swerve extends GBSubsystem {
 	}
 
 	private void setTargetModuleVelocities(SwerveModuleVelocity[] moduleVelocities, boolean isClosedLoop) {
-        SwerveModuleVelocity[] desaturatedModuleVelocities = SwerveDriveKinematics.desaturateWheelVelocities(moduleVelocities, constants.velocityAt12VoltsMetersPerSecond());
+		SwerveModuleVelocity[] desaturatedModuleVelocities = SwerveDriveKinematics
+			.desaturateWheelVelocities(moduleVelocities, constants.velocityAt12VoltsMetersPerSecond());
 		modules.setTargetVelocities(desaturatedModuleVelocities, isClosedLoop);
 	}
 

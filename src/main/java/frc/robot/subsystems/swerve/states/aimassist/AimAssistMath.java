@@ -14,7 +14,7 @@ import frc.utils.math.ToleranceMath;
 public class AimAssistMath {
 
 	public static ChassisVelocities getRotationAssistedVelocities(
-        ChassisVelocities velocities,
+		ChassisVelocities velocities,
 		Rotation2d robotHeading,
 		Rotation2d targetHeading,
 		SwerveConstants swerveConstants
@@ -42,7 +42,7 @@ public class AimAssistMath {
 	 * @formatter:on
 	 */
 	public static ChassisVelocities getObjectAssistedVelocities(
-        ChassisVelocities velocities,
+		ChassisVelocities velocities,
 		Pose2d robotPose,
 		Rotation2d allianceRelativeTargetHeading,
 		Translation2d objectTranslation,
@@ -58,8 +58,9 @@ public class AimAssistMath {
 			case ROBOT_RELATIVE -> allianceRelativeTargetHeading.minus(robotPose.getRotation());
 		};
 
-        ChassisVelocities targetHeadingRelativeVelocities = SwerveMath.allianceToRobotRelativeVelocities(velocities, targetHeadingHingeSystemAngle);
-        ChassisVelocities assistedVelocities = new ChassisVelocities(
+		ChassisVelocities targetHeadingRelativeVelocities = SwerveMath
+			.allianceToRobotRelativeVelocities(velocities, targetHeadingHingeSystemAngle);
+		ChassisVelocities assistedVelocities = new ChassisVelocities(
 			targetHeadingRelativeVelocities.vx,
 			neededObjectHorizontalVelocityMetersPerSecond,
 			targetHeadingRelativeVelocities.omega

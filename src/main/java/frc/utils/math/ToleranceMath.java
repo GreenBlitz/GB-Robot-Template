@@ -9,7 +9,13 @@ import frc.robot.subsystems.swerve.SwerveMath;
 
 public class ToleranceMath {
 
-	public static boolean isAtPose(Pose2d targetPose, Pose2d currentPose, ChassisVelocities currentVelocities, Pose2d tolerances, Pose2d deadbands) {
+	public static boolean isAtPose(
+		Pose2d targetPose,
+		Pose2d currentPose,
+		ChassisVelocities currentVelocities,
+		Pose2d tolerances,
+		Pose2d deadbands
+	) {
 		return isNear(targetPose, currentPose, tolerances) && SwerveMath.isStill(currentVelocities, deadbands);
 	}
 

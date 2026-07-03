@@ -13,13 +13,13 @@ import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.PathPlannerLogging;
+import org.json.simple.parser.ParseException;
 import org.wpilib.math.util.Pair;
 import org.wpilib.math.geometry.Pose2d;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.math.kinematics.ChassisVelocities;
 import org.wpilib.command2.Command;
 import org.wpilib.command2.CommandScheduler;
-import org.wpilib.util.struct.parser.ParseException;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.PathFollowingCommandsBuilder;
 import frc.robot.subsystems.GBSubsystem;
@@ -99,11 +99,11 @@ public class PathPlannerUtil {
 	}
 
 	public static Pose2d getPathStartingPose(PathPlannerPath path) {
-		return new Pose2d(path.getPathPoses().get(0).getTranslation(), path.getIdealStartingState().rotation());
+		return new Pose2d(path.getPathPoses().getFirst().getTranslation(), path.getIdealStartingState().rotation());
 	}
 
 	public static Pose2d getLastPathPose(PathPlannerPath path) {
-		return new Pose2d(path.getPathPoses().get(path.getPathPoses().size() - 1).getTranslation(), path.getGoalEndState().rotation());
+		return new Pose2d(path.getPathPoses().getLast().getTranslation(), path.getGoalEndState().rotation());
 	}
 
 	public static Command createPathDuringRuntime(Pose2d currentPose, Pose2d targetPose, PathConstraints constraints) {

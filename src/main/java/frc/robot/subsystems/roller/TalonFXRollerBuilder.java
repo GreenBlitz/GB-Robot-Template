@@ -23,7 +23,10 @@ public class TalonFXRollerBuilder {
 
 	public static Roller build(String logPath, Phoenix6DeviceID id, double gearRatio, int currentLimit, double momentOfInertia) {
 		SimpleMotorSimulation rollerSimulation = new SimpleMotorSimulation(
-			new DCMotorSim(Models.singleJointedArmFromPhysicalConstants(DCMotor.getKrakenX60(1), momentOfInertia, gearRatio), DCMotor.getKrakenX60(1))
+			new DCMotorSim(
+				Models.singleJointedArmFromPhysicalConstants(DCMotor.getKrakenX60(1), momentOfInertia, gearRatio),
+				DCMotor.getKrakenX60(1)
+			)
 		);
 		TalonFXMotor roller = new TalonFXMotor(logPath, id, new TalonFXFollowerConfig(), new SysIdRoutine.Config(), rollerSimulation);
 

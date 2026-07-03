@@ -18,11 +18,17 @@ public class SwerveMath {
 		return sum / modulePositionsFromCenterMeters.length;
 	}
 
-	public static ChassisVelocities allianceToRobotRelativeVelocities(ChassisVelocities allianceRelativeVelocities, Rotation2d allianceRelativeHeading) {
+	public static ChassisVelocities allianceToRobotRelativeVelocities(
+		ChassisVelocities allianceRelativeVelocities,
+		Rotation2d allianceRelativeHeading
+	) {
 		return allianceRelativeVelocities.toRobotRelative(allianceRelativeHeading);
 	}
 
-	public static ChassisVelocities robotToAllianceRelativeVelocities(ChassisVelocities robotRelativeVelocities, Rotation2d allianceRelativeHeading) {
+	public static ChassisVelocities robotToAllianceRelativeVelocities(
+		ChassisVelocities robotRelativeVelocities,
+		Rotation2d allianceRelativeHeading
+	) {
 		return robotRelativeVelocities.toFieldRelative(allianceRelativeHeading);
 	}
 
@@ -49,8 +55,7 @@ public class SwerveMath {
 	public static ChassisVelocities applyDeadband(ChassisVelocities chassisVelocities, Pose2d deadbands) {
 		double xVelocityMetersPerSecond = ToleranceMath.applyDeadband(chassisVelocities.vx, deadbands.getX());
 		double yVelocityMetersPerSecond = ToleranceMath.applyDeadband(chassisVelocities.vy, deadbands.getY());
-		double rotationalVelocityRadiansPerSecond = ToleranceMath
-			.applyDeadband(chassisVelocities.omega, deadbands.getRotation().getRadians());
+		double rotationalVelocityRadiansPerSecond = ToleranceMath.applyDeadband(chassisVelocities.omega, deadbands.getRotation().getRadians());
 
 		return new ChassisVelocities(xVelocityMetersPerSecond, yVelocityMetersPerSecond, rotationalVelocityRadiansPerSecond);
 	}

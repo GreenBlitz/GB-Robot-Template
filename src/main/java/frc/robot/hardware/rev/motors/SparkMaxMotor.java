@@ -3,6 +3,7 @@ package frc.robot.hardware.rev.motors;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.REVLibError;
 import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.util.Signal;
 import frc.robot.Robot;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import frc.robot.hardware.interfaces.IMotor;
@@ -25,8 +26,8 @@ public abstract class SparkMaxMotor implements IMotor {
 	protected final SparkMaxWrapper motor;
 	private final Optional<SparkMaxSimulation> sparkMaxSimulationOptional;
 	private final String logPath;
-	private SparkBase.Warnings warnings;
-	private SparkBase.Faults faults;
+	private Signal<SparkBase.Warnings> warnings;
+	private Signal<SparkBase.Faults> faults;
 
 	public SparkMaxMotor(String logPath, SparkMaxWrapper motor, MechanismSimulation mechanismSimulation) {
 		this.logPath = logPath;
@@ -59,7 +60,7 @@ public abstract class SparkMaxMotor implements IMotor {
 			new PeriodicAlert(
 					Alert.AlertType.ERROR,
 					logPath + "OtherErrorAt",
-					() -> faults.other
+					() -> faults.get().other
 			)
 		);
 
@@ -67,7 +68,7 @@ public abstract class SparkMaxMotor implements IMotor {
 			new PeriodicAlert(
 				Alert.AlertType.ERROR,
 				logPath + "MotorTypeMismatchAt",
-				() -> faults.motorType
+				() -> faults.get().motorType
 			)
 		);
 
@@ -75,7 +76,7 @@ public abstract class SparkMaxMotor implements IMotor {
 			new PeriodicAlert(
 				Alert.AlertType.ERROR,
 				logPath + "ConnectedSensorFaultAt",
-				() -> faults.sensor
+				() -> faults.get().sensor
 			)
 		);
 
@@ -83,7 +84,7 @@ public abstract class SparkMaxMotor implements IMotor {
 			new PeriodicAlert(
 				Alert.AlertType.ERROR,
 				logPath + "CANFatalFaultAt",
-				() -> faults.can
+				() -> faults.get().can
 			)
 		);
 
@@ -91,7 +92,7 @@ public abstract class SparkMaxMotor implements IMotor {
 			new PeriodicAlert(
 				Alert.AlertType.ERROR,
 				logPath + "OverHeatingAt",
-				() -> faults.temperature
+				() -> faults.get().temperature
 			)
 		);
 
@@ -99,7 +100,7 @@ public abstract class SparkMaxMotor implements IMotor {
 			new PeriodicAlert(
 				Alert.AlertType.ERROR,
 				logPath + "GateDriveCircuitryFaultAt",
-				() -> faults.gateDriver
+				() -> faults.get().gateDriver
 			)
 		);
 
@@ -107,7 +108,7 @@ public abstract class SparkMaxMotor implements IMotor {
 			new PeriodicAlert(
 				Alert.AlertType.ERROR,
 				logPath + "ClosedLoopControllerMemoryFaultAt",
-				() -> faults.escEeprom
+				() -> faults.get().escEeprom
 			)
 		);
 
@@ -115,7 +116,7 @@ public abstract class SparkMaxMotor implements IMotor {
 			new PeriodicAlert(
 				Alert.AlertType.ERROR,
 				logPath + "FirmwareFaultAt",
-				() -> faults.firmware
+				() -> faults.get().firmware
 			)
 		);
 		//@formatter:on
@@ -127,7 +128,7 @@ public abstract class SparkMaxMotor implements IMotor {
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
 				logPath + "SignificantVoltageDropAt",
-				() -> warnings.brownout
+				() -> warnings.get().brownout
 			)
 		);
 
@@ -135,7 +136,7 @@ public abstract class SparkMaxMotor implements IMotor {
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
 				logPath + "OverCurrentDrawAt",
-				() -> warnings.overcurrent
+				() -> warnings.get().overcurrent
 			)
 		);
 
@@ -143,7 +144,7 @@ public abstract class SparkMaxMotor implements IMotor {
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
 				logPath + "ClosedLoopControllerMemoryWarningAt",
-				() -> warnings.escEeprom
+				() -> warnings.get().escEeprom
 			)
 		);
 
@@ -151,7 +152,7 @@ public abstract class SparkMaxMotor implements IMotor {
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
 				logPath + "ExternalMemoryWarningAt",
-				() -> warnings.extEeprom
+				() -> warnings.get().extEeprom
 			)
 		);
 
@@ -159,7 +160,7 @@ public abstract class SparkMaxMotor implements IMotor {
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
 				logPath + "ConnectedSensorWarningAt",
-				() -> warnings.sensor
+				() -> warnings.get().sensor
 			)
 		);
 
@@ -167,7 +168,7 @@ public abstract class SparkMaxMotor implements IMotor {
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
 				logPath + "MotorStalledAt",
-				() -> warnings.stall
+				() -> warnings.get().stall
 			)
 		);
 
@@ -175,7 +176,7 @@ public abstract class SparkMaxMotor implements IMotor {
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
 				logPath + "MotorHasResetAt",
-				() -> warnings.hasReset
+				() -> warnings.get().hasReset
 			)
 		);
 
@@ -183,7 +184,7 @@ public abstract class SparkMaxMotor implements IMotor {
 			new PeriodicAlert(
 				Alert.AlertType.WARNING,
 				logPath + "OtherWarningAt",
-				() -> warnings.other
+				() -> warnings.get().other
 			)
 		);
 		//@formatter:on
@@ -247,7 +248,7 @@ public abstract class SparkMaxMotor implements IMotor {
 
 	@Override
 	public void setPower(double power) {
-		motor.set(power);
+		motor.setThrottle(power);
 	}
 
 }

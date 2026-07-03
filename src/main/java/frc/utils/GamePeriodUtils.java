@@ -1,8 +1,11 @@
 package frc.utils;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.RobotManager;
+import frc.robot.Robot;
 import frc.utils.driverstation.DriverStationUtil;
 import frc.utils.time.TimeUtil;
+import org.littletonrobotics.junction.Logger;
 
 public class GamePeriodUtils {
 
@@ -89,10 +92,15 @@ public class GamePeriodUtils {
 	}
 
 	public static double getTimeUntilGameEnds() {
-		if (!DriverStationUtil.isTeleop()) {
-			return -1;
+		if (Robot.ROBOT_TYPE.isReal()) {
+			return DriverStation.getMatchTime();
 		}
-		return TELEOP_DURATION_SECONDS - TimeUtil.getTimeSinceTeleopInitSeconds();
+		if (DriverStationUtil.isAutonomous()) {
+			return getTimeUntilAutonomousEnds();
+		}
+		if (DriverStationUtil.isTeleop())
+			return TELEOP_DURATION_SECONDS - TimeUtil.getTimeSinceTeleopInitSeconds();
+		return -1;
 	}
 
 	public static double getTimeUntilShiftEnds() {
@@ -101,6 +109,15 @@ public class GamePeriodUtils {
 		}
 		return ALLIANCE_SHIFT_DURATION_SECONDS
 			- ((TimeUtil.getTimeSinceTeleopInitSeconds() - TRANSITION_SHIFT_DURATION_SECONDS) % GamePeriodUtils.ALLIANCE_SHIFT_DURATION_SECONDS);
+	}
+
+	public static double getTimeUntilAutonomousEnds() {
+		if (!DriverStationUtil.isAutonomous()) {
+			return -1;
+		}
+		return Robot.ROBOT_TYPE.isReal()
+			? DriverStation.getMatchTime()
+			: AUTONOMOUS_DURATION_SECONDS - (TimeUtil.getCurrentTimeSeconds() - TimeUtil.getAutonomousStartTimeSeconds());
 	}
 
 	public static String getCurrentGamePeriod() {
@@ -113,6 +130,12 @@ public class GamePeriodUtils {
 		} else {
 			return getCurrentShift();
 		}
+	}
+
+	public static void log() {
+		Logger.recordOutput("TimeSinceTeleopInit", TimeUtil.getTimeSinceTeleopInitSeconds());
+		Logger.recordOutput("TeleopStartTimeSeconds", RobotManager.getTeleopStartTimeSeconds());
+		Logger.recordOutput("AutonomousStartTimeSeconds", TimeUtil.getAutonomousStartTimeSeconds());
 	}
 
 }

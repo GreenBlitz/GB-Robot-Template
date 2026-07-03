@@ -1,7 +1,10 @@
 package frc.utils.time;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.RobotManager;
+import frc.robot.Robot;
+import frc.utils.GamePeriodUtils;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
@@ -47,6 +50,9 @@ public class TimeUtil {
 	}
 
 	public static double getTimeSinceTeleopInitSeconds() {
+		if (Robot.ROBOT_TYPE.isReal()) {
+			return GamePeriodUtils.TELEOP_DURATION_SECONDS - DriverStation.getMatchTime();
+		}
 		if (RobotManager.getTeleopStartTimeSeconds() == -1) {
 			return -1;
 		}

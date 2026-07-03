@@ -100,6 +100,9 @@ public class HubUtil {
 	}
 
 	public static double timeUntilCurrentShiftEndsSeconds(double timeSinceTeleopInitSeconds) {
+		if (DriverStationUtil.isAutonomous()) {
+			return GamePeriodUtils.getTimeUntilAutonomousEnds();
+		}
 		if (timeSinceTeleopInitSeconds >= GamePeriodUtils.ACTIVE_HUB_TIME_AFTER_GAME_ENDS_SECONDS || timeSinceTeleopInitSeconds == -1) {
 			return 0;
 		}

@@ -12,6 +12,7 @@ import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
+import frc.utils.utilcommands.CommandUtils;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
@@ -27,11 +28,13 @@ public class RobotCommander extends GBSubsystem {
 
 	private RobotState currentState;
 	private final String logPath;
+	private Boolean isInDefenceMode;
 
 	public RobotCommander(String logPath, Robot robot) {
 		super(logPath);
 		this.robot = robot;
 		this.swerve = robot.getSwerve();
+		this.isInDefenceMode = false;
 
 		this.logPath = logPath;
 
@@ -127,13 +130,21 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public Command driveWith(RobotState state, Command command) {
-		Command swerveDriveCommand = swerve.getCommandsBuilder().driveByDriversInputs(state.getSwerveState());
+		Command swerveDriveCommand = CommandUtils.dynamicChooseBetweenTwoCommands(
+			() -> isInDefenceMode,
+			swerve.getCommandsBuilder().pointWheelsInX(),
+			swerve.getCommandsBuilder().driveByDriversInputs(state.getSwerveState())
+		);
 		Command wantedCommand = command.deadlineFor(swerveDriveCommand);
 		return asSubsystemCommand(wantedCommand, state);
 	}
 
 	public Command driveWithChangingState(RobotState state, Command command, Supplier<SwerveState> swerveState) {
-		Command swerveDriveCommand = swerve.getCommandsBuilder().driveByDriversInputsWithChangingState(() -> swerveState.get());
+		Command swerveDriveCommand = CommandUtils.dynamicChooseBetweenTwoCommands(
+			() -> isInDefenceMode,
+			swerve.getCommandsBuilder().pointWheelsInX(),
+			swerve.getCommandsBuilder().driveByDriversInputsWithChangingState(() -> swerveState.get())
+		);
 		Command wantedCommand = command.deadlineFor(swerveDriveCommand);
 		return asSubsystemCommand(wantedCommand, state);
 	}
@@ -335,6 +346,10 @@ public class RobotCommander extends GBSubsystem {
 			case PRE_SCORE -> driveWith(RobotState.PRE_SCORE);
 			case PRE_PASS -> driveWith(RobotState.PRE_PASS);
 		};
+	}
+
+	public void setIsInDefenceMode(Boolean isInDefenceMode) {
+		this.isInDefenceMode = isInDefenceMode;
 	}
 
 	public IntakeStateHandler getIntakeStateHandler() {

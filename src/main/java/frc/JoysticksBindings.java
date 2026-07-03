@@ -124,6 +124,8 @@ public class JoysticksBindings {
 		usedJoystick.B.onTrue(robot.getRobotCommander().driveWith(RobotState.OUTTAKE));
 		usedJoystick.Y.onTrue(robot.getRobotCommander().getIntakeStateHandler().setState(IntakeState.OUTTAKE));
 		usedJoystick.POV_DOWN.onTrue(robot.getRobotCommander().driveWith(RobotState.CONVEYOR_OUTTAKE));
+		usedJoystick.X.onTrue(new InstantCommand(() -> robot.getRobotCommander().setIsInDefenceMode(true)));
+		usedJoystick.X.onFalse(new InstantCommand(() -> robot.getRobotCommander().setIsInDefenceMode(false)));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

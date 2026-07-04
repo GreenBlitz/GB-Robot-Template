@@ -104,9 +104,9 @@ public class ShooterStateHandler {
 	}
 
 	private Command resetSubsystems() {
-		return new ParallelCommandGroup(
-				new InstantCommand(() -> {resetStartTime = TimeUtil.getCurrentTimeSeconds();
-				}),
+		return new ParallelCommandGroup(new InstantCommand(() -> {
+			resetStartTime = TimeUtil.getCurrentTimeSeconds();
+		}),
 			hood.getCommandsBuilder().setVoltageWithoutLimit(HoodConstants.RESET_HOOD_VOLTAGE, () -> hasHoodBeenReset()),
 			turret.getCommandsBuilder().setVoltageWithoutLimit(TurretConstants.RESET_TURRET_VOLTAGE, () -> hasTurretBeenReset())
 		);
@@ -131,7 +131,11 @@ public class ShooterStateHandler {
 		if (!hasHoodBeenReset && hood.getCurrent() > HoodConstants.CURRENT_THRESHOLD_TO_RESET_POSITION) {
 			hasHoodBeenReset = true;
 		}
-		if (TimeUtil.getCurrentTimeSeconds() - resetStartTime > TurretConstants.RESET_START_IGNORANCE_TIME_SECONDS && !hasTurretBeenReset && turret.getCurrent() > TurretConstants.CURRENT_THRESHOLD_TO_RESET_POSITION) {
+		if (
+			TimeUtil.getCurrentTimeSeconds() - resetStartTime > TurretConstants.RESET_START_IGNORANCE_TIME_SECONDS
+				&& !hasTurretBeenReset
+				&& turret.getCurrent() > TurretConstants.CURRENT_THRESHOLD_TO_RESET_POSITION
+		) {
 			hasTurretBeenReset = true;
 		}
 

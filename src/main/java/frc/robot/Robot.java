@@ -59,16 +59,12 @@ public class Robot {
 				});
 			}
 			case 2 -> {
-				VictorSP frontLeft = new VictorSP(0);
-				VictorSP rearLeft = new VictorSP(2);
-				VictorSP frontRight = new VictorSP(1);
-				VictorSP rearRight = new VictorSP(3);
+				VictorSP left = new VictorSP(4);
+				VictorSP right = new VictorSP(0);
 				tankDrive = new DifferentialDrive(power -> {
-					frontLeft.set(power * powerMultiplier);
-					rearLeft.set(power * powerMultiplier);
+					left.set(power * powerMultiplier);
 				}, power -> {
-					frontRight.set(-power * powerMultiplier);
-					rearRight.set(-power * powerMultiplier);
+					right.set(-power * powerMultiplier);
 				});
 			}
 		}

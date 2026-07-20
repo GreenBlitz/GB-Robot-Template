@@ -4,6 +4,7 @@
 
 package frc;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -30,6 +31,10 @@ public class RobotManager extends LoggedRobot {
 	private int roborioCycles;
 
 	public RobotManager() {
+		if (Robot.ROBOT_TYPE.isReplay()) {
+			setUseTiming(false);
+		}
+		DriverStation.silenceJoystickConnectionWarning(true);
 		LoggerFactory.initializeLogger();
 //		PathPlannerUtil.startPathfinder();
 //		PathPlannerUtil.setupPathPlannerLogging();
@@ -59,6 +64,9 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void autonomousInit() {
+		// robot.getRobotCommander().getSuperstructure().setIsSubsystemRunningIndependently(true);
+		// robot.getSwerve().getCommandsBuilder().setIsSubsystemRunningIndependently(true);
+
 		if (autonomousCommand == null) {
 			this.autonomousCommand = robot.getAutonomousCommand();
 		}
@@ -70,6 +78,8 @@ public class RobotManager extends LoggedRobot {
 		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
 		}
+		// robot.getRobotCommander().getSuperstructure().setIsSubsystemRunningIndependently(false);
+		// robot.getSwerve().getCommandsBuilder().setIsSubsystemRunningIndependently(false);
 	}
 
 	@Override

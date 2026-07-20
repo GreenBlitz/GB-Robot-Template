@@ -222,9 +222,9 @@ public abstract class SparkMaxMotor implements IMotor {
 
 	@Override
 	public void updateInputs(InputSignal<?>... inputSignals) {
-		if (inputSignals.length == 0) {
-			return;
-		}
+		warnings = motor.getWarnings();
+		faults = motor.getFaults();
+
 		for (InputSignal<?> signal : inputSignals) {
 			if (isValid(signal)) {
 				Logger.processInputs(logPath, signal);
@@ -232,9 +232,6 @@ public abstract class SparkMaxMotor implements IMotor {
 				reportInvalidSignal(signal);
 			}
 		}
-
-		warnings = motor.getWarnings();
-		faults = motor.getFaults();
 	}
 
 	@Override

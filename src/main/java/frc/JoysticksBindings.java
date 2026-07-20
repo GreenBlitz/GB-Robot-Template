@@ -51,7 +51,7 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-		switch (Robot.TEAM_NUMBER) {
+		switch (Robot.TANK_TYPE) {
 			case 0 -> {
 				usedJoystick.R1.whileTrue(
 					new RunCommand(

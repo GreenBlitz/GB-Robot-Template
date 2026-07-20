@@ -10,7 +10,7 @@ public interface IOdometryEstimator {
 
 	void updateOdometry(OdometryData odometryData);
 
-	void resetOdometry(SwerveModulePosition[] wheelPositions, Rotation2d gyroAngle, Pose2d robotPose);
+	void resetPose(double timestampSeconds, Rotation2d imuYaw, SwerveModulePosition[] wheelPositions, Pose2d poseMeters);
 
 	Pose2d getOdometryPose();
 

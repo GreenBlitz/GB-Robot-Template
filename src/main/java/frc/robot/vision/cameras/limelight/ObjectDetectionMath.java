@@ -3,13 +3,13 @@ package frc.robot.vision.cameras.limelight;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import frc.robot.vision.DetectedObjectObseration;
+import frc.robot.vision.DetectedObjectObservation;
 import frc.robot.vision.DetectedObjectType;
 import frc.utils.math.FieldMath;
 
 public class ObjectDetectionMath {
 
-	public static DetectedObjectObseration getDetectedObjectObservation(
+	public static DetectedObjectObservation getDetectedObjectObservation(
 		Pose3d cameraPose,
 		DetectedObjectType objectType,
 		Rotation2d objectToCrosshairYawOffset,
@@ -34,7 +34,7 @@ public class ObjectDetectionMath {
 		Translation2d robotRelativeObjectTranslation = FieldMath
 			.getTranslationRelativeToZero(cameraPose.toPose2d(), cameraRelativeObjectTranslation);
 
-		return new DetectedObjectObseration(objectType, robotRelativeObjectTranslation, timestampSeconds);
+		return new DetectedObjectObservation(objectType, robotRelativeObjectTranslation, timestampSeconds);
 	}
 
 	private static double getCameraRelativeObjectX(Pose3d cameraPose, double objectCenterHeightMeters, Rotation2d objectToCrosshairPitchOffset) {

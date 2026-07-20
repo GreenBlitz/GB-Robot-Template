@@ -2,10 +2,11 @@ package frc.robot.hardware.phoenix6.request;
 
 import com.ctre.phoenix6.controls.ControlRequest;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.hardware.interfaces.IFeedForwardRequest;
 
 import java.util.function.Consumer;
 
-public class Phoenix6FeedForwardRequest extends Phoenix6Request<Rotation2d> {
+public class Phoenix6FeedForwardRequest extends Phoenix6Request<Rotation2d> implements IFeedForwardRequest {
 
 	private final Consumer<Double> setArbitraryFeedForward;
 	private double arbitraryFeedForward;

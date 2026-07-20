@@ -6,7 +6,6 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
@@ -15,12 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
-import frc.robot.hardware.rev.motors.SparkMaxConfiguration;
-import frc.robot.hardware.rev.motors.SparkMaxDeviceID;
-import frc.robot.hardware.rev.motors.SparkMaxWrapper;
-import frc.robot.subsystems.GBSubsystem;
 import frc.utils.battery.BatteryUtil;
-import org.littletonrobotics.junction.Logger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -29,86 +23,59 @@ import org.littletonrobotics.junction.Logger;
  */
 public class Robot {
 
-	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType();
-	public static final int TEAM_NUMBER = 1;
+	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);
+	public static final int TANK_TYPE = 2;
 
-	private final GBSubsystem subsystem;
-	private final SparkMaxWrapper endEffector;
 	private DifferentialDrive tankDrive;
+	private double powerMultiplier = 1;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
-		subsystem = new GBSubsystem("EndEffector") {};
-		endEffector = new SparkMaxWrapper(new SparkMaxDeviceID(4));
-		SparkMaxConfig config = new SparkMaxConfig();
-		config.closedLoop.p(0.5);
-		endEffector.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig(config));
-		endEffector.getEncoder().setPosition(0);
-		switch (TEAM_NUMBER) {
+		switch (TANK_TYPE) {
 			case 0 -> {
 				TalonSRX frontLeft = new TalonSRX(3);
 				TalonSRX rearLeft = new TalonSRX(4);
 				TalonSRX frontRight = new TalonSRX(1);
 				TalonSRX rearRight = new TalonSRX(2);
 				tankDrive = new DifferentialDrive(power -> {
-					frontLeft.set(ControlMode.PercentOutput, power);
-					rearLeft.set(ControlMode.PercentOutput, power);
+					frontLeft.set(ControlMode.PercentOutput, power * powerMultiplier);
+					rearLeft.set(ControlMode.PercentOutput, power * powerMultiplier);
 				}, power -> {
-					frontRight.set(ControlMode.PercentOutput, -power);
-					rearRight.set(ControlMode.PercentOutput, -power);
+					frontRight.set(ControlMode.PercentOutput, -power * powerMultiplier);
+					rearRight.set(ControlMode.PercentOutput, -power * powerMultiplier);
 				});
 			}
 			case 1 -> {
-				TalonSRX frontLeft = new TalonSRX(3);
-				TalonSRX rearLeft = new TalonSRX(4);
-				TalonSRX frontRight = new TalonSRX(1);
-				TalonSRX rearRight = new TalonSRX(2);
-				tankDrive = new DifferentialDrive(power -> {
-					frontLeft.set(ControlMode.PercentOutput, power * 1.5);
-					rearLeft.set(ControlMode.PercentOutput, power * 1.5);
-				}, power -> {
-					frontRight.set(ControlMode.PercentOutput, -power * 1.5);
-					rearRight.set(ControlMode.PercentOutput, -power * 1.5);
-				});
-				config = new SparkMaxConfig();
-				config.closedLoop.p(0.1);
-				endEffector.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig(config));
-			}
-			case 2 -> {
 				PWMSparkMax frontLeft = new PWMSparkMax(0);
 				PWMSparkMax rearLeft = new PWMSparkMax(1);
 				PWMSparkMax frontRight = new PWMSparkMax(2);
 				PWMSparkMax rearRight = new PWMSparkMax(3);
 				tankDrive = new DifferentialDrive(power -> {
-					frontLeft.set(-power * 1.5);
-					rearLeft.set(-power * 1.5);
+					frontLeft.set(-power * powerMultiplier);
+					rearLeft.set(-power * powerMultiplier);
 				}, power -> {
-					frontRight.set(power * 1.5);
-					rearRight.set(power * 1.5);
+					frontRight.set(power * powerMultiplier);
+					rearRight.set(power * powerMultiplier);
 				});
 			}
-			case 3 -> {
+			case 2 -> {
 				VictorSP frontLeft = new VictorSP(0);
 				VictorSP rearLeft = new VictorSP(2);
 				VictorSP frontRight = new VictorSP(1);
 				VictorSP rearRight = new VictorSP(3);
 				tankDrive = new DifferentialDrive(power -> {
-					frontLeft.set(power);
-					rearLeft.set(power);
+					frontLeft.set(power * powerMultiplier);
+					rearLeft.set(power * powerMultiplier);
 				}, power -> {
-					frontRight.set(-power);
-					rearRight.set(-power);
+					frontRight.set(-power * powerMultiplier);
+					rearRight.set(-power * powerMultiplier);
 				});
-				config = new SparkMaxConfig();
-				config.closedLoop.p(0.2);
-				endEffector.applyConfiguration(new SparkMaxConfiguration().withSparkMaxConfig(config));
 			}
 		}
 	}
 
 	public void periodic() {
 		BusChain.refreshAll();
-		Logger.recordOutput("EndEfector/position", endEffector.getEncoder().getPosition());
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
@@ -117,14 +84,6 @@ public class Robot {
 
 	public Command getAutonomousCommand() {
 		return new InstantCommand();
-	}
-
-	public SparkMaxWrapper getEndEffector() {
-		return endEffector;
-	}
-
-	public GBSubsystem getSubsystem() {
-		return subsystem;
 	}
 
 	public DifferentialDrive getTankDrive() {

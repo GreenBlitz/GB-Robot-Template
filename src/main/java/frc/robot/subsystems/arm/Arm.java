@@ -19,7 +19,7 @@ public class Arm extends GBSubsystem {
 	private final IFeedForwardRequest positionRequest;
 	private final SysIdCalibrator sysIdCalibrator;
 	private final double kG;
-	private final ArmCommandBuilder commandBuilder;
+	private final ArmCommandsBuilder commandsBuilder;
 
 	public Arm(
 		String logPath,
@@ -36,12 +36,12 @@ public class Arm extends GBSubsystem {
 		this.positionRequest = positionRequest;
 		this.kG = kG;
 		this.sysIdCalibrator = new SysIdCalibrator(motor.getSysidConfigInfo(), this, (voltage) -> setVoltage(voltage + getKgVoltage()));
-		commandBuilder = new ArmCommandBuilder(this);
-		setDefaultCommand(commandBuilder.stayInPlace());
+		commandsBuilder = new ArmCommandsBuilder(this);
+		setDefaultCommand(commandsBuilder.stayInPlace());
 	}
 
-	public ArmCommandBuilder getCommandsBuilder() {
-		return commandBuilder;
+	public ArmCommandsBuilder getCommandsBuilder() {
+		return commandsBuilder;
 	}
 
 	public double getVoltage() {
@@ -125,14 +125,14 @@ public class Arm extends GBSubsystem {
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, double maxCalibrationPower) {
-		joystick.POV_DOWN.onTrue(new InstantCommand(() -> commandBuilder.setIsSubsystemRunningIndependently(true)));
-		joystick.POV_UP.onTrue(new InstantCommand(() -> commandBuilder.setIsSubsystemRunningIndependently(false)));
+		joystick.POV_DOWN.onTrue(new InstantCommand(() -> commandsBuilder.setIsSubsystemRunningIndependently(true)));
+		joystick.POV_UP.onTrue(new InstantCommand(() -> commandsBuilder.setIsSubsystemRunningIndependently(false)));
 
 		// Calibrate kG using phoenix tuner by setting the voltage
 
 		// Check limits
 		joystick.R1.whileTrue(
-			commandBuilder
+			commandsBuilder
 				.setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * maxCalibrationPower + (getKgVoltage() / BatteryUtil.getCurrentVoltage()))
 		);
 

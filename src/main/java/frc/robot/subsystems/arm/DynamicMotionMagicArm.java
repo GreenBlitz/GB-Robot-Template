@@ -10,7 +10,7 @@ public class DynamicMotionMagicArm extends Arm {
 	private final IDynamicMotionMagicRequest dynamicMotionMagicRequest;
 	private final Rotation2d defaultDynamicMotionAcceleration;
 	private final Rotation2d defaultDynamicMotionVelocity;
-	private final DynamicMotionMagicArmCommandBuilder dynamicMotionMagicCommandBuilder;
+	private final DynamicMotionMagicArmCommandsBuilder dynamicMotionMagicCommandsBuilder;
 
 	public DynamicMotionMagicArm(
 		String logPath,
@@ -26,12 +26,12 @@ public class DynamicMotionMagicArm extends Arm {
 		this.dynamicMotionMagicRequest = motionMagicRequest;
 		this.defaultDynamicMotionAcceleration = defaultMotionMagicAcceleration;
 		this.defaultDynamicMotionVelocity = defaultMotionMagicVelocity;
-		this.dynamicMotionMagicCommandBuilder = new DynamicMotionMagicArmCommandBuilder(this);
+		this.dynamicMotionMagicCommandsBuilder = new DynamicMotionMagicArmCommandsBuilder(this);
 		setDefaultCommand(getCommandsBuilder().stayInPlace());
 	}
 
-	public DynamicMotionMagicArmCommandBuilder getCommandsBuilder() {
-		return dynamicMotionMagicCommandBuilder;
+	public DynamicMotionMagicArmCommandsBuilder getCommandsBuilder() {
+		return dynamicMotionMagicCommandsBuilder;
 	}
 
 	public void setTargetPosition(Rotation2d target, Rotation2d acceleration, Rotation2d velocity) {

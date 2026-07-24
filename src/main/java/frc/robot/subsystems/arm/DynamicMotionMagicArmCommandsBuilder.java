@@ -7,11 +7,11 @@ import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.function.Supplier;
 
-public class DynamicMotionMagicArmCommandBuilder extends ArmCommandBuilder {
+public class DynamicMotionMagicArmCommandsBuilder extends ArmCommandsBuilder {
 
 	private final DynamicMotionMagicArm arm;
 
-	protected DynamicMotionMagicArmCommandBuilder(DynamicMotionMagicArm arm) {
+	protected DynamicMotionMagicArmCommandsBuilder(DynamicMotionMagicArm arm) {
 		super(arm);
 		this.arm = arm;
 	}

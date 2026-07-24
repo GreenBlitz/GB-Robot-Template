@@ -9,11 +9,11 @@ import frc.utils.utilcommands.InitExecuteCommand;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
-public class ArmCommandBuilder extends GBCommandsBuilder {
+public class ArmCommandsBuilder extends GBCommandsBuilder {
 
 	private final Arm arm;
 
-	protected ArmCommandBuilder(Arm arm) {
+	protected ArmCommandsBuilder(Arm arm) {
 		this.arm = arm;
 	}
 

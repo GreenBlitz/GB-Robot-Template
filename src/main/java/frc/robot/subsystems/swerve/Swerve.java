@@ -97,17 +97,16 @@ public class Swerve extends GBSubsystem {
 		return stateHandler;
 	}
 
-	public Rotation3d getAngularVelocityFromIMURotation2dPerSecond() {
-		return imuSignals.getAngularVelocity();
+	public Rotation2d[] getIMUAngularVelocityRPS() {
+		return imuSignals.getLatestAngularVelocity();
 	}
 
 	public Rotation3d getOrientationFromIMU() {
-		return imuSignals.getOrientation();
+		return imuSignals.getLatestOrientation();
 	}
 
 	public Translation3d getAccelerationFromIMUMetersPerSecondSquared() {
-		return imuSignals.getAccelerationEarthGravitationalAcceleration()
-			.times(RobotConstants.GRAVITATIONAL_ACCELERATION_METERS_PER_SECOND_SQUARED_ISRAEL);
+		return imuSignals.getLatestAccelerationG().times(RobotConstants.GRAVITATIONAL_ACCELERATION_METERS_PER_SECOND_SQUARED_ISRAEL);
 	}
 
 
@@ -153,9 +152,9 @@ public class Swerve extends GBSubsystem {
 			imuSignals.rollAngularVelocitySignal(),
 			imuSignals.pitchAngularVelocitySignal(),
 			imuSignals.yawAngularVelocitySignal(),
-			imuSignals.xAccelerationSignalEarthGravitationalAcceleration(),
-			imuSignals.yAccelerationSignalEarthGravitationalAcceleration(),
-			imuSignals.zAccelerationSignalEarthGravitationalAcceleration()
+			imuSignals.xAccelerationGSignal(),
+			imuSignals.yAccelerationGSignal(),
+			imuSignals.zAccelerationGSignal()
 		);
 	}
 
@@ -234,7 +233,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public double getIMUAcceleration() {
-		return imuSignals.getAccelerationEarthGravitationalAcceleration().getNorm();
+		return imuSignals.getLatestAccelerationG().getNorm();
 	}
 
 
@@ -334,7 +333,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public boolean isCollisionDetected() {
-		return imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d().getNorm() > SwerveConstants.MIN_COLLISION_G_FORCE;
+		return imuSignals.getLatestAccelerationG().toTranslation2d().getNorm() > SwerveConstants.MIN_COLLISION_G_FORCE;
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {

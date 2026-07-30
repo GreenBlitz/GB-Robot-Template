@@ -23,7 +23,9 @@ public class IDs {
 
 		public static final Phoenix6DeviceID SWERVE_BACK_RIGHT_DRIVE = new Phoenix6DeviceID(7, BusChain.ROBORIO);
 
-	}
+        public static final Phoenix6DeviceID HOOD = new Phoenix6DeviceID(20, BusChain.ROBORIO);
+
+    }
 
 	public static class CANCoderIDs {
 

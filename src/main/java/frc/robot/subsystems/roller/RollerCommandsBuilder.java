@@ -4,18 +4,16 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import frc.robot.subsystems.GBCommandsBuilder;
 import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.Set;
 import java.util.function.Supplier;
 
-public class RollerCommandsBuilder extends GBCommandsBuilder {
+public class RollerCommandsBuilder {
 
 	private final Roller roller;
 
 	protected RollerCommandsBuilder(Roller roller) {
-		super();
 		this.roller = roller;
 		roller.setDefaultCommand(stop());
 	}

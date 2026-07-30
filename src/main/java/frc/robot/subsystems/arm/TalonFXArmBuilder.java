@@ -230,7 +230,6 @@ public class TalonFXArmBuilder {
 
 		Phoenix6Request<Double> voltageRequest = buildVoltageRequest();
 
-
 		VelocityPositionRequest velocityPositionRequest = Phoenix6RequestBuilder
 			.build(new PositionVoltage(signals.position().getLatestValue().getRotations()), arbitraryFeedForward, true);
 

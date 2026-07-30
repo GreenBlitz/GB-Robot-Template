@@ -11,7 +11,7 @@ SwerveConstants:
 - [ ] Drive radius meters
 - [ ] PathPlanner RealTimeConstraints (in AutonomousConstants)
 
-Gyro:
+IMU:
 -----------------------
 - [ ] ID
 - [ ] Mount pose

@@ -283,43 +283,43 @@ public class TalonFXArmBuilder {
 		return config;
 	}
 
-    private static TalonFXConfiguration buildConfiguration(
-            FeedbackConfigs feedbackConfigs,
-            Slot0Configs simulationConfigSlots,
-            Slot0Configs realConfigSlots,
-            Rotation2d forwardSoftwareLimit,
-            Rotation2d reverseSoftwareLimit,
-            boolean isInverted,
-            boolean isContinuesWrap,
-            double currentLimit
-    ) {
-        TalonFXConfiguration config = new TalonFXConfiguration();
+	private static TalonFXConfiguration buildConfiguration(
+		FeedbackConfigs feedbackConfigs,
+		Slot0Configs simulationConfigSlots,
+		Slot0Configs realConfigSlots,
+		Rotation2d forwardSoftwareLimit,
+		Rotation2d reverseSoftwareLimit,
+		boolean isInverted,
+		boolean isContinuesWrap,
+		double currentLimit
+	) {
+		TalonFXConfiguration config = new TalonFXConfiguration();
 
-        switch (Robot.ROBOT_TYPE) {
-            case REAL, REPLAY -> {
-                config.Slot0 = realConfigSlots;
-            }
-            case SIMULATION -> {
-                config.Slot0 = simulationConfigSlots;
-            }
-        }
-        config.Feedback = feedbackConfigs;
+		switch (Robot.ROBOT_TYPE) {
+			case REAL, REPLAY -> {
+				config.Slot0 = realConfigSlots;
+			}
+			case SIMULATION -> {
+				config.Slot0 = simulationConfigSlots;
+			}
+		}
+		config.Feedback = feedbackConfigs;
 
-        config.ClosedLoopGeneral.ContinuousWrap = isContinuesWrap;
+		config.ClosedLoopGeneral.ContinuousWrap = isContinuesWrap;
 
-        config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = reverseSoftwareLimit.getRotations();
-        config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = forwardSoftwareLimit.getRotations();
-        config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-        config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = reverseSoftwareLimit.getRotations();
+		config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = forwardSoftwareLimit.getRotations();
+		config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+		config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
 
-        config.CurrentLimits.StatorCurrentLimitEnable = true;
-        config.CurrentLimits.StatorCurrentLimit = currentLimit;
+		config.CurrentLimits.StatorCurrentLimitEnable = true;
+		config.CurrentLimits.StatorCurrentLimit = currentLimit;
 
-        config.MotorOutput.Inverted = isInverted ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive;
-        config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+		config.MotorOutput.Inverted = isInverted ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive;
+		config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
-        return config;
-    }
+		return config;
+	}
 
 	private static void addMotionMagicConfig(TalonFXConfiguration config, Rotation2d maxVelocity, Rotation2d maxAcceleration) {
 		config.MotionMagic.MotionMagicAcceleration = maxAcceleration.getRotations();

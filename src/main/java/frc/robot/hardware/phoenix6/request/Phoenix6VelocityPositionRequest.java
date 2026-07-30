@@ -20,7 +20,6 @@ public class Phoenix6VelocityPositionRequest extends Phoenix6FeedForwardRequest 
 		Consumer<Double> setFeedForward,
 		double defaultArbitraryFeedForward,
 		Rotation2d velocity
-
 	) {
 		super(position, controlRequest, setPosition, setFeedForward, defaultArbitraryFeedForward);
 		this.setVelocity = setVelocity;
@@ -38,6 +37,5 @@ public class Phoenix6VelocityPositionRequest extends Phoenix6FeedForwardRequest 
 	public Rotation2d getVelocityRPS() {
 		return velocity;
 	}
-
 }
 

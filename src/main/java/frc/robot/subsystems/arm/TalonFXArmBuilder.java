@@ -201,7 +201,6 @@ public class TalonFXArmBuilder {
 		String logPath,
 		Phoenix6DeviceID deviceID,
 		boolean isInverted,
-		boolean isContinuesWrap,
 		TalonFXFollowerConfig talonFXFollowerConfig,
 		SysIdRoutine.Config sysIdRoutineConfig,
 		FeedbackConfigs feedbackConfigs,
@@ -240,7 +239,6 @@ public class TalonFXArmBuilder {
 			forwardSoftwareLimit,
 			reverseSoftwareLimit,
 			isInverted,
-			isContinuesWrap,
 			currentLimit
 		);
 		motor.applyConfiguration(configuration);
@@ -267,44 +265,6 @@ public class TalonFXArmBuilder {
 			}
 		}
 		config.Feedback = feedbackConfigs;
-
-		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = reverseSoftwareLimit.getRotations();
-		config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = forwardSoftwareLimit.getRotations();
-		config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-		config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-
-		config.CurrentLimits.StatorCurrentLimitEnable = true;
-		config.CurrentLimits.StatorCurrentLimit = currentLimit;
-
-		config.MotorOutput.Inverted = isInverted ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive;
-		config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-
-		return config;
-	}
-
-	private static TalonFXConfiguration buildConfiguration(
-		FeedbackConfigs feedbackConfigs,
-		Slot0Configs simulationConfigSlots,
-		Slot0Configs realConfigSlots,
-		Rotation2d forwardSoftwareLimit,
-		Rotation2d reverseSoftwareLimit,
-		boolean isInverted,
-		boolean isContinuesWrap,
-		double currentLimit
-	) {
-		TalonFXConfiguration config = new TalonFXConfiguration();
-
-		switch (Robot.ROBOT_TYPE) {
-			case REAL, REPLAY -> {
-				config.Slot0 = realConfigSlots;
-			}
-			case SIMULATION -> {
-				config.Slot0 = simulationConfigSlots;
-			}
-		}
-		config.Feedback = feedbackConfigs;
-
-		config.ClosedLoopGeneral.ContinuousWrap = isContinuesWrap;
 
 		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = reverseSoftwareLimit.getRotations();
 		config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = forwardSoftwareLimit.getRotations();

@@ -1,12 +1,10 @@
 package frc.robot.subsystems.arm;
 
-import com.ctre.phoenix6.controls.VoltageOut;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.hardware.interfaces.*;
-import frc.robot.hardware.phoenix6.request.Phoenix6Request;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.calibration.sysid.SysIdCalibrator;
@@ -135,17 +133,6 @@ public class Arm extends GBSubsystem {
 
 		// Calibrate feed forward using sys id:
 		sysIdCalibrator.setAllButtonsForCalibration(joystick);
-	}
-
-	public void setVoltageWithoutLimit(double voltage) {
-		if (voltageRequest instanceof Phoenix6Request<Double> phoenix6VoltageRequest) {
-			if (phoenix6VoltageRequest.getControlRequest() instanceof VoltageOut voltageOutRequest) {
-				voltageOutRequest.IgnoreSoftwareLimits = true;
-				voltageRequest.withSetPoint(voltage);
-				motor.applyRequest(voltageRequest);
-				voltageOutRequest.IgnoreSoftwareLimits = false;
-			}
-		}
 	}
 
 }

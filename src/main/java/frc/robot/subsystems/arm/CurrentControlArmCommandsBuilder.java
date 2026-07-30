@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 
 import java.util.function.Supplier;
 
-public class CurrentControlArmCommandsBuilder extends ArmCommandBuilder {
+public class CurrentControlArmCommandsBuilder extends ArmCommandsBuilder {
 
 	private final CurrentControlArm arm;
 

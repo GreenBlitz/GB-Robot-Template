@@ -20,7 +20,7 @@ public class Arm extends GBSubsystem {
 	private final IFeedForwardRequest positionRequest;
 	private final SysIdCalibrator sysIdCalibrator;
 	private final double kG;
-	private final ArmCommandBuilder commandBuilder;
+	private final ArmCommandsBuilder commandsBuilder;
 
 	public Arm(
 		String logPath,
@@ -37,12 +37,12 @@ public class Arm extends GBSubsystem {
 		this.positionRequest = positionRequest;
 		this.kG = kG;
 		this.sysIdCalibrator = new SysIdCalibrator(motor.getSysidConfigInfo(), this, (voltage) -> setVoltage(voltage + getKgVoltage()));
-		commandBuilder = new ArmCommandBuilder(this);
-		setDefaultCommand(commandBuilder.stayInPlace());
+		commandsBuilder = new ArmCommandsBuilder(this);
+		setDefaultCommand(commandsBuilder.stayInPlace());
 	}
 
-	public ArmCommandBuilder getCommandsBuilder() {
-		return commandBuilder;
+	public ArmCommandsBuilder getCommandsBuilder() {
+		return commandsBuilder;
 	}
 
 	public double getVoltage() {
@@ -129,7 +129,7 @@ public class Arm extends GBSubsystem {
 
 		// Check limits
 		joystick.R1.whileTrue(
-			commandBuilder
+			commandsBuilder
 				.setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * maxCalibrationPower + (getKgVoltage() / BatteryUtil.getCurrentVoltage()))
 		);
 

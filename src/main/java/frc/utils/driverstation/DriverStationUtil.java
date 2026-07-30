@@ -31,7 +31,7 @@ public class DriverStationUtil {
 	}
 
 	public static boolean isTeleop() {
-		return !(DriverStation.isAutonomous() || DriverStation.isTest() || DriverStation.isDisabled());
+		return DriverStation.isTeleop();
 	}
 
 	public static boolean isTeleopEnabled() {

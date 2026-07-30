@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Robot;
 import frc.robot.hardware.interfaces.IDynamicMotionMagicRequest;
+import frc.robot.hardware.interfaces.VelocityPositionRequest;
 import frc.robot.hardware.mechanisms.wpilib.SingleJointedArmSimulation;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
@@ -281,6 +282,44 @@ public class TalonFXArmBuilder {
 
 		return config;
 	}
+
+    private static TalonFXConfiguration buildConfiguration(
+            FeedbackConfigs feedbackConfigs,
+            Slot0Configs simulationConfigSlots,
+            Slot0Configs realConfigSlots,
+            Rotation2d forwardSoftwareLimit,
+            Rotation2d reverseSoftwareLimit,
+            boolean isInverted,
+            boolean isContinuesWrap,
+            double currentLimit
+    ) {
+        TalonFXConfiguration config = new TalonFXConfiguration();
+
+        switch (Robot.ROBOT_TYPE) {
+            case REAL, REPLAY -> {
+                config.Slot0 = realConfigSlots;
+            }
+            case SIMULATION -> {
+                config.Slot0 = simulationConfigSlots;
+            }
+        }
+        config.Feedback = feedbackConfigs;
+
+        config.ClosedLoopGeneral.ContinuousWrap = isContinuesWrap;
+
+        config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = reverseSoftwareLimit.getRotations();
+        config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = forwardSoftwareLimit.getRotations();
+        config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+        config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+
+        config.CurrentLimits.StatorCurrentLimitEnable = true;
+        config.CurrentLimits.StatorCurrentLimit = currentLimit;
+
+        config.MotorOutput.Inverted = isInverted ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive;
+        config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+
+        return config;
+    }
 
 	private static void addMotionMagicConfig(TalonFXConfiguration config, Rotation2d maxVelocity, Rotation2d maxAcceleration) {
 		config.MotionMagic.MotionMagicAcceleration = maxAcceleration.getRotations();

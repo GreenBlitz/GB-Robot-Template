@@ -5,5 +5,8 @@ mostly used in our code for determining how accurate
 data is
 
 
-- **MT** : mega tag - refers to the limelight's method of 
-calculating robot position based on capturing april tags
+- **MT** : mega tag - refers to the limelight's method of
+  calculating robot position based on capturing april tags
+
+
+- **G** : earth's gravitational acceleration

@@ -21,15 +21,15 @@ public class RollerCommandsBuilder extends GBCommandsBuilder {
 	}
 
 	public Command setVoltage(double voltage) {
-		return motor.asSubsystemCommand(new RunCommand(() -> motor.setVoltage(voltage)), "Set roller voltage to " + voltage);
+		return motor.asSubsystemCommand(new RunCommand(() -> motor.setVoltage(voltage)), "Set motor voltage to " + voltage);
 	}
 
 	public Command setVoltage(Supplier<Double> voltage) {
-		return motor.asSubsystemCommand(new RunCommand(() -> motor.setVoltage(voltage.get())), "Set roller voltage");
+		return motor.asSubsystemCommand(new RunCommand(() -> motor.setVoltage(voltage.get())), "Set motor voltage");
 	}
 
 	public Command stop() {
-		return motor.asSubsystemCommand(new RunCommand(motor::stop), "Stop roller");
+		return motor.asSubsystemCommand(new RunCommand(motor::stop), "Stop motor");
 	}
 
 	public Command setPower(Supplier<Double> supplier) {

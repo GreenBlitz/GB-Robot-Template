@@ -26,14 +26,9 @@ public class RobotCommander extends GBSubsystem {
 		this.currentState = null;
 
 		setDefaultCommand(
-			new ConditionalCommand(
-				asSubsystemCommand(Commands.none(), "Disabled"),
-				new InstantCommand(
-					() -> CommandScheduler.getInstance().schedule(new DeferredCommand(() -> endState(currentState), Set.of(this, swerve)))
-				),
-				this::isSubsystemRunningIndependently
+			new InstantCommand(
+				() -> CommandScheduler.getInstance().schedule(new DeferredCommand(() -> endState(currentState), Set.of(this, swerve)))
 			)
-
 		);
 	}
 
@@ -43,10 +38,6 @@ public class RobotCommander extends GBSubsystem {
 
 	public Superstructure getSuperstructure() {
 		return superstructure;
-	}
-
-	public boolean isSubsystemRunningIndependently() {
-		return superstructure.isSubsystemRunningIndependently() || swerve.getCommandsBuilder().isSubsystemRunningIndependently();
 	}
 
 	@Override

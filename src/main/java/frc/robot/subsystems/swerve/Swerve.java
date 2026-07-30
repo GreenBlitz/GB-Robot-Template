@@ -106,7 +106,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public Translation3d getAccelerationFromIMUMetersPerSecondSquared() {
-		return imuSignals.getLatestAccelerationG().times(RobotConstants.GRAVITATIONAL_ACCELERATION_METERS_PER_SECOND_SQUARED_ISRAEL);
+		return imuSignals.getLatestAccelerationG().times(RobotConstants.G_METERS_PER_SECOND_SQUARED_ISRAEL);
 	}
 
 

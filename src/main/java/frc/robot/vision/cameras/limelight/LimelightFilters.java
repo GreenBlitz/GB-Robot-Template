@@ -9,6 +9,7 @@ import frc.utils.math.ToleranceMath;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.function.DoubleSupplier;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -27,7 +28,7 @@ public class LimelightFilters {
 	) {
 		return MegaTagFilters.isRobotInField(() -> limelight.getMT1RawData().pose().getTranslation(), robotInFieldTolerance)
 			.and(
-				MegaTagFilters.doesYawExistAtTimestamp(limelight.getMT1RawData().timestampSeconds(), wantedYawAtTimestamp)
+				MegaTagFilters.doesYawExistAtTimestamp(() -> limelight.getMT1RawData().timestampSeconds(), wantedYawAtTimestamp)
 					.implies(
 						MegaTagFilters.isYawAtExpectedAngle(
 							() -> limelight.getMT1RawData().pose().getRotation(),
@@ -48,7 +49,7 @@ public class LimelightFilters {
 	) {
 		return MegaTagFilters.isRobotInField(() -> limelight.getMT2RawData().pose().getTranslation(), robotInFieldTolerance)
 			.and(
-				MegaTagFilters.doesYawExistAtTimestamp(limelight.getMT2RawData().timestampSeconds(), wantedYawAtTimestamp)
+				MegaTagFilters.doesYawExistAtTimestamp(() -> limelight.getMT2RawData().timestampSeconds(), wantedYawAtTimestamp)
 					.implies(
 						MegaTagFilters.isYawAtExpectedAngle(
 							() -> limelight.getMT2RawData().pose().getRotation(),
@@ -75,8 +76,8 @@ public class LimelightFilters {
 
 	private static class MegaTagFilters {
 
-		private static Filter doesYawExistAtTimestamp(double timestamp, Function<Double, Optional<Rotation2d>> getYawAtTimestamp) {
-			return () -> getYawAtTimestamp.apply(timestamp).isPresent();
+		private static Filter doesYawExistAtTimestamp(DoubleSupplier timestamp, Function<Double, Optional<Rotation2d>> getYawAtTimestamp) {
+			return () -> getYawAtTimestamp.apply(timestamp.getAsDouble()).isPresent();
 		}
 
 		private static Filter isYawAtExpectedAngle(

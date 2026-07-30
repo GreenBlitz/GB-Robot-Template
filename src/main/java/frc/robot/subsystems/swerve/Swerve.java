@@ -105,7 +105,7 @@ public class Swerve extends GBSubsystem {
 		return imuSignals.getOrientation();
 	}
 
-	public Translation3d getIMUAccelerationG(){
+	public Translation3d getIMUAccelerationG() {
 		return imuSignals.getAccelerationEarthGravitationalAcceleration();
 	}
 

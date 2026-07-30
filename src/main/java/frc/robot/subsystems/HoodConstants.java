@@ -90,7 +90,7 @@ public class HoodConstants {
         );
         return TalonFXArmBuilder.buildMotionMagicArm(
                 RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/MotionMagicArm",
-                IDs.TalonFXIDs.HOOD,
+                IDs.TalonFXIDs.NOT_HOOD1,
                 IS_INVERTED,
                 new TalonFXFollowerConfig(),
                 SYSID_ROUTINE_CONFIG,
@@ -116,7 +116,7 @@ public class HoodConstants {
         );
         return TalonFXArmBuilder.buildDynamicMotionMagicArm(
                 RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/DynamicMotionMagicArm",
-                IDs.TalonFXIDs.HOOD,
+                IDs.TalonFXIDs.NOT_HOOD2,
                 IS_INVERTED,
                 new TalonFXFollowerConfig(),
                 SYSID_ROUTINE_CONFIG,

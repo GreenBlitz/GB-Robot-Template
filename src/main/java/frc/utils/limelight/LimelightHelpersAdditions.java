@@ -2,6 +2,10 @@ package frc.utils.limelight;
 
 public class LimelightHelpersAdditions {
 
+	public static double getTemperatureCelsius(String limelightName) {
+		return LimelightHelpers.getLimelightNTTable(limelightName).getEntry("hw").getDoubleArray(new double[] {0})[0];
+	}
+
 	public record RawTarget(double txnc, double tync, double ta) {
 
 		public RawTarget() {

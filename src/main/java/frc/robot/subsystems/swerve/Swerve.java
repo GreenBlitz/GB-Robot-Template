@@ -338,6 +338,8 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {
+		joystick.START.onTrue(new InstantCommand(() -> setIsRunningIndependently(true)));
+		joystick.BACK.onTrue(new InstantCommand(() -> setIsRunningIndependently(false)));
 		// Calibrate steer ks with phoenix tuner x
 		// Calibrate steer pid with phoenix tuner x
 

@@ -55,26 +55,26 @@ public class Pigeon2IMUBuilder {
 	static IMUSignals buildSignals(Pigeon2IMU pigeon2imu) {
 		Phoenix6AngleSignal angularVelocityXWorld = buildAnglePigeonSignal(
 			pigeon2imu.getDevice().getAngularVelocityXWorld(),
-			pigeon2imu.getDevice().getBuschain()
+			pigeon2imu.getDevice().getBusChain()
 		);
 		Phoenix6AngleSignal angularVelocityYWorld = buildAnglePigeonSignal(
 			pigeon2imu.getDevice().getAngularVelocityYWorld(),
-			pigeon2imu.getDevice().getBuschain()
+			pigeon2imu.getDevice().getBusChain()
 		);
 		Phoenix6AngleSignal angularVelocityZWorld = buildAnglePigeonSignal(
 			pigeon2imu.getDevice().getAngularVelocityZWorld(),
-			pigeon2imu.getDevice().getBuschain()
+			pigeon2imu.getDevice().getBusChain()
 		);
 		return new IMUSignals(
-			buildAnglePigeonSignal(pigeon2imu.getDevice().getRoll(), angularVelocityXWorld, pigeon2imu.getDevice().getBuschain()),
-			buildAnglePigeonSignal(pigeon2imu.getDevice().getPitch(), angularVelocityYWorld, pigeon2imu.getDevice().getBuschain()),
-			buildAnglePigeonSignal(pigeon2imu.getDevice().getYaw(), angularVelocityZWorld, pigeon2imu.getDevice().getBuschain()),
+			buildAnglePigeonSignal(pigeon2imu.getDevice().getRoll(), angularVelocityXWorld, pigeon2imu.getDevice().getBusChain()),
+			buildAnglePigeonSignal(pigeon2imu.getDevice().getPitch(), angularVelocityYWorld, pigeon2imu.getDevice().getBusChain()),
+			buildAnglePigeonSignal(pigeon2imu.getDevice().getYaw(), angularVelocityZWorld, pigeon2imu.getDevice().getBusChain()),
 			angularVelocityXWorld,
 			angularVelocityYWorld,
 			angularVelocityZWorld,
-			buildDoublePigeonSignal(pigeon2imu.getDevice().getAccelerationX(), pigeon2imu.getDevice().getBuschain()),
-			buildDoublePigeonSignal(pigeon2imu.getDevice().getAccelerationY(), pigeon2imu.getDevice().getBuschain()),
-			buildDoublePigeonSignal(pigeon2imu.getDevice().getAccelerationZ(), pigeon2imu.getDevice().getBuschain())
+			buildDoublePigeonSignal(pigeon2imu.getDevice().getAccelerationX(), pigeon2imu.getDevice().getBusChain()),
+			buildDoublePigeonSignal(pigeon2imu.getDevice().getAccelerationY(), pigeon2imu.getDevice().getBusChain()),
+			buildDoublePigeonSignal(pigeon2imu.getDevice().getAccelerationZ(), pigeon2imu.getDevice().getBusChain())
 		);
 	}
 

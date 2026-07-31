@@ -9,7 +9,7 @@ public class Pigeon2IMU extends Phoenix6Device implements IIMU {
 	private final Pigeon2Wrapper imu;
 
 	public Pigeon2IMU(String logPath, Pigeon2Wrapper imu) {
-		super(logPath, imu.getBuschain());
+		super(logPath, imu.getBusChain());
 		this.imu = imu;
 		imu.optimizeBusUtilization();
 	}

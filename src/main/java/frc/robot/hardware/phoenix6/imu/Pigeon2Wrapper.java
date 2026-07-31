@@ -221,7 +221,7 @@ public class Pigeon2Wrapper extends Pigeon2 {
 		return Rotation2d.fromRadians(MathUtil.angleModulus(angle.getRadians()));
 	}
 
-	public BusChain getBuschain() {
+	public BusChain getBusChain() {
 		return BUS_CHAIN;
 	}
 

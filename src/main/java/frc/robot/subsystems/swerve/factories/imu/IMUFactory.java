@@ -16,9 +16,9 @@ public class IMUFactory {
 		};
 	}
 
-	public static IMUSignals createSignals(IIMU gyro) {
+	public static IMUSignals createSignals(IIMU imu) {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL, REPLAY -> Pigeon2IMUBuilder.buildSignals((Pigeon2IMU) gyro);
+			case REAL, REPLAY -> Pigeon2IMUBuilder.buildSignals((Pigeon2IMU) imu);
 			case SIMULATION -> SimulationIMUBuilder.buildSignals();
 		};
 	}

@@ -15,10 +15,12 @@ import java.util.LinkedList;
 public abstract class Phoenix6Device implements IDevice {
 
 	private final ConnectedInputAutoLogged connectedInput;
+	private final BusChain busChain;
 	private final String logPath;
 
-	public Phoenix6Device(String logPath) {
+	public Phoenix6Device(String logPath, BusChain busChain) {
 		this.logPath = logPath;
+		this.busChain = busChain;
 		this.connectedInput = new ConnectedInputAutoLogged();
 		connectedInput.connected = true;
 		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "disconnectedAt", () -> !isConnected()));
@@ -31,7 +33,6 @@ public abstract class Phoenix6Device implements IDevice {
 	public boolean isConnected() {
 		return connectedInput.connected;
 	}
-
 
 	private boolean isValid(InputSignal<?> signal) {
 		return signal instanceof SignalGetter;
@@ -75,5 +76,9 @@ public abstract class Phoenix6Device implements IDevice {
 	}
 
 	public abstract ParentDevice getDevice();
+
+	public BusChain getBusChain() {
+		return busChain;
+	}
 
 }

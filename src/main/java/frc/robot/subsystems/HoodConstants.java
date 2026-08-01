@@ -81,7 +81,9 @@ public class HoodConstants {
                 BACKWARD_SOFTWARE_LIMIT,
                 hoodSimulationConstants
         );
-    }public static Arm createMotionMagicArm() {
+    }
+
+    public static Arm createMotionMagicArm() {
         ArmSimulationConstants hoodSimulationConstants = new ArmSimulationConstants(
                 MAXIMUM_POSITION,
                 MINIMUM_POSITION,
@@ -91,7 +93,7 @@ public class HoodConstants {
         );
         return TalonFXArmBuilder.buildMotionMagicArm(
                 RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/MotionMagicArm",
-                IDs.TalonFXIDs.NOT_HOOD1,
+                IDs.TalonFXIDs.NOT_HOOD2,
                 IS_INVERTED,
                 false,
                 new TalonFXFollowerConfig(),
@@ -118,7 +120,7 @@ public class HoodConstants {
         );
         return TalonFXArmBuilder.buildDynamicMotionMagicArm(
                 RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/DynamicMotionMagicArm",
-                IDs.TalonFXIDs.NOT_HOOD2,
+                IDs.TalonFXIDs.NOT_HOOD1,
                 IS_INVERTED,
                 false,
                 new TalonFXFollowerConfig(),

@@ -9,7 +9,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class Roller extends GBSubsystem {
 
-	protected final ControllableMotor roller;
+	protected final ControllableMotor motor;
 
 	private final InputSignal<Double> voltageSignal;
 	private final InputSignal<Double> currentSignal;
@@ -20,20 +20,20 @@ public class Roller extends GBSubsystem {
 
 	public Roller(
 		String logPath,
-		ControllableMotor roller,
+		ControllableMotor motor,
 		InputSignal<Double> voltageSignal,
 		InputSignal<Double> currentSignal,
 		InputSignal<Rotation2d> positionSignal,
 		IRequest<Double> voltageRequest
 	) {
 		super(logPath);
-		this.roller = roller;
+		this.motor = motor;
 		this.voltageSignal = voltageSignal;
 		this.currentSignal = currentSignal;
 		this.positionSignal = positionSignal;
 		this.voltageRequest = voltageRequest;
 		this.commandsBuilder = new RollerCommandsBuilder(this);
-		this.roller.resetPosition(Rotation2d.fromRotations(0));
+		this.motor.resetPosition(Rotation2d.fromRotations(0));
 		this.targetPosition = Rotation2d.fromRotations(0);
 	}
 
@@ -46,19 +46,19 @@ public class Roller extends GBSubsystem {
 	}
 
 	public void setVoltage(double voltage) {
-		roller.applyRequest(voltageRequest.withSetPoint(voltage));
+		motor.applyRequest(voltageRequest.withSetPoint(voltage));
 	}
 
 	public void setPower(double power) {
-		roller.setPower(power);
+		motor.setPower(power);
 	}
 
 	public void stop() {
-		roller.stop();
+		motor.stop();
 	}
 
 	public void setBrake(boolean brake) {
-		roller.setBrake(brake);
+		motor.setBrake(brake);
 	}
 
 	public Double getVoltage() {
@@ -95,8 +95,8 @@ public class Roller extends GBSubsystem {
 
 	@Override
 	public void subsystemPeriodic() {
-		roller.updateSimulation();
-		roller.updateInputs(voltageSignal, currentSignal, positionSignal);
+		motor.updateSimulation();
+		motor.updateInputs(voltageSignal, currentSignal, positionSignal);
 		Logger.recordOutput(getLogPath() + "/PositionTarget", targetPosition);
 	}
 

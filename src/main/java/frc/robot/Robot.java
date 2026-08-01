@@ -24,6 +24,7 @@ import frc.robot.vision.cameras.limelight.LimelightPipeline;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.robot.hardware.interfaces.IIMU;
+import frc.utils.limelight.LimelightHelpersAdditions;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -83,6 +84,10 @@ public class Robot {
 
 		swerve.update();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
+
+        limelight.updateMT1();
+        limelight.getIndependentRobotPose().ifPresent(poseEstimator::updateVision);
+
 		poseEstimator.log();
 
 		BatteryUtil.logStatus();

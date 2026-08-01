@@ -30,7 +30,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	private final ArrayList<DetectedObjectObservation> neuralDetections;
 	private final ArrayList<DetectedObjectObservation> colorDetections;
 
-	private final LimelightInputsSet inputs;
+	public final LimelightInputsSet inputs;
 
 	private RobotPoseObservation mt1PoseObservation;
 	private RobotPoseObservation mt2PoseObservation;

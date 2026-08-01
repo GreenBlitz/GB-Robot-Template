@@ -26,6 +26,7 @@ public class TalonFXSimulation {
 			followerSimStates[i].setSupplyVoltage(BatteryUtil.DEFAULT_VOLTAGE);
 		}
 		motorSimState.setSupplyVoltage(BatteryUtil.DEFAULT_VOLTAGE);
+		updateMotor();
 	}
 
 	public void applyConfig(TalonFXWrapper talonFXWrapper, TalonFXConfiguration configuration) {

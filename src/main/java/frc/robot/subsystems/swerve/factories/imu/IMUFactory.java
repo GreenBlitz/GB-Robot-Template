@@ -13,7 +13,7 @@ public class IMUFactory {
 		};
 	}
 
-	public static IMUSignals createSignals(IIMU gyro) {
+	public static IMUSignals createSignals(IIMU imu) {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL, REPLAY, SIMULATION -> SimulationIMUBuilder.buildSignals();
 		};

@@ -4,13 +4,16 @@
 
 package frc.robot;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimator.IPoseEstimator;
+import frc.robot.poseestimator.OdometryData;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
 import frc.robot.subsystems.HoodConstants;
@@ -24,6 +27,10 @@ import frc.robot.vision.cameras.limelight.LimelightPipeline;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.robot.hardware.interfaces.IIMU;
+import frc.utils.pose.PoseUtil;
+import org.littletonrobotics.junction.Logger;
+
+import java.util.Optional;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -76,6 +83,7 @@ public class Robot {
 		);
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+
 	}
 
 	public void periodic() {
@@ -84,6 +92,22 @@ public class Robot {
 		swerve.update();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 		poseEstimator.log();
+
+        Logger.recordOutput("PoseUtil/isTilted", PoseUtil.getIsTilted(Rotation2d.fromRadians(swerve.getOrientationFromIMU().getX()),
+                Rotation2d.fromRadians(swerve.getOrientationFromIMU().getY()),
+                Rotation2d.fromDegrees(4),
+                Rotation2d.fromDegrees(4)));
+
+        Logger.recordOutput(
+                "PoseUtil/isSkidding",
+                PoseUtil.getIsSkidding(
+                        swerve.getKinematics(),
+                        swerve.getModules().getCurrentStates(),
+                        0.5
+                )
+        );
+
+        Logger.recordOutput("PoseUtil/isColliding",PoseUtil.getIsColliding(swerve.));
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();

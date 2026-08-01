@@ -40,6 +40,7 @@ public class Robot {
 			imu,
 			IMUFactory.createSignals(imu)
 		);
+
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
 			swerve.getKinematics(),

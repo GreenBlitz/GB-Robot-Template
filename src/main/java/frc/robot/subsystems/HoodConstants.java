@@ -9,10 +9,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.IDs;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
-import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.arm.ArmSimulationConstants;
-import frc.robot.subsystems.arm.DynamicMotionMagicArm;
-import frc.robot.subsystems.arm.TalonFXArmBuilder;
+import frc.robot.subsystems.arm.*;
 
 public class HoodConstants {
 
@@ -36,7 +33,7 @@ public class HoodConstants {
         REAL_SLOT.GravityType = GravityTypeValue.Arm_Cosine;
         REAL_SLOT.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
 
-        SIMULATION_SLOT.kP = 20;
+        SIMULATION_SLOT.kP = 300;
         SIMULATION_SLOT.kI = 0;
         SIMULATION_SLOT.kD = 0;
         SIMULATION_SLOT.kG = 0;
@@ -80,7 +77,32 @@ public class HoodConstants {
                 BACKWARD_SOFTWARE_LIMIT,
                 hoodSimulationConstants
         );
-    }public static Arm createMotionMagicArm() {
+    }public static VelocityPositionArm createVelocityPositionArm() {
+        ArmSimulationConstants hoodSimulationConstants = new ArmSimulationConstants(
+                MAXIMUM_POSITION,
+                MINIMUM_POSITION,
+                MINIMUM_POSITION,
+                MOMENT_OF_INERTIA,
+                HOOD_LENGTH_METERS
+        );
+        return TalonFXArmBuilder.buildVelocityPositionArm(
+                RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/MotionMagicArm",
+                IDs.TalonFXIDs.NOT_HOOD1,
+                IS_INVERTED,
+                new TalonFXFollowerConfig(),
+                SYSID_ROUTINE_CONFIG,
+                FEEDBACK_CONFIGS,
+                REAL_SLOT,
+                SIMULATION_SLOT,
+                CURRENT_LIMIT,
+                RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+                ARBITRARY_FEEDFORWARD,
+                FORWARD_SOFTWARE_LIMIT,
+                BACKWARD_SOFTWARE_LIMIT,
+                hoodSimulationConstants
+        );
+    }
+    public static Arm createMotionMagicArm() {
         ArmSimulationConstants hoodSimulationConstants = new ArmSimulationConstants(
                 MAXIMUM_POSITION,
                 MINIMUM_POSITION,

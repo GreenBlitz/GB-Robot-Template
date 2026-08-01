@@ -15,6 +15,7 @@ import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
 import frc.robot.subsystems.HoodConstants;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.VelocityPositionArm;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.imu.IMUFactory;
@@ -38,6 +39,7 @@ public class Robot {
     public final Limelight limelight;
     public final Arm arm;
     public final Arm motionMagicArm;
+    public final VelocityPositionArm velocityPositionArm;
     public final Arm dynamicMotionMagicArm;
 	private final IPoseEstimator poseEstimator;
 
@@ -65,6 +67,7 @@ public class Robot {
         this.arm = HoodConstants.createArm();
         this.dynamicMotionMagicArm = HoodConstants.createDynamicMotionMagicArm();
         this.motionMagicArm = HoodConstants.createMotionMagicArm();
+        this.velocityPositionArm = HoodConstants.createVelocityPositionArm();
 
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,

@@ -34,7 +34,7 @@ public class TalonFXArmBuilder {
 		String logPath,
 		Phoenix6DeviceID deviceID,
 		boolean isInverted,
-		boolean isContinuesWrap,
+		boolean isContinuousWrap,
 		TalonFXFollowerConfig talonFXFollowerConfig,
 		SysIdRoutine.Config sysIdRoutineConfig,
 		FeedbackConfigs feedbackConfigs,
@@ -81,7 +81,7 @@ public class TalonFXArmBuilder {
 			forwardSoftwareLimit,
 			reverseSoftwareLimit,
 			isInverted,
-			isContinuesWrap,
+				isContinuousWrap,
 			currentLimit
 		);
 		addMotionMagicConfig(configuration, defaultMaxVelocityRotation2dPerSecond, defaultMaxAccelerationRotation2dPerSecondSquare);
@@ -103,7 +103,7 @@ public class TalonFXArmBuilder {
 		String logPath,
 		Phoenix6DeviceID deviceID,
 		boolean isInverted,
-		boolean isContinuesWrap,
+		boolean isContinuousWrap,
 		TalonFXFollowerConfig talonFXFollowerConfig,
 		SysIdRoutine.Config sysIdRoutineConfig,
 		FeedbackConfigs feedbackConfigs,
@@ -143,7 +143,7 @@ public class TalonFXArmBuilder {
 			forwardSoftwareLimit,
 			reverseSoftwareLimit,
 			isInverted,
-			isContinuesWrap,
+				isContinuousWrap,
 			currentLimit
 		));
 		addMotionMagicConfig(configuration, defaultMaxVelocityRotation2dPerSecond, defaultMaxAccelerationRotation2dPerSecondSquare);
@@ -156,7 +156,7 @@ public class TalonFXArmBuilder {
 		String logPath,
 		Phoenix6DeviceID deviceID,
 		boolean isInverted,
-		boolean isContinuesWrap,
+		boolean isContinuousWrap,
 		TalonFXFollowerConfig talonFXFollowerConfig,
 		SysIdRoutine.Config sysIdRoutineConfig,
 		FeedbackConfigs feedbackConfigs,
@@ -195,7 +195,7 @@ public class TalonFXArmBuilder {
 			forwardSoftwareLimit,
 			reverseSoftwareLimit,
 			isInverted,
-			isContinuesWrap,
+				isContinuousWrap,
 			currentLimit
 		);
 		motor.applyConfiguration(configuration);
@@ -209,7 +209,7 @@ public class TalonFXArmBuilder {
 		Rotation2d forwardSoftwareLimit,
 		Rotation2d reverseSoftwareLimit,
 		boolean isInverted,
-		boolean isContinuesWrap,
+		boolean isContinuousWrap,
 		double currentLimit
 	) {
 		TalonFXConfiguration config = new TalonFXConfiguration();
@@ -224,7 +224,7 @@ public class TalonFXArmBuilder {
 		}
 		config.Feedback = feedbackConfigs;
 
-		config.ClosedLoopGeneral.ContinuousWrap = isContinuesWrap;
+		config.ClosedLoopGeneral.ContinuousWrap = isContinuousWrap;
 
 		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = reverseSoftwareLimit.getRotations();
 		config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = forwardSoftwareLimit.getRotations();

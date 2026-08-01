@@ -136,7 +136,7 @@ public class TalonFXArmBuilder {
 
 		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder
 			.build(new MotionMagicVoltage(signals.position().getLatestValue().getRotations()), arbitraryFeedForward, true);
-		TalonFXConfiguration configuration = (buildConfiguration(
+		TalonFXConfiguration configuration = buildConfiguration(
 			feedbackConfigs,
 			simulationSlotsConfig,
 			realSlotsConfig,
@@ -145,7 +145,7 @@ public class TalonFXArmBuilder {
 			isInverted,
 			isContinuesWrap,
 			currentLimit
-		));
+		);
 		addMotionMagicConfig(configuration, defaultMaxVelocityRotation2dPerSecond, defaultMaxAccelerationRotation2dPerSecondSquare);
 		motor.applyConfiguration(configuration);
 

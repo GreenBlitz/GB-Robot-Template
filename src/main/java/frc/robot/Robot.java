@@ -38,7 +38,7 @@ public class Robot {
     public final Limelight limelight;
     public final Arm arm;
     public final Arm motionMagicArm;
-    public final Arm dynamicMotionMagicArm;
+    public  Arm dynamicMotionMagicArm;
 	private final IPoseEstimator poseEstimator;
 
 	public Robot() {
@@ -63,7 +63,7 @@ public class Robot {
         );
 
         this.arm = HoodConstants.createArm();
-        this.dynamicMotionMagicArm = HoodConstants.createDynamicMotionMagicArm();
+       this.dynamicMotionMagicArm = HoodConstants.createDynamicMotionMagicArm();
         this.motionMagicArm = HoodConstants.createMotionMagicArm();
 
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(

@@ -81,7 +81,9 @@ public class HoodConstants {
                 BACKWARD_SOFTWARE_LIMIT,
                 hoodSimulationConstants
         );
-    }public static Arm createMotionMagicArm() {
+    }
+
+    public static Arm createMotionMagicArm() {
         ArmSimulationConstants hoodSimulationConstants = new ArmSimulationConstants(
                 MAXIMUM_POSITION,
                 MINIMUM_POSITION,

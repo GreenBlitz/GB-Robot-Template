@@ -24,7 +24,7 @@ public class HoodConstants {
 
     static {
         FEEDBACK_CONFIGS.RotorToSensorRatio = 1;
-        FEEDBACK_CONFIGS.SensorToMechanismRatio = 30.0;
+        FEEDBACK_CONFIGS.SensorToMechanismRatio = 120;
 
         REAL_SLOT.kP = 600;
         REAL_SLOT.kI = 0;
@@ -68,6 +68,7 @@ public class HoodConstants {
                 RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Arm",
                 IDs.TalonFXIDs.HOOD,
                 IS_INVERTED,
+                true,
                 new TalonFXFollowerConfig(),
                 SYSID_ROUTINE_CONFIG,
                 FEEDBACK_CONFIGS,
@@ -92,6 +93,7 @@ public class HoodConstants {
                 RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/MotionMagicArm",
                 IDs.TalonFXIDs.NOT_HOOD1,
                 IS_INVERTED,
+                false,
                 new TalonFXFollowerConfig(),
                 SYSID_ROUTINE_CONFIG,
                 FEEDBACK_CONFIGS,
@@ -118,6 +120,7 @@ public class HoodConstants {
                 RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/DynamicMotionMagicArm",
                 IDs.TalonFXIDs.NOT_HOOD2,
                 IS_INVERTED,
+                false,
                 new TalonFXFollowerConfig(),
                 SYSID_ROUTINE_CONFIG,
                 FEEDBACK_CONFIGS,

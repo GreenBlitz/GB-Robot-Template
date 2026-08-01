@@ -195,7 +195,7 @@ public class TalonFXArmBuilder {
 			forwardSoftwareLimit,
 			reverseSoftwareLimit,
 			isInverted,
-				isContinuousWrap,
+			isContinuousWrap,
 			currentLimit
 		);
 		motor.applyConfiguration(configuration);

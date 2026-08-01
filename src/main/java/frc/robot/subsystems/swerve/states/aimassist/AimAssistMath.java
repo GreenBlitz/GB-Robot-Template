@@ -71,4 +71,8 @@ public class AimAssistMath {
 		return velocityPerSecond.times(SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR).div(magnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
 	}
 
+	private static double applyMagnitudeCompensation(double velocityPerSecond, double magnitude, double factor) {
+		return velocityPerSecond * (SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR) / (magnitude + factor);
+	}
+
 }

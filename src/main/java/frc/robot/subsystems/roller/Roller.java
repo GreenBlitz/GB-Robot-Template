@@ -14,7 +14,10 @@ public class Roller extends GBSubsystem {
 	private final InputSignal<Double> voltageSignal;
 	private final InputSignal<Double> currentSignal;
 	private final InputSignal<Rotation2d> positionSignal;
+	private final InputSignal<Rotation2d> velocitySignal;
+
 	private final IRequest<Double> voltageRequest;
+
 	private final RollerCommandsBuilder commandsBuilder;
 	private Rotation2d targetPosition;
 
@@ -24,17 +27,23 @@ public class Roller extends GBSubsystem {
 		InputSignal<Double> voltageSignal,
 		InputSignal<Double> currentSignal,
 		InputSignal<Rotation2d> positionSignal,
+		InputSignal<Rotation2d> velocitySignal,
 		IRequest<Double> voltageRequest
 	) {
 		super(logPath);
 		this.motor = motor;
+
 		this.voltageSignal = voltageSignal;
 		this.currentSignal = currentSignal;
 		this.positionSignal = positionSignal;
+		this.velocitySignal = velocitySignal;
+
 		this.voltageRequest = voltageRequest;
+
 		this.commandsBuilder = new RollerCommandsBuilder(this);
 		this.motor.resetPosition(Rotation2d.fromRotations(0));
 		this.targetPosition = Rotation2d.fromRotations(0);
+		setDefaultCommand(commandsBuilder.stop());
 	}
 
 	public RollerCommandsBuilder getCommandsBuilder() {
@@ -73,6 +82,10 @@ public class Roller extends GBSubsystem {
 		return positionSignal.getLatestValue();
 	}
 
+	public Rotation2d getVelocity() {
+		return velocitySignal.getLatestValue();
+	}
+
 	public boolean isAtPosition(Rotation2d position, Rotation2d tolerance) {
 		return positionSignal.isNear(position, tolerance);
 	}
@@ -93,10 +106,13 @@ public class Roller extends GBSubsystem {
 		return isBehindPosition(targetPosition);
 	}
 
-	@Override
-	public void subsystemPeriodic() {
+	public boolean isAtVelocity(Rotation2d velocity, Rotation2d tolerance) {
+		return velocitySignal.isNear(velocity, tolerance);
+	}
+
+	public void update() {
 		motor.updateSimulation();
-		motor.updateInputs(voltageSignal, currentSignal, positionSignal);
+		motor.updateInputs(voltageSignal, currentSignal, positionSignal, velocitySignal);
 		Logger.recordOutput(getLogPath() + "/PositionTarget", targetPosition);
 	}
 

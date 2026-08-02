@@ -1,13 +1,10 @@
 package frc.robot.hardware.phoenix6.request;
 
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.TorqueCurrentFOC;
-import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
-import com.ctre.phoenix6.controls.VelocityVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.*;
+import edu.wpi.first.math.controller.BangBangController;
 import edu.wpi.first.math.geometry.Rotation2d;
+
+import java.util.function.Supplier;
 
 public class Phoenix6RequestBuilder {
 
@@ -78,5 +75,17 @@ public class Phoenix6RequestBuilder {
 	public static Phoenix6Request<Double> build(TorqueCurrentFOC torqueCurrentFOC) {
 		return new Phoenix6Request<>(torqueCurrentFOC.Output, torqueCurrentFOC, torqueCurrentFOC::withOutput);
 	}
+
+    public static Phoenix6Request<Rotation2d> buildBangBangRequest(Supplier<Rotation2d> currentVelocity, double maxPower, boolean enableFOC) {
+        BangBangController bangBangController = new BangBangController();
+        DutyCycleOut dutyCycleOut = new DutyCycleOut(0).withEnableFOC(enableFOC);
+        return new Phoenix6Request<>(
+                Rotation2d.kZero,
+                dutyCycleOut,
+                (Rotation2d targetVelocity) -> dutyCycleOut.withOutput(
+                        bangBangController.calculate(currentVelocity.get().getRotations(), targetVelocity.getRotations()) == 0 ? -maxPower : maxPower
+                )
+        );
+    }
 
 }

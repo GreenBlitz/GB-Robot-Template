@@ -53,10 +53,15 @@ public class Robot {
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 	}
 
+    public void updateSubsystems(){
+        swerve.update();
+
+    }
+
 	public void periodic() {
 		BusChain.refreshAll();
 
-		swerve.update();
+        updateSubsystems();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 		poseEstimator.log();
 

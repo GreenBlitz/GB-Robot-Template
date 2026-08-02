@@ -37,4 +37,5 @@ public class Phoenix6VelocityPositionRequest extends Phoenix6FeedForwardRequest 
 	public Rotation2d getVelocityRPS() {
 		return velocity;
 	}
+
 }

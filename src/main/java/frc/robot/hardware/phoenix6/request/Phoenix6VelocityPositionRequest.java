@@ -38,4 +38,3 @@ public class Phoenix6VelocityPositionRequest extends Phoenix6FeedForwardRequest 
 		return velocity;
 	}
 }
-

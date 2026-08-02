@@ -17,7 +17,7 @@ import frc.robot.subsystems.arm.TalonFXArmBuilder;
 public class HoodConstants {
 
     public static final boolean IS_INVERTED = true;
-    public static final boolean IS_CONTINUOUS_WRAP = false;
+    public static final boolean IS_CONTINUOUS_WRAP = true;
 
     public static final FeedbackConfigs FEEDBACK_CONFIGS = new FeedbackConfigs();
     public static final Slot0Configs REAL_SLOT = new Slot0Configs();
@@ -25,7 +25,7 @@ public class HoodConstants {
 
     static {
         FEEDBACK_CONFIGS.RotorToSensorRatio = 1;
-        FEEDBACK_CONFIGS.SensorToMechanismRatio = 30.0;
+        FEEDBACK_CONFIGS.SensorToMechanismRatio = 120;
 
         REAL_SLOT.kP = 600;
         REAL_SLOT.kI = 0;

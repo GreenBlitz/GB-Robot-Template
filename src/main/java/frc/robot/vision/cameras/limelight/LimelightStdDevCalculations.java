@@ -8,12 +8,6 @@ public class LimelightStdDevCalculations {
 
 	public static final StandardDeviations2D DEFAULT_STD_DEVS = new StandardDeviations2D(0.0003, 0.0003, 0.003);
 
-	public static final StandardDeviations2D DEFAULT_TAG_DISTANCE_FACTORS = new StandardDeviations2D(0.5);
-	public static final StandardDeviations2D DEFAULT_STD_DEV_FACTORS = new StandardDeviations2D(0.15);
-	public static final StandardDeviations2D DEFAULT_VISIBLE_TAGS_EXPONENTS = new StandardDeviations2D(0.4);
-	public static final StandardDeviations2D DEFAULT_STD_DEV_ADDITIONS = new StandardDeviations2D(0.011);
-
-
 	public static Supplier<StandardDeviations2D> getMT1StdDevsCalculation(
 		Limelight limelight,
 		StandardDeviations2D tagDistanceFactors,

@@ -62,10 +62,10 @@ public class Robot {
 			limelight -> limelight.setMT1StdDevsCalculation(
 				LimelightStdDevCalculations.getMT1StdDevsCalculation(
 					limelight,
-					LimelightStdDevCalculations.DEFAULT_TAG_DISTANCE_FACTORS,
-					LimelightStdDevCalculations.DEFAULT_STD_DEV_FACTORS,
-					LimelightStdDevCalculations.DEFAULT_VISIBLE_TAGS_EXPONENTS,
-					LimelightStdDevCalculations.DEFAULT_STD_DEV_ADDITIONS
+					RobotConstants.DEFAULT_TAG_DISTANCE_FACTORS,
+					RobotConstants.DEFAULT_STD_DEV_FACTORS,
+					RobotConstants.DEFAULT_VISIBLE_TAGS_EXPONENTS,
+					RobotConstants.DEFAULT_STD_DEV_ADDITIONS
 				)
 			)
 		);

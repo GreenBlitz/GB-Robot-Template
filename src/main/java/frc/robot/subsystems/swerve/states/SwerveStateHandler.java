@@ -4,11 +4,14 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import frc.JoysticksBindings;
 import frc.constants.MathConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
+import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
+import frc.robot.subsystems.swerve.states.aimassist.AimAssistMath;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -30,6 +33,9 @@ public class SwerveStateHandler {
 	}
 
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
+		if (JoysticksBindings.wannaDoThing){
+			return AimAssistMath.getObjectAssistedSpeeds(speeds,robotPoseSupplier.get().get(),new Rotation2d(),new Translation2d(4,2),swerveConstants,swerveState);
+		}
 		if (swerveState.getAimAssist() == AimAssist.NONE) {
 			return speeds;
 		}

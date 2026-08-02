@@ -15,6 +15,7 @@ import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
 import frc.robot.subsystems.HoodConstants;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.roller.VelocityRoller;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.imu.IMUFactory;
@@ -24,7 +25,6 @@ import frc.robot.vision.cameras.limelight.LimelightPipeline;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.robot.hardware.interfaces.IIMU;
-import frc.utils.limelight.LimelightHelpersAdditions;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -36,11 +36,12 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);
 
 	private final Swerve swerve;
-    public final Limelight limelight;
-    public final Arm arm;
-    public final Arm motionMagicArm;
-    public final Arm dynamicMotionMagicArm;
+	public final Limelight limelight;
+	public final Arm arm;
+	public final Arm motionMagicArm;
+	public final Arm dynamicMotionMagicArm;
 	private final IPoseEstimator poseEstimator;
+	private final VelocityRoller velocityRoller;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -53,20 +54,20 @@ public class Robot {
 			IMUFactory.createSignals(imu)
 		);
 
-        this.limelight = new Limelight(
-                "limelight-front",
-                "Vision",
-                new Pose3d(
-                        new Translation3d(0.297, -0.143, 0.361),
-                        new Rotation3d(Math.toRadians(-0.18), Math.toRadians(27.38), Math.toRadians(-0.35))
-                ),
-                LimelightPipeline.APRIL_TAG
-        );
+		this.limelight = new Limelight(
+			"limelight-front",
+			"Vision",
+			new Pose3d(
+				new Translation3d(0.297, -0.143, 0.361),
+				new Rotation3d(Math.toRadians(-0.18), Math.toRadians(27.38), Math.toRadians(-0.35))
+			),
+			LimelightPipeline.APRIL_TAG
+		);
 
-        this.arm = HoodConstants.createArm();
-        this.dynamicMotionMagicArm = HoodConstants.createDynamicMotionMagicArm();
-        this.motionMagicArm = HoodConstants.createMotionMagicArm();
-
+		this.arm = HoodConstants.createArm();
+		this.dynamicMotionMagicArm = HoodConstants.createDynamicMotionMagicArm();
+		this.motionMagicArm = HoodConstants.createMotionMagicArm();
+		this.velocityRoller = frc.robot.subsystems.constants.magazine.MagazineConstant.createMagazine();
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
 			swerve.getKinematics(),
@@ -82,11 +83,12 @@ public class Robot {
 	public void periodic() {
 		BusChain.refreshAll();
 
+		velocityRoller.update();
 		swerve.update();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 
-        limelight.updateMT1();
-        limelight.getIndependentRobotPose().ifPresent(poseEstimator::updateVision);
+		limelight.updateMT1();
+		limelight.getIndependentRobotPose().ifPresent(poseEstimator::updateVision);
 
 		poseEstimator.log();
 
@@ -101,6 +103,10 @@ public class Robot {
 
 	public Swerve getSwerve() {
 		return swerve;
+	}
+
+	public VelocityRoller getVelocityRoller() {
+		return velocityRoller;
 	}
 
 	public PathPlannerAutoWrapper getAutonomousCommand() {

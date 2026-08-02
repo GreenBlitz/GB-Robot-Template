@@ -86,7 +86,7 @@ public class HoodConstants {
                 HOOD_LENGTH_METERS
         );
         return TalonFXArmBuilder.buildVelocityPositionArm(
-                RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/MotionMagicArm",
+                RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/VelocityPositionArm",
                 IDs.TalonFXIDs.NOT_HOOD1,
                 IS_INVERTED,
                 new TalonFXFollowerConfig(),

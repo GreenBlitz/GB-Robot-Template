@@ -15,6 +15,9 @@ import java.util.function.Supplier;
 
 public class LimelightFilters {
 
+	public static final Translation2d DEFAULT_IN_FIELD_TOLERANCE_METERS = new Translation2d(0.1, 0.1);
+	public static final Rotation2d DEFAULT_YAW_AT_ANGLE_TOLERANCE = Rotation2d.fromDegrees(10);
+
 	public static Filter detectedObjectFilter(Limelight limelight) {
 		return Filter.nonFilteringFilter();
 	}

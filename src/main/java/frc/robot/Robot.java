@@ -44,7 +44,8 @@ public class Robot {
 			imu,
 			IMUFactory.createSignals(imu)
 		);
-		subsystems.add(swerve);
+
+		subsystems = List.of(swerve);
 
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,

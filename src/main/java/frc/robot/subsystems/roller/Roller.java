@@ -17,8 +17,7 @@ public class Roller extends GBSubsystem {
 	private final InputSignal<Rotation2d> velocitySignal;
 
 	private final IRequest<Double> voltageRequest;
-
-	private final RollerCommandsBuilder commandsBuilder;
+    private final RollerCommandsBuilder commandsBuilder;
 	private Rotation2d targetPosition;
 
 	public Roller(
@@ -32,14 +31,11 @@ public class Roller extends GBSubsystem {
 	) {
 		super(logPath);
 		this.motor = motor;
-
 		this.voltageSignal = voltageSignal;
 		this.currentSignal = currentSignal;
 		this.positionSignal = positionSignal;
 		this.velocitySignal = velocitySignal;
-
 		this.voltageRequest = voltageRequest;
-
 		this.commandsBuilder = new RollerCommandsBuilder(this);
 		this.motor.resetPosition(Rotation2d.fromRotations(0));
 		this.targetPosition = Rotation2d.fromRotations(0);

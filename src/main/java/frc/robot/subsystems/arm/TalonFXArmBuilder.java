@@ -81,7 +81,7 @@ public class TalonFXArmBuilder {
 			forwardSoftwareLimit,
 			reverseSoftwareLimit,
 			isInverted,
-				isContinuousWrap,
+			isContinuousWrap,
 			currentLimit
 		);
 		addMotionMagicConfig(configuration, defaultMaxVelocityRotation2dPerSecond, defaultMaxAccelerationRotation2dPerSecondSquare);
@@ -143,7 +143,7 @@ public class TalonFXArmBuilder {
 			forwardSoftwareLimit,
 			reverseSoftwareLimit,
 			isInverted,
-				isContinuousWrap,
+			isContinuousWrap,
 			currentLimit
 		));
 		addMotionMagicConfig(configuration, defaultMaxVelocityRotation2dPerSecond, defaultMaxAccelerationRotation2dPerSecondSquare);

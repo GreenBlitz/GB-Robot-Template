@@ -46,7 +46,7 @@ public class AimAssistMath {
      * |                       |   |                       |
      * @formatter:on
      */
-	public static ChassisSpeeds getObjectAssistedSpeedsSlowedDownByRotation(
+	public static ChassisSpeeds getObjectAssistedSpeeds(
 		ChassisSpeeds speeds,
 		Pose2d robotPose,
 		Rotation2d allianceRelativeTargetHeading,
@@ -97,7 +97,7 @@ public class AimAssistMath {
 		SwerveConstants swerveConstants,
 		SwerveState swerveState
 	) {
-		return getObjectAssistedSpeedsSlowedDownByRotation(
+		return getObjectAssistedSpeeds(
 			speeds,
 			robotPose,
 			allianceRelativeTargetHeading,

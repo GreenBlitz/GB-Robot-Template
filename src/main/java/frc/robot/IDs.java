@@ -7,39 +7,44 @@ public class IDs {
 
 	public static class TalonFXIDs {
 
-		public static final Phoenix6DeviceID SWERVE_FRONT_LEFT_STEER = new Phoenix6DeviceID(0, BusChain.ROBORIO);
+		public static final Phoenix6DeviceID SWERVE_FRONT_LEFT_STEER = new Phoenix6DeviceID(0, BusChain.CHASSIS);
 
-		public static final Phoenix6DeviceID SWERVE_FRONT_LEFT_DRIVE = new Phoenix6DeviceID(1, BusChain.ROBORIO);
+		public static final Phoenix6DeviceID SWERVE_FRONT_LEFT_DRIVE = new Phoenix6DeviceID(1, BusChain.CHASSIS);
 
-		public static final Phoenix6DeviceID SWERVE_FRONT_RIGHT_STEER = new Phoenix6DeviceID(2, BusChain.ROBORIO);
+		public static final Phoenix6DeviceID SWERVE_FRONT_RIGHT_STEER = new Phoenix6DeviceID(2, BusChain.CHASSIS);
 
-		public static final Phoenix6DeviceID SWERVE_FRONT_RIGHT_DRIVE = new Phoenix6DeviceID(3, BusChain.ROBORIO);
+		public static final Phoenix6DeviceID SWERVE_FRONT_RIGHT_DRIVE = new Phoenix6DeviceID(3, BusChain.CHASSIS);
 
-		public static final Phoenix6DeviceID SWERVE_BACK_LEFT_STEER = new Phoenix6DeviceID(4, BusChain.ROBORIO);
+		public static final Phoenix6DeviceID SWERVE_BACK_LEFT_STEER = new Phoenix6DeviceID(4, BusChain.CHASSIS);
 
-		public static final Phoenix6DeviceID SWERVE_BACK_LEFT_DRIVE = new Phoenix6DeviceID(5, BusChain.ROBORIO);
+		public static final Phoenix6DeviceID SWERVE_BACK_LEFT_DRIVE = new Phoenix6DeviceID(5, BusChain.CHASSIS);
 
-		public static final Phoenix6DeviceID SWERVE_BACK_RIGHT_STEER = new Phoenix6DeviceID(6, BusChain.ROBORIO);
+		public static final Phoenix6DeviceID SWERVE_BACK_RIGHT_STEER = new Phoenix6DeviceID(6, BusChain.CHASSIS);
 
-		public static final Phoenix6DeviceID SWERVE_BACK_RIGHT_DRIVE = new Phoenix6DeviceID(7, BusChain.ROBORIO);
+		public static final Phoenix6DeviceID SWERVE_BACK_RIGHT_DRIVE = new Phoenix6DeviceID(7, BusChain.CHASSIS);
 
-	}
+        public static final Phoenix6DeviceID HOOD = new Phoenix6DeviceID(54, BusChain.ROBORIO);
+
+        public static final Phoenix6DeviceID NOT_HOOD1 = new Phoenix6DeviceID(53, BusChain.ROBORIO);
+        public static final Phoenix6DeviceID NOT_HOOD2 = new Phoenix6DeviceID(52, BusChain.ROBORIO);
+
+    }
 
 	public static class CANCoderIDs {
 
-		public static final Phoenix6DeviceID SWERVE_FRONT_LEFT = new Phoenix6DeviceID(0, BusChain.ROBORIO);
+		public static final Phoenix6DeviceID SWERVE_FRONT_LEFT = new Phoenix6DeviceID(0, BusChain.CHASSIS);
 
-		public static final Phoenix6DeviceID SWERVE_FRONT_RIGHT = new Phoenix6DeviceID(1, BusChain.ROBORIO);
+		public static final Phoenix6DeviceID SWERVE_FRONT_RIGHT = new Phoenix6DeviceID(1, BusChain.CHASSIS);
 
-		public static final Phoenix6DeviceID SWERVE_BACK_LEFT = new Phoenix6DeviceID(2, BusChain.ROBORIO);
+		public static final Phoenix6DeviceID SWERVE_BACK_LEFT = new Phoenix6DeviceID(2, BusChain.CHASSIS);
 
-		public static final Phoenix6DeviceID SWERVE_BACK_RIGHT = new Phoenix6DeviceID(3, BusChain.ROBORIO);
+		public static final Phoenix6DeviceID SWERVE_BACK_RIGHT = new Phoenix6DeviceID(3, BusChain.CHASSIS);
 
 	}
 
 	public static class Pigeon2IDs {
 
-		public static final Phoenix6DeviceID SWERVE = new Phoenix6DeviceID(0, BusChain.ROBORIO);
+		public static final Phoenix6DeviceID SWERVE = new Phoenix6DeviceID(0, BusChain.CHASSIS);
 
 	}
 

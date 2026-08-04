@@ -10,6 +10,7 @@ import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
+import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.imu.IMUFactory;
@@ -17,6 +18,8 @@ import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.robot.hardware.interfaces.IIMU;
+
+import java.util.List;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -29,6 +32,7 @@ public class Robot {
 
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
+	private List<GBSubsystem> subsystems;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -40,6 +44,7 @@ public class Robot {
 			imu,
 			IMUFactory.createSignals(imu)
 		);
+		subsystems.add(swerve);
 
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
@@ -54,7 +59,9 @@ public class Robot {
 	}
 
 	public void updateSubsystems() {
-		swerve.update();
+		for (GBSubsystem subsystem : subsystems) {
+			subsystem.update();
+		}
 	}
 
 	public void periodic() {

@@ -32,7 +32,6 @@ public class Robot {
 
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
-	private List<GBSubsystem> subsystems;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -44,8 +43,6 @@ public class Robot {
 			imu,
 			IMUFactory.createSignals(imu)
 		);
-
-		subsystems = List.of(swerve);
 
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
@@ -60,9 +57,7 @@ public class Robot {
 	}
 
 	public void updateSubsystems() {
-		for (GBSubsystem subsystem : subsystems) {
-			subsystem.update();
-		}
+		swerve.update();
 	}
 
 	public void periodic() {

@@ -159,7 +159,6 @@ public class Swerve extends GBSubsystem {
 		);
 	}
 
-	@Override
 	public void update() {
 		updateIMU();
 		modules.updateInputs();

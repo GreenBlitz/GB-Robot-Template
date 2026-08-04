@@ -28,8 +28,6 @@ public abstract class GBSubsystem extends SubsystemBase {
 		subsystemPeriodic();
 	}
 
-	public void update() {}
-
 	protected void subsystemPeriodic() {}
 
 	public Command asSubsystemCommand(Command command, String commandName) {

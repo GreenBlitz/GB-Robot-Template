@@ -18,10 +18,10 @@ public class Alert {
 	private final String name;
 	private final boolean isDriverRelevant;
 
-	public Alert(AlertType type, String name, boolean isDriverRelevant) {
+	public Alert(AlertType type, String name, boolean isAlertImportant) {
 		this.logPath = ALERT_LOG_PATH + "/" + type.toString() + "/" + name;
 		this.name = name;
-		this.isDriverRelevant = isDriverRelevant;
+		this.isDriverRelevant = isAlertImportant;
 	}
 
 	public Alert(AlertType type, String name) {

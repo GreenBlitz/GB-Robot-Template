@@ -17,7 +17,7 @@ public class Roller extends GBSubsystem {
 	private final InputSignal<Rotation2d> velocitySignal;
 
 	private final IRequest<Double> voltageRequest;
-    private final RollerCommandsBuilder commandsBuilder;
+	private final RollerCommandsBuilder commandsBuilder;
 	private Rotation2d targetPosition;
 
 	public Roller(

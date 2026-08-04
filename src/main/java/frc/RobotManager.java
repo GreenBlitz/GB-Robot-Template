@@ -55,7 +55,7 @@ public class RobotManager extends LoggedRobot {
 		Threads.setCurrentThreadPriority(true, 10);
 
 		alertsMessage = "Alerts: None";
-		logDriverAlerts();
+		logImportantAlerts();
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class RobotManager extends LoggedRobot {
 		JoysticksBindings.updateChassisDriverInputs();
 		robot.periodic();
 		AlertManager.reportAlerts();
-		logDriverAlerts();
+		logImportantAlerts();
 	}
 
 	private void createAutoReadyForConstructionChooser() {
@@ -123,7 +123,7 @@ public class RobotManager extends LoggedRobot {
 		TimeUtil.updateCycleTime(roborioCycles);
 	}
 
-	private void logDriverAlerts() {
+	private void logImportantAlerts() {
 		ArrayList<Alert> alerts = AlertManager.getReportedAlerts();
 
 		String newAlertsMessage = alerts.stream().filter(Alert::isDriverRelevant).map(Alert::getName).collect(Collectors.joining(", "));

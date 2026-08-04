@@ -36,7 +36,38 @@ public class SwerveStateHandler {
 
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
 		if (JoysticksBindings.wannaDoThing){
-			return AimAssistMath.getObjectAssistedSpeeds(speeds,robotPoseSupplier.get().get(),new Rotation2d(),new Translation2d(4,2),swerveConstants,swerveState);
+//            return AimAssistMath.getObjectAssistedSpeedsSlowedDownByRotation(
+//                    AimAssistMath.getLongTurnRotationAssistedSpeeds(
+//                            speeds,
+//                            robotPoseSupplier.get().get().getRotation(),
+//                            new Rotation2d(),
+//                            swerveConstants
+//                    ),
+//                    robotPoseSupplier.get().get(),
+//                    new Rotation2d(),
+//                    new Translation2d(4, 2),
+//                    swerveConstants,
+//                    swerveState,
+//                    SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR,
+//                    true
+//            );
+
+            return AimAssistMath.getObjectAssistedSpeedsSlowedDownByRotation(
+                    AimAssistMath.getRotationAssistedSpeeds(
+                            speeds,
+                            robotPoseSupplier.get().get().getRotation(),
+                            new Rotation2d(),
+                            true,
+                            swerveConstants
+                    ),
+                    robotPoseSupplier.get().get(),
+                    new Rotation2d(),
+                    new Translation2d(4, 2),
+                    swerveConstants,
+                    swerveState,
+                    0,
+                    false
+            );
 		}
 		if (swerveState.getAimAssist() == AimAssist.NONE) {
 			return speeds;

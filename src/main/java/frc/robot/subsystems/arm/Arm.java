@@ -82,7 +82,7 @@ public class Arm extends GBSubsystem {
 	}
 
 	private void updateInputs() {
-		motor.updateInputs(signals.voltage(), signals.statorCurrent(), signals.velocity(), signals.position(), signals.torqueCurrent());
+		motor.updateInputs(signals.voltage(), signals.statorCurrent(), signals.torqueCurrent(), signals.velocity(), signals.position());
 	}
 
 	public void log() {

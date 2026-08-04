@@ -1,11 +1,14 @@
 package frc;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
+import frc.utils.calibration.camera.CameraPoseCalibration;
 
 public class JoysticksBindings {
 
@@ -50,9 +53,9 @@ public class JoysticksBindings {
         usedJoystick.A.onTrue(robot.arm.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(30)));
         usedJoystick.B.onTrue(robot.motionMagicArm.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(30)));
         usedJoystick.X.onTrue(robot.dynamicMotionMagicArm.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(30)));
-		// bindings...
+		usedJoystick.Y.onTrue((new CameraPoseCalibration("Vision/Calibration", "limelight-front", 1000, 1.5, 0.5, new Pose3d(0, 0, 1.0, new Rotation3d()), Rotation2d.fromDegrees(0))));
+        // bindings...
 	}
-
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...

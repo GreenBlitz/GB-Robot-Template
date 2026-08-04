@@ -127,8 +127,8 @@ public class Arm extends GBSubsystem {
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, double maxCalibrationPower) {
-		joystick.POV_DOWN.onTrue(new InstantCommand(() -> commandsBuilder.setIsSubsystemRunningIndependently(true)));
-		joystick.POV_UP.onTrue(new InstantCommand(() -> commandsBuilder.setIsSubsystemRunningIndependently(false)));
+		joystick.POV_DOWN.onTrue(new InstantCommand(() -> setIsRunningIndependently(true)));
+		joystick.POV_UP.onTrue(new InstantCommand(() -> setIsRunningIndependently(false)));
 
 		// Calibrate kG using phoenix tuner by setting the voltage
 

@@ -3,7 +3,6 @@ package frc.robot.subsystems.arm;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import frc.robot.subsystems.GBCommandsBuilder;
 import frc.utils.utilcommands.ExecuteEndCommand;
 import frc.utils.utilcommands.InitExecuteCommand;
 
@@ -11,7 +10,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
-public class ArmCommandsBuilder extends GBCommandsBuilder {
+public class ArmCommandsBuilder {
 
 	private final Arm arm;
 

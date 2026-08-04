@@ -126,7 +126,7 @@ public class RobotManager extends LoggedRobot {
 	private void logImportantAlerts() {
 		ArrayList<Alert> alerts = AlertManager.getReportedAlerts();
 
-		String newAlertsMessage = alerts.stream().filter(Alert::isDriverRelevant).map(Alert::getName).collect(Collectors.joining(", "));
+		String newAlertsMessage = alerts.stream().filter(Alert::isCritical).map(Alert::getName).collect(Collectors.joining(", "));
 
 		boolean areAlertsOk = newAlertsMessage.isEmpty();
 

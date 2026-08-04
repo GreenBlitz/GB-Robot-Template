@@ -33,7 +33,6 @@ public class RobotCommander extends GBSubsystem {
 				),
 				this::isSubsystemRunningIndependently
 			)
-
 		);
 	}
 
@@ -46,7 +45,7 @@ public class RobotCommander extends GBSubsystem {
 	}
 
 	public boolean isSubsystemRunningIndependently() {
-		return superstructure.isSubsystemRunningIndependently() || swerve.getCommandsBuilder().isSubsystemRunningIndependently();
+		return superstructure.isSubsystemRunningIndependently() || swerve.isRunningIndependently();
 	}
 
 	@Override

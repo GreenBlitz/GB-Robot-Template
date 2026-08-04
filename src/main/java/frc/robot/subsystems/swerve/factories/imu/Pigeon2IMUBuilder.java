@@ -34,7 +34,7 @@ public class Pigeon2IMUBuilder {
 		Pigeon2Configuration pigeon2Configuration = buildIMUConfig();
 
 		if (!pigeon2Wrapper.applyConfiguration(pigeon2Configuration, APPLY_CONFIG_RETRIES).isOK()) {
-			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
+			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt", true).report();
 		}
 
 		return new Pigeon2IMU(logPath, pigeon2Wrapper);

@@ -38,19 +38,19 @@ class KrakenX60SteerBuilder {
 
 	private static SysIdRoutine.Config buildSysidConfig(String logPath) {
 		return new SysIdRoutine.Config(
-				Units.Volts.of(0.5).per(Units.Second),
-				Units.Volts.of(1),
-				null,
-				state -> SignalLogger.writeString(logPath + "/state", state.toString())
+			Units.Volts.of(0.5).per(Units.Second),
+			Units.Volts.of(1),
+			null,
+			state -> SignalLogger.writeString(logPath + "/state", state.toString())
 		);
 	}
 
 	private static SimpleMotorSimulation buildMechanismSimulation() {
 		return new SimpleMotorSimulation(
-				new DCMotorSim(
-						LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), MOMENT_OF_INERTIA_METERS_SQUARED, FRONT_MODULES_GEAR_RATIO),
-						DCMotor.getKrakenX60Foc(1)
-				)
+			new DCMotorSim(
+				LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), MOMENT_OF_INERTIA_METERS_SQUARED, FRONT_MODULES_GEAR_RATIO),
+				DCMotor.getKrakenX60Foc(1)
+			)
 		);
 	}
 
@@ -123,11 +123,11 @@ class KrakenX60SteerBuilder {
 	}
 
 	static ControllableMotor buildSteer(
-			String logPath,
-			Phoenix6DeviceID deviceID,
-			Phoenix6DeviceID encoderID,
-			boolean inverted,
-			ModuleUtil.ModulePosition modulePosition
+		String logPath,
+		Phoenix6DeviceID deviceID,
+		Phoenix6DeviceID encoderID,
+		boolean inverted,
+		ModuleUtil.ModulePosition modulePosition
 	) {
 		TalonFXConfiguration configuration = buildMotorConfig(inverted, modulePosition);
 		configuration.Feedback.FeedbackRemoteSensorID = encoderID.id();
@@ -139,24 +139,24 @@ class KrakenX60SteerBuilder {
 
 	static SteerRequests buildRequests() {
 		return new SteerRequests(
-				Phoenix6RequestBuilder.build(new PositionVoltage(0), 0, true),
-				Phoenix6RequestBuilder.build(new VoltageOut(0), true)
+			Phoenix6RequestBuilder.build(new PositionVoltage(0), 0, true),
+			Phoenix6RequestBuilder.build(new VoltageOut(0), true)
 		);
 	}
 
 	static SteerSignals buildSignals(TalonFXMotor steer) {
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
-				.build(steer.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, steer.getBusChain());
+			.build(steer.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, steer.getBusChain());
 		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder
-				.build(steer.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, steer.getBusChain());
+			.build(steer.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, steer.getBusChain());
 		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder
-				.build(steer.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, steer.getBusChain());
+			.build(steer.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, steer.getBusChain());
 		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder.build(
-				steer.getDevice().getPosition(),
-				velocitySignal,
-				RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-				AngleUnit.ROTATIONS,
-				steer.getBusChain()
+			steer.getDevice().getPosition(),
+			velocitySignal,
+			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+			AngleUnit.ROTATIONS,
+			steer.getBusChain()
 		);
 
 		return new SteerSignals(positionSignal, velocitySignal, currentSignal, voltageSignal);

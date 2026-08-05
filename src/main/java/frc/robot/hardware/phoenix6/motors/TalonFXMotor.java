@@ -195,8 +195,4 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		}
 	}
 
-	public BusChain getBusChain(){
-		return busChain;
-	}
-
 }

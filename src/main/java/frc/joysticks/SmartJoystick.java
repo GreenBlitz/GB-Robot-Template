@@ -62,9 +62,9 @@ public class SmartJoystick {
 		this.POV_DOWN = new POVButton(this.joystick, ButtonID.POV_DOWN.getId());
 		this.POV_LEFT = new POVButton(this.joystick, ButtonID.POV_LEFT.getId());
 
-        if (Robot.ROBOT_TYPE.isReal() && alertOnDisconnect) {
-            AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "/DisconnectedAt", () -> !isConnected(), true));
-        }
+		if (Robot.ROBOT_TYPE.isReal() && alertOnDisconnect) {
+			AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "/DisconnectedAt", () -> !isConnected(), true));
+		}
 	}
 
 	public String getLogPath() {

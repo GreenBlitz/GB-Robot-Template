@@ -38,6 +38,9 @@ public class IDs {
 	}
 
 	public static class Pigeon2IDs {
+
+		public static final Phoenix6DeviceID SWERVE = new Phoenix6DeviceID(0, BusChain.ROBORIO);
+
 	}
 
 	public static class CANdleIDs {

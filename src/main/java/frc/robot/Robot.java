@@ -24,7 +24,6 @@ import frc.robot.vision.cameras.limelight.LimelightPipeline;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.robot.hardware.interfaces.IIMU;
-import frc.utils.limelight.LimelightHelpersAdditions;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -36,10 +35,10 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);
 
 	private final Swerve swerve;
-    public final Limelight limelight;
-    public final Arm arm;
-    public final Arm motionMagicArm;
-    public final Arm dynamicMotionMagicArm;
+	public final Limelight limelight;
+	public final Arm arm;
+	public final Arm motionMagicArm;
+	public final Arm dynamicMotionMagicArm;
 	private final IPoseEstimator poseEstimator;
 
 	public Robot() {
@@ -53,19 +52,19 @@ public class Robot {
 			IMUFactory.createSignals(imu)
 		);
 
-        this.limelight = new Limelight(
-                "limelight-front",
-                "Vision",
-                new Pose3d(
-                        new Translation3d(0.297, -0.143, 0.361),
-                        new Rotation3d(Math.toRadians(-0.18), Math.toRadians(27.38), Math.toRadians(-0.35))
-                ),
-                LimelightPipeline.APRIL_TAG
-        );
+		this.limelight = new Limelight(
+			"limelight-front",
+			"Vision",
+			new Pose3d(
+				new Translation3d(0.297, -0.143, 0.361),
+				new Rotation3d(Math.toRadians(-0.18), Math.toRadians(27.38), Math.toRadians(-0.35))
+			),
+			LimelightPipeline.APRIL_TAG
+		);
 
-        this.arm = HoodConstants.createArm();
-        this.dynamicMotionMagicArm = HoodConstants.createDynamicMotionMagicArm();
-        this.motionMagicArm = HoodConstants.createMotionMagicArm();
+		this.arm = HoodConstants.createArm();
+		this.dynamicMotionMagicArm = HoodConstants.createDynamicMotionMagicArm();
+		this.motionMagicArm = HoodConstants.createMotionMagicArm();
 
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
@@ -79,14 +78,18 @@ public class Robot {
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 	}
 
+	public void updateSubsystems() {
+		swerve.update();
+	}
+
 	public void periodic() {
 		BusChain.refreshAll();
 
-		swerve.update();
+		updateSubsystems();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 
-        limelight.updateMT1();
-        limelight.getIndependentRobotPose().ifPresent(poseEstimator::updateVision);
+		limelight.updateMT1();
+		limelight.getIndependentRobotPose().ifPresent(poseEstimator::updateVision);
 
 		poseEstimator.log();
 

@@ -42,7 +42,7 @@ public record IMUSignals(
 		);
 	}
 
-	public Translation3d[] getAllAccelerationsG() {
+	public Translation3d[] getAllPositionAccelerationsG() {
 		Double[] allXAccelerations = xAccelerationGSignal.asArray();
 		Double[] allYAccelerations = yAccelerationGSignal.asArray();
 		Double[] allZAccelerations = zAccelerationGSignal.asArray();

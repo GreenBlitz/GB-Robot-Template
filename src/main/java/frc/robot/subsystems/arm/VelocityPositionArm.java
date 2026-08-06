@@ -9,6 +9,7 @@ import org.littletonrobotics.junction.Logger;
 public class VelocityPositionArm extends Arm {
 
 	private final VelocityPositionRequest velocityPositionRequest;
+	private Rotation2d targetPosition;
 
 	public VelocityPositionArm(
 		String logPath,
@@ -20,15 +21,13 @@ public class VelocityPositionArm extends Arm {
 	) {
 		super(logPath, motor, signals, voltageRequest, velocityPositionRequest, kG);
 		this.velocityPositionRequest = velocityPositionRequest;
+        this.targetPosition = Rotation2d.kZero;
 	}
 
 	public void setTargetPositionVelocity(Rotation2d targetPosition, Rotation2d targetVelocity) {
 		velocityPositionRequest.withSetPoint(targetPosition);
 		velocityPositionRequest.setVelocity(targetVelocity);
-
-		Logger.recordOutput(getLogPath() + "/PositionTarget", targetPosition);
-		Logger.recordOutput(getLogPath() + "/VelocityPositionArmTargetVelocity", targetVelocity);
-
+		this.targetPosition = targetPosition;
 		motor.applyRequest(velocityPositionRequest);
 	}
 
@@ -41,6 +40,7 @@ public class VelocityPositionArm extends Arm {
 	public void log() {
 		super.log();
 		Logger.recordOutput(getLogPath() + "/VelocityPositionArmTargetVelocity", velocityPositionRequest.getVelocityRPS());
+		Logger.recordOutput(getLogPath() + "/PositionTarget", targetPosition);
 	}
 
 }

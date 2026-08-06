@@ -20,7 +20,6 @@ public class Phoenix6RequestBuilder {
 			setPoint -> positionVoltage.withPosition(setPoint.getRotations()),
 			positionVoltage::withFeedForward,
 			defaultArbitraryFeedForward
-
 		);
 	}
 

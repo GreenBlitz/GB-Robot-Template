@@ -23,7 +23,7 @@ public abstract class Phoenix6Device implements IDevice {
 		this.busChain = busChain;
 		this.connectedInput = new ConnectedInputAutoLogged();
 		connectedInput.connected = true;
-		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "disconnectedAt", () -> !isConnected(), true));
+		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "disconnectedAt", () -> !isConnected()));
 	}
 
 	public String getLogPath() {
@@ -80,9 +80,5 @@ public abstract class Phoenix6Device implements IDevice {
 	}
 
 	public abstract ParentDevice getDevice();
-
-	public BusChain getBusChain() {
-		return busChain;
-	}
 
 }

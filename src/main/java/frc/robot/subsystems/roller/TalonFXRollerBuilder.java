@@ -132,10 +132,10 @@ public class TalonFXRollerBuilder {
 		boolean inverted,
 		FeedbackConfigs feedbackConfigs,
 		int currentLimit,
-		Slot0Configs velocityControlConfig
+		Slot0Configs ConfigurationSlots
 	) {
 		TalonFXConfiguration configs = new TalonFXConfiguration();
-		configs.Slot0 = velocityControlConfig;
+		configs.Slot0 = ConfigurationSlots;
 		configs.CurrentLimits.SupplyCurrentLimit = currentLimit;
 		configs.CurrentLimits.SupplyCurrentLimitEnable = true;
 		configs.Feedback = feedbackConfigs;

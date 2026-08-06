@@ -1,16 +1,12 @@
 package frc.utils.brakestate;
 
 
+import org.littletonrobotics.junction.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class BrakeStateManager {
-
-	private enum BrakeMode {
-		UNKNOWN,
-		BRAKE,
-		COAST
-	}
 
 	private static final ArrayList<Runnable> brakeRunnables = new ArrayList<>();
 	private static final ArrayList<Runnable> coastRunnables = new ArrayList<>();
@@ -31,12 +27,16 @@ public class BrakeStateManager {
 		}
 	}
 
-	public static void brake() {
-		setBrakeMode(BrakeMode.BRAKE, brakeRunnables);
+	public static void setBrakeMode(BrakeMode brakeMode) {
+		switch (brakeMode) {
+			case BRAKE -> setBrakeMode(BrakeMode.BRAKE, brakeRunnables);
+			case COAST -> setBrakeMode(BrakeMode.COAST, coastRunnables);
+		}
+		log();
 	}
 
-	public static void coast() {
-		setBrakeMode(BrakeMode.COAST, coastRunnables);
+	public static void log() {
+		Logger.recordOutput("BrakeStateMangerState", currentMode);
 	}
 
 }

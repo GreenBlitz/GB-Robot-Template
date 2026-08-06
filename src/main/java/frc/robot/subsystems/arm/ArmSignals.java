@@ -5,7 +5,8 @@ import frc.robot.hardware.interfaces.InputSignal;
 
 public record ArmSignals(
 	InputSignal<Double> voltage,
-	InputSignal<Double> current,
+	InputSignal<Double> statorCurrent,
+	InputSignal<Double> torqueCurrent,
 	InputSignal<Rotation2d> velocity,
 	InputSignal<Rotation2d> position
 ) {}

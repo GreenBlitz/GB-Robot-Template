@@ -36,7 +36,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	private RobotPoseObservation mt2PoseObservation;
 
 	private Function<LimelightHelpers.RawDetection, Boolean> neuralDetectionFilter;
-	private Function<LimelightHelpersAdditions.RawTarget, Boolean> colorDetectionFilter;
+	private Function<LimelightHelpers.RawTarget, Boolean> colorDetectionFilter;
 	private Filter mt1PoseFilter;
 	private Filter mt2PoseFilter;
 
@@ -107,11 +107,11 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 			colorDetections.clear();
 
 			inputs.colorDetectionInputs().target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
-			inputs.colorDetectionInputs().rawTargets = LimelightHelpersAdditions.getRawTargets(name);
+			inputs.colorDetectionInputs().rawTargets = LimelightHelpers.getRawTargets(name);
 			Logger.processInputs(logPath + "/colorDetectionInputs", inputs.colorDetectionInputs());
 
 			if (getTarget2dValues().isValid()) {
-				for (LimelightHelpersAdditions.RawTarget rawTarget : getRawTargets()) {
+				for (LimelightHelpers.RawTarget rawTarget : getRawTargets()) {
 					if (colorDetectionFilter.apply(rawTarget)) {
 						pipeline.getDetectedObjectType(0).ifPresent(objectType -> {
 							DetectedObjectObservation observation = ObjectDetectionMath.getDetectedObjectObservation(
@@ -159,9 +159,10 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		}
 	}
 
-	public void updateIsConnected() {
-		inputs.connectedInput().connected = LimelightHelpersAdditions.getIsConnected(name);
-		Logger.processInputs(logPath, inputs.connectedInput());
+	public void updateHardwareInputs() {
+		inputs.hardwareInputs().connected = LimelightHelpersAdditions.getIsConnected(name);
+		inputs.hardwareInputs().temperatureCelsius = LimelightHelpersAdditions.getTemperatureCelsius(name);
+		Logger.processInputs(logPath, inputs.hardwareInputs());
 	}
 
 	public String getName() {
@@ -216,7 +217,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		return neuralDetectionFilter;
 	}
 
-	public Function<LimelightHelpersAdditions.RawTarget, Boolean> getColorDetectionFilter() {
+	public Function<LimelightHelpers.RawTarget, Boolean> getColorDetectionFilter() {
 		return colorDetectionFilter;
 	}
 
@@ -250,7 +251,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		this.neuralDetectionFilter = neuralDetectionFilter;
 	}
 
-	public void setColorDetectionFilter(Function<LimelightHelpersAdditions.RawTarget, Boolean> colorDetectionFilter) {
+	public void setColorDetectionFilter(Function<LimelightHelpers.RawTarget, Boolean> colorDetectionFilter) {
 		this.colorDetectionFilter = colorDetectionFilter;
 	}
 
@@ -283,7 +284,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		return inputs.neuralDetectionInputs().rawDetections;
 	}
 
-	protected LimelightHelpersAdditions.RawTarget[] getRawTargets() {
+	protected LimelightHelpers.RawTarget[] getRawTargets() {
 		return inputs.colorDetectionInputs().rawTargets;
 	}
 

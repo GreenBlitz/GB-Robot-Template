@@ -99,7 +99,8 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 				new PeriodicAlert(
 					Alert.AlertType.ERROR,
 					followerLogPath + "disconnectedAt",
-					() -> !followerInputsAutoLogged.followerData.connected()
+					() -> !followerInputsAutoLogged.followerData.connected(),
+					true
 				)
 			);
 		}
@@ -115,7 +116,7 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		if (talonFXSimulationOptional.isPresent()) {
 			talonFXSimulationOptional.get().applyConfig(motor, configuration);
 		} else if (!motor.applyConfiguration(configuration, APPLY_CONFIG_RETRIES).isOK()) {
-			new Alert(Alert.AlertType.ERROR, getLogPath() + "ConfigurationFailed").report();
+			new Alert(Alert.AlertType.ERROR, getLogPath() + "ConfigurationFailed", true).report();
 		}
 	}
 

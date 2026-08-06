@@ -189,7 +189,7 @@ public class Swerve extends GBSubsystem {
 				imuSignals.yawSignal().getTimestamps()[i],
 				modules.getWheelPositions(i),
 				imu instanceof EmptyIMU ? Optional.empty() : Optional.of(imuSignals.yawSignal().asArray()[i]),
-				imu instanceof EmptyIMU ? Optional.empty() : Optional.of(getIMUAcceleration())
+				imu instanceof EmptyIMU ? Optional.empty() : Optional.of(getIMUAccelerationMetesPerSecondSquared())
 			);
 		}
 
@@ -231,7 +231,7 @@ public class Swerve extends GBSubsystem {
 		return SwerveMath.allianceToRobotRelativeSpeeds(speeds, getAllianceRelativeHeading());
 	}
 
-	public double getIMUAcceleration() {
+	public double getIMUAccelerationMetesPerSecondSquared() {
 		return imuSignals.getLatestAccelerationG().getNorm();
 	}
 

@@ -53,7 +53,7 @@ public class Robot {
 			swerve.getKinematics(),
 			swerve.getModules().getWheelPositions(0),
 			swerve.getIMUAbsoluteYaw().getValue(),
-			swerve.getIMUAcceleration(),
+			swerve.getIMUAccelerationMetesPerSecondSquared(),
 			swerve.getIMUAbsoluteYaw().getTimestamp()
 		);
 

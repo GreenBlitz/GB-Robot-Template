@@ -11,7 +11,6 @@ public class PeriodicAlert extends Alert {
 		this.reportCondition = reportCondition;
 	}
 
-
 	public PeriodicAlert(AlertType type, String name, BooleanSupplier reportCondition) {
 		super(type, name);
 		this.reportCondition = reportCondition;

@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
@@ -22,14 +19,12 @@ import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.imu.IMUFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.vision.cameras.limelight.Limelight;
-import frc.robot.vision.cameras.limelight.LimelightPipeline;
 import frc.robot.vision.cameras.limelight.Limelight;
 import frc.robot.vision.cameras.limelight.LimelightFilters;
 import frc.robot.vision.cameras.limelight.LimelightStdDevCalculations;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.robot.hardware.interfaces.IIMU;
-import frc.utils.limelight.LimelightHelpersAdditions;
 
 import java.util.List;
 
@@ -43,10 +38,10 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);
 
 	private final Swerve swerve;
-    public final Arm arm;
-    public final Arm motionMagicArm;
-    public final VelocityPositionArm velocityPositionArm;
-    public final Arm dynamicMotionMagicArm;
+	public final Arm arm;
+	public final Arm motionMagicArm;
+	public final VelocityPositionArm velocityPositionArm;
+	public final Arm dynamicMotionMagicArm;
 	private final IPoseEstimator poseEstimator;
 	private final List<Limelight> limelights;
 
@@ -61,10 +56,10 @@ public class Robot {
 			IMUFactory.createSignals(imu)
 		);
 
-        this.arm = HoodConstants.createArm();
-        this.dynamicMotionMagicArm = HoodConstants.createDynamicMotionMagicArm();
-        this.motionMagicArm = HoodConstants.createMotionMagicArm();
-        this.velocityPositionArm = HoodConstants.createVelocityPositionArm();
+		this.arm = HoodConstants.createArm();
+		this.dynamicMotionMagicArm = HoodConstants.createDynamicMotionMagicArm();
+		this.motionMagicArm = HoodConstants.createMotionMagicArm();
+		this.velocityPositionArm = HoodConstants.createVelocityPositionArm();
 
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
@@ -104,7 +99,7 @@ public class Robot {
 
 	public void updateSubsystems() {
 		swerve.update();
-        velocityPositionArm.update();
+		velocityPositionArm.update();
 	}
 
 	public void periodic() {

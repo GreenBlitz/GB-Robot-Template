@@ -319,6 +319,7 @@ public class TalonFXArmBuilder {
 		return new ArmSignals(
 			Phoenix6SignalBuilder.build(motor.getDevice().getMotorVoltage(), signalFrequency, busChain),
 			Phoenix6SignalBuilder.build(motor.getDevice().getStatorCurrent(), signalFrequency, busChain),
+			Phoenix6SignalBuilder.build(motor.getDevice().getTorqueCurrent(), signalFrequency, busChain),
 			velocity,
 			Phoenix6SignalBuilder.build(motor.getDevice().getPosition(), velocity, signalFrequency, AngleUnit.ROTATIONS, busChain)
 		);

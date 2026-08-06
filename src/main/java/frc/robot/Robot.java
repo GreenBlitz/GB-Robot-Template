@@ -60,6 +60,7 @@ public class Robot {
 		this.dynamicMotionMagicArm = HoodConstants.createDynamicMotionMagicArm();
 		this.motionMagicArm = HoodConstants.createMotionMagicArm();
 		this.velocityPositionArm = HoodConstants.createVelocityPositionArm();
+		velocityPositionArm.setPosition(HoodConstants.MINIMUM_POSITION);
 
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,

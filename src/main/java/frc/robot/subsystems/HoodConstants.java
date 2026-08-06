@@ -63,7 +63,7 @@ public class HoodConstants {
 		);
 		return TalonFXArmBuilder.buildArm(
 			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Arm",
-			IDs.TalonFXIDs.HOOD,
+			IDs.TalonFXIDs.NOT_HOOD1,
 			IS_INVERTED,
 			new TalonFXFollowerConfig(),
 			SYSID_ROUTINE_CONFIG,
@@ -89,7 +89,7 @@ public class HoodConstants {
 		);
 		return TalonFXArmBuilder.buildVelocityPositionArm(
 			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/VelocityPositionArm",
-			IDs.TalonFXIDs.NOT_HOOD1,
+			IDs.TalonFXIDs.HOOD,
 			IS_INVERTED,
 			new TalonFXFollowerConfig(),
 			SYSID_ROUTINE_CONFIG,

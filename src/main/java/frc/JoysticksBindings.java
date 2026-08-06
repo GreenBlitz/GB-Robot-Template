@@ -7,6 +7,7 @@ import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
+import frc.utils.utilcommands.InitExecuteCommand;
 
 public class JoysticksBindings {
 
@@ -48,9 +49,10 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		usedJoystick.A.whileTrue(
-			new RunCommand(() -> robot.velocityPositionArm.setTargetPositionVelocity(Rotation2d.fromDegrees(35), Rotation2d.fromDegrees(1)))
-		);
+		usedJoystick.A.onTrue(
+		 robot.arm
+				.asSubsystemCommand(new InitExecuteCommand(() -> robot.velocityPositionArm.setTargetPositionVelocity(Rotation2d.fromDegrees(35), Rotation2d.fromDegrees(1)), () -> {}), "Set target position to: " ));
+
 		usedJoystick.B.whileTrue(
 			new RunCommand(() -> robot.velocityPositionArm.setTargetPositionVelocity(Rotation2d.fromDegrees(50), Rotation2d.fromDegrees(1)))
 		);

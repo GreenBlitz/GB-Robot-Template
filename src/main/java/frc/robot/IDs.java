@@ -23,7 +23,7 @@ public class IDs {
 
 		public static final Phoenix6DeviceID SWERVE_BACK_RIGHT_DRIVE = new Phoenix6DeviceID(7, BusChain.CHASSIS);
 
-		public static final Phoenix6DeviceID HOOD = new Phoenix6DeviceID(54, BusChain.ROBORIO);
+		public static final Phoenix6DeviceID HOOD = new Phoenix6DeviceID(20, BusChain.ROBORIO);
 
 		public static final Phoenix6DeviceID NOT_HOOD1 = new Phoenix6DeviceID(53, BusChain.ROBORIO);
 		public static final Phoenix6DeviceID NOT_HOOD2 = new Phoenix6DeviceID(52, BusChain.ROBORIO);

@@ -178,7 +178,6 @@ public class Swerve extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/isCollisionDetected", isCollisionDetected());
 	}
 
-
 	public int getNumberOfOdometrySamples() {
 		return Math.min(imuSignals.yawSignal().asArray().length, modules.getNumberOfOdometrySamples());
 	}

@@ -21,7 +21,7 @@ public class VelocityPositionArm extends Arm {
 	) {
 		super(logPath, motor, signals, voltageRequest, velocityPositionRequest, kG);
 		this.velocityPositionRequest = velocityPositionRequest;
-        this.targetPosition = Rotation2d.kZero;
+		this.targetPosition = Rotation2d.kZero;
 	}
 
 	public void setTargetPositionVelocity(Rotation2d targetPosition, Rotation2d targetVelocity) {
@@ -40,8 +40,7 @@ public class VelocityPositionArm extends Arm {
 	public void log() {
 		super.log();
 		Logger.recordOutput(getLogPath() + "/VelocityPositionArmTargetVelocity", velocityPositionRequest.getVelocityRPS());
-        Logger.recordOutput(getLogPath() + "/PositionTarget", velocityPositionRequest.getSetPoint());
-
-    }
+		Logger.recordOutput(getLogPath() + "/PositionTarget", velocityPositionRequest.getSetPoint());
+	}
 
 }

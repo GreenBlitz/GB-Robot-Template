@@ -1,14 +1,11 @@
 package frc;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
-import frc.robot.subsystems.swerve.SwerveMath;
-import frc.robot.subsystems.swerve.states.aimassist.AimAssistMath;
 
 public class JoysticksBindings {
 
@@ -52,7 +49,7 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-        usedJoystick.A.onTrue(new InstantCommand(() -> wannaDoThing = !wannaDoThing));
+		usedJoystick.A.onTrue(new InstantCommand(() -> wannaDoThing = !wannaDoThing));
 		// bindings...
 	}
 

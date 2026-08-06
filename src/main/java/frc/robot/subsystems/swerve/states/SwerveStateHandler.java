@@ -9,7 +9,6 @@ import frc.constants.MathConstants;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
-import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssistMath;
@@ -27,7 +26,7 @@ public class SwerveStateHandler {
 		this.swerve = swerve;
 		this.swerveConstants = swerve.getConstants();
 		this.robotPoseSupplier = Optional.empty();
-        setRobotPoseSupplier(() -> Robot.poseEstimator.getEstimatedPose());
+		setRobotPoseSupplier(() -> Robot.poseEstimator.getEstimatedPose());
 	}
 
 	public void setRobotPoseSupplier(Supplier<Pose2d> robotPoseSupplier) {
@@ -35,7 +34,7 @@ public class SwerveStateHandler {
 	}
 
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
-		if (JoysticksBindings.wannaDoThing){
+		if (JoysticksBindings.wannaDoThing) {
 //            return AimAssistMath.getObjectAssistedSpeedsSlowedDownByRotation(
 //                    AimAssistMath.getLongTurnRotationAssistedSpeeds(
 //                            speeds,
@@ -52,22 +51,17 @@ public class SwerveStateHandler {
 //                    true
 //            );
 
-            return AimAssistMath.getObjectAssistedSpeedsSlowedDownByRotation(
-                    AimAssistMath.getRotationAssistedSpeeds(
-                            speeds,
-                            robotPoseSupplier.get().get().getRotation(),
-                            new Rotation2d(),
-                            true,
-                            swerveConstants
-                    ),
-                    robotPoseSupplier.get().get(),
-                    new Rotation2d(),
-                    new Translation2d(4, 2),
-                    swerveConstants,
-                    swerveState,
-                    0,
-                    false
-            );
+			return AimAssistMath.getObjectAssistedSpeedsSlowedDownByRotation(
+				AimAssistMath
+					.getRotationAssistedSpeeds(speeds, robotPoseSupplier.get().get().getRotation(), new Rotation2d(), true, swerveConstants),
+				robotPoseSupplier.get().get(),
+				new Rotation2d(),
+				new Translation2d(4, 2),
+				swerveConstants,
+				swerveState,
+				0,
+				false
+			);
 		}
 		if (swerveState.getAimAssist() == AimAssist.NONE) {
 			return speeds;

@@ -13,13 +13,14 @@ public class Phoenix6RequestBuilder {
 
 	public static Phoenix6VelocityPositionRequest build(PositionVoltage positionVoltage, double defaultArbitraryFeedForward, boolean enableFOC) {
 		return new Phoenix6VelocityPositionRequest(
-			setPoint -> positionVoltage.withVelocity(setPoint.getRotations()),
-			setPoint -> positionVoltage.withPosition(setPoint.getRotations()),
+            Rotation2d.fromRotations(positionVoltage.Velocity),
 			Rotation2d.fromRotations(positionVoltage.Position),
 			positionVoltage.withEnableFOC(enableFOC),
-			positionVoltage::withFeedForward,
-			defaultArbitraryFeedForward,
-			Rotation2d.fromRotations(positionVoltage.Velocity)
+            setPoint -> positionVoltage.withVelocity(setPoint.getRotations()),
+            setPoint -> positionVoltage.withPosition(setPoint.getRotations()),
+            positionVoltage::withFeedForward,
+			defaultArbitraryFeedForward
+
 		);
 	}
 

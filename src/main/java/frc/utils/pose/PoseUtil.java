@@ -14,8 +14,9 @@ public class PoseUtil {
 		return imuAccelerationG.getNorm() >= minimumCollisionIMUAccelerationG;
 	}
 
-	public static boolean getIsTilted(Rotation2d imuRoll, Rotation2d imuPitch, Rotation2d minimumTiltIMU) {
-		return Math.hypot(imuRoll.getRadians(),imuPitch.getRadians()) >= minimumTiltIMU.getRadians();
+	public static boolean getIsTilted(Rotation2d imuRoll, Rotation2d imuPitch, Rotation2d minimumTiltIMURoll, Rotation2d minimumTiltIMUPitch) {
+		return Math.abs(imuRoll.getRadians()) >= minimumTiltIMURoll.getRadians()
+			|| Math.abs(imuPitch.getRadians()) >= minimumTiltIMUPitch.getRadians();
 	}
 
 	public static boolean getIsSkidding(

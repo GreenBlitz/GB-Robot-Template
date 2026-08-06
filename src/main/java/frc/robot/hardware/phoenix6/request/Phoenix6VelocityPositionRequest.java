@@ -13,13 +13,13 @@ public class Phoenix6VelocityPositionRequest extends Phoenix6FeedForwardRequest 
 	private Consumer<Rotation2d> setPosition;
 
 	public Phoenix6VelocityPositionRequest(
-		Consumer<Rotation2d> setVelocity,
+        Rotation2d position,
+        Rotation2d velocity,
+        ControlRequest controlRequest,
+        Consumer<Rotation2d> setVelocity,
 		Consumer<Rotation2d> setPosition,
-		Rotation2d position,
-		ControlRequest controlRequest,
 		Consumer<Double> setFeedForward,
-		double defaultArbitraryFeedForward,
-		Rotation2d velocity
+		double defaultArbitraryFeedForward
 	) {
 		super(position, controlRequest, setPosition, setFeedForward, defaultArbitraryFeedForward);
 		this.setVelocity = setVelocity;

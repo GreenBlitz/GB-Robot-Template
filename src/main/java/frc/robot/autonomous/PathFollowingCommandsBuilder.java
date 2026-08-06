@@ -28,8 +28,7 @@ public class PathFollowingCommandsBuilder {
             Supplier<Command> commandSupplier,
             Pose2d regularIsNearEndOfPathTolerance,
             Pose2d stuckIsNearEndOfPathTolerance,
-            double stuckDebounceSeconds,
-            String logPath
+            double stuckDebounceSeconds
     ) {
         return new ParallelCommandGroup(
                 commandSupplier.get(),

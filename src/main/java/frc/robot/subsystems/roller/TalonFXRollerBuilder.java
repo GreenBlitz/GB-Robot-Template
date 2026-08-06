@@ -24,7 +24,6 @@ import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.utils.AngleUnit;
 
-import java.util.function.Supplier;
 
 public class TalonFXRollerBuilder {
 
@@ -87,12 +86,13 @@ public class TalonFXRollerBuilder {
 			velocityVoltage
 		);
 	}
-    public static VelocityRoller buildBangBangControlledVelocityRoller(
+
+	public static VelocityRoller buildBangBangControlledVelocityRoller(
 		String logPath,
 		Phoenix6DeviceID deviceID,
 		Slot0Configs realVelocityControlConfig,
 		Slot0Configs simulationVelocityControlConfig,
-        double maxPower,
+		double maxPower,
 		int currentLimit,
 		FeedbackConfigs feedbackConfigs,
 		double momentOfInertia,
@@ -134,7 +134,8 @@ public class TalonFXRollerBuilder {
 			.build(roller.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, deviceID.busChain());
 
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), true);
-		Phoenix6Request<Rotation2d> velocityRequest = Phoenix6RequestBuilder.buildBangBangRequest(velocitySignal::getLatestValue,maxPower , true);
+		Phoenix6Request<Rotation2d> velocityRequest = Phoenix6RequestBuilder
+			.buildBangBangRequest(velocitySignal::getLatestValue, maxPower, true);
 
 		return new VelocityRoller(
 			logPath,

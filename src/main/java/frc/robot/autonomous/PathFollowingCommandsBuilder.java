@@ -28,7 +28,7 @@ public class PathFollowingCommandsBuilder {
 		Supplier<Command> commandSupplier,
 		Pose2d regularIsNearEndOfPathTolerance,
 		Pose2d stuckIsNearEndOfPathTolerance,
-		double stuckDebounceSeconds,
+		double stuckDebounceTimeSeconds,
 		String logPath
 	) {
 		return new ParallelCommandGroup(
@@ -40,7 +40,7 @@ public class PathFollowingCommandsBuilder {
 				pathfindingConstraints,
 				regularIsNearEndOfPathTolerance,
 				stuckIsNearEndOfPathTolerance,
-				stuckDebounceSeconds
+				stuckDebounceTimeSeconds
 			)
 		);
 	}
@@ -152,9 +152,9 @@ public class PathFollowingCommandsBuilder {
 		Supplier<Pose2d> currentPose,
 		Pose2d regularTolerance,
 		Pose2d stuckTolerance,
-		double stuckDebounceSeconds
+		double stuckDebounceTimeSeconds
 	) {
-		Debouncer stuckDebouncer = new Debouncer(stuckDebounceSeconds, Debouncer.DebounceType.kRising);
+		Debouncer stuckDebouncer = new Debouncer(stuckDebounceTimeSeconds, Debouncer.DebounceType.kRising);
 
 		return () -> {
 			Pose2d targetPose = Field.getAllianceRelative(PathPlannerUtil.getLastPathPose(path));

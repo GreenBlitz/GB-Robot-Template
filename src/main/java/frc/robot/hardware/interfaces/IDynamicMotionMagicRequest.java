@@ -7,12 +7,12 @@ public interface IDynamicMotionMagicRequest extends IMotionMagicRequest {
 	@Override
 	IDynamicMotionMagicRequest withSetPoint(Rotation2d setPoint);
 
-	IDynamicMotionMagicRequest withMaxVelocityRotation2dPerSecond(Rotation2d maxVelocityRotation2dPerSecond);
+	IDynamicMotionMagicRequest withMaxVelocityRPS(Rotation2d maxVelocityRPS);
 
-	Rotation2d getMaxVelocityRotation2dPerSecond();
+	Rotation2d getMaxVelocityRPS();
 
-	IDynamicMotionMagicRequest withMaxAccelerationRotation2dPerSecondSquared(Rotation2d maxAccelerationRotation2dPerSecondSquared);
+	IDynamicMotionMagicRequest withMaxAccelerationRPS(Rotation2d maxAccelerationRPSSquared);
 
-	Rotation2d getMaxAccelerationRotation2dPerSecondSquared();
+	Rotation2d getMaxAccelerationRPS();
 
 }

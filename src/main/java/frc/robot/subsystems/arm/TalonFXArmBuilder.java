@@ -45,8 +45,8 @@ public class TalonFXArmBuilder {
 		Rotation2d forwardSoftwareLimit,
 		Rotation2d reverseSoftwareLimit,
 		ArmSimulationConstants simulationConstants,
-		Rotation2d defaultMaxAccelerationRotation2dPerSecondSquare,
-		Rotation2d defaultMaxVelocityRotation2dPerSecond
+		Rotation2d defaultMaxAccelerationRPSSquare,
+		Rotation2d defaultMaxVelocityRPS
 	) {
 		TalonFXMotor motor = new TalonFXMotor(
 			logPath,
@@ -67,8 +67,8 @@ public class TalonFXArmBuilder {
 		IDynamicMotionMagicRequest positionRequest = Phoenix6RequestBuilder.build(
 			new DynamicMotionMagicVoltage(
 				signals.position().getLatestValue().getRotations(),
-				defaultMaxVelocityRotation2dPerSecond.getRotations(),
-				defaultMaxAccelerationRotation2dPerSecondSquare.getRotations()
+				defaultMaxVelocityRPS.getRotations(),
+				defaultMaxAccelerationRPSSquare.getRotations()
 			),
 			arbitraryFeedForward,
 			true
@@ -82,7 +82,7 @@ public class TalonFXArmBuilder {
 			isInverted,
 			currentLimit
 		);
-		addMotionMagicConfig(configuration, defaultMaxVelocityRotation2dPerSecond, defaultMaxAccelerationRotation2dPerSecondSquare);
+		addMotionMagicConfig(configuration, defaultMaxVelocityRPS, defaultMaxAccelerationRPSSquare);
 		motor.applyConfiguration(configuration);
 
 		return new DynamicMotionMagicArm(
@@ -91,8 +91,8 @@ public class TalonFXArmBuilder {
 			signals,
 			voltageRequest,
 			positionRequest,
-			defaultMaxAccelerationRotation2dPerSecondSquare,
-			defaultMaxVelocityRotation2dPerSecond,
+			defaultMaxAccelerationRPSSquare,
+			defaultMaxVelocityRPS,
 			configuration.Slot0.kG
 		);
 	}
@@ -112,8 +112,8 @@ public class TalonFXArmBuilder {
 		Rotation2d forwardSoftwareLimit,
 		Rotation2d reverseSoftwareLimit,
 		ArmSimulationConstants simulationConstants,
-		Rotation2d defaultMaxAccelerationRotation2dPerSecondSquare,
-		Rotation2d defaultMaxVelocityRotation2dPerSecond
+		Rotation2d defaultMaxAccelerationRPSSquare,
+		Rotation2d defaultMaxVelocityRPS
 	) {
 		TalonFXMotor motor = new TalonFXMotor(
 			logPath,
@@ -142,7 +142,7 @@ public class TalonFXArmBuilder {
 			isInverted,
 			currentLimit
 		));
-		addMotionMagicConfig(configuration, defaultMaxVelocityRotation2dPerSecond, defaultMaxAccelerationRotation2dPerSecondSquare);
+		addMotionMagicConfig(configuration, defaultMaxVelocityRPS, defaultMaxAccelerationRPSSquare);
 		motor.applyConfiguration(configuration);
 
 		return new Arm(logPath, motor, signals, voltageRequest, positionRequest, configuration.Slot0.kG);

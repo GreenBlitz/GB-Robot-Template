@@ -102,10 +102,6 @@ public class Roller extends GBSubsystem {
 		return isBehindPosition(targetPosition);
 	}
 
-	public boolean isAtVelocity(Rotation2d velocity, Rotation2d tolerance) {
-		return velocitySignal.isNear(velocity, tolerance);
-	}
-
 	public void update() {
 		motor.updateSimulation();
 		motor.updateInputs(voltageSignal, currentSignal, positionSignal, velocitySignal);

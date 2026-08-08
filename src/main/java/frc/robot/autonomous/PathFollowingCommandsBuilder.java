@@ -63,7 +63,7 @@ public class PathFollowingCommandsBuilder {
 		Supplier<Command> commandSupplier,
 		Pose2d regularIsNearEndOfPathTolerance,
 		Pose2d stuckIsNearEndOfPathTolerance,
-		double stuckDebounceSeconds
+		double stuckDebounceTimeSeconds
 	) {
 		return new SequentialCommandGroup(
 			followAdjustedPathThenStop(
@@ -73,7 +73,7 @@ public class PathFollowingCommandsBuilder {
 				pathfindingConstraints,
 				regularIsNearEndOfPathTolerance,
 				stuckIsNearEndOfPathTolerance,
-				stuckDebounceSeconds
+                    stuckDebounceTimeSeconds
 			),
 			commandSupplier.get()
 		);
@@ -140,10 +140,10 @@ public class PathFollowingCommandsBuilder {
 		PathConstraints pathfindingConstraints,
 		Pose2d regularIsNearEndOfPathTolerance,
 		Pose2d stuckIsNearEndOfPathTolerance,
-		double stuckDebounceSeconds
+		double stuckDebounceTimeSeconds
 	) {
 		return followAdjustedPath(swerve, currentPose, path, pathfindingConstraints)
-			.until(isNearEndOfPath(path, currentPose, regularIsNearEndOfPathTolerance, stuckIsNearEndOfPathTolerance, stuckDebounceSeconds))
+			.until(isNearEndOfPath(path, currentPose, regularIsNearEndOfPathTolerance, stuckIsNearEndOfPathTolerance, stuckDebounceTimeSeconds))
 			.andThen(swerve.getCommandsBuilder().resetTargetSpeeds());
 	}
 

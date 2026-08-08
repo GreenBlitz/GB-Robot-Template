@@ -219,22 +219,4 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-	public Command wiggle(Rotation2d wiggleAngle, double timeBetweenWiggles) {
-		return new DeferredCommand(
-			() -> new SequentialCommandGroup(
-				turnToHeading(Rotation2d.fromDegrees(swerve.getAbsoluteHeading().getDegrees() - wiggleAngle.getDegrees()))
-					.withTimeout(timeBetweenWiggles),
-				new RepeatCommand(
-					new SequentialCommandGroup(
-						turnToHeading(Rotation2d.fromDegrees(swerve.getAbsoluteHeading().getDegrees() + 2 * wiggleAngle.getDegrees()))
-							.withTimeout(timeBetweenWiggles),
-						turnToHeading(Rotation2d.fromDegrees(swerve.getAbsoluteHeading().getDegrees() - 2 * wiggleAngle.getDegrees()))
-							.withTimeout(timeBetweenWiggles)
-					)
-				)
-			),
-			Set.of(swerve)
-		);
-	}
-
 }

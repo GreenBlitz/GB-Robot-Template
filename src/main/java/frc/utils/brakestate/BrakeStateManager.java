@@ -18,7 +18,6 @@ public class BrakeStateManager {
 	}
 
 	private static void setBrakeMode(BrakeMode wantedMode, List<Runnable> setModes) {
-		log();
 		if (currentMode == wantedMode) {
 			return;
 		}
@@ -26,6 +25,7 @@ public class BrakeStateManager {
 		for (Runnable setMode : setModes) {
 			setMode.run();
 		}
+		log();
 	}
 
 	public static void setBrakeMode(BrakeMode brakeMode) {

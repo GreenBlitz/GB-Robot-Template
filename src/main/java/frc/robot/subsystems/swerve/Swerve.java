@@ -354,11 +354,11 @@ public class Swerve extends GBSubsystem {
 		ChassisPowers slowCalibrationPowers = new ChassisPowers();
 		slowCalibrationPowers.xPower = 0.2;
 		joystick.POV_LEFT
-			.whileTrue(getCommandsBuilder().driveByState(() -> slowCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)));
+			.whileTrue(getCommandsBuilder().driveByPowersWithSupplier(() -> slowCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)));
 		ChassisPowers fastCalibrationPowers = new ChassisPowers();
 		fastCalibrationPowers.xPower = 0.5;
 		joystick.POV_RIGHT
-			.whileTrue(getCommandsBuilder().driveByState(() -> fastCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)));
+			.whileTrue(getCommandsBuilder().driveByPowersWithSupplier(() -> fastCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)));
 
 		// The sysid outputs will be logged to the "CTRE Signal Logger".
 		// Use phoenix tuner x to extract the position, velocity, motorVoltage, state signals into wpilog.

@@ -47,12 +47,12 @@ public class SysIdCalibrator {
 	 * @param smartJoystick - the joystick to apply the buttons on
 	 */
 	public void setAllButtonsForCalibration(SmartJoystick smartJoystick) {
-        smartJoystick.START.onTrue(new InstantCommand(SignalLogger::start));
-        smartJoystick.A.whileTrue(getSysIdCommand(true, SysIdRoutine.Direction.kForward));
-        smartJoystick.B.whileTrue(getSysIdCommand(true, SysIdRoutine.Direction.kReverse));
-        smartJoystick.X.whileTrue(getSysIdCommand(false, SysIdRoutine.Direction.kForward));
-        smartJoystick.Y.whileTrue(getSysIdCommand(false, SysIdRoutine.Direction.kReverse));
-        smartJoystick.BACK.onTrue(new InstantCommand(SignalLogger::stop));
+		smartJoystick.START.onTrue(new InstantCommand(SignalLogger::start));
+		smartJoystick.A.whileTrue(getSysIdCommand(true, SysIdRoutine.Direction.kForward));
+		smartJoystick.B.whileTrue(getSysIdCommand(true, SysIdRoutine.Direction.kReverse));
+		smartJoystick.X.whileTrue(getSysIdCommand(false, SysIdRoutine.Direction.kForward));
+		smartJoystick.Y.whileTrue(getSysIdCommand(false, SysIdRoutine.Direction.kReverse));
+		smartJoystick.BACK.onTrue(new InstantCommand(SignalLogger::stop));
 	}
 
 	public Command getSysIdCommand(boolean isQuasistatic, SysIdRoutine.Direction direction) {
@@ -61,13 +61,13 @@ public class SysIdCalibrator {
 
 	public Command getSysIdQuasistatic(SysIdRoutine.Direction direction) {
 		Command command = sysIdRoutine.quasistatic(direction);
-        return usedSubsystem.asSubsystemCommand(getAppropriateCommand(command), "Sysid Quasistatic " + direction);
-    }
+		return usedSubsystem.asSubsystemCommand(getAppropriateCommand(command), "Sysid Quasistatic " + direction);
+	}
 
 	public Command getSysIdDynamic(SysIdRoutine.Direction direction) {
 		Command command = sysIdRoutine.dynamic(direction);
-        return usedSubsystem.asSubsystemCommand(getAppropriateCommand(command), "Sysid Quasistatic " + direction);
-    }
+		return usedSubsystem.asSubsystemCommand(getAppropriateCommand(command), "Sysid Quasistatic " + direction);
+	}
 
 	private Command getAppropriateCommand(Command sysIdCommand) {
 		sysIdCommand.addRequirements(usedSubsystem);

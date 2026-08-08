@@ -73,7 +73,7 @@ public class PathFollowingCommandsBuilder {
 				pathfindingConstraints,
 				regularIsNearEndOfPathTolerance,
 				stuckIsNearEndOfPathTolerance,
-                    stuckDebounceTimeSeconds
+				stuckDebounceTimeSeconds
 			),
 			commandSupplier.get()
 		);

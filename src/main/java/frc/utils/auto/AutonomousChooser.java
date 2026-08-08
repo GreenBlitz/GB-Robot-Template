@@ -19,11 +19,11 @@ public class AutonomousChooser {
 		return chooser.get().get();
 	}
 
-    public LoggedDashboardChooser<Supplier<PathPlannerAutoWrapper>> getChooser() {
-        return chooser;
-    }
+	public LoggedDashboardChooser<Supplier<PathPlannerAutoWrapper>> getChooser() {
+		return chooser;
+	}
 
-    public boolean isDefaultOptionChosen() {
+	public boolean isDefaultOptionChosen() {
 		return chooser.getSendableChooser().getSelected().equals("None");
 	}
 

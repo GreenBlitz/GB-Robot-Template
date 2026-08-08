@@ -15,6 +15,7 @@ import frc.robot.hardware.interfaces.IMotionMagicRequest;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.mechanisms.MechanismSimulation;
+import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6Device;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.simulation.TalonFXSimulation;
@@ -32,6 +33,7 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 	private static final int APPLY_CONFIG_RETRIES = 5;
 
 	private final TalonFXWrapper motor;
+	public final BusChain busChain;
 	private final TalonFXWrapper[] followers;
 	private final FollowerInputsAutoLogged[] followerInputs;
 	private final TalonFXFollowerConfig followerConfig;
@@ -47,6 +49,7 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 	) {
 		super(logPath, deviceID.busChain());
 		this.motor = new TalonFXWrapper(deviceID);
+		this.busChain = deviceID.busChain();
 		this.followers = initializeFollowers(motor, followerConfig);
 		this.followerInputs = initializeFollowerInputs(getLogPath(), followerConfig, followers.length);
 		this.followerConfig = followerConfig;
@@ -190,6 +193,10 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		} else {
 			new Alert(Alert.AlertType.WARNING, getLogPath() + "Got invalid type of request " + request.getClass().getSimpleName()).report();
 		}
+	}
+
+	public BusChain getBusChain() {
+		return busChain;
 	}
 
 }

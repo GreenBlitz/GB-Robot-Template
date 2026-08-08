@@ -18,6 +18,7 @@ public class BrakeStateManager {
 	}
 
 	private static void setBrakeMode(BrakeMode wantedMode, List<Runnable> setModes) {
+		log();
 		if (currentMode == wantedMode) {
 			return;
 		}
@@ -32,7 +33,6 @@ public class BrakeStateManager {
 			case BRAKE -> setBrakeMode(BrakeMode.BRAKE, brakeRunnables);
 			case COAST -> setBrakeMode(BrakeMode.COAST, coastRunnables);
 		}
-		log();
 	}
 
 	public static void log() {

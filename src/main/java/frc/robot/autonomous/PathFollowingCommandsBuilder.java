@@ -162,12 +162,7 @@ public class PathFollowingCommandsBuilder {
 
 			boolean isNearRegularTolerance = ToleranceMath.isNear(targetPose, current, regularTolerance);
 			boolean isNearStuckTolerance = ToleranceMath.isNear(targetPose, current, stuckTolerance);
-
-			if (isNearRegularTolerance) {
-				return true;
-			}
-
-			return stuckDebouncer.calculate(isNearStuckTolerance);
+			return isNearRegularTolerance || stuckDebouncer.calculate(isNearStuckTolerance);
 		};
 	}
 

@@ -734,9 +734,9 @@ public class LimelightHelpers {
 		public double Roll = 0.0;
 		public double Pitch = 0.0;
 		public double Yaw = 0.0;
-		public double gyroX = 0.0;
-		public double gyroY = 0.0;
-		public double gyroZ = 0.0;
+		public double IMUX = 0.0;
+		public double IMUY = 0.0;
+		public double IMUZ = 0.0;
 		public double accelX = 0.0;
 		public double accelY = 0.0;
 		public double accelZ = 0.0;
@@ -749,9 +749,9 @@ public class LimelightHelpers {
 				this.Roll = imuData[1];
 				this.Pitch = imuData[2];
 				this.Yaw = imuData[3];
-				this.gyroX = imuData[4];
-				this.gyroY = imuData[5];
-				this.gyroZ = imuData[6];
+				this.IMUX = imuData[4];
+				this.IMUY = imuData[5];
+				this.IMUZ = imuData[6];
 				this.accelX = imuData[7];
 				this.accelY = imuData[8];
 				this.accelZ = imuData[9];
@@ -1557,7 +1557,7 @@ public class LimelightHelpers {
 	}
 
 	/**
-	 * Gets the current IMU data from NetworkTables. IMU data is formatted as [robotYaw, Roll, Pitch, Yaw, gyroX, gyroY, gyroZ, accelX, accelY,
+	 * Gets the current IMU data from NetworkTables. IMU data is formatted as [robotYaw, Roll, Pitch, Yaw, IMUX, IMUY, IMUZ, accelX, accelY,
 	 * accelZ]. Returns all zeros if data is invalid or unavailable.
 	 *
 	 * @param limelightName Name/identifier of the Limelight

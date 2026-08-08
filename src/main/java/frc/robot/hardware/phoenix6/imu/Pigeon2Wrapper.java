@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.Phoenix6Util;
 
@@ -95,6 +96,7 @@ public class Pigeon2Wrapper extends Pigeon2 {
 
 	private static final int DEFAULT_CONFIG_NUMBER_OF_TRIES = 1;
 
+	private final BusChain busChain;
 
 	private double rollOffSetDegrees;
 
@@ -106,6 +108,7 @@ public class Pigeon2Wrapper extends Pigeon2 {
 
 	public Pigeon2Wrapper(Phoenix6DeviceID deviceID) {
 		super(deviceID.id(), deviceID.busChain().getCANBus());
+		this.busChain = deviceID.busChain();
 		this.rollOffSetDegrees = 0;
 		this.pitchOffSetDegrees = 0;
 	}
@@ -131,7 +134,7 @@ public class Pigeon2Wrapper extends Pigeon2 {
 	 * yourself that it won't be affected by "setRoll". If for some reason you want to get the needed offset to make the returned value affected
 	 * by resets use "getRollOffset".
 	 *
-	 * @param newRoll - the wanted roll of the gyro to have
+	 * @param newRoll - the wanted roll of the IMU to have
 	 */
 	public void setRoll(Rotation2d newRoll) {
 		rollOffSetDegrees = calculateOffset(newRoll.getDegrees(), getRoll().getValue().in(Degrees));
@@ -142,7 +145,7 @@ public class Pigeon2Wrapper extends Pigeon2 {
 	 * to yourself that it won't be affected by "setPitch". If for some reason you want to get the needed offset to make the returned value
 	 * affected by resets use "getPitchOffset".
 	 *
-	 * @param newPitch - the wanted pitch of the gyro to have
+	 * @param newPitch - the wanted pitch of the IMU to have
 	 */
 	public void setPitch(Rotation2d newPitch) {
 		pitchOffSetDegrees = calculateOffset(newPitch.getDegrees(), getPitch().getValue().in(Degrees));
@@ -216,6 +219,10 @@ public class Pigeon2Wrapper extends Pigeon2 {
 	 */
 	private Rotation2d rangeAngle(Rotation2d angle) {
 		return Rotation2d.fromRadians(MathUtil.angleModulus(angle.getRadians()));
+	}
+
+	public BusChain getBusChain() {
+		return busChain;
 	}
 
 }

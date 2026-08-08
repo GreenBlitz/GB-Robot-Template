@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -14,9 +15,14 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.imu.IMUFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
+import frc.robot.vision.cameras.limelight.Limelight;
+import frc.robot.vision.cameras.limelight.LimelightFilters;
+import frc.robot.vision.cameras.limelight.LimelightStdDevCalculations;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.robot.hardware.interfaces.IIMU;
+
+import java.util.List;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very little robot logic should
@@ -29,6 +35,7 @@ public class Robot {
 
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
+	private final List<Limelight> limelights;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -51,14 +58,47 @@ public class Robot {
 			swerve.getIMUAbsoluteYaw().getTimestamp()
 		);
 
+		this.limelights = List.of();
+		limelights.forEach(
+			limelight -> limelight.setMT1StdDevsCalculation(
+				LimelightStdDevCalculations.getMT1StdDevsCalculation(
+					limelight,
+					RobotConstants.DEFAULT_TAG_DISTANCE_FACTORS,
+					RobotConstants.DEFAULT_STD_DEV_FACTORS,
+					RobotConstants.DEFAULT_VISIBLE_TAGS_EXPONENTS,
+					RobotConstants.DEFAULT_STD_DEV_ADDITIONS
+				)
+			)
+		);
+		limelights.forEach(
+			limelight -> limelight.setMT1PoseFilter(
+				LimelightFilters.megaTag1Filter(
+					limelight,
+					timestamp -> poseEstimator.getEstimatedPoseAtTimestamp(timestamp).map(Pose2d::getRotation),
+					poseEstimator::isIMUOffsetCalibrated,
+					LimelightFilters.DEFAULT_IN_FIELD_TOLERANCE_METERS,
+					LimelightFilters.DEFAULT_YAW_AT_ANGLE_TOLERANCE
+				)
+			)
+		);
+
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+	}
+
+	public void updateSubsystems() {
+		swerve.update();
 	}
 
 	public void periodic() {
 		BusChain.refreshAll();
 
-		swerve.update();
+		updateSubsystems();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
+
+		getLimelights().forEach(Limelight::updateHardwareInputs);
+		getLimelights().forEach(Limelight::updateMT1);
+		getLimelights().forEach(limelight -> limelight.getIndependentRobotPose().ifPresent(poseEstimator::updateVision));
+
 		poseEstimator.log();
 
 		BatteryUtil.logStatus();
@@ -72,6 +112,10 @@ public class Robot {
 
 	public Swerve getSwerve() {
 		return swerve;
+	}
+
+	public List<Limelight> getLimelights() {
+		return limelights;
 	}
 
 	public PathPlannerAutoWrapper getAutonomousCommand() {

@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import frc.constants.MathConstants;
 import frc.constants.field.Field;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveMath;
@@ -87,26 +86,6 @@ public class AimAssistMath {
 		}
 
 		return SwerveMath.robotToAllianceRelativeSpeeds(assistedSpeeds, targetHeadingHingeSystemAngle);
-	}
-
-	public static ChassisSpeeds getObjectAssistedSpeedsSlowedDownByRotation(
-		ChassisSpeeds speeds,
-		Pose2d robotPose,
-		Rotation2d allianceRelativeTargetHeading,
-		Translation2d objectTranslation,
-		SwerveConstants swerveConstants,
-		SwerveState swerveState
-	) {
-		return getObjectAssistedSpeedsSlowedDownByRotation(
-			speeds,
-			robotPose,
-			allianceRelativeTargetHeading,
-			objectTranslation,
-			swerveConstants,
-			swerveState,
-			0,
-			false
-		);
 	}
 
 	private static Rotation2d applyMagnitudeCompensation(Rotation2d velocityPerSecond, double magnitude) {

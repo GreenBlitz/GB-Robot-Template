@@ -47,8 +47,9 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-        usedJoystick.B.onTrue(robot.arm.getCommandsBuilder().setVoltage(-0.5));
-        usedJoystick.A.onTrue(robot.arm.getCommandsBuilder().setVoltage(0.5));
+        usedJoystick.B.onTrue(robot.arm.getCommandsBuilder().setTargetPosition(new Rotation2d()));
+        usedJoystick.A.onTrue(robot.arm.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(180)));
+        usedJoystick.X.onTrue(robot.arm.getCommandsBuilder().stayInPlace());
 
 		// bindings...
 	}

@@ -227,8 +227,8 @@ public class TalonFXArmBuilder {
 		config.ClosedLoopGeneral.ContinuousWrap = isContinuousWrap;
 		config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = reverseSoftwareLimit.getRotations();
 		config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = forwardSoftwareLimit.getRotations();
-		config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-		config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+		config.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
+		config.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
 
 		config.CurrentLimits.StatorCurrentLimitEnable = true;
 		config.CurrentLimits.StatorCurrentLimit = currentLimit;

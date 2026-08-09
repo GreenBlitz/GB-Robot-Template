@@ -12,20 +12,20 @@
         "y": 7.0
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "end"
     },
     {
       "anchor": {
-        "x": 4.0,
+        "x": 3.0,
         "y": 7.0
       },
       "prevControl": {
-        "x": 3.0,
+        "x": 2.0,
         "y": 7.0
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "start"
     }
   ],
   "rotationTargets": [],

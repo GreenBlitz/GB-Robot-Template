@@ -350,7 +350,7 @@ public class Swerve extends GBSubsystem {
 		// Let it rotate some rotations then output will be in log under Calibrations/.
 		joystick.POV_DOWN.whileTrue(getCommandsBuilder().wheelRadiusCalibration());
 
-		// ROBOT RELATIVE DRIVE - FOR GYRO TEST
+		// ROBOT RELATIVE DRIVE - FOR IMU TEST
 		joystick.POV_UP
 			.whileTrue(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE)));
 

@@ -396,9 +396,9 @@ public class LimelightHelpers {
 		public double roll;
 		public double pitch;
 		public double rawYaw;
-		public double gyroZ;
-		public double gyroX;
-		public double gyroY;
+		public double IMUZ;
+		public double IMUX;
+		public double IMUY;
 		public double accelZ;
 		public double accelX;
 		public double accelY;
@@ -414,9 +414,9 @@ public class LimelightHelpers {
 				roll = data[1];
 				pitch = data[2];
 				rawYaw = data[3];
-				gyroZ = data[4];
-				gyroX = data[5];
-				gyroY = data[6];
+				IMUZ = data[4];
+				IMUX = data[5];
+				IMUY = data[6];
 				accelZ = data[7];
 				accelX = data[8];
 				accelY = data[9];

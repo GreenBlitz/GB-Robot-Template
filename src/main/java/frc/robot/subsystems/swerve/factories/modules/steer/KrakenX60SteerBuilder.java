@@ -60,14 +60,8 @@ class KrakenX60SteerBuilder {
 		steerConfig.CurrentLimits.StatorCurrentLimit = 30;
 		steerConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
-		switch (position) {
-			case FRONT_RIGHT, FRONT_LEFT -> {
-				steerConfig.Feedback.RotorToSensorRatio = GEAR_RATIO;
-			}
-			case BACK_RIGHT, BACK_LEFT -> {
-				steerConfig.Feedback.RotorToSensorRatio = GEAR_RATIO;
-			}
-		}
+		steerConfig.Feedback.RotorToSensorRatio = GEAR_RATIO;
+
 		steerConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
 
 		if (Robot.ROBOT_TYPE.isReal()) {

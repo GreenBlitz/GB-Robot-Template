@@ -3,10 +3,7 @@ package frc.robot.subsystems.arm;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -16,6 +13,9 @@ import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Robot;
 import frc.robot.hardware.interfaces.IDynamicMotionMagicRequest;
+import frc.robot.hardware.interfaces.IFeedForwardRequest;
+import frc.robot.hardware.interfaces.IRequest;
+import frc.robot.hardware.interfaces.VelocityPositionRequest;
 import frc.robot.hardware.mechanisms.wpilib.SingleJointedArmSimulation;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
@@ -148,6 +148,129 @@ public class TalonFXArmBuilder {
 		return new Arm(logPath, motor, signals, voltageRequest, positionRequest, configuration.Slot0.kG);
 	}
 
+	public static CurrentControlArm buildCurrentControlArm(
+		String logPath,
+		Phoenix6DeviceID deviceID,
+		boolean isInverted,
+		boolean isContinuesWrap,
+		TalonFXFollowerConfig talonFXFollowerConfig,
+		SysIdRoutine.Config sysIdRoutineConfig,
+		FeedbackConfigs feedbackConfigs,
+		Slot0Configs realSlotsConfig,
+		Slot0Configs simulationSlotsConfig,
+		double currentLimit,
+		double signalsFrequency,
+		ArmSimulationConstants simulationConstants
+	) {
+		TalonFXMotor motor = new TalonFXMotor(
+			logPath,
+			deviceID,
+			talonFXFollowerConfig,
+			sysIdRoutineConfig,
+			buildSimulation(
+				simulationConstants,
+				talonFXFollowerConfig,
+				feedbackConfigs.RotorToSensorRatio * feedbackConfigs.SensorToMechanismRatio
+			)
+		);
+
+		ArmSignals signals = buildSignals(motor, signalsFrequency, deviceID.busChain());
+
+		Phoenix6Request<Double> voltageRequest = buildVoltageRequest();
+
+		IFeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0), 0, true);
+
+		IRequest<Double> currentRequest = Phoenix6RequestBuilder.build(new TorqueCurrentFOC(0));
+
+		TalonFXConfiguration configuration = buildConfiguration(
+			feedbackConfigs,
+			simulationSlotsConfig,
+			realSlotsConfig,
+			isInverted,
+			isContinuesWrap,
+			currentLimit
+		);
+		motor.applyConfiguration(configuration);
+		return new CurrentControlArm(logPath, motor, signals, voltageRequest, positionRequest, currentRequest, configuration.Slot0.kG);
+	}
+
+	public static CurrentControlArm buildCurrentControlArm(
+		String logPath,
+		Phoenix6DeviceID deviceID,
+		boolean isInverted,
+		TalonFXFollowerConfig talonFXFollowerConfig,
+		SysIdRoutine.Config sysIdRoutineConfig,
+		FeedbackConfigs feedbackConfigs,
+		Slot0Configs realSlotsConfig,
+		Slot0Configs simulationSlotsConfig,
+		double currentLimit,
+		double signalsFrequency,
+		Rotation2d forwardSoftwareLimit,
+		Rotation2d reverseSoftwareLimit,
+		ArmSimulationConstants simulationConstants
+	) {
+		TalonFXMotor motor = new TalonFXMotor(
+			logPath,
+			deviceID,
+			talonFXFollowerConfig,
+			sysIdRoutineConfig,
+			buildSimulation(
+				simulationConstants,
+				talonFXFollowerConfig,
+				feedbackConfigs.RotorToSensorRatio * feedbackConfigs.SensorToMechanismRatio
+			)
+		);
+
+		ArmSignals signals = buildSignals(motor, signalsFrequency, deviceID.busChain());
+
+		Phoenix6Request<Double> voltageRequest = buildVoltageRequest();
+
+		IFeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0), 0, true);
+
+		IRequest<Double> currentRequest = Phoenix6RequestBuilder.build(new TorqueCurrentFOC(0));
+
+		TalonFXConfiguration configuration = buildConfiguration(
+			feedbackConfigs,
+			simulationSlotsConfig,
+			realSlotsConfig,
+			forwardSoftwareLimit,
+			reverseSoftwareLimit,
+			isInverted,
+			currentLimit
+		);
+		motor.applyConfiguration(configuration);
+		return new CurrentControlArm(logPath, motor, signals, voltageRequest, positionRequest, currentRequest, configuration.Slot0.kG);
+	}
+
+	private static TalonFXConfiguration buildConfiguration(
+		FeedbackConfigs feedbackConfigs,
+		Slot0Configs simulationConfigSlots,
+		Slot0Configs realConfigSlots,
+		boolean isInverted,
+		boolean isContinuesWrap,
+		double currentLimit
+	) {
+		TalonFXConfiguration config = new TalonFXConfiguration();
+
+		switch (Robot.ROBOT_TYPE) {
+			case REAL, REPLAY -> {
+				config.Slot0 = realConfigSlots;
+			}
+			case SIMULATION -> {
+				config.Slot0 = simulationConfigSlots;
+			}
+		}
+		config.Feedback = feedbackConfigs;
+
+		config.CurrentLimits.StatorCurrentLimitEnable = true;
+		config.CurrentLimits.StatorCurrentLimit = currentLimit;
+
+		config.MotorOutput.Inverted = isInverted ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive;
+		config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+
+		return config;
+	}
+
 	public static Arm buildArm(
 		String logPath,
 		Phoenix6DeviceID deviceID,
@@ -194,6 +317,54 @@ public class TalonFXArmBuilder {
 		);
 		motor.applyConfiguration(configuration);
 		return new Arm(logPath, motor, signals, voltageRequest, positionRequest, configuration.Slot0.kG);
+	}
+
+	public static VelocityPositionArm buildVelocityPositionArm(
+		String logPath,
+		Phoenix6DeviceID deviceID,
+		boolean isInverted,
+		TalonFXFollowerConfig talonFXFollowerConfig,
+		SysIdRoutine.Config sysIdRoutineConfig,
+		FeedbackConfigs feedbackConfigs,
+		Slot0Configs realSlotsConfig,
+		Slot0Configs simulationSlotsConfig,
+		double currentLimit,
+		double signalsFrequency,
+		double arbitraryFeedForward,
+		Rotation2d forwardSoftwareLimit,
+		Rotation2d reverseSoftwareLimit,
+		ArmSimulationConstants simulationConstants
+	) {
+		TalonFXMotor motor = new TalonFXMotor(
+			logPath,
+			deviceID,
+			talonFXFollowerConfig,
+			sysIdRoutineConfig,
+			buildSimulation(
+				simulationConstants,
+				talonFXFollowerConfig,
+				feedbackConfigs.RotorToSensorRatio * feedbackConfigs.SensorToMechanismRatio
+			)
+		);
+
+		ArmSignals signals = buildSignals(motor, signalsFrequency, deviceID.busChain());
+
+		Phoenix6Request<Double> voltageRequest = buildVoltageRequest();
+
+		VelocityPositionRequest velocityPositionRequest = Phoenix6RequestBuilder
+			.build(new PositionVoltage(signals.position().getLatestValue().getRotations()), arbitraryFeedForward, true);
+
+		TalonFXConfiguration configuration = buildConfiguration(
+			feedbackConfigs,
+			simulationSlotsConfig,
+			realSlotsConfig,
+			forwardSoftwareLimit,
+			reverseSoftwareLimit,
+			isInverted,
+			currentLimit
+		);
+		motor.applyConfiguration(configuration);
+		return new VelocityPositionArm(logPath, motor, signals, voltageRequest, velocityPositionRequest, configuration.Slot0.kG);
 	}
 
 	private static TalonFXConfiguration buildConfiguration(

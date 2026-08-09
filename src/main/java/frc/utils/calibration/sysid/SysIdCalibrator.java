@@ -61,12 +61,12 @@ public class SysIdCalibrator {
 
 	public Command getSysIdQuasistatic(SysIdRoutine.Direction direction) {
 		Command command = sysIdRoutine.quasistatic(direction);
-		return usedSubsystem.asSubsystemCommand(getAppropriateCommand(command), "Sysid Quasistatic " + direction);
+		return usedSubsystem.asSubsystemCommand(getAppropriateCommand(command), "Sysid quasistatic " + direction);
 	}
 
 	public Command getSysIdDynamic(SysIdRoutine.Direction direction) {
 		Command command = sysIdRoutine.dynamic(direction);
-		return usedSubsystem.asSubsystemCommand(getAppropriateCommand(command), "Sysid Quasistatic " + direction);
+		return usedSubsystem.asSubsystemCommand(getAppropriateCommand(command), "Sysid dynamic " + direction);
 	}
 
 	private Command getAppropriateCommand(Command sysIdCommand) {

@@ -28,7 +28,9 @@ import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.TimedValue;
 import frc.utils.auto.PathPlannerUtil;
+import frc.utils.battery.BatteryUtil;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 import java.util.Optional;
 import java.util.Set;
@@ -47,6 +49,7 @@ public class Swerve extends GBSubsystem {
 	private final HeadingStabilizer headingStabilizer;
 	private final SwerveCommandsBuilder commandsBuilder;
 	private final SwerveStateHandler stateHandler;
+	private final LoggedNetworkNumber calibrationVoltageTunable;
 
 	private SwerveState currentState;
 	private Supplier<Rotation2d> headingSupplier;
@@ -69,6 +72,7 @@ public class Swerve extends GBSubsystem {
 		this.stateHandler = new SwerveStateHandler(this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 
+		this.calibrationVoltageTunable = new LoggedNetworkNumber("Tunable/SwerveDriveCalibrationVoltage", 0);
 		update();
 		setDefaultCommand(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
 	}
@@ -340,35 +344,36 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {
-		joystick.START.onTrue(new InstantCommand(() -> setIsRunningIndependently(true)));
-		joystick.BACK.onTrue(new InstantCommand(() -> setIsRunningIndependently(false)));
 		// Calibrate steer ks with phoenix tuner x
 		// Calibrate steer pid with phoenix tuner x
 
 		// Let it rotate some rotations then output will be in log under Calibrations/.
 		joystick.POV_DOWN.whileTrue(getCommandsBuilder().wheelRadiusCalibration());
 
-		// ROBOT RELATIVE DRIVE - FOR IMU TEST
+		// ROBOT RELATIVE DRIVE - FOR GYRO TEST
 		joystick.POV_UP
-			.whileTrue(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE)));
+				.whileTrue(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE)));
 
 		// Test the swerve returns real velocities (measure distance and time in real life and compare to swerve velocity logs).
 		// REMEMBER after drive calibrations use these for pid testing - Remove OPEN LOOP for that
 		ChassisPowers slowCalibrationPowers = new ChassisPowers();
 		slowCalibrationPowers.xPower = 0.2;
 		joystick.POV_LEFT.whileTrue(
-			getCommandsBuilder().driveByPowersWithSupplier(() -> slowCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
+				getCommandsBuilder().driveByPowersWithSupplier(() -> slowCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
 		);
 		ChassisPowers fastCalibrationPowers = new ChassisPowers();
 		fastCalibrationPowers.xPower = 0.5;
 		joystick.POV_RIGHT.whileTrue(
-			getCommandsBuilder().driveByPowersWithSupplier(() -> fastCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
+				getCommandsBuilder().driveByPowersWithSupplier(() -> fastCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
 		);
 
 		// The sysid outputs will be logged to the "CTRE Signal Logger".
 		// Use phoenix tuner x to extract the position, velocity, motorVoltage, state signals into wpilog.
 		// Then enter the wpilog into wpilib sysid app and make sure you enter all info in the correct places.
 		// (see wpilib sysid in google)
+
+		joystick.START.onTrue(new InstantCommand(SignalLogger::start));
+
 		joystick.Y.whileTrue(getCommandsBuilder().driveCalibration(true, SysIdRoutine.Direction.kForward));
 		joystick.A.whileTrue(getCommandsBuilder().driveCalibration(true, SysIdRoutine.Direction.kReverse));
 		joystick.X.whileTrue(getCommandsBuilder().driveCalibration(false, SysIdRoutine.Direction.kForward));
@@ -384,21 +389,36 @@ public class Swerve extends GBSubsystem {
 
 		// Translation pid tests
 		joystick.getAxisAsButton(Axis.LEFT_TRIGGER)
-			.onTrue(
-				new DeferredCommand(
-					() -> getCommandsBuilder()
-						.moveToPoseByPID(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(1, 1, new Rotation2d()))),
-					Set.of(this)
-				)
-			);
+				.onTrue(
+						new DeferredCommand(
+								() -> getCommandsBuilder()
+										.moveToPoseByPID(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(1, 1, new Rotation2d()))),
+								Set.of(this)
+						)
+				);
 		joystick.getAxisAsButton(Axis.RIGHT_TRIGGER)
-			.onTrue(
-				new DeferredCommand(
-					() -> getCommandsBuilder()
-						.moveToPoseByPID(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(-1, -1, new Rotation2d()))),
-					Set.of(this)
-				)
-			);
+				.onTrue(
+						new DeferredCommand(
+								() -> getCommandsBuilder()
+										.moveToPoseByPID(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(-1, -1, new Rotation2d()))),
+								Set.of(this)
+						)
+				);
+
+		// max velocity at 12 volts (put a really high value in max vel and max rot vel for it to work)
+		// after calibrating max vel at 12 volts use this to calibrate kS
+		joystick.R3.whileTrue(new DeferredCommand(() -> getCommandsBuilder().drive(() -> {
+			ChassisPowers powers = new ChassisPowers();
+			powers.xPower = calibrationVoltageTunable.getAsDouble() / BatteryUtil.getCurrentVoltage();
+			return powers;
+		}), Set.of(this)));
+
+		// max rotational velocity calbration
+		joystick.BACK.whileTrue(new DeferredCommand(() -> getCommandsBuilder().drive(() -> {
+			ChassisPowers powers = new ChassisPowers();
+			powers.rotationalPower = 1;
+			return powers;
+		}), Set.of(this)));
 	}
 
 }

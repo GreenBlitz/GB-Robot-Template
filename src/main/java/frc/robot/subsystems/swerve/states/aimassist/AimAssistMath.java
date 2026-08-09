@@ -128,10 +128,8 @@ public class AimAssistMath {
 			Rotation2d targetHeading,
 			SwerveConstants swerveConstants
 	) {
-		updateLongTurnState(robotHeading, targetHeading);
-
 		double errorDegrees =
-				longTurnTargetDegrees - unwrappedHeadingDegrees;
+				targetHeading.getDegrees() - robotHeading.getDegrees();
 
 		Rotation2d pidOutputVelocityPerSecond =
 				Rotation2d.fromDegrees(
@@ -152,38 +150,4 @@ public class AimAssistMath {
 				clampedAngularVelocityPerSecond.getRadians()
 		);
 	}
-
-	private static void updateLongTurnState(
-			Rotation2d robotHeading,
-			Rotation2d targetHeading
-	) {
-		if (!longTurnActive) {
-			previousHeading = robotHeading;
-			unwrappedHeadingDegrees = robotHeading.getDegrees();
-
-			double shortError =
-					targetHeading.minus(robotHeading).getDegrees();
-
-			longTurnTargetDegrees =
-					shortError > 0
-							? targetHeading.getDegrees() - 360
-							: targetHeading.getDegrees() + 360;
-
-			longTurnActive = true;
-			return;
-		}
-
-		double delta =
-				robotHeading.getDegrees() - previousHeading.getDegrees();
-
-		if (delta > 180) {
-			delta -= 360;
-		} else if (delta < -180) {
-			delta += 360;
-		}
-
-		unwrappedHeadingDegrees += delta;
-		previousHeading = robotHeading;
-	}
-
 }

@@ -322,13 +322,16 @@ public class Swerve extends GBSubsystem {
 		modules.setTargetStates(moduleStates, isClosedLoop);
 	}
 
-	public void driveLongTurnToHeading(Rotation2d targetHeading) {
+	public void driveLongTurnToHeading(
+			Rotation2d currentHeading,
+			Rotation2d targetHeading
+	) {
 		ChassisSpeeds speeds = getRobotRelativeVelocity();
 
 		ChassisSpeeds assistedSpeeds =
 				AimAssistMath.getLongTurnRotationAssistedSpeeds(
 						speeds,
-						getAbsoluteHeading(),
+						currentHeading,
 						targetHeading,
 						constants
 				);

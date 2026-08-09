@@ -55,7 +55,11 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		usedJoystick.A.onTrue(robot.getSwerve().getCommandsBuilder().longTurnToHeading(Rotation2d.fromDegrees(90),Rotation2d.fromDegrees(3),Rotation2d.fromDegrees(2)));
+		usedJoystick.A.onTrue(
+			robot.getSwerve().getCommandsBuilder().longTurnToHeading(
+					Rotation2d.fromDegrees(90)
+			)
+		);
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

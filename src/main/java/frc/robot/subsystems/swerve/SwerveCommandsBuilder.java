@@ -117,21 +117,70 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-	public Command longTurnToHeading(
-			Rotation2d targetHeading,
-			Rotation2d tolerance,
-			Rotation2d velocityDeadband
-	) {
-		return new RunCommand(
-				() -> swerve.driveLongTurnToHeading(targetHeading),
-				swerve
-		).until(() -> swerve.isAtHeading(
-				targetHeading,
-				tolerance,
-				velocityDeadband
-		));
-	}
+	public Command longTurnToHeading(Rotation2d targetHeading) {
+		return swerve.asSubsystemCommand(
+				new Command() {
+					private Rotation2d previousHeading;
+					private double unwrappedHeadingDegrees;
+					private double longTurnTargetDegrees;
 
+					@Override
+					public void initialize() {
+						Rotation2d currentHeading = swerve.getAbsoluteHeading();
+
+						previousHeading = currentHeading;
+						unwrappedHeadingDegrees = currentHeading.getDegrees();
+
+						double shortError =
+								targetHeading.minus(currentHeading).getDegrees();
+
+						longTurnTargetDegrees =
+								shortError > 0
+										? targetHeading.getDegrees() - 360
+										: targetHeading.getDegrees() + 360;
+					}
+
+					@Override
+					public void execute() {
+						Rotation2d currentHeading = swerve.getAbsoluteHeading();
+
+						double delta =
+								currentHeading.getDegrees()
+										- previousHeading.getDegrees();
+
+						if (delta > 180) {
+							delta -= 360;
+						} else if (delta < -180) {
+							delta += 360;
+						}
+
+						unwrappedHeadingDegrees += delta;
+						previousHeading = currentHeading;
+
+						swerve.driveLongTurnToHeading(
+								Rotation2d.fromDegrees(unwrappedHeadingDegrees),
+								Rotation2d.fromDegrees(longTurnTargetDegrees)
+						);
+					}
+
+					@Override
+					public boolean isFinished() {
+						return Math.abs(
+								longTurnTargetDegrees - unwrappedHeadingDegrees
+						) < 2;
+					}
+
+					@Override
+					public void end(boolean interrupted) {
+						swerve.driveByState(
+								new ChassisSpeeds(),
+								SwerveState.DEFAULT_DRIVE
+						);
+					}
+				},
+				""
+		);
+	}
 
 	public Command turnToHeading(Rotation2d targetHeading) {
 		return turnToHeading(targetHeading, RotateAxis.MIDDLE_OF_CHASSIS);

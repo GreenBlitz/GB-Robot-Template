@@ -413,7 +413,7 @@ public class Swerve extends GBSubsystem {
 			return powers;
 		}), Set.of(this)));
 
-		// max rotational velocity calbration
+		// max rotational velocity calibration
 		joystick.BACK.whileTrue(new DeferredCommand(() -> getCommandsBuilder().drive(() -> {
 			ChassisPowers powers = new ChassisPowers();
 			powers.rotationalPower = 1;

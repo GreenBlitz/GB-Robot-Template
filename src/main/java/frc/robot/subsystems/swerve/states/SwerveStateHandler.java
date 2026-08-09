@@ -1,34 +1,19 @@
 package frc.robot.subsystems.swerve.states;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.constants.MathConstants;
-import frc.robot.Robot;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
-
-import java.util.Optional;
-import java.util.function.Supplier;
 
 public class SwerveStateHandler {
 
 	private final Swerve swerve;
-	private final SwerveConstants swerveConstants;
-	private Optional<Supplier<Pose2d>> robotPoseSupplier;
 
 	public SwerveStateHandler(Swerve swerve) {
 		this.swerve = swerve;
-		this.swerveConstants = swerve.getConstants();
-		this.robotPoseSupplier = Optional.empty();
-		setRobotPoseSupplier(() -> Robot.poseEstimator.getEstimatedPose());
-	}
-
-	public void setRobotPoseSupplier(Supplier<Pose2d> robotPoseSupplier) {
-		this.robotPoseSupplier = Optional.of(robotPoseSupplier);
 	}
 
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {

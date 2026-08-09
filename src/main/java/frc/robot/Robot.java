@@ -39,7 +39,7 @@ public class Robot {
     public final Arm arm;
     public final Arm motionMagicArm;
     public final Arm dynamicMotionMagicArm;
-	private final IPoseEstimator poseEstimator;
+	public static IPoseEstimator poseEstimator;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();

@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.JoysticksBindings;
 import frc.constants.MathConstants;
+import frc.robot.Robot;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveMath;
@@ -26,6 +27,8 @@ public class SwerveStateHandler {
 		this.swerve = swerve;
 		this.swerveConstants = swerve.getConstants();
 		this.robotPoseSupplier = Optional.empty();
+		setRobotPoseSupplier(() ->gRobot.poseEstimator.getEstimatedPose()
+		);
 	}
 
 	public void setRobotPoseSupplier(Supplier<Pose2d> robotPoseSupplier) {
@@ -34,7 +37,7 @@ public class SwerveStateHandler {
 
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
 		if (JoysticksBindings.wannaDoThing){
-			return AimAssistMath.getObjectAssistedSpeeds(speeds,robotPoseSupplier.get().get(),new Rotation2d(),new Translation2d(4,2),swerveConstants,swerveState);
+			return AimAssistMath.getObjectAssistedSpeedsSlowedDownByRotation(AimAssistMath.getRotationAssistedSpeeds(speeds,robotPoseSupplier.get().get().getRotation(),new Rotation2d(),false,swerveConstants),robotPoseSupplier.get().get(),new Rotation2d(),new Translation2d(4,2),swerveConstants,swerveState,4,true);
 		}
 		if (swerveState.getAimAssist() == AimAssist.NONE) {
 			return speeds;

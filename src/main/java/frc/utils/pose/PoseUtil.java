@@ -9,16 +9,16 @@ import frc.utils.math.ToleranceMath;
 
 public class PoseUtil {
 
-	public static boolean getIsAccelerationHigh(Translation2d imuAccelerationG, double minimumIMUAccelerationG) {
+	public static boolean isAccelerationHigh(Translation2d imuAccelerationG, double minimumIMUAccelerationG) {
 		return imuAccelerationG.getNorm() >= minimumIMUAccelerationG;
 	}
 
-	public static boolean getIsTilted(Rotation2d imuRoll, Rotation2d imuPitch, Rotation2d minimumTiltIMURoll, Rotation2d minimumTiltIMUPitch) {
+	public static boolean isTilted(Rotation2d imuRoll, Rotation2d imuPitch, Rotation2d minimumTiltIMURoll, Rotation2d minimumTiltIMUPitch) {
 		return Math.abs(imuRoll.getRadians()) >= minimumTiltIMURoll.getRadians()
 			|| Math.abs(imuPitch.getRadians()) >= minimumTiltIMUPitch.getRadians();
 	}
 
-	public static boolean getIsSkidding(
+	public static boolean areModulesSkidding(
 		SwerveDriveKinematics kinematics,
 		SwerveModuleState[] moduleStates,
 		double minimumSkidRobotToModuleVelocityDifferenceMetersPerSecond,

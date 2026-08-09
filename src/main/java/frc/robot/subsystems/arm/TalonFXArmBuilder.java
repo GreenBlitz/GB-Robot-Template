@@ -202,6 +202,7 @@ public class TalonFXArmBuilder {
 		String logPath,
 		Phoenix6DeviceID deviceID,
 		boolean isInverted,
+		boolean isContinuousWrap,
 		TalonFXFollowerConfig talonFXFollowerConfig,
 		SysIdRoutine.Config sysIdRoutineConfig,
 		FeedbackConfigs feedbackConfigs,
@@ -240,6 +241,7 @@ public class TalonFXArmBuilder {
 			forwardSoftwareLimit,
 			reverseSoftwareLimit,
 			isInverted,
+			isContinuousWrap,
 			currentLimit
 		);
 		motor.applyConfiguration(configuration);
@@ -329,6 +331,7 @@ public class TalonFXArmBuilder {
 		String logPath,
 		Phoenix6DeviceID deviceID,
 		boolean isInverted,
+		boolean isContinuousWrap,
 		TalonFXFollowerConfig talonFXFollowerConfig,
 		SysIdRoutine.Config sysIdRoutineConfig,
 		FeedbackConfigs feedbackConfigs,
@@ -367,6 +370,7 @@ public class TalonFXArmBuilder {
 			forwardSoftwareLimit,
 			reverseSoftwareLimit,
 			isInverted,
+			isContinuousWrap,
 			currentLimit
 		);
 		motor.applyConfiguration(configuration);

@@ -198,7 +198,6 @@ public class TalonFXArmBuilder {
 		String logPath,
 		Phoenix6DeviceID deviceID,
 		boolean isInverted,
-		boolean isContinuesWrap,
 		TalonFXFollowerConfig talonFXFollowerConfig,
 		SysIdRoutine.Config sysIdRoutineConfig,
 		FeedbackConfigs feedbackConfigs,
@@ -263,7 +262,6 @@ public class TalonFXArmBuilder {
 		}
 		config.Feedback = feedbackConfigs;
 
-		config.ClosedLoopGeneral.ContinuousWrap = isContinuesWrap;
 
 		config.CurrentLimits.StatorCurrentLimitEnable = true;
 		config.CurrentLimits.StatorCurrentLimit = currentLimit;

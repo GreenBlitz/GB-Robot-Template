@@ -46,7 +46,7 @@ public class AimAssistMath {
      * |                       |   |                       |
      * @formatter:on
      */
-	public static ChassisSpeeds getObjectAssistedSpeeds(
+	public static ChassisSpeeds getObjectAssistedSpeedsSlowedDownByRotation(
 		ChassisSpeeds speeds,
 		Pose2d robotPose,
 		Rotation2d allianceRelativeTargetHeading,
@@ -89,7 +89,7 @@ public class AimAssistMath {
 		return SwerveMath.robotToAllianceRelativeSpeeds(assistedSpeeds, targetHeadingHingeSystemAngle);
 	}
 
-	public static ChassisSpeeds getObjectAssistedSpeeds(
+	public static ChassisSpeeds getObjectAssistedSpeedsSlowedDownByRotation(
 		ChassisSpeeds speeds,
 		Pose2d robotPose,
 		Rotation2d allianceRelativeTargetHeading,
@@ -97,7 +97,7 @@ public class AimAssistMath {
 		SwerveConstants swerveConstants,
 		SwerveState swerveState
 	) {
-		return getObjectAssistedSpeeds(
+		return getObjectAssistedSpeedsSlowedDownByRotation(
 			speeds,
 			robotPose,
 			allianceRelativeTargetHeading,
@@ -115,25 +115,6 @@ public class AimAssistMath {
 
 	private static double applyMagnitudeCompensation(double velocityPerSecond, double magnitude, double factor) {
 		return velocityPerSecond * (SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR) / (magnitude + factor);
-	}
-
-	public static ChassisSpeeds getLongTurnRotationAssistedSpeeds(
-		ChassisSpeeds speeds,
-		Rotation2d robotHeading,
-		Rotation2d targetHeading,
-		SwerveConstants swerveConstants
-	) {
-		double errorDegrees = targetHeading.minus(robotHeading).getDegrees();
-
-		errorDegrees += errorDegrees > 0 ? -MathConstants.FULL_CIRCLE.getDegrees() : MathConstants.FULL_CIRCLE.getDegrees();
-
-		Rotation2d pidOutputVelocityPerSecond = Rotation2d
-			.fromDegrees(swerveConstants.wraplessRotationDegreesPIDController().calculate(0, errorDegrees));
-
-		Rotation2d clampedAngularVelocityPerSecond = ToleranceMath
-			.clamp(pidOutputVelocityPerSecond, swerveConstants.maxRotationalVelocityPerSecond());
-
-		return new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, clampedAngularVelocityPerSecond.getRadians());
 	}
 
 }

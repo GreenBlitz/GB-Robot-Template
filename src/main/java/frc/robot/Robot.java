@@ -10,6 +10,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -28,6 +31,7 @@ import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.vision.cameras.limelight.Limelight;
 import frc.robot.vision.cameras.limelight.LimelightPipeline;
 import frc.robot.vision.cameras.limelight.LimelightFilters;
+import frc.robot.vision.cameras.limelight.LimelightPipeline;
 import frc.robot.vision.cameras.limelight.LimelightStdDevCalculations;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
@@ -93,7 +97,7 @@ public class Robot {
 			swerve.getIMUAbsoluteYaw().getTimestamp()
 		);
 
-		this.limelights = List.of();
+		this.limelights = List.of(limelight);
 		limelights.forEach(
 			limelight -> limelight.setMT1StdDevsCalculation(
 				LimelightStdDevCalculations.getMT1StdDevsCalculation(
@@ -124,6 +128,9 @@ public class Robot {
 
 	public void updateSubsystems() {
 		swerve.update();
+		arm.update();
+		motionMagicArm.update();
+		arm.update();
 	}
 
 	public void periodic() {

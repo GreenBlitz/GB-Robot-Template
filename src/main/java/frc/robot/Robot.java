@@ -4,10 +4,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -21,12 +23,14 @@ import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.imu.IMUFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.vision.cameras.limelight.Limelight;
-import frc.robot.vision.cameras.limelight.LimelightPipeline;
 import frc.robot.vision.cameras.limelight.LimelightFilters;
+import frc.robot.vision.cameras.limelight.LimelightPipeline;
 import frc.robot.vision.cameras.limelight.LimelightStdDevCalculations;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.robot.hardware.interfaces.IIMU;
+import frc.utils.brakestate.BrakeMode;
+import frc.utils.brakestate.BrakeStateManager;
 
 import java.util.List;
 
@@ -72,6 +76,7 @@ public class Robot {
 		this.dynamicMotionMagicArm = HoodConstants.createDynamicMotionMagicArm();
 		this.motionMagicArm = HoodConstants.createMotionMagicArm();
 
+		BrakeStateManager.add(() -> swerve.getModules().setBrake(true), () -> swerve.getModules().setBrake(false));
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
 			swerve.getKinematics(),
@@ -106,10 +111,15 @@ public class Robot {
 		);
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+
+		configureBrakeStateChooser();
 	}
 
 	public void updateSubsystems() {
 		swerve.update();
+		arm.update();
+		motionMagicArm.update();
+		arm.update();
 	}
 
 	public void periodic() {
@@ -143,6 +153,14 @@ public class Robot {
 
 	public PathPlannerAutoWrapper getAutonomousCommand() {
 		return new PathPlannerAutoWrapper();
+	}
+
+	private void configureBrakeStateChooser() {
+		SendableChooser<BrakeMode> brakeStateChooser = new SendableChooser<>();
+		brakeStateChooser.setDefaultOption("Brake", BrakeMode.BRAKE);
+		brakeStateChooser.addOption("Coast", BrakeMode.COAST);
+		SmartDashboard.putData("BrakeState", brakeStateChooser);
+		brakeStateChooser.onChange(BrakeStateManager::setBrakeMode);
 	}
 
 }

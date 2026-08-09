@@ -97,20 +97,20 @@ public class Swerve extends GBSubsystem {
 		return stateHandler;
 	}
 
-	public Rotation3d getAngularVelocityFromIMURPS() {
-		return imuSignals.getAngularVelocity();
+	public Rotation2d[] getAngularVelocityFromIMURPS() {
+		return imuSignals.getLatestAngularVelocity();
 	}
 
 	public Rotation3d getOrientationFromIMU() {
-		return imuSignals.getOrientation();
+		return imuSignals.getLatestOrientation();
 	}
 
 	public Translation3d getIMUAccelerationG() {
-		return imuSignals.getAccelerationEarthGravitationalAcceleration();
+		return imuSignals.getLatestAccelerationGMetersPerSecondSquare();
 	}
 
 	public Translation3d getAccelerationFromIMUMetersPerSecondSquared() {
-		return getIMUAccelerationG().times(RobotConstants.GRAVITATIONAL_ACCELERATION_METERS_PER_SECOND_SQUARED_ISRAEL);
+		return getIMUAccelerationG().times(RobotConstants.G);
 	}
 
 
@@ -156,9 +156,9 @@ public class Swerve extends GBSubsystem {
 			imuSignals.rollAngularVelocitySignal(),
 			imuSignals.pitchAngularVelocitySignal(),
 			imuSignals.yawAngularVelocitySignal(),
-			imuSignals.xAccelerationSignalEarthGravitationalAcceleration(),
-			imuSignals.yAccelerationSignalEarthGravitationalAcceleration(),
-			imuSignals.zAccelerationSignalEarthGravitationalAcceleration()
+			imuSignals.xAccelerationGSignal(),
+			imuSignals.yAccelerationGSignal(),
+			imuSignals.zAccelerationGSignal()
 		);
 	}
 
@@ -236,7 +236,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public double getIMUAcceleration() {
-		return imuSignals.getAccelerationEarthGravitationalAcceleration().getNorm();
+		return imuSignals.getLatestAccelerationGMetersPerSecondSquare().getNorm();
 	}
 
 
@@ -336,7 +336,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public boolean isCollisionDetected() {
-		return imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d().getNorm() > SwerveConstants.MIN_COLLISION_G_FORCE;
+		return imuSignals.getLatestAccelerationGMetersPerSecondSquare().toTranslation2d().getNorm() > SwerveConstants.MIN_COLLISION_G_FORCE;
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {

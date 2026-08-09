@@ -5,8 +5,10 @@ import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
+import frc.robot.autonomous.AutonomousConstants;
 import frc.robot.autonomous.PathFollowingCommandsBuilder;
 import frc.robot.subsystems.swerve.ChassisPowers;
+import frc.utils.auto.PathHelper;
 
 public class JoysticksBindings {
 
@@ -48,7 +50,7 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		usedJoystick.A.onTrue(PathFollowingCommandsBuilder.followAdjustedPathThenStop());
+        usedJoystick.A.onTrue(PathFollowingCommandsBuilder.followAdjustedPathThenStop(robot.getSwerve(),() -> robot.getPoseEstimator().getEstimatedPose(), PathHelper.PATH_PLANNER_PATHS.get("Rotate 2m"), AutonomousConstants.DEFAULT_PATHFINDING_CONSTRAINTS,AutonomousConstants.DEFAULT_IS_NEAR_END_OF_PATH_TOLERANCE,AutonomousConstants.DEFAULT_STUCK_IS_NEAR_END_OF_PATH_TOLERANCE,AutonomousConstants.DEFAULT_STUCK_DEBOUNCE_SECONDS));
 		usedJoystick.B.onTrue(robot.motionMagicArm.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(30)));
 		usedJoystick.X.onTrue(robot.dynamicMotionMagicArm.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(30)));
 		// bindings...

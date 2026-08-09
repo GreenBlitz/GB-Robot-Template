@@ -16,7 +16,6 @@ import frc.robot.Robot;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
-import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
@@ -24,6 +23,7 @@ import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6DoubleSignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6LatencySignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
+import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.records.SteerRequests;
 import frc.robot.subsystems.swerve.module.records.SteerSignals;
 import frc.utils.AngleUnit;
@@ -51,7 +51,7 @@ class KrakenX60SteerBuilder {
 		);
 	}
 
-	private static TalonFXConfiguration buildMotorConfig(boolean inverted) {
+	private static TalonFXConfiguration buildMotorConfig(boolean inverted, ModuleUtil.ModulePosition position) {
 		TalonFXConfiguration steerConfig = new TalonFXConfiguration();
 
 		steerConfig.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
@@ -64,12 +64,40 @@ class KrakenX60SteerBuilder {
 		steerConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
 
 		if (Robot.ROBOT_TYPE.isReal()) {
-			steerConfig.Slot0.kS = 0.295;
-			steerConfig.Slot0.kV = 0;
-			steerConfig.Slot0.kA = 0;
-			steerConfig.Slot0.kP = 70;
-			steerConfig.Slot0.kI = 0;
-			steerConfig.Slot0.kD = 0;
+			switch (position) {
+				case BACK_LEFT -> {
+					steerConfig.Slot0.kS = 0.25;
+					steerConfig.Slot0.kV = 0;
+					steerConfig.Slot0.kA = 0;
+					steerConfig.Slot0.kP = 67;
+					steerConfig.Slot0.kI = 0;
+					steerConfig.Slot0.kD = 1;
+				}
+				case BACK_RIGHT -> {
+					steerConfig.Slot0.kS = 0.25;
+					steerConfig.Slot0.kV = 0;
+					steerConfig.Slot0.kA = 0;
+					steerConfig.Slot0.kP = 70;
+					steerConfig.Slot0.kI = 0;
+					steerConfig.Slot0.kD = 1;
+				}
+				case FRONT_LEFT -> {
+					steerConfig.Slot0.kS = 0.2998046875;
+					steerConfig.Slot0.kV = 0;
+					steerConfig.Slot0.kA = 0;
+					steerConfig.Slot0.kP = 70;
+					steerConfig.Slot0.kI = 0;
+					steerConfig.Slot0.kD = 1;
+				}
+				case FRONT_RIGHT -> {
+					steerConfig.Slot0.kS = 0.349609375;
+					steerConfig.Slot0.kV = 0;
+					steerConfig.Slot0.kA = 0;
+					steerConfig.Slot0.kP = 60;
+					steerConfig.Slot0.kI = 0;
+					steerConfig.Slot0.kD = 0;
+				}
+			}
 		} else {
 			steerConfig.Slot0.kS = 0;
 			steerConfig.Slot0.kV = 0;
@@ -83,8 +111,14 @@ class KrakenX60SteerBuilder {
 		return steerConfig;
 	}
 
-	static ControllableMotor buildSteer(String logPath, Phoenix6DeviceID deviceID, Phoenix6DeviceID encoderID, boolean inverted) {
-		TalonFXConfiguration configuration = buildMotorConfig(inverted);
+	static ControllableMotor buildSteer(
+		String logPath,
+		Phoenix6DeviceID deviceID,
+		Phoenix6DeviceID encoderID,
+		boolean inverted,
+		ModuleUtil.ModulePosition modulePosition
+	) {
+		TalonFXConfiguration configuration = buildMotorConfig(inverted, modulePosition);
 		configuration.Feedback.FeedbackRemoteSensorID = encoderID.id();
 
 		TalonFXMotor steer = new TalonFXMotor(logPath, deviceID, buildSysidConfig(logPath), buildMechanismSimulation());
@@ -101,17 +135,17 @@ class KrakenX60SteerBuilder {
 
 	static SteerSignals buildSignals(TalonFXMotor steer) {
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
-			.build(steer.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
+			.build(steer.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, steer.getBusChain());
 		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder
-			.build(steer.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, BusChain.ROBORIO);
+			.build(steer.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, steer.getBusChain());
 		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder
-			.build(steer.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
+			.build(steer.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, steer.getBusChain());
 		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder.build(
 			steer.getDevice().getPosition(),
 			velocitySignal,
 			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			AngleUnit.ROTATIONS,
-			BusChain.ROBORIO
+			steer.getBusChain()
 		);
 
 		return new SteerSignals(positionSignal, velocitySignal, currentSignal, voltageSignal);

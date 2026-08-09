@@ -97,17 +97,20 @@ public class Swerve extends GBSubsystem {
 		return stateHandler;
 	}
 
-	public Rotation3d getAngularVelocityFromIMURotation2dPerSecond() {
-		return imuSignals.getAngularVelocity();
+	public Rotation2d[] getAngularVelocityFromIMURPS() {
+		return imuSignals.getLatestAngularVelocity();
 	}
 
 	public Rotation3d getOrientationFromIMU() {
-		return imuSignals.getOrientation();
+		return imuSignals.getLatestOrientation();
+	}
+
+	public Translation3d getIMUAccelerationG() {
+		return imuSignals.getLatestAccelerationGMetersPerSecondSquare();
 	}
 
 	public Translation3d getAccelerationFromIMUMetersPerSecondSquared() {
-		return imuSignals.getAccelerationEarthGravitationalAcceleration()
-			.times(RobotConstants.GRAVITATIONAL_ACCELERATION_METERS_PER_SECOND_SQUARED_ISRAEL);
+		return getIMUAccelerationG().times(RobotConstants.G);
 	}
 
 
@@ -153,9 +156,9 @@ public class Swerve extends GBSubsystem {
 			imuSignals.rollAngularVelocitySignal(),
 			imuSignals.pitchAngularVelocitySignal(),
 			imuSignals.yawAngularVelocitySignal(),
-			imuSignals.xAccelerationSignalEarthGravitationalAcceleration(),
-			imuSignals.yAccelerationSignalEarthGravitationalAcceleration(),
-			imuSignals.zAccelerationSignalEarthGravitationalAcceleration()
+			imuSignals.xAccelerationGSignal(),
+			imuSignals.yAccelerationGSignal(),
+			imuSignals.zAccelerationGSignal()
 		);
 	}
 
@@ -177,7 +180,6 @@ public class Swerve extends GBSubsystem {
 
 		Logger.recordOutput(getLogPath() + "/isCollisionDetected", isCollisionDetected());
 	}
-
 
 	public int getNumberOfOdometrySamples() {
 		return Math.min(imuSignals.yawSignal().asArray().length, modules.getNumberOfOdometrySamples());
@@ -234,7 +236,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public double getIMUAcceleration() {
-		return imuSignals.getAccelerationEarthGravitationalAcceleration().getNorm();
+		return imuSignals.getLatestAccelerationGMetersPerSecondSquare().getNorm();
 	}
 
 
@@ -334,7 +336,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public boolean isCollisionDetected() {
-		return imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d().getNorm() > SwerveConstants.MIN_COLLISION_G_FORCE;
+		return imuSignals.getLatestAccelerationGMetersPerSecondSquare().toTranslation2d().getNorm() > SwerveConstants.MIN_COLLISION_G_FORCE;
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {
@@ -354,12 +356,14 @@ public class Swerve extends GBSubsystem {
 		// REMEMBER after drive calibrations use these for pid testing - Remove OPEN LOOP for that
 		ChassisPowers slowCalibrationPowers = new ChassisPowers();
 		slowCalibrationPowers.xPower = 0.2;
-		joystick.POV_LEFT
-			.whileTrue(getCommandsBuilder().driveByState(() -> slowCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)));
+		joystick.POV_LEFT.whileTrue(
+			getCommandsBuilder().driveByPowersWithSupplier(() -> slowCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
+		);
 		ChassisPowers fastCalibrationPowers = new ChassisPowers();
 		fastCalibrationPowers.xPower = 0.5;
-		joystick.POV_RIGHT
-			.whileTrue(getCommandsBuilder().driveByState(() -> fastCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)));
+		joystick.POV_RIGHT.whileTrue(
+			getCommandsBuilder().driveByPowersWithSupplier(() -> fastCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
+		);
 
 		// The sysid outputs will be logged to the "CTRE Signal Logger".
 		// Use phoenix tuner x to extract the position, velocity, motorVoltage, state signals into wpilog.

@@ -67,7 +67,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		this.poseToIMUYawDifferenceBuffer = new RingBuffer<>(WPILibPoseEstimatorConstants.POSE_TO_IMU_YAW_DIFFERENCE_BUFFER_SIZE);
 		this.imuYawBuffer = TimeInterpolatableBuffer.createBuffer(WPILibPoseEstimatorConstants.IMU_YAW_BUFFER_SIZE_SECONDS);
 		this.imu3DAccelerationGBuffer = TimeInterpolatableBuffer
-			.createBuffer(WPILibPoseEstimatorConstants.IMU_2D_ACCELERATION_G_BUFFER_SIZE_SECONDS);
+			.createBuffer(WPILibPoseEstimatorConstants.IMU_3D_ACCELERATION_G_BUFFER_SIZE_SECONDS);
 	}
 
 

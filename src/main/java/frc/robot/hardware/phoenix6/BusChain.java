@@ -10,7 +10,8 @@ import com.ctre.phoenix6.CANBus.CANBusStatus;
 
 public enum BusChain {
 
-	ROBORIO("rio");
+	ROBORIO("rio"),
+	CHASSIS("chassis");
 
 	private static final double PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE = 0.6;
 	private static final int PERMITTED_RECEIVE_ERRORS = 0;
@@ -36,46 +37,46 @@ public enum BusChain {
 	private void createAlerts() {
 		//@formatter:off
 		AlertManager.addAlert(
-			new PeriodicAlert(
-				Alert.AlertType.WARNING,
-				logPath + "/StatusErrorAt",
-				() -> !currentBusStatus.Status.isOK()
-			)
+				new PeriodicAlert(
+						Alert.AlertType.WARNING,
+						logPath + "/StatusErrorAt",
+						() -> !currentBusStatus.Status.isOK()
+				)
 		);
 		AlertManager.addAlert(
-			new PeriodicAlert(
-				Alert.AlertType.WARNING,
-				logPath + "/ReceiveErrorAt",
-				() -> currentBusStatus.REC > PERMITTED_RECEIVE_ERRORS
-			)
+				new PeriodicAlert(
+						Alert.AlertType.WARNING,
+						logPath + "/ReceiveErrorAt",
+						() -> currentBusStatus.REC > PERMITTED_RECEIVE_ERRORS
+				)
 		);
 		AlertManager.addAlert(
-			new PeriodicAlert(
-				Alert.AlertType.WARNING,
-				logPath + "/FloodedAt",
-				() -> currentBusStatus.BusUtilization > PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE
-			)
+				new PeriodicAlert(
+						Alert.AlertType.WARNING,
+						logPath + "/FloodedAt",
+						() -> currentBusStatus.BusUtilization > PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE
+				)
 		);
 		AlertManager.addAlert(
-			new PeriodicAlert(
-				Alert.AlertType.WARNING,
-				logPath + "/TransmitErrorsAt",
-				() -> currentBusStatus.TEC > PERMITTED_TRANSMIT_ERRORS
-			)
+				new PeriodicAlert(
+						Alert.AlertType.WARNING,
+						logPath + "/TransmitErrorsAt",
+						() -> currentBusStatus.TEC > PERMITTED_TRANSMIT_ERRORS
+				)
 		);
 
 		PeriodicAlert busOffAlert = new PeriodicAlert(
-			Alert.AlertType.ERROR,
-			logPath + "/BusOffAt",
-			() -> currentBusStatus.BusOffCount > lastBusStatus.BusOffCount
+				Alert.AlertType.ERROR,
+				logPath + "/BusOffAt",
+				() -> currentBusStatus.BusOffCount > lastBusStatus.BusOffCount
 		);
 		busOffAlert.reportByCondition();
 		AlertManager.addAlert(busOffAlert);
 
 		PeriodicAlert busFullAlert = new PeriodicAlert(
-			Alert.AlertType.ERROR,
-			logPath + "/FullAt",
-			() -> currentBusStatus.TxFullCount > lastBusStatus.TxFullCount
+				Alert.AlertType.ERROR,
+				logPath + "/FullAt",
+				() -> currentBusStatus.TxFullCount > lastBusStatus.TxFullCount
 		);
 		busFullAlert.reportByCondition();
 		AlertManager.addAlert(busFullAlert);

@@ -7,6 +7,7 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.units.Units;
@@ -23,13 +24,16 @@ import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6DoubleSignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6LatencySignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
+import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.records.SteerRequests;
 import frc.robot.subsystems.swerve.module.records.SteerSignals;
 import frc.utils.AngleUnit;
 
 class KrakenX60SteerBuilder {
 
-	private static final double GEAR_RATIO = 12.8;
+	private static final double FRONT_MODULES_GEAR_RATIO = 12.8;
+	private static final double BACK_MODULES_GEAR_RATIO = 18.75;
+
 	private static final double MOMENT_OF_INERTIA_METERS_SQUARED = 0.00001;
 
 	private static SysIdRoutine.Config buildSysidConfig(String logPath) {
@@ -44,31 +48,66 @@ class KrakenX60SteerBuilder {
 	private static SimpleMotorSimulation buildMechanismSimulation() {
 		return new SimpleMotorSimulation(
 			new DCMotorSim(
-				LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), MOMENT_OF_INERTIA_METERS_SQUARED, GEAR_RATIO),
+				LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), MOMENT_OF_INERTIA_METERS_SQUARED, FRONT_MODULES_GEAR_RATIO),
 				DCMotor.getKrakenX60Foc(1)
 			)
 		);
 	}
 
-	private static TalonFXConfiguration buildMotorConfig(boolean inverted) {
+	private static TalonFXConfiguration buildMotorConfig(boolean inverted, ModuleUtil.ModulePosition position) {
 		TalonFXConfiguration steerConfig = new TalonFXConfiguration();
 
 		steerConfig.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 
-		steerConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+		steerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 		steerConfig.CurrentLimits.StatorCurrentLimit = 30;
 		steerConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
-		steerConfig.Feedback.RotorToSensorRatio = GEAR_RATIO;
+		switch (position) {
+			case FRONT_RIGHT, FRONT_LEFT -> {
+				steerConfig.Feedback.RotorToSensorRatio = FRONT_MODULES_GEAR_RATIO;
+			}
+			case BACK_RIGHT, BACK_LEFT -> {
+				steerConfig.Feedback.RotorToSensorRatio = BACK_MODULES_GEAR_RATIO;
+			}
+		}
 		steerConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
 
 		if (Robot.ROBOT_TYPE.isReal()) {
-			steerConfig.Slot0.kS = 0.295;
-			steerConfig.Slot0.kV = 0;
-			steerConfig.Slot0.kA = 0;
-			steerConfig.Slot0.kP = 70;
-			steerConfig.Slot0.kI = 0;
-			steerConfig.Slot0.kD = 0;
+			switch (position) {
+				case BACK_LEFT -> {
+					steerConfig.Slot0.kS = 0.25;
+					steerConfig.Slot0.kV = 0;
+					steerConfig.Slot0.kA = 0;
+					steerConfig.Slot0.kP = 67;
+					steerConfig.Slot0.kI = 0;
+					steerConfig.Slot0.kD = 1;
+				}
+				case BACK_RIGHT -> {
+					steerConfig.Slot0.kS = 0.25;
+					steerConfig.Slot0.kV = 0;
+					steerConfig.Slot0.kA = 0;
+					steerConfig.Slot0.kP = 70;
+					steerConfig.Slot0.kI = 0;
+					steerConfig.Slot0.kD = 1;
+				}
+				case FRONT_LEFT -> {
+					steerConfig.Slot0.kS = 0.2998046875;
+					steerConfig.Slot0.kV = 0;
+					steerConfig.Slot0.kA = 0;
+					steerConfig.Slot0.kP = 70;
+					steerConfig.Slot0.kI = 0;
+					steerConfig.Slot0.kD = 1;
+				}
+				case FRONT_RIGHT -> {
+					steerConfig.Slot0.kS = 0.349609375;
+					steerConfig.Slot0.kV = 0;
+					steerConfig.Slot0.kA = 0;
+					steerConfig.Slot0.kP = 60;
+					steerConfig.Slot0.kI = 0;
+					steerConfig.Slot0.kD = 0;
+				}
+			}
 		} else {
 			steerConfig.Slot0.kS = 0;
 			steerConfig.Slot0.kV = 0;
@@ -78,12 +117,19 @@ class KrakenX60SteerBuilder {
 			steerConfig.Slot0.kD = 0;
 		}
 		steerConfig.ClosedLoopGeneral.ContinuousWrap = true;
+		steerConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
 
 		return steerConfig;
 	}
 
-	static ControllableMotor buildSteer(String logPath, Phoenix6DeviceID deviceID, Phoenix6DeviceID encoderID, boolean inverted) {
-		TalonFXConfiguration configuration = buildMotorConfig(inverted);
+	static ControllableMotor buildSteer(
+		String logPath,
+		Phoenix6DeviceID deviceID,
+		Phoenix6DeviceID encoderID,
+		boolean inverted,
+		ModuleUtil.ModulePosition modulePosition
+	) {
+		TalonFXConfiguration configuration = buildMotorConfig(inverted, modulePosition);
 		configuration.Feedback.FeedbackRemoteSensorID = encoderID.id();
 
 		TalonFXMotor steer = new TalonFXMotor(logPath, deviceID, buildSysidConfig(logPath), buildMechanismSimulation());

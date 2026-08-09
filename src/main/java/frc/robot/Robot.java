@@ -160,7 +160,7 @@ public class Robot {
                 )
         );
 
-        Logger.recordOutput("PoseUtil/isColliding",PoseUtil.getIsAccelerationHigh(swerve.getIMUAccelerationG().toTranslation2d(),2));
+        Logger.recordOutput("PoseUtil/isColliding",PoseUtil.getIsAccelerationHigh(swerve.getIMUAccelerationG().toTranslation2d(),1.3));
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();

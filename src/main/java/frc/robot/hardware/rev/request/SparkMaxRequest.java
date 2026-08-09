@@ -17,11 +17,11 @@ public class SparkMaxRequest<T> implements IRequest<T> {
 	private T setPoint;
 
 	SparkMaxRequest(
-		T setPoint,
-		SparkBase.ControlType controlType,
-		ClosedLoopSlot pidSlot,
-		Function<T, Double> feedforwardCalculator,
-		Function<T, Double> setPointToDoubleConverter
+			T setPoint,
+			SparkBase.ControlType controlType,
+			ClosedLoopSlot pidSlot,
+			Function<T, Double> feedforwardCalculator,
+			Function<T, Double> setPointToDoubleConverter
 	) {
 		this.setPoint = setPoint;
 		this.controlType = controlType;
@@ -48,7 +48,7 @@ public class SparkMaxRequest<T> implements IRequest<T> {
 	public Double getSparkMaxCompatibleSetPoint() {
 		boolean isVelocity = controlType == SparkBase.ControlType.kMAXMotionVelocityControl || controlType == SparkBase.ControlType.kVelocity;
 		return setPointToDoubleConverter.apply(
-			isVelocity ? (T) Rotation2d.fromRotations(Conversions.perSecondToPerMinute(((Rotation2d) setPoint).getRotations())) : setPoint
+				isVelocity ? (T) Rotation2d.fromRotations(Conversions.perSecondToPerMinute(((Rotation2d) setPoint).getRotations())) : setPoint
 		);
 	}
 

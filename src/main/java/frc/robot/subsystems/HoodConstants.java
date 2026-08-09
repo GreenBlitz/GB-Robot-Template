@@ -27,7 +27,7 @@ public class HoodConstants {
         FEEDBACK_CONFIGS.RotorToSensorRatio = 1;
         FEEDBACK_CONFIGS.SensorToMechanismRatio = 120;
 
-        REAL_SLOT.kP = 600;
+        REAL_SLOT.kP = 50;
         REAL_SLOT.kI = 0;
         REAL_SLOT.kD = 0;
         REAL_SLOT.kS = 0.3;

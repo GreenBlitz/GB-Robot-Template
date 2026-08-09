@@ -10,6 +10,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -34,6 +36,8 @@ import frc.utils.pose.PoseUtil;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
+import frc.utils.brakestate.BrakeMode;
+import frc.utils.brakestate.BrakeStateManager;
 
 import java.util.List;
 
@@ -79,6 +83,7 @@ public class Robot {
         this.dynamicMotionMagicArm = HoodConstants.createDynamicMotionMagicArm();
         this.motionMagicArm = HoodConstants.createMotionMagicArm();
 
+		BrakeStateManager.add(() -> swerve.getModules().setBrake(true), () -> swerve.getModules().setBrake(false));
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
 			swerve.getKinematics(),
@@ -114,6 +119,7 @@ public class Robot {
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 
+		configureBrakeStateChooser();
 	}
 
 	public void updateSubsystems() {
@@ -139,14 +145,15 @@ public class Robot {
 
         Logger.recordOutput(
                 "PoseUtil/isSkidding",
-                PoseUtil.getIsSkidding(
+                PoseUtil.getAreModulesSkidding(
                         swerve.getKinematics(),
                         swerve.getModules().getCurrentStates(),
-                        0.5
+                        0.5,
+						1e-6
                 )
         );
 
-        Logger.recordOutput("PoseUtil/isColliding",PoseUtil.getIsColliding(swerve.));
+        Logger.recordOutput("PoseUtil/isColliding",PoseUtil.getIsAccelerationHigh(swerve.getIMUAccelerationG().toTranslation2d(),2));
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
@@ -167,6 +174,14 @@ public class Robot {
 
 	public PathPlannerAutoWrapper getAutonomousCommand() {
 		return new PathPlannerAutoWrapper();
+	}
+
+	private void configureBrakeStateChooser() {
+		SendableChooser<BrakeMode> brakeStateChooser = new SendableChooser<>();
+		brakeStateChooser.setDefaultOption("Brake", BrakeMode.BRAKE);
+		brakeStateChooser.addOption("Coast", BrakeMode.COAST);
+		SmartDashboard.putData("BrakeState", brakeStateChooser);
+		brakeStateChooser.onChange(BrakeStateManager::setBrakeMode);
 	}
 
 }

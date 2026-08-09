@@ -11,10 +11,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public class Phoenix6RequestBuilder {
 
-	public static Phoenix6FeedForwardRequest build(PositionVoltage positionVoltage, double defaultArbitraryFeedForward, boolean enableFOC) {
-		return new Phoenix6FeedForwardRequest(
+	public static Phoenix6VelocityPositionRequest build(PositionVoltage positionVoltage, double defaultArbitraryFeedForward, boolean enableFOC) {
+		return new Phoenix6VelocityPositionRequest(
 			Rotation2d.fromRotations(positionVoltage.Position),
+			Rotation2d.fromRotations(positionVoltage.Velocity),
 			positionVoltage.withEnableFOC(enableFOC),
+			setPoint -> positionVoltage.withVelocity(setPoint.getRotations()),
 			setPoint -> positionVoltage.withPosition(setPoint.getRotations()),
 			positionVoltage::withFeedForward,
 			defaultArbitraryFeedForward

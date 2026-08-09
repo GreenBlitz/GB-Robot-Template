@@ -78,6 +78,10 @@ public class Module {
 		resetSteerByEncoder();
 	}
 
+	public ModuleSpecificConstants getConstants() {
+		return constants;
+	}
+
 	public SysIdCalibrator.SysIdConfigInfo getSteerSysIdConfigInfo() {
 		return steer.getSysidConfigInfo();
 	}

@@ -27,7 +27,7 @@ public class SwerveStateHandler {
 		this.swerve = swerve;
 		this.swerveConstants = swerve.getConstants();
 		this.robotPoseSupplier = Optional.empty();
-		setRobotPoseSupplier(() ->gRobot.poseEstimator.getEstimatedPose()
+		setRobotPoseSupplier(() ->Robot.poseEstimator.getEstimatedPose()
 		);
 	}
 

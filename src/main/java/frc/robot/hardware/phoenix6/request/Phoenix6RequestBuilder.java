@@ -81,7 +81,7 @@ public class Phoenix6RequestBuilder {
 	public static Phoenix6Request<Rotation2d> buildBangBangRequest(
 		Supplier<Rotation2d> currentVelocity,
 		double maxPower,
-		double reverseMultiplayer,
+		double maxReversePower,
 		boolean enableFOC
 	) {
 		BangBangController bangBangController = new BangBangController();
@@ -91,7 +91,7 @@ public class Phoenix6RequestBuilder {
 			dutyCycleOut,
 			(Rotation2d targetVelocity) -> dutyCycleOut.withOutput(
 				bangBangController.calculate(currentVelocity.get().getRotations(), targetVelocity.getRotations()) == 0
-					? maxPower * reverseMultiplayer
+					? maxReversePower
 					: maxPower
 			)
 		);

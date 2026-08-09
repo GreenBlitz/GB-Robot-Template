@@ -211,7 +211,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 
 	private static boolean isIsAccelerationHigh(Translation3d imuAccelerationG) {
 		return PoseUtil
-			.getIsAccelerationHigh(imuAccelerationG.toTranslation2d(), WPILibPoseEstimatorConstants.MINIMUM_COLLISION_IMU_ACCELERATION_G);
+			.isAccelerationHigh(imuAccelerationG.toTranslation2d(), WPILibPoseEstimatorConstants.MINIMUM_COLLISION_IMU_ACCELERATION_G);
 	}
 
 	private Optional<Rotation2d> getEstimatedPoseToIMUYawDifference(Optional<Rotation2d> IMUYaw, double timestampSeconds) {
@@ -248,7 +248,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 			.ifPresent(
 				(imuOrientation) -> Logger.recordOutput(
 					logPath + "/isTilted",
-					PoseUtil.getIsTilted(
+					PoseUtil.isTilted(
 						Rotation2d.fromRadians(imuOrientation.getX()),
 						Rotation2d.fromRadians(imuOrientation.getY()),
 						WPILibPoseEstimatorConstants.MINIMUM_TILT_IMU_ROLL,
@@ -259,7 +259,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 
 		Logger.recordOutput(
 			logPath + "/isSkidding",
-			PoseUtil.getIsSkidding(
+			PoseUtil.areModulesSkidding(
 				kinematics,
 				lastOdometryData.getWheelStates(),
 				WPILibPoseEstimatorConstants.MINIMUM_SKID_ROBOT_TO_MODULE_VELOCITY_DIFFERENCE_METERS_PER_SECOND,

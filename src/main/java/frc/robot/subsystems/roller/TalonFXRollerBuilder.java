@@ -82,8 +82,8 @@ public class TalonFXRollerBuilder {
 		Phoenix6DeviceID deviceID,
 		Slot0Configs realVelocityControlConfig,
 		Slot0Configs simulationVelocityControlConfig,
-		double maxForwardsPower,
-		double maxBackwardsPower,
+		double maxForwardPower,
+		double maxBackwardPower,
 		int currentLimit,
 		FeedbackConfigs feedbackConfigs,
 		double momentOfInertia,
@@ -126,7 +126,7 @@ public class TalonFXRollerBuilder {
 
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), true);
 		Phoenix6Request<Rotation2d> velocityRequest = Phoenix6RequestBuilder
-			.buildBangBangRequest(velocitySignal::getLatestValue, maxForwardsPower, maxBackwardsPower, true);
+			.buildBangBangRequest(velocitySignal::getLatestValue, maxForwardPower, maxBackwardPower, true);
 
 		return new VelocityRoller(logPath, motor, voltageSignal, currentSignal, positionSignal, velocitySignal, voltageRequest, velocityRequest);
 	}

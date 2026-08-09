@@ -5,13 +5,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.constants.MathConstants;
 import frc.utils.math.ToleranceMath;
 
 public class PoseUtil {
 
-	public static boolean getIsColliding(Translation2d imuAccelerationG, double minimumCollisionIMUAccelerationG) {
-		return imuAccelerationG.getNorm() >= minimumCollisionIMUAccelerationG;
+	public static boolean getIsAccelerationHigh(Translation2d imuAccelerationG, double minimumIMUAccelerationG) {
+		return imuAccelerationG.getNorm() >= minimumIMUAccelerationG;
 	}
 
 	public static boolean getIsTilted(Rotation2d imuRoll, Rotation2d imuPitch, Rotation2d minimumTiltIMURoll, Rotation2d minimumTiltIMUPitch) {
@@ -22,7 +21,8 @@ public class PoseUtil {
 	public static boolean getIsSkidding(
 		SwerveDriveKinematics kinematics,
 		SwerveModuleState[] moduleStates,
-		double minimumSkidRobotToModuleVelocityDifferenceMetersPerSecond
+		double minimumSkidRobotToModuleVelocityDifferenceMetersPerSecond,
+		double maximumNegligibleVectorNorm
 	) {
 		ChassisSpeeds swerveVelocity = kinematics.toChassisSpeeds(moduleStates);
 		Translation2d swerveTranslationalVelocityMetersPerSecond = new Translation2d(
@@ -32,7 +32,11 @@ public class PoseUtil {
 
 		SwerveModuleState[] moduleRotationalStates = kinematics
 			.toSwerveModuleStates(new ChassisSpeeds(0, 0, swerveVelocity.omegaRadiansPerSecond));
-		SwerveModuleState[] moduleTranslationalStates = getModuleTranslationalStates(moduleStates, moduleRotationalStates);
+		SwerveModuleState[] moduleTranslationalStates = getModuleTranslationalStates(
+			moduleStates,
+			moduleRotationalStates,
+			maximumNegligibleVectorNorm
+		);
 
 		for (SwerveModuleState moduleTranslationalState : moduleTranslationalStates) {
 			if (
@@ -50,20 +54,25 @@ public class PoseUtil {
 
 	private static SwerveModuleState[] getModuleTranslationalStates(
 		SwerveModuleState[] moduleStates,
-		SwerveModuleState[] moduleRotationalStates
+		SwerveModuleState[] moduleRotationalStates,
+		double maximumNegligibleVectorNorm
 	) {
 		SwerveModuleState[] moduleTranslationalStates = new SwerveModuleState[Math.min(moduleStates.length, moduleRotationalStates.length)];
 		for (int i = 0; i < moduleTranslationalStates.length; i++) {
-			moduleTranslationalStates[i] = getModuleTranslationalState(moduleStates[i], moduleRotationalStates[i]);
+			moduleTranslationalStates[i] = getModuleTranslationalState(moduleStates[i], moduleRotationalStates[i], maximumNegligibleVectorNorm);
 		}
 		return moduleTranslationalStates;
 	}
 
-	private static SwerveModuleState getModuleTranslationalState(SwerveModuleState moduleState, SwerveModuleState moduleRotationalState) {
-		Translation2d moduleTranslationalVelocity = new Translation2d(moduleState.speedMetersPerSecond, moduleState.angle)
+	private static SwerveModuleState getModuleTranslationalState(
+		SwerveModuleState moduleState,
+		SwerveModuleState moduleRotationalState,
+		double maximumNegligibleVectorNorm
+	) {
+		Translation2d velocityDifference = new Translation2d(moduleState.speedMetersPerSecond, moduleState.angle)
 			.minus(new Translation2d(moduleRotationalState.speedMetersPerSecond, moduleRotationalState.angle));
-		return moduleTranslationalVelocity.getNorm() > MathConstants.MAXIMUM_NEGLIGIBLE_VECTOR_NORM
-			? new SwerveModuleState(moduleTranslationalVelocity.getNorm(), moduleTranslationalVelocity.getAngle())
+		return velocityDifference.getNorm() > maximumNegligibleVectorNorm
+			? new SwerveModuleState(velocityDifference.getNorm(), velocityDifference.getAngle())
 			: new SwerveModuleState();
 	}
 

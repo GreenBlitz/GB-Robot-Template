@@ -186,8 +186,4 @@ public class AimAssistMath {
 		previousHeading = robotHeading;
 	}
 
-	public void resetLongTurn() {
-		longTurnActive = false;
-	}
-
 }

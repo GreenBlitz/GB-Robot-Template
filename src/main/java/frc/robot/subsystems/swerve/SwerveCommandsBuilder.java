@@ -117,6 +117,21 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
+	public Command longTurnToHeading(
+			Rotation2d targetHeading,
+			Rotation2d tolerance,
+			Rotation2d velocityDeadband
+	) {
+		return new RunCommand(
+				() -> swerve.driveLongTurnToHeading(targetHeading),
+				swerve
+		).until(() -> swerve.isAtHeading(
+				targetHeading,
+				tolerance,
+				velocityDeadband
+		));
+	}
+
 
 	public Command turnToHeading(Rotation2d targetHeading) {
 		return turnToHeading(targetHeading, RotateAxis.MIDDLE_OF_CHASSIS);

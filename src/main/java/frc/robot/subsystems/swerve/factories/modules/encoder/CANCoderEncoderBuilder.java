@@ -42,7 +42,7 @@ class CANCoderEncoderBuilder {
 		CANcoder cancoder = new CANcoder(encoderDeviceID.id(), encoderDeviceID.busChain().getCANBus());
 		CANcoderConfiguration caNcoderConfiguration = buildEncoderConfig(encoderDeviceID.id());
 		if (!Phoenix6Util.checkStatusCodeWithRetry(() -> cancoder.getConfigurator().apply(caNcoderConfiguration), APPLY_CONFIG_RETRIES).isOK()) {
-			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt").report();
+			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt", true).report();
 		}
 
 		return new CANCoderEncoder(logPath, cancoder, encoderDeviceID.busChain());

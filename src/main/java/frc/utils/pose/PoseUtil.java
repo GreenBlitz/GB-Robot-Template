@@ -18,7 +18,7 @@ public class PoseUtil {
 			|| Math.abs(imuPitch.getRadians()) >= minimumTiltIMUPitch.getRadians();
 	}
 
-	public static boolean getIsSkidding(
+	public static boolean getAreModulesSkidding(
 		SwerveDriveKinematics kinematics,
 		SwerveModuleState[] moduleStates,
 		double minimumSkidRobotToModuleVelocityDifferenceMetersPerSecond,

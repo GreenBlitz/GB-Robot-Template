@@ -262,7 +262,6 @@ public class TalonFXArmBuilder {
 		}
 		config.Feedback = feedbackConfigs;
 
-
 		config.CurrentLimits.StatorCurrentLimitEnable = true;
 		config.CurrentLimits.StatorCurrentLimit = currentLimit;
 

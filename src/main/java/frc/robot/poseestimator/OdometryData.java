@@ -1,7 +1,7 @@
 package frc.robot.poseestimator;
 
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
@@ -13,7 +13,7 @@ public class OdometryData {
 	private SwerveModulePosition[] wheelPositions = new SwerveModulePosition[4];
 	private SwerveModuleState[] wheelStates = new SwerveModuleState[4];
 	private Optional<Rotation3d> imuOrientation = Optional.empty();
-	private Optional<Translation2d> imuXYAccelerationG = Optional.empty();
+	private Optional<Translation3d> imu3DAccelerationG = Optional.empty();
 
 	public OdometryData() {}
 
@@ -22,13 +22,13 @@ public class OdometryData {
 		SwerveModulePosition[] wheelPositions,
 		SwerveModuleState[] wheelStates,
 		Optional<Rotation3d> imuOrientation,
-		Optional<Translation2d> imuXYAccelerationG
+		Optional<Translation3d> imu3DAccelerationG
 	) {
 		this.timestampSeconds = timestampSeconds;
 		this.wheelPositions = wheelPositions;
 		this.wheelStates = wheelStates;
 		this.imuOrientation = imuOrientation;
-		this.imuXYAccelerationG = imuXYAccelerationG;
+		this.imu3DAccelerationG = imu3DAccelerationG;
 	}
 
 	public double getTimestampSeconds() {
@@ -47,8 +47,8 @@ public class OdometryData {
 		return imuOrientation;
 	}
 
-	public Optional<Translation2d> getIMUXYAccelerationG() {
-		return imuXYAccelerationG;
+	public Optional<Translation3d> getIMU3DAccelerationG() {
+		return imu3DAccelerationG;
 	}
 
 	public void setTimestamp(double timestampSeconds) {
@@ -71,12 +71,12 @@ public class OdometryData {
 		setIMUOrientation(Optional.of(imuOrientation));
 	}
 
-	public void setIMUXYAcceleration(Optional<Translation2d> imuXYAccelerationG) {
-		this.imuXYAccelerationG = imuXYAccelerationG;
+	public void setIMU3DAcceleration(Optional<Translation3d> imu3DAccelerationG) {
+		this.imu3DAccelerationG = imu3DAccelerationG;
 	}
 
-	public void setIMUXYAcceleration(Translation2d imuXYAccelerationG) {
-		setIMUXYAcceleration(Optional.of(imuXYAccelerationG));
+	public void setIMU3DAcceleration(Translation3d imu3DAccelerationG) {
+		setIMU3DAcceleration(Optional.of(imu3DAccelerationG));
 	}
 
 }

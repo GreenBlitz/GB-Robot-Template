@@ -32,7 +32,6 @@ import frc.utils.AngleUnit;
 class KrakenX60SteerBuilder {
 
 	private static final double GEAR_RATIO = 12.8;
-
 	private static final double MOMENT_OF_INERTIA_METERS_SQUARED = 0.00001;
 
 	private static SysIdRoutine.Config buildSysidConfig(String logPath) {
@@ -58,7 +57,7 @@ class KrakenX60SteerBuilder {
 
 		steerConfig.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 
-		steerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+		steerConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 		steerConfig.CurrentLimits.StatorCurrentLimit = 30;
 		steerConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
@@ -116,7 +115,6 @@ class KrakenX60SteerBuilder {
 			steerConfig.Slot0.kD = 0;
 		}
 		steerConfig.ClosedLoopGeneral.ContinuousWrap = true;
-		steerConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
 
 		return steerConfig;
 	}

@@ -14,7 +14,7 @@ public class VelocityRoller extends Roller {
 
 	public VelocityRoller(
 		String logPath,
-		ControllableMotor roller,
+		ControllableMotor motor,
 		InputSignal<Double> voltageSignal,
 		InputSignal<Double> currentSignal,
 		InputSignal<Rotation2d> positionSignal,
@@ -22,7 +22,7 @@ public class VelocityRoller extends Roller {
 		IRequest<Double> voltageRequest,
 		IRequest<Rotation2d> velocityRequest
 	) {
-		super(logPath, roller, voltageSignal, currentSignal, positionSignal, velocitySignal, voltageRequest);
+		super(logPath, motor, voltageSignal, currentSignal, positionSignal, velocitySignal, voltageRequest);
 		this.velocitySignal = velocitySignal;
 		this.velocityRequest = velocityRequest;
 		this.commandsBuilder = new VelocityRollerCommandsBuilder(this);

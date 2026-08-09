@@ -39,9 +39,9 @@ public class SparkMaxRollerBuilder {
 		int currentLimit,
 		double momentOfInertia
 	) {
-		SimpleMotorSimulation rollerSimulation = buildSimulation(gearRatio, momentOfInertia);
+		SimpleMotorSimulation motorSimulation = buildSimulation(gearRatio, momentOfInertia);
 
-		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, rollerSimulation, new SysIdRoutine.Config());
+		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, motorSimulation, new SysIdRoutine.Config());
 
 		motor.applyConfiguration(buildConfiguration(inverted, gearRatio, currentLimit));
 

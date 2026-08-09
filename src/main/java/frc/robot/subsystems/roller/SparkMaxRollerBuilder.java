@@ -39,9 +39,11 @@ public class SparkMaxRollerBuilder {
 		int currentLimit,
 		double momentOfInertia
 	) {
-		SimpleMotorSimulation rollerSimulation = buildSimulation(gearRatio, momentOfInertia);
+		SimpleMotorSimulation motorSimulation = buildSimulation(gearRatio, momentOfInertia);
 
-		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, rollerSimulation, new SysIdRoutine.Config());
+		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, motorSimulation, new SysIdRoutine.Config());
+
+		motor.applyConfiguration(buildConfiguration(inverted, gearRatio, currentLimit));
 
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
 		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("current", sparkMaxWrapper::getOutputCurrent);
@@ -50,12 +52,15 @@ public class SparkMaxRollerBuilder {
 			() -> sparkMaxWrapper.getEncoder().getPosition(),
 			AngleUnit.ROTATIONS
 		);
-
-		motor.applyConfiguration(buildConfiguration(inverted, gearRatio, currentLimit));
+		SuppliedAngleSignal velocitySignal = new SuppliedAngleSignal(
+			"velocity",
+			() -> sparkMaxWrapper.getEncoder().getVelocity(),
+			AngleUnit.ROTATIONS
+		);
 
 		SparkMaxRequest<Double> voltageRequest = SparkMaxRequestBuilder.build(0.0, SparkBase.ControlType.kVoltage, ClosedLoopSlot.kSlot0);
 
-		return new Roller(logPath, motor, voltageSignal, currentSignal, positionSignal, voltageRequest);
+		return new Roller(logPath, motor, voltageSignal, currentSignal, positionSignal, velocitySignal, voltageRequest);
 	}
 
 	public static Roller build(

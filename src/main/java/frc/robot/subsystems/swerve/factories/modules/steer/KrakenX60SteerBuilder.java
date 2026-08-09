@@ -31,8 +31,7 @@ import frc.utils.AngleUnit;
 
 class KrakenX60SteerBuilder {
 
-	private static final double FRONT_MODULES_GEAR_RATIO = 12.8;
-	private static final double BACK_MODULES_GEAR_RATIO = 18.75;
+	private static final double GEAR_RATIO = 12.8;
 
 	private static final double MOMENT_OF_INERTIA_METERS_SQUARED = 0.00001;
 
@@ -48,7 +47,7 @@ class KrakenX60SteerBuilder {
 	private static SimpleMotorSimulation buildMechanismSimulation() {
 		return new SimpleMotorSimulation(
 			new DCMotorSim(
-				LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), MOMENT_OF_INERTIA_METERS_SQUARED, FRONT_MODULES_GEAR_RATIO),
+				LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), MOMENT_OF_INERTIA_METERS_SQUARED, GEAR_RATIO),
 				DCMotor.getKrakenX60Foc(1)
 			)
 		);
@@ -65,10 +64,10 @@ class KrakenX60SteerBuilder {
 
 		switch (position) {
 			case FRONT_RIGHT, FRONT_LEFT -> {
-				steerConfig.Feedback.RotorToSensorRatio = FRONT_MODULES_GEAR_RATIO;
+				steerConfig.Feedback.RotorToSensorRatio = GEAR_RATIO;
 			}
 			case BACK_RIGHT, BACK_LEFT -> {
-				steerConfig.Feedback.RotorToSensorRatio = BACK_MODULES_GEAR_RATIO;
+				steerConfig.Feedback.RotorToSensorRatio = GEAR_RATIO;
 			}
 		}
 		steerConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;

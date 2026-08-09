@@ -7,12 +7,17 @@ import frc.utils.TimedValue;
 import frc.utils.math.ToleranceMath;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.LogTable;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AngleSignal implements InputSignal<Rotation2d> {
 
 	private final String name;
 	protected final AngleUnit angleUnit;
 	private final TimedValue<Rotation2d> timedValue;
+	private final List<Rotation2d> valueBuffer = new ArrayList<>();
+	private final List<Double> timestampBuffer = new ArrayList<>();
+	private double lastClearTime = 0.0;
 
 	public AngleSignal(String name, AngleUnit angleUnit) {
 		this.name = name;
@@ -35,9 +40,23 @@ public abstract class AngleSignal implements InputSignal<Rotation2d> {
 		return timedValue.getValue();
 	}
 
+	private synchronized void recordSample() {
+		double now = edu.wpi.first.wpilibj.Timer.getFPGATimestamp();
+		if (now - lastClearTime > 0.015) {
+			valueBuffer.clear();
+			timestampBuffer.clear();
+			lastClearTime = now;
+		}
+		valueBuffer.add(timedValue.getValue());
+		timestampBuffer.add(timedValue.getTimestamp());
+	}
+
 	@Override
-	public Rotation2d[] asArray() {
-		return new Rotation2d[] {timedValue.getValue()};
+	public synchronized Rotation2d[] asArray() {
+		if (valueBuffer.isEmpty()) {
+			return new Rotation2d[] {timedValue.getValue()};
+		}
+		return valueBuffer.toArray(new Rotation2d[0]);
 	}
 
 	@Override
@@ -46,8 +65,15 @@ public abstract class AngleSignal implements InputSignal<Rotation2d> {
 	}
 
 	@Override
-	public double[] getTimestamps() {
-		return new double[] {timedValue.getTimestamp()};
+	public synchronized double[] getTimestamps() {
+		if (timestampBuffer.isEmpty()) {
+			return new double[] {timedValue.getTimestamp()};
+		}
+		double[] array = new double[timestampBuffer.size()];
+		for (int i = 0; i < array.length; i++) {
+			array[i] = timestampBuffer.get(i);
+		}
+		return array;
 	}
 
 	@Override
@@ -73,6 +99,7 @@ public abstract class AngleSignal implements InputSignal<Rotation2d> {
 	@Override
 	public void toLog(LogTable table) {
 		updateValue(timedValue);
+		recordSample();
 		table.put(name, timedValue.getValue());
 	}
 
@@ -80,10 +107,12 @@ public abstract class AngleSignal implements InputSignal<Rotation2d> {
 	public void fromLog(LogTable table) {
 		timedValue.setValue(table.get(name, new Rotation2d()));
 		timedValue.setTimestamp(TimeUtil.getCurrentTimeSeconds());
+		recordSample();
 	}
 
 	public Rotation2d getAndUpdateValue() {
 		updateValue(timedValue);
+		recordSample();
 		return timedValue.getValue();
 	}
 

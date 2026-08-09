@@ -14,6 +14,11 @@ import frc.utils.math.ToleranceMath;
 
 public class AimAssistMath {
 
+	private static Rotation2d previousHeading;
+	private static double unwrappedHeadingDegrees;
+	private static double longTurnTargetDegrees;
+	private static boolean longTurnActive = false;
+
 	public static ChassisSpeeds getRotationAssistedSpeeds(
 		ChassisSpeeds speeds,
 		Rotation2d robotHeading,
@@ -118,22 +123,71 @@ public class AimAssistMath {
 	}
 
 	public static ChassisSpeeds getLongTurnRotationAssistedSpeeds(
-		ChassisSpeeds speeds,
-		Rotation2d robotHeading,
-		Rotation2d targetHeading,
-		SwerveConstants swerveConstants
+			ChassisSpeeds speeds,
+			Rotation2d robotHeading,
+			Rotation2d targetHeading,
+			SwerveConstants swerveConstants
 	) {
-		double errorDegrees = targetHeading.getDegrees() - robotHeading.getDegrees();
+		updateLongTurnState(robotHeading, targetHeading);
 
-		errorDegrees += errorDegrees > 0 ? -MathConstants.FULL_CIRCLE.getDegrees() : MathConstants.FULL_CIRCLE.getDegrees();
+		double errorDegrees =
+				longTurnTargetDegrees - unwrappedHeadingDegrees;
 
-		Rotation2d pidOutputVelocityPerSecond = Rotation2d
-			.fromDegrees(swerveConstants.wraplessRotationDegreesPIDController().calculate(0, errorDegrees));
+		Rotation2d pidOutputVelocityPerSecond =
+				Rotation2d.fromDegrees(
+						swerveConstants
+								.wraplessRotationDegreesPIDController()
+								.calculate(0, errorDegrees)
+				);
 
-		Rotation2d clampedAngularVelocityPerSecond = ToleranceMath
-			.clamp(pidOutputVelocityPerSecond, swerveConstants.maxRotationalVelocityPerSecond());
+		Rotation2d clampedAngularVelocityPerSecond =
+				ToleranceMath.clamp(
+						pidOutputVelocityPerSecond,
+						swerveConstants.maxRotationalVelocityPerSecond()
+				);
 
-		return new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, clampedAngularVelocityPerSecond.getRadians());
+		return new ChassisSpeeds(
+				speeds.vxMetersPerSecond,
+				speeds.vyMetersPerSecond,
+				clampedAngularVelocityPerSecond.getRadians()
+		);
+	}
+
+	private static void updateLongTurnState(
+			Rotation2d robotHeading,
+			Rotation2d targetHeading
+	) {
+		if (!longTurnActive) {
+			previousHeading = robotHeading;
+			unwrappedHeadingDegrees = robotHeading.getDegrees();
+
+			double shortError =
+					targetHeading.minus(robotHeading).getDegrees();
+
+			longTurnTargetDegrees =
+					shortError > 0
+							? targetHeading.getDegrees() - 360
+							: targetHeading.getDegrees() + 360;
+
+			longTurnActive = true;
+			return;
+		}
+
+		double delta =
+				robotHeading.getDegrees() - previousHeading.getDegrees();
+
+		if (delta > 180) {
+			delta -= 360;
+		} else if (delta < -180) {
+			delta += 360;
+		}
+
+		unwrappedHeadingDegrees += delta;
+		previousHeading = robotHeading;
+	}
+
+	public void resetLongTurn() {
+		longTurnActive = false;
 	}
 
 }

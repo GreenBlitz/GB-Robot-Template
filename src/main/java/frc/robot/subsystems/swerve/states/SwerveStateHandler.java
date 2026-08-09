@@ -38,46 +38,11 @@ public class SwerveStateHandler {
 	}
 
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
-		if (JoysticksBindings.wannaDoThing) {
-			Rotation2d currentHeading = robotPoseSupplier.get().get().getRotation();
-
-			if (!wasLongTurnActive) {
-				previousHeading = currentHeading;
-				unwrappedHeadingDegrees = currentHeading.getDegrees();
-
-				longTurnTargetDegrees = 90 - 360;
-
-				wasLongTurnActive = true;
-			} else {
-				double delta = currentHeading.getDegrees() - previousHeading.getDegrees();
-
-				if (delta > 180) {
-					delta -= 360;
-				} else if (delta < -180) {
-					delta += 360;
-				}
-
-				unwrappedHeadingDegrees += delta;
-
-				previousHeading = currentHeading;
-			}
-			return AimAssistMath.getLongTurnRotationAssistedSpeeds(
-				speeds,
-				Rotation2d.fromDegrees(unwrappedHeadingDegrees),
-				Rotation2d.fromDegrees(longTurnTargetDegrees),
-				swerveConstants
-			);
-		} else {
-			wasLongTurnActive = false;
-		}
-
 		if (swerveState.getAimAssist() == AimAssist.NONE) {
 			return speeds;
 		}
-
 		return speeds;
 	}
-
 
 	public Translation2d getRotationAxis(RotateAxis rotationAxisState) {
 		return switch (rotationAxisState) {

@@ -28,7 +28,9 @@ import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.TimedValue;
 import frc.utils.auto.PathPlannerUtil;
+import frc.utils.battery.BatteryUtil;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 import java.util.Optional;
 import java.util.Set;
@@ -47,6 +49,7 @@ public class Swerve extends GBSubsystem {
 	private final HeadingStabilizer headingStabilizer;
 	private final SwerveCommandsBuilder commandsBuilder;
 	private final SwerveStateHandler stateHandler;
+	private final LoggedNetworkNumber calibrationVoltageTunable;
 
 	private SwerveState currentState;
 	private Supplier<Rotation2d> headingSupplier;
@@ -69,6 +72,7 @@ public class Swerve extends GBSubsystem {
 		this.stateHandler = new SwerveStateHandler(this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 
+		this.calibrationVoltageTunable = new LoggedNetworkNumber("Tunable/SwerveDriveCalibrationVoltage", 0);
 		update();
 		setDefaultCommand(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
 	}
@@ -97,17 +101,20 @@ public class Swerve extends GBSubsystem {
 		return stateHandler;
 	}
 
-	public Rotation3d getAngularVelocityFromIMURotation2dPerSecond() {
-		return imuSignals.getAngularVelocity();
+	public Rotation2d[] getAngularVelocityFromIMURPS() {
+		return imuSignals.getLatestAngularVelocity();
 	}
 
 	public Rotation3d getOrientationFromIMU() {
-		return imuSignals.getOrientation();
+		return imuSignals.getLatestOrientation();
+	}
+
+	public Translation3d getIMUAccelerationG() {
+		return imuSignals.getLatestAccelerationGMetersPerSecondSquare();
 	}
 
 	public Translation3d getAccelerationFromIMUMetersPerSecondSquared() {
-		return imuSignals.getAccelerationEarthGravitationalAcceleration()
-			.times(RobotConstants.GRAVITATIONAL_ACCELERATION_METERS_PER_SECOND_SQUARED_ISRAEL);
+		return getIMUAccelerationG().times(RobotConstants.G);
 	}
 
 
@@ -153,9 +160,9 @@ public class Swerve extends GBSubsystem {
 			imuSignals.rollAngularVelocitySignal(),
 			imuSignals.pitchAngularVelocitySignal(),
 			imuSignals.yawAngularVelocitySignal(),
-			imuSignals.xAccelerationSignalEarthGravitationalAcceleration(),
-			imuSignals.yAccelerationSignalEarthGravitationalAcceleration(),
-			imuSignals.zAccelerationSignalEarthGravitationalAcceleration()
+			imuSignals.xAccelerationGSignal(),
+			imuSignals.yAccelerationGSignal(),
+			imuSignals.zAccelerationGSignal()
 		);
 	}
 
@@ -233,7 +240,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public double getIMUAcceleration() {
-		return imuSignals.getAccelerationEarthGravitationalAcceleration().getNorm();
+		return imuSignals.getLatestAccelerationGMetersPerSecondSquare().getNorm();
 	}
 
 
@@ -333,12 +340,10 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public boolean isCollisionDetected() {
-		return imuSignals.getAccelerationEarthGravitationalAcceleration().toTranslation2d().getNorm() > SwerveConstants.MIN_COLLISION_G_FORCE;
+		return imuSignals.getLatestAccelerationGMetersPerSecondSquare().toTranslation2d().getNorm() > SwerveConstants.MIN_COLLISION_G_FORCE;
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {
-		joystick.START.onTrue(new InstantCommand(() -> setIsRunningIndependently(true)));
-		joystick.BACK.onTrue(new InstantCommand(() -> setIsRunningIndependently(false)));
 		// Calibrate steer ks with phoenix tuner x
 		// Calibrate steer pid with phoenix tuner x
 
@@ -353,12 +358,14 @@ public class Swerve extends GBSubsystem {
 		// REMEMBER after drive calibrations use these for pid testing - Remove OPEN LOOP for that
 		ChassisPowers slowCalibrationPowers = new ChassisPowers();
 		slowCalibrationPowers.xPower = 0.2;
-		joystick.POV_LEFT
-			.whileTrue(getCommandsBuilder().driveByState(() -> slowCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)));
+		joystick.POV_LEFT.whileTrue(
+			getCommandsBuilder().driveByPowersWithSupplier(() -> slowCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
+		);
 		ChassisPowers fastCalibrationPowers = new ChassisPowers();
 		fastCalibrationPowers.xPower = 0.5;
-		joystick.POV_RIGHT
-			.whileTrue(getCommandsBuilder().driveByState(() -> fastCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)));
+		joystick.POV_RIGHT.whileTrue(
+			getCommandsBuilder().driveByPowersWithSupplier(() -> fastCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
+		);
 
 		// The sysid outputs will be logged to the "CTRE Signal Logger".
 		// Use phoenix tuner x to extract the position, velocity, motorVoltage, state signals into wpilog.
@@ -394,6 +401,22 @@ public class Swerve extends GBSubsystem {
 					Set.of(this)
 				)
 			);
+
+		// max velocity at 12 volts (put a really high value in max vel and max rot vel for it to work)
+		// after calibrating max vel at 12 volts use this to calibrate kS
+		joystick.R3.whileTrue(new DeferredCommand(() -> getCommandsBuilder().driveByPowersWithSupplier(() -> {
+			ChassisPowers powers = new ChassisPowers();
+			powers.xPower = calibrationVoltageTunable.getAsDouble() / BatteryUtil.getCurrentVoltage();
+			return powers;
+		}, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN)), Set.of(this)));
+
+
+		// max rotational velocity calibration
+		joystick.BACK.whileTrue(new DeferredCommand(() -> getCommandsBuilder().drive(() -> {
+			ChassisPowers powers = new ChassisPowers();
+			powers.rotationalPower = 1;
+			return powers;
+		}), Set.of(this)));
 	}
 
 }

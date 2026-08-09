@@ -117,7 +117,6 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-
 	public Command turnToHeading(Rotation2d targetHeading) {
 		return turnToHeading(targetHeading, RotateAxis.MIDDLE_OF_CHASSIS);
 	}
@@ -132,27 +131,33 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-
 	public Command drive(Supplier<ChassisPowers> powersSupplier) {
-		return driveByState(powersSupplier, SwerveState.DEFAULT_DRIVE);
+		return driveByPowersWithSupplier(powersSupplier, SwerveState.DEFAULT_DRIVE);
 	}
 
-	public Command driveByState(Supplier<ChassisPowers> powersSupplier, Supplier<SwerveState> state) {
+	public Command driveByPowersWithSupplier(Supplier<ChassisPowers> powersSupplier, Supplier<SwerveState> state) {
 		return swerve.asSubsystemCommand(
-			new DeferredCommand(() -> driveByState(powersSupplier, state.get()), Set.of(swerve)),
-			"Drive with supplier state"
+			new DeferredCommand(() -> driveByPowersWithSupplier(powersSupplier, state.get()), Set.of(swerve)),
+			"Drive by chassis powers supplier with state supplier"
 		);
 	}
 
-	public Command driveByState(Supplier<ChassisPowers> chassisPowersSupplier, SwerveState state) {
+	public Command driveByPowersWithSupplier(Supplier<ChassisPowers> chassisPowersSupplier, SwerveState state) {
 		return swerve.asSubsystemCommand(
 			new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.driveByState(chassisPowersSupplier.get(), state)),
-			"Drive with state"
+			"Drive by chassis powers supplier with state"
 		);
 	}
 
 	public Command driveByDriversInputs(Supplier<SwerveState> state) {
 		return new DeferredCommand(() -> driveByDriversInputs(state.get()), Set.of(swerve));
+	}
+
+	public Command driveByDriversInputsWithChangingState(Supplier<SwerveState> state) {
+		return swerve.asSubsystemCommand(
+			new InitExecuteCommand(swerve::resetPIDControllers, () -> swerve.driveByDriversTargetsPowers(state.get())),
+			"Drive by drivers inputs with state"
+		);
 	}
 
 	public Command driveByDriversInputs(SwerveState state) {
@@ -186,9 +191,9 @@ public class SwerveCommandsBuilder {
 	private Command pathToPose(Pose2d currentPose, Pose2d targetPose, PathConstraints pathfindingConstraints) {
 		Command pathFollowingCommand;
 		if (PathPlannerUtil.isRobotInPathfindingDeadband(currentPose, targetPose)) {
-			pathFollowingCommand = PathPlannerUtil.createPathDuringRuntime(currentPose, targetPose, pathfindingConstraints);
+			pathFollowingCommand = PathPlannerUtil.createPathDuringRuntime(currentPose, targetPose, pathfindingConstraints, swerve.getLogPath());
 		} else {
-			pathFollowingCommand = PathFollowingCommandsBuilder.pathfindToPose(targetPose, pathfindingConstraints);
+			pathFollowingCommand = PathFollowingCommandsBuilder.pathfindToPose(targetPose, pathfindingConstraints, swerve.getLogPath());
 		}
 
 		return swerve.asSubsystemCommand(
@@ -200,7 +205,7 @@ public class SwerveCommandsBuilder {
 	public Command driveToPath(Supplier<Pose2d> currentPose, PathPlannerPath path, Pose2d targetPose, PathConstraints pathfindingConstraints) {
 		return new DeferredCommand(
 			() -> new SequentialCommandGroup(
-				PathFollowingCommandsBuilder.pathfindThenFollowPath(path, pathfindingConstraints),
+				PathFollowingCommandsBuilder.pathfindThenFollowPath(path, pathfindingConstraints, swerve.getLogPath()),
 				moveToPoseByPID(currentPose, Field.getAllianceRelative(targetPose))
 			),
 			Set.of(swerve)

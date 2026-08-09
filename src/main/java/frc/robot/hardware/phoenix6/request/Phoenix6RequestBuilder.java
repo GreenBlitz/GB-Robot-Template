@@ -78,14 +78,21 @@ public class Phoenix6RequestBuilder {
 		return new Phoenix6Request<>(torqueCurrentFOC.Output, torqueCurrentFOC, torqueCurrentFOC::withOutput);
 	}
 
-	public static Phoenix6Request<Rotation2d> buildBangBangRequest(Supplier<Rotation2d> currentVelocity, double maxPower, double reverseMuliplyer, boolean enableFOC) {
+	public static Phoenix6Request<Rotation2d> buildBangBangRequest(
+		Supplier<Rotation2d> currentVelocity,
+		double maxPower,
+		double reverseMultiplayer,
+		boolean enableFOC
+	) {
 		BangBangController bangBangController = new BangBangController();
 		DutyCycleOut dutyCycleOut = new DutyCycleOut(0).withEnableFOC(enableFOC);
 		return new Phoenix6Request<>(
 			Rotation2d.kZero,
 			dutyCycleOut,
 			(Rotation2d targetVelocity) -> dutyCycleOut.withOutput(
-				bangBangController.calculate(currentVelocity.get().getRotations(), targetVelocity.getRotations()) == 0 ? maxPower * reverseMuliplyer: maxPower
+				bangBangController.calculate(currentVelocity.get().getRotations(), targetVelocity.getRotations()) == 0
+					? maxPower * reverseMultiplayer
+					: maxPower
 			)
 		);
 	}

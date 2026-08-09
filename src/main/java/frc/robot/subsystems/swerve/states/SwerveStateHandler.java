@@ -20,6 +20,10 @@ public class SwerveStateHandler {
 
 	private final Swerve swerve;
 	private final SwerveConstants swerveConstants;
+	private Rotation2d previousHeading;
+	private Double unwrappedHeadingDegrees;
+	private double longTurnTargetDegrees;
+	private boolean wasLongTurnActive = false;
 	private Optional<Supplier<Pose2d>> robotPoseSupplier;
 
 	public SwerveStateHandler(Swerve swerve) {
@@ -35,37 +39,42 @@ public class SwerveStateHandler {
 
 	public ChassisSpeeds applyAimAssistOnChassisSpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
 		if (JoysticksBindings.wannaDoThing) {
-//            return AimAssistMath.getObjectAssistedSpeedsSlowedDownByRotation(
-//                    AimAssistMath.getLongTurnRotationAssistedSpeeds(
-//                            speeds,
-//                            robotPoseSupplier.get().get().getRotation(),
-//                            new Rotation2d(),
-//                            swerveConstants
-//                    ),
-//                    robotPoseSupplier.get().get(),
-//                    new Rotation2d(),
-//                    new Translation2d(4, 2),
-//                    swerveConstants,
-//                    swerveState,
-//                    SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR,
-//                    true
-//            );
+			Rotation2d currentHeading = robotPoseSupplier.get().get().getRotation();
 
-			return AimAssistMath.getObjectAssistedSpeedsSlowedDownByRotation(
-				AimAssistMath
-					.getRotationAssistedSpeeds(speeds, robotPoseSupplier.get().get().getRotation(), new Rotation2d(), true, swerveConstants),
-				robotPoseSupplier.get().get(),
-				new Rotation2d(),
-				new Translation2d(4, 2),
-				swerveConstants,
-				swerveState,
-				0,
-				false
+			if (!wasLongTurnActive) {
+				previousHeading = currentHeading;
+				unwrappedHeadingDegrees = currentHeading.getDegrees();
+
+				longTurnTargetDegrees = 90 - 360;
+
+				wasLongTurnActive = true;
+			} else {
+				double delta = currentHeading.getDegrees() - previousHeading.getDegrees();
+
+				if (delta > 180) {
+					delta -= 360;
+				} else if (delta < -180) {
+					delta += 360;
+				}
+
+				unwrappedHeadingDegrees += delta;
+
+				previousHeading = currentHeading;
+			}
+			return AimAssistMath.getLongTurnRotationAssistedSpeeds(
+				speeds,
+				Rotation2d.fromDegrees(unwrappedHeadingDegrees),
+				Rotation2d.fromDegrees(longTurnTargetDegrees),
+				swerveConstants
 			);
+		} else {
+			wasLongTurnActive = false;
 		}
+
 		if (swerveState.getAimAssist() == AimAssist.NONE) {
 			return speeds;
 		}
+
 		return speeds;
 	}
 

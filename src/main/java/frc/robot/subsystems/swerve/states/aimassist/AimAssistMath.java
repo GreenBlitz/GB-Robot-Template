@@ -11,7 +11,6 @@ import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.math.FieldMath;
 import frc.utils.math.ToleranceMath;
-import org.littletonrobotics.junction.Logger;
 
 public class AimAssistMath {
 
@@ -124,7 +123,7 @@ public class AimAssistMath {
 		Rotation2d targetHeading,
 		SwerveConstants swerveConstants
 	) {
-		double errorDegrees = targetHeading.minus(robotHeading).getDegrees();
+		double errorDegrees = targetHeading.getDegrees() - robotHeading.getDegrees();
 
 		errorDegrees += errorDegrees > 0 ? -MathConstants.FULL_CIRCLE.getDegrees() : MathConstants.FULL_CIRCLE.getDegrees();
 

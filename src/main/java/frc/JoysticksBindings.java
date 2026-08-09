@@ -53,7 +53,7 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
         usedJoystick.A.onTrue(PathFollowingCommandsBuilder.followAdjustedPathThenStop(robot.getSwerve(),() -> robot.getPoseEstimator().getEstimatedPose(), PathHelper.PATH_PLANNER_PATHS.get("Rotate 2m"),AutonomousConstants.DEFAULT_PATHFINDING_CONSTRAINTS,AutonomousConstants.DEFAULT_IS_NEAR_END_OF_PATH_TOLERANCE,AutonomousConstants.DEFAULT_STUCK_IS_NEAR_END_OF_PATH_TOLERANCE,AutonomousConstants.DEFAULT_STUCK_DEBOUNCE_SECONDS, robot.getSwerve().getLogPath()));
 		usedJoystick.B.onTrue(robot.getSwerve().getCommandsBuilder().driveToPath(()->robot.getPoseEstimator().getEstimatedPose(),PathHelper.PATH_PLANNER_PATHS.get("Rotate 2m"),new Pose2d(2,1.5,Rotation2d.k180deg),AutonomousConstants.DEFAULT_PATHFINDING_CONSTRAINTS));
-		usedJoystick.X.onTrue(robot.getSwerve().getCommandsBuilder().driveToPose(()->robot.getPoseEstimator().getEstimatedPose(),() -> new Pose2d(2,1.5,Rotation2d.k180deg),AutonomousConstants.DEFAULT_PATHFINDING_CONSTRAINTS));
+		usedJoystick.X.onTrue(robot.getSwerve().getCommandsBuilder().driveToPose(()->robot.getPoseEstimator().getEstimatedPose(),() -> new Pose2d(14.54,1.5,Rotation2d.k180deg),AutonomousConstants.DEFAULT_PATHFINDING_CONSTRAINTS));
 		// bindings...
 	}
 

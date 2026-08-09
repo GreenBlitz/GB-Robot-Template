@@ -199,10 +199,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 
 	private Matrix<N3, N1> getCollisionCompensatedVisionStdDevs(RobotPoseObservation visionObservation) {
 		boolean isColliding = imu3DAccelerationGBuffer.getSample(visionObservation.timestampSeconds())
-			.map(
-				(imuAccelerationG) -> PoseUtil
-					.getIsColliding(imuAccelerationG.toTranslation2d(), WPILibPoseEstimatorConstants.MINIMUM_COLLISION_IMU_ACCELERATION_G)
-			)
+			.map(WPILibPoseEstimatorWrapper::isIsAccelerationHigh)
 			.orElse(false);
 
 		return isColliding
@@ -210,6 +207,11 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 				.asColumnVector()
 				.minus(WPILibPoseEstimatorConstants.VISION_STD_DEV_COLLISION_REDUCTION.asColumnVector())
 			: visionObservation.stdDevs().asColumnVector();
+	}
+
+	private static boolean isIsAccelerationHigh(Translation3d imuAccelerationG) {
+		return PoseUtil
+			.getIsAccelerationHigh(imuAccelerationG.toTranslation2d(), WPILibPoseEstimatorConstants.MINIMUM_COLLISION_IMU_ACCELERATION_G);
 	}
 
 	private Optional<Rotation2d> getEstimatedPoseToIMUYawDifference(Optional<Rotation2d> IMUYaw, double timestampSeconds) {
@@ -240,13 +242,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 
 	private void logIMUMeasurements() {
 		lastOdometryData.getIMU3DAccelerationG()
-			.ifPresent(
-				(imu3DAcceleration) -> Logger.recordOutput(
-					logPath + "/isColliding",
-					PoseUtil
-						.getIsColliding(imu3DAcceleration.toTranslation2d(), WPILibPoseEstimatorConstants.MINIMUM_COLLISION_IMU_ACCELERATION_G)
-				)
-			);
+			.ifPresent((imu3DAcceleration) -> Logger.recordOutput(logPath + "/isColliding", isIsAccelerationHigh(imu3DAcceleration)));
 
 		lastOdometryData.getIMUOrientation()
 			.ifPresent(
@@ -266,7 +262,8 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 			PoseUtil.getIsSkidding(
 				kinematics,
 				lastOdometryData.getWheelStates(),
-				WPILibPoseEstimatorConstants.MINIMUM_SKID_ROBOT_TO_MODULE_VELOCITY_DIFFERENCE_METERS_PER_SECOND
+				WPILibPoseEstimatorConstants.MINIMUM_SKID_ROBOT_TO_MODULE_VELOCITY_DIFFERENCE_METERS_PER_SECOND,
+				WPILibPoseEstimatorConstants.MAXIMUM_NEGLIGIBLE_VECTOR_NORM
 			)
 		);
 	}

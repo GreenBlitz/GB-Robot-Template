@@ -1,5 +1,6 @@
 package frc;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
@@ -50,9 +51,9 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-        usedJoystick.A.onTrue(PathFollowingCommandsBuilder.followAdjustedPathThenStop(robot.getSwerve(),() -> robot.getPoseEstimator().getEstimatedPose(), PathHelper.PATH_PLANNER_PATHS.get("Rotate 2m"), AutonomousConstants.DEFAULT_PATHFINDING_CONSTRAINTS,AutonomousConstants.DEFAULT_IS_NEAR_END_OF_PATH_TOLERANCE,AutonomousConstants.DEFAULT_STUCK_IS_NEAR_END_OF_PATH_TOLERANCE,AutonomousConstants.DEFAULT_STUCK_DEBOUNCE_SECONDS));
-		usedJoystick.B.onTrue(robot.motionMagicArm.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(30)));
-		usedJoystick.X.onTrue(robot.dynamicMotionMagicArm.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(30)));
+        usedJoystick.A.onTrue(PathFollowingCommandsBuilder.followAdjustedPathThenStop(robot.getSwerve(),() -> robot.getPoseEstimator().getEstimatedPose(), PathHelper.PATH_PLANNER_PATHS.get("Rotate 2m"),AutonomousConstants.DEFAULT_PATHFINDING_CONSTRAINTS,AutonomousConstants.DEFAULT_IS_NEAR_END_OF_PATH_TOLERANCE,AutonomousConstants.DEFAULT_STUCK_IS_NEAR_END_OF_PATH_TOLERANCE,AutonomousConstants.DEFAULT_STUCK_DEBOUNCE_SECONDS, robot.getSwerve().getLogPath()));
+		usedJoystick.B.onTrue(robot.getSwerve().getCommandsBuilder().driveToPath(()->robot.getPoseEstimator().getEstimatedPose(),PathHelper.PATH_PLANNER_PATHS.get("Rotate 2m"),new Pose2d(2,1.5,Rotation2d.k180deg),AutonomousConstants.DEFAULT_PATHFINDING_CONSTRAINTS));
+		usedJoystick.X.onTrue(robot.getSwerve().getCommandsBuilder().driveToPose(()->robot.getPoseEstimator().getEstimatedPose(),() -> new Pose2d(2,1.5,Rotation2d.k180deg),AutonomousConstants.DEFAULT_PATHFINDING_CONSTRAINTS));
 		// bindings...
 	}
 

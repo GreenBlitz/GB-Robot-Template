@@ -4,14 +4,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import frc.JoysticksBindings;
 import frc.constants.MathConstants;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.states.aimassist.AimAssist;
-import frc.robot.subsystems.swerve.states.aimassist.AimAssistMath;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -20,10 +18,6 @@ public class SwerveStateHandler {
 
 	private final Swerve swerve;
 	private final SwerveConstants swerveConstants;
-	private Rotation2d previousHeading;
-	private Double unwrappedHeadingDegrees;
-	private double longTurnTargetDegrees;
-	private boolean wasLongTurnActive = false;
 	private Optional<Supplier<Pose2d>> robotPoseSupplier;
 
 	public SwerveStateHandler(Swerve swerve) {

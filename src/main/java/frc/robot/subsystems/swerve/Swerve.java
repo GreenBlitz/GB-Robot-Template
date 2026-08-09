@@ -23,7 +23,6 @@ import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.states.DriveRelative;
 import frc.robot.subsystems.swerve.states.LoopMode;
 import frc.robot.subsystems.swerve.states.SwerveStateHandler;
-import frc.robot.subsystems.swerve.states.aimassist.AimAssistMath;
 import frc.robot.subsystems.swerve.states.heading.HeadingControl;
 import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
 import frc.robot.subsystems.swerve.states.SwerveState;
@@ -320,23 +319,6 @@ public class Swerve extends GBSubsystem {
 	private void setTargetModuleStates(SwerveModuleState[] moduleStates, boolean isClosedLoop) {
 		SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, constants.velocityAt12VoltsMetersPerSecond());
 		modules.setTargetStates(moduleStates, isClosedLoop);
-	}
-
-	public void driveLongTurnToHeading(
-			Rotation2d currentHeading,
-			Rotation2d targetHeading
-	) {
-		ChassisSpeeds speeds = getRobotRelativeVelocity();
-
-		ChassisSpeeds assistedSpeeds =
-				AimAssistMath.getLongTurnRotationAssistedSpeeds(
-						speeds,
-						currentHeading,
-						targetHeading,
-						constants
-				);
-
-		driveByState(assistedSpeeds, SwerveState.DEFAULT_DRIVE);
 	}
 
 	public boolean isAtHeading(Rotation2d targetHeading, Rotation2d tolerance, Rotation2d velocityDeadbandAnglesPerSecond) {

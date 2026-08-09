@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import frc.constants.MathConstants;
 import frc.constants.field.Field;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveMath;
@@ -13,11 +12,6 @@ import frc.utils.math.FieldMath;
 import frc.utils.math.ToleranceMath;
 
 public class AimAssistMath {
-
-	private static Rotation2d previousHeading;
-	private static double unwrappedHeadingDegrees;
-	private static double longTurnTargetDegrees;
-	private static boolean longTurnActive = false;
 
 	public static ChassisSpeeds getRotationAssistedSpeeds(
 		ChassisSpeeds speeds,
@@ -122,32 +116,4 @@ public class AimAssistMath {
 		return velocityPerSecond * (SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR) / (magnitude + factor);
 	}
 
-	public static ChassisSpeeds getLongTurnRotationAssistedSpeeds(
-			ChassisSpeeds speeds,
-			Rotation2d robotHeading,
-			Rotation2d targetHeading,
-			SwerveConstants swerveConstants
-	) {
-		double errorDegrees =
-				targetHeading.getDegrees() - robotHeading.getDegrees();
-
-		Rotation2d pidOutputVelocityPerSecond =
-				Rotation2d.fromDegrees(
-						swerveConstants
-								.wraplessRotationDegreesPIDController()
-								.calculate(0, errorDegrees)
-				);
-
-		Rotation2d clampedAngularVelocityPerSecond =
-				ToleranceMath.clamp(
-						pidOutputVelocityPerSecond,
-						swerveConstants.maxRotationalVelocityPerSecond()
-				);
-
-		return new ChassisSpeeds(
-				speeds.vxMetersPerSecond,
-				speeds.vyMetersPerSecond,
-				clampedAngularVelocityPerSecond.getRadians()
-		);
-	}
 }

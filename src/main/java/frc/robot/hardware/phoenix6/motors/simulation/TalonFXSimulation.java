@@ -43,10 +43,10 @@ public class TalonFXSimulation {
 		mechanismSimulation.setInputVoltage(motorSimState.getMotorVoltage());
 		mechanismSimulation.updateMotor();
 		motorSimState.setRawRotorPosition(mechanismSimulation.getRotorPosition().getRotations());
-		motorSimState.setRotorVelocity(mechanismSimulation.getRotorVelocityAnglesPerSecond().getRotations());
+		motorSimState.setRotorVelocity(mechanismSimulation.getRotorVelocityRPS().getRotations());
 
 		for (TalonFXSimState followerSimState : followerSimStates) {
-			followerSimState.setRotorVelocity(mechanismSimulation.getRotorVelocityAnglesPerSecond().getRotations());
+			followerSimState.setRotorVelocity(mechanismSimulation.getRotorVelocityRPS().getRotations());
 			followerSimState.setRawRotorPosition(mechanismSimulation.getRotorPosition().getRotations());
 		}
 	}

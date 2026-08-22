@@ -11,8 +11,8 @@ public interface WPILibMechanismSimulation extends MechanismSimulation {
 	}
 
 	@Override
-	default Rotation2d getRotorVelocityAnglesPerSecond() {
-		return getMechanismVelocityAnglesPerSecond().times(getGearRatio());
+	default Rotation2d getRotorVelocityRPS() {
+		return getMechanismVelocityRPS().times(getGearRatio());
 	}
 
 	double getGearRatio();

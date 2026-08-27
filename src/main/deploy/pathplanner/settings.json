@@ -19,7 +19,7 @@
   "driveWheelRadius": 0.048,
   "driveGearing": 6.12,
   "maxDriveSpeed": 5.24,
-  "driveMotorType": "falcon500FOC",
+  "driveMotorType": "krakenX60FOC",
   "driveCurrentLimit": 60.0,
   "wheelCOF": 0.96,
   "flModuleX": 0.27833,

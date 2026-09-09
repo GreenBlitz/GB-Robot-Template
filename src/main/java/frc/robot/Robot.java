@@ -4,15 +4,20 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
+import frc.robot.subsystems.FlywheelConstants;
+import frc.robot.subsystems.roller.TalonFXRollerBuilder;
+import frc.robot.subsystems.roller.VelocityRoller;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.imu.IMUFactory;
@@ -38,6 +43,7 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);
 
 	private final Swerve swerve;
+	public final VelocityRoller flywheel;
 	private final IPoseEstimator poseEstimator;
 	private final List<Limelight> limelights;
 
@@ -88,6 +94,8 @@ public class Robot {
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 
+		this.flywheel = TalonFXRollerBuilder.buildVelocityRoller("flywheel", new Phoenix6DeviceID(10, BusChain.ROBORIO),buildConfig().Slot0,buildConfig().Slot0,FlywheelConstants.CURRENT_LIMIT,buildConfig().Feedback,FlywheelConstants.MOMENT_OF_INERTIA,true,true);
+
 		configureBrakeStateChooser();
 	}
 
@@ -110,6 +118,38 @@ public class Robot {
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		CommandScheduler.getInstance().run(); // Should be last
+	}
+
+	public static TalonFXConfiguration buildConfig() {
+		TalonFXConfiguration configuration = new TalonFXConfiguration();
+
+		configuration.MotorOutput.Inverted = FlywheelConstants.IS_MASTER_INVERTED;
+		configuration.Feedback.SensorToMechanismRatio = FlywheelConstants.SENSOR_TO_MECHANISM_RATIO_MASTER;
+
+		configuration.CurrentLimits.StatorCurrentLimit = FlywheelConstants.CURRENT_LIMIT;
+		configuration.CurrentLimits.StatorCurrentLimitEnable = true;
+		configuration.CurrentLimits.SupplyCurrentLimit = FlywheelConstants.CURRENT_LIMIT;
+		configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
+
+		configuration.MotionMagic.MotionMagicAcceleration = FlywheelConstants.MAX_ACCELERATION.getRotations();
+
+		if (Robot.ROBOT_TYPE.equals(RobotType.REAL)) {
+			configuration.Slot0.kP = FlywheelConstants.kP;
+			configuration.Slot0.kI = FlywheelConstants.kI;
+			configuration.Slot0.kD = FlywheelConstants.kD;
+			configuration.Slot0.kV = FlywheelConstants.kV;
+			configuration.Slot0.kA = FlywheelConstants.kA;
+			configuration.Slot0.kS = FlywheelConstants.kS;
+		} else {
+			configuration.Slot0.kP = FlywheelConstants.kP_SIM;
+			configuration.Slot0.kI = FlywheelConstants.kI_SIM;
+			configuration.Slot0.kD = FlywheelConstants.kD_SIM;
+			configuration.Slot0.kV = FlywheelConstants.kV_SIM;
+			configuration.Slot0.kA = FlywheelConstants.kA_SIM;
+			configuration.Slot0.kS = FlywheelConstants.kS_SIM;
+		}
+
+		return configuration;
 	}
 
 	public IPoseEstimator getPoseEstimator() {

@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -13,17 +12,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
-import frc.robot.poseestimator.IPoseEstimator;
-import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
-import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
-import frc.robot.subsystems.HoodConstants;
-import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.imu.IMUFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.vision.cameras.limelight.Limelight;
-import frc.robot.vision.cameras.limelight.LimelightFilters;
 import frc.robot.vision.cameras.limelight.LimelightPipeline;
 import frc.robot.vision.cameras.limelight.LimelightStdDevCalculations;
 import frc.utils.auto.PathPlannerAutoWrapper;
@@ -44,11 +37,10 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);
 
 	private final Swerve swerve;
-	public final Limelight limelight;
-	public final Arm arm;
-	public final Arm motionMagicArm;
-	public final Arm dynamicMotionMagicArm;
-	private final IPoseEstimator poseEstimator;
+
+	private final Limelight limelightFront;
+	private final Limelight limelightRight;
+	private final Limelight limelightLeft;
 	private final List<Limelight> limelights;
 
 	public Robot() {
@@ -56,92 +48,74 @@ public class Robot {
 
 		IIMU imu = IMUFactory.createIMU(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(
-			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
-			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
-			imu,
-			IMUFactory.createSignals(imu)
+				SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
+				ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
+				imu,
+				IMUFactory.createSignals(imu)
 		);
 
-		this.limelight = new Limelight(
-			"limelight-front",
-			"Vision",
-			new Pose3d(
-				new Translation3d(0.297, -0.143, 0.361),
-				new Rotation3d(Math.toRadians(-0.18), Math.toRadians(27.38), Math.toRadians(-0.35))
-			),
-			LimelightPipeline.APRIL_TAG
+		this.limelightFront = new Limelight(
+				"limelight-front",
+				"Vision",
+				new Pose3d(
+						new Translation3d(0.297, -0.143, 0.361),
+						new Rotation3d(Math.toRadians(-0.18), Math.toRadians(27.38), Math.toRadians(-0.35))
+				),
+				LimelightPipeline.APRIL_TAG
 		);
-
-		this.arm = HoodConstants.createArm();
-		this.dynamicMotionMagicArm = HoodConstants.createDynamicMotionMagicArm();
-		this.motionMagicArm = HoodConstants.createMotionMagicArm();
+		this.limelightRight = new Limelight(
+				"limelight-right",
+				"Vision",
+				new Pose3d(
+						new Translation3d(-0.06, 0.367, 0.469),
+						new Rotation3d(Math.toRadians(-177.78), Math.toRadians(20.64), Math.toRadians(-90.7))
+				),
+				LimelightPipeline.APRIL_TAG
+		);
+		this.limelightLeft = new Limelight(
+				"limelight-left",
+				"Vision",
+				new Pose3d(
+						new Translation3d(-0.125, -0.37, 0.481),
+						new Rotation3d(Math.toRadians(-179.25), Math.toRadians(20.05), Math.toRadians(90.35))
+				),
+				LimelightPipeline.APRIL_TAG
+		);
 
 		BrakeStateManager.add(() -> swerve.getModules().setBrake(true), () -> swerve.getModules().setBrake(false));
-		this.poseEstimator = new WPILibPoseEstimatorWrapper(
-			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
-			swerve.getKinematics(),
-			swerve.getModules().getWheelPositions(0),
-			swerve.getModules().getCurrentStates(),
-			swerve.getOrientationFromIMU(),
-			swerve.getIMUAccelerationG(),
-			swerve.getIMUAbsoluteYaw().getTimestamp()
+
+		this.limelights = List.of(limelightFront, limelightRight, limelightLeft);
+		limelights.forEach(
+				limelight -> limelight.setMT1StdDevsCalculation(
+						LimelightStdDevCalculations.getMT1StdDevsCalculation(
+								limelight,
+								RobotConstants.DEFAULT_TAG_DISTANCE_FACTORS,
+								RobotConstants.DEFAULT_STD_DEV_FACTORS,
+								RobotConstants.DEFAULT_VISIBLE_TAGS_EXPONENTS,
+								RobotConstants.DEFAULT_STD_DEV_ADDITIONS
+						)
+				)
 		);
 
-		this.limelights = List.of(limelight);
-		limelights.forEach(
-			limelight -> limelight.setMT1StdDevsCalculation(
-				LimelightStdDevCalculations.getMT1StdDevsCalculation(
-					limelight,
-					RobotConstants.DEFAULT_TAG_DISTANCE_FACTORS,
-					RobotConstants.DEFAULT_STD_DEV_FACTORS,
-					RobotConstants.DEFAULT_VISIBLE_TAGS_EXPONENTS,
-					RobotConstants.DEFAULT_STD_DEV_ADDITIONS
-				)
-			)
-		);
-		limelights.forEach(
-			limelight -> limelight.setMT1PoseFilter(
-				LimelightFilters.megaTag1Filter(
-					limelight,
-					timestamp -> poseEstimator.getEstimatedPoseAtTimestamp(timestamp).map(Pose2d::getRotation),
-					poseEstimator::isIMUOffsetCalibrated,
-					LimelightFilters.DEFAULT_IN_FIELD_TOLERANCE_METERS,
-					LimelightFilters.DEFAULT_YAW_AT_ANGLE_TOLERANCE
-				)
-			)
-		);
-
-		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+		swerve.setHeadingSupplier(() -> swerve.getIMUAbsoluteYaw().getValue());
 
 		configureBrakeStateChooser();
 	}
 
 	public void updateSubsystems() {
 		swerve.update();
-		arm.update();
-		motionMagicArm.update();
-		arm.update();
 	}
 
 	public void periodic() {
 		BusChain.refreshAll();
 
 		updateSubsystems();
-		poseEstimator.updateOdometry(swerve.getAllOdometryData());
-
 		getLimelights().forEach(Limelight::updateHardwareInputs);
 		getLimelights().forEach(Limelight::updateMT1);
-		getLimelights().forEach(limelight -> limelight.getIndependentRobotPose().ifPresent(poseEstimator::updateVision));
-
-		poseEstimator.log();
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		CommandScheduler.getInstance().run(); // Should be last
-	}
-
-	public IPoseEstimator getPoseEstimator() {
-		return poseEstimator;
 	}
 
 	public Swerve getSwerve() {

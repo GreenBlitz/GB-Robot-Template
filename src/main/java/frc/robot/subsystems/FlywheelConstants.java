@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
 
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 
@@ -20,12 +23,12 @@ public class FlywheelConstants {
 	public static final double kS = 0.24;
 	public static final double kA = 0.012081;
 
-	public static final double kP_SIM = 0.4;
+	public static final double kP_SIM = 20;
 	public static final double kI_SIM = 0;
 	public static final double kD_SIM = 0;
 	public static final double kS_SIM = 0.0;
-	public static final double kV_SIM = 0.1385;
-	public static final double kA_SIM = 0;
+	public static final double kV_SIM = 1;
+	public static final double kA_SIM = 1;
 
 	public static final double MOMENT_OF_INERTIA = 0.01;
 	public static final int CURRENT_LIMIT = 80;
@@ -36,6 +39,15 @@ public class FlywheelConstants {
 	public static final double MAX_BANG_BANG_POWER = 0.65;
 
 	public static final Rotation2d FLYWHEEL_ACCELERATION_THRESHOLD_FOR_SHOT = Rotation2d.fromRotations(-105);
+	public static Slot0Configs configuration = new Slot0Configs();
 
+	static{
+		configuration.kP = FlywheelConstants.kP_SIM;
+		configuration.kI = FlywheelConstants.kI_SIM;
+		configuration.kD = FlywheelConstants.kD_SIM;
+		configuration.kV = FlywheelConstants.kV_SIM;
+		configuration.kA = FlywheelConstants.kA_SIM;
+		configuration.kS = FlywheelConstants.kS_SIM;
+	}
 
 }

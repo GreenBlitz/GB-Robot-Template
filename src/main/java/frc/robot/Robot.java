@@ -57,6 +57,9 @@ public class Robot {
 			imu,
 			IMUFactory.createSignals(imu)
 		);
+
+		this.flywheel = TalonFXRollerBuilder.buildVelocityRoller("flywheel", new Phoenix6DeviceID(10, BusChain.ROBORIO),buildConfig().Slot0,FlywheelConstants.configuration,FlywheelConstants.CURRENT_LIMIT,buildConfig().Feedback,FlywheelConstants.MOMENT_OF_INERTIA,false,false);
+
 		BrakeStateManager.add(() -> swerve.getModules().setBrake(true), () -> swerve.getModules().setBrake(false));
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
@@ -94,13 +97,13 @@ public class Robot {
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 
-		this.flywheel = TalonFXRollerBuilder.buildVelocityRoller("flywheel", new Phoenix6DeviceID(10, BusChain.ROBORIO),buildConfig().Slot0,buildConfig().Slot0,FlywheelConstants.CURRENT_LIMIT,buildConfig().Feedback,FlywheelConstants.MOMENT_OF_INERTIA,true,true);
 
 		configureBrakeStateChooser();
 	}
 
 	public void updateSubsystems() {
 		swerve.update();
+		flywheel.update();
 	}
 
 	public void periodic() {
@@ -123,15 +126,7 @@ public class Robot {
 	public static TalonFXConfiguration buildConfig() {
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
 
-		configuration.MotorOutput.Inverted = FlywheelConstants.IS_MASTER_INVERTED;
 		configuration.Feedback.SensorToMechanismRatio = FlywheelConstants.SENSOR_TO_MECHANISM_RATIO_MASTER;
-
-		configuration.CurrentLimits.StatorCurrentLimit = FlywheelConstants.CURRENT_LIMIT;
-		configuration.CurrentLimits.StatorCurrentLimitEnable = true;
-		configuration.CurrentLimits.SupplyCurrentLimit = FlywheelConstants.CURRENT_LIMIT;
-		configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
-
-		configuration.MotionMagic.MotionMagicAcceleration = FlywheelConstants.MAX_ACCELERATION.getRotations();
 
 		if (Robot.ROBOT_TYPE.equals(RobotType.REAL)) {
 			configuration.Slot0.kP = FlywheelConstants.kP;

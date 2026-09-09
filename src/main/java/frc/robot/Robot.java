@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -12,11 +13,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.poseestimator.IPoseEstimator;
+import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
+import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.imu.IMUFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.vision.cameras.limelight.Limelight;
+import frc.robot.vision.cameras.limelight.LimelightFilters;
 import frc.robot.vision.cameras.limelight.LimelightPipeline;
 import frc.robot.vision.cameras.limelight.LimelightStdDevCalculations;
 import frc.utils.auto.PathPlannerAutoWrapper;
@@ -34,7 +39,7 @@ import java.util.List;
  */
 public class Robot {
 
-	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);
+	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(true);
 
 	private final Swerve swerve;
 
@@ -42,6 +47,8 @@ public class Robot {
 	private final Limelight limelightRight;
 	private final Limelight limelightLeft;
 	private final List<Limelight> limelights;
+	private final IPoseEstimator poseEstimator;
+
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -83,6 +90,15 @@ public class Robot {
 		);
 
 		BrakeStateManager.add(() -> swerve.getModules().setBrake(true), () -> swerve.getModules().setBrake(false));
+		this.poseEstimator = new WPILibPoseEstimatorWrapper(
+				WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
+				swerve.getKinematics(),
+				swerve.getModules().getWheelPositions(0),
+				swerve.getModules().getCurrentStates(),
+				swerve.getOrientationFromIMU(),
+				swerve.getIMUAccelerationG(),
+				swerve.getIMUAbsoluteYaw().getTimestamp()
+		);
 
 		this.limelights = List.of(limelightFront, limelightRight, limelightLeft);
 		limelights.forEach(
@@ -96,6 +112,18 @@ public class Robot {
 						)
 				)
 		);
+		limelights.forEach(
+				limelight -> limelight.setMT1PoseFilter(
+						LimelightFilters.megaTag1Filter(
+								limelight,
+								timestamp -> poseEstimator.getEstimatedPoseAtTimestamp(timestamp).map(Pose2d::getRotation),
+								poseEstimator::isIMUOffsetCalibrated,
+								LimelightFilters.DEFAULT_IN_FIELD_TOLERANCE_METERS,
+								LimelightFilters.DEFAULT_YAW_AT_ANGLE_TOLERANCE
+						)
+				)
+		);
+
 
 		swerve.setHeadingSupplier(() -> swerve.getIMUAbsoluteYaw().getValue());
 

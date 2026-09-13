@@ -4,14 +4,19 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
+import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
@@ -58,7 +63,12 @@ public class Robot {
 			IMUFactory.createSignals(imu)
 		);
 
-		this.flywheel = TalonFXRollerBuilder.buildVelocityRoller("flywheel", new Phoenix6DeviceID(10, BusChain.ROBORIO),buildConfig().Slot0,buildConfig().Slot0,FlywheelConstants.CURRENT_LIMIT,buildConfig().Feedback,FlywheelConstants.MOMENT_OF_INERTIA,false,true);
+		this.flywheel = TalonFXRollerBuilder.buildVelocityRoller("flywheel", new Phoenix6DeviceID(10, BusChain.ROBORIO),buildConfig().Slot0,buildConfig().Slot0,buildFollowerConfig(),new SysIdRoutine.Config(
+				Units.Volts.of(1).per(Units.Second),
+				Units.Volts.of(7),
+				null,
+				state -> SignalLogger.writeString( "flywheel/state", state.toString())
+		),FlywheelConstants.CURRENT_LIMIT,buildConfig().Feedback,FlywheelConstants.MOMENT_OF_INERTIA,false,true);
 
 		BrakeStateManager.add(() -> swerve.getModules().setBrake(true), () -> swerve.getModules().setBrake(false));
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
@@ -97,13 +107,29 @@ public class Robot {
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 
-
 		configureBrakeStateChooser();
 	}
 
 	public void updateSubsystems() {
 		swerve.update();
 		flywheel.update();
+	}
+
+	public static TalonFXFollowerConfig buildFollowerConfig() {
+		TalonFXFollowerConfig followerConfig = new TalonFXFollowerConfig();
+
+		followerConfig.motorConfig.MotorOutput.Inverted = FlywheelConstants.IS_FOLLOWER_INVERTED;
+		followerConfig.motorConfig.Feedback.SensorToMechanismRatio = FlywheelConstants.SENSOR_TO_MECHANISM_RATIO_FOLLOWER;
+
+		followerConfig.motorConfig.CurrentLimits.StatorCurrentLimit = FlywheelConstants.CURRENT_LIMIT;
+		followerConfig.motorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+		followerConfig.motorConfig.CurrentLimits.SupplyCurrentLimit = FlywheelConstants.CURRENT_LIMIT;
+		followerConfig.motorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+
+		followerConfig.followerIDs = new TalonFXFollowerConfig.TalonFXFollowerID[] {
+				new TalonFXFollowerConfig.TalonFXFollowerID("flyWheelFollower", new Phoenix6DeviceID(11, BusChain.ROBORIO), MotorAlignmentValue.Opposed)};
+
+		return followerConfig;
 	}
 
 	public void periodic() {

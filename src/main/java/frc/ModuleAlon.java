@@ -23,6 +23,10 @@ public class ModuleAlon extends GBSubsystem {
 		commandBuilder = new ModulesCommandBuilder(this);
 	}
 
+	public ModulesCommandBuilder getCommandBuilder(){
+		return commandBuilder;
+	}
+
 	public void invertLinear() {
 		linear.invertMotor();
 	}

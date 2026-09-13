@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
+import frc.robot.subsystems.swerve.module.Module;
 
 import java.util.function.Supplier;
 
@@ -18,10 +19,8 @@ public class ModulesCommandBuilder {
 	private Trigger combo;
 	private SmartJoystick defaultJoystick;
 
-	public ModulesCommandBuilder(int steerID, int linearID, double steerGearRatio, double linearGearRatio, CANBus canBus, String logPath) {
-		AlonFX steer = new AlonFX(steerID, canBus, logPath + "/steer", steerGearRatio);
-		AlonFX drive = new AlonFX(linearID, canBus, logPath + "/drive", linearGearRatio);
-		moduleAlon = new ModuleAlon(drive, steer, logPath);
+	public ModulesCommandBuilder(ModuleAlon moduleAlon) {
+		this.moduleAlon = moduleAlon;
 		combo = new Trigger(() -> (comboButton1 && comboButton2));
 		combo.onTrue(new InstantCommand(() -> {
 			moduleAlon.linearSetPower(0.5);
@@ -96,5 +95,9 @@ public class ModulesCommandBuilder {
 	public void stopModule() {
 		moduleAlon.stop();
 	}
+
+	private final double constantPower = .5;
+	private final static double steerToleranceRadians = .01;
+
 
 }

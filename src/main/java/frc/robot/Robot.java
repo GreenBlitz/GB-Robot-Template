@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.ModulesCommandBuilder;
 import frc.RobotManager;
+import frc.ModuleAlon;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
@@ -64,7 +65,7 @@ public class Robot {
 			swerve.getIMUAccelerationG(),
 			swerve.getIMUAbsoluteYaw().getTimestamp()
 		);
-		this.moduleAlon = new ModulesCommandBuilder(21, 3, 1, 1, new CANBus("rio"), "/motor");
+		this.moduleAlon = new ModulesCommandBuilder(new ModuleAlon(21, 3, 1, 1, new CANBus("rio"), "/motor"));
 
 		this.limelights = List.of();
 		limelights.forEach(

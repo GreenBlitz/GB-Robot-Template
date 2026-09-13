@@ -1,5 +1,6 @@
 package frc;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -11,13 +12,15 @@ public class ModuleAlon extends GBSubsystem {
 	private final AlonFX linear;
 	private final AlonFX steer;
 	private final String LOGPATH;
+	private final ModulesCommandBuilder commandBuilder;
 
-	public ModuleAlon(AlonFX linear, AlonFX steer, String logPath) {
+	public ModuleAlon(int steerID, int linearID, double steerGearRatio, double linearGearRatio, CANBus canBus, String logPath) {
 		super(logPath);
-		this.linear = linear;
-		this.steer = steer;
+		this.linear = new AlonFX(steerID, canBus, logPath + "/steer", steerGearRatio,2);
+		this.steer = new AlonFX(linearID, canBus, logPath + "/drive", linearGearRatio,2);
 		this.LOGPATH = logPath;
 		super.setDefaultCommand(new InstantCommand(() -> stop()));
+		commandBuilder = new ModulesCommandBuilder(this);
 	}
 
 	public void invertLinear() {
@@ -32,8 +35,8 @@ public class ModuleAlon extends GBSubsystem {
 		steer.driveToPosition(angleRadians);
 	}
 
-	public void linearToPosition(double power) {
-		linear.runInStablePowerToPosition(power);
+	public void linearStablePower(double power) {
+		linear.setPower(power);
 	}
 
 	public void linearSetPower(double power) {

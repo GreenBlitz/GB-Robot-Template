@@ -34,6 +34,8 @@ public class TalonFXRollerBuilder {
 		Phoenix6DeviceID deviceID,
 		Slot0Configs realVelocityControlConfig,
 		Slot0Configs simulationVelocityControlConfig,
+		TalonFXFollowerConfig talonFXFollowerConfig,
+		SysIdRoutine.Config sysIdRoutineConfig,
 		int currentLimit,
 		FeedbackConfigs feedbackConfigs,
 		double momentOfInertia,
@@ -45,27 +47,27 @@ public class TalonFXRollerBuilder {
 			motorSimulation = new FlywheelSimulation(
 				new FlywheelSim(
 					LinearSystemId.createFlywheelSystem(
-						DCMotor.getKrakenX60(1),
+						DCMotor.getKrakenX60(talonFXFollowerConfig.followerIDs.length + 1),
 						momentOfInertia,
 						feedbackConfigs.SensorToMechanismRatio * feedbackConfigs.RotorToSensorRatio
 					),
-					DCMotor.getKrakenX60(1)
+					DCMotor.getKrakenX60(talonFXFollowerConfig.followerIDs.length + 1)
 				)
 			);
 		} else {
 			motorSimulation = new SimpleMotorSimulation(
 				new DCMotorSim(
 					LinearSystemId.createDCMotorSystem(
-						DCMotor.getKrakenX60(1),
+						DCMotor.getKrakenX60(talonFXFollowerConfig.followerIDs.length + 1),
 						momentOfInertia,
 						feedbackConfigs.SensorToMechanismRatio * feedbackConfigs.RotorToSensorRatio
 					),
-					DCMotor.getKrakenX60(1)
+					DCMotor.getKrakenX60(talonFXFollowerConfig.followerIDs.length + 1)
 				)
 			);
 		}
 
-		TalonFXMotor motor = new TalonFXMotor(logPath, deviceID, new TalonFXFollowerConfig(), new SysIdRoutine.Config(), motorSimulation);
+		TalonFXMotor motor = new TalonFXMotor(logPath, deviceID, talonFXFollowerConfig, sysIdRoutineConfig, motorSimulation);
 
 		motor.applyConfiguration(
 			buildConfiguration(

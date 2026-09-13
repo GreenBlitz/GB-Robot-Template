@@ -32,8 +32,8 @@ public class ModuleAlon extends GBSubsystem {
 		steer.driveToPosition(angleRadians);
 	}
 
-	public void linearToPosition(double rotations, double power) {
-		linear.runInStablePowerToPosition(rotations, power);
+	public void linearToPosition(double power) {
+		linear.runInStablePowerToPosition(power);
 	}
 
 	public void linearSetPower(double power) {
@@ -42,6 +42,10 @@ public class ModuleAlon extends GBSubsystem {
 
 	public Rotation2d getSteerAngle() {
 		return steer.getPosition();
+	}
+
+	public Rotation2d getLinearAngle(){
+		return linear.getPosition();
 	}
 
 	public Rotation2d getLinearVelocity() {

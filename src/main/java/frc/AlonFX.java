@@ -27,7 +27,7 @@ public class AlonFX {
 	StatusSignal<Current> current;
 	StatusSignal<Angle> position;
 
-	public AlonFX(int deviceId, CANBus canBus, String logPath, double gearRatio) {
+	public AlonFX(int deviceId, CANBus canBus, String logPath, double gearRatio, double kP) {
 		this.logPath = logPath;
 		this.motor = new TalonFX(deviceId, canBus);
 		direction = InvertedValue.CounterClockwise_Positive;
@@ -157,10 +157,8 @@ public class AlonFX {
 		return direction == InvertedValue.Clockwise_Positive ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive;
 	}
 
-	public void runInStablePowerToPosition(double positionRotations, double power) {
-		PositionDutyCycle positionDutyCycle = new PositionDutyCycle(positionRotations);
-		positionDutyCycle.FeedForward = power;
-		motor.setControl(positionDutyCycle);
+	public void runInStablePowerToPosition(double power) {
+		setPower(power);
 	}
 
 

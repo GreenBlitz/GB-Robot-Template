@@ -11,13 +11,13 @@ public class DriveDistanceCommand extends InstantCommand {
 
 	public DriveDistanceCommand(ModuleAlon subsystem, Rotation2d drive, Rotation2d angle) {
 		super(() -> subsystem.stop());
+		int signOfPosMDrive = (int)Math.signum(subsystem.getLinearAngle().minus(angle).getRadians());
 		addRequirements(subsystem);
 		RunCommand steerToAngle = new RunCommand(() -> subsystem.steerToPosition(angle.getRadians()));
 		steerToAngle.until(() -> MathUtilBlitz.tolerance(angle.getRadians(), subsystem.getSteerAngle().getRadians(), steerToleranceRadians));
-		RunCommand driveToPosition = new RunCommand(() -> subsystem.linearToPosition(drive.getRotations(), constantPower));
-		// driveToPosition.until()
+		RunCommand driveToPosition = new RunCommand(() -> subsystem.linearToPosition(constantPower));
+		driveToPosition.until(() -> (subsystem.getLinearAngle().minus(angle).times(signOfPosMDrive).getRadians()<0));
 	}
-
 	@Override
 	public void execute() {
 		super.execute();

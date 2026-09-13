@@ -32,7 +32,7 @@ public class ModuleAlon extends GBSubsystem {
 		steer.driveToPosition(angleRadians);
 	}
 
-	public void linearToPosition(double rotations,double power) {
+	public void linearToPosition(double rotations, double power) {
 		linear.runInStablePowerToPosition(rotations, power);
 	}
 
@@ -56,10 +56,11 @@ public class ModuleAlon extends GBSubsystem {
 		steer.setNeutralMode(neutralMode);
 	}
 
-	public void setSteerPosition(double position){
+	public void setSteerPosition(double position) {
 		steer.setPosition(position);
 	}
-	public void setLinearPosition(double position){
+
+	public void setLinearPosition(double position) {
 		linear.setPosition(position);
 	}
 

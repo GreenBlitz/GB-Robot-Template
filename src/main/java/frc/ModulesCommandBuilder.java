@@ -129,8 +129,9 @@ public class ModulesCommandBuilder {
 				driveDistanceCommand(Rotation2d.fromRotations(2),Rotation2d.fromDegrees(0)),
 				driveDistanceCommand(Rotation2d.fromRotations(2),Rotation2d.fromDegrees(90)),
 				driveDistanceCommand(Rotation2d.fromRotations(2),Rotation2d.fromDegrees(180)),
+				new ParallelCommandGroup(
 				printArmOpening(),
-				driveDistanceCommand(Rotation2d.fromRotations(2),Rotation2d.fromDegrees(-90))
+				driveDistanceCommand(Rotation2d.fromRotations(2),Rotation2d.fromDegrees(-90)))
 		);
 	}
 

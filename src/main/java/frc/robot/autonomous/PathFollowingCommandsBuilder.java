@@ -5,6 +5,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.constants.field.Field;
 import frc.robot.subsystems.swerve.Swerve;
@@ -60,9 +61,12 @@ public class PathFollowingCommandsBuilder {
 		PathPlannerPath path,
 		PathConstraints pathfindingConstraints,
 		Supplier<Command> commandSupplier,
+		Pose2d regularIsNearEndOfPathTolerance,
+		Pose2d stuckIsNearEndOfPathTolerance,
+		double stuckDebounceSeconds,
 		String logPath
 	) {
-		return new ParallelDeadlineGroup(followAdjustedPath(swerve, currentPose, path, pathfindingConstraints, logPath), commandSupplier.get());
+		return new ParallelDeadlineGroup(followAdjustedPathThenStop(swerve, currentPose, path, pathfindingConstraints,regularIsNearEndOfPathTolerance,stuckIsNearEndOfPathTolerance,stuckDebounceSeconds, logPath), commandSupplier.get());
 	}
 
 	public static Command commandAfterPath(

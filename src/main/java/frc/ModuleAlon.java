@@ -16,14 +16,14 @@ public class ModuleAlon extends GBSubsystem {
 
 	public ModuleAlon(int steerID, int linearID, double steerGearRatio, double linearGearRatio, CANBus canBus, String logPath) {
 		super(logPath);
-		this.linear = new AlonFX(steerID, canBus, logPath + "/steer", steerGearRatio,2);
-		this.steer = new AlonFX(linearID, canBus, logPath + "/drive", linearGearRatio,2);
+		this.linear = new AlonFX(steerID, canBus, logPath + "/steer", steerGearRatio, 2);
+		this.steer = new AlonFX(linearID, canBus, logPath + "/drive", linearGearRatio, 2);
 		this.LOGPATH = logPath;
 		super.setDefaultCommand(new InstantCommand(() -> stop()));
 		commandBuilder = new ModulesCommandBuilder(this);
 	}
 
-	public ModulesCommandBuilder getCommandBuilder(){
+	public ModulesCommandBuilder getCommandBuilder() {
 		return commandBuilder;
 	}
 
@@ -51,7 +51,7 @@ public class ModuleAlon extends GBSubsystem {
 		return steer.getPosition();
 	}
 
-	public Rotation2d getLinearAngle(){
+	public Rotation2d getLinearAngle() {
 		return linear.getPosition();
 	}
 

@@ -1,13 +1,13 @@
 package frc;
 
-import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
-import frc.robot.subsystems.swerve.module.Module;
 
 import java.util.function.Supplier;
 
@@ -99,5 +99,25 @@ public class ModulesCommandBuilder {
 	private final double constantPower = .5;
 	private final static double steerToleranceRadians = .01;
 
+	public FunctionalCommand DriveDistanceCommand(Rotation2d drive, Rotation2d angle) {
+		FunctionalCommand command = new FunctionalCommand(
+			() -> moduleAlon.stop(),
+			() -> moduleAlon.steerToPosition(angle.getRadians()),
+			(b) -> moduleAlon.stop(),
+			() -> MathUtilBlitz.tolerance(angle.getRadians(), moduleAlon.getSteerAngle().getRadians(), steerToleranceRadians)
+		);
+		command.addRequirements(moduleAlon);
+		int signOfDrive = (int) Math.signum(drive.getRadians());
+		Rotation2d[] originalPos = {null};
+		FunctionalCommand driveToPosition = new FunctionalCommand(() -> {
+			originalPos[0] = moduleAlon.getLinearAngle();
+		},
+			() -> moduleAlon.linearStablePower(constantPower),
+			(b) -> moduleAlon.linearSetPower(0),
+			() -> (originalPos[0].plus(drive).minus(moduleAlon.getLinearAngle()).times(signOfDrive).getRadians() <= 0)
+		);
+		command.andThen(driveToPosition);
+		return command;
+	}
 
 }

@@ -65,7 +65,7 @@ public class Robot {
 			swerve.getIMUAccelerationG(),
 			swerve.getIMUAbsoluteYaw().getTimestamp()
 		);
-		this.moduleAlon = new ModulesCommandBuilder(new ModuleAlon(21, 3, 1, 1, new CANBus("rio"), "/motor"));
+		this.moduleAlon = new ModulesCommandBuilder(new ModuleAlon(21, 3, 1, 1, 2,2,new CANBus("rio"), "/motor"));
 
 		this.limelights = List.of();
 		limelights.forEach(

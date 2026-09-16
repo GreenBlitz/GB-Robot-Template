@@ -2,9 +2,7 @@ package frc;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
@@ -99,7 +97,7 @@ public class ModulesCommandBuilder {
 	private final double constantPower = .5;
 	private final static double steerToleranceRadians = .01;
 
-	public FunctionalCommand DriveDistanceCommand(Rotation2d drive, Rotation2d angle) {
+	public FunctionalCommand driveDistanceCommand(Rotation2d drive, Rotation2d angle) {
 		FunctionalCommand command = new FunctionalCommand(
 			() -> moduleAlon.stop(),
 			() -> moduleAlon.steerToPosition(angle.getRadians()),
@@ -116,8 +114,24 @@ public class ModulesCommandBuilder {
 			(b) -> moduleAlon.linearSetPower(0),
 			() -> (originalPos[0].plus(drive).minus(moduleAlon.getLinearAngle()).times(signOfDrive).getRadians() <= 0)
 		);
+		driveToPosition.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf);
 		command.andThen(driveToPosition);
+		command.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf);
 		return command;
+	}
+	public Command printArmOpening(){
+		return new InstantCommand(()->{
+			System.out.println("opening arm");
+		});
+	}
+	public Command fullyCircleDrive(){
+		return new SequentialCommandGroup(
+				driveDistanceCommand(Rotation2d.fromRotations(2),Rotation2d.fromDegrees(0)),
+				driveDistanceCommand(Rotation2d.fromRotations(2),Rotation2d.fromDegrees(90)),
+				driveDistanceCommand(Rotation2d.fromRotations(2),Rotation2d.fromDegrees(180)),
+				printArmOpening(),
+				driveDistanceCommand(Rotation2d.fromRotations(2),Rotation2d.fromDegrees(-90))
+		);
 	}
 
 }

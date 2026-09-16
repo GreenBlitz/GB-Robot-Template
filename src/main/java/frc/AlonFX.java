@@ -29,6 +29,21 @@ public class AlonFX {
 	public AlonFX(int deviceId, CANBus canBus, String logPath, double gearRatio, double kP) {
 		this.logPath = logPath;
 		this.motor = new TalonFX(deviceId, canBus);
+		TalonFXConfiguration configuration = createConfig(gearRatio,kP);
+		motor.getConfigurator().apply(configuration);
+		motor.optimizeBusUtilization();
+
+		velocity = motor.getVelocity();
+		velocity.setUpdateFrequency(50);
+		voltage = motor.getMotorVoltage();
+		voltage.setUpdateFrequency(50);
+		current = motor.getStatorCurrent();
+		current.setUpdateFrequency(50);
+		position = motor.getPosition();
+		position.setUpdateFrequency(50);
+	}
+
+	private TalonFXConfiguration createConfig(double gearRatio, double kP){
 		direction = InvertedValue.CounterClockwise_Positive;
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
 
@@ -56,19 +71,7 @@ public class AlonFX {
 		feedbackConfigs.SensorToMechanismRatio = gearRatio;
 		configuration.Feedback = feedbackConfigs;
 
-		motor.getConfigurator().apply(configuration);
-		motor.optimizeBusUtilization();
-
-		velocity = motor.getVelocity();
-		velocity.setUpdateFrequency(50);
-		voltage = motor.getMotorVoltage();
-		voltage.setUpdateFrequency(50);
-		current = motor.getStatorCurrent();
-		current.setUpdateFrequency(50);
-		position = motor.getPosition();
-		position.setUpdateFrequency(50);
 	}
-
 	private boolean isMotorConnected() {
 		return motor.isConnected();
 	}

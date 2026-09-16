@@ -1,5 +1,6 @@
 package frc;
 
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
@@ -49,7 +50,8 @@ public class JoysticksBindings {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 		robot.getModuleAlon().setDefaultJoystick(usedJoystick);
-		robot.getModuleAlon().bindComboButtons(usedJoystick);
+		Trigger comboButtons = usedJoystick.A.and(usedJoystick.B);
+		comboButtons.onTrue(robot.getModuleAlon().comboCommand());
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

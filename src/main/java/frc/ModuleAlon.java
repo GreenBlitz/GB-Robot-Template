@@ -38,11 +38,7 @@ public class ModuleAlon extends GBSubsystem {
 	public void steerToPosition(double angleRadians) {
 		steer.driveToPosition(angleRadians);
 	}
-
-	public void linearStablePower(double power) {
-		linear.setPower(power);
-	}
-
+	
 	public void linearSetPower(double power) {
 		linear.setPower(power);
 	}

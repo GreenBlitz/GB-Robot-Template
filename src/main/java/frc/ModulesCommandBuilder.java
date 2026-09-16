@@ -1,6 +1,7 @@
 package frc;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -12,17 +13,10 @@ import java.util.function.Supplier;
 public class ModulesCommandBuilder {
 
 	private ModuleAlon moduleAlon;
-	private boolean comboButton1 = false;
-	private boolean comboButton2 = false;
-	private Trigger combo;
 	private SmartJoystick defaultJoystick;
 
 	public ModulesCommandBuilder(ModuleAlon moduleAlon) {
 		this.moduleAlon = moduleAlon;
-		combo = new Trigger(() -> (comboButton1 && comboButton2));
-		combo.onTrue(new InstantCommand(() -> {
-			moduleAlon.linearSetPower(0.5);
-		}));
 	}
 
 	public void setDefaultJoystick(SmartJoystick defaultJoystick) {
@@ -54,26 +48,6 @@ public class ModulesCommandBuilder {
 		return driveWithStick(() -> joystick.getAxisValue(Axis.RIGHT_X), () -> joystick.getAxisValue(Axis.RIGHT_Y));
 	}
 
-	public Trigger getComboTrigger() {
-		return combo;
-	}
-
-
-	public void bindComboButtons(SmartJoystick joystick) {
-		joystick.A.onTrue(new InstantCommand(() -> {
-			comboButton1 = true;
-		}));
-		joystick.A.onFalse(new InstantCommand(() -> {
-			comboButton1 = false;
-		}));
-		joystick.B.onTrue(new InstantCommand(() -> {
-			comboButton2 = true;
-		}));
-		joystick.B.onFalse(new InstantCommand(() -> {
-			comboButton2 = false;
-		}));
-	}
-
 	public void logAll() {
 		moduleAlon.logAll();
 	}
@@ -102,7 +76,7 @@ public class ModulesCommandBuilder {
 			() -> moduleAlon.stop(),
 			() -> moduleAlon.steerToPosition(angle.getRadians()),
 			(b) -> moduleAlon.stop(),
-			() -> MathUtilBlitz.tolerance(angle.getRadians(), moduleAlon.getSteerAngle().getRadians(), steerToleranceRadians)
+			() -> MathUtil.isNear(angle.getRadians(), moduleAlon.getSteerAngle().getRadians(), steerToleranceRadians)
 		);
 		command.addRequirements(moduleAlon);
 		int signOfDrive = (int) Math.signum(drive.getRadians());
@@ -110,7 +84,7 @@ public class ModulesCommandBuilder {
 		FunctionalCommand driveToPosition = new FunctionalCommand(() -> {
 			originalPos[0] = moduleAlon.getLinearAngle();
 		},
-			() -> moduleAlon.linearStablePower(constantPower),
+			() -> moduleAlon.linearSetPower(constantPower),
 			(b) -> moduleAlon.linearSetPower(0),
 			() -> (originalPos[0].plus(drive).minus(moduleAlon.getLinearAngle()).times(signOfDrive).getRadians() <= 0)
 		);
@@ -118,6 +92,9 @@ public class ModulesCommandBuilder {
 		command.andThen(driveToPosition);
 		command.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf);
 		return command;
+	}
+	public InstantCommand comboCommand(){
+		return new InstantCommand(()->{moduleAlon.linearSetPower(0.5);});
 	}
 	public Command printArmOpening(){
 		return new InstantCommand(()->{

@@ -48,6 +48,7 @@ public class Robot {
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 
+
 		IIMU imu = IMUFactory.createIMU(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
@@ -65,7 +66,7 @@ public class Robot {
 			swerve.getIMUAccelerationG(),
 			swerve.getIMUAbsoluteYaw().getTimestamp()
 		);
-		this.moduleAlon = new ModuleAlon(21, 3, 6767, 1, 1, RobotConstants.steerKp,2,new CANBus("rio"), "/motor");
+		this.moduleAlon = new ModuleAlon(0, 10, 6767, 1, 1, RobotConstants.steerKp,2,new CANBus("rio"), "motor");
 
 		this.limelights = List.of();
 		limelights.forEach(

@@ -4,7 +4,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.*;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
 
@@ -18,6 +17,7 @@ public class ModulesCommandBuilder {
 
 	public ModulesCommandBuilder(ModuleAlon moduleAlon) {
 		this.moduleAlon = moduleAlon;
+		moduleAlon.setDefaultCommand(new InstantCommand(() -> moduleAlon.stop(),moduleAlon));
 	}
 
 	public void setDefaultJoystick(SmartJoystick defaultJoystick) {
@@ -84,14 +84,13 @@ public class ModulesCommandBuilder {
 	private final double constantPower = .5;
 	private final static double steerToleranceRadians = .01;
 
-	public FunctionalCommand driveDistanceCommand(Rotation2d drive, Rotation2d angle) {
-		FunctionalCommand command = new FunctionalCommand(
+	public Command driveDistanceCommand(Rotation2d drive, Rotation2d angle) {
+		FunctionalCommand steerToPosition = new FunctionalCommand(
 			() -> moduleAlon.stop(),
 			() -> moduleAlon.steerToPosition(angle.getRadians()),
 			(b) -> moduleAlon.stop(),
 			() -> MathUtil.isNear(angle.getRadians(), moduleAlon.getSteerAngle().getRadians(), steerToleranceRadians)
 		);
-		command.addRequirements(moduleAlon);
 		int signOfDrive = (int) Math.signum(drive.getRadians());
 		Rotation2d[] originalPos = {null};
 		FunctionalCommand driveToPosition = new FunctionalCommand(() -> {
@@ -101,8 +100,8 @@ public class ModulesCommandBuilder {
 			(b) -> moduleAlon.linearSetPower(0),
 			() -> (originalPos[0].plus(drive).minus(moduleAlon.getLinearAngle()).times(signOfDrive).getRadians() <= 0)
 		);
-		driveToPosition.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf);
-		command.andThen(driveToPosition);
+		SequentialCommandGroup command = new SequentialCommandGroup(steerToPosition,driveToPosition);
+		command.addRequirements(moduleAlon);
 		command.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf);
 		return command;
 	}

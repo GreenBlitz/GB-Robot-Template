@@ -20,7 +20,7 @@ public class ModuleAlon extends GBSubsystem {
 		this.linear = new AlonFX(steerID, canBus, logPath + "/steer", steerGearRatio, steerKp);
 		this.steer = new AlonFX(linearID, canBus, logPath + "/drive", linearGearRatio, linearKp);
 		this.LOGPATH = logPath;
-		super.setDefaultCommand(new InstantCommand(() -> stop()));
+
 		commandBuilder = new ModulesCommandBuilder(this);
 	}
 

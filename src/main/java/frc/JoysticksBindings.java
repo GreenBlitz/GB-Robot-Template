@@ -51,9 +51,9 @@ public class JoysticksBindings {
 		usedJoystick.A.whileTrue(new InstantCommand(robot.getMotor()::MoveForwardHalfPower));
 		usedJoystick.B.whileTrue(new InstantCommand(robot.getMotor()::stopMotor));
 		usedJoystick.X.whileTrue(new InstantCommand(robot.getMotor()::MoveBackwardsHalfPower));
-		usedJoystick.Y.whileTrue(new InstantCommand(robot.getMotor()::invertRotation));
-        usedJoystick.POV_DOWN.whileTrue(new InstantCommand(robot.getMotor()::setPoisition));
-        usedJoystick.POV_UP.whileTrue(new InstantCommand(robot.getMotor()::changeNeutralMode));
+		usedJoystick.Y.onTrue(new InstantCommand(robot.getMotor()::invertRotation));
+		usedJoystick.POV_DOWN.whileTrue(new InstantCommand(robot.getMotor()::setPoisition));
+		usedJoystick.POV_UP.onTrue(new InstantCommand(robot.getMotor()::changeNeutralMode));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

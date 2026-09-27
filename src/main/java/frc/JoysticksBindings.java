@@ -1,12 +1,14 @@
 package frc;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
+import jdk.swing.interop.SwingInterOpUtils;
 
 
 public class JoysticksBindings {
@@ -48,6 +50,7 @@ public class JoysticksBindings {
 	}
 
 	private static void mainJoystickButtons(Robot robot) {
+		System.out.println("JSBINDINGSAHH");
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 		robot.getModuleAlon().setDefaultJoystick(usedJoystick);
@@ -56,6 +59,9 @@ public class JoysticksBindings {
 		usedJoystick.X.onTrue(robot.getModuleAlon().driveDistanceCommand(
 				Rotation2d.fromRotations(2.5),Rotation2d.fromDegrees(67)
 		));
+		usedJoystick.Y.onTrue(new InstantCommand(()->{
+			System.out.println("AHHHHHHHHHHHHHH");
+		}));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

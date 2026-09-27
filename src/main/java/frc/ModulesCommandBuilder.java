@@ -102,7 +102,7 @@ public class ModulesCommandBuilder {
 		);
 		SequentialCommandGroup command = new SequentialCommandGroup(steerToPosition,driveToPosition);
 		command.addRequirements(moduleAlon);
-		command.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf);
+		//command.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf);
 		return command;
 	}
 	public InstantCommand comboCommand(){

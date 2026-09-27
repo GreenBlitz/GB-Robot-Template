@@ -3,7 +3,7 @@ package frc.robot.subsystems.arm;
 import com.ctre.phoenix6.controls.VoltageOut;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.joysticks.Axis;
-import frc.joysticks.SmartJoystick;
+import frc.joysticks.SmartJoystickPlayStation;
 import frc.robot.Robot;
 import frc.robot.hardware.interfaces.*;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
@@ -124,7 +124,7 @@ public class Arm extends GBSubsystem {
 		return Robot.ROBOT_TYPE.isReal() ? kG * getPosition().getCos() : 0;
 	}
 
-	public void applyCalibrationBindings(SmartJoystick joystick, double maxCalibrationPower) {
+	public void applyCalibrationBindings(SmartJoystickPlayStation joystick, double maxCalibrationPower) {
 		// Calibrate kG using phoenix tuner by setting the voltage
 
 		// Check limits

@@ -2,18 +2,18 @@ package frc;
 
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
-import frc.joysticks.SmartJoystick;
+import frc.joysticks.SmartJoystickPlayStation;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
 
 public class JoysticksBindings {
 
-	private static final SmartJoystick MAIN_JOYSTICK = new SmartJoystick(JoystickPorts.MAIN, true);
-	private static final SmartJoystick SECOND_JOYSTICK = new SmartJoystick(JoystickPorts.SECOND);
-	private static final SmartJoystick THIRD_JOYSTICK = new SmartJoystick(JoystickPorts.THIRD);
-	private static final SmartJoystick FOURTH_JOYSTICK = new SmartJoystick(JoystickPorts.FOURTH);
-	private static final SmartJoystick FIFTH_JOYSTICK = new SmartJoystick(JoystickPorts.FIFTH);
-	private static final SmartJoystick SIXTH_JOYSTICK = new SmartJoystick(JoystickPorts.SIXTH);
+	private static final SmartJoystickPlayStation MAIN_JOYSTICK = new SmartJoystickPlayStation(JoystickPorts.MAIN, true);
+	private static final SmartJoystickPlayStation SECOND_JOYSTICK = new SmartJoystickPlayStation(JoystickPorts.SECOND);
+	private static final SmartJoystickPlayStation THIRD_JOYSTICK = new SmartJoystickPlayStation(JoystickPorts.THIRD);
+	private static final SmartJoystickPlayStation FOURTH_JOYSTICK = new SmartJoystickPlayStation(JoystickPorts.FOURTH);
+	private static final SmartJoystickPlayStation FIFTH_JOYSTICK = new SmartJoystickPlayStation(JoystickPorts.FIFTH);
+	private static final SmartJoystickPlayStation SIXTH_JOYSTICK = new SmartJoystickPlayStation(JoystickPorts.SIXTH);
 
 	private static final ChassisPowers chassisDriverInputs = new ChassisPowers();
 
@@ -45,32 +45,32 @@ public class JoysticksBindings {
 	}
 
 	private static void mainJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = MAIN_JOYSTICK;
+		SmartJoystickPlayStation usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = SECOND_JOYSTICK;
+		SmartJoystickPlayStation usedJoystick = SECOND_JOYSTICK;
 		// bindings...
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = THIRD_JOYSTICK;
+		SmartJoystickPlayStation usedJoystick = THIRD_JOYSTICK;
 		// bindings...
 	}
 
 	private static void fourthJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = FOURTH_JOYSTICK;
+		SmartJoystickPlayStation usedJoystick = FOURTH_JOYSTICK;
 		// bindings...
 	}
 
 	private static void fifthJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = FIFTH_JOYSTICK;
+		SmartJoystickPlayStation usedJoystick = FIFTH_JOYSTICK;
 		// bindings...
 	}
 
 	private static void sixthJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = SIXTH_JOYSTICK;
+		SmartJoystickPlayStation usedJoystick = SIXTH_JOYSTICK;
 		// bindings...
 	}
 

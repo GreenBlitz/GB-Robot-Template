@@ -81,8 +81,8 @@ public class ModulesCommandBuilder {
 		moduleAlon.stop();
 	}
 
-	private final double constantPower = .5;
-	private final static double steerToleranceRadians = .01;
+	private final double constantPower = 0.5;
+	private final static double steerToleranceRadians = 0.1;
 
 	public Command driveDistanceCommand(Rotation2d drive, Rotation2d angle) {
 		FunctionalCommand steerToPosition = new FunctionalCommand(
@@ -105,8 +105,8 @@ public class ModulesCommandBuilder {
 		//command.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf);
 		return command;
 	}
-	public InstantCommand comboCommand(){
-		return new InstantCommand(()->{moduleAlon.linearSetPower(0.5);});
+	public RunCommand comboCommand(){
+		return new RunCommand(()->{moduleAlon.linearSetPower(1);});
 	}
 	public Command printArmOpening(){
 		return new InstantCommand(()->{

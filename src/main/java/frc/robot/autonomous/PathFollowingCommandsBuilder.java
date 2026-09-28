@@ -43,7 +43,7 @@ public class PathFollowingCommandsBuilder {
 		);
 	}
 
-	public static Command deadlinePathWithCommand(
+	public static Command deadlinedPathWithCommand(
 		Swerve swerve,
 		Supplier<Pose2d> currentPose,
 		PathPlannerPath path,
@@ -54,7 +54,7 @@ public class PathFollowingCommandsBuilder {
 		return new ParallelDeadlineGroup(commandSupplier.get(), followAdjustedPath(swerve, currentPose, path, pathfindingConstraints, logPath));
 	}
 
-	public static Command deadlineCommandWithPath(
+	public static Command deadlinedCommandWithPath(
 		Swerve swerve,
 		Supplier<Pose2d> currentPose,
 		PathPlannerPath path,

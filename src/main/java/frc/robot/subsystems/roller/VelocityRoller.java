@@ -50,7 +50,7 @@ public class VelocityRoller extends Roller {
 
 	@Override
 	public void update() {
-		super.stop();
+		super.update();
 		Logger.recordOutput(getLogPath() + "/TargetVelocity", velocityRequest.getSetPoint());
 		motor.updateInputs(velocitySignal);
 	}

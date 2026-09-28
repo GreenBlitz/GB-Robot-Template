@@ -163,6 +163,24 @@ tasks.register('installLocalGitHookPostCheckout', Copy) {
 	}
 }
 
+tasks.register('setReachableIP') {
+    group = 'networkUtils'
+    doLast {
+        int PING_TIMEOUT_MILLISECONDS = 1000
+        boolean found = false
+        for (int i = 0; i < IPS.size() && !found; i++) {
+            if (InetAddress.getByName(IPS[i]).isReachable(PING_TIMEOUT_MILLISECONDS)) {
+                reachableIP = IPS[i]
+                println("Using " + IPS[i])
+                found = true
+            }
+        }
+        if (!found) {
+            println("No IP is reachable.")
+        }
+    }
+}
+
 tasks.named("deploy").configure { finalizedBy('runComputerPrograms') }
 tasks.register('runComputerPrograms', JavaExec) {
 	group = 'execution'

@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 
 public class WheelRadiusCharacterization extends Command {
 
-	private final Supplier<Rotation2d> gyroAngleSupplier;
+	private final Supplier<Rotation2d> IMUAngleSupplier;
 	private final Supplier<Rotation2d[]> wheelDriveDistanceSupplier;
 	private final Consumer<Rotation2d> velocityControl;
 	private final Rotation2d characterizationSpeed;
@@ -27,8 +27,8 @@ public class WheelRadiusCharacterization extends Command {
 	private final double driveRadiusMeters;
 
 	private Rotation2d[] startWheelPositions;
-	private double lastGyroYawRadians = 0.0;
-	private double accumulateGyroYawRadians = 0.0;
+	private double lastIMUYawRadians = 0.0;
+	private double accumulateIMUYawRadians = 0.0;
 	private double wheelRadiusMeters = 0.0;
 
 	public WheelRadiusCharacterization(
@@ -36,27 +36,27 @@ public class WheelRadiusCharacterization extends Command {
 		double driveRadiusMeters,
 		Rotation2d characterizationSpeed,
 		Supplier<Rotation2d[]> wheelDriveDistanceSupplier,
-		Supplier<Rotation2d> gyroAngleSupplier,
+		Supplier<Rotation2d> IMUAngleSupplier,
 		Consumer<Rotation2d> velocityControl,
 		Runnable onEnd
 	) {
 		this.characterizationSpeed = characterizationSpeed;
 		this.driveRadiusMeters = driveRadiusMeters;
 		this.wheelDriveDistanceSupplier = wheelDriveDistanceSupplier;
-		this.gyroAngleSupplier = gyroAngleSupplier;
+		this.IMUAngleSupplier = IMUAngleSupplier;
 		this.velocityControl = velocityControl;
 		this.onEnd = onEnd;
 		addRequirements(drive);
 	}
 
 	private void updateAnglePassedFromStart() {
-		double currentGyroYawRadians = gyroAngleSupplier.get().getRadians();
-		accumulateGyroYawRadians += MathUtil.angleModulus(currentGyroYawRadians - lastGyroYawRadians);
-		lastGyroYawRadians = currentGyroYawRadians;
+		double currentIMUYawRadians = IMUAngleSupplier.get().getRadians();
+		accumulateIMUYawRadians += MathUtil.angleModulus(currentIMUYawRadians - lastIMUYawRadians);
+		lastIMUYawRadians = currentIMUYawRadians;
 	}
 
 	private double getDriveDistanceMeters() {
-		return accumulateGyroYawRadians * driveRadiusMeters;
+		return accumulateIMUYawRadians * driveRadiusMeters;
 	}
 
 	private double getAverageDriveDistanceRadians() {
@@ -70,8 +70,8 @@ public class WheelRadiusCharacterization extends Command {
 
 	@Override
 	public void initialize() {
-		lastGyroYawRadians = gyroAngleSupplier.get().getRadians();
-		accumulateGyroYawRadians = 0.0;
+		lastIMUYawRadians = IMUAngleSupplier.get().getRadians();
+		accumulateIMUYawRadians = 0.0;
 
 		startWheelPositions = wheelDriveDistanceSupplier.get();
 	}
@@ -89,7 +89,7 @@ public class WheelRadiusCharacterization extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		onEnd.run();
-		String output = accumulateGyroYawRadians <= MathConstants.FULL_CIRCLE.getRadians()
+		String output = accumulateIMUYawRadians <= MathConstants.FULL_CIRCLE.getRadians()
 			? "Not enough data for characterization"
 			: wheelRadiusMeters + " meters";
 		Logger.recordOutput(WheelRadiusConstants.LOG_PATH, output);

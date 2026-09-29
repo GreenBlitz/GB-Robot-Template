@@ -1,4 +1,4 @@
-package frc.utils;
+package frc.utils.driverstation;
 
 import org.wpilib.driverstation.Alliance;
 import org.wpilib.driverstation.MatchType;
@@ -6,7 +6,7 @@ import org.wpilib.driverstation.internal.DriverStationBackend;
 
 public class DriverStationUtil {
 
-	private static final Alliance DEFAULT_ALLIANCE = Alliance.RED;
+	public static final Alliance DEFAULT_ALLIANCE = Alliance.RED;
 
 	public static Alliance getAlliance() {
 		return DriverStationBackend.getAlliance().orElse(DEFAULT_ALLIANCE);

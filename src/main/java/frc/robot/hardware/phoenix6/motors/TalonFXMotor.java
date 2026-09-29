@@ -14,7 +14,7 @@ import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IMotionMagicRequest;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
-import frc.robot.hardware.mechanisms.MechanismSimulation;
+import frc.robot.hardware.simulations.MechanismSimulation;
 import frc.robot.hardware.phoenix6.Phoenix6Device;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.simulation.TalonFXSimulation;
@@ -45,7 +45,7 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		SysIdRoutine.Config sysidConfig,
 		MechanismSimulation simulation
 	) {
-		super(logPath);
+		super(logPath, deviceID.busChain());
 		this.motor = new TalonFXWrapper(deviceID);
 		this.followers = initializeFollowers(motor, followerConfig);
 		this.followerInputs = initializeFollowerInputs(getLogPath(), followerConfig, followers.length);
@@ -99,7 +99,8 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 				new PeriodicAlert(
 					Alert.AlertType.ERROR,
 					followerLogPath + "disconnectedAt",
-					() -> !followerInputsAutoLogged.followerData.connected()
+					() -> !followerInputsAutoLogged.followerData.connected(),
+					true
 				)
 			);
 		}
@@ -115,7 +116,7 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		if (talonFXSimulationOptional.isPresent()) {
 			talonFXSimulationOptional.get().applyConfig(motor, configuration);
 		} else if (!motor.applyConfiguration(configuration, APPLY_CONFIG_RETRIES).isOK()) {
-			new Alert(Alert.AlertType.ERROR, getLogPath() + "ConfigurationFailed").report();
+			new Alert(Alert.AlertType.ERROR, getLogPath() + "ConfigurationFailed", true).report();
 		}
 	}
 

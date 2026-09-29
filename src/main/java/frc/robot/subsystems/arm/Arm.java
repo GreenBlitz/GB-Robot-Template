@@ -1,11 +1,13 @@
 package frc.robot.subsystems.arm;
 
+import com.ctre.phoenix6.controls.VoltageOut;
 import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.command2.InstantCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.hardware.interfaces.*;
+import frc.robot.hardware.phoenix6.request.Phoenix6Request;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.calibration.sysid.SysIdCalibrator;
@@ -19,7 +21,7 @@ public class Arm extends GBSubsystem {
 	private final IFeedForwardRequest positionRequest;
 	private final SysIdCalibrator sysIdCalibrator;
 	private final double kG;
-	private final ArmCommandBuilder commandBuilder;
+	private final ArmCommandsBuilder commandsBuilder;
 
 	public Arm(
 		String logPath,
@@ -36,12 +38,12 @@ public class Arm extends GBSubsystem {
 		this.positionRequest = positionRequest;
 		this.kG = kG;
 		this.sysIdCalibrator = new SysIdCalibrator(motor.getSysidConfigInfo(), this, (voltage) -> setVoltage(voltage + getKgVoltage()));
-		commandBuilder = new ArmCommandBuilder(this);
-		setDefaultCommand(commandBuilder.stayInPlace());
+		commandsBuilder = new ArmCommandsBuilder(this);
+		setDefaultCommand(commandsBuilder.stayInPlace());
 	}
 
-	public ArmCommandBuilder getCommandsBuilder() {
-		return commandBuilder;
+	public ArmCommandsBuilder getCommandsBuilder() {
+		return commandsBuilder;
 	}
 
 	public double getVoltage() {
@@ -49,7 +51,7 @@ public class Arm extends GBSubsystem {
 	}
 
 	public double getCurrent() {
-		return signals.current().getLatestValue();
+		return signals.statorCurrent().getLatestValue();
 	}
 
 	public Rotation2d getVelocity() {
@@ -76,15 +78,14 @@ public class Arm extends GBSubsystem {
 		return signals.position().isLess(position);
 	}
 
-	@Override
-	protected void subsystemPeriodic() {
+	public void update() {
 		motor.updateSimulation();
 		updateInputs();
 		log();
 	}
 
 	private void updateInputs() {
-		motor.updateInputs(signals.voltage(), signals.current(), signals.velocity(), signals.position());
+		motor.updateInputs(signals.voltage(), signals.statorCurrent(), signals.torqueCurrent(), signals.velocity(), signals.position());
 	}
 
 	public void log() {
@@ -92,7 +93,7 @@ public class Arm extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/ArbitraryFeedForward", positionRequest.getArbitraryFeedForward());
 	}
 
-	public void setVoltage(Double voltage) {
+	public void setVoltage(double voltage) {
 		motor.applyRequest(voltageRequest.withSetPoint(voltage));
 	}
 
@@ -116,7 +117,7 @@ public class Arm extends GBSubsystem {
 		positionRequest.withArbitraryFeedForward(arbitraryFeedForward);
 	}
 
-	protected void stayInPlace() {
+	public void stayInPlace() {
 		setTargetPosition(signals.position().getLatestValue());
 	}
 
@@ -125,14 +126,11 @@ public class Arm extends GBSubsystem {
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, double maxCalibrationPower) {
-		joystick.POV_DOWN.onTrue(new InstantCommand(() -> commandBuilder.setIsSubsystemRunningIndependently(true)));
-		joystick.POV_UP.onTrue(new InstantCommand(() -> commandBuilder.setIsSubsystemRunningIndependently(false)));
-
 		// Calibrate kG using phoenix tuner by setting the voltage
 
 		// Check limits
 		joystick.R1.whileTrue(
-			commandBuilder
+			commandsBuilder
 				.setPower(() -> joystick.getAxisValue(Axis.LEFT_Y) * maxCalibrationPower + (getKgVoltage() / BatteryUtil.getCurrentVoltage()))
 		);
 
@@ -140,5 +138,15 @@ public class Arm extends GBSubsystem {
 		sysIdCalibrator.setAllButtonsForCalibration(joystick);
 	}
 
-}
+	public void setVoltageWithoutLimit(double voltage) {
+		if (voltageRequest instanceof Phoenix6Request<Double> phoenix6VoltageRequest) {
+			if (phoenix6VoltageRequest.getControlRequest() instanceof VoltageOut voltageOutRequest) {
+				voltageOutRequest.IgnoreSoftwareLimits = true;
+				voltageRequest.withSetPoint(voltage);
+				motor.applyRequest(voltageRequest);
+				voltageOutRequest.IgnoreSoftwareLimits = false;
+			}
+		}
+	}
 
+}

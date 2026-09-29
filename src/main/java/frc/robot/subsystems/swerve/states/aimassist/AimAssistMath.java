@@ -17,14 +17,19 @@ public class AimAssistMath {
 		ChassisVelocities velocities,
 		Rotation2d robotHeading,
 		Rotation2d targetHeading,
+		boolean slowDownByDriveMagnitude,
 		SwerveConstants swerveConstants
 	) {
 		Rotation2d pidOutputVelocityPerSecond = Rotation2d
 			.fromDegrees(swerveConstants.rotationDegreesPIDController().calculate(robotHeading.getDegrees(), targetHeading.getDegrees()));
 
+		if (slowDownByDriveMagnitude) {
+			pidOutputVelocityPerSecond = applyMagnitudeCompensation(pidOutputVelocityPerSecond, SwerveMath.getDriveMagnitude(speeds));
+		}
+
 		Rotation2d angularVelocityPerSecond = applyMagnitudeCompensation(pidOutputVelocityPerSecond, SwerveMath.getDriveMagnitude(velocities));
 		Rotation2d clampedAngularVelocityPerSecond = ToleranceMath
-			.clamp(angularVelocityPerSecond, swerveConstants.maxRotationalVelocityPerSecond());
+			.clamp(pidOutputVelocityPerSecond, swerveConstants.maxRotationalVelocityPerSecond());
 
 		return new ChassisVelocities(velocities.vx, velocities.vy, clampedAngularVelocityPerSecond.getRadians());
 	}
@@ -47,11 +52,14 @@ public class AimAssistMath {
 		Rotation2d allianceRelativeTargetHeading,
 		Translation2d objectTranslation,
 		SwerveConstants swerveConstants,
-		SwerveState swerveState
+		SwerveState swerveState,
+		double magnitudeCompensationFactor,
+		boolean slowDownByRotation
 	) {
 		Pose2d robotPoseWithTargetHeading = new Pose2d(robotPose.getX(), robotPose.getY(), allianceRelativeTargetHeading);
 		Translation2d objectRelativeToRobot = FieldMath.getRelativeTranslation(robotPoseWithTargetHeading, objectTranslation);
-		double neededObjectHorizontalVelocityMetersPerSecond = swerveConstants.yMetersPIDController().calculate(0, objectRelativeToRobot.getY());
+		double neededHorizontalVelocityRelativeToObjectMetersPerSecond = swerveConstants.yMetersPIDController()
+			.calculate(0, objectRelativeToRobot.getY());
 
 		Rotation2d targetHeadingHingeSystemAngle = switch (swerveState.getDriveRelative()) {
 			case ALLIANCE_RELATIVE -> Field.getAllianceRelative(allianceRelativeTargetHeading);
@@ -62,14 +70,32 @@ public class AimAssistMath {
 			.allianceToRobotRelativeVelocities(velocities, targetHeadingHingeSystemAngle);
 		ChassisVelocities assistedVelocities = new ChassisVelocities(
 			targetHeadingRelativeVelocities.vx,
-			neededObjectHorizontalVelocityMetersPerSecond,
+                neededHorizontalVelocityRelativeToObjectMetersPerSecond,
 			targetHeadingRelativeVelocities.omega
 		);
+
+		if (slowDownByRotation) {
+			assistedVelocities.vx = applyMagnitudeCompensation(
+				targetHeadingRelativeVelocities.vx,
+				Math.abs(velocities.omega),
+				magnitudeCompensationFactor
+			);
+			assistedVelocities.vy = applyMagnitudeCompensation(
+				neededHorizontalVelocityRelativeToObjectMetersPerSecond,
+				Math.abs(velocities.omega),
+				magnitudeCompensationFactor
+			);
+		}
+
 		return SwerveMath.robotToAllianceRelativeVelocities(assistedVelocities, targetHeadingHingeSystemAngle);
 	}
 
 	private static Rotation2d applyMagnitudeCompensation(Rotation2d velocityPerSecond, double magnitude) {
 		return velocityPerSecond.times(SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR).div(magnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
+	}
+
+	private static double applyMagnitudeCompensation(double velocityPerSecond, double magnitude, double factor) {
+		return velocityPerSecond * (SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR) / (magnitude + factor);
 	}
 
 }

@@ -19,7 +19,7 @@ public class SparkMaxWrapper extends SparkMax {
 		return getAppliedOutput().get() * getBusVoltage().get();
 	}
 
-	public Rotation2d getVelocityAnglePerSecond() {
+	public Rotation2d getVelocityRPS() {
 		return Rotation2d.fromRotations(Conversions.perMinuteToPerSecond(getEncoder().getVelocity().get()));
 	}
 

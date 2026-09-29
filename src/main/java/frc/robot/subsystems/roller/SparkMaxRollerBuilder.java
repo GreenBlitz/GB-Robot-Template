@@ -12,7 +12,7 @@ import frc.robot.Robot;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.digitalinput.chooser.ChooserDigitalInput;
 import frc.robot.hardware.digitalinput.supplied.SuppliedDigitalInput;
-import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
+import frc.robot.hardware.simulations.wpilib.SimpleMotorSimulation;
 import frc.robot.hardware.rev.motors.BrushlessSparkMAXMotor;
 import frc.robot.hardware.rev.motors.SparkMaxConfiguration;
 import frc.robot.hardware.rev.motors.SparkMaxDeviceID;
@@ -39,9 +39,11 @@ public class SparkMaxRollerBuilder {
 		int currentLimit,
 		double momentOfInertia
 	) {
-		SimpleMotorSimulation rollerSimulation = buildSimulation(gearRatio, momentOfInertia);
+		SimpleMotorSimulation motorSimulation = buildSimulation(gearRatio, momentOfInertia);
 
-		BrushlessSparkMAXMotor roller = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, rollerSimulation, new SysIdRoutine.Config());
+		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, motorSimulation, new SysIdRoutine.Config());
+
+		motor.applyConfiguration(buildConfiguration(inverted, gearRatio, currentLimit));
 
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
 		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("current", () -> sparkMaxWrapper.getOutputCurrent().get());
@@ -50,12 +52,15 @@ public class SparkMaxRollerBuilder {
 			() -> sparkMaxWrapper.getEncoder().getPosition().get(),
 			AngleUnit.ROTATIONS
 		);
-
-		roller.applyConfiguration(buildConfiguration(inverted, gearRatio, currentLimit));
+		SuppliedAngleSignal velocitySignal = new SuppliedAngleSignal(
+			"velocity",
+			() -> sparkMaxWrapper.getEncoder().getVelocity(),
+			AngleUnit.ROTATIONS
+		);
 
 		SparkMaxRequest<Double> voltageRequest = SparkMaxRequestBuilder.build(0.0, SparkBase.ControlType.kVoltage, ClosedLoopSlot.kSlot0);
 
-		return new Roller(logPath, roller, voltageSignal, currentSignal, positionSignal, voltageRequest);
+		return new Roller(logPath, motor, voltageSignal, currentSignal, positionSignal, velocitySignal, voltageRequest);
 	}
 
 	public static Roller build(

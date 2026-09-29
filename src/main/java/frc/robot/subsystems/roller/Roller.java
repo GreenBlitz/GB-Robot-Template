@@ -9,32 +9,37 @@ import org.littletonrobotics.junction.Logger;
 
 public class Roller extends GBSubsystem {
 
-	protected final ControllableMotor roller;
+	protected final ControllableMotor motor;
 
 	private final InputSignal<Double> voltageSignal;
 	private final InputSignal<Double> currentSignal;
 	private final InputSignal<Rotation2d> positionSignal;
+	private final InputSignal<Rotation2d> velocitySignal;
+
 	private final IRequest<Double> voltageRequest;
 	private final RollerCommandsBuilder commandsBuilder;
 	private Rotation2d targetPosition;
 
 	public Roller(
 		String logPath,
-		ControllableMotor roller,
+		ControllableMotor motor,
 		InputSignal<Double> voltageSignal,
 		InputSignal<Double> currentSignal,
 		InputSignal<Rotation2d> positionSignal,
+		InputSignal<Rotation2d> velocitySignal,
 		IRequest<Double> voltageRequest
 	) {
 		super(logPath);
-		this.roller = roller;
+		this.motor = motor;
 		this.voltageSignal = voltageSignal;
 		this.currentSignal = currentSignal;
 		this.positionSignal = positionSignal;
+		this.velocitySignal = velocitySignal;
 		this.voltageRequest = voltageRequest;
 		this.commandsBuilder = new RollerCommandsBuilder(this);
-		this.roller.resetPosition(Rotation2d.fromRotations(0));
+		this.motor.resetPosition(Rotation2d.fromRotations(0));
 		this.targetPosition = Rotation2d.fromRotations(0);
+		setDefaultCommand(commandsBuilder.stop());
 	}
 
 	public RollerCommandsBuilder getCommandsBuilder() {
@@ -46,19 +51,19 @@ public class Roller extends GBSubsystem {
 	}
 
 	public void setVoltage(double voltage) {
-		roller.applyRequest(voltageRequest.withSetPoint(voltage));
+		motor.applyRequest(voltageRequest.withSetPoint(voltage));
 	}
 
 	public void setPower(double power) {
-		roller.setPower(power);
+		motor.setPower(power);
 	}
 
 	public void stop() {
-		roller.stop();
+		motor.stop();
 	}
 
 	public void setBrake(boolean brake) {
-		roller.setBrake(brake);
+		motor.setBrake(brake);
 	}
 
 	public Double getVoltage() {
@@ -71,6 +76,10 @@ public class Roller extends GBSubsystem {
 
 	public Rotation2d getPosition() {
 		return positionSignal.getLatestValue();
+	}
+
+	public Rotation2d getVelocity() {
+		return velocitySignal.getLatestValue();
 	}
 
 	public boolean isAtPosition(Rotation2d position, Rotation2d tolerance) {
@@ -93,10 +102,9 @@ public class Roller extends GBSubsystem {
 		return isBehindPosition(targetPosition);
 	}
 
-	@Override
-	public void subsystemPeriodic() {
-		roller.updateSimulation();
-		roller.updateInputs(voltageSignal, currentSignal, positionSignal);
+	public void update() {
+		motor.updateSimulation();
+		motor.updateInputs(voltageSignal, currentSignal, positionSignal, velocitySignal);
 		Logger.recordOutput(getLogPath() + "/PositionTarget", targetPosition);
 	}
 

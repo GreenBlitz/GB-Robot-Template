@@ -1,4 +1,4 @@
-package frc.robot.hardware.mechanisms.wpilib;
+package frc.robot.hardware.simulations.wpilib;
 
 import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.simulation.FlywheelSim;
@@ -13,7 +13,7 @@ public class FlywheelSimulation implements WPILibMechanismSimulation {
 	public FlywheelSimulation(FlywheelSim flywheelSimulation) {
 		this.flywheelSimulation = flywheelSimulation;
 		this.currentPosition = Rotation2d.fromDegrees(0);
-		this.currentVelocity = getMechanismVelocityAnglesPerSecond();
+		this.currentVelocity = getMechanismVelocityRPS();
 	}
 
 	@Override
@@ -22,7 +22,7 @@ public class FlywheelSimulation implements WPILibMechanismSimulation {
 	}
 
 	@Override
-	public Rotation2d getMechanismVelocityAnglesPerSecond() {
+	public Rotation2d getMechanismVelocityRPS() {
 		return Rotation2d.fromRadians(flywheelSimulation.getAngularVelocity());
 	}
 
@@ -35,7 +35,7 @@ public class FlywheelSimulation implements WPILibMechanismSimulation {
 	public void updateMotor() {
 		flywheelSimulation.update(TimeUtil.getLatestCycleTimeSeconds());
 		Rotation2d lastVelocity = currentVelocity;
-		currentVelocity = getMechanismVelocityAnglesPerSecond();
+		currentVelocity = getMechanismVelocityRPS();
 		Rotation2d averageVelocity = Rotation2d.fromRotations((currentVelocity.getRotations() + lastVelocity.getRotations()) / 2);
 		updatePosition(averageVelocity);
 	}

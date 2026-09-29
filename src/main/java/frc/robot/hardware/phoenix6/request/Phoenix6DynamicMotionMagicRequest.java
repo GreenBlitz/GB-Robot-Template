@@ -37,26 +37,26 @@ public class Phoenix6DynamicMotionMagicRequest extends Phoenix6MotionMagicReques
 	}
 
 	@Override
-	public IDynamicMotionMagicRequest withMaxVelocityRotation2dPerSecond(Rotation2d maxVelocityRotation2dPerSecond) {
-		maxVelocity = maxVelocityRotation2dPerSecond;
+	public IDynamicMotionMagicRequest withMaxVelocityRPS(Rotation2d maxVelocityRPS) {
+		maxVelocity = maxVelocityRPS;
 		setMaxVelocity.accept(maxVelocity);
 		return this;
 	}
 
 	@Override
-	public Rotation2d getMaxVelocityRotation2dPerSecond() {
+	public Rotation2d getMaxVelocityRPS() {
 		return maxVelocity;
 	}
 
 	@Override
-	public IDynamicMotionMagicRequest withMaxAccelerationRotation2dPerSecondSquared(Rotation2d maxAccelerationRotation2dPerSecondSquared) {
-		maxAcceleration = maxAccelerationRotation2dPerSecondSquared;
+	public IDynamicMotionMagicRequest withMaxAccelerationRPS(Rotation2d maxAccelerationRPS) {
+		maxAcceleration = maxAccelerationRPS;
 		setMaxAcceleration.accept(maxAcceleration);
 		return this;
 	}
 
 	@Override
-	public Rotation2d getMaxAccelerationRotation2dPerSecondSquared() {
+	public Rotation2d getMaxAccelerationRPS() {
 		return maxAcceleration;
 	}
 

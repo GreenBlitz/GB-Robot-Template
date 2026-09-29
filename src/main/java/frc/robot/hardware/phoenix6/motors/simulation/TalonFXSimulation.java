@@ -5,7 +5,7 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import frc.robot.hardware.phoenix6.motors.TalonFXWrapper;
-import frc.robot.hardware.mechanisms.MechanismSimulation;
+import frc.robot.hardware.simulations.MechanismSimulation;
 import frc.utils.battery.BatteryUtil;
 
 public class TalonFXSimulation {
@@ -26,6 +26,7 @@ public class TalonFXSimulation {
 			followerSimStates[i].setSupplyVoltage(BatteryUtil.DEFAULT_VOLTAGE);
 		}
 		motorSimState.setSupplyVoltage(BatteryUtil.DEFAULT_VOLTAGE);
+		updateMotor();
 	}
 
 	public void applyConfig(TalonFXWrapper talonFXWrapper, TalonFXConfiguration configuration) {
@@ -42,10 +43,10 @@ public class TalonFXSimulation {
 		mechanismSimulation.setInputVoltage(motorSimState.getMotorVoltage());
 		mechanismSimulation.updateMotor();
 		motorSimState.setRawRotorPosition(mechanismSimulation.getRotorPosition().getRotations());
-		motorSimState.setRotorVelocity(mechanismSimulation.getRotorVelocityAnglesPerSecond().getRotations());
+		motorSimState.setRotorVelocity(mechanismSimulation.getRotorVelocityRPS().getRotations());
 
 		for (TalonFXSimState followerSimState : followerSimStates) {
-			followerSimState.setRotorVelocity(mechanismSimulation.getRotorVelocityAnglesPerSecond().getRotations());
+			followerSimState.setRotorVelocity(mechanismSimulation.getRotorVelocityRPS().getRotations());
 			followerSimState.setRawRotorPosition(mechanismSimulation.getRotorPosition().getRotations());
 		}
 	}

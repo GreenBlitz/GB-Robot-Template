@@ -5,7 +5,7 @@ import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.command2.sysid.SysIdRoutine;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
-import frc.robot.hardware.mechanisms.MechanismSimulation;
+import frc.robot.hardware.simulations.MechanismSimulation;
 import frc.robot.hardware.rev.request.SparkMaxRequest;
 import frc.utils.alerts.Alert;
 import frc.utils.calibration.sysid.SysIdCalibrator;

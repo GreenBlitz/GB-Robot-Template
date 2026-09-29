@@ -7,6 +7,7 @@ public abstract class GBSubsystem extends SubsystemBase {
 
 	private final String logPath;
 	private Command currentCommand;
+	private boolean isRunningIndependently;
 
 	public GBSubsystem(String logPath) {
 		this.logPath = logPath;
@@ -22,9 +23,18 @@ public abstract class GBSubsystem extends SubsystemBase {
 		return logPath;
 	}
 
+	public boolean isRunningIndependently() {
+		return isRunningIndependently;
+	}
+
+	public void setIsRunningIndependently(boolean isRunningIndependently) {
+		this.isRunningIndependently = isRunningIndependently;
+	}
+
 	@Override
 	public final void periodic() {
 		Logger.recordOutput(getLogPath() + "/CurrentCommand", getCurrentCommand().getName());
+		Logger.recordOutput(getLogPath() + "/IsRunningIndependently", isRunningIndependently());
 		subsystemPeriodic();
 	}
 

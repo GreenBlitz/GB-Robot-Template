@@ -1,4 +1,4 @@
-package frc.robot.hardware.mechanisms;
+package frc.robot.hardware.simulations;
 
 import org.wpilib.math.geometry.Rotation2d;
 
@@ -6,11 +6,11 @@ public interface MechanismSimulation {
 
 	Rotation2d getRotorPosition();
 
-	Rotation2d getRotorVelocityAnglesPerSecond();
+	Rotation2d getRotorVelocityRPS();
 
 	Rotation2d getMechanismPosition();
 
-	Rotation2d getMechanismVelocityAnglesPerSecond();
+	Rotation2d getMechanismVelocityRPS();
 
 	void setInputVoltage(double voltage);
 

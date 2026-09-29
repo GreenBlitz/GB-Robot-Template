@@ -36,7 +36,7 @@ public class LoggerFactory {
 		if (LogSavePath.USB.isWritable()) {
 			startLoggerOnUSB();
 		} else {
-			new Alert(Alert.AlertType.WARNING, LOG_PATH + "/Didn't find USB").report();
+			new Alert(Alert.AlertType.WARNING, LOG_PATH + "/Didn't find USB", true).report();
 			startLoggerOnRoborio();
 		}
 	}

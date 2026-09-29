@@ -7,11 +7,11 @@ import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.function.Supplier;
 
-public class DynamicMotionMagicArmCommandBuilder extends ArmCommandBuilder {
+public class DynamicMotionMagicArmCommandsBuilder extends ArmCommandsBuilder {
 
 	private final DynamicMotionMagicArm arm;
 
-	protected DynamicMotionMagicArmCommandBuilder(DynamicMotionMagicArm arm) {
+	protected DynamicMotionMagicArmCommandsBuilder(DynamicMotionMagicArm arm) {
 		super(arm);
 		this.arm = arm;
 	}
@@ -26,20 +26,13 @@ public class DynamicMotionMagicArmCommandBuilder extends ArmCommandBuilder {
 		return arm.asSubsystemCommand(new RunCommand(() -> arm.setTargetPosition(position.get())), "Set target position by supplier");
 	}
 
-	public Command setTargetPosition(
-		Rotation2d position,
-		Rotation2d maxVelocityRotation2dPerSecond,
-		Rotation2d maxAccelerationRotation2dPerSecondSquared
-	) {
+	public Command setTargetPosition(Rotation2d position, Rotation2d maxVelocityRPS, Rotation2d maxAccelerationRPSSquared) {
 		return arm.asSubsystemCommand(
-			new InitExecuteCommand(
-				() -> {},
-				() -> arm.setTargetPosition(position, maxVelocityRotation2dPerSecond, maxAccelerationRotation2dPerSecondSquared)
-			),
+			new InitExecuteCommand(() -> {}, () -> arm.setTargetPosition(position, maxVelocityRPS, maxAccelerationRPSSquared)),
 			"Set target position with "
-				+ maxAccelerationRotation2dPerSecondSquared
+				+ maxAccelerationRPSSquared
 				+ " acceleration per Second Squared and with "
-				+ maxVelocityRotation2dPerSecond
+				+ maxVelocityRPS
 				+ " velocity per second to:"
 				+ position
 		);

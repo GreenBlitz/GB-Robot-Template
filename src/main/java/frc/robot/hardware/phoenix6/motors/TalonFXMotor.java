@@ -4,8 +4,8 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.command2.sysid.SysIdRoutine;
 import frc.robot.Robot;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.FollowerInputs;
@@ -158,9 +158,9 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 	@Override
 	public void setBrake(boolean brake) {
 		NeutralModeValue neutralModeValue = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
-		motor.setNeutralMode(neutralModeValue);
+		motor.configNeutralMode(neutralModeValue);
 		for (TalonFXWrapper follower : followers) {
-			follower.setNeutralMode(neutralModeValue);
+			follower.configNeutralMode(neutralModeValue);
 		}
 	}
 
@@ -177,7 +177,7 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 
 	@Override
 	public void setPower(double power) {
-		motor.set(power);
+		motor.setThrottle(power);
 	}
 
 	@Override

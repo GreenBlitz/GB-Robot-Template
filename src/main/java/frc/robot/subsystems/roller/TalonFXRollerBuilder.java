@@ -6,13 +6,14 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.InvertedValue;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Robot;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.system.DCMotor;
+import org.wpilib.math.system.Models;
+import org.wpilib.simulation.DCMotorSim;
+import org.wpilib.command2.sysid.SysIdRoutine;
+import org.wpilib.simulation.FlywheelSim;
+
 import frc.robot.RobotConstants;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.simulations.MechanismSimulation;
@@ -46,7 +47,7 @@ public class TalonFXRollerBuilder {
 		if (isFlywheel) {
 			motorSimulation = new FlywheelSimulation(
 				new FlywheelSim(
-					LinearSystemId.createFlywheelSystem(
+					Models.flywheelFromPhysicalConstants(
 						DCMotor.getKrakenX60(talonFXFollowerConfig.followerIDs.length + 1),
 						momentOfInertia,
 						feedbackConfigs.SensorToMechanismRatio * feedbackConfigs.RotorToSensorRatio
@@ -56,14 +57,14 @@ public class TalonFXRollerBuilder {
 			);
 		} else {
 			motorSimulation = new SimpleMotorSimulation(
-				new DCMotorSim(
-					LinearSystemId.createDCMotorSystem(
+			new DCMotorSim(
+				Models.singleJointedArmFromPhysicalConstants(
 						DCMotor.getKrakenX60(talonFXFollowerConfig.followerIDs.length + 1),
 						momentOfInertia,
 						feedbackConfigs.SensorToMechanismRatio * feedbackConfigs.RotorToSensorRatio
 					),
-					DCMotor.getKrakenX60(talonFXFollowerConfig.followerIDs.length + 1)
-				)
+				DCMotor.getKrakenX60(talonFXFollowerConfig.followerIDs.length +1)
+			)
 			);
 		}
 

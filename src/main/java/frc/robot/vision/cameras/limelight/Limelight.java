@@ -1,6 +1,6 @@
 package frc.robot.vision.cameras.limelight;
 
-import edu.wpi.first.math.geometry.*;
+import org.wpilib.math.geometry.*;
 import frc.robot.vision.DetectedObjectObservation;
 import frc.robot.vision.RobotPoseObservation;
 import frc.robot.vision.cameras.limelight.inputs.LimelightInputsSet;

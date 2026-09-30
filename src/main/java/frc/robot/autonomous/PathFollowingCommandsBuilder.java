@@ -3,9 +3,9 @@ package frc.robot.autonomous;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
-import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj2.command.*;
+import org.wpilib.command2.*;
+import org.wpilib.math.filter.Debouncer;
+import org.wpilib.math.geometry.Pose2d;
 import frc.constants.field.Field;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.utils.auto.PathPlannerUtil;
@@ -177,7 +177,7 @@ public class PathFollowingCommandsBuilder {
 	) {
 		return followAdjustedPath(swerve, currentPose, path, pathfindingConstraints, logPath)
 			.until(isNearEndOfPath(path, currentPose, regularIsNearEndOfPathTolerance, stuckIsNearEndOfPathTolerance, stuckDebounceTimeSeconds))
-			.andThen(swerve.getCommandsBuilder().resetTargetSpeeds());
+			.andThen(swerve.getCommandsBuilder().resetTargetVelocities());
 	}
 
 	private static BooleanSupplier isNearEndOfPath(

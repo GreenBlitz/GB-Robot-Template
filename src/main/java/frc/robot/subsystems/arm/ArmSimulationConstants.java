@@ -1,6 +1,6 @@
 package frc.robot.subsystems.arm;
 
-import edu.wpi.first.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Rotation2d;
 
 public record ArmSimulationConstants(
 	Rotation2d maxPosition,

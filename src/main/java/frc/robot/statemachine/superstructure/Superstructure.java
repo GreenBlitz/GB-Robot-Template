@@ -1,10 +1,12 @@
 package frc.robot.statemachine.superstructure;
 
-import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Robot;
 import frc.robot.statemachine.RobotState;
 
 import org.littletonrobotics.junction.Logger;
+import org.wpilib.command2.Command;
+import org.wpilib.command2.InstantCommand;
+import org.wpilib.command2.Subsystem;
 
 import java.util.Set;
 

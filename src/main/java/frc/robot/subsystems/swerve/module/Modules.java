@@ -1,9 +1,9 @@
 package frc.robot.subsystems.swerve.module;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Translation2d;
+import org.wpilib.math.kinematics.SwerveModulePosition;
+import org.wpilib.math.kinematics.SwerveModuleVelocity;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
@@ -27,8 +27,8 @@ public class Modules {
 		for (Module currentModule : modules) {
 			currentModule.updateInputs();
 		}
-		Logger.recordOutput(logPath + "/CurrentStates", getCurrentStates());
-		Logger.recordOutput(logPath + "/TargetStates", getTargetStates());
+		Logger.recordOutput(logPath + "/CurrentStates", getCurrentVelocities());
+		Logger.recordOutput(logPath + "/TargetStates", getTargetVelocities());
 	}
 
 
@@ -84,9 +84,9 @@ public class Modules {
 		}
 	}
 
-	public void setTargetStates(SwerveModuleState[] moduleStates, boolean isClosedLoop) {
+	public void setTargetVelocities(SwerveModuleVelocity[] moduleVelocities, boolean isClosedLoop) {
 		for (int i = 0; i < modules.length; i++) {
-			modules[i].setTargetState(moduleStates[i], isClosedLoop);
+			modules[i].setTargetState(moduleVelocities[i], isClosedLoop);
 		}
 	}
 
@@ -103,12 +103,12 @@ public class Modules {
 		return numberOfOdometrySamples;
 	}
 
-	public SwerveModuleState[] getTargetStates() {
-		return Arrays.stream(modules).map(Module::getTargetState).toArray(SwerveModuleState[]::new);
+	public SwerveModuleVelocity[] getTargetVelocities() {
+		return Arrays.stream(modules).map(Module::getTargetVelocity).toArray(SwerveModuleVelocity[]::new);
 	}
 
-	public SwerveModuleState[] getCurrentStates() {
-		return Arrays.stream(modules).map(Module::getCurrentState).toArray(SwerveModuleState[]::new);
+	public SwerveModuleVelocity[] getCurrentVelocities() {
+		return Arrays.stream(modules).map(Module::getCurrentVelocity).toArray(SwerveModuleVelocity[]::new);
 	}
 
 	public Rotation2d[] getDrivesPositions() {
@@ -142,7 +142,7 @@ public class Modules {
 		return true;
 	}
 
-	public boolean isAtTargetStates(
+	public boolean isAtTargetVelocities(
 		Rotation2d steerPositionTolerance,
 		Rotation2d steerVelocityPerSecondDeadband,
 		double speedToleranceMetersPerSecond

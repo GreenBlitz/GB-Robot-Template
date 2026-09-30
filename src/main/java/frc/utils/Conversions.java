@@ -1,7 +1,7 @@
 package frc.utils;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.trajectory.TrapezoidProfile;
 import frc.constants.MathConstants;
 
 public class Conversions {

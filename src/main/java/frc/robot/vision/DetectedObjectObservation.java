@@ -1,7 +1,7 @@
 package frc.robot.vision;
 
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
+import org.wpilib.math.geometry.Translation2d;
+import org.wpilib.math.geometry.Translation3d;
 
 public record DetectedObjectObservation(DetectedObjectType type, Translation3d robotRelativeObjectTranslation, double timestampSeconds) {
 

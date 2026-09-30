@@ -1,7 +1,7 @@
 package frc.robot.hardware.phoenix6.request;
 
 import com.ctre.phoenix6.controls.ControlRequest;
-import edu.wpi.first.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.IFeedForwardRequest;
 
 import java.util.function.Consumer;

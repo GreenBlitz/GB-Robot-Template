@@ -1,9 +1,9 @@
 package frc.utils;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
-import edu.wpi.first.math.interpolation.Interpolator;
-import edu.wpi.first.math.interpolation.InverseInterpolator;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.interpolation.InterpolatingTreeMap;
+import org.wpilib.math.interpolation.Interpolator;
+import org.wpilib.math.interpolation.InverseInterpolator;
 
 import java.util.Arrays;
 import java.util.Comparator;

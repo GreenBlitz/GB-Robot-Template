@@ -1,6 +1,6 @@
 package frc.robot.vision.cameras.limelight.inputs;
 
-import edu.wpi.first.math.geometry.Pose3d;
+import org.wpilib.math.geometry.Pose3d;
 import frc.utils.limelight.LimelightHelpers;
 import org.littletonrobotics.junction.AutoLog;
 

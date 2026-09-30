@@ -1,6 +1,6 @@
 package frc.robot.hardware.phoenix6.imu;
 
-import edu.wpi.first.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.phoenix6.Phoenix6Device;
 

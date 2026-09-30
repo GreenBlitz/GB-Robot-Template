@@ -1,9 +1,9 @@
 package frc.robot.poseestimator;
 
 import org.wpilib.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation3d;
+import org.wpilib.math.geometry.Translation3d;
 import org.wpilib.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
+import org.wpilib.math.kinematics.SwerveModuleVelocity;
 
 import java.util.Optional;
 
@@ -11,7 +11,7 @@ public class OdometryData {
 
 	private double timestampSeconds = 0;
 	private SwerveModulePosition[] wheelPositions = new SwerveModulePosition[4];
-	private SwerveModuleState[] wheelStates = new SwerveModuleState[4];
+	private SwerveModuleVelocity[] wheelVelocities = new SwerveModuleVelocity[4];
 	private Optional<Rotation3d> imuOrientation = Optional.empty();
 	private Optional<Translation3d> imu3DAccelerationG = Optional.empty();
 
@@ -20,13 +20,13 @@ public class OdometryData {
 	public OdometryData(
 		double timestampSeconds,
 		SwerveModulePosition[] wheelPositions,
-		SwerveModuleState[] wheelStates,
+		SwerveModuleVelocity[] wheelVelocities,
 		Optional<Rotation3d> imuOrientation,
 		Optional<Translation3d> imu3DAccelerationG
 	) {
 		this.timestampSeconds = timestampSeconds;
 		this.wheelPositions = wheelPositions;
-		this.wheelStates = wheelStates;
+		this.wheelVelocities = wheelVelocities;
 		this.imuOrientation = imuOrientation;
 		this.imu3DAccelerationG = imu3DAccelerationG;
 	}
@@ -39,8 +39,8 @@ public class OdometryData {
 		return wheelPositions;
 	}
 
-	public SwerveModuleState[] getWheelStates() {
-		return wheelStates;
+	public SwerveModuleVelocity[] getWheelVelocities() {
+		return wheelVelocities;
 	}
 
 	public Optional<Rotation3d> getIMUOrientation() {
@@ -59,8 +59,8 @@ public class OdometryData {
 		this.wheelPositions = wheelPositions;
 	}
 
-	public void setWheelStates(SwerveModuleState[] wheelStates) {
-		this.wheelStates = wheelStates;
+	public void setWheelVelocities(SwerveModuleVelocity[] wheelVelocities) {
+		this.wheelVelocities = wheelVelocities;
 	}
 
 	public void setIMUOrientation(Optional<Rotation3d> imuOrientation) {

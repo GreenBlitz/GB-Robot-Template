@@ -2,9 +2,9 @@ package frc.utils.pose;
 
 import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.geometry.Translation2d;
-import org.wpilib.math.kinematics.ChassisSpeeds;
+import org.wpilib.math.kinematics.ChassisVelocities;
 import org.wpilib.math.kinematics.SwerveDriveKinematics;
-import org.wpilib.math.kinematics.SwerveModuleState;
+import org.wpilib.math.kinematics.SwerveModuleVelocity;
 import frc.utils.math.ToleranceMath;
 
 public class PoseUtil {
@@ -20,29 +20,29 @@ public class PoseUtil {
 
 	public static boolean areModulesSkidding(
 		SwerveDriveKinematics kinematics,
-		SwerveModuleState[] moduleStates,
+		SwerveModuleVelocity[] moduleVelocities,
 		double minimumSkidRobotToModuleVelocityDifferenceMetersPerSecond,
 		double maximumNegligibleVectorNorm
 	) {
-		ChassisSpeeds swerveVelocity = kinematics.toChassisSpeeds(moduleStates);
+		ChassisVelocities swerveVelocity = kinematics.toChassisVelocities(moduleVelocities);
 		Translation2d swerveTranslationalVelocityMetersPerSecond = new Translation2d(
-			swerveVelocity.vxMetersPerSecond,
-			swerveVelocity.vyMetersPerSecond
+			swerveVelocity.vx,
+			swerveVelocity.vy
 		);
 
-		SwerveModuleState[] moduleRotationalStates = kinematics
-			.toSwerveModuleStates(new ChassisSpeeds(0, 0, swerveVelocity.omegaRadiansPerSecond));
-		SwerveModuleState[] moduleTranslationalStates = getModuleTranslationalStates(
-			moduleStates,
-			moduleRotationalStates,
+		SwerveModuleVelocity[] moduleRotationalVelocities = kinematics
+			.toSwerveModuleVelocities(new ChassisVelocities(0, 0, swerveVelocity.omega));
+		SwerveModuleVelocity[] moduleTranslationalVelocities = getModuleTranslationalVelocities(
+			moduleVelocities,
+			moduleRotationalVelocities,
 			maximumNegligibleVectorNorm
 		);
 
-		for (SwerveModuleState moduleTranslationalState : moduleTranslationalStates) {
+		for (SwerveModuleVelocity moduleTranslationalVelocity : moduleTranslationalVelocities) {
 			if (
 				!ToleranceMath.isNear(
 					swerveTranslationalVelocityMetersPerSecond,
-					new Translation2d(moduleTranslationalState.speedMetersPerSecond, moduleTranslationalState.angle),
+					new Translation2d(moduleTranslationalVelocity.velocity, moduleTranslationalVelocity.angle),
 					minimumSkidRobotToModuleVelocityDifferenceMetersPerSecond
 				)
 			) {
@@ -52,28 +52,28 @@ public class PoseUtil {
 		return false;
 	}
 
-	private static SwerveModuleState[] getModuleTranslationalStates(
-		SwerveModuleState[] moduleStates,
-		SwerveModuleState[] moduleRotationalStates,
+	private static SwerveModuleVelocity[] getModuleTranslationalVelocities(
+		SwerveModuleVelocity[] moduleVelocities,
+		SwerveModuleVelocity[] moduleRotationalVelocities,
 		double maximumNegligibleVectorNorm
 	) {
-		SwerveModuleState[] moduleTranslationalStates = new SwerveModuleState[Math.min(moduleStates.length, moduleRotationalStates.length)];
-		for (int i = 0; i < moduleTranslationalStates.length; i++) {
-			moduleTranslationalStates[i] = getModuleTranslationalState(moduleStates[i], moduleRotationalStates[i], maximumNegligibleVectorNorm);
+		SwerveModuleVelocity[] moduleTranslationalVelocities = new SwerveModuleVelocity[Math.min(moduleVelocities.length, moduleRotationalVelocities.length)];
+		for (int i = 0; i < moduleTranslationalVelocities.length; i++) {
+			moduleTranslationalVelocities[i] = getModuleTranslationalVelocity(moduleVelocities[i], moduleRotationalVelocities[i], maximumNegligibleVectorNorm);
 		}
-		return moduleTranslationalStates;
+		return moduleTranslationalVelocities;
 	}
 
-	private static SwerveModuleState getModuleTranslationalState(
-		SwerveModuleState moduleState,
-		SwerveModuleState moduleRotationalState,
+	private static SwerveModuleVelocity getModuleTranslationalVelocity(
+		SwerveModuleVelocity moduleVelocity,
+		SwerveModuleVelocity moduleRotationalVelocity,
 		double maximumNegligibleVectorNorm
 	) {
-		Translation2d velocityDifference = new Translation2d(moduleState.speedMetersPerSecond, moduleState.angle)
-			.minus(new Translation2d(moduleRotationalState.speedMetersPerSecond, moduleRotationalState.angle));
+		Translation2d velocityDifference = new Translation2d(moduleVelocity.velocity, moduleVelocity.angle)
+			.minus(new Translation2d(moduleRotationalVelocity.velocity, moduleRotationalVelocity.angle));
 		return velocityDifference.getNorm() > maximumNegligibleVectorNorm
-			? new SwerveModuleState(velocityDifference.getNorm(), velocityDifference.getAngle())
-			: new SwerveModuleState();
+			? new SwerveModuleVelocity(velocityDifference.getNorm(), velocityDifference.getAngle())
+			: new SwerveModuleVelocity();
 	}
 
 }

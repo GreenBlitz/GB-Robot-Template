@@ -1,7 +1,8 @@
 package frc.robot.subsystems.arm;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
+
+import org.wpilib.command2.Command;
+import org.wpilib.command2.RunCommand;
 
 import java.util.function.Supplier;
 

@@ -1,7 +1,7 @@
 package frc.robot.hardware.phoenix6.request;
 
 import com.ctre.phoenix6.controls.*;
-import edu.wpi.first.math.controller.BangBangController;
+import org.wpilib.math.controller.BangBangController;
 import org.wpilib.math.geometry.Rotation2d;
 
 import java.util.function.Supplier;

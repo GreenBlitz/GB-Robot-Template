@@ -110,8 +110,8 @@ public class Robot {
 
 		poseEstimator.log();
 		this.motor.logUpdates();
-        this.motor.runPID();
-        BatteryUtil.logStatus();
+		this.motor.runPID();
+		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		CommandScheduler.getInstance().run(); // Should be last
 	}

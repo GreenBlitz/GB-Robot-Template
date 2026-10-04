@@ -70,7 +70,7 @@ public class AimAssistMath {
 			.allianceToRobotRelativeVelocities(velocities, targetHeadingHingeSystemAngle);
 		ChassisVelocities assistedVelocities = new ChassisVelocities(
 			targetHeadingRelativeVelocities.vx,
-                neededHorizontalVelocityRelativeToObjectMetersPerSecond,
+			neededHorizontalVelocityRelativeToObjectMetersPerSecond,
 			targetHeadingRelativeVelocities.omega
 		);
 

@@ -54,7 +54,7 @@ public class SparkMaxRollerBuilder {
 		);
 		SuppliedAngleSignal velocitySignal = new SuppliedAngleSignal(
 			"velocity",
-			() -> sparkMaxWrapper.getEncoder().getVelocity(),
+			() -> sparkMaxWrapper.getEncoder().getVelocity().get(),
 			AngleUnit.ROTATIONS
 		);
 

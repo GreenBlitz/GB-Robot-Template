@@ -25,10 +25,7 @@ public class PoseUtil {
 		double maximumNegligibleVectorNorm
 	) {
 		ChassisVelocities swerveVelocity = kinematics.toChassisVelocities(moduleVelocities);
-		Translation2d swerveTranslationalVelocityMetersPerSecond = new Translation2d(
-			swerveVelocity.vx,
-			swerveVelocity.vy
-		);
+		Translation2d swerveTranslationalVelocityMetersPerSecond = new Translation2d(swerveVelocity.vx, swerveVelocity.vy);
 
 		SwerveModuleVelocity[] moduleRotationalVelocities = kinematics
 			.toSwerveModuleVelocities(new ChassisVelocities(0, 0, swerveVelocity.omega));
@@ -57,9 +54,14 @@ public class PoseUtil {
 		SwerveModuleVelocity[] moduleRotationalVelocities,
 		double maximumNegligibleVectorNorm
 	) {
-		SwerveModuleVelocity[] moduleTranslationalVelocities = new SwerveModuleVelocity[Math.min(moduleVelocities.length, moduleRotationalVelocities.length)];
+		SwerveModuleVelocity[] moduleTranslationalVelocities = new SwerveModuleVelocity[Math
+			.min(moduleVelocities.length, moduleRotationalVelocities.length)];
 		for (int i = 0; i < moduleTranslationalVelocities.length; i++) {
-			moduleTranslationalVelocities[i] = getModuleTranslationalVelocity(moduleVelocities[i], moduleRotationalVelocities[i], maximumNegligibleVectorNorm);
+			moduleTranslationalVelocities[i] = getModuleTranslationalVelocity(
+				moduleVelocities[i],
+				moduleRotationalVelocities[i],
+				maximumNegligibleVectorNorm
+			);
 		}
 		return moduleTranslationalVelocities;
 	}

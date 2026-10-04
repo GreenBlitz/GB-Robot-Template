@@ -2,7 +2,6 @@ package frc.robot.subsystems.arm;
 
 import com.ctre.phoenix6.controls.VoltageOut;
 import org.wpilib.math.geometry.Rotation2d;
-import org.wpilib.command2.InstantCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;

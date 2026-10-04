@@ -57,14 +57,14 @@ public class TalonFXRollerBuilder {
 			);
 		} else {
 			motorSimulation = new SimpleMotorSimulation(
-			new DCMotorSim(
-				Models.singleJointedArmFromPhysicalConstants(
+				new DCMotorSim(
+					Models.singleJointedArmFromPhysicalConstants(
 						DCMotor.getKrakenX60(talonFXFollowerConfig.followerIDs.length + 1),
 						momentOfInertia,
 						feedbackConfigs.SensorToMechanismRatio * feedbackConfigs.RotorToSensorRatio
 					),
-				DCMotor.getKrakenX60(talonFXFollowerConfig.followerIDs.length +1)
-			)
+					DCMotor.getKrakenX60(talonFXFollowerConfig.followerIDs.length + 1)
+				)
 			);
 		}
 

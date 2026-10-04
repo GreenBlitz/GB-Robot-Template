@@ -59,7 +59,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		this.lastOdometryData = new OdometryData(
 			initialTimestampSeconds,
 			initialModulePositions,
-                initialModuleVelocities,
+			initialModuleVelocities,
 			Optional.of(initialIMUOrientation),
 			Optional.of(initialIMUXYAccelerationG)
 		);
@@ -266,9 +266,10 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 
 	private Pose2d getPredictedOdometryPose() {
 		return poseEstimator.getEstimatedPosition()
-			.exp(
-				kinematics.toChassisSpeeds(lastOdometryData.getWheelVelocities())
+			.transformBy(
+				kinematics.toChassisVelocities(lastOdometryData.getWheelVelocities())
 					.toTwist2d(WPILibPoseEstimatorConstants.ODOMETRY_POSE_PREDICTION_TIME_SECONDS)
+					.exp()
 			);
 	}
 

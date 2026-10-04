@@ -2,12 +2,12 @@ package frc.robot.subsystems.roller;
 
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase;
-import edu.wpi.first.math.Pair;
-import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import org.wpilib.math.util.Pair;
+import org.wpilib.math.filter.Debouncer;
+import org.wpilib.math.system.DCMotor;
+import org.wpilib.math.system.Models;
+import org.wpilib.simulation.DCMotorSim;
+import org.wpilib.command2.sysid.SysIdRoutine;
 import frc.robot.Robot;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.digitalinput.chooser.ChooserDigitalInput;
@@ -27,7 +27,7 @@ public class SparkMaxRollerBuilder {
 
 	private static SimpleMotorSimulation buildSimulation(double gearRatio, double momentOfInertia) {
 		return new SimpleMotorSimulation(
-			new DCMotorSim(LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), momentOfInertia, gearRatio), DCMotor.getNEO(1))
+			new DCMotorSim(Models.singleJointedArmFromPhysicalConstants(DCMotor.getNEO(1), momentOfInertia, gearRatio), DCMotor.getNEO(1))
 		);
 	}
 
@@ -46,15 +46,15 @@ public class SparkMaxRollerBuilder {
 		motor.applyConfiguration(buildConfiguration(inverted, gearRatio, currentLimit));
 
 		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
-		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("current", sparkMaxWrapper::getOutputCurrent);
+		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("current", () -> sparkMaxWrapper.getOutputCurrent().get());
 		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal(
 			"position",
-			() -> sparkMaxWrapper.getEncoder().getPosition(),
+			() -> sparkMaxWrapper.getEncoder().getPosition().get(),
 			AngleUnit.ROTATIONS
 		);
 		SuppliedAngleSignal velocitySignal = new SuppliedAngleSignal(
 			"velocity",
-			() -> sparkMaxWrapper.getEncoder().getVelocity(),
+			() -> sparkMaxWrapper.getEncoder().getVelocity().get(),
 			AngleUnit.ROTATIONS
 		);
 
@@ -95,13 +95,13 @@ public class SparkMaxRollerBuilder {
 		} else {
 			if (isForwardLimitSwitch) {
 				digitalInput = new SuppliedDigitalInput(
-					() -> sparkMaxWrapper.getForwardLimitSwitch().isPressed(),
+					() -> sparkMaxWrapper.getForwardLimitSwitch().isPressed().get(),
 					new Debouncer(debounceTime),
 					isLimitSwitchInverted
 				);
 			} else {
 				digitalInput = new SuppliedDigitalInput(
-					() -> sparkMaxWrapper.getReverseLimitSwitch().isPressed(),
+					() -> sparkMaxWrapper.getReverseLimitSwitch().isPressed().get(),
 					new Debouncer(debounceTime),
 					isLimitSwitchInverted
 				);

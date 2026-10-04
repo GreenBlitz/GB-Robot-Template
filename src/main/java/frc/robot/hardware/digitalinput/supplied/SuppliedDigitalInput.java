@@ -1,6 +1,6 @@
 package frc.robot.hardware.digitalinput.supplied;
 
-import edu.wpi.first.math.filter.Debouncer;
+import org.wpilib.math.filter.Debouncer;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 

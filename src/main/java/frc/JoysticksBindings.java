@@ -54,10 +54,10 @@ public class JoysticksBindings {
 		robot.getModuleAlon().getCommandBuilder().setDefaultJoystick(usedJoystick);
 		Trigger comboButtons = usedJoystick.A.and(usedJoystick.B);
 		comboButtons.onTrue(robot.getModuleAlon().getCommandBuilder().comboCommand());
-		usedJoystick.X.onTrue(robot.getModuleAlon().getCommandBuilder().driveDistanceCommand(
+		usedJoystick.X.whileTrue(robot.getModuleAlon().getCommandBuilder().driveDistanceCommand(
 				Rotation2d.fromRotations(2.5),Rotation2d.fromDegrees(67)
 		));
-		usedJoystick.Y.onTrue(robot.getModuleAlon().getCommandBuilder().driveWithLeftStick());
+		usedJoystick.Y.whileTrue(robot.getModuleAlon().getCommandBuilder().driveWithLeftStick());
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -17,19 +18,25 @@ public class ModulesCommandBuilder {
 
 	public ModulesCommandBuilder(ModuleAlon moduleAlon) {
 		this.moduleAlon = moduleAlon;
-		moduleAlon.setDefaultCommand(new InstantCommand(() -> moduleAlon.stop(),moduleAlon));
+		moduleAlon.setDefaultCommand(new InstantCommand(() -> moduleAlon.stop(),moduleAlon).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
 	}
 
 	public void setDefaultJoystick(SmartJoystick defaultJoystick) {
 		this.defaultJoystick = defaultJoystick;
 	}
 
+	public static final double stickMinTolerance = .1;
+
 	public RunCommand driveWithStick(Supplier<Double> xAxis, Supplier<Double> yAxis) {
 		return new RunCommand(() -> {
 			double x = xAxis.get();
 			double y = yAxis.get();
-			moduleAlon.steerToPosition(Math.atan2(y, x));
-			moduleAlon.linearSetPower(Math.sqrt(x * x + y * y));
+			Logger.recordOutput("axis/x",x);
+			Logger.recordOutput("axis/y",y);
+			if (x*x+y*y>=stickMinTolerance*stickMinTolerance) {
+				moduleAlon.steerToPosition(Math.atan2(y, x));
+				moduleAlon.linearSetPower(Math.sqrt(x * x + y * y));
+			}
 		});
 	}
 

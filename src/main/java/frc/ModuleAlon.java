@@ -3,8 +3,6 @@ package frc;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import com.ctre.phoenix6.hardware.CANcoder;
 import frc.robot.subsystems.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
@@ -15,7 +13,7 @@ public class ModuleAlon extends GBSubsystem {
 	private final String LOGPATH;
 	private final ModulesCommandBuilder commandBuilder;
 
-	public ModuleAlon(int steerID, int linearID, int canCoderID, double steerGearRatio, double linearGearRatio, double steerKp, double linearKp, CANBus canBus, String logPath) {
+	public ModuleAlon(int steerID, int linearID, double steerGearRatio, double linearGearRatio, double steerKp, double linearKp, CANBus canBus, String logPath) {
 		super(logPath);
 		this.linear = new AlonFX(steerID, canBus, logPath + "/steer", steerGearRatio, steerKp);
 		this.steer = new AlonFX(linearID, canBus, logPath + "/drive", linearGearRatio, linearKp);

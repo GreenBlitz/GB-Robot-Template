@@ -1,14 +1,12 @@
 package frc;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
-import jdk.swing.interop.SwingInterOpUtils;
 
 
 public class JoysticksBindings {
@@ -53,15 +51,13 @@ public class JoysticksBindings {
 		System.out.println("JSBINDINGSAHH");
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-		robot.getModuleAlon().setDefaultJoystick(usedJoystick);
+		robot.getModuleAlon().getCommandBuilder().setDefaultJoystick(usedJoystick);
 		Trigger comboButtons = usedJoystick.A.and(usedJoystick.B);
-		comboButtons.onTrue(robot.getModuleAlon().comboCommand());
-		usedJoystick.X.onTrue(robot.getModuleAlon().driveDistanceCommand(
+		comboButtons.onTrue(robot.getModuleAlon().getCommandBuilder().comboCommand());
+		usedJoystick.X.onTrue(robot.getModuleAlon().getCommandBuilder().driveDistanceCommand(
 				Rotation2d.fromRotations(2.5),Rotation2d.fromDegrees(67)
 		));
-		usedJoystick.Y.onTrue(new InstantCommand(()->{
-			System.out.println("AHHHHHHHHHHHHHH");
-		}));
+		usedJoystick.Y.onTrue(robot.getModuleAlon().getCommandBuilder().driveWithLeftStick());
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

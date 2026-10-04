@@ -43,7 +43,7 @@ public class Robot {
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
 	private final List<Limelight> limelights;
-	private final ModulesCommandBuilder moduleAlon;
+	private final ModuleAlon moduleAlon;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -65,7 +65,7 @@ public class Robot {
 			swerve.getIMUAccelerationG(),
 			swerve.getIMUAbsoluteYaw().getTimestamp()
 		);
-		this.moduleAlon = new ModulesCommandBuilder(new ModuleAlon(0, 10, 6767, 1, 1, RobotConstants.steerKp,2,new CANBus("rio"), "/motor"));
+		this.moduleAlon = new ModuleAlon(22, 10, 1, 1, RobotConstants.steerKp,2,new CANBus("rio"), "/motor");
 
 		this.limelights = List.of();
 		limelights.forEach(
@@ -122,7 +122,7 @@ public class Robot {
 		return poseEstimator;
 	}
 
-	public ModulesCommandBuilder getModuleAlon() {
+	public ModuleAlon getModuleAlon() {
 		return moduleAlon;
 	}
 

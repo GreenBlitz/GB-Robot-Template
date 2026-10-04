@@ -40,6 +40,7 @@ public class Robot {
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
 	private final List<Limelight> limelights;
+	private final TalMotorControilMission motor;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -61,6 +62,8 @@ public class Robot {
 			swerve.getIMUAccelerationG(),
 			swerve.getIMUAbsoluteYaw().getTimestamp()
 		);
+
+		motor = new TalMotorControilMission(10);
 
 		this.limelights = List.of();
 		limelights.forEach(
@@ -106,7 +109,8 @@ public class Robot {
 		getLimelights().forEach(limelight -> limelight.getIndependentRobotPose().ifPresent(poseEstimator::updateVision));
 
 		poseEstimator.log();
-
+		this.motor.logUpdates();
+		this.motor.runPID();
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		CommandScheduler.getInstance().run(); // Should be last
@@ -126,6 +130,10 @@ public class Robot {
 
 	public PathPlannerAutoWrapper getAutonomousCommand() {
 		return new PathPlannerAutoWrapper();
+	}
+
+	public TalMotorControilMission getMotor() {
+		return motor;
 	}
 
 	private void configureBrakeStateChooser() {

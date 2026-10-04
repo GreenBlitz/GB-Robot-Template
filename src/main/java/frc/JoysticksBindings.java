@@ -57,7 +57,7 @@ public class JoysticksBindings {
 		usedJoystick.X.whileTrue(robot.getModuleAlon().getCommandBuilder().driveDistanceCommand(
 				Rotation2d.fromRotations(2.5),Rotation2d.fromDegrees(67)
 		));
-		usedJoystick.Y.whileTrue(robot.getModuleAlon().getCommandBuilder().driveWithLeftStick());
+		usedJoystick.Y.whileTrue(robot.getModuleAlon().getCommandBuilder().driveWithStick(()->{return 0.5;},()->{return 0.5;}));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

@@ -1,15 +1,12 @@
 package frc.robot.subsystems.tal;
 
-import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.GBSubsystem;
-import jdk.jshell.Snippet;
 import org.littletonrobotics.junction.Logger;
 
 public class ModuleTal extends GBSubsystem {
@@ -24,8 +21,8 @@ public class ModuleTal extends GBSubsystem {
 	private InvertedValue driveRotationDirection;
 	private NeutralModeValue driveNeutralModeValue;
 	private NeutralModeValue steerNeutralModeValue;
-    private double targetMotorPower;
-    private double targetAngle;
+	private double targetMotorPower;
+	private double targetAngle;
 
 	public ModuleTal(String logPath, int driveID, int steerID) {
 		super(logPath);
@@ -38,8 +35,8 @@ public class ModuleTal extends GBSubsystem {
 		this.steerNeutralModeValue = NeutralModeValue.Brake;
 		this.driveNeutralModeValue = NeutralModeValue.Brake;
 		configureSteerMotor();
-        this.targetAngle = 0;
-        this.targetMotorPower = 0;
+		this.targetAngle = 0;
+		this.targetMotorPower = 0;
 	}
 
 	private void configureSteerMotor() {
@@ -56,12 +53,13 @@ public class ModuleTal extends GBSubsystem {
 		this.driveConfigurator.apply(this.driveConfigs);
 	}
 
-    public void changeDriveNeutralMode() {
-        this.driveNeutralModeValue = this.driveNeutralModeValue == NeutralModeValue.Brake ? NeutralModeValue.Coast : NeutralModeValue.Brake;
-    }
-    public void changeSteerNeutralMode() {
-        this.steerNeutralModeValue = this.steerNeutralModeValue == NeutralModeValue.Brake ? NeutralModeValue.Coast : NeutralModeValue.Brake;
-    }
+	public void changeDriveNeutralMode() {
+		this.driveNeutralModeValue = this.driveNeutralModeValue == NeutralModeValue.Brake ? NeutralModeValue.Coast : NeutralModeValue.Brake;
+	}
+
+	public void changeSteerNeutralMode() {
+		this.steerNeutralModeValue = this.steerNeutralModeValue == NeutralModeValue.Brake ? NeutralModeValue.Coast : NeutralModeValue.Brake;
+	}
 
 	protected void invertDriveRotation() {
 		this.driveRotationDirection = this.driveRotationDirection == InvertedValue.Clockwise_Positive
@@ -85,24 +83,27 @@ public class ModuleTal extends GBSubsystem {
 	}
 
 	public void steerToAngle(double targetAngle) {
-        this.targetAngle = targetAngle;
+		this.targetAngle = targetAngle;
 		this.steerMotor.setControl(new PositionDutyCycle(targetAngle));
 	}
-    public double getDriveVoltage() {
-        return this.driveMotor.getMotorVoltage().getValueAsDouble();
-    }
+
+	public double getDriveVoltage() {
+		return this.driveMotor.getMotorVoltage().getValueAsDouble();
+	}
 
 	public void setDriveVoltage(double voltage) {
 		this.driveMotor.setVoltage(voltage);
 	}
-    public void setDrivePower(double power) {
-        this.targetMotorPower = power;
-        this.driveMotor.set(power);
-    }
-    public void stop() {
-        this.driveMotor.stopMotor();
-        this.steerMotor.stopMotor();
-    }
+
+	public void setDrivePower(double power) {
+		this.targetMotorPower = power;
+		this.driveMotor.set(power);
+	}
+
+	public void stop() {
+		this.driveMotor.stopMotor();
+		this.steerMotor.stopMotor();
+	}
 
 	public double getSteerAngle() {
 		return this.steerMotor.getPosition().getValueAsDouble();
@@ -121,15 +122,14 @@ public class ModuleTal extends GBSubsystem {
 		return this.getSteerAngle() == angle;
 	}
 
-    @Override
-    protected void subsystemPeriodic() {
-        Logger.recordOutput(getLogPath()+"/currentDriveSpeed",getDriveSpeed());
-        Logger.recordOutput(getLogPath()+"/targetDrivePower", this.targetMotorPower);
-        Logger.recordOutput(getLogPath()+"/driveVoltage", getDriveVoltage());
-        Logger.recordOutput(getLogPath()+"/wheelAngle", this.getSteerAngle());
-        Logger.recordOutput(getLogPath()+"/targetWheelAngle", this.targetAngle);
-    }
-
+	@Override
+	protected void subsystemPeriodic() {
+		Logger.recordOutput(getLogPath() + "/currentDriveSpeed", getDriveSpeed());
+		Logger.recordOutput(getLogPath() + "/targetDrivePower", this.targetMotorPower);
+		Logger.recordOutput(getLogPath() + "/driveVoltage", getDriveVoltage());
+		Logger.recordOutput(getLogPath() + "/wheelAngle", this.getSteerAngle());
+		Logger.recordOutput(getLogPath() + "/targetWheelAngle", this.targetAngle);
+	}
 
 
 }

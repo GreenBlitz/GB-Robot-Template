@@ -127,7 +127,7 @@ public class ModulesCommandBuilder {
 		});
 	}
 	public Command fullyCircleDrive(){
-		return new SequentialCommandGroup(
+		SequentialCommandGroup command =  new SequentialCommandGroup(
 				driveDistanceCommand(Rotation2d.fromRotations(2),Rotation2d.fromDegrees(0)),
 				driveDistanceCommand(Rotation2d.fromRotations(2),Rotation2d.fromDegrees(90)),
 				driveDistanceCommand(Rotation2d.fromRotations(2),Rotation2d.fromDegrees(180)),
@@ -135,6 +135,8 @@ public class ModulesCommandBuilder {
 				printArmOpening(),
 				driveDistanceCommand(Rotation2d.fromRotations(2),Rotation2d.fromDegrees(-90)))
 		);
+		command.addRequirements(moduleAlon);
+		return command;
 	}
 
 	public DeferredCommand realTimeChoice(Supplier<Boolean> var){

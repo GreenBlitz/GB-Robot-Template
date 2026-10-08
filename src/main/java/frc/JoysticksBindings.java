@@ -1,6 +1,7 @@
 package frc;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
@@ -58,6 +59,9 @@ public class JoysticksBindings {
 				Rotation2d.fromRotations(2.5),Rotation2d.fromDegrees(67)
 		));
 		usedJoystick.Y.whileTrue(robot.getModuleAlon().getCommandBuilder().driveWithLeftStick());
+		usedJoystick.POV_UP.onTrue(new InstantCommand(()->{
+			robot.getModuleAlon().setSteerPosition(0);
+		}));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
+import frc.utils.math.AngleMath;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
@@ -34,7 +35,7 @@ public class ModulesCommandBuilder {
 			Logger.recordOutput("axis/x",x);
 			Logger.recordOutput("axis/y",y);
 			if (x*x+y*y>=stickMinTolerance*stickMinTolerance) {
-				moduleAlon.steerToPosition(Math.atan2(y, x));
+				moduleAlon.steerToPosition(AngleMath.closestAngle(Math.atan2(y, x),moduleAlon.getSteerAngle().getRadians()));
 				moduleAlon.linearSetPower(Math.sqrt(x * x + y * y));
 			}
 		});

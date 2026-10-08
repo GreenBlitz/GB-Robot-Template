@@ -3,6 +3,8 @@ package frc;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
@@ -20,6 +22,11 @@ public class ModuleAlon extends GBSubsystem {
 		this.LOGPATH = logPath;
 
 		commandBuilder = new ModulesCommandBuilder(this);
+		Command defaultCommand = new InstantCommand(()->{stop();});
+		defaultCommand.addRequirements(this);
+		setDefaultCommand(
+				defaultCommand
+		);
 	}
 
 	public ModulesCommandBuilder getCommandBuilder() {

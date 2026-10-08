@@ -28,7 +28,7 @@ public class ModulesCommandBuilder {
 	public static final double stickMinTolerance = .1;
 
 	public RunCommand driveWithStick(Supplier<Double> xAxis, Supplier<Double> yAxis) {
-		return new RunCommand(() -> {
+		RunCommand command =new RunCommand(() -> {
 			double x = xAxis.get();
 			double y = yAxis.get();
 			Logger.recordOutput("axis/x",x);
@@ -38,6 +38,8 @@ public class ModulesCommandBuilder {
 				moduleAlon.linearSetPower(Math.sqrt(x * x + y * y));
 			}
 		});
+		command.addRequirements(moduleAlon);
+		return command;
 	}
 
 	public RunCommand driveWithLeftStick() {
@@ -112,6 +114,7 @@ public class ModulesCommandBuilder {
 		//SequentialCommandGroup command = new SequentialCommandGroup(steerToPosition,driveToPosition);
 		//command.addRequirements(moduleAlon);
 		//command.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf);
+		steerToPosition.addRequirements(moduleAlon);
 		return steerToPosition;
 		//NOTE THAT THIS IMPLEMENTATION CANNOT STAY, YOU NEED TO ADD ALL THE COMMENTED SHI
 	}

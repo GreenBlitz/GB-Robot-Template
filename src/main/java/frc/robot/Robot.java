@@ -65,7 +65,7 @@ public class Robot {
 			swerve.getIMUAccelerationG(),
 			swerve.getIMUAbsoluteYaw().getTimestamp()
 		);
-		this.moduleAlon = new ModuleAlon(10, 22, 1, 1, RobotConstants.steerKp,2,new CANBus("rio"), "/motor");
+		this.moduleAlon = new ModuleAlon(11, 10, 1, 1, RobotConstants.steerKp,2,new CANBus("rio"), "/motor");
 
 		this.limelights = List.of();
 		limelights.forEach(
@@ -115,6 +115,7 @@ public class Robot {
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
+		System.out.println(moduleAlon.getCurrentCommand().getName());
 		CommandScheduler.getInstance().run();// Should be last
 	}
 

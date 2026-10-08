@@ -88,14 +88,6 @@ public class AlonFX {
 		motor.set(amount);
 	}
 
-
-	public void driveToPositionTick(double angleRadians) {
-		double difference = angleRadians - getPosition().getRadians();
-		setVoltage(difference / (2 * Math.PI));
-		Logger.recordOutput(logPath + "/target", angleRadians);
-		Logger.recordOutput(logPath + "/positionInRadians", getPosition().getRadians());
-	}
-
 	public void driveToPosition(double positionRadians) {
 		PositionVoltage positionVoltage = new PositionVoltage(positionRadians / (2 * Math.PI));
 		motor.setControl(positionVoltage);

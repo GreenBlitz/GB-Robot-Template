@@ -9,4 +9,7 @@ data is
 calculating robot position based on capturing april tags
 
 
--**G** : Earths gravitational acceleration
+- **G** : Earths gravitational acceleration
+
+
+- **rot** : rotations

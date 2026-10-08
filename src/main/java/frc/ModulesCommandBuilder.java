@@ -98,6 +98,8 @@ public class ModulesCommandBuilder {
 			(b) -> moduleAlon.stop(),
 			() -> MathUtil.isNear(angle.getRadians(), moduleAlon.getSteerAngle().getRadians(), steerToleranceRadians)
 		);
+
+
 		int signOfDrive = (int) Math.signum(drive.getRadians());
 		Rotation2d[] originalPos = {null};
 		FunctionalCommand driveToPosition = new FunctionalCommand(() -> {
@@ -107,10 +109,11 @@ public class ModulesCommandBuilder {
 			(b) -> moduleAlon.linearSetPower(0),
 			() -> (originalPos[0].plus(drive).minus(moduleAlon.getLinearAngle()).times(signOfDrive).getRadians() <= 0)
 		);
-		SequentialCommandGroup command = new SequentialCommandGroup(steerToPosition,driveToPosition);
-		command.addRequirements(moduleAlon);
+		//SequentialCommandGroup command = new SequentialCommandGroup(steerToPosition,driveToPosition);
+		//command.addRequirements(moduleAlon);
 		//command.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf);
-		return command;
+		return steerToPosition;
+		//NOTE THAT THIS IMPLEMENTATION CANNOT STAY, YOU NEED TO ADD ALL THE COMMENTED SHI
 	}
 	public RunCommand comboCommand(){
 		return new RunCommand(()->{moduleAlon.linearSetPower(1);});

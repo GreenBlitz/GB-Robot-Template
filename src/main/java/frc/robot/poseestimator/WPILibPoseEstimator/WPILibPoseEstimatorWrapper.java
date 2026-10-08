@@ -176,7 +176,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		lastOdometryData.getIMU3DAccelerationG()
 			.ifPresent(
 				(imu3DAcceleration) -> Logger.recordOutput(
-					logPath + "/isColliding",
+					logPath + "/isAccelerationHigh",
 					PoseUtil.isAccelerationHigh(
 						imu3DAcceleration.toTranslation2d(),
 						WPILibPoseEstimatorConstants.MINIMUM_COLLISION_IMU_ACCELERATION_G
@@ -198,7 +198,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 			);
 
 		Logger.recordOutput(
-			logPath + "/isSkidding",
+			logPath + "/areModulesSkidding",
 			PoseUtil.areModulesSkidding(
 				kinematics,
 				lastOdometryData.getWheelStates(),

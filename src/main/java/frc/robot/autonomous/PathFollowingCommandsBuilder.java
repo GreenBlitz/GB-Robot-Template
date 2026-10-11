@@ -187,7 +187,7 @@ public class PathFollowingCommandsBuilder {
 		Pose2d stuckTolerance,
 		double stuckDebounceTimeSeconds
 	) {
-		Debouncer stuckDebouncer = new Debouncer(stuckDebounceTimeSeconds, Debouncer.DebounceType.kRising);
+		Debouncer stuckDebouncer = new Debouncer(stuckDebounceTimeSeconds, Debouncer.DebounceType.RISING);
 
 		return () -> {
 			Pose2d targetPose = Field.getAllianceRelative(PathPlannerUtil.getLastPathPose(path));

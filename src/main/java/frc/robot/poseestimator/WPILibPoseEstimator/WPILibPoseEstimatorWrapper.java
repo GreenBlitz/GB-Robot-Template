@@ -51,7 +51,6 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
 		);
 		this.poseEstimator = new PoseEstimator<>(
-			kinematics,
 			odometryEstimator,
 			WPILibPoseEstimatorConstants.DEFAULT_ODOMETRY_STD_DEV.asColumnVector(),
 			WPILibPoseEstimatorConstants.DEFAULT_VISION_STD_DEV.asColumnVector()
@@ -132,7 +131,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		Logger.recordOutput(logPath + "/lastPoseResetTo", poseMeters);
 
 		poseEstimator.resetPosition(
-			Rotation2d.fromRadians(odometryData.getIMUOrientation().orElse(Rotation3d.kZero).getZ()),
+			Rotation2d.fromRadians(odometryData.getIMUOrientation().orElse(Rotation3d.ZERO).getZ()),
 			odometryData.getWheelPositions(),
 			poseMeters
 		);
@@ -140,9 +139,9 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		poseToIMUYawDifferenceBuffer.clear();
 		imuYawBuffer.addSample(
 			odometryData.getTimestampSeconds(),
-			Rotation2d.fromRadians(odometryData.getIMUOrientation().orElse(Rotation3d.kZero).getZ())
+			Rotation2d.fromRadians(odometryData.getIMUOrientation().orElse(Rotation3d.ZERO).getZ())
 		);
-		imu3DAccelerationGBuffer.addSample(odometryData.getTimestampSeconds(), odometryData.getIMU3DAccelerationG().orElse(Translation3d.kZero));
+		imu3DAccelerationGBuffer.addSample(odometryData.getTimestampSeconds(), odometryData.getIMU3DAccelerationG().orElse(Translation3d.ZERO));
 	}
 
 	@Override

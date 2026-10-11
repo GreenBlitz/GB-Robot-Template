@@ -2,7 +2,6 @@ package frc.robot.subsystems.roller;
 
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase;
-import org.wpilib.math.util.Pair;
 import org.wpilib.math.filter.Debouncer;
 import org.wpilib.math.system.DCMotor;
 import org.wpilib.math.system.Models;
@@ -22,6 +21,7 @@ import frc.robot.hardware.rev.request.SparkMaxRequestBuilder;
 import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
 import frc.utils.AngleUnit;
+import org.wpilib.util.Pair;
 
 public class SparkMaxRollerBuilder {
 

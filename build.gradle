@@ -1,221 +1,107 @@
 plugins {
-	id "java"
-	id "org.wpilib.GradleRIO" version "2027.0.0-alpha-6"
-	id "com.diffplug.spotless" version "6.25.0"
-	id "com.gradleup.shadow" version "9.4.1"
+    id "java"
+    id "application"
+    id "org.wpilib.GradleRIO" version "2027.0.0-alpha-7"
 }
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_25
-	targetCompatibility = JavaVersion.VERSION_25
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
 }
 
-def ROBOT_MAIN_CLASS = "frc.Main"
-def COMPUTER_MAIN_CLASS = "frc.ComputerMain"
-def ROUTER_IP = "10.45.90.2"
-def USB_B_IP = "172.22.11.2"
-def IPS = [ROUTER_IP, USB_B_IP]
-def reachableIP
-
-final MAX_JAVA_HEAP_SIZE_MB = 100;
+def ROBOT_MAIN_CLASS = "first.Main"
 
 // Define my targets (SystemCore) and artifacts (deployable files)
 // This is added by GradleRIO's backing project DeployUtils.
 deploy {
-	targets {
-		systemcore(getTargetTypeClass('SystemCore')) {
-			// Team number is loaded either from the .wpilib/wpilib_preferences.json
-			// or from command line. If not found an exception will be thrown.
-			// You can use getTeamOrDefault(team) instead of getTeamNumber if you
-			// want to store a team number in this file.
-			team = project.wpilib.getTeamNumber()
-			// Use the default systemcore host name. This must be called after setting team
-			// as happens on the line above
-			useDefaultSystemcoreHostName()
-			debug = project.wpilib.getDebugOrDefault(false)
+    targets {
+        systemcore(getTargetTypeClass('SystemCore')) {
+            // Team number is loaded either from the .wpilib/wpilib_preferences.json
+            // or from command line. If not found an exception will be thrown.
+            // You can use getTeamOrDefault(team) instead of getTeamNumber if you
+            // want to store a team number in this file.
+            team = project.wpilib.getTeamNumber()
+            // Use the default systemcore host name. This must be called after setting team
+            // as happens on the line above
+            useDefaultSystemcoreHostName()
+            debug = project.wpilib.getDebugOrDefault(false)
 
-			artifacts {
-				// First part is artifact name, 2nd is artifact type
-				// getTargetTypeClass is a shortcut to get the class type using a string
+            artifacts {
+                // First part is artifact name, 2nd is artifact type
+                // getTargetTypeClass is a shortcut to get the class type using a string
 
-				wpilibJava(getArtifactTypeClass('WPILibJavaArtifact')) {
-					// visual vm
-					// jvmArgs.add('-Dcom.sun.management.jmxremote=true')
-					// jvmArgs.add('-Dcom.sun.management.jmxremote.port=1198')
-					// jvmArgs.add('-Dcom.sun.management.jmxremote.local.only=false')
-					// jvmArgs.add('-Dcom.sun.management.jmxremote.ssl=false')
-					// jvmArgs.add('-Dcom.sun.management.jmxremote.authenticate=false')
-					// jvmArgs.add("-Djava.rmi.server.hostname=${IPS[0]}")
+                wpilibJava(getArtifactTypeClass('WPILibJavaArtifact')) {
+                    // Set to true to use debug including JNI, which will drastically impact performance.
+                    debugJni = false
+                }
 
-					//                    jvmArgs.add("-XX:+UnlockExperimentalVMOptions")
-					//                    jvmArgs.add("-XX:GCTimeRatio=5")
-					//                    jvmArgs.add("-XX:+UseSerialGC")
-					//                    jvmArgs.add("-XX:MaxGCPauseMillis=50")
-					//
-					//                    jvmArgs.add("-Xmx" + MAX_JAVA_HEAP_SIZE_MB + "M")
-					//                    jvmArgs.add("-Xms" + MAX_JAVA_HEAP_SIZE_MB + "M")
-					//                    jvmArgs.add("-XX:+AlwaysPreTouch")
-
-					// jvmArgs.add("-Xlog:gc") log garbage collector events in console
-				}
-
-				// Static files artifact
-				wpilibStaticFileDeploy(getArtifactTypeClass('FileTreeArtifact')) {
-					files = project.fileTree('src/main/deploy')
-					directory = '/home/systemcore/deploy'
-					deleteOldFiles = true // Change to true to delete files on systemcore that no
-					// longer exist in deploy directory of this project
-				}
-			}
-		}
-	}
+                // Static files artifact
+                wpilibStaticFileDeploy(getArtifactTypeClass('FileTreeArtifact')) {
+                    files = project.fileTree('src/main/deploy')
+                    directory = '/home/systemcore/deploy'
+                    deleteOldFiles = false // Change to true to delete files on systemcore that no
+                    // longer exist in deploy directory of this project
+                }
+            }
+        }
+    }
 }
 
 def deployArtifact = deploy.targets.systemcore.artifacts.wpilibJava
 
-// Set to true to use debug for all targets including JNI, which will drastically impact
-// performance.
-wpi.java.debugJni = false
+// Set to true to use debug for simulation including JNI
+wpi.java.runSimWithDebugJni = false
 
 // Set this to true to enable desktop support.
-def includeDesktopSupport = true
-
+def includeDesktopSupport = false
 
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 5.
 dependencies {
-	annotationProcessor wpi.java.deps.wpilibAnnotations()
-	implementation wpi.java.deps.wpilib()
-	implementation wpi.java.vendor.java()
+    annotationProcessor wpi.java.deps.wpilibAnnotations()
+    implementation wpi.java.deps.wpilib()
+    implementation wpi.java.vendor.java()
 
-	systemcoreDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.systemcore)
-	systemcoreDebug wpi.java.vendor.jniDebug(wpi.platforms.systemcore)
+    systemcoreDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.systemcore)
+    systemcoreDebug wpi.java.vendor.jniDebug(wpi.platforms.systemcore)
 
-	systemcoreRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.systemcore)
-	systemcoreRelease wpi.java.vendor.jniRelease(wpi.platforms.systemcore)
+    systemcoreRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.systemcore)
+    systemcoreRelease wpi.java.vendor.jniRelease(wpi.platforms.systemcore)
 
-	nativeDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.desktop)
-	nativeDebug wpi.java.vendor.jniDebug(wpi.platforms.desktop)
-	simulationDebug wpi.sim.enableDebug()
+    nativeDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.desktop)
+    nativeDebug wpi.java.vendor.jniDebug(wpi.platforms.desktop)
+    simulationDebug wpi.sim.enableDebug()
 
-	nativeRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.desktop)
-	nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
-	simulationRelease wpi.sim.enableRelease()
+    nativeRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.desktop)
+    nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
+    simulationRelease wpi.sim.enableRelease()
 
-	testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-	def akitJson = new groovy.json.JsonSlurper().parseText(new File(projectDir.getAbsolutePath() + "/vendordeps/AdvantageKit.json").text)
-	annotationProcessor "org.littletonrobotics.akit:akit-autolog:$akitJson.version"
-}
-
-
-repositories {
-	maven {
-		url = uri("https://frcmaven.wpi.edu/artifactory/littletonrobotics-mvn-release")
-	}
-	mavenLocal()
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 test {
-	useJUnitPlatform()
-	systemProperty 'junit.jupiter.extensions.autodetection.enabled', 'true'
+    useJUnitPlatform()
+    systemProperty 'junit.jupiter.extensions.autodetection.enabled', 'true'
 }
 
 // Simulation configuration (e.g. environment variables).
 wpi.sim.addGui().defaultEnabled = true
 wpi.sim.addDriverstation()
 
+application.mainClass = ROBOT_MAIN_CLASS
 
-// Setting up my Jar File. In this case, adding all libraries into the main jar ('fat/shaded jar')
-// in order to make them all available at runtime and merging service files to make JSON work.
-// Also adding the manifest so WPILib knows where to look for our Robot Class.
-shadowJar {
-	mergeServiceFiles()
-	from('src') { into 'backup/src' }
-	from('vendordeps') { into 'backup/vendordeps' }
-	from('build.gradle') { into 'backup' }
-	manifest org.wpilib.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
-	duplicatesStrategy = DuplicatesStrategy.INCLUDE
-}
-
-// Configure jar and deploy tasks
-deployArtifact.jarTask = shadowJar
-wpi.java.configureExecutableTasks(shadowJar)
+deployArtifact.configureApplication(application)
+wpi.java.configureApplication(application)
 wpi.java.configureTestTasks(test)
 
+jar {
+    from('src') { into 'backup/src' }
+    from('vendordeps') { into 'backup/vendordeps' }
+    from('build.gradle') { into 'backup' }
+}
 
 // Configure string concat to always inline compile
 tasks.withType(JavaCompile) {
-	options.compilerArgs.add '-XDstringConcat=inline'
-}
-
-tasks.named("build").configure { dependsOn('installLocalGitHookPostCheckout') }
-tasks.register('installLocalGitHookPostCheckout', Copy) {
-	group = 'git'
-	from new File(rootProject.rootDir, '.scripts/post-checkout')
-	into { new File(rootProject.rootDir, '.git/hooks') }
-	filePermissions {
-		unix(0775)
-	}
-	doLast {
-		println("---Added Post Checkout Git Hook Script---")
-	}
-}
-
-tasks.register('setReachableIP') {
-	group = 'networkUtils'
-	doLast {
-		int PING_TIMEOUT_MILLISECONDS = 1000
-		boolean found = false
-		for (int i = 0; i < IPS.size() && !found; i++) {
-			if (InetAddress.getByName(IPS[i]).isReachable(PING_TIMEOUT_MILLISECONDS)) {
-				reachableIP = IPS[i]
-				println("Using " + IPS[i])
-				found = true
-			}
-		}
-		if (!found) {
-			println("No IP is reachable.")
-		}
-	}
-}
-
-tasks.named("deploy").configure { finalizedBy('runComputerPrograms') }
-tasks.register('runComputerPrograms', JavaExec) {
-	group = 'execution'
-	dependsOn('setReachableIP')
-	description = "Run the main class in ComputerMain"
-	classpath = sourceSets.main.runtimeClasspath
-	mainClass = COMPUTER_MAIN_CLASS
-	doFirst {
-		if (reachableIP == null || reachableIP.isEmpty()) {
-			throw new GradleException("reachableIP is null or empty. Please set a valid IP address.")
-		}
-		args = ["${reachableIP}"]
-		println("Using reachable IP: ${reachableIP}")
-	}
-}
-
-
-spotless {
-	java {
-		target fileTree(".") {
-			include "src/main/java/frc/**/*.java"
-			exclude '**/build/**', '**/build-*/**'
-		}
-		removeUnusedImports()
-		trimTrailingWhitespace()
-		eclipse().configFile("codestyle.xml")
-		formatAnnotations()
-	}
-	groovyGradle {
-		target fileTree(".") {
-			include "**/*.gradle"
-			exclude "**/build/**", "**/build-*/**"
-		}
-		greclipse()
-		indentWithTabs(4)
-		trimTrailingWhitespace()
-	}
+    options.compilerArgs.add '-XDstringConcat=inline'
 }

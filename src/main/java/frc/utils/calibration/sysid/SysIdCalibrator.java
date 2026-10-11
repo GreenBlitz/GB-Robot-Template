@@ -48,10 +48,10 @@ public class SysIdCalibrator {
 	 */
 	public void setAllButtonsForCalibration(SmartJoystick smartJoystick) {
 		smartJoystick.START.onTrue(new InstantCommand(SignalLogger::start));
-		smartJoystick.A.whileTrue(getSysIdCommand(true, SysIdRoutine.Direction.kForward));
-		smartJoystick.B.whileTrue(getSysIdCommand(true, SysIdRoutine.Direction.kReverse));
-		smartJoystick.X.whileTrue(getSysIdCommand(false, SysIdRoutine.Direction.kForward));
-		smartJoystick.Y.whileTrue(getSysIdCommand(false, SysIdRoutine.Direction.kReverse));
+		smartJoystick.A.whileTrue(getSysIdCommand(true, SysIdRoutine.Direction.FORWARD));
+		smartJoystick.B.whileTrue(getSysIdCommand(true, SysIdRoutine.Direction.REVERSE));
+		smartJoystick.X.whileTrue(getSysIdCommand(false, SysIdRoutine.Direction.FORWARD));
+		smartJoystick.Y.whileTrue(getSysIdCommand(false, SysIdRoutine.Direction.REVERSE));
 		smartJoystick.BACK.onTrue(new InstantCommand(SignalLogger::stop));
 	}
 

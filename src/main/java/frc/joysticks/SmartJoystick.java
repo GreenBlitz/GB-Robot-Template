@@ -42,7 +42,7 @@ public class SmartJoystick {
 	private SmartJoystick(Joystick joystick, double deadzone, boolean alertOnDisconnect) {
 		this.deadzone = deadzone;
 		this.joystick = joystick;
-		this.logPath = "Joysticks/" + joystick.getPort();
+		this.logPath = "Joysticks/" + joystick.getHID().getPort();
 
 		this.A = new JoystickButton(this.joystick, ButtonID.A.getId());
 		this.B = new JoystickButton(this.joystick, ButtonID.B.getId());
@@ -73,14 +73,14 @@ public class SmartJoystick {
 	}
 
 	public boolean isConnected() {
-		return joystick.isConnected();
+		return joystick.getHID().isConnected();
 	}
 
 	/**
 	 * @param power the power to rumble the joystick between [-1, 1]
 	 */
 	public void setRumble(GenericHID.RumbleType rumbleSide, double power) {
-		joystick.setRumble(rumbleSide, power);
+		joystick.getHID().setRumble(rumbleSide, power);
 	}
 
 	public void stopRumble(GenericHID.RumbleType rumbleSide) {

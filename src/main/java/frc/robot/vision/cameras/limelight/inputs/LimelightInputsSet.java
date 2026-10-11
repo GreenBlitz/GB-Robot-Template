@@ -2,20 +2,20 @@ package frc.robot.vision.cameras.limelight.inputs;
 
 
 public record LimelightInputsSet(
-	MTInputsAutoLogged mt1Inputs,
-	MTInputsAutoLogged mt2Inputs,
-	NeuralDetectionInputsAutoLogged neuralDetectionInputs,
-	ColorDetectionInputsAutoLogged colorDetectionInputs,
-	LimelightHardwareInputsAutoLogged hardwareInputs
+	MTInputs mt1Inputs,
+	MTInputs mt2Inputs,
+	NeuralDetectionInputs neuralDetectionInputs,
+	ColorDetectionInputs colorDetectionInputs,
+	LimelightHardwareInputs hardwareInputs
 ) {
 
 	public LimelightInputsSet() {
 		this(
-			new MTInputsAutoLogged(),
-			new MTInputsAutoLogged(),
-			new NeuralDetectionInputsAutoLogged(),
-			new ColorDetectionInputsAutoLogged(),
-			new LimelightHardwareInputsAutoLogged()
+			new MTInputs(),
+			new MTInputs(),
+			new NeuralDetectionInputs(),
+			new ColorDetectionInputs(),
+			new LimelightHardwareInputs()
 		);
 	}
 

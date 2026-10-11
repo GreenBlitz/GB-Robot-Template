@@ -20,7 +20,7 @@ public enum Axis {
 	}
 
 	AxisButton getAsButton(Joystick joystick, double threshold) {
-		return new AxisButton(joystick, id, threshold);
+		return new AxisButton(joystick.getHID(), id, threshold);
 	}
 
 	double getValue(Joystick joystick) {

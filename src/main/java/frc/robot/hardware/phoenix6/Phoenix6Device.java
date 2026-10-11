@@ -1,7 +1,7 @@
 package frc.robot.hardware.phoenix6;
 
 import com.ctre.phoenix6.hardware.ParentDevice;
-import frc.robot.hardware.ConnectedInputAutoLogged;
+import frc.robot.hardware.ConnectedInput;
 import frc.robot.hardware.interfaces.IDevice;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.phoenix6.signal.SignalGetter;
@@ -14,14 +14,14 @@ import java.util.LinkedList;
 
 public abstract class Phoenix6Device implements IDevice {
 
-	private final ConnectedInputAutoLogged connectedInput;
+	private final ConnectedInput connectedInput;
 	private final BusChain busChain;
 	private final String logPath;
 
 	public Phoenix6Device(String logPath, BusChain busChain) {
 		this.logPath = logPath;
 		this.busChain = busChain;
-		this.connectedInput = new ConnectedInputAutoLogged();
+		this.connectedInput = new ConnectedInput();
 		connectedInput.connected = true;
 		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "disconnectedAt", () -> !isConnected(), true));
 	}

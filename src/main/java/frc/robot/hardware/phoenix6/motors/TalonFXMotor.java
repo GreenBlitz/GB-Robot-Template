@@ -9,7 +9,6 @@ import org.wpilib.command2.sysid.SysIdRoutine;
 import frc.robot.Robot;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.FollowerInputs;
-import frc.robot.hardware.FollowerInputsAutoLogged;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IMotionMagicRequest;
 import frc.robot.hardware.interfaces.IRequest;
@@ -33,7 +32,7 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 
 	private final TalonFXWrapper motor;
 	private final TalonFXWrapper[] followers;
-	private final FollowerInputsAutoLogged[] followerInputs;
+	private final FollowerInputs[] followerInputs;
 	private final TalonFXFollowerConfig followerConfig;
 	private final Optional<TalonFXSimulation> talonFXSimulationOptional;
 	private final SysIdCalibrator.SysIdConfigInfo sysidConfigInfo;
@@ -88,12 +87,12 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		return followers;
 	}
 
-	private static FollowerInputsAutoLogged[] initializeFollowerInputs(String logPath, TalonFXFollowerConfig followerConfig, int followersNum) {
-		FollowerInputsAutoLogged[] followerInputs = new FollowerInputsAutoLogged[followersNum];
+	private static FollowerInputs[] initializeFollowerInputs(String logPath, TalonFXFollowerConfig followerConfig, int followersNum) {
+		FollowerInputs[] followerInputs = new FollowerInputs[followersNum];
 
 		for (int i = 0; i < followerInputs.length; i++) {
 			String followerLogPath = logPath + "/followers/" + followerConfig.followerIDs[i].name();
-			FollowerInputsAutoLogged followerInputsAutoLogged = new FollowerInputsAutoLogged();
+			FollowerInputs followerInputsAutoLogged = new FollowerInputs();
 			followerInputs[i] = followerInputsAutoLogged;
 			AlertManager.addAlert(
 				new PeriodicAlert(

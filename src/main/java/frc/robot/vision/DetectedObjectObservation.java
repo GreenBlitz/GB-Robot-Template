@@ -6,7 +6,7 @@ import org.wpilib.math.geometry.Translation3d;
 public record DetectedObjectObservation(DetectedObjectType type, Translation3d robotRelativeObjectTranslation, double timestampSeconds) {
 
 	public DetectedObjectObservation() {
-		this(null, Translation3d.kZero, 0);
+		this(null, Translation3d.ZERO, 0);
 	}
 
 	public DetectedObjectObservation(DetectedObjectType type, Translation2d Translation2dObject, double timestampSeconds) {

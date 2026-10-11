@@ -14,7 +14,6 @@ import com.pathplanner.lib.pathfinding.Pathfinder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import org.json.simple.parser.ParseException;
-import org.wpilib.math.util.Pair;
 import org.wpilib.math.geometry.Pose2d;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.math.kinematics.ChassisVelocities;
@@ -26,6 +25,7 @@ import frc.robot.subsystems.GBSubsystem;
 import frc.utils.alerts.Alert;
 import frc.utils.math.ToleranceMath;
 import org.littletonrobotics.junction.Logger;
+import org.wpilib.util.Pair;
 
 import java.io.IOException;
 import java.util.ArrayList;

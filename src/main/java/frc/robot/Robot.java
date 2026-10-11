@@ -5,8 +5,8 @@
 package frc.robot;
 
 import org.wpilib.math.geometry.Pose2d;
-import org.wpilib.smartdashboard.SendableChooser;
-import org.wpilib.smartdashboard.SmartDashboard;
+//import org.wpilib.smartdashboard.SendableChooser;
+//import org.wpilib.smartdashboard.SmartDashboard;
 import org.wpilib.command2.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -88,7 +88,7 @@ public class Robot {
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 
-		configureBrakeStateChooser();
+//		configureBrakeStateChooser();
 	}
 
 	public void updateSubsystems() {
@@ -128,12 +128,12 @@ public class Robot {
 		return new PathPlannerAutoWrapper();
 	}
 
-	private void configureBrakeStateChooser() {
-		SendableChooser<BrakeMode> brakeStateChooser = new SendableChooser<>();
-		brakeStateChooser.setDefaultOption("Brake", BrakeMode.BRAKE);
-		brakeStateChooser.addOption("Coast", BrakeMode.COAST);
-		SmartDashboard.putData("BrakeState", brakeStateChooser);
-		brakeStateChooser.onChange(BrakeStateManager::setBrakeMode);
-	}
+//	private void configureBrakeStateChooser() {
+//		SendableChooser<BrakeMode> brakeStateChooser = new SendableChooser<>();
+//		brakeStateChooser.setDefaultOption("Brake", BrakeMode.BRAKE);
+//		brakeStateChooser.addOption("Coast", BrakeMode.COAST);
+//		SmartDashboard.putData("BrakeState", brakeStateChooser);
+//		brakeStateChooser.onChange(BrakeStateManager::setBrakeMode);
+//	}
 
 }

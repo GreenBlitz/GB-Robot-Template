@@ -1,24 +1,25 @@
 package frc.robot.hardware.digitalinput.chooser;
 
-import org.wpilib.smartdashboard.SendableChooser;
-import org.wpilib.smartdashboard.SmartDashboard;
-import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
+import frc.robot.hardware.digitalinput.DigitalInputInputs;
 import frc.robot.hardware.digitalinput.IDigitalInput;
+import org.wpilib.telemetry.Telemetry;
+import org.wpilib.tunable.Selectable;
+import org.wpilib.tunable.TunableRegistry;
 
 public class ChooserDigitalInput implements IDigitalInput {
 
-	private final SendableChooser<Boolean> digitalInputValueChooser;
+	private final Selectable<Boolean> digitalInputValueChooser;
 
 	public ChooserDigitalInput(String chooserName) {
-		this.digitalInputValueChooser = new SendableChooser<>();
+		this.digitalInputValueChooser = new Selectable<>();
 
-		digitalInputValueChooser.setDefaultOption("false", false);
-		digitalInputValueChooser.addOption("true", true);
-		SmartDashboard.putData(chooserName, digitalInputValueChooser);
+		digitalInputValueChooser.addDefault("false", false);
+		digitalInputValueChooser.add("true", true);
+		TunableRegistry.putData(chooserName, digitalInputValueChooser);
 	}
 
 	@Override
-	public void updateInputs(DigitalInputInputsAutoLogged inputs) {
+	public void updateInputs(DigitalInputInputs inputs) {
 		inputs.nonDebouncedValue = digitalInputValueChooser.getSelected();
 		inputs.debouncedValue = inputs.nonDebouncedValue;
 	}

@@ -36,6 +36,9 @@ public class ModulesCommandBuilder {
 			Logger.recordOutput("axis/y",y);
 			if (x*x+y*y>=stickMinTolerance*stickMinTolerance) {
 				moduleAlon.steerToPosition(AngleMath.closestAngle(Math.atan2(y, x),moduleAlon.getSteerAngle().getRadians()));
+				Logger.recordOutput("driveStick/closestAngle",AngleMath.closestAngle(Math.atan2(y, x),moduleAlon.getSteerAngle().getRadians()));
+				Logger.recordOutput("driveStick/motorAngle",moduleAlon.getSteerAngle().getRadians());
+				Logger.recordOutput("driveStick/stickAngle",Math.atan2(y, x));
 				moduleAlon.linearSetPower(Math.sqrt(x * x + y * y));
 			}
 		});
@@ -91,7 +94,7 @@ public class ModulesCommandBuilder {
 		moduleAlon.stop();
 	}
 
-	private final double constantPower = 0.5;
+	public static final double constantPower = 0.5;
 	private final static double steerToleranceRadians = 0.1;
 
 	public Command driveDistanceCommand(Rotation2d drive, Rotation2d angle) {
@@ -103,21 +106,44 @@ public class ModulesCommandBuilder {
 		);
 
 
-		int signOfDrive = (int) Math.signum(drive.getRadians());
-		Rotation2d[] originalPos = {null};
-		FunctionalCommand driveToPosition = new FunctionalCommand(() -> {
-			originalPos[0] = moduleAlon.getLinearAngle();
-		},
-			() -> moduleAlon.linearSetPower(constantPower),
-			(b) -> moduleAlon.linearSetPower(0),
-			() -> (originalPos[0].plus(drive).minus(moduleAlon.getLinearAngle()).times(signOfDrive).getRadians() <= 0)
-		);
+		//Command driveToPosition = new DriveToPositionCommand(drive,moduleAlon);
+		//steerToPosition.addRequirements(moduleAlon);
+		//driveToPosition.addRequirements(moduleAlon);
 		//SequentialCommandGroup command = new SequentialCommandGroup(steerToPosition,driveToPosition);
-		//command.addRequirements(moduleAlon);
+		//command.steerToPosition(moduleAlon);
 		//command.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf);
-		steerToPosition.addRequirements(moduleAlon);
+		//steerToPosition.addRequirements(moduleAlon);
 		return steerToPosition;
 		//NOTE THAT THIS IMPLEMENTATION CANNOT STAY, YOU NEED TO ADD ALL THE COMMENTED SHI
+	}
+
+	private static class DriveToPositionCommand extends Command{
+		private Rotation2d originalPos;
+		private Rotation2d turns;
+		private ModuleAlon moduleAlon;
+		public DriveToPositionCommand(Rotation2d turns, ModuleAlon moduleAlon){
+			this.turns=turns;
+			this.moduleAlon=moduleAlon;
+		}
+		@Override
+		public void initialize(){
+			originalPos=moduleAlon.getLinearAngle();
+		}
+		@Override
+		public void execute(){
+			moduleAlon.linearSetPower(constantPower*signOfTurns());
+		}
+		@Override
+		public void end(boolean interrupted){
+			moduleAlon.stop();
+		}
+		@Override
+		public boolean isFinished(){
+			return moduleAlon.getLinearAngle().minus(turns).minus(originalPos).times(signOfTurns()).getRadians()>0;
+		}
+		private int signOfTurns(){
+			return (int)Math.signum(turns.getRadians());
+		}
 	}
 	public RunCommand comboCommand(){
 		return new RunCommand(()->{moduleAlon.linearSetPower(1);});

@@ -1,21 +1,24 @@
 package frc.robot.subsystems.led;
 
 import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.subsystems.GBSubsystem;
 
-public class AddressableLEDWrapper extends GBSubsystem {
+import static edu.wpi.first.units.Units.Meters;
 
-	private static final LEDConstants ledConstants = new LEDConstants(4, 50, 0.5);
+public class LED extends GBSubsystem {
+
+	public static final LEDConstants ledConstants = new LEDConstants(4, 50, 0.5, 10, 0.05, 255, 255);
 	private final AddressableLED addressableLED;
 	private final AddressableLEDBuffer addressableLEDBuffer;
 	private LEDPattern ledPattern;
 	private final LEDCommandsBuilder ledCommandsBuilder;
 
-	public AddressableLEDWrapper(String logPath) {
+	public LED(String logPath) {
 		super(logPath);
 
 		this.addressableLED = new AddressableLED(ledConstants.portNum());
@@ -50,8 +53,16 @@ public class AddressableLEDWrapper extends GBSubsystem {
 		addressableLED.setData(addressableLEDBuffer);
 	}
 
-	public void blink() {
+	public void blinkWithCurrentPattern() {
 		ledPattern = ledPattern.blink(Units.Seconds.of(ledConstants.secondsBetweenBlinks()));
+	}
+
+	public void setDualGradient(Color colorA, Color colorB) {
+		setPattern(LEDPattern.gradient(LEDPattern.GradientType.kContinuous, colorA, colorB));
+	}
+
+	public void enableScroll(LinearVelocity linearVelocity) {
+		setPattern(ledPattern.scrollAtAbsoluteSpeed(linearVelocity, Meters.of(1 / ledConstants.ledAmountPerMeter())));
 	}
 
 	void applyPattern() {

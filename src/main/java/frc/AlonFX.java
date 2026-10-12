@@ -7,12 +7,16 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.hardware.interfaces.IMotor;
 import frc.robot.hardware.interfaces.InputSignal;
+import frc.robot.hardware.mechanisms.MechanismSimulation;
 import org.littletonrobotics.junction.Logger;
 import com.ctre.phoenix6.signals.InvertedValue;
 
@@ -22,6 +26,7 @@ public class AlonFX implements IMotor {
 	private final TalonFX motor;
 	private InvertedValue direction;
 	private final String logPath;
+	private MechanismSimulation mechanismSimulation;
 
 	StatusSignal<AngularVelocity> velocity;
 	StatusSignal<Voltage> voltage;
@@ -43,6 +48,15 @@ public class AlonFX implements IMotor {
 		current.setUpdateFrequency(50);
 		position = motor.getPosition();
 		position.setUpdateFrequency(50);
+
+		if (RobotManager.isSimulation()){
+			mechanismSimulation=new DCMotorSim(
+					LinearSystemId.createDCMotorSystem(
+							DCMotor.getKrakenX60(1),
+
+					)
+			)
+		}
 	}
 
 	private TalonFXConfiguration createConfig(double gearRatio, double kP){

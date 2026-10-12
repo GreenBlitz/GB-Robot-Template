@@ -1,10 +1,14 @@
 package frc;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
+
 
 public class JoysticksBindings {
 
@@ -45,13 +49,25 @@ public class JoysticksBindings {
 	}
 
 	private static void mainJoystickButtons(Robot robot) {
+		System.out.println("JSBINDINGSAHH");
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+		robot.getModuleAlon().getCommandBuilder().setDefaultJoystick(usedJoystick);
+		Trigger comboButtons = usedJoystick.A.and(usedJoystick.B);
+		comboButtons.onTrue(robot.getModuleAlon().getCommandBuilder().comboCommand());
+		usedJoystick.X.whileTrue(robot.getModuleAlon().getCommandBuilder().driveDistanceCommand(
+				Rotation2d.fromRotations(2.5),Rotation2d.fromDegrees(67)
+		));
+		usedJoystick.Y.whileTrue(robot.getModuleAlon().getCommandBuilder().driveWithLeftStick());
+		usedJoystick.POV_UP.onTrue(new InstantCommand(()->{
+			robot.getModuleAlon().setSteerPosition(0);
+		}));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
-		// bindings...
+		// binding
+		// s...
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {

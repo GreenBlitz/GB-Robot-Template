@@ -16,13 +16,29 @@ public class LEDCommandsBuilder {
 		this.led = led;
 	}
 
-	public Command setSolidColor(Color color) {
-		return led.asSubsystemCommand(new InstantCommand(() -> led.setPattern(LEDPattern.solid(color))), "Set LED pattern");
+	public Command setSolidGreenColor() {
+		return led.asSubsystemCommand(new InstantCommand(() -> led.setPattern(LEDPattern.solid(Color.kLimeGreen))), "Set LED pattern");
 	}
 
-	public Command setAlternatingGreenWhiteColors(LEDPattern pattern) {
+	public Command setSolidWhiteColor() {
+		return led.asSubsystemCommand(new InstantCommand(() -> led.setPattern(LEDPattern.solid(Color.kWhite))), "Set LED pattern");
+	}
+
+	public Command setSolidRedColor() {
+		return led.asSubsystemCommand(new InstantCommand(() -> led.setPattern(LEDPattern.solid(Color.kWhite))), "Set LED pattern");
+	}
+
+	public Command setSolidBlueColor() {
+		return led.asSubsystemCommand(new InstantCommand(() -> led.setPattern(LEDPattern.solid(Color.kLimeGreen))), "Set LED pattern");
+	}
+
+	public Command setSolidYellowColor() {
+		return led.asSubsystemCommand(new InstantCommand(() -> led.setPattern(LEDPattern.solid(Color.kWhite))), "Set LED pattern");
+	}
+
+	public Command setAlternatingGreenYellowColors(LEDPattern pattern) {
 		return led.asSubsystemCommand(
-			new InstantCommand(() -> led.setAlternatingColors(Color.kLimeGreen, Color.kWhite)),
+			new InstantCommand(() -> led.setAlternatingColors(Color.kLimeGreen, Color.kYellow)),
 			"Set Alternating Led Pattern"
 		);
 	}

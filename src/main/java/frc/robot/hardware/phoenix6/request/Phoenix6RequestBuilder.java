@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 
 public class Phoenix6RequestBuilder {
 
-	public static Phoenix6VelocityPositionRequest buildVelocityPosition(
+	public static Phoenix6VelocityPositionRequest buildVelocityPositionRequest(
 		PositionVoltage positionVoltage,
 		double defaultArbitraryFeedForward,
 		boolean enableFOC
@@ -24,7 +24,7 @@ public class Phoenix6RequestBuilder {
 		);
 	}
 
-	public static Phoenix6FeedForwardRequest buildVelocityVoltage(
+	public static Phoenix6FeedForwardRequest buildVelocityVoltageRequest(
 		VelocityVoltage velocityVoltage,
 		double defaultArbitraryFeedForward,
 		boolean enableFOC
@@ -38,7 +38,7 @@ public class Phoenix6RequestBuilder {
 		);
 	}
 
-	public static Phoenix6FeedForwardRequest buildVelocityTorqueCurrentFOC(
+	public static Phoenix6FeedForwardRequest buildVelocityTorqueCurrentFOCRequest(
 		VelocityTorqueCurrentFOC velocityTorqueCurrentFOC,
 		double defaultArbitraryFeedForward
 	) {
@@ -51,7 +51,7 @@ public class Phoenix6RequestBuilder {
 		);
 	}
 
-	public static Phoenix6FeedForwardRequest buildMotionMagic(
+	public static Phoenix6FeedForwardRequest buildMotionMagicRequest(
 		MotionMagicVoltage motionMagicVoltage,
 		double defaultArbitraryFeedForward,
 		boolean enableFOC
@@ -65,7 +65,7 @@ public class Phoenix6RequestBuilder {
 		);
 	}
 
-	public static Phoenix6DynamicMotionMagicRequest buildDynamicMotionMagic(
+	public static Phoenix6DynamicMotionMagicRequest buildDynamicMotionMagicRequest(
 		DynamicMotionMagicVoltage dynamicMotionMagicVoltage,
 		double defaultArbitraryFeedForward,
 		boolean enableFOC
@@ -81,11 +81,11 @@ public class Phoenix6RequestBuilder {
 		);
 	}
 
-	public static Phoenix6Request<Double> buildVoltageOut(VoltageOut voltageOut, boolean enableFOC) {
+	public static Phoenix6Request<Double> buildVoltageOutRequest(VoltageOut voltageOut, boolean enableFOC) {
 		return new Phoenix6Request<>(voltageOut.Output, voltageOut.withEnableFOC(enableFOC), voltageOut::withOutput);
 	}
 
-	public static Phoenix6Request<Double> buildTorqueCurrentFOC(TorqueCurrentFOC torqueCurrentFOC) {
+	public static Phoenix6Request<Double> buildTorqueCurrentFOCRequest(TorqueCurrentFOC torqueCurrentFOC) {
 		return new Phoenix6Request<>(torqueCurrentFOC.Output, torqueCurrentFOC, torqueCurrentFOC::withOutput);
 	}
 

@@ -20,17 +20,17 @@ public class Phoenix6SignalBuilder {
 		return signalClone;
 	}
 
-	public static Phoenix6DoubleSignal build(StatusSignal<?> signal, double frequency, BusChain busChain) {
+	public static Phoenix6DoubleSignal buildDoubleSignal(StatusSignal<?> signal, double frequency, BusChain busChain) {
 		StatusSignal<?> signalClone = cloneWithFrequency(signal, frequency, busChain);
 		return new Phoenix6DoubleSignal(signalClone.getName(), signalClone);
 	}
 
-	public static Phoenix6AngleSignal build(StatusSignal<?> signal, double frequency, AngleUnit angleUnit, BusChain busChain) {
+	public static Phoenix6AngleSignal buildAngleSignal(StatusSignal<?> signal, double frequency, AngleUnit angleUnit, BusChain busChain) {
 		StatusSignal<?> signalClone = cloneWithFrequency(signal, frequency, busChain);
 		return new Phoenix6AngleSignal(signalClone.getName(), signalClone, angleUnit);
 	}
 
-	public static Phoenix6LatencySignal build(
+	public static Phoenix6LatencySignal buildLatencySignal(
 		StatusSignal<?> signal,
 		StatusSignal<?> signalSlope,
 		double frequency,

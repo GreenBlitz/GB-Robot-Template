@@ -59,10 +59,6 @@ public class RobotCommander extends GBSubsystem {
 		return asSubsystemCommand(wantedCommand, state);
 	}
 
-	public Command turnOnLED(){
-		return new SequentialCommandGroup(robot.getLed().getLedCommandsBuilder().setAlternatingGreenYellowColors(), robot.getLed().getLedCommandsBuilder().enableScroll());
-	}
-
 	public Command driveWith(RobotState state) {
 		return driveWith(state, superstructure.setState(state));
 	}

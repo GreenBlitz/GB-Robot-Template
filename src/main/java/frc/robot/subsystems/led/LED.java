@@ -32,7 +32,7 @@ public class LED extends GBSubsystem {
 		this.ledCommandsBuilder = new LEDCommandsBuilder(this);
 	}
 
-	public LEDCommandsBuilder getLedCommandsBuilder() {
+	public LEDCommandsBuilder getCommandsBuilder() {
 		return ledCommandsBuilder;
 	}
 

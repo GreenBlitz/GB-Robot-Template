@@ -142,7 +142,7 @@ class KrakenX60SteerBuilder {
 			.build(steer.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, steer.getBusChain());
 		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder.build(
 			steer.getDevice().getPosition(),
-			velocitySignal,
+			velocitySignal.getSignal(),
 			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			AngleUnit.ROTATIONS,
 			steer.getBusChain()

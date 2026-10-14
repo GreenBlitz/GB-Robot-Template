@@ -8,7 +8,11 @@ import java.util.function.Supplier;
 
 public class Phoenix6RequestBuilder {
 
-	public static Phoenix6VelocityPositionRequest buildVelocityPosition(PositionVoltage positionVoltage, double defaultArbitraryFeedForward, boolean enableFOC) {
+	public static Phoenix6VelocityPositionRequest buildVelocityPosition(
+		PositionVoltage positionVoltage,
+		double defaultArbitraryFeedForward,
+		boolean enableFOC
+	) {
 		return new Phoenix6VelocityPositionRequest(
 			Rotation2d.fromRotations(positionVoltage.Position),
 			Rotation2d.fromRotations(positionVoltage.Velocity),
@@ -20,7 +24,11 @@ public class Phoenix6RequestBuilder {
 		);
 	}
 
-	public static Phoenix6FeedForwardRequest buildVelocityVoltage(VelocityVoltage velocityVoltage, double defaultArbitraryFeedForward, boolean enableFOC) {
+	public static Phoenix6FeedForwardRequest buildVelocityVoltage(
+		VelocityVoltage velocityVoltage,
+		double defaultArbitraryFeedForward,
+		boolean enableFOC
+	) {
 		return new Phoenix6FeedForwardRequest(
 			Rotation2d.fromRotations(velocityVoltage.Velocity),
 			velocityVoltage.withEnableFOC(enableFOC),
@@ -30,7 +38,10 @@ public class Phoenix6RequestBuilder {
 		);
 	}
 
-	public static Phoenix6FeedForwardRequest buildVelocityTorqueCurrentFOC(VelocityTorqueCurrentFOC velocityTorqueCurrentFOC, double defaultArbitraryFeedForward) {
+	public static Phoenix6FeedForwardRequest buildVelocityTorqueCurrentFOC(
+		VelocityTorqueCurrentFOC velocityTorqueCurrentFOC,
+		double defaultArbitraryFeedForward
+	) {
 		return new Phoenix6FeedForwardRequest(
 			Rotation2d.fromRotations(velocityTorqueCurrentFOC.Velocity),
 			velocityTorqueCurrentFOC,

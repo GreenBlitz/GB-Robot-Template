@@ -2,12 +2,14 @@ package frc.robot.subsystems.tal;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
-import com.ctre.phoenix6.controls.PositionDutyCycle;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.subsystems.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
+
+import java.util.function.Supplier;
 
 public class ModuleTal extends GBSubsystem {
 
@@ -21,8 +23,13 @@ public class ModuleTal extends GBSubsystem {
 	private InvertedValue driveRotationDirection;
 	private NeutralModeValue driveNeutralModeValue;
 	private NeutralModeValue steerNeutralModeValue;
-	private double targetMotorPower;
-	private double targetAngle;
+	private Supplier<Double> targetMotorPower;
+	private Supplier<Double> targetAngle;
+	private ModulePowers modulePowers;
+	private PositionVoltage request;
+	private double previousAngle;
+	private ModuleTalCommandBuilder commandBuilder = new ModuleTalCommandBuilder(this);
+
 
 	public ModuleTal(String logPath, int driveID, int steerID) {
 		super(logPath);
@@ -35,13 +42,30 @@ public class ModuleTal extends GBSubsystem {
 		this.steerNeutralModeValue = NeutralModeValue.Brake;
 		this.driveNeutralModeValue = NeutralModeValue.Brake;
 		configureSteerMotor();
-		this.targetAngle = 0;
-		this.targetMotorPower = 0;
+		configureDriveMotor();
+		this.targetAngle = () -> 0.0;
+		this.targetMotorPower = () -> 0.0;
+		this.previousAngle = 0;
+		this.setAmpereLimit(40);
+		this.commandBuilder = new ModuleTalCommandBuilder(this);
+		this.request = new PositionVoltage(0).withSlot(0);
 	}
 
+
 	private void configureSteerMotor() {
-		this.steerConfigs.ClosedLoopGeneral.withContinuousWrap(true);
+		this.steerConfigs.Slot0.kP = 0.5;
+		this.steerConfigs.Slot0.kI = 0.1;
+		this.steerConfigs.Slot0.kD = 0;
+		this.steerConfigs.Feedback.SensorToMechanismRatio = 1 / 12.8;
 		this.steerConfigurator.apply(this.steerConfigs);
+	}
+
+	private void configureDriveMotor() {
+		this.driveConfigs.Slot0.kP = 0.5;
+		this.driveConfigs.Slot0.kI = 0;
+		this.driveConfigs.Slot0.kD = 0;
+		this.driveConfigs.Feedback.SensorToMechanismRatio = 8.14;
+		this.driveConfigurator.apply(this.driveConfigs);
 	}
 
 	public void setAmpereLimit(double ampereLimit) {
@@ -51,6 +75,10 @@ public class ModuleTal extends GBSubsystem {
 		this.driveConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
 		this.driveConfigs.CurrentLimits.withStatorCurrentLimit(ampereLimit);
 		this.driveConfigurator.apply(this.driveConfigs);
+	}
+
+	public ModuleTalCommandBuilder getCommandBuilder() {
+		return this.commandBuilder;
 	}
 
 	public void changeDriveNeutralMode() {
@@ -82,9 +110,16 @@ public class ModuleTal extends GBSubsystem {
 		this.invertSteerRotation();
 	}
 
+	public void drive(double targetAngle, double power) {
+		steerToAngle(targetAngle);
+		setDrivePower(power);
+	}
+
 	public void steerToAngle(double targetAngle) {
-		this.targetAngle = targetAngle;
-		this.steerMotor.setControl(new PositionDutyCycle(targetAngle));
+		if (this.previousAngle * targetAngle <= 0) {
+			this.steerConfigurator.setPosition(this.previousAngle * -1);
+		}
+		this.steerMotor.setControl(request.withPosition(this.previousAngle + Math.abs(this.previousAngle)));
 	}
 
 	public double getDriveVoltage() {
@@ -96,8 +131,11 @@ public class ModuleTal extends GBSubsystem {
 	}
 
 	public void setDrivePower(double power) {
-		this.targetMotorPower = power;
 		this.driveMotor.set(power);
+	}
+
+	public void stopSteer() {
+		this.steerMotor.stopMotor();
 	}
 
 	public void stop() {
@@ -113,6 +151,10 @@ public class ModuleTal extends GBSubsystem {
 		return this.driveMotor.get();
 	}
 
+	public void setModulePowers(ModulePowers modulePowers) {
+		this.modulePowers = modulePowers;
+	}
+
 
 	public boolean isDriveAtSpeed(double speed) {
 		return this.driveMotor.get() == speed;
@@ -122,14 +164,40 @@ public class ModuleTal extends GBSubsystem {
 		return this.getSteerAngle() == angle;
 	}
 
+	public Supplier<Double> getTargetMotorPower() {
+		return targetMotorPower;
+	}
+
 	@Override
 	protected void subsystemPeriodic() {
 		Logger.recordOutput(getLogPath() + "/currentDriveSpeed", getDriveSpeed());
-		Logger.recordOutput(getLogPath() + "/targetDrivePower", this.targetMotorPower);
+		Logger.recordOutput(getLogPath() + "/targetDrivePower", getTargetMotorPower().get());
 		Logger.recordOutput(getLogPath() + "/driveVoltage", getDriveVoltage());
 		Logger.recordOutput(getLogPath() + "/wheelAngle", this.getSteerAngle());
-		Logger.recordOutput(getLogPath() + "/targetWheelAngle", this.targetAngle);
+		Logger.recordOutput(getLogPath() + "/targetWheelAngle", this.targetAngle.get());
 	}
 
+	public void update() {
+		this.targetMotorPower = () -> Math.sqrt(Math.pow(this.modulePowers.xPower, 2) + Math.pow(this.modulePowers.yPower, 2));
+		this.previousAngle = this.targetAngle.get();
+		this.targetAngle = this::calculateAngle;
+
+	}
+
+	public boolean isCloseToAngle(double target) {
+		if (this.getSteerAngle() - target <= 1 && this.getSteerAngle() - target >= -1) {
+			Logger.recordOutput(getLogPath() + "/isclose", this.getSteerAngle() - target);
+			return true;
+		}
+		return false;
+	}
+
+	public Supplier<Double> getTargetAngle() {
+		return targetAngle;
+	}
+
+	private double calculateAngle() {
+		return Math.atan2(this.modulePowers.yPower, this.modulePowers.xPower) * 50;
+	}
 
 }

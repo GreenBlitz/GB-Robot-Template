@@ -13,20 +13,21 @@ public class ModuleTalCommandBuilder {
 		this.module.setDefaultCommand(stop());
 	}
 
-	public Command driveModuleByJoystick(Supplier<Double> power, Supplier<Double> angle) {
-		return new SequentialCommandGroup(steerToAngle(angle), setDrivePower(power));
+	public Command driveModuleByJoystick(Supplier<Double> angle, Supplier<Double> power) {
+		return module
+			.asSubsystemCommand(new RunCommand(() -> module.drive(angle.get(), power.get()), module), "drive module by power and angle");
 	}
 
 	public Command stop() {
 		return module.asSubsystemCommand(new RunCommand(module::stop), "stop motors");
 	}
 
-	protected Command setDrivePower(Supplier<Double> power) {
-		return module.asSubsystemCommand(new RunCommand(() -> module.setDrivePower(power.get())), "set the motors power");
+	public Command setDrivePower(Supplier<Double> power) {
+		return module.asSubsystemCommand(new RunCommand(() -> module.setDrivePower(power.get()), module), "set the motors power");
 	}
 
-	protected Command steerToAngle(Supplier<Double> angle) {
-		return module.asSubsystemCommand(new InstantCommand(() -> module.steerToAngle(angle.get())), "steer to an angle");
+	public Command steerToAngle(Supplier<Double> angle) {
+		return module.asSubsystemCommand(new RunCommand(() -> module.steerToAngle(angle.get()), module), "steer to an angle");
 	}
 
 }

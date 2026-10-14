@@ -46,15 +46,16 @@ public class TalMotorControilMission {
 		this.lastPos = this.getPositionAsDouble();
 		this.mistakeSum = this.mistakeFromPos();
 		this.motor.optimizeBusUtilization();
+//		TalonFXConfiguration pidConfigs = new TalonFXConfiguration();
+//		pidConfigs.Slot0.kP = 0.5;
+//		pidConfigs.Slot0.kI = 0;
+//		pidConfigs.Slot0.kD = 0;
+//		this.configurator.apply(pidConfigs);
 	}
 
-	public void pidWithPositionVoltage() {
-		TalonFXConfiguration pidConfigs = new TalonFXConfiguration();
-		pidConfigs.Slot0.kP = 2;
-		pidConfigs.Slot0.kI = 0.5;
-		pidConfigs.Slot0.kD = 2;
-		PositionVoltage positionVoltage = new PositionVoltage(5);
-		this.motor.setControl(positionVoltage);
+	public void pidWithPositionVoltage(double rotations) {
+		final PositionVoltage positionVoltage = new PositionVoltage(0).withSlot(0);
+		this.motor.setControl(positionVoltage.withPosition(rotations));
 	}
 
 	private void setSoftwareConfigs() {
@@ -93,6 +94,8 @@ public class TalMotorControilMission {
 	}
 
 	public void MoveForwardHalfPower() {
+		Logger.recordOutput("ControlMode", motor.getControlMode().getValue().toString());
+		Logger.recordOutput("ClosedLoopRef", motor.getClosedLoopReference().getValueAsDouble());
 		this.motor.set(0.5);
 	}
 

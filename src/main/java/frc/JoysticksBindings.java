@@ -1,10 +1,13 @@
 package frc;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystickPlayStation;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
+import frc.utils.brakestate.BrakeMode;
+import frc.utils.brakestate.BrakeStateManager;
 
 public class JoysticksBindings {
 
@@ -47,6 +50,8 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystickPlayStation usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+		usedJoystick.circleButton.onTrue(new InstantCommand(() -> BrakeStateManager.setBrakeMode(BrakeMode.COAST)));
+		usedJoystick.triangularButton.onTrue(new InstantCommand(() -> BrakeStateManager.setBrakeMode(BrakeMode.BRAKE)));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

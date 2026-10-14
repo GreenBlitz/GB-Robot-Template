@@ -65,7 +65,7 @@ public class TalonFXArmBuilder {
 
 		Phoenix6Request<Double> voltageRequest = buildVoltageRequest();
 
-		IDynamicMotionMagicRequest positionRequest = Phoenix6RequestBuilder.build(
+		IDynamicMotionMagicRequest positionRequest = Phoenix6RequestBuilder.buildDynamicMotionMagic(
 			new DynamicMotionMagicVoltage(
 				signals.position().getLatestValue().getRotations(),
 				defaultMaxVelocityRPS.getRotations(),
@@ -135,7 +135,7 @@ public class TalonFXArmBuilder {
 		Phoenix6Request<Double> voltageRequest = buildVoltageRequest();
 
 		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder
-			.build(new MotionMagicVoltage(signals.position().getLatestValue().getRotations()), arbitraryFeedForward, true);
+			.buildMotionMagic(new MotionMagicVoltage(signals.position().getLatestValue().getRotations()), arbitraryFeedForward, true);
 		TalonFXConfiguration configuration = (buildConfiguration(
 			feedbackConfigs,
 			simulationSlotsConfig,
@@ -182,9 +182,9 @@ public class TalonFXArmBuilder {
 
 		Phoenix6Request<Double> voltageRequest = buildVoltageRequest();
 
-		IFeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0), 0, true);
+		IFeedForwardRequest positionRequest = Phoenix6RequestBuilder.buildVelocityPosition(new PositionVoltage(0), 0, true);
 
-		IRequest<Double> currentRequest = Phoenix6RequestBuilder.build(new TorqueCurrentFOC(0));
+		IRequest<Double> currentRequest = Phoenix6RequestBuilder.buildTorqueCurrentFOC(new TorqueCurrentFOC(0));
 
 		TalonFXConfiguration configuration = buildConfiguration(
 			feedbackConfigs,
@@ -230,9 +230,9 @@ public class TalonFXArmBuilder {
 
 		Phoenix6Request<Double> voltageRequest = buildVoltageRequest();
 
-		IFeedForwardRequest positionRequest = Phoenix6RequestBuilder.build(new PositionVoltage(0), 0, true);
+		IFeedForwardRequest positionRequest = Phoenix6RequestBuilder.buildVelocityPosition(new PositionVoltage(0), 0, true);
 
-		IRequest<Double> currentRequest = Phoenix6RequestBuilder.build(new TorqueCurrentFOC(0));
+		IRequest<Double> currentRequest = Phoenix6RequestBuilder.buildTorqueCurrentFOC(new TorqueCurrentFOC(0));
 
 		TalonFXConfiguration configuration = buildConfiguration(
 			feedbackConfigs,
@@ -311,7 +311,7 @@ public class TalonFXArmBuilder {
 		Phoenix6Request<Double> voltageRequest = buildVoltageRequest();
 
 		Phoenix6FeedForwardRequest positionRequest = Phoenix6RequestBuilder
-			.build(new PositionVoltage(signals.position().getLatestValue().getRotations()), arbitraryFeedForward, true);
+			.buildVelocityPosition(new PositionVoltage(signals.position().getLatestValue().getRotations()), arbitraryFeedForward, true);
 
 		TalonFXConfiguration configuration = buildConfiguration(
 			feedbackConfigs,
@@ -361,7 +361,7 @@ public class TalonFXArmBuilder {
 		Phoenix6Request<Double> voltageRequest = buildVoltageRequest();
 
 		VelocityPositionRequest velocityPositionRequest = Phoenix6RequestBuilder
-			.build(new PositionVoltage(signals.position().getLatestValue().getRotations()), arbitraryFeedForward, true);
+			.buildVelocityPosition(new PositionVoltage(signals.position().getLatestValue().getRotations()), arbitraryFeedForward, true);
 
 		TalonFXConfiguration configuration = buildConfiguration(
 			feedbackConfigs,
@@ -445,7 +445,7 @@ public class TalonFXArmBuilder {
 	}
 
 	private static Phoenix6Request<Double> buildVoltageRequest() {
-		return Phoenix6RequestBuilder.build(new VoltageOut(0), true);
+		return Phoenix6RequestBuilder.buildVoltageOut(new VoltageOut(0), true);
 	}
 
 	private static ArmSignals buildSignals(TalonFXMotor motor, double signalFrequency, BusChain busChain) {

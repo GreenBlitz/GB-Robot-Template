@@ -128,8 +128,8 @@ class KrakenX60SteerBuilder {
 
 	static SteerRequests buildRequests() {
 		return new SteerRequests(
-			Phoenix6RequestBuilder.build(new PositionVoltage(0), 0, true),
-			Phoenix6RequestBuilder.build(new VoltageOut(0), true)
+			Phoenix6RequestBuilder.buildVelocityPosition(new PositionVoltage(0), 0, true),
+			Phoenix6RequestBuilder.buildVoltageOut(new VoltageOut(0), true)
 		);
 	}
 

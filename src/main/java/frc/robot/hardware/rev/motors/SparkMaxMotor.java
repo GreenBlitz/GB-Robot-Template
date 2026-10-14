@@ -7,7 +7,7 @@ import frc.robot.Robot;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import frc.robot.hardware.interfaces.IMotor;
 import frc.robot.hardware.interfaces.InputSignal;
-import frc.robot.hardware.mechanisms.MechanismSimulation;
+import frc.robot.hardware.simulations.MechanismSimulation;
 import frc.robot.hardware.rev.motors.simulation.SparkMaxSimulation;
 import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;

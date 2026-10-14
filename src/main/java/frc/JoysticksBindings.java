@@ -1,6 +1,7 @@
 package frc;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
@@ -50,6 +51,8 @@ public class JoysticksBindings {
 		usedJoystick.A.onTrue(robot.arm.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(30)));
 		usedJoystick.B.onTrue(robot.motionMagicArm.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(30)));
 		usedJoystick.X.onTrue(robot.dynamicMotionMagicArm.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(30)));
+		usedJoystick.POV_UP.onTrue(new SequentialCommandGroup(robot.getLed().getCommandsBuilder().setAlternatingGreenYellowColors(),robot.getLed().getCommandsBuilder().blink()));
+		usedJoystick.POV_DOWN.onTrue(new SequentialCommandGroup(robot.getLed().getCommandsBuilder().setRainbowGradient(), robot.getLed().getCommandsBuilder().enableScroll()));
 		// bindings...
 	}
 

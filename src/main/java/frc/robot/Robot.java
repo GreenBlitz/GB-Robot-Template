@@ -4,10 +4,10 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import org.wpilib.math.geometry.Pose2d;
+//import org.wpilib.smartdashboard.SendableChooser;
+//import org.wpilib.smartdashboard.SmartDashboard;
+import org.wpilib.command2.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimator.IPoseEstimator;
@@ -56,7 +56,7 @@ public class Robot {
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
 			swerve.getKinematics(),
 			swerve.getModules().getWheelPositions(0),
-			swerve.getModules().getCurrentStates(),
+			swerve.getModules().getCurrentVelocities(),
 			swerve.getOrientationFromIMU(),
 			swerve.getIMUAccelerationG(),
 			swerve.getIMUAbsoluteYaw().getTimestamp()
@@ -88,7 +88,7 @@ public class Robot {
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 
-		configureBrakeStateChooser();
+//		configureBrakeStateChooser();
 	}
 
 	public void updateSubsystems() {
@@ -128,12 +128,12 @@ public class Robot {
 		return new PathPlannerAutoWrapper();
 	}
 
-	private void configureBrakeStateChooser() {
-		SendableChooser<BrakeMode> brakeStateChooser = new SendableChooser<>();
-		brakeStateChooser.setDefaultOption("Brake", BrakeMode.BRAKE);
-		brakeStateChooser.addOption("Coast", BrakeMode.COAST);
-		SmartDashboard.putData("BrakeState", brakeStateChooser);
-		brakeStateChooser.onChange(BrakeStateManager::setBrakeMode);
-	}
+//	private void configureBrakeStateChooser() {
+//		SendableChooser<BrakeMode> brakeStateChooser = new SendableChooser<>();
+//		brakeStateChooser.setDefaultOption("Brake", BrakeMode.BRAKE);
+//		brakeStateChooser.addOption("Coast", BrakeMode.COAST);
+//		SmartDashboard.putData("BrakeState", brakeStateChooser);
+//		brakeStateChooser.onChange(BrakeStateManager::setBrakeMode);
+//	}
 
 }

@@ -4,12 +4,11 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.hardware.FollowerInputsAutoLogged;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.command2.sysid.SysIdRoutine;
 import frc.robot.Robot;
 import frc.robot.RobotConstants;
-import frc.robot.hardware.FollowerInputs;
-import frc.robot.hardware.FollowerInputsAutoLogged;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IMotionMagicRequest;
 import frc.robot.hardware.interfaces.IRequest;
@@ -141,7 +140,7 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 		super.updateInputs(inputSignals);
 		for (int i = 0; i < followers.length; i++) {
 			String followerLogPath = getLogPath() + "/followers/" + followerConfig.followerIDs[i].name();
-			followerInputs[i].followerData = new FollowerInputs.FollowerData(
+			followerInputs[i].followerData = new FollowerInputsAutoLogged.FollowerData(
 				followers[i].isConnected(),
 				new Rotation2d(followers[i].getPosition().getValue()),
 				followers[i].getMotorVoltage().getValueAsDouble()
@@ -158,9 +157,9 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 	@Override
 	public void setBrake(boolean brake) {
 		NeutralModeValue neutralModeValue = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
-		motor.setNeutralMode(neutralModeValue);
+		motor.configNeutralMode(neutralModeValue);
 		for (TalonFXWrapper follower : followers) {
-			follower.setNeutralMode(neutralModeValue);
+			follower.configNeutralMode(neutralModeValue);
 		}
 	}
 
@@ -177,7 +176,7 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 
 	@Override
 	public void setPower(double power) {
-		motor.set(power);
+		motor.setThrottle(power);
 	}
 
 	@Override

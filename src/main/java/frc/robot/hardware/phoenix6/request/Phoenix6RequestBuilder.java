@@ -1,8 +1,8 @@
 package frc.robot.hardware.phoenix6.request;
 
 import com.ctre.phoenix6.controls.*;
-import edu.wpi.first.math.controller.BangBangController;
-import edu.wpi.first.math.geometry.Rotation2d;
+import org.wpilib.math.controller.BangBangController;
+import org.wpilib.math.geometry.Rotation2d;
 
 import java.util.function.Supplier;
 
@@ -87,7 +87,7 @@ public class Phoenix6RequestBuilder {
 		BangBangController bangBangController = new BangBangController();
 		DutyCycleOut dutyCycleOut = new DutyCycleOut(0).withEnableFOC(enableFOC);
 		return new Phoenix6Request<>(
-			Rotation2d.kZero,
+			Rotation2d.ZERO,
 			dutyCycleOut,
 			(Rotation2d targetVelocity) -> dutyCycleOut.withOutput(
 				bangBangController.calculate(currentVelocity.get().getRotations(), targetVelocity.getRotations()) == 0

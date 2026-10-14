@@ -3,9 +3,10 @@ package frc.robot.vision.cameras.limelight.inputs;
 import frc.robot.vision.cameras.limelight.LimelightTarget2dValues;
 import frc.utils.limelight.LimelightHelpers;
 import org.littletonrobotics.junction.AutoLog;
+import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 @AutoLog
-public class ColorDetectionInputs {
+public class ColorDetectionInputs{
 
 	public LimelightTarget2dValues target2dValues = new LimelightTarget2dValues();
 

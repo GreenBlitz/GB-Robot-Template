@@ -1,6 +1,6 @@
 package frc.robot.subsystems.arm;
 
-import edu.wpi.first.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.VelocityPositionRequest;
@@ -30,7 +30,7 @@ public class VelocityPositionArm extends Arm {
 
 	@Override
 	public void setTargetPosition(Rotation2d targetPosition) {
-		setTargetPositionVelocity(targetPosition, Rotation2d.kZero);
+		setTargetPositionVelocity(targetPosition, Rotation2d.ZERO);
 	}
 
 	@Override

@@ -36,7 +36,7 @@ public class LEDCommandsBuilder {
 		return led.asSubsystemCommand(new InstantCommand(() -> led.setPattern(LEDPattern.solid(Color.kWhite))), "Set LED pattern");
 	}
 
-	public Command setAlternatingGreenYellowColors(LEDPattern pattern) {
+	public Command setAlternatingGreenYellowColors() {
 		return led.asSubsystemCommand(
 			new InstantCommand(() -> led.setAlternatingColors(Color.kLimeGreen, Color.kYellow)),
 			"Set Alternating Led Pattern"

@@ -50,6 +50,7 @@ public class JoysticksBindings {
 		usedJoystick.A.onTrue(robot.arm.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(30)));
 		usedJoystick.B.onTrue(robot.motionMagicArm.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(30)));
 		usedJoystick.X.onTrue(robot.dynamicMotionMagicArm.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(30)));
+		usedJoystick.POV_UP.onTrue(robot.get)
 		// bindings...
 	}
 

@@ -5,17 +5,7 @@ import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 @AutoLog
-public class ConnectedInput implements LoggableInputs {
+public class ConnectedInput{
 
 	public boolean connected = false;
-
-    @Override
-    public void toLog(LogTable table) {
-
-    }
-
-    @Override
-    public void fromLog(LogTable table) {
-
-    }
 }

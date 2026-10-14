@@ -22,7 +22,7 @@ public class CameraPoseCalibration extends Command {
 	private final double tagCenterHeightFromGroundMeters;
 	private final Rotation2d robotYawRelativeToTagFacingYaw;
 
-	private final CameraPoseCalibrationInputs cameraPoseCalibrationInputs;
+	private final CameraPoseCalibrationInputsAutoLogged cameraPoseCalibrationInputs;
 
 	private double cameraRobotRelativeYawCosSum = 0, cameraRobotRelativeYawSinSum = 0;
 	private double cameraRobotRelativePitchCosSum = 0, cameraRobotRelativePitchSinSum = 0;
@@ -68,7 +68,7 @@ public class CameraPoseCalibration extends Command {
 		this.tagCenterHeightFromGroundMeters = tagCenterHeightFromGroundMeters;
 		this.robotYawRelativeToTagFacingYaw = robotYawRelativeToTagFacingYaw;
 
-		this.cameraPoseCalibrationInputs = new CameraPoseCalibrationInputs();
+		this.cameraPoseCalibrationInputs = new CameraPoseCalibrationInputsAutoLogged();
 
 		this.robotRelativeCameraTranslationSum = new Translation3d();
 		this.currentRobotRelativeCameraPose = new Pose3d();

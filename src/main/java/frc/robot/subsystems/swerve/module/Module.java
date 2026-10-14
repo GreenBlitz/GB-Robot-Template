@@ -1,7 +1,7 @@
 package frc.robot.subsystems.swerve.module;
 
-import frc.robot.subsystems.swerve.module.extrainputs.DriveInputs;
-import frc.robot.subsystems.swerve.module.extrainputs.ModuleInputs;
+import frc.robot.subsystems.swerve.module.extrainputs.DriveInputsAutoLogged;
+import frc.robot.subsystems.swerve.module.extrainputs.ModuleInputsAutoLogged;
 import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.math.kinematics.SwerveModulePosition;
@@ -37,8 +37,8 @@ public class Module {
 	private final DriveRequests driveRequests;
 	private final DriveSignals driveSignals;
 
-	private final ModuleInputs moduleInputs;
-	private final DriveInputs driveInputs;
+	private final ModuleInputsAutoLogged moduleInputs;
+	private final DriveInputsAutoLogged driveInputs;
 
 	private SwerveModuleVelocity targetVelocity;
 	private Rotation2d startingSteerPosition;
@@ -71,8 +71,8 @@ public class Module {
 		this.targetVelocity = new SwerveModuleVelocity();
 		this.startingSteerPosition = new Rotation2d();
 		this.isClosedLoop = ModuleConstants.DEFAULT_IS_CLOSE_LOOP;
-		this.moduleInputs = new ModuleInputs();
-		this.driveInputs = new DriveInputs();
+		this.moduleInputs = new ModuleInputsAutoLogged();
+		this.driveInputs = new DriveInputsAutoLogged();
 
 		updateInputs();
 		resetSteerByEncoder();

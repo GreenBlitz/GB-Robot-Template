@@ -50,7 +50,7 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystickPlayStation usedJoystick = MAIN_JOYSTICK;
 		// bindings...
-		usedJoystick.circleButton.onTrue(new InstantCommand(() -> BrakeStateManager.setBrakeMode(BrakeMode.COAST)));
+		usedJoystick.XButton.onTrue(new InstantCommand(() -> BrakeStateManager.setBrakeMode(BrakeMode.COAST)));
 		usedJoystick.triangularButton.onTrue(new InstantCommand(() -> BrakeStateManager.setBrakeMode(BrakeMode.BRAKE)));
 	}
 

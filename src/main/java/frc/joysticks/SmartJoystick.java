@@ -10,7 +10,7 @@ import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
 import frc.utils.math.ToleranceMath;
 
-public class SmartJoystick {
+public class SmartJoystick extends GenericSmartJoystick {
 
 	private static final double DEADZONE = 0.07;
 	private static final double DEFAULT_THRESHOLD_FOR_AXIS_BUTTON = 0.1;
@@ -38,7 +38,8 @@ public class SmartJoystick {
 		this(new Joystick(joystickPorts.getPort()), deadzone, alertOnDisconnect);
 	}
 
-	private SmartJoystick(Joystick joystick, double deadzone, boolean alertOnDisconnect) {
+	public SmartJoystick(Joystick joystick, double deadzone, boolean alertOnDisconnect) {
+		super(joystick, deadzone, alertOnDisconnect);
 		this.deadzone = deadzone;
 		this.joystick = joystick;
 		this.logPath = "Joysticks/" + joystick.getPort();

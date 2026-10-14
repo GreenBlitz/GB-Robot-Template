@@ -1,7 +1,6 @@
 package frc.joysticks;
 
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
 
 public enum Axis {
 
@@ -24,7 +23,7 @@ public enum Axis {
 		return new AxisButton(joystick, id, threshold);
 	}
 
-	double getValue(Joystick joystick) {
+	double getValue(GenericHID joystick) {
 		return invertedSign * joystick.getRawAxis(id);
 	}
 

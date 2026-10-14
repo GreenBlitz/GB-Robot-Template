@@ -16,6 +16,7 @@ import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.mechanisms.MechanismSimulation;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.hardware.simulations.MechanismSimulation;
 import frc.robot.hardware.phoenix6.Phoenix6Device;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.simulation.TalonFXSimulation;

@@ -12,7 +12,6 @@ import frc.robot.RobotConstants;
 import frc.robot.hardware.FollowerInputs;
 import frc.robot.hardware.FollowerInputsAutoLogged;
 import frc.robot.hardware.interfaces.ControllableMotor;
-import frc.robot.hardware.interfaces.IDynamicMotionMagicRequest;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.simulations.MechanismSimulation;

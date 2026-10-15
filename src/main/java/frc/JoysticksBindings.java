@@ -1,8 +1,9 @@
 package frc;
 
-import frc.joysticks.Axis;
-import frc.joysticks.JoystickPorts;
-import frc.joysticks.SmartJoystick;
+import frc.controllers.joysticks.Axis;
+import frc.controllers.joysticks.JoystickPorts;
+import frc.controllers.joysticks.SmartJoystick;
+import frc.controllers.keyboard.KeyboardController;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
 
@@ -14,6 +15,7 @@ public class JoysticksBindings {
 	private static final SmartJoystick FOURTH_JOYSTICK = new SmartJoystick(JoystickPorts.FOURTH);
 	private static final SmartJoystick FIFTH_JOYSTICK = new SmartJoystick(JoystickPorts.FIFTH);
 	private static final SmartJoystick SIXTH_JOYSTICK = new SmartJoystick(JoystickPorts.SIXTH);
+	private static final KeyboardController KEYBOARD_CONTROLLER = new KeyboardController();
 
 	private static final ChassisPowers chassisDriverInputs = new ChassisPowers();
 
@@ -26,6 +28,7 @@ public class JoysticksBindings {
 		fourthJoystickButtons(robot);
 		fifthJoystickButtons(robot);
 		sixthJoystickButtons(robot);
+		keyboardButtons(robot);
 	}
 
 	public static void updateChassisDriverInputs() {
@@ -71,6 +74,11 @@ public class JoysticksBindings {
 
 	private static void sixthJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SIXTH_JOYSTICK;
+		// bindings...
+	}
+
+	private static void keyboardButtons(Robot robot) {
+		KeyboardController usedKeyboard = KEYBOARD_CONTROLLER;
 		// bindings...
 	}
 

@@ -42,7 +42,8 @@ public class RobotManager extends LoggedRobot {
 		if (Robot.ROBOT_TYPE.isReplay()) {
 			setUseTiming(false);
 		}
-		DriverStation.silenceJoystickConnectionWarning(true);
+
+        DriverStation.silenceJoystickConnectionWarning(true);
 		LoggerFactory.initializeLogger();
 		PathPlannerUtil.startPathfinder();
 		PathPlannerUtil.setupPathPlannerLogging();

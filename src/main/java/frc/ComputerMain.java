@@ -14,8 +14,8 @@ public class ComputerMain {
 		startComputerPrograms(args[0]);
 	}
 
-	private static void startComputerPrograms(String connectedIP) {
-		CMDHandler.runPythonClass(Path.of("BatteryMessage"), connectedIP);
+	public static void startComputerPrograms(String connectedIP) {
+        System.out.println("galsknv[oiasnv[0iasn[voasi[ov[osaivn[oisanv[oisn[ovinas[");        CMDHandler.runPythonClass(Path.of("BatteryMessage"), connectedIP);
 
 		if (KeyboardController.ENABLE_KEYBOARD) {
 			CMDHandler.runPythonClass(Path.of("KeyboardToNetworkTables"), connectedIP);

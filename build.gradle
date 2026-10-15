@@ -198,7 +198,6 @@ tasks.register('setVisualVMHost') {
 	}
 }
 
-tasks.named("deploy").configure { finalizedBy('runComputerPrograms') }
 tasks.register('runComputerPrograms', JavaExec) {
 	group = 'execution'
 	dependsOn('setReachableIP')

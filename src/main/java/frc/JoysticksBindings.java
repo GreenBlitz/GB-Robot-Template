@@ -1,5 +1,6 @@
 package frc;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.controllers.joysticks.Axis;
 import frc.controllers.joysticks.JoystickPorts;
 import frc.controllers.joysticks.SmartJoystick;
@@ -49,6 +50,7 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
+        usedJoystick.A.onTrue(new InstantCommand(() -> System.out.println("psifao[pinvoanms[voasv")));
 		// bindings...
 	}
 
@@ -79,6 +81,7 @@ public class JoysticksBindings {
 
 	private static void keyboardButtons(Robot robot) {
 		KeyboardController usedKeyboard = KEYBOARD_CONTROLLER;
+        usedKeyboard.FIVE.onChange(new InstantCommand(() -> System.out.println("saofj-asjfpasnf[oian[scnas[iobncv[oawn0[f9vhnwa[oivnao[sinv[oiasn[oic[")));
 		// bindings...
 	}
 

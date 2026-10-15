@@ -52,6 +52,7 @@ def create_keyboard_listener(keys_table: NetworkTable) -> keyboard.Listener:
 
 
 def track_keyboard_until_client_disconnect(keys_table: NetworkTable, keyboard_client: NetworkTableClient) -> None:
+    print("afnao[sfnas]")
     keyboard_listener = create_keyboard_listener(keys_table)
     keyboard_listener.start()
     wait_until_client_disconnect(keyboard_client)
@@ -59,8 +60,11 @@ def track_keyboard_until_client_disconnect(keys_table: NetworkTable, keyboard_cl
 
 
 def run_keyboard_tracking_client(ip: str) -> None:
+    print("afnao[sfnas]")
     keyboard_client = NetworkTableClient(ip, CLIENT_NAME)
+    print("afnao[sfnas]")
     keyboard_client.connect()
+    print("afnao[sfnassdflasnfpasnmf]iasn0]fin[a]sofnasnf[oas]")
     keys_table = keyboard_client.get_table(KEYBOARD_KEYS_TABLE)
 
     track_keyboard_until_client_disconnect(keys_table, keyboard_client)

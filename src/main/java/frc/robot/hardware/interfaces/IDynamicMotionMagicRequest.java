@@ -2,7 +2,7 @@ package frc.robot.hardware.interfaces;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
-public interface IDynamicMotionMagicRequest extends IMotionMagicRequest {
+public interface IDynamicMotionMagicRequest extends IFeedForwardRequest {
 
 	@Override
 	IDynamicMotionMagicRequest withSetPoint(Rotation2d setPoint);

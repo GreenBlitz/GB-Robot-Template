@@ -41,15 +41,16 @@ public class Pigeon2IMUBuilder {
 	}
 
 	private static Phoenix6AngleSignal buildAnglePigeonSignal(StatusSignal<?> signal, BusChain busChain) {
-		return Phoenix6SignalBuilder.build(signal, RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.DEGREES, busChain);
+		return Phoenix6SignalBuilder.buildAngleSignal(signal, RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.DEGREES, busChain);
 	}
 
 	private static AngleSignal buildAnglePigeonSignal(StatusSignal<?> signal, SignalGetter signalSlope, BusChain busChain) {
-		return Phoenix6SignalBuilder.build(signal, signalSlope, RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.DEGREES, busChain);
+		return Phoenix6SignalBuilder
+			.buildLatencySignal(signal, signalSlope.getSignal(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.DEGREES, busChain);
 	}
 
 	private static DoubleSignal buildDoublePigeonSignal(StatusSignal<?> signal, BusChain busChain) {
-		return Phoenix6SignalBuilder.build(signal, RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, busChain);
+		return Phoenix6SignalBuilder.buildDoubleSignal(signal, RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, busChain);
 	}
 
 	static IMUSignals buildSignals(Pigeon2IMU pigeon2imu) {

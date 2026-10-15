@@ -128,21 +128,25 @@ class KrakenX60SteerBuilder {
 
 	static SteerRequests buildRequests() {
 		return new SteerRequests(
-			Phoenix6RequestBuilder.build(new PositionVoltage(0), 0, true),
-			Phoenix6RequestBuilder.build(new VoltageOut(0), true)
+			Phoenix6RequestBuilder.buildVelocityPositionRequest(new PositionVoltage(0), 0, true),
+			Phoenix6RequestBuilder.buildVoltageOutRequest(new VoltageOut(0), true)
 		);
 	}
 
 	static SteerSignals buildSignals(TalonFXMotor steer) {
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
-			.build(steer.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, steer.getBusChain());
+			.buildDoubleSignal(steer.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, steer.getBusChain());
 		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder
-			.build(steer.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, steer.getBusChain());
-		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder
-			.build(steer.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, steer.getBusChain());
-		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder.build(
+			.buildDoubleSignal(steer.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, steer.getBusChain());
+		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder.buildAngleSignal(
+			steer.getDevice().getVelocity(),
+			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+			AngleUnit.ROTATIONS,
+			steer.getBusChain()
+		);
+		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder.buildLatencySignal(
 			steer.getDevice().getPosition(),
-			velocitySignal,
+			velocitySignal.getSignal(),
 			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			AngleUnit.ROTATIONS,
 			steer.getBusChain()

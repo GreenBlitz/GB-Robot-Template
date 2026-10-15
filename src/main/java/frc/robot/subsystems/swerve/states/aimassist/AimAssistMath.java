@@ -4,70 +4,96 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import frc.constants.field.Field;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveMath;
 import frc.robot.subsystems.swerve.states.SwerveState;
-import frc.utils.math.PoseMath;
+import frc.utils.math.FieldMath;
 import frc.utils.math.ToleranceMath;
 
 public class AimAssistMath {
 
-	public static ChassisSpeeds getRotationAssistedChassisSpeeds(
+	public static ChassisSpeeds getRotationAssistedSpeeds(
 		ChassisSpeeds speeds,
 		Rotation2d robotHeading,
 		Rotation2d targetHeading,
+		boolean slowDownByDriveMagnitude,
 		SwerveConstants swerveConstants
 	) {
 		Rotation2d pidOutputVelocityPerSecond = Rotation2d
 			.fromDegrees(swerveConstants.rotationDegreesPIDController().calculate(robotHeading.getDegrees(), targetHeading.getDegrees()));
 
-		Rotation2d angularVelocityPerSecond = applyMagnitudeCompensation(pidOutputVelocityPerSecond, SwerveMath.getDriveMagnitude(speeds));
+		if (slowDownByDriveMagnitude) {
+			pidOutputVelocityPerSecond = applyMagnitudeCompensation(pidOutputVelocityPerSecond, SwerveMath.getDriveMagnitude(speeds));
+		}
+
 		Rotation2d clampedAngularVelocityPerSecond = ToleranceMath
-			.clamp(angularVelocityPerSecond, swerveConstants.maxRotationalVelocityPerSecond());
+			.clamp(pidOutputVelocityPerSecond, swerveConstants.maxRotationalVelocityPerSecond());
 
 		return new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, clampedAngularVelocityPerSecond.getRadians());
 	}
 
 	/**
-	 * @formatter:off
-	 * Returns {@link ChassisSpeeds} that aligns you to the object.
-	 * The returned chassis speeds will move you horizontally to the object so your current heading will point to it.
-	 * Example (0 is object, R is robot, > is heading):
-	 * Current Pose:              Ending Pose:
-	 * |            0          |   |   R>       0          |
-	 * |                       |   |                       |
-	 * |   R>                  |   |                       |
-	 * |                       |   |                       |
-	 * @formatter:on
-	 */
-	public static ChassisSpeeds getObjectAssistedSpeeds(
+     * @formatter:off
+     * Returns {@link ChassisSpeeds} that aligns you to the object.
+     * The returned chassis speeds will move you horizontally to the object so your current heading will point to it.
+     * Example (0 is object, R is robot, > is heading):
+     * Current Pose:              Ending Pose:
+     * |            0          |   |   R>       0          |
+     * |                       |   |                       |
+     * |   R>                  |   |                       |
+     * |                       |   |                       |
+     * @formatter:on
+     */
+	public static ChassisSpeeds getObjectAssistedSpeedsSlowedDownByRotation(
 		ChassisSpeeds speeds,
 		Pose2d robotPose,
+		Rotation2d allianceRelativeTargetHeading,
 		Translation2d objectTranslation,
 		SwerveConstants swerveConstants,
-		SwerveState swerveState
+		SwerveState swerveState,
+		double magnitudeCompensationFactor,
+		boolean slowDownByRotation
 	) {
-		Translation2d objectRelativeToRobot = PoseMath.getRelativeTranslation(robotPose, objectTranslation);
-		double pidHorizontalToObjectOutputVelocityMetersPerSecond = swerveConstants.yMetersPIDController()
+		Pose2d robotPoseWithTargetHeading = new Pose2d(robotPose.getX(), robotPose.getY(), allianceRelativeTargetHeading);
+		Translation2d objectRelativeToRobot = FieldMath.getRelativeTranslation(robotPoseWithTargetHeading, objectTranslation);
+		double neededHorizontalVelocityRelativeToObjectMetersPerSecond = swerveConstants.yMetersPIDController()
 			.calculate(0, objectRelativeToRobot.getY());
 
-		return switch (swerveState.getDriveMode()) {
-			case ROBOT_RELATIVE:
-				new ChassisSpeeds(speeds.vxMetersPerSecond, pidHorizontalToObjectOutputVelocityMetersPerSecond, speeds.omegaRadiansPerSecond);
-
-			case ALLIANCE_RELATIVE:
-				ChassisSpeeds robotRelativeSpeeds = SwerveMath.allianceToRobotRelativeSpeeds(speeds, robotPose.getRotation());
-				ChassisSpeeds assistedSpeed = new ChassisSpeeds(
-					robotRelativeSpeeds.vxMetersPerSecond,
-					pidHorizontalToObjectOutputVelocityMetersPerSecond,
-					robotRelativeSpeeds.omegaRadiansPerSecond
-				);
-				yield SwerveMath.robotToAllianceRelativeSpeeds(assistedSpeed, robotPose.getRotation());
+		Rotation2d targetHeadingHingeSystemAngle = switch (swerveState.getDriveRelative()) {
+			case ALLIANCE_RELATIVE -> Field.getAllianceRelative(allianceRelativeTargetHeading);
+			case ROBOT_RELATIVE -> allianceRelativeTargetHeading.minus(robotPose.getRotation());
 		};
+
+		ChassisSpeeds targetHeadingRelativeSpeeds = SwerveMath.allianceToRobotRelativeSpeeds(speeds, targetHeadingHingeSystemAngle);
+		ChassisSpeeds assistedSpeeds = new ChassisSpeeds(
+			targetHeadingRelativeSpeeds.vxMetersPerSecond,
+			neededHorizontalVelocityRelativeToObjectMetersPerSecond,
+			targetHeadingRelativeSpeeds.omegaRadiansPerSecond
+		);
+
+		if (slowDownByRotation) {
+			assistedSpeeds.vxMetersPerSecond = applyMagnitudeCompensation(
+				targetHeadingRelativeSpeeds.vxMetersPerSecond,
+				Math.abs(speeds.omegaRadiansPerSecond),
+				magnitudeCompensationFactor
+			);
+			assistedSpeeds.vyMetersPerSecond = applyMagnitudeCompensation(
+				neededHorizontalVelocityRelativeToObjectMetersPerSecond,
+				Math.abs(speeds.omegaRadiansPerSecond),
+				magnitudeCompensationFactor
+			);
+		}
+
+		return SwerveMath.robotToAllianceRelativeSpeeds(assistedSpeeds, targetHeadingHingeSystemAngle);
 	}
 
-	public static Rotation2d applyMagnitudeCompensation(Rotation2d velocityPerSecond, double magnitude) {
+	private static Rotation2d applyMagnitudeCompensation(Rotation2d velocityPerSecond, double magnitude) {
 		return velocityPerSecond.times(SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR).div(magnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
+	}
+
+	private static double applyMagnitudeCompensation(double velocityPerSecond, double magnitude, double factor) {
+		return velocityPerSecond * (SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR) / (magnitude + factor);
 	}
 
 }

@@ -4,16 +4,25 @@ import java.util.ArrayList;
 
 public class AlertManager {
 
-	private static final ArrayList<PeriodicAlert> alerts = new ArrayList<>();
+	private static final ArrayList<PeriodicAlert> periodicAlerts = new ArrayList<>();
+	private static final ArrayList<Alert> reportedAlerts = new ArrayList<>();
 
 	public static void addAlert(PeriodicAlert periodicAlert) {
-		alerts.add(periodicAlert);
+		periodicAlerts.add(periodicAlert);
 	}
 
 	public static void reportAlerts() {
-		for (PeriodicAlert alert : alerts) {
+		for (PeriodicAlert alert : periodicAlerts) {
 			alert.reportByCondition();
 		}
+	}
+
+	public static ArrayList<PeriodicAlert> getPeriodicAlerts() {
+		return periodicAlerts;
+	}
+
+	public static ArrayList<Alert> getReportedAlerts() {
+		return reportedAlerts;
 	}
 
 }

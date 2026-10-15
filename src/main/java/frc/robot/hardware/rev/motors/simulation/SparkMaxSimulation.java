@@ -2,7 +2,7 @@ package frc.robot.hardware.rev.motors.simulation;
 
 import com.revrobotics.sim.SparkMaxSim;
 import edu.wpi.first.math.system.plant.DCMotor;
-import frc.robot.hardware.mechanisms.MechanismSimulation;
+import frc.robot.hardware.simulations.MechanismSimulation;
 import frc.robot.hardware.rev.motors.SparkMaxWrapper;
 import frc.utils.Conversions;
 import frc.utils.battery.BatteryUtil;
@@ -32,7 +32,7 @@ public class SparkMaxSimulation {
 		mechanismSimulation.setInputVoltage(getVoltage());
 		mechanismSimulation.updateMotor();
 		simulation.iterate(
-			Conversions.perSecondToPerMinute(mechanismSimulation.getRotorVelocityAnglesPerSecond().getRotations()),
+			Conversions.perSecondToPerMinute(mechanismSimulation.getRotorVelocityRPS().getRotations()),
 			BatteryUtil.getCurrentVoltage(),
 			TimeUtil.getLatestCycleTimeSeconds()
 		);

@@ -1,13 +1,15 @@
 package frc;
 
-import frc.controllers.joysticks.JoystickPorts;
-import frc.controllers.joysticks.SmartJoystick;
+import frc.joysticks.Axis;
+import frc.joysticks.JoystickPorts;
+import frc.joysticks.SmartJoystick;
 import frc.controllers.keyboard.KeyboardController;
 import frc.robot.Robot;
+import frc.robot.subsystems.swerve.ChassisPowers;
 
 public class JoysticksBindings {
 
-	private static final SmartJoystick MAIN_JOYSTICK = new SmartJoystick(JoystickPorts.MAIN);
+	private static final SmartJoystick MAIN_JOYSTICK = new SmartJoystick(JoystickPorts.MAIN, true);
 	private static final SmartJoystick SECOND_JOYSTICK = new SmartJoystick(JoystickPorts.SECOND);
 	private static final SmartJoystick THIRD_JOYSTICK = new SmartJoystick(JoystickPorts.THIRD);
 	private static final SmartJoystick FOURTH_JOYSTICK = new SmartJoystick(JoystickPorts.FOURTH);
@@ -15,7 +17,11 @@ public class JoysticksBindings {
 	private static final SmartJoystick SIXTH_JOYSTICK = new SmartJoystick(JoystickPorts.SIXTH);
 	private static final KeyboardController KEYBOARD_CONTROLLER = new KeyboardController();
 
+	private static final ChassisPowers chassisDriverInputs = new ChassisPowers();
+
 	public static void configureBindings(Robot robot) {
+		robot.getSwerve().setDriversPowerInputs(chassisDriverInputs);
+
 		mainJoystickButtons(robot);
 		secondJoystickButtons(robot);
 		thirdJoystickButtons(robot);
@@ -23,6 +29,22 @@ public class JoysticksBindings {
 		fifthJoystickButtons(robot);
 		sixthJoystickButtons(robot);
 		keyboardButtons(robot);
+	}
+
+	public static void updateChassisDriverInputs() {
+		if (MAIN_JOYSTICK.isConnected()) {
+			chassisDriverInputs.xPower = MAIN_JOYSTICK.getAxisValue(Axis.LEFT_Y);
+			chassisDriverInputs.yPower = MAIN_JOYSTICK.getAxisValue(Axis.LEFT_X);
+			chassisDriverInputs.rotationalPower = MAIN_JOYSTICK.getAxisValue(Axis.RIGHT_X);
+		} else if (THIRD_JOYSTICK.isConnected()) {
+			chassisDriverInputs.xPower = THIRD_JOYSTICK.getAxisValue(Axis.LEFT_Y);
+			chassisDriverInputs.yPower = THIRD_JOYSTICK.getAxisValue(Axis.LEFT_X);
+			chassisDriverInputs.rotationalPower = THIRD_JOYSTICK.getAxisValue(Axis.RIGHT_X);
+		} else {
+			chassisDriverInputs.xPower = 0;
+			chassisDriverInputs.yPower = 0;
+			chassisDriverInputs.rotationalPower = 0;
+		}
 	}
 
 	private static void mainJoystickButtons(Robot robot) {

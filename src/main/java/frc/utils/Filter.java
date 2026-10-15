@@ -1,33 +1,64 @@
 package frc.utils;
 
-import java.util.function.Function;
+@FunctionalInterface
+public interface Filter {
 
-public class Filter<T> {
+	boolean passesFilter();
 
-	private final Function<T, Boolean> filter;
-
-	public Filter(Function<T, Boolean> filter) {
-		this.filter = filter;
+	default Filter not() {
+		return () -> !passesFilter();
 	}
 
-	public static <T> Filter<T> nonFilteringFilter() {
-		return new Filter<>(data -> true);
+	default Filter and(Filter other) {
+		return () -> passesFilter() && other.passesFilter();
 	}
 
-	public boolean apply(T data) {
-		return filter.apply(data);
+	default Filter or(Filter other) {
+		return () -> passesFilter() || other.passesFilter();
 	}
 
-	public Filter<T> and(Filter<T> otherFilter) {
-		return new Filter<>(data -> apply(data) && otherFilter.apply(data));
+	default Filter xor(Filter other) {
+		return () -> passesFilter() ^ other.passesFilter();
 	}
 
-	public Filter<T> or(Filter<T> otherFilter) {
-		return new Filter<>(data -> apply(data) || otherFilter.apply(data));
+	default Filter nand(Filter other) {
+		return and(other).not();
 	}
 
-	public <E extends T> Filter<E> polymorphAs() {
-		return new Filter<>(this::apply);
+	default Filter nor(Filter other) {
+		return or(other).not();
+	}
+
+	default Filter xnor(Filter other) {
+		return xor(other).not();
+	}
+
+	default Filter implies(Filter other) {
+		return not().or(other);
+	}
+
+	static Filter nonFilteringFilter() {
+		return () -> true;
+	}
+
+	static Filter alwaysFilteringFilter() {
+		return () -> false;
+	}
+
+	static Filter orAll(Filter... filters) {
+		Filter output = alwaysFilteringFilter();
+		for (Filter filter : filters) {
+			output = output.or(filter);
+		}
+		return output;
+	}
+
+	static Filter andAll(Filter... filters) {
+		Filter output = nonFilteringFilter();
+		for (Filter filter : filters) {
+			output = output.and(filter);
+		}
+		return output;
 	}
 
 }

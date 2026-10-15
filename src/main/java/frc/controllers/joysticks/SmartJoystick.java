@@ -1,13 +1,14 @@
 package frc.controllers.joysticks;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.robot.Robot;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
+import frc.utils.math.ToleranceMath;
 
 public class SmartJoystick {
 
@@ -26,10 +27,18 @@ public class SmartJoystick {
 	}
 
 	public SmartJoystick(JoystickPorts joystickPort, double deadzone) {
-		this(new Joystick(joystickPort.getPort()), deadzone);
+		this(new Joystick(joystickPort.getPort()), deadzone, false);
 	}
 
-	private SmartJoystick(Joystick joystick, double deadzone) {
+	public SmartJoystick(JoystickPorts joystickPorts, boolean alertOnDisconnect) {
+		this(new Joystick(joystickPorts.getPort()), DEADZONE, alertOnDisconnect);
+	}
+
+	public SmartJoystick(JoystickPorts joystickPorts, double deadzone, boolean alertOnDisconnect) {
+		this(new Joystick(joystickPorts.getPort()), deadzone, alertOnDisconnect);
+	}
+
+	private SmartJoystick(Joystick joystick, double deadzone, boolean alertOnDisconnect) {
 		this.deadzone = deadzone;
 		this.joystick = joystick;
 		this.logPath = "Joysticks/" + joystick.getPort();
@@ -53,7 +62,9 @@ public class SmartJoystick {
 		this.POV_DOWN = new POVButton(this.joystick, ButtonID.POV_DOWN.getId());
 		this.POV_LEFT = new POVButton(this.joystick, ButtonID.POV_LEFT.getId());
 
-		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "/DisconnectedAt", () -> !isConnected()));
+		if (Robot.ROBOT_TYPE.isReal() && alertOnDisconnect) {
+			AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "/DisconnectedAt", () -> !isConnected(), true));
+		}
 	}
 
 	public String getLogPath() {
@@ -91,7 +102,7 @@ public class SmartJoystick {
 	}
 
 	private static double applyDeadzone(double power, double deadzone) {
-		return MathUtil.applyDeadband(power, deadzone);
+		return ToleranceMath.applyDeadband(power, deadzone);
 	}
 
 	public AxisButton getAxisAsButton(Axis axis) {

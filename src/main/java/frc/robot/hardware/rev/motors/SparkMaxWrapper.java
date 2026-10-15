@@ -12,14 +12,14 @@ public class SparkMaxWrapper extends SparkMax {
 
 	public SparkMaxWrapper(SparkMaxDeviceID deviceID) {
 		super(deviceID.id(), deviceID.type());
-		applyConfiguration(new SparkMaxConfiguration().withResetMode(ResetMode.kResetSafeParameters));
+		applyConfiguration(new SparkMaxConfiguration().withResetMode(com.revrobotics.ResetMode.kResetSafeParameters));
 	}
 
 	public double getVoltage() {
 		return getAppliedOutput() * getBusVoltage();
 	}
 
-	public Rotation2d getVelocityAnglePerSecond() {
+	public Rotation2d getVelocityRPS() {
 		return Rotation2d.fromRotations(Conversions.perMinuteToPerSecond(getEncoder().getVelocity()));
 	}
 

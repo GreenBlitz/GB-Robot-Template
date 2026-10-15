@@ -47,11 +47,12 @@ public class SysIdCalibrator {
 	 * @param smartJoystick - the joystick to apply the buttons on
 	 */
 	public void setAllButtonsForCalibration(SmartJoystick smartJoystick) {
+		smartJoystick.START.onTrue(new InstantCommand(SignalLogger::start));
 		smartJoystick.A.whileTrue(getSysIdCommand(true, SysIdRoutine.Direction.kForward));
 		smartJoystick.B.whileTrue(getSysIdCommand(true, SysIdRoutine.Direction.kReverse));
 		smartJoystick.X.whileTrue(getSysIdCommand(false, SysIdRoutine.Direction.kForward));
 		smartJoystick.Y.whileTrue(getSysIdCommand(false, SysIdRoutine.Direction.kReverse));
-		smartJoystick.START.onTrue(new InstantCommand(SignalLogger::stop));
+		smartJoystick.BACK.onTrue(new InstantCommand(SignalLogger::stop));
 	}
 
 	public Command getSysIdCommand(boolean isQuasistatic, SysIdRoutine.Direction direction) {
@@ -60,12 +61,12 @@ public class SysIdCalibrator {
 
 	public Command getSysIdQuasistatic(SysIdRoutine.Direction direction) {
 		Command command = sysIdRoutine.quasistatic(direction);
-		return getAppropriateCommand(command);
+		return usedSubsystem.asSubsystemCommand(getAppropriateCommand(command), "Sysid quasistatic " + direction);
 	}
 
 	public Command getSysIdDynamic(SysIdRoutine.Direction direction) {
 		Command command = sysIdRoutine.dynamic(direction);
-		return getAppropriateCommand(command);
+		return usedSubsystem.asSubsystemCommand(getAppropriateCommand(command), "Sysid dynamic " + direction);
 	}
 
 	private Command getAppropriateCommand(Command sysIdCommand) {

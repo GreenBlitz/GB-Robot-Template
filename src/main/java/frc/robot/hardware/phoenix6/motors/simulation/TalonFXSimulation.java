@@ -5,7 +5,7 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import frc.robot.hardware.phoenix6.motors.TalonFXWrapper;
-import frc.robot.hardware.mechanisms.MechanismSimulation;
+import frc.robot.hardware.simulations.MechanismSimulation;
 import frc.utils.battery.BatteryUtil;
 
 public class TalonFXSimulation {
@@ -13,13 +13,20 @@ public class TalonFXSimulation {
 	private final double ROTOR_TO_SENSOR_RATIO = 1.0;
 
 	private final TalonFXSimState motorSimState;
+	private final TalonFXSimState[] followerSimStates;
 	private final MechanismSimulation mechanismSimulation;
 
-	public TalonFXSimulation(TalonFXWrapper talonFXWrapper, MechanismSimulation simulation) {
+	public TalonFXSimulation(TalonFXWrapper talonFXWrapper, MechanismSimulation simulation, TalonFXWrapper[] followers) {
 		this.mechanismSimulation = simulation;
 		this.motorSimState = talonFXWrapper.getSimState();
+		this.followerSimStates = new TalonFXSimState[followers.length];
 
+		for (int i = 0; i < followerSimStates.length; i++) {
+			followerSimStates[i] = followers[i].getSimState();
+			followerSimStates[i].setSupplyVoltage(BatteryUtil.DEFAULT_VOLTAGE);
+		}
 		motorSimState.setSupplyVoltage(BatteryUtil.DEFAULT_VOLTAGE);
+		updateMotor();
 	}
 
 	public void applyConfig(TalonFXWrapper talonFXWrapper, TalonFXConfiguration configuration) {
@@ -36,7 +43,12 @@ public class TalonFXSimulation {
 		mechanismSimulation.setInputVoltage(motorSimState.getMotorVoltage());
 		mechanismSimulation.updateMotor();
 		motorSimState.setRawRotorPosition(mechanismSimulation.getRotorPosition().getRotations());
-		motorSimState.setRotorVelocity(mechanismSimulation.getRotorVelocityAnglesPerSecond().getRotations());
+		motorSimState.setRotorVelocity(mechanismSimulation.getRotorVelocityRPS().getRotations());
+
+		for (TalonFXSimState followerSimState : followerSimStates) {
+			followerSimState.setRotorVelocity(mechanismSimulation.getRotorVelocityRPS().getRotations());
+			followerSimState.setRawRotorPosition(mechanismSimulation.getRotorPosition().getRotations());
+		}
 	}
 
 }

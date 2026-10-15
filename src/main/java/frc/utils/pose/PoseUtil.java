@@ -1,52 +1,79 @@
 package frc.utils.pose;
 
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import frc.utils.TimedValue;
-import frc.robot.poseestimator.Pose2dComponentsValue;
-import frc.robot.poseestimator.Pose3dComponentsValue;
-import edu.wpi.first.math.geometry.Pose2d;
-import frc.robot.vision.data.VisionData;
-import frc.utils.AngleUnit;
-import frc.utils.alerts.Alert;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.utils.math.ToleranceMath;
 
 public class PoseUtil {
 
-	public static Pose3d poseArrayToPose3D(double[] poseArray, AngleUnit angleUnit) {
-		int requiredAmount = Pose3dComponentsValue.POSE3D_COMPONENTS_AMOUNT;
-		if (poseArray.length != requiredAmount) {
-			new Alert(Alert.AlertType.WARNING, "gotBadPoseArrayWith" + poseArray.length + "ElementsInsteadOf" + requiredAmount);
-		}
-		return new Pose3d(
-			new Translation3d(
-				poseArray[Pose3dComponentsValue.X_VALUE.getIndex()],
-				poseArray[Pose3dComponentsValue.Y_VALUE.getIndex()],
-				poseArray[Pose3dComponentsValue.Z_VALUE.getIndex()]
-			),
-			new Rotation3d(
-				angleUnit.toRotation2d(poseArray[Pose3dComponentsValue.ROLL_VALUE.getIndex()]).getRadians(),
-				angleUnit.toRotation2d(poseArray[Pose3dComponentsValue.PITCH_VALUE.getIndex()]).getRadians(),
-				angleUnit.toRotation2d(poseArray[Pose3dComponentsValue.YAW_VALUE.getIndex()]).getRadians()
-			)
-		);
+	public static boolean isAccelerationHigh(Translation2d imuAccelerationG, double minimumIMUAccelerationG) {
+		return imuAccelerationG.getNorm() >= minimumIMUAccelerationG;
 	}
 
-	public static Pose2d poseArrayToPose2D(double[] poseArray, AngleUnit angleUnit) {
-		int requiredAmount = Pose2dComponentsValue.POSE2D_COMPONENTS_AMOUNT;
-		if (poseArray.length != requiredAmount) {
-			new Alert(Alert.AlertType.WARNING, "gotBadPoseArrayWith" + poseArray.length + "ElementsInsteadOf" + requiredAmount);
-		}
-		return new Pose2d(
-			poseArray[Pose2dComponentsValue.X_VALUE.getIndex()],
-			poseArray[Pose2dComponentsValue.X_VALUE.getIndex()],
-			angleUnit.toRotation2d(poseArray[Pose2dComponentsValue.ROTATION_VALUE.getIndex()])
-		);
+	public static boolean isTilted(Rotation2d imuRoll, Rotation2d imuPitch, Rotation2d minimumTiltIMURoll, Rotation2d minimumTiltIMUPitch) {
+		return Math.abs(imuRoll.getRadians()) >= minimumTiltIMURoll.getRadians()
+			|| Math.abs(imuPitch.getRadians()) >= minimumTiltIMUPitch.getRadians();
 	}
 
-	public static TimedValue<Rotation2d> visionDataToHeadingData(VisionData visionData) {
-		return new TimedValue<>(visionData.getEstimatedPose().getRotation().toRotation2d(), visionData.getTimestamp());
+	public static boolean areModulesSkidding(
+		SwerveDriveKinematics kinematics,
+		SwerveModuleState[] moduleStates,
+		double minimumSkidRobotToModuleVelocityDifferenceMetersPerSecond,
+		double maximumNegligibleVectorNorm
+	) {
+		ChassisSpeeds swerveVelocity = kinematics.toChassisSpeeds(moduleStates);
+		Translation2d swerveTranslationalVelocityMetersPerSecond = new Translation2d(
+			swerveVelocity.vxMetersPerSecond,
+			swerveVelocity.vyMetersPerSecond
+		);
+
+		SwerveModuleState[] moduleRotationalStates = kinematics
+			.toSwerveModuleStates(new ChassisSpeeds(0, 0, swerveVelocity.omegaRadiansPerSecond));
+		SwerveModuleState[] moduleTranslationalStates = getModuleTranslationalStates(
+			moduleStates,
+			moduleRotationalStates,
+			maximumNegligibleVectorNorm
+		);
+
+		for (SwerveModuleState moduleTranslationalState : moduleTranslationalStates) {
+			if (
+				!ToleranceMath.isNear(
+					swerveTranslationalVelocityMetersPerSecond,
+					new Translation2d(moduleTranslationalState.speedMetersPerSecond, moduleTranslationalState.angle),
+					minimumSkidRobotToModuleVelocityDifferenceMetersPerSecond
+				)
+			) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static SwerveModuleState[] getModuleTranslationalStates(
+		SwerveModuleState[] moduleStates,
+		SwerveModuleState[] moduleRotationalStates,
+		double maximumNegligibleVectorNorm
+	) {
+		SwerveModuleState[] moduleTranslationalStates = new SwerveModuleState[Math.min(moduleStates.length, moduleRotationalStates.length)];
+		for (int i = 0; i < moduleTranslationalStates.length; i++) {
+			moduleTranslationalStates[i] = getModuleTranslationalState(moduleStates[i], moduleRotationalStates[i], maximumNegligibleVectorNorm);
+		}
+		return moduleTranslationalStates;
+	}
+
+	private static SwerveModuleState getModuleTranslationalState(
+		SwerveModuleState moduleState,
+		SwerveModuleState moduleRotationalState,
+		double maximumNegligibleVectorNorm
+	) {
+		Translation2d velocityDifference = new Translation2d(moduleState.speedMetersPerSecond, moduleState.angle)
+			.minus(new Translation2d(moduleRotationalState.speedMetersPerSecond, moduleRotationalState.angle));
+		return velocityDifference.getNorm() > maximumNegligibleVectorNorm
+			? new SwerveModuleState(velocityDifference.getNorm(), velocityDifference.getAngle())
+			: new SwerveModuleState();
 	}
 
 }

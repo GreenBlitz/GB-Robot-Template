@@ -1,6 +1,5 @@
 package frc.robot.subsystems.swerve.module;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -8,7 +7,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.constants.MathConstants;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IAngleEncoder;
-import frc.robot.subsystems.swerve.module.extrainputs.DriveCouplingInputsAutoLogged;
 import frc.robot.subsystems.swerve.module.extrainputs.DriveInputsAutoLogged;
 import frc.robot.subsystems.swerve.module.extrainputs.ModuleInputsAutoLogged;
 import frc.robot.subsystems.swerve.module.records.DriveRequests;
@@ -41,7 +39,6 @@ public class Module {
 
 	private final ModuleInputsAutoLogged moduleInputs;
 	private final DriveInputsAutoLogged driveInputs;
-	private final DriveCouplingInputsAutoLogged driveCouplingInputs;
 
 	private SwerveModuleState targetState;
 	private Rotation2d startingSteerPosition;
@@ -76,10 +73,13 @@ public class Module {
 		this.isClosedLoop = ModuleConstants.DEFAULT_IS_CLOSE_LOOP;
 		this.moduleInputs = new ModuleInputsAutoLogged();
 		this.driveInputs = new DriveInputsAutoLogged();
-		this.driveCouplingInputs = new DriveCouplingInputsAutoLogged();
 
 		updateInputs();
 		resetSteerByEncoder();
+	}
+
+	public ModuleSpecificConstants getConstants() {
+		return constants;
 	}
 
 	public SysIdCalibrator.SysIdConfigInfo getSteerSysIdConfigInfo() {
@@ -100,14 +100,14 @@ public class Module {
 
 
 	private void fixDriveInputsCoupling() {
-		driveCouplingInputs.uncoupledVelocityAnglesPerSecond = ModuleUtil
+		driveInputs.uncoupledVelocityAnglesPerSecond = ModuleUtil
 			.uncoupleDriveAngle(driveSignals.velocity().getLatestValue(), steerSignals.velocity().getLatestValue(), constants.couplingRatio());
 
-		driveCouplingInputs.uncoupledPositions = new Rotation2d[driveSignals.position().asArray().length];
-		for (int i = 0; i < driveCouplingInputs.uncoupledPositions.length; i++) {
+		driveInputs.uncoupledPositions = new Rotation2d[driveSignals.position().asArray().length];
+		for (int i = 0; i < driveInputs.uncoupledPositions.length; i++) {
 			Rotation2d steerDelta = Rotation2d
 				.fromRotations(steerSignals.position().asArray()[i].getRotations() - startingSteerPosition.getRotations());
-			driveCouplingInputs.uncoupledPositions[i] = ModuleUtil
+			driveInputs.uncoupledPositions[i] = ModuleUtil
 				.uncoupleDriveAngle(driveSignals.position().asArray()[i], steerDelta, constants.couplingRatio());
 		}
 	}
@@ -122,15 +122,14 @@ public class Module {
 
 		fixDriveInputsCoupling();
 
-		driveInputs.velocityMetersPerSecond = toDriveMeters(driveCouplingInputs.uncoupledVelocityAnglesPerSecond);
-		driveInputs.positionsMeters = Arrays.stream(driveCouplingInputs.uncoupledPositions).mapToDouble(this::toDriveMeters).toArray();
+		driveInputs.velocityMetersPerSecond = toDriveMeters(driveInputs.uncoupledVelocityAnglesPerSecond);
+		driveInputs.positionsMeters = Arrays.stream(driveInputs.uncoupledPositions).mapToDouble(this::toDriveMeters).toArray();
 
 		moduleInputs.isClosedLoop = isClosedLoop;
 		moduleInputs.targetState = targetState;
 
-		Logger.processInputs(constants.logPath(), moduleInputs);
-		Logger.processInputs(constants.logPath() + "/Drive", driveInputs);
-		Logger.processInputs(constants.logPath() + "/Drive", driveCouplingInputs);
+		Logger.processInputs(constants.logPath() + "/ModuleControl", moduleInputs);
+		Logger.processInputs(constants.logPath() + "/DriveConversions", driveInputs);
 	}
 
 
@@ -156,6 +155,9 @@ public class Module {
 		drive.stop();
 	}
 
+	public void setDriveCurrent(double current) {
+		drive.applyRequest(driveRequests.torqueCurrent().withSetPoint(current));
+	}
 
 	public void setDriveVoltage(double voltage) {
 		setDriveVoltage(voltage, false);
@@ -268,7 +270,7 @@ public class Module {
 	}
 
 	public Rotation2d getDrivePosition() {
-		return driveCouplingInputs.uncoupledPositions[driveCouplingInputs.uncoupledPositions.length - 1];
+		return driveInputs.uncoupledPositions[driveInputs.uncoupledPositions.length - 1];
 	}
 
 	public double getDriveVelocityMetersPerSecond() {
@@ -281,7 +283,7 @@ public class Module {
 
 
 	public boolean isAtTargetVelocity(double speedToleranceMetersPerSecond) {
-		return MathUtil.isNear(getTargetState().speedMetersPerSecond, getDriveVelocityMetersPerSecond(), speedToleranceMetersPerSecond);
+		return ToleranceMath.isNear(getTargetState().speedMetersPerSecond, getDriveVelocityMetersPerSecond(), speedToleranceMetersPerSecond);
 	}
 
 	public boolean isSteerAtTargetPosition(Rotation2d steerPositionTolerance, Rotation2d steerVelocityPerSecondDeadband) {

@@ -1,0 +1,3 @@
+- [ ] AutonomousInit/Exit independence
+- [ ] RobotCommander current state in constructor
+- [ ] Swerve setting in RobotCommander constructor

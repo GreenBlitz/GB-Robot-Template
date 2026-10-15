@@ -3,32 +3,40 @@ package frc.robot.poseestimator.WPILibPoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.utils.math.StandardDeviations2D;
-import frc.robot.vision.data.AprilTagVisionData;
 
-import java.util.function.Function;
 
 public class WPILibPoseEstimatorConstants {
 
-	public static final String WPILIB_POSEESTIMATOR_LOGPATH = "WPILibPoseEstimator/";
+	public static final String WPILIB_POSEESTIMATOR_LOGPATH = "WPILibPoseEstimator";
 
-	//@formatter:off
-	public static final StandardDeviations2D DEFAULT_ODOMETRY_STANDARD_DEVIATIONS = new StandardDeviations2D(
-		0.003,
-		0.003,
-		0.003
-	);
+	public static final StandardDeviations2D DEFAULT_ODOMETRY_STD_DEV = new StandardDeviations2D(0.05, 0.05, 0.003);
 
-	public static final StandardDeviations2D DEFAULT_VISION_STANDARD_DEVIATIONS = new StandardDeviations2D(
-		0.0003,
-		0.0003,
-		0.003
-	);
-	//formatter:on
+	public static final StandardDeviations2D DEFAULT_VISION_STD_DEV = new StandardDeviations2D(0.0003, 0.0003, 0.003);
 
-	public static final Rotation2d INITIAL_GYRO_ANGLE = new Rotation2d();
+	public static final StandardDeviations2D VISION_STD_DEV_COLLISION_REDUCTION = new StandardDeviations2D();
+
+	public static final double MINIMUM_COLLISION_IMU_ACCELERATION_G = 2;
+
+	public static final Rotation2d MINIMUM_TILT_IMU_ROLL = Rotation2d.fromDegrees(4);
+
+	public static final Rotation2d MINIMUM_TILT_IMU_PITCH = Rotation2d.fromDegrees(4);
+
+	public static final double MINIMUM_SKID_ROBOT_TO_MODULE_VELOCITY_DIFFERENCE_METERS_PER_SECOND = 0.5;
+
+	public static final Rotation2d INITIAL_IMU_YAW = new Rotation2d();
 
 	public static final Pose2d STARTING_ODOMETRY_POSE = new Pose2d();
 
-	public static final Function<AprilTagVisionData, StandardDeviations2D> VISION_STANDARD_DEVIATIONS_TRANSFORM = aprilTagVisionData -> new StandardDeviations2D(Math.pow(aprilTagVisionData.getDistanceFromAprilTagMeters(), 2));
+	public static final double ODOMETRY_POSE_PREDICTION_TIME_SECONDS = 1;
+
+	public static final int POSE_TO_IMU_YAW_DIFFERENCE_BUFFER_SIZE = 50;
+
+	public static double MAX_POSE_TO_IMU_YAW_DIFFERENCE_STD_DEV = 0.0025;
+
+	public static double IMU_YAW_BUFFER_SIZE_SECONDS = 2;
+
+	public static double IMU_3D_ACCELERATION_G_BUFFER_SIZE_SECONDS = 2;
+
+	public static double MAXIMUM_NEGLIGIBLE_VECTOR_NORM = 1e-6;
 
 }

@@ -3,6 +3,7 @@ package frc.robot.hardware.phoenix6.motors;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -183,7 +184,7 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 	@Override
 	public void applyRequest(IRequest<?> request) {
 		if (request instanceof Phoenix6Request<?> phoenix6Request) {
-			if (phoenix6Request instanceof IDynamicMotionMagicRequest) {
+			if (phoenix6Request.getControlRequest() instanceof MotionMagicVoltage) {
 				motor.stopMotor();
 			}
 			motor.setControl(phoenix6Request.getControlRequest());

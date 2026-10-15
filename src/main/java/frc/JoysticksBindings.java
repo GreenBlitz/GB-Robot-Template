@@ -1,8 +1,8 @@
 package frc;
 
-import frc.joysticks.Axis;
-import frc.joysticks.JoystickPorts;
-import frc.joysticks.SmartJoystick;
+import frc.controllers.joysticks.Axis;
+import frc.controllers.joysticks.JoystickPorts;
+import frc.controllers.joysticks.SmartJoystick;
 import frc.controllers.keyboard.KeyboardController;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;

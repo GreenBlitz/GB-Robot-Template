@@ -1,6 +1,6 @@
 package frc.robot.vision.cameras.limelight;
 
-import edu.wpi.first.math.geometry.*;
+import org.wpilib.math.geometry.*;
 import frc.robot.vision.DetectedObjectObservation;
 import frc.robot.vision.RobotPoseObservation;
 import frc.robot.vision.cameras.limelight.inputs.LimelightInputsSet;
@@ -75,9 +75,9 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		if (pipeline.isNeuralDetecting()) {
 			neuralDetections.clear();
 
-			inputs.neuralDetectionInputs().target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
-			inputs.neuralDetectionInputs().rawDetections = LimelightHelpers.getRawDetections(name);
-			Logger.processInputs(logPath + "/neuralDetectionInputs", inputs.neuralDetectionInputs());
+//			inputs.neuralDetectionInputs().target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
+//			inputs.neuralDetectionInputs().rawDetections = LimelightHelpers.getRawDetections(name);
+//			Logger.processInputs(logPath + "/neuralDetectionInputs", inputs.neuralDetectionInputs());
 
 			if (getTarget2dValues().isValid()) {
 				for (LimelightHelpers.RawDetection rawDetection : getRawDetections()) {
@@ -106,7 +106,6 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		if (pipeline.isColorDetecting()) {
 			colorDetections.clear();
 
-			inputs.colorDetectionInputs().target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
 			inputs.colorDetectionInputs().rawTargets = LimelightHelpers.getRawTargets(name);
 			Logger.processInputs(logPath + "/colorDetectionInputs", inputs.colorDetectionInputs());
 
@@ -135,9 +134,9 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	public void updateMT1() {
 		if (pipeline.isUsingMT()) {
-			inputs.mt1Inputs().mtRawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
-			inputs.mt1Inputs().primaryTagPoseInCameraSpace = LimelightHelpers.getTargetPose3d_CameraSpace(name);
-			Logger.processInputs(logPath + "/mt1Inputs", inputs.mt1Inputs());
+//			inputs.mt1Inputs().mtRawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
+//			inputs.mt1Inputs().primaryTagPoseInCameraSpace = LimelightHelpers.getTargetPose3d_CameraSpace(name);
+//			Logger.processInputs(logPath + "/mt1Inputs", inputs.mt1Inputs());
 
 			mt1PoseObservation = new RobotPoseObservation(
 				getMT1RawData().timestampSeconds(),
@@ -153,9 +152,9 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 
 	public void updateMT2() {
 		if (pipeline.isUsingMT()) {
-			inputs.mt2Inputs().mtRawData = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
-			inputs.mt2Inputs().primaryTagPoseInCameraSpace = LimelightHelpers.getTargetPose3d_CameraSpace(name);
-			Logger.processInputs(logPath + "/mt2Inputs", inputs.mt2Inputs());
+//			inputs.mt2Inputs().mtRawData = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
+//			inputs.mt2Inputs().primaryTagPoseInCameraSpace = LimelightHelpers.getTargetPose3d_CameraSpace(name);
+//			Logger.processInputs(logPath + "/mt2Inputs", inputs.mt2Inputs());
 
 			mt2PoseObservation = new RobotPoseObservation(
 				getMT2RawData().timestampSeconds(),
@@ -170,9 +169,9 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	public void updateHardwareInputs() {
-		inputs.hardwareInputs().connected = LimelightHelpersAdditions.getIsConnected(name);
-		inputs.hardwareInputs().temperatureCelsius = LimelightHelpersAdditions.getTemperatureCelsius(name);
-		Logger.processInputs(logPath, inputs.hardwareInputs());
+//		inputs.hardwareInputs().connected = LimelightHelpersAdditions.getIsConnected(name);
+//		inputs.hardwareInputs().temperatureCelsius = LimelightHelpersAdditions.getTemperatureCelsius(name);
+//		Logger.processInputs(logPath, inputs.hardwareInputs());
 	}
 
 	public String getName() {
@@ -282,11 +281,11 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	protected LimelightTarget2dValues getTarget2dValues() {
-		if (pipeline.isNeuralDetecting()) {
-			return inputs.neuralDetectionInputs().target2dValues;
-		} else if (pipeline.isColorDetecting()) {
-			return inputs.colorDetectionInputs().target2dValues;
-		}
+//		if (pipeline.isNeuralDetecting()) {
+//			return inputs.neuralDetectionInputs().target2dValues;
+//		} else if (pipeline.isColorDetecting()) {
+//			return inputs.colorDetectionInputs().target2dValues;
+//		}
 		return new LimelightTarget2dValues();
 	}
 
@@ -332,11 +331,11 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 	}
 
 	private static boolean doesObservationExist(DetectedObjectObservation detectedObjectObservation) {
-		return !detectedObjectObservation.robotRelativeObjectTranslation().equals(Translation3d.kZero);
+		return !detectedObjectObservation.robotRelativeObjectTranslation().equals(Translation3d.ZERO);
 	}
 
 	private static boolean doesObservationExist(RobotPoseObservation robotPoseObservation) {
-		return !robotPoseObservation.robotPose().equals(Pose2d.kZero);
+		return !robotPoseObservation.robotPose().equals(Pose2d.ZERO);
 	}
 
 }

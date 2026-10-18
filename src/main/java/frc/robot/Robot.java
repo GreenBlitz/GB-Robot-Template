@@ -4,10 +4,8 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import org.wpilib.math.geometry.Pose2d;
+import org.wpilib.command2.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimator.IPoseEstimator;
@@ -25,6 +23,8 @@ import frc.utils.battery.BatteryUtil;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.utils.brakestate.BrakeMode;
 import frc.utils.brakestate.BrakeStateManager;
+import org.wpilib.telemetry.Telemetry;
+import org.wpilib.tunable.Selectable;
 
 import java.util.List;
 
@@ -56,7 +56,7 @@ public class Robot {
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
 			swerve.getKinematics(),
 			swerve.getModules().getWheelPositions(0),
-			swerve.getModules().getCurrentStates(),
+			swerve.getModules().getCurrentVelocities(),
 			swerve.getOrientationFromIMU(),
 			swerve.getIMUAccelerationG(),
 			swerve.getIMUAbsoluteYaw().getTimestamp()
@@ -129,10 +129,10 @@ public class Robot {
 	}
 
 	private void configureBrakeStateChooser() {
-		SendableChooser<BrakeMode> brakeStateChooser = new SendableChooser<>();
-		brakeStateChooser.setDefaultOption("Brake", BrakeMode.BRAKE);
-		brakeStateChooser.addOption("Coast", BrakeMode.COAST);
-		SmartDashboard.putData("BrakeState", brakeStateChooser);
+		Selectable<BrakeMode> brakeStateChooser = new Selectable<>();
+		brakeStateChooser.addDefault("Brake", BrakeMode.BRAKE);
+		brakeStateChooser.add("Coast", BrakeMode.COAST);
+		Telemetry.getTable().log("BrakeState", brakeStateChooser);
 		brakeStateChooser.onChange(BrakeStateManager::setBrakeMode);
 	}
 

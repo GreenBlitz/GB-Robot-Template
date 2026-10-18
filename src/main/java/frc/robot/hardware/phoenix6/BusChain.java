@@ -2,11 +2,11 @@ package frc.robot.hardware.phoenix6;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.CANBus.CANBusStatus;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
 import org.littletonrobotics.junction.Logger;
-import com.ctre.phoenix6.CANBus.CANBusStatus;
 
 public enum BusChain {
 

@@ -13,8 +13,8 @@ import java.util.function.Supplier;
 
 public class ModuleTal extends GBSubsystem {
 
-	private TalonFX driveMotor;
-	private TalonFX steerMotor;
+	private final TalonFX driveMotor;
+	private final TalonFX steerMotor;
 	private TalonFXConfiguration steerConfigs;
 	private TalonFXConfiguration driveConfigs;
 	private TalonFXConfigurator steerConfigurator;
@@ -26,7 +26,7 @@ public class ModuleTal extends GBSubsystem {
 	private Supplier<Double> targetMotorPower;
 	private Supplier<Double> targetAngle;
 	private ModulePowers modulePowers;
-	private PositionVoltage request;
+	private final PositionVoltage request;
 	private Supplier<Double> previousAngle;
 	private ModuleTalCommandBuilder commandBuilder = new ModuleTalCommandBuilder(this);
 
@@ -53,10 +53,10 @@ public class ModuleTal extends GBSubsystem {
 
 
 	private void configureSteerMotor() {
-		this.steerConfigs.Slot0.kP = 0.04;
-		this.steerConfigs.Slot0.kI = 0.02;
-		this.steerConfigs.Slot0.kD = 0.01;
-		this.steerConfigs.Feedback.SensorToMechanismRatio = 1 / 12.8;
+		this.steerConfigs.Slot0.kP = 0.5;
+		this.steerConfigs.Slot0.kI = 0;
+		this.steerConfigs.Slot0.kD = 0;
+		this.steerConfigs.Feedback.SensorToMechanismRatio = 1 / (12.8 * 2);
 		this.steerConfigurator.apply(this.steerConfigs);
 	}
 
@@ -64,7 +64,7 @@ public class ModuleTal extends GBSubsystem {
 		this.driveConfigs.Slot0.kP = 0.5;
 		this.driveConfigs.Slot0.kI = 0;
 		this.driveConfigs.Slot0.kD = 0;
-		this.driveConfigs.Feedback.SensorToMechanismRatio = 1 / 8.14;
+		this.driveConfigs.Feedback.SensorToMechanismRatio = 8.14;
 		this.driveConfigurator.apply(this.driveConfigs);
 	}
 
@@ -110,17 +110,27 @@ public class ModuleTal extends GBSubsystem {
 		this.invertSteerRotation();
 	}
 
+	public void changeNeutralModeMotors() {
+		this.changeDriveNeutralMode();
+		this.changeSteerNeutralMode();
+	}
+
 	public void drive(double targetAngle, double power) {
-		steerToAngle();
+		steerToJoystickTarget();
 		setDrivePower(power);
 	}
 
-	public void steerToAngle() {
-		if (this.previousAngle.get() * this.targetAngle.get() < 0) {
-			this.steerConfigurator.setPosition(this.previousAngle.get() * -1);
-		}
+	public void steerToJoystickTarget() {
+//		if (this.previousAngle.get() * this.targetAngle.get() < 0) {
+//			this.steerConfigurator.setPosition(this.previousAngle.get() * -1);
+//		}
 		this.steerMotor.setControl(request.withPosition(this.targetAngle.get()));
 	}
+
+	public void steerToAngle(double angle) {
+		this.steerMotor.setControl(request.withPosition(angle));
+	}
+
 
 	public double getDriveVoltage() {
 		return this.driveMotor.getMotorVoltage().getValueAsDouble();
@@ -168,6 +178,10 @@ public class ModuleTal extends GBSubsystem {
 		return targetMotorPower;
 	}
 
+	public double getDrivePosition() {
+		return this.driveMotor.getPosition().getValueAsDouble();
+	}
+
 	@Override
 	protected void subsystemPeriodic() {
 		Logger.recordOutput(getLogPath() + "/currentDriveSpeed", getDriveSpeed());
@@ -181,15 +195,8 @@ public class ModuleTal extends GBSubsystem {
 	public void update() {
 		this.targetMotorPower = () -> Math.sqrt(Math.pow(this.modulePowers.xPower, 2) + Math.pow(this.modulePowers.yPower, 2));
 		this.previousAngle = this.targetAngle;
-		this.targetAngle = this::calculateAngle;
-	}
 
-	public boolean isCloseToAngle(double target) {
-		if (this.getSteerAngle() - target <= 1 && this.getSteerAngle() - target >= -1) {
-			Logger.recordOutput(getLogPath() + "/isclose", this.getSteerAngle() - target);
-			return true;
-		}
-		return false;
+		this.targetAngle = this::calculateAngle;
 	}
 
 	public Supplier<Double> getTargetAngle() {

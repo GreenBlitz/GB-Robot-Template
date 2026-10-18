@@ -1,6 +1,7 @@
 package frc;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
@@ -65,14 +66,15 @@ public class JoysticksBindings {
 		usedJoystick.B.whileTrue(new InstantCommand(robot.getMotor()::stopMotor));
 		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getMotor().pidWithPositionVoltage(100.0)));
 		usedJoystick.POV_DOWN.onTrue(new InstantCommand(robot.getMotor()::setPoisition));
-		usedJoystick.POV_LEFT.onTrue(new InstantCommand(() -> robot.getMotor().pidWithPositionVoltage(50.0)));
+		usedJoystick.POV_RIGHT.onTrue(robot.getModuleTal().getCommandBuilder().FullyCircleDrive());
+		usedJoystick.POV_LEFT.onTrue(new RunCommand(() -> robot.getModuleTal().steerToAngle(90)));
 		usedJoystick.X.onTrue(
 			robot.getModuleTal()
 				.getCommandBuilder()
 				.driveModuleByJoystick(() -> robot.getModuleTal().getTargetAngle().get(), () -> robot.getModuleTal().getTargetMotorPower().get())
 		);
-
-
+		Trigger combo = usedJoystick.R1.and(usedJoystick.L1);
+		combo.onTrue(robot.getModuleTal().getCommandBuilder().setDrivePower(() -> 0.5));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

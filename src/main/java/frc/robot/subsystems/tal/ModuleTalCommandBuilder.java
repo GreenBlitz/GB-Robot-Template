@@ -27,7 +27,24 @@ public class ModuleTalCommandBuilder {
 	}
 
 	public Command steerToAngle(Supplier<Double> angle) {
-		return module.asSubsystemCommand(new RunCommand(module::steerToAngle, module), "steer to an angle");
+		return module.asSubsystemCommand(new InstantCommand(() -> module.steerToAngle(angle.get()), module), "steer to an angle");
 	}
+
+	public Command changeNeutralMode() {
+		return module.asSubsystemCommand(new InstantCommand(module::changeNeutralModeMotors, module), "change module neutral mode");
+	}
+
+	public Command FullyCircleDrive() {
+		return module.asSubsystemCommand(
+			new SequentialCommandGroup(
+				new DriveDistanceCommand(module, 0, 2),
+				new DriveDistanceCommand(module, 90, 2),
+				new DriveDistanceCommand(module, 180, 2),
+				new DriveDistanceCommand(module, 270, 2)
+			),
+			"drive 2 rotations to each 90 degrees angle"
+		);
+	}
+
 
 }

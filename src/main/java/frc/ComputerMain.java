@@ -1,6 +1,8 @@
 package frc;
 
+import frc.controllers.keyboard.KeyboardController;
 import frc.utils.CMDHandler;
+
 import java.nio.file.Path;
 
 /**
@@ -8,12 +10,16 @@ import java.nio.file.Path;
  */
 public class ComputerMain {
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		startComputerPrograms(args[0]);
 	}
 
 	private static void startComputerPrograms(String connectedIP) {
 		CMDHandler.runPythonClass(Path.of("BatteryMessage"), connectedIP);
+
+		if (KeyboardController.ENABLE_KEYBOARD) {
+			CMDHandler.runPythonClass(Path.of("KeyboardToNetworkTables"), connectedIP);
+		}
 	}
 
 }

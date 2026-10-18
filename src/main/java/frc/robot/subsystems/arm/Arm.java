@@ -2,8 +2,8 @@ package frc.robot.subsystems.arm;
 
 import com.ctre.phoenix6.controls.VoltageOut;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.joysticks.Axis;
-import frc.joysticks.SmartJoystick;
+import frc.controllers.joysticks.Axis;
+import frc.controllers.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.hardware.interfaces.*;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;

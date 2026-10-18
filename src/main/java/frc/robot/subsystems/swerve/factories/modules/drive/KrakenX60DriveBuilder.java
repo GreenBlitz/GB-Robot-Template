@@ -127,7 +127,7 @@ public class KrakenX60DriveBuilder {
 			AngleUnit.ROTATIONS,
 			drive.getBusChain()
 		);
-		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder.buildLatencySignal(
+		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder.buildLatencySignalWithoutRegisteringSlope(
 			drive.getDevice().getPosition(),
 			velocitySignal.getSignal(),
 			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,

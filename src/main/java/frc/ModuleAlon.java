@@ -21,7 +21,7 @@ public class ModuleAlon extends GBSubsystem {
 		this.linear = new AlonFX(linearID, canBus, logPath + "/drive", linearGearRatio, linearKp);
 		this.LOGPATH = logPath;
 
-		commandBuilder = new ModulesCommandBuilder(this);
+		commandBuilder = new ModulesCommandBuilder(this, logPath+"/commandBuilder");
 		Command defaultCommand = new InstantCommand(()->{stop();});
 		defaultCommand.addRequirements(this);
 		setDefaultCommand(

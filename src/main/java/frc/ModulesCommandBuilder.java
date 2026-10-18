@@ -16,8 +16,10 @@ public class ModulesCommandBuilder {
 
 	private ModuleAlon moduleAlon;
 	private SmartJoystick defaultJoystick;
+	private final String logPath;
 
-	public ModulesCommandBuilder(ModuleAlon moduleAlon) {
+	public ModulesCommandBuilder(ModuleAlon moduleAlon, String logPath) {
+		this.logPath = logPath;
 		this.moduleAlon = moduleAlon;
 		moduleAlon.setDefaultCommand(new InstantCommand(() -> moduleAlon.stop(),moduleAlon).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
 	}
@@ -95,25 +97,29 @@ public class ModulesCommandBuilder {
 	}
 
 	public static final double constantPower = 0.5;
-	private final static double steerToleranceRadians = 0.1;
+	private final static double steerToleranceDegrees = 5;
 
 	public Command driveDistanceCommand(Rotation2d drive, Rotation2d angle) {
 		FunctionalCommand steerToPosition = new FunctionalCommand(
 			() -> moduleAlon.stop(),
-			() -> moduleAlon.steerToPosition(angle.getRadians()),
-			(b) -> moduleAlon.stop(),
-			() -> MathUtil.isNear(angle.getRadians(), moduleAlon.getSteerAngle().getRadians(), steerToleranceRadians)
+			() -> {moduleAlon.steerToPosition(angle.getRadians());
+				Logger.recordOutput(logPath+"/targetAngle",angle);},
+			(b) -> {moduleAlon.stop();
+				System.out.println("finished command");},
+			() -> {return MathUtil.isNear( angle.getDegrees(), moduleAlon.getSteerAngle().getDegrees(), steerToleranceDegrees);}
 		);
 
 
-		//Command driveToPosition = new DriveToPositionCommand(drive,moduleAlon);
-		//steerToPosition.addRequirements(moduleAlon);
-		//driveToPosition.addRequirements(moduleAlon);
-		//SequentialCommandGroup command = new SequentialCommandGroup(steerToPosition,driveToPosition);
+		Command driveToPosition = new DriveToPositionCommand(drive,moduleAlon);
+		steerToPosition.addRequirements(moduleAlon);
+		driveToPosition.addRequirements(moduleAlon);
+		SequentialCommandGroup command = new SequentialCommandGroup(
+				steerToPosition.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf),
+				driveToPosition.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
 		//command.steerToPosition(moduleAlon);
 		//command.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf);
-		steerToPosition.addRequirements(moduleAlon);
-		return steerToPosition.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf);
+		//steerToPosition.addRequirements(moduleAlon);
+		return command;
 		//NOTE THAT THIS IMPLEMENTATION CANNOT STAY, YOU NEED TO ADD ALL THE COMMENTED SHI
 	}
 

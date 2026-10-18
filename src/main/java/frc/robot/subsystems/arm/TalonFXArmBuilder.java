@@ -456,8 +456,13 @@ public class TalonFXArmBuilder {
 			Phoenix6SignalBuilder.buildDoubleSignal(motor.getDevice().getStatorCurrent(), signalFrequency, busChain),
 			Phoenix6SignalBuilder.buildDoubleSignal(motor.getDevice().getTorqueCurrent(), signalFrequency, busChain),
 			velocity,
-			Phoenix6SignalBuilder
-				.buildLatencySignalWithoutRegisteringSlope(motor.getDevice().getPosition(), velocity.getSignal(), signalFrequency, AngleUnit.ROTATIONS, busChain)
+			Phoenix6SignalBuilder.buildLatencySignalWithoutRegisteringSlope(
+				motor.getDevice().getPosition(),
+				velocity.getSignal(),
+				signalFrequency,
+				AngleUnit.ROTATIONS,
+				busChain
+			)
 		);
 	}
 

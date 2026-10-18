@@ -50,7 +50,7 @@ public class Phoenix6SignalBuilder {
 		BusChain busChain
 	) {
 		StatusSignal<?> signalClone = cloneWithFrequency(signal, frequency, busChain);
-		setFrequencyWithRetry(signalSlope,frequency);
+		setFrequencyWithRetry(signalSlope, frequency);
 		return new Phoenix6LatencySignal(signalClone.getName(), signalClone, signalSlope, angleUnit);
 	}
 

@@ -23,11 +23,11 @@ public class ModuleTalCommandBuilder {
 	}
 
 	public Command setDrivePower(Supplier<Double> power) {
-		return module.asSubsystemCommand(new RunCommand(() -> module.setDrivePower(power.get()), module), "set the motors power");
+		return module.asSubsystemCommand(new InstantCommand(() -> module.setDrivePower(power.get()), module), "set the motors power");
 	}
 
 	public Command steerToAngle(Supplier<Double> angle) {
-		return module.asSubsystemCommand(new RunCommand(() -> module.steerToAngle(angle.get()), module), "steer to an angle");
+		return module.asSubsystemCommand(new RunCommand(module::steerToAngle, module), "steer to an angle");
 	}
 
 }

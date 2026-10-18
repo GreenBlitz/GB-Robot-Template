@@ -27,7 +27,7 @@ public class ModuleTal extends GBSubsystem {
 	private Supplier<Double> targetAngle;
 	private ModulePowers modulePowers;
 	private PositionVoltage request;
-	private double previousAngle;
+	private Supplier<Double> previousAngle;
 	private ModuleTalCommandBuilder commandBuilder = new ModuleTalCommandBuilder(this);
 
 
@@ -45,7 +45,7 @@ public class ModuleTal extends GBSubsystem {
 		configureDriveMotor();
 		this.targetAngle = () -> 0.0;
 		this.targetMotorPower = () -> 0.0;
-		this.previousAngle = 0;
+		this.previousAngle = () -> 0.0;
 		this.setAmpereLimit(40);
 		this.commandBuilder = new ModuleTalCommandBuilder(this);
 		this.request = new PositionVoltage(0).withSlot(0);
@@ -53,9 +53,9 @@ public class ModuleTal extends GBSubsystem {
 
 
 	private void configureSteerMotor() {
-		this.steerConfigs.Slot0.kP = 0.5;
-		this.steerConfigs.Slot0.kI = 0.1;
-		this.steerConfigs.Slot0.kD = 0;
+		this.steerConfigs.Slot0.kP = 0.04;
+		this.steerConfigs.Slot0.kI = 0.02;
+		this.steerConfigs.Slot0.kD = 0.01;
 		this.steerConfigs.Feedback.SensorToMechanismRatio = 1 / 12.8;
 		this.steerConfigurator.apply(this.steerConfigs);
 	}
@@ -64,7 +64,7 @@ public class ModuleTal extends GBSubsystem {
 		this.driveConfigs.Slot0.kP = 0.5;
 		this.driveConfigs.Slot0.kI = 0;
 		this.driveConfigs.Slot0.kD = 0;
-		this.driveConfigs.Feedback.SensorToMechanismRatio = 8.14;
+		this.driveConfigs.Feedback.SensorToMechanismRatio = 1 / 8.14;
 		this.driveConfigurator.apply(this.driveConfigs);
 	}
 
@@ -111,15 +111,15 @@ public class ModuleTal extends GBSubsystem {
 	}
 
 	public void drive(double targetAngle, double power) {
-		steerToAngle(targetAngle);
+		steerToAngle();
 		setDrivePower(power);
 	}
 
-	public void steerToAngle(double targetAngle) {
-		if (this.previousAngle * targetAngle <= 0) {
-			this.steerConfigurator.setPosition(this.previousAngle * -1);
+	public void steerToAngle() {
+		if (this.previousAngle.get() * this.targetAngle.get() < 0) {
+			this.steerConfigurator.setPosition(this.previousAngle.get() * -1);
 		}
-		this.steerMotor.setControl(request.withPosition(this.previousAngle + Math.abs(this.previousAngle)));
+		this.steerMotor.setControl(request.withPosition(this.targetAngle.get()));
 	}
 
 	public double getDriveVoltage() {
@@ -175,13 +175,13 @@ public class ModuleTal extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/driveVoltage", getDriveVoltage());
 		Logger.recordOutput(getLogPath() + "/wheelAngle", this.getSteerAngle());
 		Logger.recordOutput(getLogPath() + "/targetWheelAngle", this.targetAngle.get());
+		Logger.recordOutput(getLogPath() + "/previousAngle", this.previousAngle.get());
 	}
 
 	public void update() {
 		this.targetMotorPower = () -> Math.sqrt(Math.pow(this.modulePowers.xPower, 2) + Math.pow(this.modulePowers.yPower, 2));
-		this.previousAngle = this.targetAngle.get();
+		this.previousAngle = this.targetAngle;
 		this.targetAngle = this::calculateAngle;
-
 	}
 
 	public boolean isCloseToAngle(double target) {

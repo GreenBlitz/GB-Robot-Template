@@ -3,19 +3,28 @@ package frc.robot.hardware.digitalinput.chooser;
 import frc.robot.hardware.digitalinput.DigitalInputInputs;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import org.wpilib.telemetry.Telemetry;
+import org.wpilib.telemetry.TelemetryTable;
 import org.wpilib.tunable.Selectable;
-import org.wpilib.tunable.TunableRegistry;
 
 public class ChooserDigitalInput implements IDigitalInput {
 
 	private final Selectable<Boolean> digitalInputValueChooser;
+    private final TelemetryTable telemetry;
 
 	public ChooserDigitalInput(String chooserName) {
 		this.digitalInputValueChooser = new Selectable<>();
-
+        this.telemetry = Telemetry.getTable();
 		digitalInputValueChooser.addDefault("false", false);
 		digitalInputValueChooser.add("true", true);
-		TunableRegistry.putData(chooserName, digitalInputValueChooser);
+		telemetry.log(chooserName, digitalInputValueChooser);
+	}
+
+    public ChooserDigitalInput(String chooserName, String tableName) {
+		this.digitalInputValueChooser = new Selectable<>();
+        this.telemetry = Telemetry.getTable(tableName);
+		digitalInputValueChooser.addDefault("false", false);
+		digitalInputValueChooser.add("true", true);
+		telemetry.log(chooserName, digitalInputValueChooser);
 	}
 
 	@Override

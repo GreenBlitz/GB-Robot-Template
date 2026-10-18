@@ -74,7 +74,7 @@ public class PoseUtil {
 		Translation2d velocityDifference = new Translation2d(moduleVelocity.velocity, moduleVelocity.angle)
 			.minus(new Translation2d(moduleRotationalVelocity.velocity, moduleRotationalVelocity.angle));
 		return velocityDifference.getNorm() > maximumNegligibleVectorNorm
-			? new SwerveModuleVelocity(velocityDifference.getNorm(), velocityDifference.getAngle())
+			? new SwerveModuleVelocity(velocityDifference.getNorm(), velocityDifference.getAngle().get())
 			: new SwerveModuleVelocity();
 	}
 

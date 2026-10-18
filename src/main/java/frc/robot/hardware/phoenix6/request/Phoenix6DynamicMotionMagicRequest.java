@@ -6,7 +6,7 @@ import frc.robot.hardware.interfaces.IDynamicMotionMagicRequest;
 
 import java.util.function.Consumer;
 
-public class Phoenix6DynamicMotionMagicRequest extends Phoenix6FeedForwardRequest implements IDynamicMotionMagicRequest {
+public class Phoenix6DynamicMotionMagicRequest extends Phoenix6MotionMagicRequest implements IDynamicMotionMagicRequest {
 
 	private final Consumer<Rotation2d> setMaxVelocity;
 	private Rotation2d maxVelocity;

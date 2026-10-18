@@ -51,12 +51,12 @@ public class Phoenix6RequestBuilder {
 		);
 	}
 
-	public static Phoenix6FeedForwardRequest buildMotionMagicRequest(
+	public static Phoenix6MotionMagicRequest buildMotionMagicRequest(
 		MotionMagicVoltage motionMagicVoltage,
 		double defaultArbitraryFeedForward,
 		boolean enableFOC
 	) {
-		return new Phoenix6FeedForwardRequest(
+		return new Phoenix6MotionMagicRequest(
 			Rotation2d.fromRotations(motionMagicVoltage.Position),
 			motionMagicVoltage.withEnableFOC(enableFOC),
 			setPoint -> motionMagicVoltage.withPosition(setPoint.getRotations()),

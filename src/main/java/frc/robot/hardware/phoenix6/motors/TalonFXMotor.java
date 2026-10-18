@@ -11,7 +11,7 @@ import frc.robot.RobotConstants;
 import frc.robot.hardware.FollowerInputs;
 import frc.robot.hardware.FollowerInputsAutoLogged;
 import frc.robot.hardware.interfaces.ControllableMotor;
-import frc.robot.hardware.interfaces.IDynamicMotionMagicRequest;
+import frc.robot.hardware.interfaces.IMotionMagicRequest;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.simulations.MechanismSimulation;
@@ -183,7 +183,7 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 	@Override
 	public void applyRequest(IRequest<?> request) {
 		if (request instanceof Phoenix6Request<?> phoenix6Request) {
-			if (phoenix6Request instanceof IDynamicMotionMagicRequest) {
+			if (phoenix6Request instanceof IMotionMagicRequest) {
 				motor.stopMotor();
 			}
 			motor.setControl(phoenix6Request.getControlRequest());

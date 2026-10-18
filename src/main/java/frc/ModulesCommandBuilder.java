@@ -113,8 +113,7 @@ public class ModulesCommandBuilder {
 		//command.steerToPosition(moduleAlon);
 		//command.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf);
 		steerToPosition.addRequirements(moduleAlon);
-		steerToPosition.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf);
-		return steerToPosition;
+		return steerToPosition.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf);
 		//NOTE THAT THIS IMPLEMENTATION CANNOT STAY, YOU NEED TO ADD ALL THE COMMENTED SHI
 	}
 

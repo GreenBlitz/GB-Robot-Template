@@ -49,14 +49,6 @@ public class AlonFX implements IMotor {
 		position = motor.getPosition();
 		position.setUpdateFrequency(50);
 
-		if (RobotManager.isSimulation()){
-			mechanismSimulation=new DCMotorSim(
-					LinearSystemId.createDCMotorSystem(
-							DCMotor.getKrakenX60(1),
-
-					)
-			)
-		}
 	}
 
 	private TalonFXConfiguration createConfig(double gearRatio, double kP){

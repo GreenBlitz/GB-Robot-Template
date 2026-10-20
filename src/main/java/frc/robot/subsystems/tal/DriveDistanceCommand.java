@@ -19,24 +19,28 @@ public class DriveDistanceCommand extends Command {
 
 	@Override
 	public void initialize() {
-        this.startPosition = module.getDrivePosition();
-        this.module.stop();
+		this.startPosition = module.getDrivePosition();
+		this.module.stop();
 	}
 
 	@Override
 	public void execute() {
 		this.module.steerToAngle(this.angle);
-		this.module.setDrivePower(0.5);
+		if (this.targetRotations > 0) {
+			this.module.setDrivePower(ModuleTalConstants.defaultPower);
+		} else {
+			this.module.setDrivePower(-ModuleTalConstants.defaultPower);
+		}
 	}
 
 	@Override
 	public boolean isFinished() {
-		double result = (Math.abs(this.startPosition)+this.targetRotations) - Math.abs(this.module.getDrivePosition());
+		double result = (Math.abs(this.startPosition + this.targetRotations)) - Math.abs(this.module.getDrivePosition());
 		Logger.recordOutput("drivedistanceResult", result);
-        Logger.recordOutput("drivePoisition", this.module.getDrivePosition());
-        Logger.recordOutput("startpoition", this.startPosition);
+		Logger.recordOutput("drivePoisition", this.module.getDrivePosition());
+		Logger.recordOutput("startpoition", this.startPosition);
 
-        return result <= 0;
+		return result <= 0;
 	}
 
 	@Override

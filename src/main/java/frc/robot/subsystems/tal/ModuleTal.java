@@ -15,19 +15,18 @@ public class ModuleTal extends GBSubsystem {
 
 	private final TalonFX driveMotor;
 	private final TalonFX steerMotor;
-	private TalonFXConfiguration steerConfigs;
-	private TalonFXConfiguration driveConfigs;
-	private TalonFXConfigurator steerConfigurator;
-	private TalonFXConfigurator driveConfigurator;
+	private final TalonFXConfiguration steerConfigs;
+	private final TalonFXConfiguration driveConfigs;
+	private final TalonFXConfigurator steerConfigurator;
+	private final TalonFXConfigurator driveConfigurator;
 	private InvertedValue steerRotationDirection;
 	private InvertedValue driveRotationDirection;
 	private NeutralModeValue driveNeutralModeValue;
 	private NeutralModeValue steerNeutralModeValue;
 	private Supplier<Double> targetMotorPower;
-	private Supplier<Double> targetAngle;
+	private Supplier<Double> targetJoystickAngle;
 	private ModulePowers modulePowers;
 	private final PositionVoltage request;
-	private Supplier<Double> previousAngle;
 	private ModuleTalCommandBuilder commandBuilder = new ModuleTalCommandBuilder(this);
 
 
@@ -43,9 +42,8 @@ public class ModuleTal extends GBSubsystem {
 		this.driveNeutralModeValue = NeutralModeValue.Brake;
 		configureSteerMotor();
 		configureDriveMotor();
-		this.targetAngle = () -> 0.0;
+		this.targetJoystickAngle = () -> 0.0;
 		this.targetMotorPower = () -> 0.0;
-		this.previousAngle = () -> 0.0;
 		this.setAmpereLimit(40);
 		this.commandBuilder = new ModuleTalCommandBuilder(this);
 		this.request = new PositionVoltage(0).withSlot(0);
@@ -53,18 +51,18 @@ public class ModuleTal extends GBSubsystem {
 
 
 	private void configureSteerMotor() {
-		this.steerConfigs.Slot0.kP = 0.5;
-		this.steerConfigs.Slot0.kI = 0;
-		this.steerConfigs.Slot0.kD = 0;
-		this.steerConfigs.Feedback.SensorToMechanismRatio = 1 / (12.8 * 2);
+		this.steerConfigs.Slot0.kP = ModuleTalConstants.kPSteer;
+		this.steerConfigs.Slot0.kI = ModuleTalConstants.kISteer;
+		this.steerConfigs.Slot0.kD = ModuleTalConstants.kDSteer;
+		this.steerConfigs.Feedback.SensorToMechanismRatio = ModuleTalConstants.steerGearRatio;
 		this.steerConfigurator.apply(this.steerConfigs);
 	}
 
 	private void configureDriveMotor() {
-		this.driveConfigs.Slot0.kP = 0.5;
-		this.driveConfigs.Slot0.kI = 0;
-		this.driveConfigs.Slot0.kD = 0;
-		this.driveConfigs.Feedback.SensorToMechanismRatio = 8.14;
+		this.driveConfigs.Slot0.kP = ModuleTalConstants.kPDrive;
+		this.driveConfigs.Slot0.kI = ModuleTalConstants.kIDrive;
+		this.driveConfigs.Slot0.kD = ModuleTalConstants.kDDrive;
+		this.driveConfigs.Feedback.SensorToMechanismRatio = ModuleTalConstants.driveGearRatio;
 		this.driveConfigurator.apply(this.driveConfigs);
 	}
 
@@ -115,17 +113,11 @@ public class ModuleTal extends GBSubsystem {
 		this.changeSteerNeutralMode();
 	}
 
-	public void drive(double targetAngle, double power) {
-		steerToJoystickTarget();
+	public void drive(double angle, double power) {
+		steerToAngle(angle);
 		setDrivePower(power);
 	}
 
-	public void steerToJoystickTarget() {
-//		if (this.previousAngle.get() * this.targetAngle.get() < 0) {
-//			this.steerConfigurator.setPosition(this.previousAngle.get() * -1);
-//		}
-		this.steerMotor.setControl(request.withPosition(this.targetAngle.get()));
-	}
 
 	public void steerToAngle(double angle) {
 		this.steerMotor.setControl(request.withPosition(angle));
@@ -188,23 +180,20 @@ public class ModuleTal extends GBSubsystem {
 		Logger.recordOutput(getLogPath() + "/targetDrivePower", getTargetMotorPower().get());
 		Logger.recordOutput(getLogPath() + "/driveVoltage", getDriveVoltage());
 		Logger.recordOutput(getLogPath() + "/wheelAngle", this.getSteerAngle());
-		Logger.recordOutput(getLogPath() + "/targetWheelAngle", this.targetAngle.get());
-		Logger.recordOutput(getLogPath() + "/previousAngle", this.previousAngle.get());
+		Logger.recordOutput(getLogPath() + "/targetWheelAngle", this.targetJoystickAngle.get());
 	}
 
 	public void update() {
 		this.targetMotorPower = () -> Math.sqrt(Math.pow(this.modulePowers.xPower, 2) + Math.pow(this.modulePowers.yPower, 2));
-		this.previousAngle = this.targetAngle;
-
-		this.targetAngle = this::calculateAngle;
+		this.targetJoystickAngle = this::calculateAngle;
 	}
 
-	public Supplier<Double> getTargetAngle() {
-		return targetAngle;
+	public Supplier<Double> getTargetJoystickAngle() {
+		return targetJoystickAngle;
 	}
 
 	private double calculateAngle() {
-		return Math.atan2(this.modulePowers.yPower, this.modulePowers.xPower) * 50;
+		return Math.toDegrees(Math.atan2(this.modulePowers.yPower, this.modulePowers.xPower));
 	}
 
 }

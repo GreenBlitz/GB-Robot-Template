@@ -71,7 +71,10 @@ public class JoysticksBindings {
 		usedJoystick.X.onTrue(
 			robot.getModuleTal()
 				.getCommandBuilder()
-				.driveModuleByJoystick(() -> robot.getModuleTal().getTargetAngle().get(), () -> robot.getModuleTal().getTargetMotorPower().get())
+				.driveModuleByJoystick(
+					() -> robot.getModuleTal().getTargetJoystickAngle().get(),
+					() -> robot.getModuleTal().getTargetMotorPower().get()
+				)
 		);
 		Trigger combo = usedJoystick.R1.and(usedJoystick.L1);
 		combo.onTrue(robot.getModuleTal().getCommandBuilder().setDrivePower(() -> 0.5));

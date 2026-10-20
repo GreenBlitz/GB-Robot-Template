@@ -15,5 +15,7 @@ public class ModuleTalConstants {
 	public static final double steerGearRatio = 1 / (12.8 * 2);
 	public static final double driveGearRatio = 8.14;
 
+    public static final double ampereLimit = 40;
+
 
 }

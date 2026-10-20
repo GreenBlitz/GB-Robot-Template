@@ -44,7 +44,7 @@ public class ModuleTal extends GBSubsystem {
 		configureDriveMotor();
 		this.targetJoystickAngle = () -> 0.0;
 		this.targetMotorPower = () -> 0.0;
-		this.setAmpereLimit(40);
+		this.setAmpereLimit(ModuleTalConstants.ampereLimit);
 		this.commandBuilder = new ModuleTalCommandBuilder(this);
 		this.request = new PositionVoltage(0).withSlot(0);
 	}
@@ -55,6 +55,7 @@ public class ModuleTal extends GBSubsystem {
 		this.steerConfigs.Slot0.kI = ModuleTalConstants.kISteer;
 		this.steerConfigs.Slot0.kD = ModuleTalConstants.kDSteer;
 		this.steerConfigs.Feedback.SensorToMechanismRatio = ModuleTalConstants.steerGearRatio;
+        this.steerMotor.setNeutralMode(this.steerNeutralModeValue);
 		this.steerConfigurator.apply(this.steerConfigs);
 	}
 
@@ -63,16 +64,24 @@ public class ModuleTal extends GBSubsystem {
 		this.driveConfigs.Slot0.kI = ModuleTalConstants.kIDrive;
 		this.driveConfigs.Slot0.kD = ModuleTalConstants.kDDrive;
 		this.driveConfigs.Feedback.SensorToMechanismRatio = ModuleTalConstants.driveGearRatio;
+        this.driveMotor.setNeutralMode(this.driveNeutralModeValue);
 		this.driveConfigurator.apply(this.driveConfigs);
 	}
 
+    public void setDriveAmpereLimit(double ampereLimit) {
+        this.driveConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
+        this.driveConfigs.CurrentLimits.withStatorCurrentLimit(ampereLimit);
+        this.driveConfigurator.apply(this.driveConfigs);
+    }
+
+    public void setSteerAmpereLimit(double ampereLimit) {
+        this.steerConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
+        this.steerConfigs.CurrentLimits.withStatorCurrentLimit(ampereLimit);
+        this.steerConfigurator.apply(this.steerConfigs);
+    }
 	public void setAmpereLimit(double ampereLimit) {
-		this.steerConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
-		this.steerConfigs.CurrentLimits.withStatorCurrentLimit(ampereLimit);
-		this.steerConfigurator.apply(this.steerConfigs);
-		this.driveConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
-		this.driveConfigs.CurrentLimits.withStatorCurrentLimit(ampereLimit);
-		this.driveConfigurator.apply(this.driveConfigs);
+		this.setSteerAmpereLimit(ampereLimit);
+        this.setDriveAmpereLimit(ampereLimit);
 	}
 
 	public ModuleTalCommandBuilder getCommandBuilder() {
@@ -81,10 +90,12 @@ public class ModuleTal extends GBSubsystem {
 
 	public void changeDriveNeutralMode() {
 		this.driveNeutralModeValue = this.driveNeutralModeValue == NeutralModeValue.Brake ? NeutralModeValue.Coast : NeutralModeValue.Brake;
+        this.driveMotor.setNeutralMode(this.driveNeutralModeValue);
 	}
 
 	public void changeSteerNeutralMode() {
 		this.steerNeutralModeValue = this.steerNeutralModeValue == NeutralModeValue.Brake ? NeutralModeValue.Coast : NeutralModeValue.Brake;
+        this.steerMotor.setNeutralMode(this.steerNeutralModeValue);
 	}
 
 	protected void invertDriveRotation() {

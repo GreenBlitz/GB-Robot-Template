@@ -15,7 +15,7 @@ import java.util.function.Supplier;
 
 public class LimelightFilters {
 
-	public static final Translation2d DEFAULT_IN_FIELD_TOLERANCE_METERS = new Translation2d(0.1, 0.1);
+	public static final double DEFAULT_IN_FIELD_TOLERANCE_METERS = 0.1;
 	public static final Rotation2d DEFAULT_YAW_AT_ANGLE_TOLERANCE = Rotation2d.fromDegrees(10);
 
 	public static Filter detectedObjectFilter(Limelight limelight) {
@@ -26,7 +26,7 @@ public class LimelightFilters {
 		Limelight limelight,
 		Function<Double, Optional<Rotation2d>> wantedYawAtTimestamp,
 		Supplier<Boolean> isYawCalibrated,
-		Translation2d robotInFieldTolerance,
+		double robotInFieldTolerance,
 		Rotation2d yawAtAngleTolerance
 	) {
 		return MegaTagFilters.isRobotInField(() -> limelight.getMT1RawData().pose().getTranslation(), robotInFieldTolerance)
@@ -47,7 +47,7 @@ public class LimelightFilters {
 		Limelight limelight,
 		Function<Double, Optional<Rotation2d>> wantedYawAtTimestamp,
 		Supplier<Boolean> isYawCalibrated,
-		Translation2d robotInFieldTolerance,
+		double robotInFieldTolerance,
 		Rotation2d yawAtAngleTolerance
 	) {
 		return MegaTagFilters.isRobotInField(() -> limelight.getMT2RawData().pose().getTranslation(), robotInFieldTolerance)
@@ -97,17 +97,13 @@ public class LimelightFilters {
 			return () -> robotYaw.get().getRotations() != 0.0;
 		}
 
-		private static Filter isXInField(Supplier<Double> robotX, double xToleranceMeters) {
-			return () -> ToleranceMath.isInRange(robotX.get(), 0, Field.LENGTH_METERS, xToleranceMeters);
-		}
-
-		private static Filter isYInField(Supplier<Double> robotY, double yToleranceMeters) {
-			return () -> ToleranceMath.isInRange(robotY.get(), 0, Field.WIDTH_METERS, yToleranceMeters);
-		}
-
-		private static Filter isRobotInField(Supplier<Translation2d> robotTranslation, Translation2d tolerance) {
-			return isXInField(() -> robotTranslation.get().getX(), tolerance.getX())
-				.and(isYInField(() -> robotTranslation.get().getY(), tolerance.getY()));
+		private static Filter isRobotInField(Supplier<Translation2d> robotTranslation, double tolerance) {
+			Translation2d currentRobotTranslation = robotTranslation.get();
+			Translation2d robotFieldOffset = new Translation2d(
+				currentRobotTranslation.getX() - Field.LENGTH_METERS,
+				currentRobotTranslation.getY() - Field.WIDTH_METERS
+			);
+			return () -> Math.abs(robotFieldOffset.getNorm()) > tolerance;
 		}
 
 	}

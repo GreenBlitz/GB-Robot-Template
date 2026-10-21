@@ -6,7 +6,14 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.sim.TalonFXSimState;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import frc.robot.Robot;
+import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
 import frc.robot.subsystems.GBSubsystem;
+import frc.utils.battery.BatteryUtil;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.function.Supplier;
@@ -29,6 +36,11 @@ public class ModuleTal extends GBSubsystem {
 	private final PositionVoltage request;
 	private ModuleTalCommandBuilder commandBuilder = new ModuleTalCommandBuilder(this);
 
+	private SimpleMotorSimulation steerSimulation;
+	private SimpleMotorSimulation driveSimulation;
+	private TalonFXSimState steerMotorSimState;
+	private TalonFXSimState driveMotorSimState;
+
 
 	public ModuleTal(String logPath, int driveID, int steerID) {
 		super(logPath);
@@ -42,11 +54,32 @@ public class ModuleTal extends GBSubsystem {
 		this.driveNeutralModeValue = NeutralModeValue.Brake;
 		configureSteerMotor();
 		configureDriveMotor();
-		this.targetJoystickAngle = () -> 0.0;
-		this.targetMotorPower = () -> 0.0;
+		this.targetJoystickAngle = () -> (Double) 0.0;
+		this.targetMotorPower = () -> (Double)0.0;
 		this.setAmpereLimit(ModuleTalConstants.ampereLimit);
 		this.commandBuilder = new ModuleTalCommandBuilder(this);
 		this.request = new PositionVoltage(0).withSlot(0);
+
+		if (Robot.ROBOT_TYPE.isSimulation()) {
+			this.driveSimulation = new SimpleMotorSimulation(
+				new DCMotorSim(
+					LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60(1), 0.0000001, ModuleTalConstants.driveGearRatio),
+					DCMotor.getKrakenX60(1)
+				)
+			);
+			this.steerSimulation = new SimpleMotorSimulation(
+				new DCMotorSim(
+					LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60(1), 0.0000001, ModuleTalConstants.steerGearRatio),
+					DCMotor.getKrakenX60(1)
+				)
+			);
+
+			this.steerMotorSimState = steerMotor.getSimState();
+			steerMotorSimState.setSupplyVoltage(BatteryUtil.DEFAULT_VOLTAGE);
+
+			this.driveMotorSimState = driveMotor.getSimState();
+			driveMotorSimState.setSupplyVoltage(BatteryUtil.DEFAULT_VOLTAGE);
+		}
 	}
 
 
@@ -188,6 +221,10 @@ public class ModuleTal extends GBSubsystem {
 
 	@Override
 	protected void subsystemPeriodic() {
+		if (Robot.ROBOT_TYPE.isSimulation()) {
+			updateSteerSim();
+			updateDriveSim();
+		}
 		Logger.recordOutput(getLogPath() + "/currentDriveSpeed", getDriveSpeed());
 		Logger.recordOutput(getLogPath() + "/targetDrivePower", getTargetMotorPower().get());
 		Logger.recordOutput(getLogPath() + "/driveVoltage", getDriveVoltage());
@@ -196,7 +233,7 @@ public class ModuleTal extends GBSubsystem {
 	}
 
 	public void update() {
-		this.targetMotorPower = () -> Math.sqrt(Math.pow(this.modulePowers.xPower, 2) + Math.pow(this.modulePowers.yPower, 2));
+		this.targetMotorPower = () -> (Double)Math.sqrt(Math.pow(this.modulePowers.xPower, 2) + Math.pow(this.modulePowers.yPower, 2));
 		this.targetJoystickAngle = this::calculateAngle;
 	}
 
@@ -204,8 +241,22 @@ public class ModuleTal extends GBSubsystem {
 		return targetJoystickAngle;
 	}
 
-	private double calculateAngle() {
-		return Math.toDegrees(Math.atan2(this.modulePowers.yPower, this.modulePowers.xPower));
+	protected Double calculateAngle() {
+		return (Double)Math.toDegrees(Math.atan2(this.modulePowers.yPower, this.modulePowers.xPower));
+	}
+
+	protected void updateSteerSim() {
+		steerSimulation.setInputVoltage(steerMotorSimState.getMotorVoltage());
+		steerSimulation.updateMotor();
+		steerMotorSimState.setRawRotorPosition(steerSimulation.getRotorPosition().getRotations());
+		steerMotorSimState.setRotorAcceleration(steerSimulation.getRotorVelocityRPS().getRotations());
+	}
+
+	protected void updateDriveSim() {
+		driveSimulation.setInputVoltage(driveMotorSimState.getMotorVoltage());
+		driveSimulation.updateMotor();
+		driveMotorSimState.setRawRotorPosition(driveSimulation.getRotorPosition().getRotations());
+		driveMotorSimState.setRotorAcceleration(driveSimulation.getRotorVelocityRPS().getRotations());
 	}
 
 }

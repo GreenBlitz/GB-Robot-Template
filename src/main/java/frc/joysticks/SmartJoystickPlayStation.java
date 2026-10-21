@@ -35,11 +35,12 @@ public class SmartJoystickPlayStation extends GenericSmartJoystick {
 		this.circleButton = new JoystickButton(this.joystick, PS4Controller.Button.kCircle.value);
 		this.optionButton = new JoystickButton(this.joystick, PS4Controller.Button.kOptions.value);
 		this.shareButton = new JoystickButton(this.joystick, PS4Controller.Button.kShare.value);
-		this.squareButton = new JoystickButton(this.joystick, PS4Controller.Button.kCross.value);
+		this.squareButton = new JoystickButton(this.joystick, PS4Controller.Button.kSquare.value);
 		this.L1 = new JoystickButton(this.joystick, PS4Controller.Button.kL1.value);
 		this.R1 = new JoystickButton(this.joystick, PS4Controller.Button.kR1.value);
 		this.triangularButton = new JoystickButton(this.joystick, PS4Controller.Button.kTriangle.value);
 		this.R3 = new JoystickButton(joystick, PS4Controller.Button.kR3.value);
+		this.XButton = new JoystickButton(joystick, PS4Controller.Button.kCross.value);
 
 		this.POV_UP = new POVButton(this.joystick, 0);
 		this.POV_RIGHT = new POVButton(this.joystick, 90);

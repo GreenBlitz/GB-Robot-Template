@@ -12,14 +12,16 @@ import static edu.wpi.first.units.Units.Meters;
 
 public class LED extends GBSubsystem {
 
-	public static final LEDConstants ledConstants = new LEDConstants(4, 50, 0.5, 10, 0.05, 255, 255);
+	public static LEDConstants ledConstants;
 	private final AddressableLED addressableLED;
 	private final AddressableLEDBuffer addressableLEDBuffer;
 	private LEDPattern ledPattern;
 	private final LEDCommandsBuilder ledCommandsBuilder;
 
-	public LED(String logPath) {
+	public LED(String logPath, LEDConstants ledConstants) {
 		super(logPath);
+
+		this.ledConstants = ledConstants;
 
 		this.addressableLED = new AddressableLED(ledConstants.portNum());
 		this.addressableLED.setLength(ledConstants.numOfLEDsInStrip()); // very expensive function, run ONCE only

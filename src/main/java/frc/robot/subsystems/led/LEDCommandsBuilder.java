@@ -23,10 +23,7 @@ public class LEDCommandsBuilder {
 	}
 
 	public Command setTwoAlternatingColors(Color a, Color b) {
-		return led.asSubsystemCommand(
-			new InstantCommand(() -> led.setAlternatingColors(a, b)),
-			"Set Alternating Led Pattern"
-		);
+		return led.asSubsystemCommand(new InstantCommand(() -> led.setAlternatingColors(a, b)), "Set Alternating Led Pattern");
 	}
 
 	public Command setRainbowGradient() {
@@ -37,7 +34,8 @@ public class LEDCommandsBuilder {
 	}
 
 	public Command Blink() {
-		blinkCommand = led.asSubsystemCommand(new RunCommand(led::applyPattern).beforeStarting(led::blinkWithCurrentPattern), "Enable LED Blink");
+		blinkCommand = led
+			.asSubsystemCommand(new RunCommand(led::applyPattern).beforeStarting(led::blinkWithCurrentPattern), "Enable LED Blink");
 		return blinkCommand;
 	}
 
@@ -46,7 +44,7 @@ public class LEDCommandsBuilder {
 			if (blinkCommand != null) {
 				blinkCommand.cancel();
 			}
-		}),"Disable LED Blink");
+		}), "Disable LED Blink");
 	}
 
 	public Command enableScroll() {
@@ -56,9 +54,8 @@ public class LEDCommandsBuilder {
 		);
 	}
 
-	public Command disableScroll(){
-		return led.asSubsystemCommand(
-			new InstantCommand(()->led.setPattern(led.getBasePattern())),"Disable LED Scroll"
-		);
+	public Command disableScroll() {
+		return led.asSubsystemCommand(new InstantCommand(() -> led.setPattern(led.getBasePattern())), "Disable LED Scroll");
 	}
+
 }

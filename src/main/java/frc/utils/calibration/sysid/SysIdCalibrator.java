@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.joysticks.SmartJoystickPlayStation;
 import frc.robot.subsystems.GBSubsystem;
-import frc.joysticks.SmartJoystick;
 
 import java.util.function.Consumer;
 
@@ -46,13 +46,13 @@ public class SysIdCalibrator {
 	 *
 	 * @param smartJoystick - the joystick to apply the buttons on
 	 */
-	public void setAllButtonsForCalibration(SmartJoystick smartJoystick) {
-		smartJoystick.START.onTrue(new InstantCommand(SignalLogger::start));
-		smartJoystick.A.whileTrue(getSysIdCommand(true, SysIdRoutine.Direction.kForward));
-		smartJoystick.B.whileTrue(getSysIdCommand(true, SysIdRoutine.Direction.kReverse));
-		smartJoystick.X.whileTrue(getSysIdCommand(false, SysIdRoutine.Direction.kForward));
-		smartJoystick.Y.whileTrue(getSysIdCommand(false, SysIdRoutine.Direction.kReverse));
-		smartJoystick.BACK.onTrue(new InstantCommand(SignalLogger::stop));
+	public void setAllButtonsForCalibration(SmartJoystickPlayStation smartJoystick) {
+		smartJoystick.optionButton.onTrue(new InstantCommand(SignalLogger::start));
+		smartJoystick.triangularButton.whileTrue(getSysIdCommand(true, SysIdRoutine.Direction.kForward));
+		smartJoystick.circleButton.whileTrue(getSysIdCommand(true, SysIdRoutine.Direction.kReverse));
+		smartJoystick.XButton.whileTrue(getSysIdCommand(false, SysIdRoutine.Direction.kForward));
+		smartJoystick.squareButton.whileTrue(getSysIdCommand(false, SysIdRoutine.Direction.kReverse));
+		smartJoystick.shareButton.onTrue(new InstantCommand(SignalLogger::stop));
 	}
 
 	public Command getSysIdCommand(boolean isQuasistatic, SysIdRoutine.Direction direction) {

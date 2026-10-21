@@ -97,16 +97,13 @@ public class LimelightFilters {
 			return () -> robotYaw.get().getRotations() != 0.0;
 		}
 
-		private static Filter isXInField(Supplier<Double> robotX, double xToleranceMeters) {
-			return () -> ToleranceMath.isInRange(robotX.get(), 0, Field.LENGTH_METERS, xToleranceMeters);
-		}
-
-		private static Filter isYInField(Supplier<Double> robotY, double yToleranceMeters) {
-			return () -> ToleranceMath.isInRange(robotY.get(), 0, Field.WIDTH_METERS, yToleranceMeters);
-		}
-
 		private static Filter isRobotInField(Supplier<Translation2d> robotTranslation, double tolerance) {
-			return () -> robotTranslation.get().getNorm() > tolerance;
+			Translation2d currentRobotTranslation = robotTranslation.get();
+			Translation2d robotFieldOffset = new Translation2d(
+				currentRobotTranslation.getX() - Field.LENGTH_METERS,
+				currentRobotTranslation.getY() - Field.WIDTH_METERS
+			);
+			return () -> Math.abs(robotFieldOffset.getNorm()) > tolerance;
 		}
 
 	}

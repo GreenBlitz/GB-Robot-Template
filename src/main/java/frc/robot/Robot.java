@@ -18,6 +18,8 @@ import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
 import frc.robot.subsystems.HoodConstants;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.led.LEDConstantsFactory;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.imu.IMUFactory;
@@ -48,6 +50,7 @@ public class Robot {
 	public final Arm arm;
 	public final Arm motionMagicArm;
 	public final Arm dynamicMotionMagicArm;
+	public final LED led;
 	private final IPoseEstimator poseEstimator;
 	private final List<Limelight> limelights;
 
@@ -76,13 +79,16 @@ public class Robot {
 		this.dynamicMotionMagicArm = HoodConstants.createDynamicMotionMagicArm();
 		this.motionMagicArm = HoodConstants.createMotionMagicArm();
 
+		this.led = new LED(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/LED", LEDConstantsFactory.createConstants());
+
 		BrakeStateManager.add(() -> swerve.getModules().setBrake(true), () -> swerve.getModules().setBrake(false));
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
 			swerve.getKinematics(),
 			swerve.getModules().getWheelPositions(0),
-			swerve.getIMUAbsoluteYaw().getValue(),
-			swerve.getIMUAcceleration(),
+			swerve.getModules().getCurrentStates(),
+			swerve.getOrientationFromIMU(),
+			swerve.getIMUAccelerationG(),
 			swerve.getIMUAbsoluteYaw().getTimestamp()
 		);
 
@@ -113,6 +119,10 @@ public class Robot {
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 
 		configureBrakeStateChooser();
+	}
+
+	public LED getLed() {
+		return led;
 	}
 
 	public void updateSubsystems() {

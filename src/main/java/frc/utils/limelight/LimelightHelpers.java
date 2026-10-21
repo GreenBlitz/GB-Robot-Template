@@ -1379,10 +1379,10 @@ public class LimelightHelpers {
 	}
 
 	/**
-	 * Gets the Limelight heartbeat value. Increments once per frame, allowing you to detect if the Limelight is connected and alive.
+	 * Gets the Limelight heartbeat VALUE. Increments once per frame, allowing you to detect if the Limelight is connected and alive.
 	 *
 	 * @param limelightName Name of the Limelight camera
-	 * @return Heartbeat value that increments each frame
+	 * @return Heartbeat VALUE that increments each frame
 	 */
 	public static double getHeartbeat(String limelightName) {
 		return getLimelightNTDouble(limelightName, "hb");
@@ -1636,10 +1636,10 @@ public class LimelightHelpers {
 	 * Sets the crop window for the camera. The crop window in the UI must be completely open.
 	 *
 	 * @param limelightName Name of the Limelight camera
-	 * @param cropXMin      Minimum X value (-1 to 1)
-	 * @param cropXMax      Maximum X value (-1 to 1)
-	 * @param cropYMin      Minimum Y value (-1 to 1)
-	 * @param cropYMax      Maximum Y value (-1 to 1)
+	 * @param cropXMin      Minimum X VALUE (-1 to 1)
+	 * @param cropXMax      Maximum X VALUE (-1 to 1)
+	 * @param cropYMin      Minimum Y VALUE (-1 to 1)
+	 * @param cropYMax      Maximum Y VALUE (-1 to 1)
 	 */
 	public static void setCropWindow(String limelightName, double cropXMin, double cropXMax, double cropYMin, double cropYMax) {
 		double[] entries = new double[4];
@@ -1654,8 +1654,8 @@ public class LimelightHelpers {
 	 * Sets the keystone modification for the crop window.
 	 *
 	 * @param limelightName Name of the Limelight camera
-	 * @param horizontal    Horizontal keystone value (-0.95 to 0.95)
-	 * @param vertical      Vertical keystone value (-0.95 to 0.95)
+	 * @param horizontal    Horizontal keystone VALUE (-0.95 to 0.95)
+	 * @param vertical      Vertical keystone VALUE (-0.95 to 0.95)
 	 */
 	public static void setKeystone(String limelightName, double horizontal, double vertical) {
 		double[] entries = new double[2];
@@ -1744,7 +1744,7 @@ public class LimelightHelpers {
 	}
 
 	/**
-	 * Configures the complementary filter alpha value for IMU Assist Modes (Modes 3 and 4)
+	 * Configures the complementary filter alpha VALUE for IMU Assist Modes (Modes 3 and 4)
 	 *
 	 * @param limelightName Name/identifier of the Limelight
 	 * @param alpha         Defaults to .001. Higher values will cause the internal IMU to converge onto the assist source more rapidly.
@@ -1755,7 +1755,7 @@ public class LimelightHelpers {
 
 
 	/**
-	 * Configures the throttle value. Set to 100-200 while disabled to reduce thermal output/temperature.
+	 * Configures the throttle VALUE. Set to 100-200 while disabled to reduce thermal output/temperature.
 	 *
 	 * @param limelightName Name/identifier of the Limelight
 	 * @param throttle      Defaults to 0. Your Limelight will process one frame after skipping <throttle> frames.

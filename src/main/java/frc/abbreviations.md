@@ -7,3 +7,6 @@ data is
 
 - **MT** : mega tag - refers to the limelight's method of 
 calculating robot position based on capturing april tags
+
+
+-**G** : Earths gravitational acceleration

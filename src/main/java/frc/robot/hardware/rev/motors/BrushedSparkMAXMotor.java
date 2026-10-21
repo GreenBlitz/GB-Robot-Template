@@ -1,7 +1,7 @@
 package frc.robot.hardware.rev.motors;
 
 import com.revrobotics.spark.SparkLowLevel;
-import frc.robot.hardware.mechanisms.MechanismSimulation;
+import frc.robot.hardware.simulations.MechanismSimulation;
 
 public class BrushedSparkMAXMotor extends SparkMaxMotor {
 

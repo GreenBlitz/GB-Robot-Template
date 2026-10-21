@@ -131,7 +131,7 @@ public class Pigeon2Wrapper extends Pigeon2 {
 
 	/**
 	 * This function only set pitch for the function "getAdjustedRoll". If you want to use the pitch signal you need to use "getRoll" but note to
-	 * yourself that it won't be affected by "setRoll". If for some reason you want to get the needed offset to make the returned value affected
+	 * yourself that it won't be affected by "setRoll". If for some reason you want to get the needed offset to make the returned VALUE affected
 	 * by resets use "getRollOffset".
 	 *
 	 * @param newRoll - the wanted roll of the IMU to have
@@ -142,7 +142,7 @@ public class Pigeon2Wrapper extends Pigeon2 {
 
 	/**
 	 * This function only set pitch for the function "getAdjustedPitch". If you want to use the pitch signal you need to use "getPitch" but note
-	 * to yourself that it won't be affected by "setPitch". If for some reason you want to get the needed offset to make the returned value
+	 * to yourself that it won't be affected by "setPitch". If for some reason you want to get the needed offset to make the returned VALUE
 	 * affected by resets use "getPitchOffset".
 	 *
 	 * @param newPitch - the wanted pitch of the IMU to have
@@ -168,35 +168,35 @@ public class Pigeon2Wrapper extends Pigeon2 {
 	}
 
 	/**
-	 * @return - the yaw value ranged between -180 , 180
+	 * @return - the yaw VALUE ranged between -180 , 180
 	 */
 	public Rotation2d getRangedYaw() {
 		return rangeAngle(Rotation2d.fromDegrees(getYaw().getValue().in(Degrees)));
 	}
 
 	/**
-	 * @return - the unadjusted roll value ranged between -180 , 180
+	 * @return - the unadjusted roll VALUE ranged between -180 , 180
 	 */
 	public Rotation2d getRangedRoll() {
 		return rangeAngle(Rotation2d.fromDegrees(getRoll().getValue().in(Degrees)));
 	}
 
 	/**
-	 * @return - the unadjusted pitch value ranged between -180 , 180
+	 * @return - the unadjusted pitch VALUE ranged between -180 , 180
 	 */
 	public Rotation2d getRangedPitch() {
 		return rangeAngle(Rotation2d.fromDegrees(getPitch().getValue().in(Degrees)));
 	}
 
 	/**
-	 * @return - the adjusted roll value ranged between -180 , 180
+	 * @return - the adjusted roll VALUE ranged between -180 , 180
 	 */
 	public Rotation2d getAdjustedRangedRoll() {
 		return rangeAngle(getAdjustedRoll());
 	}
 
 	/**
-	 * @return - the adjusted pitch value ranged between -180 , 180
+	 * @return - the adjusted pitch VALUE ranged between -180 , 180
 	 */
 	public Rotation2d getAdjustedRangedPitch() {
 		return rangeAngle(getAdjustedPitch());

@@ -33,9 +33,9 @@ public class LEDCommandsBuilder {
 		);
 	}
 
-	public Command Blink() {
+	public Command enableBlink() {
 		blinkCommand = led
-			.asSubsystemCommand(new RunCommand(led::applyPattern).beforeStarting(led::blinkWithCurrentPattern), "Enable LED Blink");
+			.asSubsystemCommand(new RunCommand(led::applyPattern).beforeStarting(led::blinkWithCurrentPattern), "Enable LED enableBlink");
 		return blinkCommand;
 	}
 
@@ -44,7 +44,7 @@ public class LEDCommandsBuilder {
 			if (blinkCommand != null) {
 				blinkCommand.cancel();
 			}
-		}), "Disable LED Blink");
+		}), "Disable LED enableBlink");
 	}
 
 	public Command enableScroll() {

@@ -3,7 +3,7 @@ package frc;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
-import frc.joysticks.SmartJoystick;
+import frc.joysticks.XboxSmartJoystick;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import frc.utils.brakestate.BrakeMode;
@@ -11,12 +11,12 @@ import frc.utils.brakestate.BrakeStateManager;
 
 public class JoysticksBindings {
 
-	private static final SmartJoystick MAIN_JOYSTICK = new SmartJoystick(JoystickPorts.MAIN, true);
-	private static final SmartJoystick SECOND_JOYSTICK = new SmartJoystick(JoystickPorts.SECOND);
-	private static final SmartJoystick THIRD_JOYSTICK = new SmartJoystick(JoystickPorts.THIRD);
-	private static final SmartJoystick FOURTH_JOYSTICK = new SmartJoystick(JoystickPorts.FOURTH);
-	private static final SmartJoystick FIFTH_JOYSTICK = new SmartJoystick(JoystickPorts.FIFTH);
-	private static final SmartJoystick SIXTH_JOYSTICK = new SmartJoystick(JoystickPorts.SIXTH);
+	private static final XboxSmartJoystick MAIN_JOYSTICK = new XboxSmartJoystick(JoystickPorts.MAIN, true);
+	private static final XboxSmartJoystick SECOND_JOYSTICK = new XboxSmartJoystick(JoystickPorts.SECOND);
+	private static final XboxSmartJoystick THIRD_JOYSTICK = new XboxSmartJoystick(JoystickPorts.THIRD);
+	private static final XboxSmartJoystick FOURTH_JOYSTICK = new XboxSmartJoystick(JoystickPorts.FOURTH);
+	private static final XboxSmartJoystick FIFTH_JOYSTICK = new XboxSmartJoystick(JoystickPorts.FIFTH);
+	private static final XboxSmartJoystick SIXTH_JOYSTICK = new XboxSmartJoystick(JoystickPorts.SIXTH);
 
 	private static final ChassisPowers chassisDriverInputs = new ChassisPowers();
 
@@ -48,34 +48,34 @@ public class JoysticksBindings {
 	}
 
 	private static void mainJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = MAIN_JOYSTICK;
+		XboxSmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
 		usedJoystick.X.onTrue(new InstantCommand(() -> BrakeStateManager.setBrakeMode(BrakeMode.COAST)));
 		usedJoystick.A.onTrue(new InstantCommand(() -> BrakeStateManager.setBrakeMode(BrakeMode.BRAKE)));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = SECOND_JOYSTICK;
+		XboxSmartJoystick usedJoystick = SECOND_JOYSTICK;
 		// bindings...
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = THIRD_JOYSTICK;
+		XboxSmartJoystick usedJoystick = THIRD_JOYSTICK;
 		// bindings...
 	}
 
 	private static void fourthJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = FOURTH_JOYSTICK;
+		XboxSmartJoystick usedJoystick = FOURTH_JOYSTICK;
 		// bindings...
 	}
 
 	private static void fifthJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = FIFTH_JOYSTICK;
+		XboxSmartJoystick usedJoystick = FIFTH_JOYSTICK;
 		// bindings...
 	}
 
 	private static void sixthJoystickButtons(Robot robot) {
-		SmartJoystick usedJoystick = SIXTH_JOYSTICK;
+		XboxSmartJoystick usedJoystick = SIXTH_JOYSTICK;
 		// bindings...
 	}
 

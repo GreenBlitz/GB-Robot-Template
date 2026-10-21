@@ -5,9 +5,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 
-public class SmartJoystickPlayStation extends GenericSmartJoystick {
+public class SmartJoystickPlayStation extends SmartJoystick {
 
-	public JoystickButton XButton, circleButton, squareButton, triangularButton, L1, R1, L3, R3, optionButton, shareButton;
+	private final JoystickButton XButton, circleButton, squareButton, triangularButton, L1, R1, L3, R3, optionButton, shareButton;
 	public final POVButton POV_UP, POV_RIGHT, POV_DOWN, POV_LEFT;
 	private final PS4Controller joystick;
 

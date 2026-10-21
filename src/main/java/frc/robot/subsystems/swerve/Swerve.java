@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.constants.MathConstants;
 import frc.constants.field.Field;
+import frc.imu.IMU;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
 import frc.robot.RobotConstants;
@@ -42,8 +43,7 @@ public class Swerve extends GBSubsystem {
 	private final SwerveConstants constants;
 	private final double driveRadiusMeters;
 	private final Modules modules;
-	private final IIMU imu;
-	private final IMUSignals imuSignals;
+	private final IMU imu;
 
 	private final SwerveDriveKinematics kinematics;
 	private final HeadingStabilizer headingStabilizer;
@@ -55,7 +55,7 @@ public class Swerve extends GBSubsystem {
 	private Supplier<Rotation2d> headingSupplier;
 	private ChassisPowers driversPowerInputs;
 
-	public Swerve(SwerveConstants constants, Modules modules, IIMU imu, IMUSignals imuSignals) {
+	public Swerve(SwerveConstants constants, Modules modules, IMU imu) {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 		this.driversPowerInputs = new ChassisPowers();
@@ -64,7 +64,6 @@ public class Swerve extends GBSubsystem {
 		this.driveRadiusMeters = SwerveMath.calculateDriveRadiusMeters(modules.getModulePositionsFromCenterMeters());
 		this.modules = modules;
 		this.imu = imu;
-		this.imuSignals = imuSignals;
 
 		this.kinematics = new SwerveDriveKinematics(modules.getModulePositionsFromCenterMeters());
 		this.headingSupplier = () -> getIMUAbsoluteYaw().getValue();
@@ -239,11 +238,6 @@ public class Swerve extends GBSubsystem {
 		}
 		return SwerveMath.allianceToRobotRelativeSpeeds(speeds, getAllianceRelativeHeading());
 	}
-
-	public double getIMUAcceleration() {
-		return imuSignals.getLatestAccelerationGMetersPerSecondSquare().getNorm();
-	}
-
 
 	protected void moveToPoseByPID(Pose2d currentPose, Pose2d targetPose) {
 		double xVelocityMetersPerSecond = constants.xMetersPIDController().calculate(currentPose.getX(), targetPose.getX());

@@ -19,6 +19,7 @@ import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
 import frc.robot.subsystems.HoodConstants;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.led.LEDConstantsFactory;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.imu.IMUFactory;
@@ -78,7 +79,7 @@ public class Robot {
 		this.dynamicMotionMagicArm = HoodConstants.createDynamicMotionMagicArm();
 		this.motionMagicArm = HoodConstants.createMotionMagicArm();
 
-		this.led = new LED(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX+"/LED");
+		this.led = new LED(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX+"/LED", LEDConstantsFactory.createConstants());
 
 		BrakeStateManager.add(() -> swerve.getModules().setBrake(true), () -> swerve.getModules().setBrake(false));
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(

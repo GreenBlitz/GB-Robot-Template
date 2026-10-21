@@ -1,18 +1,13 @@
 package frc.robot.subsystems.led;
-    public class LEDConstantsFactory {
 
-        private LEDConstantsFactory() {
-        }
+import edu.wpi.first.wpilibj.util.Color;
 
-        public static LEDConstants createConstants() {
-            return new LEDConstants(
-                    4,
-                    50,
-                    0.5,
-                    10,
-                    0.05,
-                    255,
-                    255
-            );
-        }
-    }
+public class LEDConstantsFactory {
+
+	private LEDConstantsFactory() {}
+
+	public static LEDConstants createConstants() {
+		return new LEDConstants(4, 50, 0.5, 10, 0.05, Color.kBlack, 255, 255);
+	}
+
+}

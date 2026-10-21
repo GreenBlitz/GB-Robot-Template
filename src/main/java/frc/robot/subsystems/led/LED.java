@@ -16,6 +16,7 @@ public class LED extends GBSubsystem {
 	private final AddressableLED addressableLED;
 	private final AddressableLEDBuffer addressableLEDBuffer;
 	private LEDPattern ledPattern;
+	private LEDPattern basePattern;
 	private final LEDCommandsBuilder ledCommandsBuilder;
 
 	public LED(String logPath, LEDConstants ledConstants) {
@@ -23,11 +24,12 @@ public class LED extends GBSubsystem {
 
 		this.ledConstants = ledConstants;
 
-		this.addressableLED = new AddressableLED(ledConstants.portNum());
-		this.addressableLED.setLength(ledConstants.numOfLEDsInStrip()); // very expensive function, run ONCE only
+		this.addressableLED = new AddressableLED(ledConstants.PORT_NUMBER());
+		this.addressableLED.setLength(ledConstants.NUMBER_OF_LEDS_IN_STRIP()); // very expensive function, run ONCE only
 
-		this.addressableLEDBuffer = new AddressableLEDBuffer(ledConstants.numOfLEDsInStrip());
-		this.ledPattern = LEDPattern.solid(Color.kBlack);
+		this.addressableLEDBuffer = new AddressableLEDBuffer(ledConstants.NUMBER_OF_LEDS_IN_STRIP());
+		this.ledPattern = LEDPattern.solid(ledConstants.DEFAULT_COLOR());
+		this.basePattern = ledPattern;
 		applyPattern();
 		addressableLED.start();
 
@@ -36,6 +38,10 @@ public class LED extends GBSubsystem {
 
 	public LEDCommandsBuilder getCommandsBuilder() {
 		return ledCommandsBuilder;
+	}
+
+	public LEDPattern getBasePattern() {
+		return basePattern;
 	}
 
 	public void setPattern(LEDPattern pattern) {
@@ -56,7 +62,8 @@ public class LED extends GBSubsystem {
 	}
 
 	public void blinkWithCurrentPattern() {
-		ledPattern = ledPattern.blink(Units.Seconds.of(ledConstants.secondsBetweenBlinks()));
+		basePattern = ledPattern;
+		setPattern(ledPattern.blink(Units.Seconds.of(ledConstants.TIME_BETWEEN_BLINKS_SECOND())));
 	}
 
 	public void setDualGradient(Color colorA, Color colorB) {
@@ -64,7 +71,8 @@ public class LED extends GBSubsystem {
 	}
 
 	public void enableScroll(LinearVelocity linearVelocity) {
-		setPattern(ledPattern.scrollAtAbsoluteSpeed(linearVelocity, Meters.of(1 / ledConstants.ledAmountPerMeter())));
+		basePattern = ledPattern;
+		setPattern(ledPattern.scrollAtAbsoluteSpeed(linearVelocity, Meters.of(1 / ledConstants.NUMBER_OF_LEDS_PER_METER())));
 	}
 
 	void applyPattern() {

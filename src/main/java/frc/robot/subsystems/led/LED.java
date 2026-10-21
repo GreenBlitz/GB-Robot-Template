@@ -27,7 +27,7 @@ public class LED extends GBSubsystem {
 		this.addressableLED.setLength(ledConstants.numOfLEDsInStrip()); // very expensive function, run ONCE only
 
 		this.addressableLEDBuffer = new AddressableLEDBuffer(ledConstants.numOfLEDsInStrip());
-		this.ledPattern = LEDPattern.solid(Color.kBlack);
+		this.ledPattern = LEDPattern.solid(ledConstants.defaultColor());
 		applyPattern();
 		addressableLED.start();
 

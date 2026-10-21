@@ -1,5 +1,8 @@
 package frc.robot.subsystems.led;
-    public class LEDConstantsFactory {
+
+import edu.wpi.first.wpilibj.util.Color;
+
+public class LEDConstantsFactory {
 
         private LEDConstantsFactory() {
         }
@@ -11,6 +14,7 @@ package frc.robot.subsystems.led;
                     0.5,
                     10,
                     0.05,
+                    Color.kBlack,
                     255,
                     255
             );

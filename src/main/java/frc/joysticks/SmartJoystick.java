@@ -87,7 +87,7 @@ public class SmartJoystick {
 	}
 
 	/**
-	 * Sample axis value with parabolic curve, allowing for finer control for smaller values.
+	 * Sample axis VALUE with parabolic curve, allowing for finer control for smaller values.
 	 */
 	public double getSensitiveAxisValue(Axis axis) {
 		return sensitiveValue(getAxisValue(axis), SENSITIVE_AXIS_VALUE_POWER);

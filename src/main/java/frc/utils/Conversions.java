@@ -159,12 +159,12 @@ public class Conversions {
 	}
 
 	/**
-	 * Converts a target output voltage to a percentage output when voltage compensation is enabled. The voltage compensation saturation
-	 * determines what voltage represents 100% output. The compensated power is the voltage represented by a percentage of the saturation
+	 * Converts a target output voltage to a percentage output when voltage compensation is enabled. The voltage compensation SATURATION
+	 * determines what voltage represents 100% output. The compensated power is the voltage represented by a percentage of the SATURATION
 	 * voltage.
 	 *
 	 * @param voltage    the target voltage output
-	 * @param saturation the configured saturation which represents 100% output
+	 * @param saturation the configured SATURATION which represents 100% output
 	 * @return the percentage output to achieve the target voltage
 	 */
 	public static double voltageToCompensatedPower(double voltage, double saturation) {
@@ -172,11 +172,11 @@ public class Conversions {
 	}
 
 	/**
-	 * Converts a target output percentage output to voltage when voltage compensation is enabled. The voltage compensation saturation determines
-	 * what voltage represents 100% output. The compensated power is the voltage represented by a percentage of the saturation voltage.
+	 * Converts a target output percentage output to voltage when voltage compensation is enabled. The voltage compensation SATURATION determines
+	 * what voltage represents 100% output. The compensated power is the voltage represented by a percentage of the SATURATION voltage.
 	 *
 	 * @param power      the target percentage output
-	 * @param saturation the configured saturation which represents 100% output
+	 * @param saturation the configured SATURATION which represents 100% output
 	 * @return the percentage output to achieve the target voltage
 	 */
 	public static double compensatedPowerToVoltage(double power, double saturation) {

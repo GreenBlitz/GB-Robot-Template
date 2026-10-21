@@ -24,11 +24,11 @@ public class LED extends GBSubsystem {
 
 		this.ledConstants = ledConstants;
 
-		this.addressableLED = new AddressableLED(ledConstants.portNum());
-		this.addressableLED.setLength(ledConstants.numOfLEDsInStrip()); // very expensive function, run ONCE only
+		this.addressableLED = new AddressableLED(ledConstants.PORT_NUMBER());
+		this.addressableLED.setLength(ledConstants.NUMBER_OF_LEDS_IN_STRIP()); // very expensive function, run ONCE only
 
-		this.addressableLEDBuffer = new AddressableLEDBuffer(ledConstants.numOfLEDsInStrip());
-		this.ledPattern = LEDPattern.solid(ledConstants.defaultColor());
+		this.addressableLEDBuffer = new AddressableLEDBuffer(ledConstants.NUMBER_OF_LEDS_IN_STRIP());
+		this.ledPattern = LEDPattern.solid(ledConstants.DEFAULT_COLOR());
 		this.basePattern = ledPattern;
 		applyPattern();
 		addressableLED.start();
@@ -63,7 +63,7 @@ public class LED extends GBSubsystem {
 
 	public void blinkWithCurrentPattern() {
 		basePattern = ledPattern;
-		setPattern(ledPattern.blink(Units.Seconds.of(ledConstants.secondsBetweenBlinks())));
+		setPattern(ledPattern.blink(Units.Seconds.of(ledConstants.TIME_BETWEEN_BLINKS_SECOND())));
 	}
 
 	public void setDualGradient(Color colorA, Color colorB) {
@@ -72,7 +72,7 @@ public class LED extends GBSubsystem {
 
 	public void enableScroll(LinearVelocity linearVelocity) {
 		basePattern = ledPattern;
-		setPattern(ledPattern.scrollAtAbsoluteSpeed(linearVelocity, Meters.of(1 / ledConstants.ledAmountPerMeter())));
+		setPattern(ledPattern.scrollAtAbsoluteSpeed(linearVelocity, Meters.of(1 / ledConstants.NUMBER_OF_LEDS_PER_METER())));
 	}
 
 	void applyPattern() {

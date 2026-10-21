@@ -31,7 +31,7 @@ public class LEDCommandsBuilder {
 
 	public Command setRainbowGradient() {
 		return led.asSubsystemCommand(
-			new InstantCommand(() -> led.setPattern(LEDPattern.rainbow(LED.ledConstants.saturation(), LED.ledConstants.value()))),
+			new InstantCommand(() -> led.setPattern(LEDPattern.rainbow(LED.ledConstants.SATURATION(), LED.ledConstants.VALUE()))),
 			"Set Rainbow LED Pattern"
 		);
 	}
@@ -51,7 +51,7 @@ public class LEDCommandsBuilder {
 
 	public Command enableScroll() {
 		return led.asSubsystemCommand(
-			new InstantCommand(() -> led.enableScroll(MetersPerSecond.of(LED.ledConstants.scrollSpeedMetersPerSecond()))),
+			new InstantCommand(() -> led.enableScroll(MetersPerSecond.of(LED.ledConstants.SCROLL_SPEED_PER_METER_PER_SECOND()))),
 			"Enable LED Scroll"
 		);
 	}

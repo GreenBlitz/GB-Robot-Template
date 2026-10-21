@@ -16,6 +16,7 @@ public class LED extends GBSubsystem {
 	private final AddressableLED addressableLED;
 	private final AddressableLEDBuffer addressableLEDBuffer;
 	private LEDPattern ledPattern;
+	private LEDPattern basePattern;
 	private final LEDCommandsBuilder ledCommandsBuilder;
 
 	public LED(String logPath, LEDConstants ledConstants) {
@@ -28,6 +29,7 @@ public class LED extends GBSubsystem {
 
 		this.addressableLEDBuffer = new AddressableLEDBuffer(ledConstants.numOfLEDsInStrip());
 		this.ledPattern = LEDPattern.solid(ledConstants.defaultColor());
+		this.basePattern = ledPattern;
 		applyPattern();
 		addressableLED.start();
 
@@ -36,6 +38,10 @@ public class LED extends GBSubsystem {
 
 	public LEDCommandsBuilder getCommandsBuilder() {
 		return ledCommandsBuilder;
+	}
+
+	public LEDPattern getBasePattern() {
+		return basePattern;
 	}
 
 	public void setPattern(LEDPattern pattern) {
@@ -56,7 +62,8 @@ public class LED extends GBSubsystem {
 	}
 
 	public void blinkWithCurrentPattern() {
-		ledPattern = ledPattern.blink(Units.Seconds.of(ledConstants.secondsBetweenBlinks()));
+		basePattern = ledPattern;
+		setPattern(ledPattern.blink(Units.Seconds.of(ledConstants.secondsBetweenBlinks())));
 	}
 
 	public void setDualGradient(Color colorA, Color colorB) {
@@ -64,6 +71,7 @@ public class LED extends GBSubsystem {
 	}
 
 	public void enableScroll(LinearVelocity linearVelocity) {
+		basePattern = ledPattern;
 		setPattern(ledPattern.scrollAtAbsoluteSpeed(linearVelocity, Meters.of(1 / ledConstants.ledAmountPerMeter())));
 	}
 

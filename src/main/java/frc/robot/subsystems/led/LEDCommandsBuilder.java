@@ -12,33 +12,19 @@ public class LEDCommandsBuilder {
 
 	private final LED led;
 
+	private Command blinkCommand;
+
 	protected LEDCommandsBuilder(LED led) {
 		this.led = led;
 	}
 
-	public Command setSolidGreenColor() {
-		return led.asSubsystemCommand(new InstantCommand(() -> led.setPattern(LEDPattern.solid(Color.kLimeGreen))), "Set LED pattern");
-	}
-
-	public Command setSolidWhiteColor() {
+	public Command setSolidColor(Color color) {
 		return led.asSubsystemCommand(new InstantCommand(() -> led.setPattern(LEDPattern.solid(Color.kWhite))), "Set LED pattern");
 	}
 
-	public Command setSolidRedColor() {
-		return led.asSubsystemCommand(new InstantCommand(() -> led.setPattern(LEDPattern.solid(Color.kWhite))), "Set LED pattern");
-	}
-
-	public Command setSolidBlueColor() {
-		return led.asSubsystemCommand(new InstantCommand(() -> led.setPattern(LEDPattern.solid(Color.kLimeGreen))), "Set LED pattern");
-	}
-
-	public Command setSolidYellowColor() {
-		return led.asSubsystemCommand(new InstantCommand(() -> led.setPattern(LEDPattern.solid(Color.kWhite))), "Set LED pattern");
-	}
-
-	public Command setAlternatingGreenYellowColors() {
+	public Command setTwoAlternatingColors(Color a, Color b) {
 		return led.asSubsystemCommand(
-			new InstantCommand(() -> led.setAlternatingColors(Color.kLimeGreen, Color.kYellow)),
+			new InstantCommand(() -> led.setAlternatingColors(a, b)),
 			"Set Alternating Led Pattern"
 		);
 	}
@@ -50,15 +36,29 @@ public class LEDCommandsBuilder {
 		);
 	}
 
-	public Command blink() {
-		return led.asSubsystemCommand(new RunCommand(led::applyPattern).beforeStarting(led::blinkWithCurrentPattern), "Set LED to Blink");
+	public Command Blink() {
+		blinkCommand = led.asSubsystemCommand(new RunCommand(led::applyPattern).beforeStarting(led::blinkWithCurrentPattern), "Enable LED Blink");
+		return blinkCommand;
+	}
+
+	public Command disableBlink() {
+		return led.asSubsystemCommand(new InstantCommand(() -> {
+			if (blinkCommand != null) {
+				blinkCommand.cancel();
+			}
+		}),"Disable LED Blink");
 	}
 
 	public Command enableScroll() {
 		return led.asSubsystemCommand(
 			new InstantCommand(() -> led.enableScroll(MetersPerSecond.of(LED.ledConstants.scrollSpeedMetersPerSecond()))),
-			"Set LED to Scroll"
+			"Enable LED Scroll"
 		);
 	}
 
+	public Command disableScroll(){
+		return led.asSubsystemCommand(
+			new InstantCommand(()->led.setPattern(led.getBasePattern())),"Disable LED Scroll"
+		);
+	}
 }

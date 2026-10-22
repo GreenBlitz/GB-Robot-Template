@@ -12,6 +12,7 @@ SwerveConstants:
 - [ ] Rotational degrees PID 
 - [ ] Drive radius meters
 - [ ] PathPlanner RealTimeConstraints (in AutonomousConstants)
+- [ ] Skid acceleration limit (meters per seconds square)
 
 IMU:
 -----------------------

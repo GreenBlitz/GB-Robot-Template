@@ -2,6 +2,7 @@ package frc.robot.subsystems.swerve;
 
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -10,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.constants.field.Field;
 import frc.robot.autonomous.PathFollowingCommandsBuilder;
+import frc.robot.subsystems.swerve.factories.constants.RealSwerveConstants;
 import frc.robot.subsystems.swerve.module.ModuleConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.Modules;
@@ -91,6 +93,14 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
+	public Command setTargetLimitedAccelerationModuleStates(SlewRateLimiter slewRateLimiter, boolean isClosedLoop) {
+		SwerveModuleState [] swerveModuleStates = new SwerveModuleState[4];
+		for (int i = 0; i < swerveModuleStates.length ; i++) {
+			swerveModuleStates[i].speedMetersPerSecond = slewRateLimiter.calculate(modules.getModule(i).getTargetState().speedMetersPerSecond);
+			swerveModuleStates[i].angle = modules.getModule(i).getTargetState().angle;
+		}
+		return setTargetModuleStates(() -> swerveModuleStates, isClosedLoop);
+	}
 
 	public Command wheelRadiusCalibration() {
 		return swerve.asSubsystemCommand(

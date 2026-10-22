@@ -36,10 +36,12 @@ public class ModulesCommandBuilder {
 			double y = yAxis.get();
 			Logger.recordOutput("axis/x",x);
 			Logger.recordOutput("axis/y",y);
+			Rotation2d steerAngle = moduleAlon.getSteerAngle();
 			if (x*x+y*y>=stickMinTolerance*stickMinTolerance) {
-				moduleAlon.steerToPosition(AngleMath.closestAngle(Math.atan2(y, x),moduleAlon.getSteerAngle().getRadians()));
-				Logger.recordOutput("driveStick/closestAngle",AngleMath.closestAngle(Math.atan2(y, x),moduleAlon.getSteerAngle().getRadians()));
-				Logger.recordOutput("driveStick/motorAngle",moduleAlon.getSteerAngle().getRadians());
+				moduleAlon.steerToPosition(AngleMath.closestAngle(Math.atan2(y, x),steerAngle.getRadians()));
+				Logger.recordOutput("driveStick/closestAngle",AngleMath.closestAngle(Math.atan2(y, x),steerAngle.getRadians()));
+				System.out.println(steerAngle.getRadians());
+				Logger.recordOutput("driveStick/motorAngle",steerAngle.getRadians());
 				Logger.recordOutput("driveStick/stickAngle",Math.atan2(y, x));
 				moduleAlon.linearSetPower(Math.sqrt(x * x + y * y));
 			}
@@ -119,8 +121,7 @@ public class ModulesCommandBuilder {
 			() -> moduleAlon.stop(),
 			() -> {moduleAlon.steerToPosition(angle.getRadians());
 				Logger.recordOutput(logPath+"/targetAngle",angle);},
-			(b) -> {moduleAlon.stop();
-				System.out.println("finished command");},
+			(b) -> {moduleAlon.stop();},
 			() -> {return MathUtil.isNear( angle.getDegrees(), moduleAlon.getSteerAngle().getDegrees(), steerToleranceDegrees);}
 		);
 

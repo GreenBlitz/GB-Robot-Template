@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.hardware.interfaces.IMotor;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.mechanisms.MechanismSimulation;
+import edu.wpi.first.units.AngleUnit;
 import org.littletonrobotics.junction.Logger;
 import com.ctre.phoenix6.signals.InvertedValue;
 
@@ -127,7 +128,7 @@ public class AlonFX implements IMotor {
 
 	public Rotation2d getPosition() {
 		position.refresh();
-		return Rotation2d.fromRadians(StatusSignal.getLatencyCompensatedValue(position, velocity).baseUnitMagnitude());
+		return Rotation2d.fromDegrees(StatusSignal.getLatencyCompensatedValueAsDouble(position, velocity));
 	}
 
 	public Rotation2d getVelocity() {

@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.function.Supplier;
+
 public class ModuleAlon extends GBSubsystem {
 
 	private final AlonFX linear;
@@ -79,7 +81,7 @@ public class ModuleAlon extends GBSubsystem {
 
 	public void logAll() {
 		Logger.recordOutput(LOGPATH + "/linearMotorVelocity", getLinearVelocity());
-		Logger.recordOutput(LOGPATH + "/steerAngle", getSteerAngle());
+		Logger.recordOutput(LOGPATH + "/steerAngle", getSteerAngle().getDegrees());
 		Logger.recordOutput(LOGPATH + "/steerTarget", steer.getPIDTarget());
 		Logger.recordOutput(LOGPATH + "/linearTarget", linear.getPIDTarget());
 	}

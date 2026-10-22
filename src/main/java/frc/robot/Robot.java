@@ -47,10 +47,7 @@ public class Robot {
 		BatteryUtil.scheduleLimiter();
 
 		IIMU iimu = IMUFactory.createIMU("IMU/");
-		this.imu = new IMU(
-				iimu,
-				IMUFactory.createSignals(iimu)
-		);
+		this.imu = new IMU(iimu, IMUFactory.createSignals(iimu));
 
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
@@ -63,9 +60,9 @@ public class Robot {
 			swerve.getKinematics(),
 			swerve.getModules().getWheelPositions(0),
 			swerve.getModules().getCurrentStates(),
-			swerve.getOrientationFromIMU(),
-			swerve.getIMUAccelerationG(),
-			swerve.getIMUAbsoluteYaw().getTimestamp()
+			imu.getLatestOrientation(),
+			imu.getLatestAccelerationGMetersPerSecondSquare(),
+			imu.getAbsoluteYaw().getTimestamp()
 		);
 
 		this.limelights = List.of();

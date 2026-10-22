@@ -14,74 +14,74 @@ import org.littletonrobotics.junction.Logger;
 
 public class IMU {
 
-    private final IIMU imu;
-    private final IMUSignals imuSignals;
+	private final IIMU imu;
+	private final IMUSignals imuSignals;
 
-    public IMU(IIMU imu, IMUSignals imuSignals){
-        this.imu = imu;
-        this.imuSignals = imuSignals;
-    }
+	public IMU(IIMU imu, IMUSignals imuSignals) {
+		this.imu = imu;
+		this.imuSignals = imuSignals;
+	}
 
-    public boolean isEmpty(){
-        return imu instanceof EmptyIMU;
-    }
+	public boolean isEmpty() {
+		return imu instanceof EmptyIMU;
+	}
 
-    public void setYaw(Rotation2d yaw){
-        imu.setYaw(yaw);
-    }
+	public void setYaw(Rotation2d yaw) {
+		imu.setYaw(yaw);
+	}
 
-    public InputSignal<Rotation2d> getYawSignal(){
-        return imuSignals.yawSignal();
-    }
+	public InputSignal<Rotation2d> getYawSignal() {
+		return imuSignals.yawSignal();
+	}
 
-    public boolean isConnected(){
-        return imu.isConnected();
-    }
+	public boolean isConnected() {
+		return imu.isConnected();
+	}
 
-    public Rotation2d[] getLatestAngularVelocity() {
-        return imuSignals.getLatestAngularVelocity();
-    }
+	public Rotation2d[] getLatestAngularVelocity() {
+		return imuSignals.getLatestAngularVelocity();
+	}
 
-    public Rotation3d[] getAllOrientations() {
-        return imuSignals.getAllOrientations();
-    }
+	public Rotation3d[] getAllOrientations() {
+		return imuSignals.getAllOrientations();
+	}
 
-    public Rotation3d getLatestOrientation() {
-        return imuSignals.getLatestOrientation();
-    }
+	public Rotation3d getLatestOrientation() {
+		return imuSignals.getLatestOrientation();
+	}
 
-    public Translation3d[] getAllAccelerationsG() {
-        return imuSignals.getAllAccelerationsG();
-    }
+	public Translation3d[] getAllAccelerationsG() {
+		return imuSignals.getAllAccelerationsG();
+	}
 
-    public Translation3d getLatestAccelerationGMetersPerSecondSquare() {
-        return imuSignals.getLatestAccelerationGMetersPerSecondSquare();
-    }
+	public Translation3d getLatestAccelerationGMetersPerSecondSquare() {
+		return imuSignals.getLatestAccelerationGMetersPerSecondSquare();
+	}
 
-    public Translation3d getAccelerationMetersPerSecondSquared() {
-        return getLatestAccelerationGMetersPerSecondSquare().times(RobotConstants.G);
-    }
+	public Translation3d getAccelerationMetersPerSecondSquared() {
+		return getLatestAccelerationGMetersPerSecondSquare().times(RobotConstants.G);
+	}
 
-    public TimedValue<Rotation2d> getAbsoluteYaw() {
-        TimedValue<Rotation2d> latestYaw = imuSignals.yawSignal().getLatestTimedValue();
-        Rotation2d latestAbsoluteYaw = Rotation2d.fromRadians(MathUtil.angleModulus(latestYaw.getValue().getRadians()));
-        return new TimedValue<>(latestAbsoluteYaw, latestYaw.getTimestamp());
-    }
+	public TimedValue<Rotation2d> getAbsoluteYaw() {
+		TimedValue<Rotation2d> latestYaw = imuSignals.yawSignal().getLatestTimedValue();
+		Rotation2d latestAbsoluteYaw = Rotation2d.fromRadians(MathUtil.angleModulus(latestYaw.getValue().getRadians()));
+		return new TimedValue<>(latestAbsoluteYaw, latestYaw.getTimestamp());
+	}
 
-    public void updateIMU(){
-        imu.updateInputs(
-                imuSignals.pitchSignal(),
-                imuSignals.rollSignal(),
-                imuSignals.yawSignal(),
-                imuSignals.rollAngularVelocitySignal(),
-                imuSignals.pitchAngularVelocitySignal(),
-                imuSignals.yawAngularVelocitySignal(),
-                imuSignals.xAccelerationGSignal(),
-                imuSignals.yAccelerationGSignal(),
-                imuSignals.zAccelerationGSignal()
-        );
-        Logger.recordOutput("IMU/Acceleration", getAccelerationMetersPerSecondSquared());
-    }
+	public void updateIMU() {
+		imu.updateInputs(
+			imuSignals.pitchSignal(),
+			imuSignals.rollSignal(),
+			imuSignals.yawSignal(),
+			imuSignals.rollAngularVelocitySignal(),
+			imuSignals.pitchAngularVelocitySignal(),
+			imuSignals.yawAngularVelocitySignal(),
+			imuSignals.xAccelerationGSignal(),
+			imuSignals.yAccelerationGSignal(),
+			imuSignals.zAccelerationGSignal()
+		);
+		Logger.recordOutput("IMU/Acceleration", getAccelerationMetersPerSecondSquared());
+	}
 
 
 }

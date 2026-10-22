@@ -66,7 +66,7 @@ public class Swerve extends GBSubsystem {
 		this.imu = imu;
 
 		this.kinematics = new SwerveDriveKinematics(modules.getModulePositionsFromCenterMeters());
-		this.headingSupplier = () -> getIMUAbsoluteYaw().getValue();
+		this.headingSupplier = () -> imu.getAbsoluteYaw().getValue();
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
 		this.stateHandler = new SwerveStateHandler(this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
@@ -100,33 +100,16 @@ public class Swerve extends GBSubsystem {
 		return stateHandler;
 	}
 
-	public Rotation2d[] getAngularVelocityFromIMURPS() {
-		return imuSignals.getLatestAngularVelocity();
-	}
-
-	public Rotation3d getOrientationFromIMU() {
-		return imuSignals.getLatestOrientation();
-	}
-
-	public Translation3d getIMUAccelerationG() {
-		return imuSignals.getLatestAccelerationGMetersPerSecondSquare();
-	}
-
-	public Translation3d getAccelerationFromIMUMetersPerSecondSquared() {
-		return getIMUAccelerationG().times(RobotConstants.G);
-	}
-
-
 	public void configPathPlanner(Supplier<Pose2d> currentPoseSupplier, Consumer<Pose2d> resetPoseConsumer, RobotConfig robotConfig) {
 		PathPlannerUtil.configPathPlanner(
-			currentPoseSupplier,
-			resetPoseConsumer,
-			this::getRobotRelativeVelocity,
-			(speeds) -> driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER),
-			constants.pathPlannerHolonomicDriveController(),
-			robotConfig,
-			() -> !Field.isFieldConventionAlliance(),
-			this
+				currentPoseSupplier,
+				resetPoseConsumer,
+				this::getRobotRelativeVelocity,
+				(speeds) -> driveByState(speeds, SwerveState.DEFAULT_PATH_PLANNER),
+				constants.pathPlannerHolonomicDriveController(),
+				robotConfig,
+				() -> !Field.isFieldConventionAlliance(),
+				this
 		);
 	}
 
@@ -140,7 +123,7 @@ public class Swerve extends GBSubsystem {
 
 	public void setHeading(Rotation2d heading) {
 		imu.setYaw(heading);
-		updateIMU();
+		imu.updateIMU();
 		headingStabilizer.unlockTarget();
 		headingStabilizer.setTargetHeading(heading);
 	}
@@ -151,22 +134,7 @@ public class Swerve extends GBSubsystem {
 		constants.rotationDegreesPIDController().reset();
 	}
 
-	private void updateIMU() {
-		imu.updateInputs(
-			imuSignals.pitchSignal(),
-			imuSignals.rollSignal(),
-			imuSignals.yawSignal(),
-			imuSignals.rollAngularVelocitySignal(),
-			imuSignals.pitchAngularVelocitySignal(),
-			imuSignals.yawAngularVelocitySignal(),
-			imuSignals.xAccelerationGSignal(),
-			imuSignals.yAccelerationGSignal(),
-			imuSignals.zAccelerationGSignal()
-		);
-	}
-
 	public void update() {
-		updateIMU();
 		modules.updateInputs();
 
 		currentState.log(constants.stateLogPath());
@@ -179,13 +147,11 @@ public class Swerve extends GBSubsystem {
 
 		Logger.recordOutput(getLogPath() + "/OdometrySamples", getNumberOfOdometrySamples());
 
-		Logger.recordOutput(getLogPath() + "/IMU/Acceleration", getAccelerationFromIMUMetersPerSecondSquared());
-
 		Logger.recordOutput(getLogPath() + "/isCollisionDetected", isCollisionDetected());
 	}
 
 	public int getNumberOfOdometrySamples() {
-		return Math.min(imuSignals.yawSignal().asArray().length, modules.getNumberOfOdometrySamples());
+		return Math.min(imu.getYawSignal().asArray().length, modules.getNumberOfOdometrySamples());
 	}
 
 	public OdometryData[] getAllOdometryData() {
@@ -193,11 +159,11 @@ public class Swerve extends GBSubsystem {
 
 		for (int i = 0; i < odometryData.length; i++) {
 			odometryData[i] = new OdometryData(
-				imuSignals.yawSignal().getTimestamps()[i],
-				modules.getWheelPositions(i),
-				modules.getCurrentStates(),
-				imu instanceof EmptyIMU ? Optional.empty() : Optional.of(imuSignals.getAllOrientations()[i]),
-				imu instanceof EmptyIMU ? Optional.empty() : Optional.of(imuSignals.getAllAccelerationsG()[i])
+					imu.getYawSignal().getTimestamps()[i],
+					modules.getWheelPositions(i),
+					modules.getCurrentStates(),
+					imu.isEmpty() ? Optional.empty() : Optional.of(imu.getAllOrientations()[i]),
+					imu.isEmpty() ? Optional.empty() : Optional.of(imu.getAllAccelerationsG()[i])
 			);
 		}
 
@@ -206,12 +172,6 @@ public class Swerve extends GBSubsystem {
 
 	public double getDriveRadiusMeters() {
 		return driveRadiusMeters;
-	}
-
-	public TimedValue<Rotation2d> getIMUAbsoluteYaw() {
-		TimedValue<Rotation2d> latestIMUYaw = imuSignals.yawSignal().getLatestTimedValue();
-		Rotation2d latestIMUAbsoluteYaw = Rotation2d.fromRadians(MathUtil.angleModulus(latestIMUYaw.getValue().getRadians()));
-		return new TimedValue<>(latestIMUAbsoluteYaw, latestIMUYaw.getTimestamp());
 	}
 
 	public Rotation2d getAbsoluteHeading() {
@@ -244,24 +204,24 @@ public class Swerve extends GBSubsystem {
 		double yVelocityMetersPerSecond = constants.yMetersPIDController().calculate(currentPose.getY(), targetPose.getY());
 		int direction = Field.isFieldConventionAlliance() ? 1 : -1;
 		Rotation2d rotationVelocityPerSecond = Rotation2d.fromDegrees(
-			constants.rotationDegreesPIDController().calculate(currentPose.getRotation().getDegrees(), targetPose.getRotation().getDegrees())
+				constants.rotationDegreesPIDController().calculate(currentPose.getRotation().getDegrees(), targetPose.getRotation().getDegrees())
 		);
 
 		ChassisSpeeds targetAllianceRelativeSpeeds = new ChassisSpeeds(
-			xVelocityMetersPerSecond * direction,
-			yVelocityMetersPerSecond * direction,
-			rotationVelocityPerSecond.getRadians()
+				xVelocityMetersPerSecond * direction,
+				yVelocityMetersPerSecond * direction,
+				rotationVelocityPerSecond.getRadians()
 		);
 		driveByState(targetAllianceRelativeSpeeds, SwerveState.DEFAULT_DRIVE);
 	}
 
 	protected void turnToHeading(Rotation2d targetHeading, SwerveState swerveState) {
 		ChassisSpeeds targetSpeeds = new ChassisSpeeds(
-			0,
-			0,
-			Rotation2d
-				.fromDegrees(constants.rotationDegreesPIDController().calculate(headingSupplier.get().getDegrees(), targetHeading.getDegrees()))
-				.getRadians()
+				0,
+				0,
+				Rotation2d
+						.fromDegrees(constants.rotationDegreesPIDController().calculate(headingSupplier.get().getDegrees(), targetHeading.getDegrees()))
+						.getRadians()
 		);
 		driveByState(targetSpeeds, swerveState);
 	}
@@ -306,15 +266,15 @@ public class Swerve extends GBSubsystem {
 		headingStabilizer.setTargetHeading(headingSupplier.get());
 		headingStabilizer.lockTarget();
 		return new ChassisSpeeds(
-			speeds.vxMetersPerSecond,
-			speeds.vyMetersPerSecond,
-			headingStabilizer.calculatePIDOutput(headingSupplier.get()).getRadians()
+				speeds.vxMetersPerSecond,
+				speeds.vyMetersPerSecond,
+				headingStabilizer.calculatePIDOutput(headingSupplier.get()).getRadians()
 		);
 	}
 
 	private void applySpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
 		SwerveModuleState[] swerveModuleStates = kinematics
-			.toSwerveModuleStates(speeds, stateHandler.getRotationAxis(swerveState.getRotateAxis()));
+				.toSwerveModuleStates(speeds, stateHandler.getRotationAxis(swerveState.getRotateAxis()));
 		setTargetModuleStates(swerveModuleStates, swerveState.getLoopMode().isClosedLoop());
 	}
 
@@ -335,7 +295,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public boolean isCollisionDetected() {
-		return imuSignals.getLatestAccelerationGMetersPerSecondSquare().toTranslation2d().getNorm() > SwerveConstants.MIN_COLLISION_G_FORCE;
+		return imu.getLatestAccelerationGMetersPerSecondSquare().toTranslation2d().getNorm() > SwerveConstants.MIN_COLLISION_G_FORCE;
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {
@@ -347,19 +307,19 @@ public class Swerve extends GBSubsystem {
 
 		// ROBOT RELATIVE DRIVE - FOR IMU TEST
 		joystick.POV_UP
-			.whileTrue(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE)));
+				.whileTrue(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE.withDriveRelative(DriveRelative.ROBOT_RELATIVE)));
 
 		// Test the swerve returns real velocities (measure distance and time in real life and compare to swerve velocity logs).
 		// REMEMBER after drive calibrations use these for pid testing - Remove OPEN LOOP for that
 		ChassisPowers slowCalibrationPowers = new ChassisPowers();
 		slowCalibrationPowers.xPower = 0.2;
 		joystick.POV_LEFT.whileTrue(
-			getCommandsBuilder().driveByPowersWithSupplier(() -> slowCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
+				getCommandsBuilder().driveByPowersWithSupplier(() -> slowCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
 		);
 		ChassisPowers fastCalibrationPowers = new ChassisPowers();
 		fastCalibrationPowers.xPower = 0.5;
 		joystick.POV_RIGHT.whileTrue(
-			getCommandsBuilder().driveByPowersWithSupplier(() -> fastCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
+				getCommandsBuilder().driveByPowersWithSupplier(() -> fastCalibrationPowers, SwerveState.DEFAULT_DRIVE.withLoopMode(LoopMode.OPEN))
 		);
 
 		// The sysid outputs will be logged to the "CTRE Signal Logger".
@@ -381,21 +341,21 @@ public class Swerve extends GBSubsystem {
 
 		// Translation pid tests
 		joystick.getAxisAsButton(Axis.LEFT_TRIGGER)
-			.onTrue(
-				new DeferredCommand(
-					() -> getCommandsBuilder()
-						.moveToPoseByPID(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(1, 1, new Rotation2d()))),
-					Set.of(this)
-				)
-			);
+				.onTrue(
+						new DeferredCommand(
+								() -> getCommandsBuilder()
+										.moveToPoseByPID(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(1, 1, new Rotation2d()))),
+								Set.of(this)
+						)
+				);
 		joystick.getAxisAsButton(Axis.RIGHT_TRIGGER)
-			.onTrue(
-				new DeferredCommand(
-					() -> getCommandsBuilder()
-						.moveToPoseByPID(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(-1, -1, new Rotation2d()))),
-					Set.of(this)
-				)
-			);
+				.onTrue(
+						new DeferredCommand(
+								() -> getCommandsBuilder()
+										.moveToPoseByPID(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(-1, -1, new Rotation2d()))),
+								Set.of(this)
+						)
+				);
 
 		// max velocity at 12 volts (put a really high value in max vel and max rot vel for it to work)
 		// after calibrating max vel at 12 volts use this to calibrate kS

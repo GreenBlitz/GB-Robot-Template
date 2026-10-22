@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
+import frc.imu.IMU;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
@@ -38,18 +39,23 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);
 
 	private final Swerve swerve;
+	private final IMU imu;
 	private final IPoseEstimator poseEstimator;
 	private final List<Limelight> limelights;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 
-		IIMU imu = IMUFactory.createIMU(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
+		IIMU iimu = IMUFactory.createIMU("IMU/");
+		this.imu = new IMU(
+				iimu,
+				IMUFactory.createSignals(iimu)
+		);
+
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
 			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
-			imu,
-			IMUFactory.createSignals(imu)
+			imu
 		);
 		BrakeStateManager.add(() -> swerve.getModules().setBrake(true), () -> swerve.getModules().setBrake(false));
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(

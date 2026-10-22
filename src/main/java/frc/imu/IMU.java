@@ -8,7 +8,6 @@ import frc.robot.RobotConstants;
 import frc.robot.hardware.empties.EmptyIMU;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.interfaces.InputSignal;
-import frc.robot.subsystems.swerve.IMUSignals;
 import frc.utils.TimedValue;
 import org.littletonrobotics.junction.Logger;
 
@@ -82,6 +81,5 @@ public class IMU {
 		);
 		Logger.recordOutput("IMU/Acceleration", getAccelerationMetersPerSecondSquared());
 	}
-
 
 }

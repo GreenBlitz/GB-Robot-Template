@@ -4,7 +4,7 @@ import frc.robot.IDs;
 import frc.robot.Robot;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.phoenix6.imu.Pigeon2IMU;
-import frc.robot.subsystems.swerve.IMUSignals;
+import frc.imu.IMUSignals;
 
 public class IMUFactory {
 

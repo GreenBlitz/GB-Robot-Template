@@ -22,25 +22,29 @@ public class ModuleTal extends GBSubsystem {
 
 	private final TalonFX driveMotor;
 	private final TalonFX steerMotor;
+
 	private final TalonFXConfiguration steerConfigs;
 	private final TalonFXConfiguration driveConfigs;
 	private final TalonFXConfigurator steerConfigurator;
 	private final TalonFXConfigurator driveConfigurator;
+
 	private InvertedValue steerRotationDirection;
 	private InvertedValue driveRotationDirection;
 	private NeutralModeValue driveNeutralModeValue;
 	private NeutralModeValue steerNeutralModeValue;
+
 	private Supplier<Double> targetMotorPower;
 	private Supplier<Double> targetJoystickAngle;
+
 	private ModulePowers modulePowers;
 	private final PositionVoltage request;
+
 	private ModuleTalCommandBuilder commandBuilder = new ModuleTalCommandBuilder(this);
 
 	private SimpleMotorSimulation steerSimulation;
 	private SimpleMotorSimulation driveSimulation;
 	private TalonFXSimState steerMotorSimState;
 	private TalonFXSimState driveMotorSimState;
-
 
 	public ModuleTal(String logPath, int driveID, int steerID) {
 		super(logPath);
@@ -55,7 +59,7 @@ public class ModuleTal extends GBSubsystem {
 		configureSteerMotor();
 		configureDriveMotor();
 		this.targetJoystickAngle = () -> (Double) 0.0;
-		this.targetMotorPower = () -> (Double)0.0;
+		this.targetMotorPower = () -> (Double) 0.0;
 		this.setAmpereLimit(ModuleTalConstants.ampereLimit);
 		this.commandBuilder = new ModuleTalCommandBuilder(this);
 		this.request = new PositionVoltage(0).withSlot(0);
@@ -81,7 +85,6 @@ public class ModuleTal extends GBSubsystem {
 			driveMotorSimState.setSupplyVoltage(BatteryUtil.DEFAULT_VOLTAGE);
 		}
 	}
-
 
 	private void configureSteerMotor() {
 		this.steerConfigs.Slot0.kP = ModuleTalConstants.kPSteer;
@@ -233,7 +236,7 @@ public class ModuleTal extends GBSubsystem {
 	}
 
 	public void update() {
-		this.targetMotorPower = () -> (Double)Math.sqrt(Math.pow(this.modulePowers.xPower, 2) + Math.pow(this.modulePowers.yPower, 2));
+		this.targetMotorPower = () -> (Double) Math.sqrt(Math.pow(this.modulePowers.xPower, 2) + Math.pow(this.modulePowers.yPower, 2));
 		this.targetJoystickAngle = this::calculateAngle;
 	}
 
@@ -242,7 +245,7 @@ public class ModuleTal extends GBSubsystem {
 	}
 
 	protected Double calculateAngle() {
-		return (Double)Math.toDegrees(Math.atan2(this.modulePowers.yPower, this.modulePowers.xPower));
+		return (Double) Math.toDegrees(Math.atan2(this.modulePowers.yPower, this.modulePowers.xPower));
 	}
 
 	protected void updateSteerSim() {

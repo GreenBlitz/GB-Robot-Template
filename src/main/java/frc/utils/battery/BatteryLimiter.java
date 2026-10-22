@@ -40,6 +40,7 @@ class BatteryLimiter extends Command {
 
 		if (Robot.ROBOT_TYPE.isSimulation()) {
 			CMDHandler.runPythonClass(Path.of("BatteryMessage"), IPs.SIMULATION_IP);
+			System.out.println("67 on a merry crismas 67 on a merry crismas67 on a merry crismas 67 on a merry crismas67 on a merry crismas 67 on a merry crismas67 on a merry crismas 67 on a merry crismas67 on a merry crismas 67 on a merry crismas67 on a merry crismas 67 on a merry crismas");
 		}
 	}
 
@@ -64,7 +65,7 @@ class BatteryLimiter extends Command {
 	@Override
 	public void execute() {
 		averageVoltage = voltageFilter.calculate(BatteryUtil.getCurrentVoltage());
-		if (averageVoltage <= BatteryUtil.MIN_VOLTAGE && !DriverStationUtil.isMatch()) {
+		if (true) {
 			showBatteryMessage();
 		} else if (lowBatteryEntry.get()) {
 			lowBatteryEntry.set(false);

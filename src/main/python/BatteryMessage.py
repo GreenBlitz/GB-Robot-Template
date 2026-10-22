@@ -13,7 +13,7 @@ LOW_BATTERY_TOPIC_NAME = "BatteryMessage/LowBattery"
 TIME_BETWEEN_MESSAGES_SECONDS = 60
 SHOW_MESSAGE_CHECK_COOLDOWN_SECONDS = 0.1
 
-
+afdafsa'm'';a;;sf;asm;vmsa;vnlanva'
 def config_window(window: tkinter.Tk) -> None:
     window.attributes("-topmost", True)
     window.resizable(False, False)
@@ -68,4 +68,4 @@ def run_battery_message_client(ip: str) -> None:
 
 
 if __name__ == '__main__':
-    run_battery_message_client(sys.argv[1])
+    run_batteressage_client(sys.argv[1])

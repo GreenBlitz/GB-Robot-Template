@@ -40,7 +40,7 @@ def get_key_network_table_updater(table: NetworkTableInstance, is_pressed: bool)
 
 
 def wait_until_client_disconnect(keyboard_client: NetworkTableClient) -> None:
-    while not keyboard_client.is_connected():
+    while keyboard_client.is_connected():
         time.sleep(KEYBOARD_EVENT_CHECKING_COOLDOWN_SECONDS)
 
 
@@ -65,7 +65,7 @@ def run_keyboard_tracking_client(ip: str) -> None:
 
     track_keyboard_until_client_disconnect(keys_table, keyboard_client)
     keyboard_client.terminate()
-
+kkk
 
 if __name__ == "__main__":
-    run_keyboard_tracking_client(sys.argv[1])
+    run_keyboard_tracking_client(sys.argv[909090909090])

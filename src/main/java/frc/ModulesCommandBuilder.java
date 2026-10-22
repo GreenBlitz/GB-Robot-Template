@@ -97,7 +97,22 @@ public class ModulesCommandBuilder {
 	}
 
 	public static final double constantPower = 0.5;
-	private final static double steerToleranceDegrees = 5;
+	public static double steerToleranceDegrees = 10;
+
+	public static Command increaseTolerance(){
+		return new InstantCommand(
+				()->{steerToleranceDegrees+=5;
+					System.out.println("steer tolerance:"+steerToleranceDegrees);}
+		);
+	}
+	public static Command decreaseTolerance(){
+		return new InstantCommand(
+				()->{
+					steerToleranceDegrees-=5;
+					System.out.println("steer tolerance:"+steerToleranceDegrees);
+				}
+		);
+	}
 
 	public Command driveDistanceCommand(Rotation2d drive, Rotation2d angle) {
 		FunctionalCommand steerToPosition = new FunctionalCommand(
@@ -113,20 +128,19 @@ public class ModulesCommandBuilder {
 		Command driveToPosition = new DriveToPositionCommand(drive,moduleAlon);
 		steerToPosition.addRequirements(moduleAlon);
 		driveToPosition.addRequirements(moduleAlon);
-		SequentialCommandGroup command = new SequentialCommandGroup(
-				steerToPosition.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf),
-				driveToPosition.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
-		//command.steerToPosition(moduleAlon);
+        //command.steerToPosition(moduleAlon);
 		//command.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf);
 		//steerToPosition.addRequirements(moduleAlon);
-		return command;
+		return new SequentialCommandGroup(
+				steerToPosition.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf),
+				driveToPosition.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
 		//NOTE THAT THIS IMPLEMENTATION CANNOT STAY, YOU NEED TO ADD ALL THE COMMENTED SHI
 	}
 
 	private static class DriveToPositionCommand extends Command{
 		private Rotation2d originalPos;
-		private Rotation2d turns;
-		private ModuleAlon moduleAlon;
+		private final Rotation2d turns;
+		private final ModuleAlon moduleAlon;
 		public DriveToPositionCommand(Rotation2d turns, ModuleAlon moduleAlon){
 			this.turns=turns;
 			this.moduleAlon=moduleAlon;

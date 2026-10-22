@@ -1,10 +1,14 @@
 package frc;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
+import frc.robot.subsystems.tal.ModulePowers;
 
 public class JoysticksBindings {
 
@@ -16,9 +20,12 @@ public class JoysticksBindings {
 	private static final SmartJoystick SIXTH_JOYSTICK = new SmartJoystick(JoystickPorts.SIXTH);
 
 	private static final ChassisPowers chassisDriverInputs = new ChassisPowers();
+	private static final ModulePowers moduleInputs = new ModulePowers();
+
 
 	public static void configureBindings(Robot robot) {
 		robot.getSwerve().setDriversPowerInputs(chassisDriverInputs);
+		robot.getModuleTal().setModulePowers(moduleInputs);
 
 		mainJoystickButtons(robot);
 		secondJoystickButtons(robot);
@@ -44,9 +51,33 @@ public class JoysticksBindings {
 		}
 	}
 
+	public static void updateModuleTal() {
+		if (MAIN_JOYSTICK.isConnected()) {
+			moduleInputs.xPower = MAIN_JOYSTICK.getAxisValue(Axis.LEFT_X);
+			moduleInputs.yPower = MAIN_JOYSTICK.getAxisValue(Axis.LEFT_Y);
+		}
+	}
+
+
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+		usedJoystick.A.whileTrue(new InstantCommand(robot.getMotor()::MoveForwardHalfPower));
+		usedJoystick.B.whileTrue(new InstantCommand(robot.getMotor()::stopMotor));
+		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getMotor().pidWithPositionVoltage(100.0)));
+		usedJoystick.POV_DOWN.onTrue(new InstantCommand(robot.getMotor()::setPoisition));
+		usedJoystick.POV_RIGHT.onTrue(robot.getModuleTal().getCommandBuilder().FullyCircleDrive());
+		usedJoystick.POV_LEFT.onTrue(new RunCommand(() -> robot.getModuleTal().steerToAngle(90)));
+		usedJoystick.X.onTrue(
+			robot.getModuleTal()
+				.getCommandBuilder()
+				.driveModuleByJoystick(
+					() -> robot.getModuleTal().getTargetJoystickAngle().get(),
+					() -> robot.getModuleTal().getTargetMotorPower().get()
+				)
+		);
+		Trigger combo = usedJoystick.R1.and(usedJoystick.L1);
+		combo.onTrue(robot.getModuleTal().getCommandBuilder().setDrivePower(() -> 0.5));
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

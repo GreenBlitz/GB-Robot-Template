@@ -17,6 +17,7 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.imu.IMUFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
+import frc.robot.subsystems.tal.ModuleTal;
 import frc.robot.vision.cameras.limelight.Limelight;
 import frc.robot.vision.cameras.limelight.LimelightFilters;
 import frc.robot.vision.cameras.limelight.LimelightStdDevCalculations;
@@ -40,6 +41,8 @@ public class Robot {
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
 	private final List<Limelight> limelights;
+	private final TalMotorControilMission motor;
+	private final ModuleTal moduleTal;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -61,6 +64,9 @@ public class Robot {
 			swerve.getIMUAccelerationG(),
 			swerve.getIMUAbsoluteYaw().getTimestamp()
 		);
+
+		motor = new TalMotorControilMission(10);
+		this.moduleTal = new ModuleTal(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/ModuleTal", 10, 11);
 
 		this.limelights = List.of();
 		limelights.forEach(
@@ -93,11 +99,11 @@ public class Robot {
 
 	public void updateSubsystems() {
 		swerve.update();
+		moduleTal.update();
 	}
 
 	public void periodic() {
 		BusChain.refreshAll();
-
 		updateSubsystems();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 
@@ -106,7 +112,7 @@ public class Robot {
 		getLimelights().forEach(limelight -> limelight.getIndependentRobotPose().ifPresent(poseEstimator::updateVision));
 
 		poseEstimator.log();
-
+		this.motor.logUpdates();
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		CommandScheduler.getInstance().run(); // Should be last
@@ -126,6 +132,14 @@ public class Robot {
 
 	public PathPlannerAutoWrapper getAutonomousCommand() {
 		return new PathPlannerAutoWrapper();
+	}
+
+	public TalMotorControilMission getMotor() {
+		return motor;
+	}
+
+	public ModuleTal getModuleTal() {
+		return this.moduleTal;
 	}
 
 	private void configureBrakeStateChooser() {

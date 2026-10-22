@@ -10,7 +10,7 @@ import java.nio.file.Path;
  */
 public class ComputerMain {
 
-	public static void main(String... args) {
+	public static void main(String[] args) {
 		startComputerPrograms(args[0]);
 	}
 

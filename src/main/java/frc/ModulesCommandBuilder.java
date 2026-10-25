@@ -30,39 +30,34 @@ public class ModulesCommandBuilder {
 
 	public static final double stickMinTolerance = .1;
 
-	public RunCommand driveWithStick(Supplier<Double> xAxis, Supplier<Double> yAxis) {
+	public Command driveWithStick(Supplier<Double> xAxis, Supplier<Double> yAxis) {
 		RunCommand command =new RunCommand(() -> {
 			double x = xAxis.get();
 			double y = yAxis.get();
 			Logger.recordOutput("axis/x",x);
 			Logger.recordOutput("axis/y",y);
-			Rotation2d steerAngle = moduleAlon.getSteerAngle();
 			if (x*x+y*y>=stickMinTolerance*stickMinTolerance) {
-				moduleAlon.steerToPosition(AngleMath.closestAngle(Math.atan2(y, x),steerAngle.getRadians()));
-				Logger.recordOutput("driveStick/closestAngle",AngleMath.closestAngle(Math.atan2(y, x),steerAngle.getRadians()));
-				System.out.println(steerAngle.getRadians());
-				Logger.recordOutput("driveStick/motorAngle",steerAngle.getRadians());
-				Logger.recordOutput("driveStick/stickAngle",Math.atan2(y, x));
+				moduleAlon.steerToPosition(AngleMath.closestAngle(Math.atan2(y, x),moduleAlon.getSteerAngle().getRadians()));
 				moduleAlon.linearSetPower(Math.sqrt(x * x + y * y));
 			}
 		});
 		command.addRequirements(moduleAlon);
-		return command;
+		return command.withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming);
 	}
 
-	public RunCommand driveWithLeftStick() {
+	public Command driveWithLeftStick() {
 		return driveWithLeftStick(defaultJoystick);
 	}
 
-	public RunCommand driveWithRightStick() {
+	public Command driveWithRightStick() {
 		return driveWithRightStick(defaultJoystick);
 	}
 
-	public RunCommand driveWithLeftStick(SmartJoystick joystick) {
+	public Command driveWithLeftStick(SmartJoystick joystick) {
 		return driveWithStick(() -> joystick.getAxisValue(Axis.LEFT_X), () -> joystick.getAxisValue(Axis.LEFT_Y));
 	}
 
-	public RunCommand driveWithRightStick(SmartJoystick joystick) {
+	public Command driveWithRightStick(SmartJoystick joystick) {
 		return driveWithStick(() -> joystick.getAxisValue(Axis.RIGHT_X), () -> joystick.getAxisValue(Axis.RIGHT_Y));
 	}
 

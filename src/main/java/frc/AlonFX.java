@@ -128,7 +128,7 @@ public class AlonFX implements IMotor {
 
 	public Rotation2d getPosition() {
 		position.refresh();
-		return Rotation2d.fromDegrees(StatusSignal.getLatencyCompensatedValueAsDouble(position, velocity));
+		return Rotation2d.fromRotations(StatusSignal.getLatencyCompensatedValueAsDouble(position, velocity));
 	}
 
 	public Rotation2d getVelocity() {

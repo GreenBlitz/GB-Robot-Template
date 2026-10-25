@@ -25,10 +25,10 @@ public class AlonFX implements IMotor {
 	private final String logPath;
 	private MechanismSimulation mechanismSimulation;
 
-	StatusSignal<AngularVelocity> velocity;
-	StatusSignal<Voltage> voltage;
-	StatusSignal<Current> current;
-	StatusSignal<Angle> position;
+	private final StatusSignal<AngularVelocity> velocity;
+	private final StatusSignal<Voltage> voltage;
+	private final StatusSignal<Current> current;
+	private final StatusSignal<Angle> position;
 
 	public AlonFX(int deviceId, CANBus canBus, String logPath, double gearRatio, double kP) {
 		this.logPath = logPath;

@@ -25,6 +25,7 @@ import frc.utils.battery.BatteryUtil;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.utils.brakestate.BrakeMode;
 import frc.utils.brakestate.BrakeStateManager;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.List;
 
@@ -106,6 +107,8 @@ public class Robot {
 		getLimelights().forEach(limelight -> limelight.getIndependentRobotPose().ifPresent(poseEstimator::updateVision));
 
 		poseEstimator.log();
+
+		Logger.recordOutput("aaa", swerve.getModules().isAtTargetVelocities(0.2));
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();

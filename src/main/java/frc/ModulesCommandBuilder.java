@@ -39,7 +39,7 @@ public class ModulesCommandBuilder {
 			Logger.recordOutput("axis/x", x);
 			Logger.recordOutput("axis/y", y);
 			if (x * x + y * y >= stickMinTolerance * stickMinTolerance) {
-				moduleAlon.steerToPosition(AngleMath.closestAngle(Math.atan2(y, x), moduleAlon.getSteerAngle().getRadians()));
+				moduleAlon.steerToPosition(AngleMath.findAngleInRange(Math.atan2(y, x), moduleAlon.getSteerAngle().getRadians()));
 				moduleAlon.linearSetPower(Math.sqrt(x * x + y * y));
 			}
 		});

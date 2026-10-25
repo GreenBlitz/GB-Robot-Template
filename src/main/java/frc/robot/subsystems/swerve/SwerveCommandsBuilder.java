@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.constants.field.Field;
 import frc.robot.autonomous.PathFollowingCommandsBuilder;
-import frc.robot.subsystems.swerve.factories.constants.RealSwerveConstants;
 import frc.robot.subsystems.swerve.module.ModuleConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.Modules;
@@ -94,8 +93,8 @@ public class SwerveCommandsBuilder {
 	}
 
 	public Command setTargetLimitedAccelerationModuleStates(SlewRateLimiter slewRateLimiter, boolean isClosedLoop) {
-		SwerveModuleState [] swerveModuleStates = new SwerveModuleState[4];
-		for (int i = 0; i < swerveModuleStates.length ; i++) {
+		SwerveModuleState[] swerveModuleStates = new SwerveModuleState[4];
+		for (int i = 0; i < swerveModuleStates.length; i++) {
 			swerveModuleStates[i].speedMetersPerSecond = slewRateLimiter.calculate(modules.getModule(i).getTargetState().speedMetersPerSecond);
 			swerveModuleStates[i].angle = modules.getModule(i).getTargetState().angle;
 		}

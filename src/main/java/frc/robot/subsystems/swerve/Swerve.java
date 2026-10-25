@@ -40,7 +40,7 @@ import java.util.function.Supplier;
 public class Swerve extends GBSubsystem {
 
 	private final SwerveConstants constants;
-	private final double driveRadiusMeters;
+	private final double driveRadiusMe ters;
 	private final Modules modules;
 	private final IIMU imu;
 	private final IMUSignals imuSignals;

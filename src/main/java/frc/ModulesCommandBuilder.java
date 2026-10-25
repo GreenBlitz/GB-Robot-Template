@@ -93,10 +93,6 @@ public class ModulesCommandBuilder {
 		moduleAlon.linearSetPower(joystick.getAxisValue(axis));
 	}
 
-	public void stopModule() {
-		moduleAlon.stop();
-	}
-
 	public static final double constantPower = 0.5;
 	public static double steerToleranceDegrees = 10;
 

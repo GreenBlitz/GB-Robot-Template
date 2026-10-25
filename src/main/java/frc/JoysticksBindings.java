@@ -56,19 +56,16 @@ public class JoysticksBindings {
 		comboButtons.onTrue(robot.getModuleAlon().getCommandBuilder().comboCommand());
 		usedJoystick.X
 			.whileTrue(robot.getModuleAlon().getCommandBuilder().driveDistanceCommand(Rotation2d.fromRotations(0), Rotation2d.fromDegrees(360)));
-		usedJoystick.Y.whileTrue(robot.getModuleAlon().getCommandBuilder().driveWithLeftStick());
-		usedJoystick.POV_LEFT.onTrue(new InstantCommand(() -> {
-			robot.getModuleAlon().setSteerPosition(0);
-		}));
-		usedJoystick.POV_UP.onTrue(ModulesCommandBuilder.increaseTolerance());
-		usedJoystick.POV_DOWN.onTrue(ModulesCommandBuilder.decreaseTolerance());
-		usedJoystick.POV_RIGHT.onTrue(new InstantCommand(() -> robot.getModuleAlon().steerToPosition(5 * Math.PI)));
+		usedJoystick.A.whileTrue(robot.getModuleAlon().getCommandBuilder().driveWithLeftStick());
+		usedJoystick.Y.whileTrue(robot.getModuleAlon().getCommandBuilder().driveDistanceCommand(
+				Rotation2d.fromRotations(2.5),Rotation2d.fromDegrees(0)
+		));
+		usedJoystick.B.onTrue(robot.getModuleAlon().getCommandBuilder().fullyCircleDrive());
 	}
 
 	private static void secondJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = SECOND_JOYSTICK;
-		// binding
-		// s...
+		// bindings...
 	}
 
 	private static void thirdJoystickButtons(Robot robot) {

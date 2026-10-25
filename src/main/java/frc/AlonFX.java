@@ -167,9 +167,6 @@ public class AlonFX implements IMotor {
 		return direction == InvertedValue.Clockwise_Positive ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive;
 	}
 
-	public void runInStablePowerToPosition(double power) {
-		setPower(power);
-	}
 
 
 	public void logAll() {

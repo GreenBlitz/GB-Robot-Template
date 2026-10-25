@@ -21,7 +21,9 @@ public class ModulesCommandBuilder {
 	public ModulesCommandBuilder(ModuleAlon moduleAlon, String logPath) {
 		this.logPath = logPath;
 		this.moduleAlon = moduleAlon;
-		moduleAlon.setDefaultCommand(new InstantCommand(() -> moduleAlon.stop(),moduleAlon).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
+		moduleAlon.setDefaultCommand(
+			new InstantCommand(() -> moduleAlon.stop(), moduleAlon).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf)
+		);
 	}
 
 	public void setDefaultJoystick(SmartJoystick defaultJoystick) {
@@ -31,13 +33,13 @@ public class ModulesCommandBuilder {
 	public static final double stickMinTolerance = .1;
 
 	public Command driveWithStick(Supplier<Double> xAxis, Supplier<Double> yAxis) {
-		RunCommand command =new RunCommand(() -> {
+		RunCommand command = new RunCommand(() -> {
 			double x = xAxis.get();
 			double y = yAxis.get();
-			Logger.recordOutput("axis/x",x);
-			Logger.recordOutput("axis/y",y);
-			if (x*x+y*y>=stickMinTolerance*stickMinTolerance) {
-				moduleAlon.steerToPosition(AngleMath.closestAngle(Math.atan2(y, x),moduleAlon.getSteerAngle().getRadians()));
+			Logger.recordOutput("axis/x", x);
+			Logger.recordOutput("axis/y", y);
+			if (x * x + y * y >= stickMinTolerance * stickMinTolerance) {
+				moduleAlon.steerToPosition(AngleMath.closestAngle(Math.atan2(y, x), moduleAlon.getSteerAngle().getRadians()));
 				moduleAlon.linearSetPower(Math.sqrt(x * x + y * y));
 			}
 		});
@@ -73,16 +75,18 @@ public class ModulesCommandBuilder {
 		moduleAlon.setSteerNeutral(mode);
 	}
 
-	public InstantCommand setNeutralMode(boolean brake){
-		return new InstantCommand(()->{
-			NeutralModeValue neutralMode = brake?NeutralModeValue.Brake:NeutralModeValue.Coast;
+	public InstantCommand setNeutralMode(boolean brake) {
+		return new InstantCommand(() -> {
+			NeutralModeValue neutralMode = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
 			setNeutralModeToLinear(neutralMode);
 			setNeutralModeToSteer(neutralMode);
-		},moduleAlon);
+		}, moduleAlon);
 	}
 
-	public RunCommand manualDriveCommand(Supplier<Double> power){
-		return new RunCommand(()->{moduleAlon.linearSetPower(power.get());},moduleAlon);
+	public RunCommand manualDriveCommand(Supplier<Double> power) {
+		return new RunCommand(() -> {
+			moduleAlon.linearSetPower(power.get());
+		}, moduleAlon);
 	}
 
 	public void linearWithStickValue(SmartJoystick joystick, Axis axis) {
@@ -96,99 +100,110 @@ public class ModulesCommandBuilder {
 	public static final double constantPower = 0.5;
 	public static double steerToleranceDegrees = 10;
 
-	public static Command increaseTolerance(){
-		return new InstantCommand(
-				()->{steerToleranceDegrees+=5;
-					System.out.println("steer tolerance:"+steerToleranceDegrees);}
-		);
+	public static Command increaseTolerance() {
+		return new InstantCommand(() -> {
+			steerToleranceDegrees += 5;
+			System.out.println("steer tolerance:" + steerToleranceDegrees);
+		});
 	}
-	public static Command decreaseTolerance(){
-		return new InstantCommand(
-				()->{
-					steerToleranceDegrees-=5;
-					System.out.println("steer tolerance:"+steerToleranceDegrees);
-				}
-		);
+
+	public static Command decreaseTolerance() {
+		return new InstantCommand(() -> {
+			steerToleranceDegrees -= 5;
+			System.out.println("steer tolerance:" + steerToleranceDegrees);
+		});
 	}
 
 	public Command driveDistanceCommand(Rotation2d drive, Rotation2d angle) {
-		FunctionalCommand steerToPosition = new FunctionalCommand(
-			() -> moduleAlon.stop(),
-			() -> {moduleAlon.steerToPosition(angle.getRadians());
-				Logger.recordOutput(logPath+"/targetAngle",angle);},
-			(b) -> {moduleAlon.stop();},
-			() -> {return MathUtil.isNear( angle.getDegrees(), moduleAlon.getSteerAngle().getDegrees(), steerToleranceDegrees);}
-		);
+		FunctionalCommand steerToPosition = new FunctionalCommand(() -> moduleAlon.stop(), () -> {
+			moduleAlon.steerToPosition(angle.getRadians());
+			Logger.recordOutput(logPath + "/targetAngle", angle);
+		}, (b) -> {
+			moduleAlon.stop();
+		}, () -> {
+			return MathUtil.isNear(angle.getDegrees(), moduleAlon.getSteerAngle().getDegrees(), steerToleranceDegrees);
+		});
 
 
-		Command driveToPosition = new DriveToPositionCommand(drive,moduleAlon);
+		Command driveToPosition = new DriveToPositionCommand(drive, moduleAlon);
 		steerToPosition.addRequirements(moduleAlon);
 		driveToPosition.addRequirements(moduleAlon);
-        //command.steerToPosition(moduleAlon);
-		//command.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf);
-		//steerToPosition.addRequirements(moduleAlon);
+		// command.steerToPosition(moduleAlon);
+		// command.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf);
+		// steerToPosition.addRequirements(moduleAlon);
 		return new SequentialCommandGroup(
-				steerToPosition.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf),
-				driveToPosition.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
-		//NOTE THAT THIS IMPLEMENTATION CANNOT STAY, YOU NEED TO ADD ALL THE COMMENTED SHI
+			steerToPosition.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf),
+			driveToPosition.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf)
+		);
+		// NOTE THAT THIS IMPLEMENTATION CANNOT STAY, YOU NEED TO ADD ALL THE COMMENTED SHI
 	}
 
-	private static class DriveToPositionCommand extends Command{
+	private static class DriveToPositionCommand extends Command {
+
 		private Rotation2d originalPos;
 		private final Rotation2d turns;
 		private final ModuleAlon moduleAlon;
-		public DriveToPositionCommand(Rotation2d turns, ModuleAlon moduleAlon){
-			this.turns=turns;
-			this.moduleAlon=moduleAlon;
+
+		public DriveToPositionCommand(Rotation2d turns, ModuleAlon moduleAlon) {
+			this.turns = turns;
+			this.moduleAlon = moduleAlon;
 		}
+
 		@Override
-		public void initialize(){
-			originalPos=moduleAlon.getLinearAngle();
+		public void initialize() {
+			originalPos = moduleAlon.getLinearAngle();
 		}
+
 		@Override
-		public void execute(){
-			moduleAlon.linearSetPower(constantPower*signOfTurns());
+		public void execute() {
+			moduleAlon.linearSetPower(constantPower * signOfTurns());
 		}
+
 		@Override
-		public void end(boolean interrupted){
+		public void end(boolean interrupted) {
 			moduleAlon.stop();
 		}
+
 		@Override
-		public boolean isFinished(){
-			return moduleAlon.getLinearAngle().minus(turns).minus(originalPos).times(signOfTurns()).getRadians()>0;
+		public boolean isFinished() {
+			return moduleAlon.getLinearAngle().minus(turns).minus(originalPos).times(signOfTurns()).getRadians() > 0;
 		}
-		private int signOfTurns(){
-			return (int)Math.signum(turns.getRadians());
+
+		private int signOfTurns() {
+			return (int) Math.signum(turns.getRadians());
 		}
+
 	}
-	public RunCommand comboCommand(){
-		return new RunCommand(()->{moduleAlon.linearSetPower(1);});
+
+	public RunCommand comboCommand() {
+		return new RunCommand(() -> {
+			moduleAlon.linearSetPower(1);
+		});
 	}
-	public Command printArmOpening(){
-		return new InstantCommand(()->{
+
+	public Command printArmOpening() {
+		return new InstantCommand(() -> {
 			System.out.println("opening arm");
 		});
 	}
-	public Command fullyCircleDrive(){
-		SequentialCommandGroup command =  new SequentialCommandGroup(
-				driveDistanceCommand(Rotation2d.fromRotations(2),Rotation2d.fromDegrees(0)),
-				driveDistanceCommand(Rotation2d.fromRotations(2),Rotation2d.fromDegrees(90)),
-				driveDistanceCommand(Rotation2d.fromRotations(2),Rotation2d.fromDegrees(180)),
-				new ParallelCommandGroup(
-				printArmOpening(),
-				driveDistanceCommand(Rotation2d.fromRotations(2),Rotation2d.fromDegrees(-90)))
+
+	public Command fullyCircleDrive() {
+		SequentialCommandGroup command = new SequentialCommandGroup(
+			driveDistanceCommand(Rotation2d.fromRotations(2), Rotation2d.fromDegrees(0)),
+			driveDistanceCommand(Rotation2d.fromRotations(2), Rotation2d.fromDegrees(90)),
+			driveDistanceCommand(Rotation2d.fromRotations(2), Rotation2d.fromDegrees(180)),
+			new ParallelCommandGroup(printArmOpening(), driveDistanceCommand(Rotation2d.fromRotations(2), Rotation2d.fromDegrees(-90)))
 		);
 		command.addRequirements(moduleAlon);
 		return command;
 	}
 
-	public DeferredCommand realTimeChoice(Supplier<Boolean> var){
-		return new DeferredCommand(
-				()->{return var.get()?
-						driveDistanceCommand(Rotation2d.fromDegrees(0),Rotation2d.fromDegrees(90)):
-						driveDistanceCommand(Rotation2d.fromDegrees(0),Rotation2d.fromDegrees(-90));
-				}, Set.of(moduleAlon)
-		);
+	public DeferredCommand realTimeChoice(Supplier<Boolean> var) {
+		return new DeferredCommand(() -> {
+			return var.get()
+				? driveDistanceCommand(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(90))
+				: driveDistanceCommand(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(-90));
+		}, Set.of(moduleAlon));
 	}
 
 }

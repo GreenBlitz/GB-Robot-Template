@@ -9,7 +9,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.ModulesCommandBuilder;
 import frc.RobotManager;
 import frc.ModuleAlon;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -65,7 +64,7 @@ public class Robot {
 			swerve.getIMUAccelerationG(),
 			swerve.getIMUAbsoluteYaw().getTimestamp()
 		);
-		this.moduleAlon = new ModuleAlon(11, 10, RobotConstants.steerGearRatio, 1, RobotConstants.steerKp,2,new CANBus("rio"), "/motor");
+		this.moduleAlon = new ModuleAlon(11, 10, RobotConstants.steerGearRatio, 1, RobotConstants.steerKp, 2, new CANBus("rio"), "/motor");
 
 		this.limelights = List.of();
 		limelights.forEach(

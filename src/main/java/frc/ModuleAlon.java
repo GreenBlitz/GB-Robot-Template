@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
-import java.util.function.Supplier;
 
 public class ModuleAlon extends GBSubsystem {
 
@@ -17,18 +16,27 @@ public class ModuleAlon extends GBSubsystem {
 	private final String LOGPATH;
 	private final ModulesCommandBuilder commandBuilder;
 
-	public ModuleAlon(int steerID, int linearID, double steerGearRatio, double linearGearRatio, double steerKp, double linearKp, CANBus canBus, String logPath) {
+	public ModuleAlon(
+		int steerID,
+		int linearID,
+		double steerGearRatio,
+		double linearGearRatio,
+		double steerKp,
+		double linearKp,
+		CANBus canBus,
+		String logPath
+	) {
 		super(logPath);
 		this.steer = new AlonFX(steerID, canBus, logPath + "/steer", steerGearRatio, steerKp);
 		this.linear = new AlonFX(linearID, canBus, logPath + "/drive", linearGearRatio, linearKp);
 		this.LOGPATH = logPath;
 
-		commandBuilder = new ModulesCommandBuilder(this, logPath+"/commandBuilder");
-		Command defaultCommand = new InstantCommand(()->{stop();});
+		commandBuilder = new ModulesCommandBuilder(this, logPath + "/commandBuilder");
+		Command defaultCommand = new InstantCommand(() -> {
+			stop();
+		});
 		defaultCommand.addRequirements(this);
-		setDefaultCommand(
-				defaultCommand
-		);
+		setDefaultCommand(defaultCommand);
 	}
 
 	public ModulesCommandBuilder getCommandBuilder() {
@@ -46,7 +54,7 @@ public class ModuleAlon extends GBSubsystem {
 	public void steerToPosition(double angleRadians) {
 		steer.driveToPosition(angleRadians);
 	}
-	
+
 	public void linearSetPower(double power) {
 		linear.setPower(power);
 	}

@@ -7,17 +7,13 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.units.measure.Current;
-import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.hardware.interfaces.IMotor;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.mechanisms.MechanismSimulation;
-import edu.wpi.first.units.AngleUnit;
 import org.littletonrobotics.junction.Logger;
 import com.ctre.phoenix6.signals.InvertedValue;
 
@@ -37,7 +33,7 @@ public class AlonFX implements IMotor {
 	public AlonFX(int deviceId, CANBus canBus, String logPath, double gearRatio, double kP) {
 		this.logPath = logPath;
 		this.motor = new TalonFX(deviceId, canBus);
-		TalonFXConfiguration configuration = createConfig(gearRatio,kP);
+		TalonFXConfiguration configuration = createConfig(gearRatio, kP);
 		motor.getConfigurator().apply(configuration);
 		motor.optimizeBusUtilization();
 
@@ -49,10 +45,9 @@ public class AlonFX implements IMotor {
 		current.setUpdateFrequency(50);
 		position = motor.getPosition();
 		position.setUpdateFrequency(50);
-
 	}
 
-	private TalonFXConfiguration createConfig(double gearRatio, double kP){
+	private TalonFXConfiguration createConfig(double gearRatio, double kP) {
 		direction = InvertedValue.CounterClockwise_Positive;
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
 
@@ -81,6 +76,7 @@ public class AlonFX implements IMotor {
 		configuration.Feedback = feedbackConfigs;
 		return configuration;
 	}
+
 	private boolean isMotorConnected() {
 		return motor.isConnected();
 	}
@@ -94,12 +90,11 @@ public class AlonFX implements IMotor {
 	}
 
 	@Override
-	public void updateSimulation() {
-	}
+	public void updateSimulation() {}
 
 	@Override
 	public void setBrake(boolean brake) {
-		NeutralModeValue neutralMode = brake?NeutralModeValue.Brake:NeutralModeValue.Coast;
+		NeutralModeValue neutralMode = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
 		setNeutralMode(neutralMode);
 	}
 
@@ -205,4 +200,5 @@ public class AlonFX implements IMotor {
 		current.refresh();
 		position.refresh();
 	}
+
 }

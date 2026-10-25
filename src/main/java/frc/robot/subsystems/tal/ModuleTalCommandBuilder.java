@@ -36,8 +36,7 @@ public class ModuleTalCommandBuilder {
 
 	public Command FullyCircleDrive() {
 		return module.asSubsystemCommand(
-			new SequentialCommandGroup(
-				new DriveDistanceCommand(module, 0, 2),
+			new SequentialCommandGroup(new DriveDistanceCommand(module, 0, 2),
 				new DriveDistanceCommand(module, 90, 2),
 				new DriveDistanceCommand(module, 180, 2),
 				new DriveDistanceCommand(module, 270, 2)
@@ -45,6 +44,4 @@ public class ModuleTalCommandBuilder {
 			"drive 2 rotations to each 90 degrees angle"
 		);
 	}
-
-
 }

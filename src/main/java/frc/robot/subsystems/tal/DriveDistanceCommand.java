@@ -20,17 +20,19 @@ public class DriveDistanceCommand extends Command {
 	@Override
 	public void initialize() {
 		this.startPosition = module.getDrivePosition();
-		this.module.stop();
+
+        this.module.stop();
 	}
 
 	@Override
 	public void execute() {
-		this.module.steerToAngle(this.angle);
-		if (this.targetRotations > 0) {
-			this.module.setDrivePower(ModuleTalConstants.defaultPower);
-		} else {
-			this.module.setDrivePower(-ModuleTalConstants.defaultPower);
-		}
+        this.module.steerToAngle(this.angle);
+        if (Math.abs(this.angle)-Math.abs(this.module.getSteerAngle())<=1 && Math.abs(this.angle)-Math.abs(this.module.getSteerAngle())>=-1)
+            if (this.targetRotations > 0) {
+                this.module.setDrivePower(ModuleTalConstants.defaultPower);
+            } else {
+                this.module.setDrivePower(-ModuleTalConstants.defaultPower);
+            }
 	}
 
 	@Override

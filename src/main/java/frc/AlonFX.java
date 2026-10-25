@@ -81,10 +81,6 @@ public class AlonFX implements IMotor {
 		return motor.isConnected();
 	}
 
-	public void logMotorConnection() {
-		Logger.recordOutput(logPath + "/isMotorConnected", isMotorConnected());
-	}
-
 	public void stopMotor() {
 		motor.stopMotor();
 	}

@@ -103,8 +103,8 @@ public class AlonFX implements IMotor {
 		motor.set(amount);
 	}
 
-	public void driveToPosition(double positionRadians) {
-		PositionVoltage positionVoltage = new PositionVoltage(positionRadians / (2 * Math.PI));
+	public void driveToPosition(Rotation2d position) {
+		PositionVoltage positionVoltage = new PositionVoltage(position.getRotations());
 		motor.setControl(positionVoltage);
 	}
 
@@ -175,7 +175,6 @@ public class AlonFX implements IMotor {
 		Logger.recordOutput(logPath + "/voltage", voltage.refresh().getValue());
 		Logger.recordOutput(logPath + "/current", current.refresh().getValue());
 		Logger.recordOutput(logPath + "/isMotorConnected", isMotorConnected());
-		logMotorConnection();
 	}
 
 	public double getPIDTarget() {

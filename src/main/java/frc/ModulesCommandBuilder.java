@@ -39,7 +39,7 @@ public class ModulesCommandBuilder {
 			Logger.recordOutput("axis/x", x);
 			Logger.recordOutput("axis/y", y);
 			if (x * x + y * y >= stickMinTolerance * stickMinTolerance) {
-				moduleAlon.steerToPosition(AngleMath.findAngleInRange(Math.atan2(y, x), moduleAlon.getSteerAngle().getRadians()));
+				moduleAlon.steerToPosition(AngleMath.findAngleInRange(Rotation2d.fromRadians(Math.atan2(y, x)), moduleAlon.getSteerAngle()));
 				moduleAlon.linearSetPower(Math.sqrt(x * x + y * y));
 			}
 		});
@@ -112,7 +112,7 @@ public class ModulesCommandBuilder {
 
 	public Command driveDistanceCommand(Rotation2d drive, Rotation2d angle) {
 		FunctionalCommand steerToPosition = new FunctionalCommand(() -> moduleAlon.stop(), () -> {
-			moduleAlon.steerToPosition(angle.getRadians());
+			moduleAlon.steerToPosition(angle);
 			Logger.recordOutput(logPath + "/targetAngle", angle);
 		}, (b) -> {
 			moduleAlon.stop();

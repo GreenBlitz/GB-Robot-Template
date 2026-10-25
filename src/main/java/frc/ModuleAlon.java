@@ -51,7 +51,7 @@ public class ModuleAlon extends GBSubsystem {
 		steer.invertMotor();
 	}
 
-	public void steerToPosition(double angleRadians) {
+	public void steerToPosition(Rotation2d angleRadians) {
 		steer.driveToPosition(angleRadians);
 	}
 

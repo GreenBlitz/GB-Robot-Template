@@ -64,7 +64,7 @@ public class Robot {
 			swerve.getIMUAccelerationG(),
 			swerve.getIMUAbsoluteYaw().getTimestamp()
 		);
-		this.moduleAlon = new ModuleAlon(11, 10, RobotConstants.steerGearRatio, 1, RobotConstants.steerKp, 2, new CANBus("rio"), "/motor");
+		this.moduleAlon = new ModuleAlon(RobotConstants.alonSteerId, RobotConstants.alonLinearId, RobotConstants.steerGearRatio, RobotConstants.linearGearRatio, RobotConstants.steerKp, RobotConstants.linearKp, new CANBus("rio"), "/motor");
 
 		this.limelights = List.of();
 		limelights.forEach(

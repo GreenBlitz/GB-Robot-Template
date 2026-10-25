@@ -18,6 +18,7 @@ public class RobotConstants {
 	public static final double linearGearRatio = 1; //to calibrate
 	public static final int alonLinearId = 10;
 	public static final int alonSteerId = 11;
+	public static final double moduleAlonStickTolerance = .1;
 
 	// data fetched from:
 	// https://www.mt.com/mt_ext_files/Editorial/Generic/7/NewtonFactor_Editorial-Generic_1149155213028_files/Newton%20Factor%20and%20Values.pdf

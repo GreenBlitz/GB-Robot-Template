@@ -22,7 +22,7 @@ public class AlonFX implements IMotor {
 
 	private final TalonFX motor;
 	private InvertedValue direction;
-	private final String logPath;
+	private final String logpath;
 	private MechanismSimulation mechanismSimulation;
 
 	private final StatusSignal<AngularVelocity> velocity;
@@ -31,7 +31,7 @@ public class AlonFX implements IMotor {
 	private final StatusSignal<Angle> position;
 
 	public AlonFX(int deviceId, CANBus canBus, String logPath, double gearRatio, double kP) {
-		this.logPath = logPath;
+		this.logpath = logPath;
 		this.motor = new TalonFX(deviceId, canBus);
 		TalonFXConfiguration configuration = createConfig(gearRatio, kP);
 		motor.getConfigurator().apply(configuration);
@@ -68,7 +68,8 @@ public class AlonFX implements IMotor {
 		slot0Configs.kD = 0.0001;
 		slot0Configs.kI = 0;
 		configuration.Slot0 = slot0Configs;
-		MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs().withInverted(direction);
+		MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
+		motorOutputConfigs.Inverted = direction;
 		configuration.MotorOutput = motorOutputConfigs;
 
 		FeedbackConfigs feedbackConfigs = new FeedbackConfigs();
@@ -155,12 +156,8 @@ public class AlonFX implements IMotor {
 		motor.getConfigurator().apply(motorOutputConfigs);
 	}
 
-	public void setPosition(double angle) {
-		motor.setPosition(angle);
-	}
-
-	public void setPosition(Angle angle) {
-		motor.setPosition(angle);
+	public void setPosition(Rotation2d angle) {
+		motor.setPosition(angle.getRotations());
 	}
 
 	private InvertedValue getMotorInvertedDirection() {
@@ -170,15 +167,15 @@ public class AlonFX implements IMotor {
 
 
 	public void logAll() {
-		Logger.recordOutput(logPath + "/position", position.refresh().getValue());
-		Logger.recordOutput(logPath + "/velocity", velocity.refresh().getValue());
-		Logger.recordOutput(logPath + "/voltage", voltage.refresh().getValue());
-		Logger.recordOutput(logPath + "/current", current.refresh().getValue());
-		Logger.recordOutput(logPath + "/isMotorConnected", isMotorConnected());
+		Logger.recordOutput(logpath + "/position", position.refresh().getValue());
+		Logger.recordOutput(logpath + "/velocity", velocity.refresh().getValue());
+		Logger.recordOutput(logpath + "/voltage", voltage.refresh().getValue());
+		Logger.recordOutput(logpath + "/current", current.refresh().getValue());
+		Logger.recordOutput(logpath + "/isMotorConnected", isMotorConnected());
 	}
 
-	public double getPIDTarget() {
-		return motor.getClosedLoopReference().getValueAsDouble();
+	public Rotation2d getPIDTarget() {
+		return Rotation2d.fromRotations(motor.getClosedLoopReference().getValueAsDouble());
 	}
 
 	@Override

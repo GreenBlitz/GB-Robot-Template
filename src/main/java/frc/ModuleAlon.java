@@ -13,8 +13,8 @@ public class ModuleAlon extends GBSubsystem {
 
 	private final AlonFX linear;
 	private final AlonFX steer;
-	private final String LOGPATH;
-	private final ModulesCommandBuilder commandBuilder;
+	private final String logpath;
+	private final ModuleCommandsBuilder commandBuilder;
 
 	public ModuleAlon(
 		int steerID,
@@ -29,9 +29,9 @@ public class ModuleAlon extends GBSubsystem {
 		super(logPath);
 		this.steer = new AlonFX(steerID, canBus, logPath + "/steer", steerGearRatio, steerKp);
 		this.linear = new AlonFX(linearID, canBus, logPath + "/drive", linearGearRatio, linearKp);
-		this.LOGPATH = logPath;
+		this.logpath = logPath;
 
-		commandBuilder = new ModulesCommandBuilder(this, logPath + "/commandBuilder");
+		commandBuilder = new ModuleCommandsBuilder(this, logPath + "/commandBuilder");
 		Command defaultCommand = new InstantCommand(() -> {
 			stop();
 		});
@@ -39,7 +39,7 @@ public class ModuleAlon extends GBSubsystem {
 		setDefaultCommand(defaultCommand);
 	}
 
-	public ModulesCommandBuilder getCommandBuilder() {
+	public ModuleCommandsBuilder getCommandBuilder() {
 		return commandBuilder;
 	}
 
@@ -79,19 +79,21 @@ public class ModuleAlon extends GBSubsystem {
 		steer.setNeutralMode(neutralMode);
 	}
 
-	public void setSteerPosition(double position) {
+	public void setSteerPosition(Rotation2d position) {
 		steer.setPosition(position);
 	}
 
-	public void setLinearPosition(double position) {
+	public void setLinearPosition(Rotation2d position) {
 		linear.setPosition(position);
 	}
 
 	public void logAll() {
-		Logger.recordOutput(LOGPATH + "/linearMotorVelocity", getLinearVelocity());
-		Logger.recordOutput(LOGPATH + "/steerAngle", getSteerAngle().getDegrees());
-		Logger.recordOutput(LOGPATH + "/steerTarget", steer.getPIDTarget());
-		Logger.recordOutput(LOGPATH + "/linearTarget", linear.getPIDTarget());
+		Logger.recordOutput(logpath + "/linearMotorVelocity", getLinearVelocity());
+		Logger.recordOutput(logpath + "/steerAngle", getSteerAngle().getDegrees());
+		Logger.recordOutput(logpath + "/steerTarget", steer.getPIDTarget());
+		Logger.recordOutput(logpath + "/linearTarget", linear.getPIDTarget());
+		steer.logAll();
+		linear.logAll();
 	}
 
 	public void stop() {

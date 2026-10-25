@@ -6,19 +6,20 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
+import frc.robot.RobotConstants;
 import frc.utils.math.AngleMath;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
 import java.util.function.Supplier;
 
-public class ModulesCommandBuilder {
+public class ModuleCommandsBuilder {
 
-	private ModuleAlon moduleAlon;
+	private final ModuleAlon moduleAlon;
 	private SmartJoystick defaultJoystick;
 	private final String logPath;
 
-	public ModulesCommandBuilder(ModuleAlon moduleAlon, String logPath) {
+	public ModuleCommandsBuilder(ModuleAlon moduleAlon, String logPath) {
 		this.logPath = logPath;
 		this.moduleAlon = moduleAlon;
 		moduleAlon.setDefaultCommand(
@@ -30,15 +31,13 @@ public class ModulesCommandBuilder {
 		this.defaultJoystick = defaultJoystick;
 	}
 
-	public static final double stickMinTolerance = .1;
-
 	public Command driveWithStick(Supplier<Double> xAxis, Supplier<Double> yAxis) {
 		RunCommand command = new RunCommand(() -> {
 			double x = xAxis.get();
 			double y = yAxis.get();
 			Logger.recordOutput("axis/x", x);
 			Logger.recordOutput("axis/y", y);
-			if (x * x + y * y >= stickMinTolerance * stickMinTolerance) {
+			if (x * x + y * y >= RobotConstants.moduleAlonStickTolerance * RobotConstants.moduleAlonStickTolerance) {
 				moduleAlon.steerToPosition(AngleMath.findAngleInRange(Rotation2d.fromRadians(Math.atan2(y, x)), moduleAlon.getSteerAngle()));
 				moduleAlon.linearSetPower(Math.sqrt(x * x + y * y));
 			}
@@ -61,10 +60,6 @@ public class ModulesCommandBuilder {
 
 	public Command driveWithRightStick(SmartJoystick joystick) {
 		return driveWithStick(() -> joystick.getAxisValue(Axis.RIGHT_X), () -> joystick.getAxisValue(Axis.RIGHT_Y));
-	}
-
-	public void logAll() {
-		moduleAlon.logAll();
 	}
 
 	public void setNeutralModeToLinear(NeutralModeValue mode) {

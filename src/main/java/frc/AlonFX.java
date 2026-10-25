@@ -181,6 +181,7 @@ public class AlonFX implements IMotor {
 		Logger.recordOutput(logPath + "/velocity", velocity.refresh().getValue());
 		Logger.recordOutput(logPath + "/voltage", voltage.refresh().getValue());
 		Logger.recordOutput(logPath + "/current", current.refresh().getValue());
+		Logger.recordOutput(logPath + "/isMotorConnected", isMotorConnected());
 		logMotorConnection();
 	}
 

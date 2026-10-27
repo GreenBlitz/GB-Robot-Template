@@ -1,6 +1,6 @@
 package frc.robot.subsystems.roller;
 
-import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Angle2d;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.interfaces.ControllableMotor;
@@ -8,8 +8,8 @@ import org.littletonrobotics.junction.Logger;
 
 public class VelocityRoller extends Roller {
 
-	private final InputSignal<Rotation2d> velocitySignal;
-	private final IRequest<Rotation2d> velocityRequest;
+	private final InputSignal<Angle2d> velocitySignal;
+	private final IRequest<Angle2d> velocityRequest;
 	private final VelocityRollerCommandsBuilder commandsBuilder;
 
 	public VelocityRoller(
@@ -17,10 +17,10 @@ public class VelocityRoller extends Roller {
 		ControllableMotor motor,
 		InputSignal<Double> voltageSignal,
 		InputSignal<Double> currentSignal,
-		InputSignal<Rotation2d> positionSignal,
-		InputSignal<Rotation2d> velocitySignal,
+		InputSignal<Angle2d> positionSignal,
+		InputSignal<Angle2d> velocitySignal,
 		IRequest<Double> voltageRequest,
-		IRequest<Rotation2d> velocityRequest
+		IRequest<Angle2d> velocityRequest
 	) {
 		super(logPath, motor, voltageSignal, currentSignal, positionSignal, velocitySignal, voltageRequest);
 		this.velocitySignal = velocitySignal;
@@ -34,18 +34,18 @@ public class VelocityRoller extends Roller {
 		return commandsBuilder;
 	}
 
-	public Rotation2d getVelocity() {
+	public Angle2d getVelocity() {
 		return velocitySignal.getLatestValue();
 	}
 
-	public void setVelocity(Rotation2d targetVelocity) {
+	public void setVelocity(Angle2d targetVelocity) {
 		motor.applyRequest(velocityRequest.withSetPoint(targetVelocity));
 	}
 
 	@Override
 	public void stop() {
 		super.stop();
-		velocityRequest.withSetPoint(Rotation2d.ZERO);
+		velocityRequest.withSetPoint(Angle2d.ZERO);
 	}
 
 	@Override

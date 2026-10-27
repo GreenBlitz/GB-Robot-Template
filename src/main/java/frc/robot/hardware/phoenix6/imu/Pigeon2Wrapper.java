@@ -4,7 +4,7 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import org.wpilib.math.util.MathUtil;
-import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Angle2d;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.Phoenix6Util;
@@ -121,12 +121,12 @@ public class Pigeon2Wrapper extends Pigeon2 {
 		return applyConfiguration(configuration, DEFAULT_CONFIG_NUMBER_OF_TRIES);
 	}
 
-	public StatusCode setYaw(Rotation2d newYaw) {
+	public StatusCode setYaw(Angle2d newYaw) {
 		return super.setYaw(newYaw.getDegrees());
 	}
 
-	public Rotation2d getRotation2dYaw() {
-		return Rotation2d.fromDegrees(getYaw().getValue().in(Degrees));
+	public Angle2d getAngle2dYaw() {
+		return Angle2d.fromDegrees(getYaw().getValue().in(Degrees));
 	}
 
 	/**
@@ -136,7 +136,7 @@ public class Pigeon2Wrapper extends Pigeon2 {
 	 *
 	 * @param newRoll - the wanted roll of the IMU to have
 	 */
-	public void setRoll(Rotation2d newRoll) {
+	public void setRoll(Angle2d newRoll) {
 		rollOffSetDegrees = calculateOffset(newRoll.getDegrees(), getRoll().getValue().in(Degrees));
 	}
 
@@ -147,58 +147,58 @@ public class Pigeon2Wrapper extends Pigeon2 {
 	 *
 	 * @param newPitch - the wanted pitch of the IMU to have
 	 */
-	public void setPitch(Rotation2d newPitch) {
+	public void setPitch(Angle2d newPitch) {
 		pitchOffSetDegrees = calculateOffset(newPitch.getDegrees(), getPitch().getValue().in(Degrees));
 	}
 
-	public Rotation2d getRollOffSet() {
-		return Rotation2d.fromDegrees(rollOffSetDegrees);
+	public Angle2d getRollOffSet() {
+		return Angle2d.fromDegrees(rollOffSetDegrees);
 	}
 
-	public Rotation2d getPitchOffSet() {
-		return Rotation2d.fromDegrees(pitchOffSetDegrees);
+	public Angle2d getPitchOffSet() {
+		return Angle2d.fromDegrees(pitchOffSetDegrees);
 	}
 
-	public Rotation2d getAdjustedRoll() {
-		return Rotation2d.fromDegrees(getRoll().getValue().in(Degrees) + rollOffSetDegrees);
+	public Angle2d getAdjustedRoll() {
+		return Angle2d.fromDegrees(getRoll().getValue().in(Degrees) + rollOffSetDegrees);
 	}
 
-	public Rotation2d getAdjustedPitch() {
-		return Rotation2d.fromDegrees(getPitch().getValue().in(Degrees) + pitchOffSetDegrees);
+	public Angle2d getAdjustedPitch() {
+		return Angle2d.fromDegrees(getPitch().getValue().in(Degrees) + pitchOffSetDegrees);
 	}
 
 	/**
 	 * @return - the yaw value ranged between -180 , 180
 	 */
-	public Rotation2d getRangedYaw() {
-		return rangeAngle(Rotation2d.fromDegrees(getYaw().getValue().in(Degrees)));
+	public Angle2d getRangedYaw() {
+		return rangeAngle(Angle2d.fromDegrees(getYaw().getValue().in(Degrees)));
 	}
 
 	/**
 	 * @return - the unadjusted roll value ranged between -180 , 180
 	 */
-	public Rotation2d getRangedRoll() {
-		return rangeAngle(Rotation2d.fromDegrees(getRoll().getValue().in(Degrees)));
+	public Angle2d getRangedRoll() {
+		return rangeAngle(Angle2d.fromDegrees(getRoll().getValue().in(Degrees)));
 	}
 
 	/**
 	 * @return - the unadjusted pitch value ranged between -180 , 180
 	 */
-	public Rotation2d getRangedPitch() {
-		return rangeAngle(Rotation2d.fromDegrees(getPitch().getValue().in(Degrees)));
+	public Angle2d getRangedPitch() {
+		return rangeAngle(Angle2d.fromDegrees(getPitch().getValue().in(Degrees)));
 	}
 
 	/**
 	 * @return - the adjusted roll value ranged between -180 , 180
 	 */
-	public Rotation2d getAdjustedRangedRoll() {
+	public Angle2d getAdjustedRangedRoll() {
 		return rangeAngle(getAdjustedRoll());
 	}
 
 	/**
 	 * @return - the adjusted pitch value ranged between -180 , 180
 	 */
-	public Rotation2d getAdjustedRangedPitch() {
+	public Angle2d getAdjustedRangedPitch() {
 		return rangeAngle(getAdjustedPitch());
 	}
 
@@ -217,8 +217,8 @@ public class Pigeon2Wrapper extends Pigeon2 {
 	 * @param angle - the angle to range
 	 * @return the ranged angle
 	 */
-	private Rotation2d rangeAngle(Rotation2d angle) {
-		return Rotation2d.fromRadians(MathUtil.angleModulus(angle.getRadians()));
+	private Angle2d rangeAngle(Angle2d angle) {
+		return Angle2d.fromRadians(MathUtil.angleModulus(angle.getRadians()));
 	}
 
 	public BusChain getBusChain() {

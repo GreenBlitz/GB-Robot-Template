@@ -1,11 +1,11 @@
 package frc.constants.field;
 
+import frc.utils.costomUnits.Angle2d;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.math.geometry.Rotation3d;
 import org.wpilib.math.geometry.Pose2d;
 import org.wpilib.math.geometry.Translation3d;
 import org.wpilib.math.geometry.Pose3d;
-import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.driverstation.Alliance;
 import frc.utils.driverstation.DriverStationUtil;
 import frc.utils.math.AngleTransform;
@@ -30,7 +30,7 @@ public class Field {
 		return isFieldConventionAlliance() ? translation : FieldMath.mirror(translation, true, true);
 	}
 
-	public static Rotation2d getAllianceRelative(Rotation2d rotation) {
+	public static Angle2d getAllianceRelative(Angle2d rotation) {
 		return isFieldConventionAlliance() ? rotation : FieldMath.transformAngle(rotation, AngleTransform.INVERT);
 	}
 

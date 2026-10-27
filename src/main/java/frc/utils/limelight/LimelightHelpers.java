@@ -9,7 +9,7 @@ import org.wpilib.networktables.NetworkTableInstance;
 import org.wpilib.networktables.TimestampedDoubleArray;
 import org.wpilib.math.geometry.Pose2d;
 import org.wpilib.math.geometry.Pose3d;
-import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Angle2d;
 import org.wpilib.math.geometry.Translation3d;
 import org.wpilib.math.util.Units;
 import org.wpilib.math.geometry.Rotation3d;
@@ -806,7 +806,7 @@ public class LimelightHelpers {
 			return new Pose2d();
 		}
 		Translation2d tran2d = new Translation2d(inData[0], inData[1]);
-		Rotation2d r2d = new Rotation2d(Units.degreesToRadians(inData[5]));
+		Angle2d r2d = new Angle2d(Units.degreesToRadians(inData[5]));
 		return new Pose2d(tran2d, r2d);
 	}
 

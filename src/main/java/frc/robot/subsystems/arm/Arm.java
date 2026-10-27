@@ -1,7 +1,7 @@
 package frc.robot.subsystems.arm;
 
 import com.ctre.phoenix6.controls.VoltageOut;
-import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Angle2d;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
@@ -53,11 +53,11 @@ public class Arm extends GBSubsystem {
 		return signals.statorCurrent().getLatestValue();
 	}
 
-	public Rotation2d getVelocity() {
+	public Angle2d getVelocity() {
 		return signals.velocity().getLatestValue();
 	}
 
-	public Rotation2d getPosition() {
+	public Angle2d getPosition() {
 		return signals.position().getLatestValue();
 	}
 
@@ -65,15 +65,15 @@ public class Arm extends GBSubsystem {
 		return sysIdCalibrator;
 	}
 
-	public boolean isAtPosition(Rotation2d targetPosition, Rotation2d tolerance) {
+	public boolean isAtPosition(Angle2d targetPosition, Angle2d tolerance) {
 		return signals.position().isNear(targetPosition, tolerance);
 	}
 
-	public boolean isPastPosition(Rotation2d position) {
+	public boolean isPastPosition(Angle2d position) {
 		return signals.position().isGreater(position);
 	}
 
-	public boolean isBehindPosition(Rotation2d position) {
+	public boolean isBehindPosition(Angle2d position) {
 		return signals.position().isLess(position);
 	}
 
@@ -100,11 +100,11 @@ public class Arm extends GBSubsystem {
 		motor.setBrake(brake);
 	}
 
-	public void setTargetPosition(Rotation2d targetPosition) {
+	public void setTargetPosition(Angle2d targetPosition) {
 		motor.applyRequest(positionRequest.withSetPoint(targetPosition));
 	}
 
-	public void setPosition(Rotation2d targetPosition) {
+	public void setPosition(Angle2d targetPosition) {
 		motor.resetPosition(targetPosition);
 	}
 

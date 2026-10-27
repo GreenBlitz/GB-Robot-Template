@@ -1,62 +1,62 @@
 package frc.robot.hardware.phoenix6.request;
 
 import com.ctre.phoenix6.controls.ControlRequest;
-import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Angle2d;
 import frc.robot.hardware.interfaces.IDynamicMotionMagicRequest;
 
 import java.util.function.Consumer;
 
 public class Phoenix6DynamicMotionMagicRequest extends Phoenix6MotionMagicRequest implements IDynamicMotionMagicRequest {
 
-	private final Consumer<Rotation2d> setMaxVelocity;
-	private Rotation2d maxVelocity;
+	private final Consumer<Angle2d> setMaxVelocity;
+	private Angle2d maxVelocity;
 
-	private final Consumer<Rotation2d> setMaxAcceleration;
-	private Rotation2d maxAcceleration;
+	private final Consumer<Angle2d> setMaxAcceleration;
+	private Angle2d maxAcceleration;
 
 	Phoenix6DynamicMotionMagicRequest(
-		Rotation2d defaultSetPoint,
+		Angle2d defaultSetPoint,
 		ControlRequest controlRequest,
-		Consumer<Rotation2d> setSetPoint,
+		Consumer<Angle2d> setSetPoint,
 		Consumer<Double> setFeedForward,
-		Consumer<Rotation2d> setMaxVelocity,
-		Consumer<Rotation2d> setMaxAcceleration,
+		Consumer<Angle2d> setMaxVelocity,
+		Consumer<Angle2d> setMaxAcceleration,
 		double defaultArbitraryFeedForward
 	) {
 		super(defaultSetPoint, controlRequest, setSetPoint, setFeedForward, defaultArbitraryFeedForward);
 		this.setMaxVelocity = setMaxVelocity;
 		this.setMaxAcceleration = setMaxAcceleration;
-		maxVelocity = new Rotation2d();
-		maxAcceleration = new Rotation2d();
+		maxVelocity = new Angle2d();
+		maxAcceleration = new Angle2d();
 	}
 
 	@Override
-	public Phoenix6DynamicMotionMagicRequest withSetPoint(Rotation2d setPoint) {
+	public Phoenix6DynamicMotionMagicRequest withSetPoint(Angle2d setPoint) {
 		super.withSetPoint(setPoint);
 		return this;
 	}
 
 	@Override
-	public IDynamicMotionMagicRequest withMaxVelocityRPS(Rotation2d maxVelocityRPS) {
+	public IDynamicMotionMagicRequest withMaxVelocityRPS(Angle2d maxVelocityRPS) {
 		maxVelocity = maxVelocityRPS;
 		setMaxVelocity.accept(maxVelocity);
 		return this;
 	}
 
 	@Override
-	public Rotation2d getMaxVelocityRPS() {
+	public Angle2d getMaxVelocityRPS() {
 		return maxVelocity;
 	}
 
 	@Override
-	public IDynamicMotionMagicRequest withMaxAccelerationRPS(Rotation2d maxAccelerationRPS) {
+	public IDynamicMotionMagicRequest withMaxAccelerationRPS(Angle2d maxAccelerationRPS) {
 		maxAcceleration = maxAccelerationRPS;
 		setMaxAcceleration.accept(maxAcceleration);
 		return this;
 	}
 
 	@Override
-	public Rotation2d getMaxAccelerationRPS() {
+	public Angle2d getMaxAccelerationRPS() {
 		return maxAcceleration;
 	}
 

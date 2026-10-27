@@ -86,8 +86,8 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 							DetectedObjectObservation observation = ObjectDetectionMath.getDetectedObjectObservation(
 								robotRelativeCameraPose,
 								objectType,
-								Rotation2d.fromDegrees(rawDetection.txnc()),
-								Rotation2d.fromDegrees(rawDetection.tync()),
+								Angle2d.fromDegrees(rawDetection.txnc()),
+								Angle2d.fromDegrees(rawDetection.tync()),
 								getTarget2dTimestampSeconds(getTarget2dValues())
 							);
 
@@ -116,8 +116,8 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 							DetectedObjectObservation observation = ObjectDetectionMath.getDetectedObjectObservation(
 								robotRelativeCameraPose,
 								objectType,
-								Rotation2d.fromDegrees(rawTarget.txnc()),
-								Rotation2d.fromDegrees(rawTarget.tync()),
+								Angle2d.fromDegrees(rawTarget.txnc()),
+								Angle2d.fromDegrees(rawTarget.tync()),
 								getTarget2dTimestampSeconds(getTarget2dValues())
 							);
 

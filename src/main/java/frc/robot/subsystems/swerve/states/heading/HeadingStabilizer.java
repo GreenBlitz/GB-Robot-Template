@@ -1,7 +1,7 @@
 package frc.robot.subsystems.swerve.states.heading;
 
 import org.wpilib.math.controller.PIDController;
-import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Angle2d;
 import frc.constants.MathConstants;
 import frc.robot.subsystems.swerve.SwerveConstants;
 
@@ -29,15 +29,15 @@ public class HeadingStabilizer {
 		targetLocked = false;
 	}
 
-	public void setTargetHeading(Rotation2d targetHeading) {
+	public void setTargetHeading(Angle2d targetHeading) {
 		if (!targetLocked) {
 			headingController.reset();
 			headingController.setSetpoint(targetHeading.getDegrees());
 		}
 	}
 
-	public Rotation2d calculatePIDOutput(Rotation2d currentHeading) {
-		return Rotation2d.fromDegrees(headingController.calculate(currentHeading.getDegrees()));
+	public Angle2d calculatePIDOutput(Angle2d currentHeading) {
+		return Angle2d.fromDegrees(headingController.calculate(currentHeading.getDegrees()));
 	}
 
 }

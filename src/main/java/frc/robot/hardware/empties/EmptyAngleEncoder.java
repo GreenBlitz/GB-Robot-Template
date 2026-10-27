@@ -1,6 +1,6 @@
 package frc.robot.hardware.empties;
 
-import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Angle2d;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 
 public class EmptyAngleEncoder extends EmptyDevice implements IAngleEncoder {
@@ -10,6 +10,6 @@ public class EmptyAngleEncoder extends EmptyDevice implements IAngleEncoder {
 	}
 
 	@Override
-	public void setPosition(Rotation2d position) {}
+	public void setPosition(Angle2d position) {}
 
 }

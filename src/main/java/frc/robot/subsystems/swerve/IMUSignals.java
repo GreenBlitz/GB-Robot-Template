@@ -1,31 +1,32 @@
 package frc.robot.subsystems.swerve;
 
+import frc.utils.costomUnits.Angle2d;
 import org.wpilib.math.geometry.*;
 import frc.robot.hardware.interfaces.InputSignal;
 
 public record IMUSignals(
-	InputSignal<Rotation2d> rollSignal,
-	InputSignal<Rotation2d> pitchSignal,
-	InputSignal<Rotation2d> yawSignal,
-	InputSignal<Rotation2d> rollAngularVelocitySignal,
-	InputSignal<Rotation2d> pitchAngularVelocitySignal,
-	InputSignal<Rotation2d> yawAngularVelocitySignal,
+	InputSignal<Angle2d> rollSignal,
+	InputSignal<Angle2d> pitchSignal,
+	InputSignal<Angle2d> yawSignal,
+	InputSignal<Angle2d> rollAngularVelocitySignal,
+	InputSignal<Angle2d> pitchAngularVelocitySignal,
+	InputSignal<Angle2d> yawAngularVelocitySignal,
 	InputSignal<Double> xAccelerationGSignal,
 	InputSignal<Double> yAccelerationGSignal,
 	InputSignal<Double> zAccelerationGSignal
 ) {
 
-	public Rotation2d[] getLatestAngularVelocity() {
-		return new Rotation2d[] {
+	public Angle2d[] getLatestAngularVelocity() {
+		return new Angle2d[] {
 			rollAngularVelocitySignal.getLatestValue(),
 			pitchAngularVelocitySignal.getLatestValue(),
 			yawAngularVelocitySignal.getLatestValue()};
 	}
 
 	public Rotation3d[] getAllOrientations() {
-		Rotation2d[] allRollValues = rollSignal.asArray();
-		Rotation2d[] allPitchValues = pitchSignal.asArray();
-		Rotation2d[] allYawValues = yawSignal.asArray();
+		Angle2d[] allRollValues = rollSignal.asArray();
+		Angle2d[] allPitchValues = pitchSignal.asArray();
+		Angle2d[] allYawValues = yawSignal.asArray();
 		Rotation3d[] allOrientations = new Rotation3d[Math.min(Math.min(allRollValues.length, allPitchValues.length), allYawValues.length)];
 
 		for (int i = 0; i < allOrientations.length; i++) {

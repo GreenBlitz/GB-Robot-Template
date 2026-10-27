@@ -1,7 +1,7 @@
 package frc.robot.poseestimator.WPILibPoseEstimator;
 
 import org.wpilib.math.geometry.Pose2d;
-import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Angle2d;
 import frc.utils.math.StandardDeviations2D;
 
 
@@ -17,13 +17,13 @@ public class WPILibPoseEstimatorConstants {
 
 	public static final double MINIMUM_COLLISION_IMU_ACCELERATION_G = 2;
 
-	public static final Rotation2d MINIMUM_TILT_IMU_ROLL = Rotation2d.fromDegrees(4);
+	public static final Angle2d MINIMUM_TILT_IMU_ROLL = Angle2d.fromDegrees(4);
 
-	public static final Rotation2d MINIMUM_TILT_IMU_PITCH = Rotation2d.fromDegrees(4);
+	public static final Angle2d MINIMUM_TILT_IMU_PITCH = Angle2d.fromDegrees(4);
 
 	public static final double MINIMUM_SKID_ROBOT_TO_MODULE_VELOCITY_DIFFERENCE_METERS_PER_SECOND = 0.5;
 
-	public static final Rotation2d INITIAL_IMU_YAW = new Rotation2d();
+	public static final Angle2d INITIAL_IMU_YAW = new Angle2d();
 
 	public static final Pose2d STARTING_ODOMETRY_POSE = new Pose2d();
 

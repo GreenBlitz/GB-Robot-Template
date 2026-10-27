@@ -1,7 +1,7 @@
 package frc.robot.subsystems.swerve.states.aimassist;
 
 import org.wpilib.math.geometry.Pose2d;
-import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Angle2d;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.math.kinematics.ChassisVelocities;
 import frc.constants.field.Field;
@@ -15,20 +15,20 @@ public class AimAssistMath {
 
 	public static ChassisVelocities getRotationAssistedVelocities(
 		ChassisVelocities velocities,
-		Rotation2d robotHeading,
-		Rotation2d targetHeading,
+		Angle2d robotHeading,
+		Angle2d targetHeading,
 		boolean slowDownByDriveMagnitude,
 		SwerveConstants swerveConstants
 	) {
-		Rotation2d pidOutputVelocityPerSecond = Rotation2d
+		Angle2d pidOutputVelocityPerSecond = Angle2d
 			.fromDegrees(swerveConstants.rotationDegreesPIDController().calculate(robotHeading.getDegrees(), targetHeading.getDegrees()));
 
 		if (slowDownByDriveMagnitude) {
 			pidOutputVelocityPerSecond = applyMagnitudeCompensation(pidOutputVelocityPerSecond, SwerveMath.getDriveMagnitude(velocities));
 		}
 
-		Rotation2d angularVelocityPerSecond = applyMagnitudeCompensation(pidOutputVelocityPerSecond, SwerveMath.getDriveMagnitude(velocities));
-		Rotation2d clampedAngularVelocityPerSecond = ToleranceMath
+		Angle2d angularVelocityPerSecond = applyMagnitudeCompensation(pidOutputVelocityPerSecond, SwerveMath.getDriveMagnitude(velocities));
+		Angle2d clampedAngularVelocityPerSecond = ToleranceMath
 			.clamp(pidOutputVelocityPerSecond, swerveConstants.maxRotationalVelocityPerSecond());
 
 		return new ChassisVelocities(velocities.vx, velocities.vy, clampedAngularVelocityPerSecond.getRadians());
@@ -49,7 +49,7 @@ public class AimAssistMath {
 	public static ChassisVelocities getObjectAssistedVelocities(
 		ChassisVelocities velocities,
 		Pose2d robotPose,
-		Rotation2d allianceRelativeTargetHeading,
+		Angle2d allianceRelativeTargetHeading,
 		Translation2d objectTranslation,
 		SwerveConstants swerveConstants,
 		SwerveState swerveState,
@@ -61,7 +61,7 @@ public class AimAssistMath {
 		double neededHorizontalVelocityRelativeToObjectMetersPerSecond = swerveConstants.yMetersPIDController()
 			.calculate(0, objectRelativeToRobot.getY());
 
-		Rotation2d targetHeadingHingeSystemAngle = switch (swerveState.getDriveRelative()) {
+		Angle2d targetHeadingHingeSystemAngle = switch (swerveState.getDriveRelative()) {
 			case ALLIANCE_RELATIVE -> Field.getAllianceRelative(allianceRelativeTargetHeading);
 			case ROBOT_RELATIVE -> allianceRelativeTargetHeading.minus(robotPose.getRotation());
 		};
@@ -90,7 +90,7 @@ public class AimAssistMath {
 		return SwerveMath.robotToAllianceRelativeVelocities(assistedVelocities, targetHeadingHingeSystemAngle);
 	}
 
-	private static Rotation2d applyMagnitudeCompensation(Rotation2d velocityPerSecond, double magnitude) {
+	private static Angle2d applyMagnitudeCompensation(Angle2d velocityPerSecond, double magnitude) {
 		return velocityPerSecond.times(SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR).div(magnitude + SwerveConstants.AIM_ASSIST_MAGNITUDE_FACTOR);
 	}
 

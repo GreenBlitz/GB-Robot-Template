@@ -1,16 +1,16 @@
 package frc.robot.vision.cameras.limelight;
 
-import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Angle2d;
 
 public record LimelightTarget2dValues(
 	boolean isValid,
 	int targetCount,
 	double targetLatencyMilliseconds,
 	double captureLatencyMilliseconds,
-	Rotation2d targetX,
-	Rotation2d targetY,
-	Rotation2d targetXNoCrosshair,
-	Rotation2d targetYNoCrosshair,
+	Angle2d targetX,
+	Angle2d targetY,
+	Angle2d targetXNoCrosshair,
+	Angle2d targetYNoCrosshair,
 	double targetAreaPercentage,
 	int targetID,
 	int targetDetectorClassIndex,
@@ -19,13 +19,13 @@ public record LimelightTarget2dValues(
 	double targetShortSidePixels,
 	double targetHorizontalExtentPixels,
 	double targetVerticalExtentPixels,
-	Rotation2d targetSkew
+	Angle2d targetSkew
 ) {
 
 	public static final int AMOUNT_OF_TARGET2D_VALUES = 17;
 
 	public LimelightTarget2dValues() {
-		this(false, 0, 0, 0, Rotation2d.ZERO, Rotation2d.ZERO, Rotation2d.ZERO, Rotation2d.ZERO, 0, 0, 0, 0, 0, 0, 0, 0, Rotation2d.ZERO);
+		this(false, 0, 0, 0, Angle2d.ZERO, Angle2d.ZERO, Angle2d.ZERO, Angle2d.ZERO, 0, 0, 0, 0, 0, 0, 0, 0, Angle2d.ZERO);
 	}
 
 	public static LimelightTarget2dValues fromArray(double[] target2dArray) {
@@ -35,10 +35,10 @@ public record LimelightTarget2dValues(
 				(int) target2dArray[1],
 				target2dArray[2],
 				target2dArray[3],
-				Rotation2d.fromDegrees(target2dArray[4]),
-				Rotation2d.fromDegrees(target2dArray[5]),
-				Rotation2d.fromDegrees(target2dArray[6]),
-				Rotation2d.fromDegrees(target2dArray[7]),
+				Angle2d.fromDegrees(target2dArray[4]),
+				Angle2d.fromDegrees(target2dArray[5]),
+				Angle2d.fromDegrees(target2dArray[6]),
+				Angle2d.fromDegrees(target2dArray[7]),
 				target2dArray[8],
 				(int) target2dArray[9],
 				(int) target2dArray[10],
@@ -47,7 +47,7 @@ public record LimelightTarget2dValues(
 				target2dArray[13],
 				target2dArray[14],
 				target2dArray[15],
-				Rotation2d.fromDegrees(target2dArray[16])
+				Angle2d.fromDegrees(target2dArray[16])
 			);
 		} else {
 			return new LimelightTarget2dValues();

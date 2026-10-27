@@ -1,7 +1,7 @@
 package frc.robot.poseestimator;
 
 import org.wpilib.math.geometry.Pose2d;
-import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Angle2d;
 
 public interface IOdometryEstimator {
 
@@ -13,6 +13,6 @@ public interface IOdometryEstimator {
 
 	Pose2d getOdometryPose();
 
-	void setHeading(Rotation2d newHeading);
+	void setHeading(Angle2d newHeading);
 
 }

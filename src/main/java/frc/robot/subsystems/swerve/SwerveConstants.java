@@ -4,7 +4,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import org.wpilib.math.controller.PIDController;
 import org.wpilib.math.geometry.Pose2d;
-import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Angle2d;
 import frc.constants.MathConstants;
 
 public record SwerveConstants(
@@ -12,7 +12,7 @@ public record SwerveConstants(
 	String stateLogPath,
 	String velocityLogPath,
 	double velocityAt12VoltsMetersPerSecond,
-	Rotation2d maxRotationalVelocityPerSecond,
+	Angle2d maxRotationalVelocityPerSecond,
 	PIDController xMetersPIDController,
 	PIDController yMetersPIDController,
 	PIDController wraplessRotationDegreesPIDController,
@@ -23,7 +23,7 @@ public record SwerveConstants(
 	public SwerveConstants(
 		String logPath,
 		double velocityAt12VoltsMetersPerSecond,
-		Rotation2d maxRotationalVelocityPerSecond,
+		Angle2d maxRotationalVelocityPerSecond,
 		PIDConstants translationMetersPIDConstants,
 		PIDConstants rotationDegreesPIDConstants
 	) {
@@ -44,14 +44,14 @@ public record SwerveConstants(
 			.enableContinuousInput(MathConstants.HALF_CIRCLE.unaryMinus().getDegrees(), MathConstants.HALF_CIRCLE.getDegrees());
 	}
 
-	static final Rotation2d WHEEL_RADIUS_CALIBRATION_VELOCITY_PER_SECOND = Rotation2d.fromRotations(0.5);
+	static final Angle2d WHEEL_RADIUS_CALIBRATION_VELOCITY_PER_SECOND = Angle2d.fromRotations(0.5);
 
 	public static final double AIM_ASSIST_MAGNITUDE_FACTOR = 4;
 
 	public static final double MIN_COLLISION_G_FORCE = 2;
 
-	public static final Pose2d DEADBANDS = new Pose2d(0.0092, 0.0092, Rotation2d.fromRadians(0.0115));
-	static final Rotation2d CALIBRATION_MODULE_ANGLE_TOLERANCE = Rotation2d.fromDegrees(3);
-	static final Rotation2d CALIBRATION_MODULE_ANGULAR_VELOCITY_PER_SECOND_DEADBAND = Rotation2d.fromDegrees(3);
+	public static final Pose2d DEADBANDS = new Pose2d(0.0092, 0.0092, Angle2d.fromRadians(0.0115));
+	static final Angle2d CALIBRATION_MODULE_ANGLE_TOLERANCE = Angle2d.fromDegrees(3);
+	static final Angle2d CALIBRATION_MODULE_ANGULAR_VELOCITY_PER_SECOND_DEADBAND = Angle2d.fromDegrees(3);
 
 }

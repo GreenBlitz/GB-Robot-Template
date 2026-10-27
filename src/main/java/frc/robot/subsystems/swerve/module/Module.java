@@ -2,7 +2,7 @@ package frc.robot.subsystems.swerve.module;
 
 import frc.robot.subsystems.swerve.module.extrainputs.DriveInputsAutoLogged;
 import frc.robot.subsystems.swerve.module.extrainputs.ModuleInputsAutoLogged;
-import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Angle2d;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.math.kinematics.SwerveModulePosition;
 import org.wpilib.math.kinematics.SwerveModuleVelocity;
@@ -41,7 +41,7 @@ public class Module {
 	private final DriveInputsAutoLogged driveInputs;
 
 	private SwerveModuleVelocity targetVelocity;
-	private Rotation2d startingSteerPosition;
+	private Angle2d startingSteerPosition;
 	private boolean isClosedLoop;
 
 	public Module(
@@ -69,7 +69,7 @@ public class Module {
 		this.driveSignals = driveSignals;
 
 		this.targetVelocity = new SwerveModuleVelocity();
-		this.startingSteerPosition = new Rotation2d();
+		this.startingSteerPosition = new Angle2d();
 		this.isClosedLoop = ModuleConstants.DEFAULT_IS_CLOSE_LOOP;
 		this.moduleInputs = new ModuleInputsAutoLogged();
 		this.driveInputs = new DriveInputsAutoLogged();
@@ -94,7 +94,7 @@ public class Module {
 		return constants.positionFromCenterMeters();
 	}
 
-	public double toDriveMeters(Rotation2d angle) {
+	public double toDriveMeters(Angle2d angle) {
 		return Conversions.angleToDistance(angle, constants.wheelDiameterMeters());
 	}
 
@@ -103,9 +103,9 @@ public class Module {
 		driveInputs.uncoupledVelocityAnglesPerSecond = ModuleUtil
 			.uncoupleDriveAngle(driveSignals.velocity().getLatestValue(), steerSignals.velocity().getLatestValue(), constants.couplingRatio());
 
-		driveInputs.uncoupledPositions = new Rotation2d[driveSignals.position().asArray().length];
+		driveInputs.uncoupledPositions = new Angle2d[driveSignals.position().asArray().length];
 		for (int i = 0; i < driveInputs.uncoupledPositions.length; i++) {
-			Rotation2d steerDelta = Rotation2d
+			Angle2d steerDelta = Angle2d
 				.fromRotations(steerSignals.position().asArray()[i].getRotations() - startingSteerPosition.getRotations());
 			driveInputs.uncoupledPositions[i] = ModuleUtil
 				.uncoupleDriveAngle(driveSignals.position().asArray()[i], steerDelta, constants.couplingRatio());
@@ -179,16 +179,16 @@ public class Module {
 
 	public void pointToCenter() {
 		double angleRadians = Math.atan(constants.positionFromCenterMeters().getY() / constants.positionFromCenterMeters().getX());
-		pointSteer(Rotation2d.fromRadians(angleRadians), true);
+		pointSteer(Angle2d.fromRadians(angleRadians), true);
 	}
 
 	public void pointInCircle() {
 		double angleRadians = Math.atan(constants.positionFromCenterMeters().getY() / constants.positionFromCenterMeters().getX());
 		angleRadians -= MathConstants.QUARTER_CIRCLE.getRadians();
-		pointSteer(Rotation2d.fromRadians(angleRadians), true);
+		pointSteer(Angle2d.fromRadians(angleRadians), true);
 	}
 
-	public void pointSteer(Rotation2d steerTargetPosition, boolean optimize) {
+	public void pointSteer(Angle2d steerTargetPosition, boolean optimize) {
 		SwerveModuleVelocity moduleVelocity = new SwerveModuleVelocity(0, steerTargetPosition);
 		if (optimize) {
 			moduleVelocity = moduleVelocity.optimize(getSteerPosition());
@@ -210,7 +210,7 @@ public class Module {
 		setTargetVelocity(this.targetVelocity.velocity, isClosedLoop);
 	}
 
-	private void setTargetSteerPosition(Rotation2d targetSteerPosition) {
+	private void setTargetSteerPosition(Angle2d targetSteerPosition) {
 		steer.applyRequest(steerRequests.position().withSetPoint(targetSteerPosition));
 	}
 
@@ -224,8 +224,8 @@ public class Module {
 
 	public void setTargetClosedLoopVelocity(double targetVelocityMetersPerSecond) {
 		setClosedLoop(true);
-		Rotation2d targetVelocityPerSecond = Conversions.distanceToAngle(targetVelocityMetersPerSecond, constants.wheelDiameterMeters());
-		Rotation2d coupledVelocityPerSecond = ModuleUtil
+		Angle2d targetVelocityPerSecond = Conversions.distanceToAngle(targetVelocityMetersPerSecond, constants.wheelDiameterMeters());
+		Angle2d coupledVelocityPerSecond = ModuleUtil
 			.coupleDriveAngle(targetVelocityPerSecond, steerSignals.velocity().getLatestValue(), constants.couplingRatio());
 		drive.applyRequest(driveRequests.velocity().withSetPoint(coupledVelocityPerSecond));
 	}
@@ -269,7 +269,7 @@ public class Module {
 		return new SwerveModuleVelocity(getDriveVelocityMetersPerSecond(), getSteerPosition());
 	}
 
-	public Rotation2d getDrivePosition() {
+	public Angle2d getDrivePosition() {
 		return driveInputs.uncoupledPositions[driveInputs.uncoupledPositions.length - 1];
 	}
 
@@ -277,7 +277,7 @@ public class Module {
 		return driveInputs.velocityMetersPerSecond;
 	}
 
-	public Rotation2d getSteerPosition() {
+	public Angle2d getSteerPosition() {
 		return steerSignals.position().getLatestValue();
 	}
 
@@ -286,7 +286,7 @@ public class Module {
 		return ToleranceMath.isNear(getTargetVelocity().velocity, getDriveVelocityMetersPerSecond(), speedToleranceMetersPerSecond);
 	}
 
-	public boolean isSteerAtTargetPosition(Rotation2d steerPositionTolerance, Rotation2d steerVelocityPerSecondDeadband) {
+	public boolean isSteerAtTargetPosition(Angle2d steerPositionTolerance, Angle2d steerVelocityPerSecondDeadband) {
 		boolean isStopping = steerSignals.velocity().getLatestValue().getRadians() <= steerVelocityPerSecondDeadband.getRadians();
 		if (!isStopping) {
 			return false;
@@ -296,8 +296,8 @@ public class Module {
 	}
 
 	public boolean isAtTargetState(
-		Rotation2d steerPositionTolerance,
-		Rotation2d steerVelocityPerSecondDeadband,
+		Angle2d steerPositionTolerance,
+		Angle2d steerVelocityPerSecondDeadband,
 		double speedToleranceMetersPerSecond
 	) {
 		return isSteerAtTargetPosition(steerPositionTolerance, steerVelocityPerSecondDeadband)

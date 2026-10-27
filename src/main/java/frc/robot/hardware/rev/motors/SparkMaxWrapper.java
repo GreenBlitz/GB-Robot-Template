@@ -2,9 +2,9 @@ package frc.robot.hardware.rev.motors;
 
 import com.revrobotics.REVLibError;
 import com.revrobotics.spark.SparkMax;
-import org.wpilib.math.geometry.Rotation2d;
 import frc.robot.hardware.rev.REVUtil;
 import frc.utils.Conversions;
+import frc.utils.costomUnits.Angle2d;
 
 public class SparkMaxWrapper extends SparkMax {
 
@@ -19,8 +19,8 @@ public class SparkMaxWrapper extends SparkMax {
 		return getAppliedOutput().get() * getBusVoltage().get();
 	}
 
-	public Rotation2d getVelocityRPS() {
-		return Rotation2d.fromRotations(Conversions.perMinuteToPerSecond(getEncoder().getVelocity().get()));
+	public Angle2d getVelocityRPS() {
+		return Angle2d.fromRotations(Conversions.perMinuteToPerSecond(getEncoder().getVelocity().get()));
 	}
 
 	public REVLibError applyConfiguration(SparkMaxConfiguration configuration, int numberOfTries) {

@@ -6,6 +6,7 @@ import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -109,11 +110,16 @@ public class AlonFX implements IMotor {
 		motor.setControl(positionVoltage);
 	}
 
-
+	@Deprecated
 	public void moveAtHalfPower() {
 		setPower(0.5);
 	}
 
+	protected final TalonFXSimState getSimState(){
+		return motor.getSimState();
+	}
+
+	@Deprecated
 	public void moveReverseTenthSpeed() {
 		setPower(-0.1);
 	}

@@ -104,5 +104,10 @@ public class ModuleAlon extends GBSubsystem {
 		steer.stopMotor();
 	}
 
+	public void updateSimulation(){
+		linear.updateSimulation();
+		steer.updateSimulation();
+	}
+
 
 }

@@ -108,8 +108,11 @@ public class AlonFX implements IMotor {
 
 	@Override
 	public void updateSimulation() {
+		simulation.updateMotor();
 		motor.getSimState().setRawRotorPosition(simulation.getRotorPosition().getRotations());
 		motor.getSimState().setRotorVelocity(simulation.getMechanismVelocityRPS().getRotations());
+		simulation.setInputVoltage(motor.getSimState().getMotorVoltage());
+		System.out.println(logpath+": "+motor.getSimState().getMotorVoltage());
 	}
 
 	@Override
@@ -137,21 +140,23 @@ public class AlonFX implements IMotor {
 		setPower(0.5);
 	}
 
-	protected final TalonFXSimState getSimState(){
-		return motor.getSimState();
-	}
-
 	@Deprecated
 	public void moveReverseTenthSpeed() {
 		setPower(-0.1);
 	}
 
 	public Rotation2d getPosition() {
+		if (RobotManager.isSimulation()){
+			return simulation.getRotorPosition();
+		}
 		position.refresh();
 		return Rotation2d.fromRotations(StatusSignal.getLatencyCompensatedValueAsDouble(position, velocity));
 	}
 
 	public Rotation2d getVelocity() {
+		if (RobotManager.isSimulation()){
+			return simulation.getRotorVelocityRPS();
+		}
 		velocity.refresh();
 		return Rotation2d.fromRotations(velocity.getValueAsDouble());
 	}

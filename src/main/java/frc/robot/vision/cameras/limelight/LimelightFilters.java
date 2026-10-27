@@ -99,7 +99,7 @@ public class LimelightFilters {
 
 		private static double getFieldOffsetMeters(double axisPositionMeters, double fieldAxisLengthMeters) {
 			double axisFieldOffsetMeters = 0;
-			if (axisPositionMeters < 0 || axisPositionMeters - fieldAxisLengthMeters > 0) {
+			if (axisPositionMeters < 0 || axisPositionMeters > fieldAxisLengthMeters) {
 				axisFieldOffsetMeters = axisPositionMeters < 0 ? axisPositionMeters : axisPositionMeters - fieldAxisLengthMeters;
 			}
 			return Math.abs(axisFieldOffsetMeters);

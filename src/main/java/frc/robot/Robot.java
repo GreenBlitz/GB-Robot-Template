@@ -17,7 +17,7 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.imu.IMUFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
-import frc.robot.subsystems.tal.ModuleTal;
+import frc.robot.subsystems.tal.GBModuleTal;
 import frc.robot.vision.cameras.limelight.Limelight;
 import frc.robot.vision.cameras.limelight.LimelightFilters;
 import frc.robot.vision.cameras.limelight.LimelightStdDevCalculations;
@@ -42,7 +42,7 @@ public class Robot {
 	private final IPoseEstimator poseEstimator;
 	private final List<Limelight> limelights;
 	private final TalMotorControilMission motor;
-	private final ModuleTal moduleTal;
+	private final GBModuleTal GBModuleTal;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -66,7 +66,7 @@ public class Robot {
 		);
 
 		motor = new TalMotorControilMission(10);
-		this.moduleTal = new ModuleTal(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/ModuleTal", 10, 11);
+		this.GBModuleTal = new GBModuleTal(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/GBModuleTal", 10, 11);
 
 		this.limelights = List.of();
 		limelights.forEach(
@@ -99,7 +99,7 @@ public class Robot {
 
 	public void updateSubsystems() {
 		swerve.update();
-		moduleTal.update();
+		GBModuleTal.update();
 	}
 
 	public void periodic() {
@@ -138,8 +138,8 @@ public class Robot {
 		return motor;
 	}
 
-	public ModuleTal getModuleTal() {
-		return this.moduleTal;
+	public GBModuleTal getGBModuleTal() {
+		return this.GBModuleTal;
 	}
 
 	private void configureBrakeStateChooser() {

@@ -1,16 +1,17 @@
 package frc.robot.subsystems.tal;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import org.littletonrobotics.junction.Logger;
 
 public class DriveDistanceCommand extends Command {
 
-	public ModuleTal module;
-	private final double angle;
-	private final double targetRotations;
-	private double startPosition;
+	public GBModuleTal module;
+	private final Rotation2d angle;
+	private final Rotation2d targetRotations;
+	private Rotation2d startPosition;
 
-	public DriveDistanceCommand(ModuleTal module, double angle, double targetRotations) {
+	public DriveDistanceCommand(GBModuleTal module, Rotation2d angle, Rotation2d targetRotations) {
 		this.module = module;
 		this.angle = angle;
 		this.targetRotations = targetRotations;
@@ -28,10 +29,10 @@ public class DriveDistanceCommand extends Command {
 	public void execute() {
 		this.module.steerToAngle(this.angle);
 		if (
-			Math.abs(this.angle) - Math.abs(this.module.getSteerAngle()) <= 1
-				&& Math.abs(this.angle) - Math.abs(this.module.getSteerAngle()) >= -1
+			Math.abs(this.angle.getDegrees()) - Math.abs(this.module.getSteerAngle().getDegrees()) <= 1
+				&& Math.abs(this.angle.getDegrees()) - Math.abs(this.module.getSteerAngle().getDegrees()) >= -1
 		)
-			if (this.targetRotations > 0) {
+			if (this.targetRotations.getRotations() > 0) {
 				this.module.setDrivePower(ModuleTalConstants.defaultPower);
 			} else {
 				this.module.setDrivePower(-ModuleTalConstants.defaultPower);
@@ -40,7 +41,8 @@ public class DriveDistanceCommand extends Command {
 
 	@Override
 	public boolean isFinished() {
-		double result = (Math.abs(this.startPosition + this.targetRotations)) - Math.abs(this.module.getDrivePosition());
+		double result = (Math.abs(this.startPosition.getRotations() + this.targetRotations.getRotations()))
+			- Math.abs(this.module.getDrivePosition().getRotations());
 		Logger.recordOutput("drivedistanceResult", result);
 		Logger.recordOutput("drivePoisition", this.module.getDrivePosition());
 		Logger.recordOutput("startpoition", this.startPosition);

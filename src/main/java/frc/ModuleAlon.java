@@ -24,12 +24,14 @@ public class ModuleAlon extends GBSubsystem {
 		double linearGearRatio,
 		double steerKp,
 		double linearKp,
+		double steerMomentOfInertiaKgM2,
+		double linearMomentOfInertiaKgM2,
 		CANBus canBus,
 		String logPath
 	) {
 		super(logPath);
-		this.steer = new AlonFX(steerID, canBus, logPath + "/steer", steerGearRatio, steerKp);
-		this.linear = new AlonFX(linearID, canBus, logPath + "/drive", linearGearRatio, linearKp);
+		this.steer = new AlonFX(steerID, canBus, logPath + "/steer", steerGearRatio, steerKp, steerMomentOfInertiaKgM2);
+		this.linear = new AlonFX(linearID, canBus, logPath + "/drive", linearGearRatio, linearKp, linearMomentOfInertiaKgM2);
 		this.logpath = logPath;
 
 		commandBuilder = new ModuleCommandsBuilder(this, logPath + "/commandBuilder");

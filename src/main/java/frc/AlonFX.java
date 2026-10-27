@@ -8,13 +8,18 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.hardware.interfaces.IMotor;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.mechanisms.MechanismSimulation;
+import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
+import frc.utils.battery.BatteryUtil;
 import org.littletonrobotics.junction.Logger;
 import com.ctre.phoenix6.signals.InvertedValue;
 
@@ -24,14 +29,14 @@ public class AlonFX implements IMotor {
 	private final TalonFX motor;
 	private InvertedValue direction;
 	private final String logpath;
-	private MechanismSimulation mechanismSimulation;
+	private SimpleMotorSimulation simulation;
 
 	private final StatusSignal<AngularVelocity> velocity;
 	private final StatusSignal<Voltage> voltage;
 	private final StatusSignal<Current> current;
 	private final StatusSignal<Angle> position;
 
-	public AlonFX(int deviceId, CANBus canBus, String logPath, double gearRatio, double kP) {
+	public AlonFX(int deviceId, CANBus canBus, String logPath, double gearRatio, double kP, double momentOfInertiaKgM2) {
 		this.logpath = logPath;
 		this.motor = new TalonFX(deviceId, canBus);
 		TalonFXConfiguration configuration = createConfig(gearRatio, kP);
@@ -46,6 +51,20 @@ public class AlonFX implements IMotor {
 		current.setUpdateFrequency(50);
 		position = motor.getPosition();
 		position.setUpdateFrequency(50);
+		if (RobotManager.isSimulation()){
+			simulation=new SimpleMotorSimulation(
+					new DCMotorSim(
+							LinearSystemId.createDCMotorSystem(
+									DCMotor.getKrakenX60(1),
+									momentOfInertiaKgM2,
+									gearRatio
+							),
+							DCMotor.getKrakenX60Foc(1)
+					)
+			);
+		}
+		motor.getSimState().setSupplyVoltage(BatteryUtil.DEFAULT_VOLTAGE);
+		motor.getSimState().setMotorType(TalonFXSimState.MotorType.KrakenX60);
 	}
 
 	private TalonFXConfiguration createConfig(double gearRatio, double kP) {
@@ -88,7 +107,10 @@ public class AlonFX implements IMotor {
 	}
 
 	@Override
-	public void updateSimulation() {}
+	public void updateSimulation() {
+		motor.getSimState().setRawRotorPosition(simulation.getRotorPosition().getRotations());
+		motor.getSimState().setRotorVelocity(simulation.getMechanismVelocityRPS().getRotations());
+	}
 
 	@Override
 	public void setBrake(boolean brake) {

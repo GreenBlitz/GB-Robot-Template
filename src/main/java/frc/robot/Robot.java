@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -65,6 +66,7 @@ public class Robot {
 			swerve.getIMUAbsoluteYaw().getTimestamp()
 		);
 		this.moduleAlon = new ModuleAlon(RobotConstants.alonSteerId, RobotConstants.alonLinearId, RobotConstants.steerGearRatio, RobotConstants.linearGearRatio, RobotConstants.steerKp, RobotConstants.linearKp, RobotConstants.steerMomementOfInertiaKgM2, RobotConstants.linearMomentOfInertiaKgM2 ,new CANBus("rio"), "/motor");
+		this.moduleAlon.setLinearNeutral(NeutralModeValue.Brake);
 
 		this.limelights = List.of();
 		limelights.forEach(

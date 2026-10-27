@@ -92,7 +92,7 @@ public class ModuleAlon extends GBSubsystem {
 
 	public void logAll() {
 		Logger.recordOutput(logpath + "/linearMotorVelocity", getLinearVelocity());
-		Logger.recordOutput(logpath + "/steerAngle", getSteerAngle().getDegrees());
+		Logger.recordOutput(logpath + "/steerAngle", getSteerAngle());
 		Logger.recordOutput(logpath + "/steerTarget", steer.getPIDTarget());
 		Logger.recordOutput(logpath + "/linearTarget", linear.getPIDTarget());
 		steer.logAll();

@@ -35,11 +35,15 @@ public class ModuleCommandsBuilder {
 		RunCommand command = new RunCommand(() -> {
 			double x = xAxis.get();
 			double y = yAxis.get();
-			Logger.recordOutput("axis/x", x);
-			Logger.recordOutput("axis/y", y);
+			Logger.recordOutput(logPath+"/axis/x", x);
+			Logger.recordOutput(logPath+"/axis/y", y);
+			Logger.recordOutput(logPath+"/axis/angle",Rotation2d.fromRadians(Math.atan2(y, x)));
+			Logger.recordOutput(logPath+"/axis/angleInRange",AngleMath.findAngleInRange(Rotation2d.fromRadians(Math.atan2(y, x)), moduleAlon.getSteerAngle()));
 			if (x * x + y * y >= RobotConstants.moduleAlonStickTolerance * RobotConstants.moduleAlonStickTolerance) {
 				moduleAlon.steerToPosition(AngleMath.findAngleInRange(Rotation2d.fromRadians(Math.atan2(y, x)), moduleAlon.getSteerAngle()));
 				moduleAlon.linearSetPower(Math.sqrt(x * x + y * y));
+			} else {
+				moduleAlon.stop();
 			}
 		});
 		command.addRequirements(moduleAlon);

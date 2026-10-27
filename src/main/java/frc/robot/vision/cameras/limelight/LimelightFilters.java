@@ -26,10 +26,10 @@ public class LimelightFilters {
 		Limelight limelight,
 		Function<Double, Optional<Rotation2d>> wantedYawAtTimestamp,
 		Supplier<Boolean> isYawCalibrated,
-		double robotInFieldTolerance,
+		double robotInFieldToleranceMeters,
 		Rotation2d yawAtAngleTolerance
 	) {
-		return MegaTagFilters.isRobotInField(() -> limelight.getMT1RawData().pose().getTranslation(), robotInFieldTolerance)
+		return MegaTagFilters.isRobotInField(() -> limelight.getMT1RawData().pose().getTranslation(), robotInFieldToleranceMeters)
 			.and(
 				MegaTagFilters.doesYawExistAtTimestamp(() -> limelight.getMT1RawData().timestampSeconds(), wantedYawAtTimestamp)
 					.implies(
@@ -47,10 +47,10 @@ public class LimelightFilters {
 		Limelight limelight,
 		Function<Double, Optional<Rotation2d>> wantedYawAtTimestamp,
 		Supplier<Boolean> isYawCalibrated,
-		double robotInFieldTolerance,
+		double robotInFieldToleranceMeters,
 		Rotation2d yawAtAngleTolerance
 	) {
-		return MegaTagFilters.isRobotInField(() -> limelight.getMT2RawData().pose().getTranslation(), robotInFieldTolerance)
+		return MegaTagFilters.isRobotInField(() -> limelight.getMT2RawData().pose().getTranslation(), robotInFieldToleranceMeters)
 			.and(
 				MegaTagFilters.doesYawExistAtTimestamp(() -> limelight.getMT2RawData().timestampSeconds(), wantedYawAtTimestamp)
 					.implies(
@@ -77,7 +77,7 @@ public class LimelightFilters {
 
 	}
 
-	public static class MegaTagFilters {
+	private static class MegaTagFilters {
 
 		private static Filter doesYawExistAtTimestamp(DoubleSupplier timestamp, Function<Double, Optional<Rotation2d>> getYawAtTimestamp) {
 			return () -> getYawAtTimestamp.apply(timestamp.getAsDouble()).isPresent();
@@ -97,18 +97,18 @@ public class LimelightFilters {
 			return () -> robotYaw.get().getRotations() != 0.0;
 		}
 
-		private static double getOffset(double axisPositionMeters, double fieldAxisLengthMeters) {
-			double axisFieldOffset = 0;
+		private static double getFieldOffsetMeters(double axisPositionMeters, double fieldAxisLengthMeters) {
+			double axisFieldOffsetMeters = 0;
 			if (axisPositionMeters < 0 || axisPositionMeters - fieldAxisLengthMeters > 0) {
-				axisFieldOffset = axisPositionMeters < 0 ? axisPositionMeters : axisFieldOffset - fieldAxisLengthMeters;
+				axisFieldOffsetMeters = axisPositionMeters < 0 ? axisPositionMeters : axisPositionMeters - fieldAxisLengthMeters;
 			}
-			return Math.abs(axisFieldOffset);
+			return Math.abs(axisFieldOffsetMeters);
 		}
 
 		private static Filter isRobotInField(Supplier<Translation2d> robotTranslation, double toleranceMeters) {
 			Translation2d currentRobotTranslation = robotTranslation.get();
-			double xFieldOffset = getOffset(currentRobotTranslation.getX(), Field.LENGTH_METERS);
-			double yFieldOffset = getOffset(currentRobotTranslation.getY(), Field.WIDTH_METERS);
+			double xFieldOffset = getFieldOffsetMeters(currentRobotTranslation.getX(), Field.LENGTH_METERS);
+			double yFieldOffset = getFieldOffsetMeters(currentRobotTranslation.getY(), Field.WIDTH_METERS);
 			Translation2d robotFieldOffset = new Translation2d(xFieldOffset, yFieldOffset);
 			return () -> robotFieldOffset.getNorm() < toleranceMeters;
 		}

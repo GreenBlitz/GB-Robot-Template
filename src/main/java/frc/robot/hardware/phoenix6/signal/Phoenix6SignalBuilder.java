@@ -30,6 +30,7 @@ public class Phoenix6SignalBuilder {
 		return new Phoenix6AngleSignal(signalClone.getName(), signalClone, angleUnit);
 	}
 
+	/** use this if you already registered your slope signal */
 	public static Phoenix6LatencySignal buildLatencySignal(
 		StatusSignal<?> signal,
 		StatusSignal<?> signalSlope,

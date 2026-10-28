@@ -15,6 +15,7 @@ import frc.constants.field.Field;
 import frc.robot.imu.IMU;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
+import frc.robot.poseestimator.HeadingSource;
 import frc.robot.poseestimator.OdometryData;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
@@ -51,7 +52,7 @@ public class Swerve extends GBSubsystem {
 	private Supplier<Rotation2d> headingSupplier;
 	private ChassisPowers driversPowerInputs;
 
-	public Swerve(SwerveConstants constants, Modules modules, IMU imu) {
+	public Swerve(SwerveConstants constants, Modules modules, IMU imu, HeadingSource headingSource) {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 		this.driversPowerInputs = new ChassisPowers();

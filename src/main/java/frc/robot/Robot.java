@@ -122,6 +122,10 @@ public class Robot {
 		return swerve;
 	}
 
+	public IMU getIMU() {
+		return imu;
+	}
+
 	public List<Limelight> getLimelights() {
 		return limelights;
 	}

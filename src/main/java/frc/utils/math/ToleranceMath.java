@@ -2,7 +2,7 @@ package frc.utils.math;
 
 import org.wpilib.math.util.MathUtil;
 import org.wpilib.math.geometry.Pose2d;
-import org.wpilib.math.geometry.Rotation2d;
+import frc.utils.costomUnits.Angle2d;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.math.kinematics.ChassisVelocities;
 import frc.robot.subsystems.swerve.SwerveMath;
@@ -21,7 +21,7 @@ public class ToleranceMath {
 
 	public static boolean isNear(Pose2d wantedPose, Pose2d pose, Pose2d tolerance) {
 		return isNear(wantedPose.getTranslation(), pose.getTranslation(), tolerance.getTranslation())
-			&& isNearWrapped(wantedPose.getRotation(), pose.getRotation(), tolerance.getRotation());
+			&& isNearWrapped(Angle2d.fromRotation2d(wantedPose.getRotation()), Angle2d.fromRotation2d(pose.getRotation()), Angle2d.fromRotation2d(tolerance.getRotation()));
 	}
 
 	public static boolean isNear(Translation2d wantedTranslation, Translation2d translation, double toleranceMeters) {
@@ -33,7 +33,7 @@ public class ToleranceMath {
 			&& isNear(wantedTranslation.getY(), translation.getY(), tolerance.getY());
 	}
 
-	public static boolean isNearWrapped(Rotation2d wantedAngle, Rotation2d angle, Rotation2d tolerance) {
+	public static boolean isNearWrapped(Angle2d wantedAngle, Angle2d angle, Angle2d tolerance) {
 		return Math.abs(MathUtil.angleModulus(wantedAngle.minus(angle).getRadians())) <= tolerance.getRadians();
 	}
 
@@ -53,12 +53,12 @@ public class ToleranceMath {
 		return Math.abs(value) <= deadband ? 0 : value;
 	}
 
-	public static Rotation2d clamp(Rotation2d angle, Rotation2d maxAngle) {
-		return Rotation2d.fromRadians(Math.clamp(angle.getRadians(), -maxAngle.getRadians(), maxAngle.getRadians()));
+	public static Angle2d clamp(Angle2d angle, Angle2d maxAngle) {
+		return Angle2d.fromRadians(Math.clamp(angle.getRadians(), -maxAngle.getRadians(), maxAngle.getRadians()));
 	}
 
-	public static Rotation2d clamp(Rotation2d angle, Rotation2d minAngle, Rotation2d maxAngle) {
-		return Rotation2d.fromRadians(Math.clamp(angle.getRadians(), minAngle.getRadians(), maxAngle.getRadians()));
+	public static Angle2d clamp(Angle2d angle, Angle2d minAngle, Angle2d maxAngle) {
+		return Angle2d.fromRadians(Math.clamp(angle.getRadians(), minAngle.getRadians(), maxAngle.getRadians()));
 	}
 
 }

@@ -1,6 +1,6 @@
 package frc.robot.hardware.empties;
 
-import org.wpilib.math.geometry.Rotation2d;
+import frc.utils.costomUnits.Angle2d;
 import frc.robot.hardware.interfaces.IIMU;
 
 public class EmptyIMU extends EmptyDevice implements IIMU {
@@ -10,6 +10,6 @@ public class EmptyIMU extends EmptyDevice implements IIMU {
 	}
 
 	@Override
-	public void setYaw(Rotation2d yaw) {}
+	public void setYaw(Angle2d yaw) {}
 
 }

@@ -1,6 +1,6 @@
 package frc.robot.hardware.simulations.wpilib;
 
-import org.wpilib.math.geometry.Rotation2d;
+import frc.utils.costomUnits.Angle2d;
 import org.wpilib.simulation.SingleJointedArmSim;
 import frc.utils.time.TimeUtil;
 
@@ -15,13 +15,13 @@ public class SingleJointedArmSimulation implements WPILibMechanismSimulation {
 	}
 
 	@Override
-	public Rotation2d getMechanismPosition() {
-		return Rotation2d.fromRadians(singleJointedArmSimulation.getAngle());
+	public Angle2d getMechanismPosition() {
+		return Angle2d.fromRadians(singleJointedArmSimulation.getAngle());
 	}
 
 	@Override
-	public Rotation2d getMechanismVelocityRPS() {
-		return Rotation2d.fromRadians(singleJointedArmSimulation.getVelocity());
+	public Angle2d getMechanismVelocityRPS() {
+		return Angle2d.fromRadians(singleJointedArmSimulation.getVelocity());
 	}
 
 	@Override

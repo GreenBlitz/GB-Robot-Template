@@ -1,9 +1,9 @@
 package frc.robot.hardware.interfaces;
 
-import org.wpilib.math.geometry.Rotation2d;
+import frc.utils.costomUnits.Angle2d;
 
 public interface IIMU extends IDevice {
 
-	void setYaw(Rotation2d yaw);
+	void setYaw(Angle2d yaw);
 
 }

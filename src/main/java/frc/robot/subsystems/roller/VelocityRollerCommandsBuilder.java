@@ -2,7 +2,7 @@ package frc.robot.subsystems.roller;
 
 import org.wpilib.command2.Command;
 import org.wpilib.command2.RunCommand;
-import org.wpilib.math.geometry.Rotation2d;
+import frc.utils.costomUnits.Angle2d;
 
 public class VelocityRollerCommandsBuilder extends RollerCommandsBuilder {
 
@@ -13,7 +13,7 @@ public class VelocityRollerCommandsBuilder extends RollerCommandsBuilder {
 		this.roller = roller;
 	}
 
-	public Command setVelocity(Rotation2d velocityRPS) {
+	public Command setVelocity(Angle2d velocityRPS) {
 		return roller.asSubsystemCommand(
 			new RunCommand(() -> roller.setVelocity(velocityRPS)),
 			"set velocity to " + velocityRPS.getRotations() + "rot/s"

@@ -2,7 +2,7 @@ package frc.utils.calibration.camera;
 
 import org.wpilib.math.geometry.Pose2d;
 import org.wpilib.math.geometry.Pose3d;
-import org.wpilib.math.geometry.Rotation2d;
+import frc.utils.costomUnits.Angle2d;
 import org.wpilib.math.geometry.Rotation3d;
 import org.wpilib.math.geometry.Translation3d;
 import org.wpilib.command2.Command;
@@ -20,7 +20,7 @@ public class CameraPoseCalibration extends Command {
 	private final Pose3d tagPoseFieldRelative;
 	private final Pose2d expectedRobotPoseFieldRelative;
 	private final double tagCenterHeightFromGroundMeters;
-	private final Rotation2d robotYawRelativeToTagFacingYaw;
+	private final Angle2d robotYawRelativeToTagFacingYaw;
 
 	private final CameraPoseCalibrationInputsAutoLogged cameraPoseCalibrationInputs;
 
@@ -53,7 +53,7 @@ public class CameraPoseCalibration extends Command {
 		double robotXAxisDistanceFromTag,
 		double tagCenterHeightFromGroundMeters,
 		Pose3d tagPoseFieldRelative,
-		Rotation2d robotYawRelativeToTagFacingYaw
+		Angle2d robotYawRelativeToTagFacingYaw
 	) {
 		this.logPath = logPathPrefix + "/cameraPositionCalibration";
 		this.cameraName = cameraName;
@@ -63,7 +63,7 @@ public class CameraPoseCalibration extends Command {
 		this.expectedRobotPoseFieldRelative = new Pose2d(
 			tagPoseFieldRelative.getX() - robotXAxisDistanceFromTag,
 			tagPoseFieldRelative.getY(),
-			FieldMath.transformAngle(tagPoseFieldRelative.getRotation().toRotation2d(), AngleTransform.INVERT)
+			FieldMath.transformAngle(Angle2d.fromRotation2d(tagPoseFieldRelative.getRotation().toRotation2d()), AngleTransform.INVERT).toRotation2d()
 		);
 		this.tagCenterHeightFromGroundMeters = tagCenterHeightFromGroundMeters;
 		this.robotYawRelativeToTagFacingYaw = robotYawRelativeToTagFacingYaw;

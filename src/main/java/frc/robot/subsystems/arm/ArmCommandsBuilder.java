@@ -1,6 +1,6 @@
 package frc.robot.subsystems.arm;
 
-import org.wpilib.math.geometry.Rotation2d;
+import frc.utils.costomUnits.Angle2d;
 import org.wpilib.command2.Command;
 import org.wpilib.command2.RunCommand;
 import frc.utils.utilcommands.ExecuteEndCommand;
@@ -30,12 +30,12 @@ public class ArmCommandsBuilder {
 		return arm.asSubsystemCommand(new RunCommand(() -> arm.setPower(powerSupplier.getAsDouble())), "Set power by supplier");
 	}
 
-	public Command setTargetPosition(Rotation2d target) {
+	public Command setTargetPosition(Angle2d target) {
 		return arm
 			.asSubsystemCommand(new InitExecuteCommand(() -> arm.setTargetPosition(target), () -> {}), "Set target position to: " + target);
 	}
 
-	public Command setTargetPosition(Supplier<Rotation2d> target) {
+	public Command setTargetPosition(Supplier<Angle2d> target) {
 		return arm.asSubsystemCommand(new RunCommand(() -> arm.setTargetPosition(target.get())), "Set target with Supplier");
 	}
 

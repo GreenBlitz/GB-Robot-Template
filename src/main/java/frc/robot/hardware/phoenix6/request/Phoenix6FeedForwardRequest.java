@@ -1,20 +1,20 @@
 package frc.robot.hardware.phoenix6.request;
 
 import com.ctre.phoenix6.controls.ControlRequest;
-import org.wpilib.math.geometry.Rotation2d;
+import frc.utils.costomUnits.Angle2d;
 import frc.robot.hardware.interfaces.IFeedForwardRequest;
 
 import java.util.function.Consumer;
 
-public class Phoenix6FeedForwardRequest extends Phoenix6Request<Rotation2d> implements IFeedForwardRequest {
+public class Phoenix6FeedForwardRequest extends Phoenix6Request<Angle2d> implements IFeedForwardRequest {
 
 	private final Consumer<Double> setArbitraryFeedForward;
 	private double arbitraryFeedForward;
 
 	Phoenix6FeedForwardRequest(
-		Rotation2d defaultSetPoint,
+		Angle2d defaultSetPoint,
 		ControlRequest controlRequest,
-		Consumer<Rotation2d> setSetPoint,
+		Consumer<Angle2d> setSetPoint,
 		Consumer<Double> setFeedForward,
 		double defaultArbitraryFeedForward
 	) {

@@ -1,9 +1,9 @@
 package frc.robot.subsystems.arm;
 
-import org.wpilib.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.VelocityPositionRequest;
+import frc.utils.costomUnits.Angle2d;
 import org.littletonrobotics.junction.Logger;
 
 public class VelocityPositionArm extends Arm {
@@ -22,15 +22,15 @@ public class VelocityPositionArm extends Arm {
 		this.velocityPositionRequest = velocityPositionRequest;
 	}
 
-	public void setTargetPositionVelocity(Rotation2d targetPosition, Rotation2d targetVelocity) {
+	public void setTargetPositionVelocity(Angle2d targetPosition, Angle2d targetVelocity) {
 		velocityPositionRequest.withSetPoint(targetPosition);
 		velocityPositionRequest.setVelocity(targetVelocity);
 		motor.applyRequest(velocityPositionRequest);
 	}
 
 	@Override
-	public void setTargetPosition(Rotation2d targetPosition) {
-		setTargetPositionVelocity(targetPosition, Rotation2d.ZERO);
+	public void setTargetPosition(Angle2d targetPosition) {
+		setTargetPositionVelocity(targetPosition, Angle2d.ZERO);
 	}
 
 	@Override

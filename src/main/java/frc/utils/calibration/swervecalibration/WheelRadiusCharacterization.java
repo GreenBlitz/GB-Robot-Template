@@ -8,7 +8,7 @@
 package frc.utils.calibration.swervecalibration;
 
 import org.wpilib.math.util.MathUtil;
-import org.wpilib.math.geometry.Rotation2d;
+import frc.utils.costomUnits.Angle2d;
 import org.wpilib.command2.Command;
 import frc.constants.MathConstants;
 import frc.robot.subsystems.GBSubsystem;
@@ -19,14 +19,14 @@ import java.util.function.Supplier;
 
 public class WheelRadiusCharacterization extends Command {
 
-	private final Supplier<Rotation2d> IMUAngleSupplier;
-	private final Supplier<Rotation2d[]> wheelDriveDistanceSupplier;
-	private final Consumer<Rotation2d> velocityControl;
-	private final Rotation2d characterizationSpeed;
+	private final Supplier<Angle2d> IMUAngleSupplier;
+	private final Supplier<Angle2d[]> wheelDriveDistanceSupplier;
+	private final Consumer<Angle2d> velocityControl;
+	private final Angle2d characterizationSpeed;
 	private final Runnable onEnd;
 	private final double driveRadiusMeters;
 
-	private Rotation2d[] startWheelPositions;
+	private Angle2d[] startWheelPositions;
 	private double lastIMUYawRadians = 0.0;
 	private double accumulateIMUYawRadians = 0.0;
 	private double wheelRadiusMeters = 0.0;
@@ -34,10 +34,10 @@ public class WheelRadiusCharacterization extends Command {
 	public WheelRadiusCharacterization(
 		GBSubsystem drive,
 		double driveRadiusMeters,
-		Rotation2d characterizationSpeed,
-		Supplier<Rotation2d[]> wheelDriveDistanceSupplier,
-		Supplier<Rotation2d> IMUAngleSupplier,
-		Consumer<Rotation2d> velocityControl,
+		Angle2d characterizationSpeed,
+		Supplier<Angle2d[]> wheelDriveDistanceSupplier,
+		Supplier<Angle2d> IMUAngleSupplier,
+		Consumer<Angle2d> velocityControl,
 		Runnable onEnd
 	) {
 		this.characterizationSpeed = characterizationSpeed;
@@ -60,7 +60,7 @@ public class WheelRadiusCharacterization extends Command {
 	}
 
 	private double getAverageDriveDistanceRadians() {
-		Rotation2d[] wheelPositions = wheelDriveDistanceSupplier.get();
+		Angle2d[] wheelPositions = wheelDriveDistanceSupplier.get();
 		double averageDriveDistanceRadians = 0.0;
 		for (int i = 0; i < WheelRadiusConstants.NUMBER_OF_MODULES; i++) {
 			averageDriveDistanceRadians += Math.abs(wheelPositions[i].getRadians() - startWheelPositions[i].getRadians());

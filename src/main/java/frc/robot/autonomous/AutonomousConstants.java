@@ -2,7 +2,7 @@ package frc.robot.autonomous;
 
 import com.pathplanner.lib.path.PathConstraints;
 import org.wpilib.math.geometry.Pose2d;
-import org.wpilib.math.geometry.Rotation2d;
+import frc.utils.costomUnits.Angle2d;
 
 public class AutonomousConstants {
 
@@ -13,10 +13,10 @@ public class AutonomousConstants {
 	public static final PathConstraints DEFAULT_PATHFINDING_CONSTRAINTS = new PathConstraints(
 		4.200,
 		2.000,
-		Rotation2d.fromDegrees(540).getRadians(),
-		Rotation2d.fromDegrees(720).getRadians()
+		Angle2d.fromDegrees(540).getRadians(),
+		Angle2d.fromDegrees(720).getRadians()
 	);
 
-	public static final Pose2d DEFAULT_IS_NEAR_END_OF_PATH_TOLERANCE = new Pose2d(0.05, 0.05, Rotation2d.fromDegrees(1));
+	public static final Pose2d DEFAULT_IS_NEAR_END_OF_PATH_TOLERANCE = new Pose2d(0.05, 0.05, Angle2d.fromDegrees(1).toRotation2d());
 
 }

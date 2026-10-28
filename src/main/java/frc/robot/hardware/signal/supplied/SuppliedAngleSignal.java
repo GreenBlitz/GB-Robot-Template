@@ -1,6 +1,6 @@
 package frc.robot.hardware.signal.supplied;
 
-import org.wpilib.math.geometry.Rotation2d;
+import frc.utils.costomUnits.Angle2d;
 import frc.robot.hardware.signal.AngleSignal;
 import frc.utils.TimedValue;
 import frc.utils.AngleUnit;
@@ -18,8 +18,8 @@ public class SuppliedAngleSignal extends AngleSignal {
 	}
 
 	@Override
-	protected void updateValue(TimedValue<Rotation2d> timedValue) {
-		timedValue.setValue(angleUnit.toRotation2d(angleSupplier.get()));
+	protected void updateValue(TimedValue<Angle2d> timedValue) {
+		timedValue.setValue(angleUnit.toAngle2d(angleSupplier.get()));
 		timedValue.setTimestamp(TimeUtil.getCurrentTimeSeconds());
 	}
 

@@ -1,6 +1,6 @@
 package frc.robot.subsystems.roller;
 
-import org.wpilib.math.geometry.Rotation2d;
+import frc.utils.costomUnits.Angle2d;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.InputSignal;
@@ -13,20 +13,20 @@ public class Roller extends GBSubsystem {
 
 	private final InputSignal<Double> voltageSignal;
 	private final InputSignal<Double> currentSignal;
-	private final InputSignal<Rotation2d> positionSignal;
-	private final InputSignal<Rotation2d> velocitySignal;
+	private final InputSignal<Angle2d> positionSignal;
+	private final InputSignal<Angle2d> velocitySignal;
 
 	private final IRequest<Double> voltageRequest;
 	private final RollerCommandsBuilder commandsBuilder;
-	private Rotation2d targetPosition;
+	private Angle2d targetPosition;
 
 	public Roller(
 		String logPath,
 		ControllableMotor motor,
 		InputSignal<Double> voltageSignal,
 		InputSignal<Double> currentSignal,
-		InputSignal<Rotation2d> positionSignal,
-		InputSignal<Rotation2d> velocitySignal,
+		InputSignal<Angle2d> positionSignal,
+		InputSignal<Angle2d> velocitySignal,
 		IRequest<Double> voltageRequest
 	) {
 		super(logPath);
@@ -37,8 +37,8 @@ public class Roller extends GBSubsystem {
 		this.velocitySignal = velocitySignal;
 		this.voltageRequest = voltageRequest;
 		this.commandsBuilder = new RollerCommandsBuilder(this);
-		this.motor.resetPosition(Rotation2d.fromRotations(0));
-		this.targetPosition = Rotation2d.fromRotations(0);
+		this.motor.resetPosition(Angle2d.fromRotations(0));
+		this.targetPosition = Angle2d.fromRotations(0);
 		setDefaultCommand(commandsBuilder.stop());
 	}
 
@@ -46,7 +46,7 @@ public class Roller extends GBSubsystem {
 		return commandsBuilder;
 	}
 
-	public void updateTargetPosition(Rotation2d targetPosition) {
+	public void updateTargetPosition(Angle2d targetPosition) {
 		this.targetPosition = targetPosition;
 	}
 
@@ -74,23 +74,23 @@ public class Roller extends GBSubsystem {
 		return currentSignal.getLatestValue();
 	}
 
-	public Rotation2d getPosition() {
+	public Angle2d getPosition() {
 		return positionSignal.getLatestValue();
 	}
 
-	public Rotation2d getVelocity() {
+	public Angle2d getVelocity() {
 		return velocitySignal.getLatestValue();
 	}
 
-	public boolean isAtPosition(Rotation2d position, Rotation2d tolerance) {
+	public boolean isAtPosition(Angle2d position, Angle2d tolerance) {
 		return positionSignal.isNear(position, tolerance);
 	}
 
-	public boolean isBehindPosition(Rotation2d position) {
+	public boolean isBehindPosition(Angle2d position) {
 		return positionSignal.isLess(position);
 	}
 
-	public boolean isPastPosition(Rotation2d position) {
+	public boolean isPastPosition(Angle2d position) {
 		return positionSignal.isGreater(position);
 	}
 

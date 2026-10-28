@@ -1,6 +1,6 @@
 package frc.robot.subsystems.roller;
 
-import org.wpilib.math.geometry.Rotation2d;
+import frc.utils.costomUnits.Angle2d;
 import org.wpilib.command2.Command;
 import org.wpilib.command2.DeferredCommand;
 import org.wpilib.command2.RunCommand;
@@ -43,7 +43,7 @@ public class RollerCommandsBuilder {
 		return motor.asSubsystemCommand(
 			new DeferredCommand(
 				() -> new InitExecuteCommand(
-					() -> motor.updateTargetPosition(Rotation2d.fromRotations(rotations + motor.getPosition().getRotations())),
+					() -> motor.updateTargetPosition(Angle2d.fromRotations(rotations + motor.getPosition().getRotations())),
 					() -> motor.setVoltage(finalVoltage)
 				).until(motor::isPastTargetPosition),
 				Set.of(motor)
@@ -57,7 +57,7 @@ public class RollerCommandsBuilder {
 		return motor.asSubsystemCommand(
 			new DeferredCommand(
 				() -> new InitExecuteCommand(
-					() -> motor.updateTargetPosition(Rotation2d.fromRotations(motor.getPosition().getRotations() - rotations)),
+					() -> motor.updateTargetPosition(Angle2d.fromRotations(motor.getPosition().getRotations() - rotations)),
 					() -> motor.setVoltage(finalVoltage)
 				).until(motor::isBehindTargetPosition),
 				Set.of(motor)

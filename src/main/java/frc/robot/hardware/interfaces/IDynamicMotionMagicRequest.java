@@ -1,18 +1,18 @@
 package frc.robot.hardware.interfaces;
 
-import org.wpilib.math.geometry.Rotation2d;
+import frc.utils.costomUnits.Angle2d;
 
 public interface IDynamicMotionMagicRequest extends IMotionMagicRequest {
 
 	@Override
-	IDynamicMotionMagicRequest withSetPoint(Rotation2d setPoint);
+	IDynamicMotionMagicRequest withSetPoint(Angle2d setPoint);
 
-	IDynamicMotionMagicRequest withMaxVelocityRPS(Rotation2d maxVelocityRPS);
+	IDynamicMotionMagicRequest withMaxVelocityRPS(Angle2d maxVelocityRPS);
 
-	Rotation2d getMaxVelocityRPS();
+	Angle2d getMaxVelocityRPS();
 
-	IDynamicMotionMagicRequest withMaxAccelerationRPS(Rotation2d maxAccelerationRPSSquared);
+	IDynamicMotionMagicRequest withMaxAccelerationRPS(Angle2d maxAccelerationRPSSquared);
 
-	Rotation2d getMaxAccelerationRPS();
+	Angle2d getMaxAccelerationRPS();
 
 }

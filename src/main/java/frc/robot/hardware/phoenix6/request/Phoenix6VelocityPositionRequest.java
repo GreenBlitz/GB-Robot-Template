@@ -1,23 +1,23 @@
 package frc.robot.hardware.phoenix6.request;
 
 import com.ctre.phoenix6.controls.ControlRequest;
-import org.wpilib.math.geometry.Rotation2d;
+import frc.utils.costomUnits.Angle2d;
 import frc.robot.hardware.interfaces.VelocityPositionRequest;
 
 import java.util.function.Consumer;
 
 public class Phoenix6VelocityPositionRequest extends Phoenix6FeedForwardRequest implements VelocityPositionRequest {
 
-	private final Consumer<Rotation2d> setVelocity;
-	private Rotation2d velocity;
-	private Consumer<Rotation2d> setPosition;
+	private final Consumer<Angle2d> setVelocity;
+	private Angle2d velocity;
+	private Consumer<Angle2d> setPosition;
 
 	public Phoenix6VelocityPositionRequest(
-		Rotation2d position,
-		Rotation2d velocity,
+		Angle2d position,
+		Angle2d velocity,
 		ControlRequest controlRequest,
-		Consumer<Rotation2d> setVelocity,
-		Consumer<Rotation2d> setPosition,
+		Consumer<Angle2d> setVelocity,
+		Consumer<Angle2d> setPosition,
 		Consumer<Double> setFeedForward,
 		double defaultArbitraryFeedForward
 	) {
@@ -27,14 +27,14 @@ public class Phoenix6VelocityPositionRequest extends Phoenix6FeedForwardRequest 
 	}
 
 	@Override
-	public VelocityPositionRequest setVelocity(Rotation2d targetVelocityRPS) {
+	public VelocityPositionRequest setVelocity(Angle2d targetVelocityRPS) {
 		this.velocity = targetVelocityRPS;
 		setVelocity.accept(targetVelocityRPS);
 		return this;
 	}
 
 	@Override
-	public Rotation2d getVelocityRPS() {
+	public Angle2d getVelocityRPS() {
 		return velocity;
 	}
 

@@ -1,11 +1,11 @@
 package frc.robot.hardware.interfaces;
 
-import org.wpilib.math.geometry.Rotation2d;
+import frc.utils.costomUnits.Angle2d;
 
 public interface VelocityPositionRequest extends IFeedForwardRequest {
 
-	VelocityPositionRequest setVelocity(Rotation2d targetVelocityRPS);
+	VelocityPositionRequest setVelocity(Angle2d targetVelocityRPS);
 
-	Rotation2d getVelocityRPS();
+	Angle2d getVelocityRPS();
 
 }

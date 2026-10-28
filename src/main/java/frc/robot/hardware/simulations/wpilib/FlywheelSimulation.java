@@ -1,29 +1,29 @@
 package frc.robot.hardware.simulations.wpilib;
 
-import org.wpilib.math.geometry.Rotation2d;
+import frc.utils.costomUnits.Angle2d;
 import org.wpilib.simulation.FlywheelSim;
 import frc.utils.time.TimeUtil;
 
 public class FlywheelSimulation implements WPILibMechanismSimulation {
 
 	private final FlywheelSim flywheelSimulation;
-	private Rotation2d currentPosition;
-	private Rotation2d currentVelocity;
+	private Angle2d currentPosition;
+	private Angle2d currentVelocity;
 
 	public FlywheelSimulation(FlywheelSim flywheelSimulation) {
 		this.flywheelSimulation = flywheelSimulation;
-		this.currentPosition = Rotation2d.fromDegrees(0);
+		this.currentPosition = Angle2d.fromDegrees(0);
 		this.currentVelocity = getMechanismVelocityRPS();
 	}
 
 	@Override
-	public Rotation2d getMechanismPosition() {
+	public Angle2d getMechanismPosition() {
 		return currentPosition;
 	}
 
 	@Override
-	public Rotation2d getMechanismVelocityRPS() {
-		return Rotation2d.fromRadians(flywheelSimulation.getAngularVelocity());
+	public Angle2d getMechanismVelocityRPS() {
+		return Angle2d.fromRadians(flywheelSimulation.getAngularVelocity());
 	}
 
 	@Override
@@ -34,9 +34,9 @@ public class FlywheelSimulation implements WPILibMechanismSimulation {
 	@Override
 	public void updateMotor() {
 		flywheelSimulation.update(TimeUtil.getLatestCycleTimeSeconds());
-		Rotation2d lastVelocity = currentVelocity;
+		Angle2d lastVelocity = currentVelocity;
 		currentVelocity = getMechanismVelocityRPS();
-		Rotation2d averageVelocity = Rotation2d.fromRotations((currentVelocity.getRotations() + lastVelocity.getRotations()) / 2);
+		Angle2d averageVelocity = Angle2d.fromRotations((currentVelocity.getRotations() + lastVelocity.getRotations()) / 2);
 		updatePosition(averageVelocity);
 	}
 
@@ -45,9 +45,9 @@ public class FlywheelSimulation implements WPILibMechanismSimulation {
 		return flywheelSimulation.getGearing();
 	}
 
-	private void updatePosition(Rotation2d velocity) {
-		Rotation2d deltaDistance = velocity.times(TimeUtil.getLatestCycleTimeSeconds());
-		currentPosition = Rotation2d.fromRotations(currentPosition.getRotations() + deltaDistance.getRotations());
+	private void updatePosition(Angle2d velocity) {
+		Angle2d deltaDistance = velocity.times(TimeUtil.getLatestCycleTimeSeconds());
+		currentPosition = Angle2d.fromRotations(currentPosition.getRotations() + deltaDistance.getRotations());
 	}
 
 }

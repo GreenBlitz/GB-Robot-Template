@@ -7,7 +7,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.InvertedValue;
 import frc.robot.Robot;
-import org.wpilib.math.geometry.Rotation2d;
+import frc.utils.costomUnits.Angle2d;
 import org.wpilib.math.system.DCMotor;
 import org.wpilib.math.system.Models;
 import org.wpilib.command2.sysid.SysIdRoutine;
@@ -68,14 +68,14 @@ public class TalonFXRollerBuilder {
 			.build(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, deviceID.busChain());
 		InputSignal<Double> currentSignal = Phoenix6SignalBuilder
 			.build(motor.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, deviceID.busChain());
-		InputSignal<Rotation2d> positionSignal = Phoenix6SignalBuilder.build(
+		InputSignal<Angle2d> positionSignal = Phoenix6SignalBuilder.build(
 			motor.getDevice().getPosition(),
 			motor.getDevice().getVelocity(),
 			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			AngleUnit.ROTATIONS,
 			deviceID.busChain()
 		);
-		InputSignal<Rotation2d> velocitySignal = Phoenix6SignalBuilder
+		InputSignal<Angle2d> velocitySignal = Phoenix6SignalBuilder
 			.build(motor.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, deviceID.busChain());
 
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), true);
@@ -121,18 +121,18 @@ public class TalonFXRollerBuilder {
 			.build(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, deviceID.busChain());
 		InputSignal<Double> currentSignal = Phoenix6SignalBuilder
 			.build(motor.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, deviceID.busChain());
-		InputSignal<Rotation2d> positionSignal = Phoenix6SignalBuilder.build(
+		InputSignal<Angle2d> positionSignal = Phoenix6SignalBuilder.build(
 			motor.getDevice().getPosition(),
 			motor.getDevice().getVelocity(),
 			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			AngleUnit.ROTATIONS,
 			deviceID.busChain()
 		);
-		InputSignal<Rotation2d> velocitySignal = Phoenix6SignalBuilder
+		InputSignal<Angle2d> velocitySignal = Phoenix6SignalBuilder
 			.build(motor.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, deviceID.busChain());
 
 		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.build(new VoltageOut(0), true);
-		Phoenix6Request<Rotation2d> velocityRequest = Phoenix6RequestBuilder
+		Phoenix6Request<Angle2d> velocityRequest = Phoenix6RequestBuilder
 			.buildBangBangRequest(velocitySignal::getLatestValue, maxForwardPower, maxBackwardPower, true);
 
 		return new VelocityRoller(logPath, motor, voltageSignal, currentSignal, positionSignal, velocitySignal, voltageRequest, velocityRequest);
@@ -164,14 +164,14 @@ public class TalonFXRollerBuilder {
 			.build(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, id.busChain());
 		InputSignal<Double> currentSignal = Phoenix6SignalBuilder
 			.build(motor.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, id.busChain());
-		InputSignal<Rotation2d> positionSignal = Phoenix6SignalBuilder.build(
+		InputSignal<Angle2d> positionSignal = Phoenix6SignalBuilder.build(
 			motor.getDevice().getPosition(),
 			motor.getDevice().getVelocity(),
 			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			AngleUnit.ROTATIONS,
 			id.busChain()
 		);
-		InputSignal<Rotation2d> velocitySignal = Phoenix6SignalBuilder
+		InputSignal<Angle2d> velocitySignal = Phoenix6SignalBuilder
 			.build(motor.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, id.busChain());
 
 

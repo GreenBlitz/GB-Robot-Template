@@ -23,7 +23,6 @@ import frc.utils.battery.BatteryUtil;
 import org.littletonrobotics.junction.Logger;
 import com.ctre.phoenix6.signals.InvertedValue;
 
-
 public class AlonFX implements IMotor {
 
 	private final TalonFX motor;

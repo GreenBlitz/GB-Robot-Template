@@ -11,7 +11,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
-import frc.ModuleAlon;
+import frc.robot.subsystems.moduleAlon.ModuleAlon;
+import frc.constants.AlonModuleConstants;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
@@ -65,7 +66,7 @@ public class Robot {
 			swerve.getIMUAccelerationG(),
 			swerve.getIMUAbsoluteYaw().getTimestamp()
 		);
-		this.moduleAlon = new ModuleAlon(RobotConstants.alonSteerId, RobotConstants.alonLinearId, RobotConstants.steerGearRatio, RobotConstants.linearGearRatio, RobotConstants.steerKp, RobotConstants.linearKp, RobotConstants.steerMomementOfInertiaKgM2, RobotConstants.linearMomentOfInertiaKgM2 ,new CANBus("rio"), "/motor");
+		this.moduleAlon = new ModuleAlon(AlonModuleConstants.alonSteerId, AlonModuleConstants.alonLinearId, AlonModuleConstants.steerGearRatio, AlonModuleConstants.linearGearRatio, AlonModuleConstants.steerKp, AlonModuleConstants.linearKp, AlonModuleConstants.steerMomementOfInertiaKgM2, AlonModuleConstants.linearMomentOfInertiaKgM2 ,CANBus.roboRIO(), "/motor");
 		this.moduleAlon.setLinearNeutral(NeutralModeValue.Brake);
 
 		this.limelights = List.of();

@@ -1,14 +1,13 @@
-package frc;
+package frc.robot.subsystems.moduleAlon;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.hardware.interfaces.IMotor;
+import frc.AlonFX;
 import frc.robot.subsystems.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
-
 
 public class ModuleAlon extends GBSubsystem {
 

@@ -12,15 +12,6 @@ public class RobotConstants {
 	public static final StandardDeviations2D DEFAULT_STD_DEV_FACTORS = new StandardDeviations2D(0.15);
 	public static final StandardDeviations2D DEFAULT_VISIBLE_TAGS_EXPONENTS = new StandardDeviations2D(0.4);
 	public static final StandardDeviations2D DEFAULT_STD_DEV_ADDITIONS = new StandardDeviations2D(0.011);
-	public static final double steerKp = 4;
-	public static final double steerGearRatio = 12.8;
-	public static final double linearKp = 2; // to calibrate
-	public static final double linearGearRatio = 1; //to calibrate
-	public static final int alonLinearId = 10;
-	public static final int alonSteerId = 11;
-	public static final double moduleAlonStickTolerance = .1;
-	public static final double steerMomementOfInertiaKgM2 = 1; //to calibrate
-	public static final double linearMomentOfInertiaKgM2 = 1; // to calibrate
 
 	// data fetched from:
 	// https://www.mt.com/mt_ext_files/Editorial/Generic/7/NewtonFactor_Editorial-Generic_1149155213028_files/Newton%20Factor%20and%20Values.pdf

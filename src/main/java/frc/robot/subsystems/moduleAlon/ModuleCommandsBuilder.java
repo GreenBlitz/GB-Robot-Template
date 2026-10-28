@@ -1,9 +1,10 @@
-package frc;
+package frc.robot.subsystems.moduleAlon;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.*;
+import frc.constants.AlonModuleConstants;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
 import frc.robot.RobotConstants;
@@ -39,7 +40,7 @@ public class ModuleCommandsBuilder {
 			Logger.recordOutput(logPath+"/axis/y", y);
 			Logger.recordOutput(logPath+"/axis/angle",Rotation2d.fromRadians(Math.atan2(y, x)));
 			Logger.recordOutput(logPath+"/axis/angleInRange",AngleMath.findAngleInRange(Rotation2d.fromRadians(Math.atan2(y, x)), moduleAlon.getSteerAngle()));
-			if (x * x + y * y >= RobotConstants.moduleAlonStickTolerance * RobotConstants.moduleAlonStickTolerance) {
+			if (x * x + y * y >= AlonModuleConstants.moduleAlonStickTolerance * AlonModuleConstants.moduleAlonStickTolerance) {
 				moduleAlon.steerToPosition(AngleMath.findAngleInRange(Rotation2d.fromRadians(Math.atan2(y, x)), moduleAlon.getSteerAngle()));
 				moduleAlon.linearSetPower(Math.sqrt(x * x + y * y));
 			} else {

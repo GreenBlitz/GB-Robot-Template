@@ -1,10 +1,11 @@
-package frc.robot.imu;
+package frc.robot.imu.factories;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.empties.EmptyIMU;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.signal.AngleSignal;
 import frc.robot.hardware.signal.DoubleSignal;
+import frc.robot.imu.IMUSignals;
 import frc.utils.TimedValue;
 import frc.utils.AngleUnit;
 import frc.utils.time.TimeUtil;

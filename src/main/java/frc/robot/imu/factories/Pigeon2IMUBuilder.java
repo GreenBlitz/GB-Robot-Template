@@ -1,4 +1,4 @@
-package frc.robot.imu;
+package frc.robot.imu.factories;
 
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
@@ -13,6 +13,7 @@ import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.hardware.phoenix6.signal.SignalGetter;
 import frc.robot.hardware.signal.AngleSignal;
 import frc.robot.hardware.signal.DoubleSignal;
+import frc.robot.imu.IMUSignals;
 import frc.utils.AngleUnit;
 import frc.utils.alerts.Alert;
 

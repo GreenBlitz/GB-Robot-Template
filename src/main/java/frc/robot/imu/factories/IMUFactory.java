@@ -1,9 +1,10 @@
-package frc.robot.imu;
+package frc.robot.imu.factories;
 
 import frc.robot.IDs;
 import frc.robot.Robot;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.phoenix6.imu.Pigeon2IMU;
+import frc.robot.imu.IMUSignals;
 
 public class IMUFactory {
 

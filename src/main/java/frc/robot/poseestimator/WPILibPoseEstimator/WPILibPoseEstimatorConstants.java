@@ -1,7 +1,7 @@
 package frc.robot.poseestimator.WPILibPoseEstimator;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Pose2d;
+import org.wpilib.math.geometry.Rotation2d;
 import frc.utils.math.StandardDeviations2D;
 
 

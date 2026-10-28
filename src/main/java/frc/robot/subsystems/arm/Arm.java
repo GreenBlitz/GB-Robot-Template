@@ -1,7 +1,7 @@
 package frc.robot.subsystems.arm;
 
 import com.ctre.phoenix6.controls.VoltageOut;
-import edu.wpi.first.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Rotation2d;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;

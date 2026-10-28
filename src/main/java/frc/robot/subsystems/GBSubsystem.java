@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.*;
+import org.wpilib.command2.*;
 import org.littletonrobotics.junction.Logger;
 
 public abstract class GBSubsystem extends SubsystemBase {

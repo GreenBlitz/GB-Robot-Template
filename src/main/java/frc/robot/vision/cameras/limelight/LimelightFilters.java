@@ -107,9 +107,10 @@ public class LimelightFilters {
 
 		private static Filter isRobotInField(Supplier<Translation2d> robotTranslation, double toleranceMeters) {
 			Translation2d currentRobotTranslation = robotTranslation.get();
-			double xDistanceFromFieldEdgeMeters = getDistanceFromFieldEdgeMeters(currentRobotTranslation.getX(), Field.LENGTH_METERS);
-			double yDistanceFromFieldEdgeMeters = getDistanceFromFieldEdgeMeters(currentRobotTranslation.getY(), Field.WIDTH_METERS);
-			Translation2d robotFieldOffset = new Translation2d(xDistanceFromFieldEdgeMeters, yDistanceFromFieldEdgeMeters);
+			Translation2d robotFieldOffset = new Translation2d(
+				getDistanceFromFieldEdgeMeters(currentRobotTranslation.getX(), Field.LENGTH_METERS),
+				getDistanceFromFieldEdgeMeters(currentRobotTranslation.getY(), Field.WIDTH_METERS)
+			);
 			return () -> robotFieldOffset.getNorm() < toleranceMeters;
 		}
 

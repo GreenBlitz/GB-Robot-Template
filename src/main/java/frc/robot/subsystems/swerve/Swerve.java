@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.constants.MathConstants;
 import frc.constants.field.Field;
+import frc.robot.Robot;
 import frc.robot.imu.IMU;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
@@ -41,6 +42,7 @@ public class Swerve extends GBSubsystem {
 	private final double driveRadiusMeters;
 	private final Modules modules;
 	private final IMU imu;
+	private final Robot robot;
 
 	private final SwerveDriveKinematics kinematics;
 	private final HeadingStabilizer headingStabilizer;
@@ -52,7 +54,7 @@ public class Swerve extends GBSubsystem {
 	private Supplier<Rotation2d> headingSupplier;
 	private ChassisPowers driversPowerInputs;
 
-	public Swerve(SwerveConstants constants, Modules modules, IMU imu, HeadingSource headingSource) {
+	public Swerve(SwerveConstants constants, Robot robot, Modules modules, IMU imu, HeadingSource headingSource) {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 		this.driversPowerInputs = new ChassisPowers();
@@ -61,9 +63,10 @@ public class Swerve extends GBSubsystem {
 		this.driveRadiusMeters = SwerveMath.calculateDriveRadiusMeters(modules.getModulePositionsFromCenterMeters());
 		this.modules = modules;
 		this.imu = imu;
+		this.robot = robot;
 
 		this.kinematics = new SwerveDriveKinematics(modules.getModulePositionsFromCenterMeters());
-		this.headingSupplier = () -> imu.getAbsoluteYaw().getValue();
+		this.headingSupplier = HeadingSource.handleHeadingSource(headingSource, robot);
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
 		this.stateHandler = new SwerveStateHandler(this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
@@ -112,6 +115,10 @@ public class Swerve extends GBSubsystem {
 
 	public void setHeadingSupplier(Supplier<Rotation2d> headingSupplier) {
 		this.headingSupplier = headingSupplier;
+	}
+
+	public void setHeadingSupplier(HeadingSource headingSource) {
+		this.headingSupplier = HeadingSource.handleHeadingSource(headingSource, robot);
 	}
 
 	public void setDriversPowerInputs(ChassisPowers powers) {

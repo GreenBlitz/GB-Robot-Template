@@ -87,6 +87,11 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	}
 
 	@Override
+	public RobotPoseObservation getLastVisionObservation() {
+		return lastVisionObservation;
+	}
+
+	@Override
 	public void updateOdometry(OdometryData[] odometryData) {
 		for (OdometryData data : odometryData) {
 			updateOdometry(data);

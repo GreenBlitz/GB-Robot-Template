@@ -1,5 +1,6 @@
 package frc.robot.vision.cameras.limelight;
 
+import edu.wpi.first.math.geometry.Rectangle2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.constants.field.Field;
@@ -97,21 +98,10 @@ public class LimelightFilters {
 			return () -> robotYaw.get().getRotations() != 0.0;
 		}
 
-		private static double getDistanceFromFieldEdgeMeters(double axisPositionMeters, double fieldAxisLengthMeters) {
-			double axisDistanceFromFieldEdgeMeters = 0;
-			if (axisPositionMeters < 0 || axisPositionMeters > fieldAxisLengthMeters) {
-				axisDistanceFromFieldEdgeMeters = axisPositionMeters < 0 ? axisPositionMeters : axisPositionMeters - fieldAxisLengthMeters;
-			}
-			return Math.abs(axisDistanceFromFieldEdgeMeters);
-		}
-
 		private static Filter isRobotInField(Supplier<Translation2d> robotTranslation, double toleranceMeters) {
 			Translation2d currentRobotTranslation = robotTranslation.get();
-			Translation2d robotFieldOffset = new Translation2d(
-				getDistanceFromFieldEdgeMeters(currentRobotTranslation.getX(), Field.LENGTH_METERS),
-				getDistanceFromFieldEdgeMeters(currentRobotTranslation.getY(), Field.WIDTH_METERS)
-			);
-			return () -> robotFieldOffset.getNorm() < toleranceMeters;
+			Rectangle2d field = new Rectangle2d(new Translation2d(0, 0), new Translation2d(Field.LENGTH_METERS, Field.WIDTH_METERS));
+			return () -> field.getDistance(currentRobotTranslation) < toleranceMeters;
 		}
 
 	}

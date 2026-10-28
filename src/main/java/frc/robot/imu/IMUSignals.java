@@ -1,4 +1,4 @@
-package frc.imu;
+package frc.robot.imu;
 
 import edu.wpi.first.math.geometry.*;
 import frc.robot.hardware.interfaces.InputSignal;

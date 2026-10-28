@@ -1,16 +1,15 @@
-package frc.robot.subsystems.swerve.factories.imu;
+package frc.robot.imu;
 
 import frc.robot.IDs;
 import frc.robot.Robot;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.phoenix6.imu.Pigeon2IMU;
-import frc.imu.IMUSignals;
 
 public class IMUFactory {
 
 	public static IIMU createIMU(String logPath) {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL, REPLAY -> Pigeon2IMUBuilder.buildIMU(logPath, IDs.Pigeon2IDs.SWERVE);
+			case REAL, REPLAY -> Pigeon2IMUBuilder.buildIMU(logPath, IDs.Pigeon2IDs.IMU);
 			case SIMULATION -> SimulationIMUBuilder.buildIMU(logPath);
 		};
 	}

@@ -1,4 +1,4 @@
-package frc.imu;
+package frc.robot.imu;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -37,7 +37,7 @@ public class IMU {
 		return imu.isConnected();
 	}
 
-	public Rotation2d[] getLatestAngularVelocity() {
+	public Rotation2d[] getLatestAngularVelocities() {
 		return imuSignals.getLatestAngularVelocity();
 	}
 
@@ -53,12 +53,12 @@ public class IMU {
 		return imuSignals.getAllAccelerationsG();
 	}
 
-	public Translation3d getLatestAccelerationGMetersPerSecondSquare() {
+	public Translation3d getLatestAccelerationG() {
 		return imuSignals.getLatestAccelerationGMetersPerSecondSquare();
 	}
 
 	public Translation3d getAccelerationMetersPerSecondSquared() {
-		return getLatestAccelerationGMetersPerSecondSquare().times(RobotConstants.G);
+		return getLatestAccelerationG().times(RobotConstants.G);
 	}
 
 	public TimedValue<Rotation2d> getAbsoluteYaw() {

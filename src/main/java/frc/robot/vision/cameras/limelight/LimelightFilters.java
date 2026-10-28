@@ -97,19 +97,19 @@ public class LimelightFilters {
 			return () -> robotYaw.get().getRotations() != 0.0;
 		}
 
-		private static double getFieldOffsetMeters(double axisPositionMeters, double fieldAxisLengthMeters) {
-			double axisFieldOffsetMeters = 0;
+		private static double getDistanceFromFieldEdgeMeters(double axisPositionMeters, double fieldAxisLengthMeters) {
+			double axisDistanceFromFieldEdgeMeters = 0;
 			if (axisPositionMeters < 0 || axisPositionMeters > fieldAxisLengthMeters) {
-				axisFieldOffsetMeters = axisPositionMeters < 0 ? axisPositionMeters : axisPositionMeters - fieldAxisLengthMeters;
+				axisDistanceFromFieldEdgeMeters = axisPositionMeters < 0 ? axisPositionMeters : axisPositionMeters - fieldAxisLengthMeters;
 			}
-			return Math.abs(axisFieldOffsetMeters);
+			return Math.abs(axisDistanceFromFieldEdgeMeters);
 		}
 
 		private static Filter isRobotInField(Supplier<Translation2d> robotTranslation, double toleranceMeters) {
 			Translation2d currentRobotTranslation = robotTranslation.get();
-			double xFieldOffset = getFieldOffsetMeters(currentRobotTranslation.getX(), Field.LENGTH_METERS);
-			double yFieldOffset = getFieldOffsetMeters(currentRobotTranslation.getY(), Field.WIDTH_METERS);
-			Translation2d robotFieldOffset = new Translation2d(xFieldOffset, yFieldOffset);
+			double xDistanceFromFieldEdgeMeters = getDistanceFromFieldEdgeMeters(currentRobotTranslation.getX(), Field.LENGTH_METERS);
+			double yDistanceFromFieldEdgeMeters = getDistanceFromFieldEdgeMeters(currentRobotTranslation.getY(), Field.WIDTH_METERS);
+			Translation2d robotFieldOffset = new Translation2d(xDistanceFromFieldEdgeMeters, yDistanceFromFieldEdgeMeters);
 			return () -> robotFieldOffset.getNorm() < toleranceMeters;
 		}
 

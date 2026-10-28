@@ -46,9 +46,7 @@ public class Robot {
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 
-		IIMU iimu = IMUFactory.createIMU("IMU/");
-		this.imu = new IMU(iimu, IMUFactory.createSignals(iimu));
-
+		this.imu = IMUFactory.createIMU("IMU/");
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
 			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),

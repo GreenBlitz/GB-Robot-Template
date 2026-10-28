@@ -149,7 +149,7 @@ public class Module {
 
 
 	public void stop() {
-		targetVelocity = new SwerveModuleVelocity(0, getSteerPosition());
+		targetVelocity = new SwerveModuleVelocity(0, getSteerPosition().toRotation2d());
 		moduleInputs.controlMode = ModuleUtil.ControlMode.TARGET_STATE.toLog();
 		steer.stop();
 		drive.stop();
@@ -189,24 +189,24 @@ public class Module {
 	}
 
 	public void pointSteer(Angle2d steerTargetPosition, boolean optimize) {
-		SwerveModuleVelocity moduleVelocity = new SwerveModuleVelocity(0, steerTargetPosition);
+		SwerveModuleVelocity moduleVelocity = new SwerveModuleVelocity(0, steerTargetPosition.toRotation2d());
 		if (optimize) {
-			moduleVelocity = moduleVelocity.optimize(getSteerPosition());
+			moduleVelocity = moduleVelocity.optimize(getSteerPosition().toRotation2d());
 		}
 		targetVelocity.angle = moduleVelocity.angle;
 		moduleInputs.controlMode = ModuleUtil.ControlMode.TARGET_STATE.toLog();
-		setTargetSteerPosition(targetVelocity.angle);
+		setTargetSteerPosition(Angle2d.fromRotation2d(targetVelocity.angle));
 	}
 
 
 	public void setTargetState(SwerveModuleVelocity targetVelocity, boolean isClosedLoop) {
-		targetVelocity = targetVelocity.optimize(getSteerPosition());
-		targetVelocity = targetVelocity.cosineScale(getSteerPosition());
+		targetVelocity = targetVelocity.optimize(getSteerPosition().toRotation2d());
+		targetVelocity = targetVelocity.cosineScale(getSteerPosition().toRotation2d());
 
 		this.targetVelocity = targetVelocity;
 		moduleInputs.controlMode = ModuleUtil.ControlMode.TARGET_STATE.toLog();
 
-		setTargetSteerPosition(this.targetVelocity.angle);
+		setTargetSteerPosition(Angle2d.fromRotation2d(this.targetVelocity.angle));
 		setTargetVelocity(this.targetVelocity.velocity, isClosedLoop);
 	}
 
@@ -253,7 +253,7 @@ public class Module {
 	public SwerveModulePosition getOdometryPosition(int odometryUpdateIndex) {
 		return new SwerveModulePosition(
 			driveInputs.positionsMeters[odometryUpdateIndex],
-			steerSignals.position().asArray()[odometryUpdateIndex]
+			steerSignals.position().asArray()[odometryUpdateIndex].toRotation2d()
 		);
 	}
 
@@ -266,7 +266,7 @@ public class Module {
 	}
 
 	public SwerveModuleVelocity getCurrentVelocity() {
-		return new SwerveModuleVelocity(getDriveVelocityMetersPerSecond(), getSteerPosition());
+		return new SwerveModuleVelocity(getDriveVelocityMetersPerSecond(), getSteerPosition().toRotation2d());
 	}
 
 	public Angle2d getDrivePosition() {
@@ -291,7 +291,7 @@ public class Module {
 		if (!isStopping) {
 			return false;
 		}
-		boolean isAtSteerPosition = ToleranceMath.isNearWrapped(getTargetVelocity().angle, getSteerPosition(), steerPositionTolerance);
+		boolean isAtSteerPosition = ToleranceMath.isNearWrapped(Angle2d.fromRotation2d(getTargetVelocity().angle), getSteerPosition(), steerPositionTolerance);
 		return isAtSteerPosition;
 	}
 

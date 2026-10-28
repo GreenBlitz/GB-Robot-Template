@@ -56,14 +56,14 @@ public class AimAssistMath {
 		double magnitudeCompensationFactor,
 		boolean slowDownByRotation
 	) {
-		Pose2d robotPoseWithTargetHeading = new Pose2d(robotPose.getX(), robotPose.getY(), allianceRelativeTargetHeading);
+		Pose2d robotPoseWithTargetHeading = new Pose2d(robotPose.getX(), robotPose.getY(), allianceRelativeTargetHeading.toRotation2d());
 		Translation2d objectRelativeToRobot = FieldMath.getRelativeTranslation(robotPoseWithTargetHeading, objectTranslation);
 		double neededHorizontalVelocityRelativeToObjectMetersPerSecond = swerveConstants.yMetersPIDController()
 			.calculate(0, objectRelativeToRobot.getY());
 
 		Angle2d targetHeadingHingeSystemAngle = switch (swerveState.getDriveRelative()) {
 			case ALLIANCE_RELATIVE -> Field.getAllianceRelative(allianceRelativeTargetHeading);
-			case ROBOT_RELATIVE -> allianceRelativeTargetHeading.minus(robotPose.getRotation());
+			case ROBOT_RELATIVE -> allianceRelativeTargetHeading.minus(Angle2d.fromRotation2d(robotPose.getRotation()));
 		};
 
 		ChassisVelocities targetHeadingRelativeVelocities = SwerveMath

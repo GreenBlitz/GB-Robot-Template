@@ -63,7 +63,7 @@ public class CameraPoseCalibration extends Command {
 		this.expectedRobotPoseFieldRelative = new Pose2d(
 			tagPoseFieldRelative.getX() - robotXAxisDistanceFromTag,
 			tagPoseFieldRelative.getY(),
-			FieldMath.transformAngle(tagPoseFieldRelative.getRotation().toAngle2d(), AngleTransform.INVERT)
+			FieldMath.transformAngle(Angle2d.fromRotation2d(tagPoseFieldRelative.getRotation().toRotation2d()), AngleTransform.INVERT).toRotation2d()
 		);
 		this.tagCenterHeightFromGroundMeters = tagCenterHeightFromGroundMeters;
 		this.robotYawRelativeToTagFacingYaw = robotYawRelativeToTagFacingYaw;

@@ -24,7 +24,7 @@ public class FieldMath {
 	}
 
 	public static Pose2d rotatePose(Angle2d rotation, Pose2d toRelative) {
-		return toRelative.rotateBy(rotation.unaryMinus());
+		return toRelative.rotateBy(rotation.unaryMinus().toRotation2d());
 	}
 
 	public static Angle2d transformAngle(Angle2d angle, AngleTransform angleTransform) {
@@ -57,7 +57,7 @@ public class FieldMath {
 	}
 
 	public static Pose2d mirror(Pose2d pose2d, boolean mirrorX, boolean mirrorY, AngleTransform angleTransform) {
-		return new Pose2d(mirror(pose2d.getTranslation(), mirrorX, mirrorY), transformAngle(pose2d.getRotation(), angleTransform));
+		return new Pose2d(mirror(pose2d.getTranslation(), mirrorX, mirrorY), transformAngle(Angle2d.fromRotation2d(pose2d.getRotation()), angleTransform).toRotation2d());
 	}
 
 	public static Translation3d mirror(Translation3d translation3d, boolean mirrorX, boolean mirrorY) {

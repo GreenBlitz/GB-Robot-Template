@@ -11,7 +11,7 @@ public interface OrientationRequiringRobotPoseSupplier {
 	void setRobotOrientation(Rotation3d robotOrientation);
 
 	default void setRobotOrientation(Angle2d robotYaw) {
-		setRobotOrientation(new Rotation3d(robotYaw));
+		setRobotOrientation(new Rotation3d(robotYaw.toRotation2d()));
 	}
 
 	Optional<RobotPoseObservation> getOrientationRequiringRobotPose();

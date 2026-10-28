@@ -34,7 +34,7 @@ public class LimelightFilters {
 				MegaTagFilters.doesYawExistAtTimestamp(() -> limelight.getMT1RawData().timestampSeconds(), wantedYawAtTimestamp)
 					.implies(
 						MegaTagFilters.isYawAtExpectedAngle(
-							() -> limelight.getMT1RawData().pose().getRotation(),
+							() -> Angle2d.fromRotation2d(limelight.getMT1RawData().pose().getRotation()),
 							() -> wantedYawAtTimestamp.apply(limelight.getMT1RawData().timestampSeconds()).get(),
 							isYawCalibrated,
 							yawAtAngleTolerance
@@ -55,14 +55,14 @@ public class LimelightFilters {
 				MegaTagFilters.doesYawExistAtTimestamp(() -> limelight.getMT2RawData().timestampSeconds(), wantedYawAtTimestamp)
 					.implies(
 						MegaTagFilters.isYawAtExpectedAngle(
-							() -> limelight.getMT2RawData().pose().getRotation(),
+							() -> Angle2d.fromRotation2d(limelight.getMT2RawData().pose().getRotation()),
 							() -> wantedYawAtTimestamp.apply(limelight.getMT2RawData().timestampSeconds()).get(),
 							isYawCalibrated,
 							yawAtAngleTolerance
 						)
 					)
 			)
-			.and(MegaTagFilters.isYawNotZero(() -> limelight.getMT2RawData().pose().getRotation()));
+			.and(MegaTagFilters.isYawNotZero(() -> Angle2d.fromRotation2d(limelight.getMT2RawData().pose().getRotation())));
 	}
 
 	private static class ObjectDetectionFilters {

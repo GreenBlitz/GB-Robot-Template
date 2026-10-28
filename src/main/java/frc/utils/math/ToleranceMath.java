@@ -21,7 +21,7 @@ public class ToleranceMath {
 
 	public static boolean isNear(Pose2d wantedPose, Pose2d pose, Pose2d tolerance) {
 		return isNear(wantedPose.getTranslation(), pose.getTranslation(), tolerance.getTranslation())
-			&& isNearWrapped(wantedPose.getRotation(), pose.getRotation(), tolerance.getRotation());
+			&& isNearWrapped(Angle2d.fromRotation2d(wantedPose.getRotation()), Angle2d.fromRotation2d(pose.getRotation()), Angle2d.fromRotation2d(tolerance.getRotation()));
 	}
 
 	public static boolean isNear(Translation2d wantedTranslation, Translation2d translation, double toleranceMeters) {

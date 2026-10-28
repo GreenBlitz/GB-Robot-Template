@@ -99,9 +99,8 @@ public class LimelightFilters {
 		}
 
 		private static Filter isRobotInField(Supplier<Translation2d> robotTranslation, double toleranceMeters) {
-			Translation2d currentRobotTranslation = robotTranslation.get();
 			Rectangle2d field = new Rectangle2d(new Translation2d(0, 0), new Translation2d(Field.LENGTH_METERS, Field.WIDTH_METERS));
-			return () -> field.getDistance(currentRobotTranslation) < toleranceMeters;
+			return () -> field.getDistance(robotTranslation.get()) < toleranceMeters;
 		}
 
 	}

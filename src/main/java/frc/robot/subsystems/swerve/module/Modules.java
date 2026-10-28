@@ -1,5 +1,6 @@
 package frc.robot.subsystems.swerve.module;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -84,8 +85,9 @@ public class Modules {
 		}
 	}
 
-	public void setTargetStates(SwerveModuleState[] moduleStates, boolean isClosedLoop) {
+	public void setTargetStates(SwerveModuleState[] moduleStates, boolean isClosedLoop, SlewRateLimiter slewRateLimiter) {
 		for (int i = 0; i < modules.length; i++) {
+			moduleStates[i].speedMetersPerSecond = slewRateLimiter.calculate(moduleStates[i].speedMetersPerSecond);
 			modules[i].setTargetState(moduleStates[i], isClosedLoop);
 		}
 	}

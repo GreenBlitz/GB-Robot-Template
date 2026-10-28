@@ -9,7 +9,7 @@ java {
     targetCompatibility = JavaVersion.VERSION_25
 }
 
-def ROBOT_MAIN_CLASS = "first.Main"
+def ROBOT_MAIN_CLASS = "frc.Main"
 
 // Define my targets (SystemCore) and artifacts (deployable files)
 // This is added by GradleRIO's backing project DeployUtils.

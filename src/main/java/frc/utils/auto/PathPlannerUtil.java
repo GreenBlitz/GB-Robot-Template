@@ -71,7 +71,6 @@ public class PathPlannerUtil {
 
 	public static void startPathfinder() {
 		setPathfinder(new LocalADStar());
-		scheduleWarmup();
 	}
 
 	public static void setPathfinder(Pathfinder pathfinder) {

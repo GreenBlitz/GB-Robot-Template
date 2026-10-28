@@ -1,13 +1,11 @@
 package frc.robot.subsystems.moduleAlon;
 
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.constants.AlonModuleConstants;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
-import frc.robot.RobotConstants;
 import frc.utils.math.AngleMath;
 import org.littletonrobotics.junction.Logger;
 
@@ -24,8 +22,12 @@ public class ModuleCommandsBuilder {
 		this.logPath = logPath;
 		this.moduleAlon = moduleAlon;
 		moduleAlon.setDefaultCommand(
-			new InstantCommand(() -> moduleAlon.stop(), moduleAlon).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf)
+			new InstantCommand(() -> moduleAlon.stop(), moduleAlon)
 		);
+	}
+
+	public RunCommand stopCommand(){
+		return new RunCommand(()->{moduleAlon.stop();},moduleAlon);
 	}
 
 	public void setDefaultJoystick(SmartJoystick defaultJoystick) {
@@ -33,22 +35,20 @@ public class ModuleCommandsBuilder {
 	}
 
 	public Command driveWithStick(Supplier<Double> xAxis, Supplier<Double> yAxis) {
-		RunCommand command = new RunCommand(() -> {
+		return new RunCommand(() -> {
 			double x = xAxis.get();
 			double y = yAxis.get();
 			Logger.recordOutput(logPath+"/axis/x", x);
 			Logger.recordOutput(logPath+"/axis/y", y);
 			Logger.recordOutput(logPath+"/axis/angle",Rotation2d.fromRadians(Math.atan2(y, x)));
-			Logger.recordOutput(logPath+"/axis/angleInRange",AngleMath.findAngleInRange(Rotation2d.fromRadians(Math.atan2(y, x)), moduleAlon.getSteerAngle()));
+			Logger.recordOutput(logPath+"/axis/angleInRange",AngleMath.findAngleInRange(Rotation2d.fromRadians(Math.atan2(y, x)), moduleAlon.getSteerPosition()));
 			if (x * x + y * y >= AlonModuleConstants.moduleAlonStickTolerance * AlonModuleConstants.moduleAlonStickTolerance) {
-				moduleAlon.steerToPosition(AngleMath.findAngleInRange(Rotation2d.fromRadians(Math.atan2(y, x)), moduleAlon.getSteerAngle()));
-				moduleAlon.linearSetPower(Math.sqrt(x * x + y * y));
+				moduleAlon.steerToPosition(AngleMath.findAngleInRange(Rotation2d.fromRadians(Math.atan2(y, x)), moduleAlon.getSteerPosition()));
+				moduleAlon.linearPower(Math.sqrt(x * x + y * y));
 			} else {
 				moduleAlon.stop();
 			}
-		});
-		command.addRequirements(moduleAlon);
-		return command.withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming);
+		}, moduleAlon).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming);
 	}
 
 	public Command driveWithLeftStick() {
@@ -67,71 +67,38 @@ public class ModuleCommandsBuilder {
 		return driveWithStick(() -> joystick.getAxisValue(Axis.RIGHT_X), () -> joystick.getAxisValue(Axis.RIGHT_Y));
 	}
 
-	public void setNeutralModeToLinear(NeutralModeValue mode) {
-		moduleAlon.setLinearNeutral(mode);
-	}
-
-	public void setNeutralModeToSteer(NeutralModeValue mode) {
-		moduleAlon.setSteerNeutral(mode);
-	}
 
 	public InstantCommand setNeutralMode(boolean brake) {
 		return new InstantCommand(() -> {
-			NeutralModeValue neutralMode = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
-			setNeutralModeToLinear(neutralMode);
-			setNeutralModeToSteer(neutralMode);
+			moduleAlon.setLinearNeutral(brake);
+			moduleAlon.setSteerNeutral(brake);
 		}, moduleAlon);
 	}
 
 	public RunCommand manualDriveCommand(Supplier<Double> power) {
-		return new RunCommand(() -> {
-			moduleAlon.linearSetPower(power.get());
-		}, moduleAlon);
+		return new RunCommand(()->moduleAlon.linearPower(power.get()), moduleAlon);
 	}
 
 	public void linearWithStickValue(SmartJoystick joystick, Axis axis) {
-		moduleAlon.linearSetPower(joystick.getAxisValue(axis));
+		moduleAlon.linearPower(joystick.getAxisValue(axis));
 	}
 
 	public static final double constantPower = 0.5;
 	public static double steerToleranceDegrees = 10;
 
-	public static Command increaseTolerance() {
-		return new InstantCommand(() -> {
-			steerToleranceDegrees += 5;
-			System.out.println("steer tolerance:" + steerToleranceDegrees);
-		});
-	}
-
-	public static Command decreaseTolerance() {
-		return new InstantCommand(() -> {
-			steerToleranceDegrees -= 5;
-			System.out.println("steer tolerance:" + steerToleranceDegrees);
-		});
-	}
-
 	public Command driveDistanceCommand(Rotation2d drive, Rotation2d angle) {
 		FunctionalCommand steerToPosition = new FunctionalCommand(() -> moduleAlon.stop(), () -> {
 			moduleAlon.steerToPosition(angle);
-			Logger.recordOutput(logPath + "/targetAngle", angle);
-		}, (b) -> {
+		}, (isInterrupted) -> {
 			moduleAlon.stop();
-		}, () -> {
-			return MathUtil.isNear(angle.getDegrees(), moduleAlon.getSteerAngle().getDegrees(), steerToleranceDegrees);
-		});
-
+		}, () -> MathUtil.isNear(angle.getDegrees(), moduleAlon.getSteerPosition().getDegrees(), steerToleranceDegrees),
+				moduleAlon);
 
 		Command driveToPosition = new DriveToPositionCommand(drive, moduleAlon);
-		steerToPosition.addRequirements(moduleAlon);
-		driveToPosition.addRequirements(moduleAlon);
-		// command.steerToPosition(moduleAlon);
-		// command.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf);
-		// steerToPosition.addRequirements(moduleAlon);
 		return new SequentialCommandGroup(
-			steerToPosition.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf),
-			driveToPosition.withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf)
+			steerToPosition,
+			driveToPosition
 		);
-		// NOTE THAT THIS IMPLEMENTATION CANNOT STAY, YOU NEED TO ADD ALL THE COMMENTED SHI
 	}
 
 	private static class DriveToPositionCommand extends Command {
@@ -143,16 +110,17 @@ public class ModuleCommandsBuilder {
 		public DriveToPositionCommand(Rotation2d turns, ModuleAlon moduleAlon) {
 			this.turns = turns;
 			this.moduleAlon = moduleAlon;
+			this.addRequirements(moduleAlon);
 		}
 
 		@Override
 		public void initialize() {
-			originalPos = moduleAlon.getLinearAngle();
+			originalPos = moduleAlon.getLinearPosition();
 		}
 
 		@Override
 		public void execute() {
-			moduleAlon.linearSetPower(constantPower * signOfTurns());
+			moduleAlon.linearPower(constantPower * signOfTurns());
 		}
 
 		@Override
@@ -162,7 +130,7 @@ public class ModuleCommandsBuilder {
 
 		@Override
 		public boolean isFinished() {
-			return moduleAlon.getLinearAngle().minus(turns).minus(originalPos).times(signOfTurns()).getRadians() > 0;
+			return moduleAlon.getLinearPosition().minus(turns).minus(originalPos).times(signOfTurns()).getRadians() > 0;
 		}
 
 		private int signOfTurns() {
@@ -173,7 +141,7 @@ public class ModuleCommandsBuilder {
 
 	public RunCommand comboCommand() {
 		return new RunCommand(() -> {
-			moduleAlon.linearSetPower(1);
+			moduleAlon.linearPower(1);
 		});
 	}
 
@@ -194,9 +162,9 @@ public class ModuleCommandsBuilder {
 		return command;
 	}
 
-	public DeferredCommand realTimeChoice(Supplier<Boolean> var) {
+	public DeferredCommand realTimeChoice(Supplier<Boolean> shouldLeft) {
 		return new DeferredCommand(() -> {
-			return var.get()
+			return shouldLeft.get()
 				? driveDistanceCommand(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(90))
 				: driveDistanceCommand(Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(-90));
 		}, Set.of(moduleAlon));

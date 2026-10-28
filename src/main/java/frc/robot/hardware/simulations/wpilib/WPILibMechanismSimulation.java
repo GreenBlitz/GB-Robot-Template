@@ -1,6 +1,6 @@
 package frc.robot.hardware.simulations.wpilib;
 
-import org.wpilib.math.geometry.Angle2d;
+import frc.utils.costomUnits.Angle2d;
 import frc.robot.hardware.simulations.MechanismSimulation;
 
 public interface WPILibMechanismSimulation extends MechanismSimulation {

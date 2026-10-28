@@ -2,9 +2,9 @@ package frc.robot.subsystems.swerve;
 
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import frc.utils.costomUnits.Angle2d;
 import org.wpilib.math.controller.PIDController;
 import org.wpilib.math.geometry.Pose2d;
-import org.wpilib.math.geometry.Angle2d;
 import frc.constants.MathConstants;
 
 public record SwerveConstants(
@@ -50,7 +50,7 @@ public record SwerveConstants(
 
 	public static final double MIN_COLLISION_G_FORCE = 2;
 
-	public static final Pose2d DEADBANDS = new Pose2d(0.0092, 0.0092, Angle2d.fromRadians(0.0115));
+	public static final Pose2d DEADBANDS = new Pose2d(0.0092, 0.0092, Angle2d.fromRadians(0.0115).toRotation2d());
 	static final Angle2d CALIBRATION_MODULE_ANGLE_TOLERANCE = Angle2d.fromDegrees(3);
 	static final Angle2d CALIBRATION_MODULE_ANGULAR_VELOCITY_PER_SECOND_DEADBAND = Angle2d.fromDegrees(3);
 

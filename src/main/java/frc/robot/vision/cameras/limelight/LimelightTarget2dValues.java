@@ -1,6 +1,7 @@
 package frc.robot.vision.cameras.limelight;
 
-import org.wpilib.math.geometry.Angle2d;
+
+import frc.utils.costomUnits.Angle2d;
 
 public record LimelightTarget2dValues(
 	boolean isValid,

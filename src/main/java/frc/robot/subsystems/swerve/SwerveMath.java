@@ -1,7 +1,7 @@
 package frc.robot.subsystems.swerve;
 
 import org.wpilib.math.geometry.Pose2d;
-import org.wpilib.math.geometry.Angle2d;
+import frc.utils.costomUnits.Angle2d;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.math.kinematics.ChassisVelocities;
 import frc.robot.subsystems.swerve.states.DriveSpeed;
@@ -22,14 +22,14 @@ public class SwerveMath {
 		ChassisVelocities allianceRelativeVelocities,
 		Angle2d allianceRelativeHeading
 	) {
-		return allianceRelativeVelocities.toRobotRelative(allianceRelativeHeading);
+		return allianceRelativeVelocities.toRobotRelative(allianceRelativeHeading.toRotation2d());
 	}
 
 	public static ChassisVelocities robotToAllianceRelativeVelocities(
 		ChassisVelocities robotRelativeVelocities,
 		Angle2d allianceRelativeHeading
 	) {
-		return robotRelativeVelocities.toFieldRelative(allianceRelativeHeading);
+		return robotRelativeVelocities.toFieldRelative(allianceRelativeHeading.toRotation2d());
 	}
 
 	public static ChassisVelocities discretize(ChassisVelocities chassisVelocities) {

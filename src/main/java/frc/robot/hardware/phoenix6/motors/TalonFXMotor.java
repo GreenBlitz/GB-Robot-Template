@@ -5,7 +5,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.hardware.FollowerInputsAutoLogged;
-import org.wpilib.math.geometry.Angle2d;
+import frc.utils.costomUnits.Angle2d;
 import org.wpilib.command2.sysid.SysIdRoutine;
 import frc.robot.Robot;
 import frc.robot.RobotConstants;

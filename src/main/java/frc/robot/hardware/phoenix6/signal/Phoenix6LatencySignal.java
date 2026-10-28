@@ -2,7 +2,7 @@ package frc.robot.hardware.phoenix6.signal;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
-import org.wpilib.math.geometry.Angle2d;
+import frc.utils.costomUnits.Angle2d;
 import frc.robot.hardware.signal.AngleSignal;
 import frc.utils.TimedValue;
 import frc.utils.AngleUnit;

@@ -1,5 +1,6 @@
 package frc.robot.poseestimator.WPILibPoseEstimator;
 
+import frc.utils.costomUnits.Angle2d;
 import org.wpilib.math.geometry.*;
 import org.wpilib.math.kinematics.SwerveModuleVelocity;
 import org.wpilib.math.linalg.Matrix;
@@ -46,7 +47,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		this.kinematics = kinematics;
 		this.odometryEstimator = new Odometry<>(
 			kinematics,
-			Angle2d.fromRadians(initialIMUOrientation.getZ()),
+			Angle2d.fromRadians(initialIMUOrientation.getZ()).toRotation2d(),
 			initialModulePositions,
 			WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE
 		);
@@ -108,7 +109,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		}
 
 		poseEstimator
-			.updateWithTime(data.getTimestampSeconds(), Angle2d.fromRadians(data.getIMUOrientation().get().getZ()), data.getWheelPositions());
+			.updateWithTime(data.getTimestampSeconds(), Angle2d.fromRadians(data.getIMUOrientation().get().getZ()).toRotation2d(), data.getWheelPositions());
 		imuYawBuffer.addSample(data.getTimestampSeconds(), Angle2d.fromRadians(data.getIMUOrientation().get().getZ()));
 		data.getIMU3DAccelerationG().ifPresent((acceleration) -> imu3DAccelerationGBuffer.addSample(data.getTimestampSeconds(), acceleration));
 
@@ -131,7 +132,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		Logger.recordOutput(logPath + "/lastPoseResetTo", poseMeters);
 
 		poseEstimator.resetPosition(
-			Angle2d.fromRadians(odometryData.getIMUOrientation().orElse(Rotation3d.ZERO).getZ()),
+			Angle2d.fromRadians(odometryData.getIMUOrientation().orElse(Rotation3d.ZERO).getZ()).toRotation2d(),
 			odometryData.getWheelPositions(),
 			poseMeters
 		);
@@ -151,7 +152,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 
 	@Override
 	public void setHeading(Angle2d newHeading) {
-		poseEstimator.resetRotation(newHeading);
+		poseEstimator.resetRotation(newHeading.toRotation2d());
 		poseToIMUYawDifferenceBuffer.clear();
 	}
 
@@ -260,7 +261,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 
 	private Optional<Angle2d> getEstimatedPoseToIMUYawDifference(Optional<Angle2d> gyroYaw, double timestampSeconds) {
 		return getEstimatedPoseAtTimestamp(timestampSeconds)
-			.flatMap(estimatedPose -> gyroYaw.map(yaw -> estimatedPose.getRotation().minus(yaw)));
+			.flatMap(estimatedPose -> gyroYaw.map(yaw -> Angle2d.fromRotation2d(estimatedPose.getRotation()).minus(yaw)));
 	}
 
 	private Pose2d getPredictedOdometryPose() {

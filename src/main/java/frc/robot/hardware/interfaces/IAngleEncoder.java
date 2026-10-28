@@ -1,6 +1,7 @@
 package frc.robot.hardware.interfaces;
 
-import org.wpilib.math.geometry.Angle2d;
+
+import frc.utils.costomUnits.Angle2d;
 
 public interface IAngleEncoder extends IDevice {
 

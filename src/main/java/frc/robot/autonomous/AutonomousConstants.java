@@ -2,7 +2,7 @@ package frc.robot.autonomous;
 
 import com.pathplanner.lib.path.PathConstraints;
 import org.wpilib.math.geometry.Pose2d;
-import org.wpilib.math.geometry.Angle2d;
+import frc.utils.costomUnits.Angle2d;
 
 public class AutonomousConstants {
 

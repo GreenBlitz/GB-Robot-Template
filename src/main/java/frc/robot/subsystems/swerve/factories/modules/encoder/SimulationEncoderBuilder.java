@@ -1,6 +1,6 @@
 package frc.robot.subsystems.swerve.factories.modules.encoder;
 
-import org.wpilib.math.geometry.Angle2d;
+import frc.utils.costomUnits.Angle2d;
 import frc.robot.hardware.empties.EmptyAngleEncoder;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.signal.AngleSignal;

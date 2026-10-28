@@ -1,7 +1,7 @@
 package frc.robot.hardware.rev.motors;
 
 import com.revrobotics.spark.SparkLowLevel;
-import org.wpilib.math.geometry.Angle2d;
+import frc.utils.costomUnits.Angle2d;
 import org.wpilib.command2.sysid.SysIdRoutine;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;

@@ -1,7 +1,6 @@
 package frc.utils.costomUnits;
 
-import org.wpilib.math.geometry.proto.Rotation2dProto;
-import org.wpilib.math.geometry.struct.Rotation2dStruct;
+import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.interpolation.Interpolatable;
 import org.wpilib.math.linalg.MatBuilder;
 import org.wpilib.math.linalg.Matrix;
@@ -176,8 +175,8 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
         return new Angle2d(Units.rotationsToRadians(rotations));
     }
 
-    public static Angle2d fromAngle2d(Angle2d Angle2d){
-        return Angle2d.fromRadians(Angle2d.getRadians());
+    public static Angle2d fromRotation2d(Rotation2d rotation2d){
+        return Angle2d.fromRadians(rotation2d.getRadians());
     }
 
     /**
@@ -277,8 +276,8 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
         return MatBuilder.fill(Nat.N2(), Nat.N2(), m_cos, -m_sin, m_sin, m_cos);
     }
 
-    public Angle2d toAngle2d(){
-        return Angle2d.fromRadians(getRadians());
+    public Rotation2d toRotation2d(){
+        return Rotation2d.fromRadians(getRadians());
     }
 
     /**
@@ -372,9 +371,9 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
     }
 
 
-    /** Rotation2d protobuf for serialization. */
+    /** Angle2d protobuf for serialization. */
     public static final Angle2dProto proto = new Angle2dProto();
 
-    /** Rotation2d struct for serialization. */
+    /** Angle2d struct for serialization. */
     public static final Angle2dStruct struct = new Angle2dStruct();
 }

@@ -1,7 +1,7 @@
 package frc.robot.hardware.phoenix6.angleencoder;
 
 import com.ctre.phoenix6.hardware.CANcoder;
-import org.wpilib.math.geometry.Angle2d;
+import frc.utils.costomUnits.Angle2d;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6Device;

@@ -2,7 +2,7 @@ package frc.robot.hardware.rev.request;
 
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase;
-import org.wpilib.math.geometry.Angle2d;
+import frc.utils.costomUnits.Angle2d;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.utils.Conversions;
 

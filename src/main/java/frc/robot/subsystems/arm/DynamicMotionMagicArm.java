@@ -1,6 +1,6 @@
 package frc.robot.subsystems.arm;
 
-import org.wpilib.math.geometry.Angle2d;
+import frc.utils.costomUnits.Angle2d;
 import frc.robot.hardware.interfaces.*;
 import org.littletonrobotics.junction.Logger;
 

@@ -1,7 +1,7 @@
 package frc.robot.vision.cameras.limelight;
 
 import org.wpilib.math.geometry.Pose3d;
-import org.wpilib.math.geometry.Angle2d;
+import frc.utils.costomUnits.Angle2d;
 import org.wpilib.math.geometry.Translation2d;
 import frc.robot.vision.DetectedObjectObservation;
 import frc.robot.vision.DetectedObjectType;

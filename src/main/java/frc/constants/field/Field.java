@@ -23,7 +23,7 @@ public class Field {
 	public static final double WIDTH_METERS = 8.0518;
 
 	public static Pose2d getAllianceRelative(Pose2d pose2d) {
-		return new Pose2d(getAllianceRelative(pose2d.getTranslation()), getAllianceRelative(pose2d.getRotation()));
+		return new Pose2d(getAllianceRelative(pose2d.getTranslation()), getAllianceRelative(Angle2d.fromRotation2d(pose2d.getRotation())).toRotation2d());
 	}
 
 	public static Translation2d getAllianceRelative(Translation2d translation) {

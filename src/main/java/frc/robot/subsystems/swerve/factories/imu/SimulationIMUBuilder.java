@@ -1,6 +1,6 @@
 package frc.robot.subsystems.swerve.factories.imu;
 
-import org.wpilib.math.geometry.Angle2d;
+import frc.utils.costomUnits.Angle2d;
 import frc.robot.hardware.empties.EmptyIMU;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.signal.AngleSignal;

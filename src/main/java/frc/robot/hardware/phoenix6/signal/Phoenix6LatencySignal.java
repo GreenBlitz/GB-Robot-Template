@@ -11,7 +11,7 @@ import frc.utils.time.TimeUtil;
 public class Phoenix6LatencySignal extends AngleSignal implements SignalGetter {
 
 	private final StatusSignal<?> signal;
-	protected final StatusSignal<?> slopeSignal;
+	private final StatusSignal<?> slopeSignal;
 
 	protected Phoenix6LatencySignal(String name, StatusSignal<?> signal, StatusSignal<?> slopeSignal, AngleUnit angleUnit) {
 		super(name, angleUnit);
@@ -31,6 +31,10 @@ public class Phoenix6LatencySignal extends AngleSignal implements SignalGetter {
 	@Override
 	public StatusSignal<?> getSignal() {
 		return signal;
+	}
+
+	public StatusSignal<?> getSlopeSignal() {
+		return slopeSignal;
 	}
 
 }

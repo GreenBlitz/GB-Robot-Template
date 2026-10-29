@@ -51,7 +51,7 @@ public class Swerve extends GBSubsystem {
 	private Supplier<Rotation2d> headingSupplier;
 	private ChassisPowers driversPowerInputs;
 
-	public Swerve(SwerveConstants constants, Modules modules, IMUWrapper imuWrapper) {
+	public Swerve(SwerveConstants constants, Modules modules, IMUWrapper imuWrapper, Supplier<Rotation2d> headingSupplier) {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 		this.driversPowerInputs = new ChassisPowers();
@@ -62,7 +62,7 @@ public class Swerve extends GBSubsystem {
 		this.imuWrapper = imuWrapper;
 
 		this.kinematics = new SwerveDriveKinematics(modules.getModulePositionsFromCenterMeters());
-		this.headingSupplier = () -> imuWrapper.getAbsoluteYaw().getValue();
+		this.headingSupplier = headingSupplier;
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
 		this.stateHandler = new SwerveStateHandler(this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);

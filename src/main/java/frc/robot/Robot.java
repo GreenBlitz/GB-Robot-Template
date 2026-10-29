@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.imu.IMUWrapper;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.poseestimator.HeadingSource;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
@@ -49,7 +50,8 @@ public class Robot {
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
 			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
-			imuWrapper
+			imuWrapper,
+			HeadingSource.handleHeadingSource(HeadingSource.IMU, this)
 		);
 		BrakeStateManager.add(() -> swerve.getModules().setBrake(true), () -> swerve.getModules().setBrake(false));
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
@@ -95,6 +97,10 @@ public class Robot {
 		swerve.update();
 	}
 
+	public void setSwerveHeadingSource(HeadingSource headingSource) {
+		swerve.setHeadingSupplier(HeadingSource.handleHeadingSource(headingSource, this));
+	}
+
 	public void periodic() {
 		BusChain.refreshAll();
 
@@ -119,6 +125,10 @@ public class Robot {
 
 	public Swerve getSwerve() {
 		return swerve;
+	}
+
+	public IMUWrapper getImuWrapper() {
+		return imuWrapper;
 	}
 
 	public List<Limelight> getLimelights() {

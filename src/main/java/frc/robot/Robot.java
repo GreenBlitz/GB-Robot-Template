@@ -49,10 +49,9 @@ public class Robot {
 		this.imu = IMUFactory.createIMU("IMU/");
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
-			this,
 			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
 			imu,
-			HeadingSource.IMU
+			HeadingSource.handleHeadingSource(HeadingSource.IMU, this)
 		);
 		BrakeStateManager.add(() -> swerve.getModules().setBrake(true), () -> swerve.getModules().setBrake(false));
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
@@ -96,6 +95,10 @@ public class Robot {
 
 	public void updateSubsystems() {
 		swerve.update();
+	}
+
+	public void setSwerveHeadingSource(HeadingSource headingSource) {
+		swerve.setHeadingSupplier(HeadingSource.handleHeadingSource(headingSource, this));
 	}
 
 	public void periodic() {

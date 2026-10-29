@@ -14,7 +14,7 @@ public enum HeadingSource {
 
 	public static Supplier<Rotation2d> handleHeadingSource(HeadingSource headingSource, Robot robot) {
 		return switch (headingSource) {
-			case IMU -> () -> robot.getIMU().getAbsoluteYaw().getValue();
+			case IMU -> () -> robot.getImuWrapper().getAbsoluteYaw().getValue();
 			case LIMELIGHT_IMU -> () -> new Rotation2d();
 			case SWERVE -> () -> robot.getPoseEstimator().getOdometryPose().getRotation();
 			case VISION -> () -> robot.getPoseEstimator().getLastVisionObservation().robotPose().getRotation();

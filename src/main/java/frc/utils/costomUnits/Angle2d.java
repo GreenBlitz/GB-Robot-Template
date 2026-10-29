@@ -65,7 +65,7 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
     private final double m_cos;
     private final double m_sin;
 
-    /** Constructs a Angle2d with a default angle of 0 degrees. */
+    /** Constructs an Angle2d with a default angle of 0 degrees. */
     public Angle2d() {
         m_value = 0.0;
         m_cos = 1.0;
@@ -73,7 +73,7 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
     }
 
     /**
-     * Constructs a Angle2d with the given radian value.
+     * Constructs an Angle2d with the given radian value.
      *
      * @param value The value of the angle in radians.
      */
@@ -84,7 +84,7 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
     }
 
     /**
-     * Constructs a Angle2d with the given x and y (cosine and sine) components.
+     * Constructs an Angle2d with the given x and y (cosine and sine) components.
      *
      * @param x The x component or cosine of the rotation.
      * @param y The y component or sine of the rotation.
@@ -104,7 +104,7 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
     }
 
     /**
-     * Constructs a Angle2d with the given angle.
+     * Constructs an Angle2d with the given angle.
      *
      * @param angle The angle of the rotation.
      */
@@ -113,7 +113,7 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
     }
 
     /**
-     * Constructs a Angle2d from a rotation matrix.
+     * Constructs an Angle2d from a rotation matrix.
      *
      * @param rotationMatrix The rotation matrix.
      * @throws IllegalArgumentException if the rotation matrix isn't special orthogonal.
@@ -146,7 +146,7 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
     }
 
     /**
-     * Constructs and returns a Angle2d with the given radian value.
+     * Constructs and returns an Angle2d with the given radian value.
      *
      * @param radians The value of the angle in radians.
      * @return The rotation object with the desired angle value.
@@ -156,7 +156,7 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
     }
 
     /**
-     * Constructs and returns a Angle2d with the given degree value.
+     * Constructs and returns an Angle2d with the given degree value.
      *
      * @param degrees The value of the angle in degrees.
      * @return The rotation object with the desired angle value.
@@ -166,7 +166,7 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
     }
 
     /**
-     * Constructs and returns a Angle2d with the given number of rotations.
+     * Constructs and returns an Angle2d with the given number of rotations.
      *
      * @param rotations The value of the angle in rotations.
      * @return The rotation object with the desired angle value.
@@ -175,6 +175,13 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
         return new Angle2d(Units.rotationsToRadians(rotations));
     }
 
+    /**
+     * Constructs and returns an Angle2d with the given number of rotations.
+     *
+     * @param rotation2d The value of the angle in Rotation2d.
+     * @return The rotation object with the desired angle value.
+     */
+    //use carefully, it does a Modulo 360
     public static Angle2d fromRotation2d(Rotation2d rotation2d){
         return Angle2d.fromRadians(rotation2d.getRadians());
     }

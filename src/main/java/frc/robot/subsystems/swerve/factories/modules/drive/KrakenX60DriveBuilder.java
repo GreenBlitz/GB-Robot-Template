@@ -30,7 +30,7 @@ import frc.utils.AngleUnit;
 
 public class KrakenX60DriveBuilder {
 
-	public static final double SLIP_CURRENT = 60;
+	public static final double SLIP_CURRENT = 40;
 	public static final double GEAR_RATIO = 7.13;
 	private static final double MOMENT_OF_INERTIA_METERS_SQUARED = 0.001;
 
@@ -67,10 +67,10 @@ public class KrakenX60DriveBuilder {
 
 		if (Robot.ROBOT_TYPE.isReal()) {
 			// Velocity Voltage
-			driveConfig.Slot0.kS = 0.15916;
-			driveConfig.Slot0.kV = 0.90548;
-			driveConfig.Slot0.kA = 0.079923;
-			driveConfig.Slot0.kP = 3;
+			driveConfig.Slot0.kS = 0.35;
+			driveConfig.Slot0.kV = 0.834924;
+			driveConfig.Slot0.kA = 0;
+			driveConfig.Slot0.kP = 30;
 			driveConfig.Slot0.kI = 0;
 			driveConfig.Slot0.kD = 0;
 

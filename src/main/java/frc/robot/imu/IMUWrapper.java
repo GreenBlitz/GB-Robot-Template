@@ -11,12 +11,12 @@ import frc.robot.hardware.interfaces.InputSignal;
 import frc.utils.TimedValue;
 import org.littletonrobotics.junction.Logger;
 
-public class IMU {
+public class IMUWrapper {
 
 	private final IIMU imu;
 	private final IMUSignals imuSignals;
 
-	public IMU(IIMU imu, IMUSignals imuSignals) {
+	public IMUWrapper(IIMU imu, IMUSignals imuSignals) {
 		this.imu = imu;
 		this.imuSignals = imuSignals;
 	}

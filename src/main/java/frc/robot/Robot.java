@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
-import frc.robot.imu.IMU;
+import frc.robot.imu.IMUWrapper;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
@@ -23,7 +23,6 @@ import frc.robot.vision.cameras.limelight.LimelightFilters;
 import frc.robot.vision.cameras.limelight.LimelightStdDevCalculations;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
-import frc.robot.hardware.interfaces.IIMU;
 import frc.utils.brakestate.BrakeMode;
 import frc.utils.brakestate.BrakeStateManager;
 
@@ -39,18 +38,18 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);
 
 	private final Swerve swerve;
-	private final IMU imu;
+	private final IMUWrapper imuWrapper;
 	private final IPoseEstimator poseEstimator;
 	private final List<Limelight> limelights;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 
-		this.imu = IMUFactory.createIMU("IMU/");
+		this.imuWrapper = IMUFactory.createIMU("IMU/");
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
 			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
-			imu
+			imuWrapper
 		);
 		BrakeStateManager.add(() -> swerve.getModules().setBrake(true), () -> swerve.getModules().setBrake(false));
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
@@ -58,9 +57,9 @@ public class Robot {
 			swerve.getKinematics(),
 			swerve.getModules().getWheelPositions(0),
 			swerve.getModules().getCurrentStates(),
-			imu.getLatestOrientation(),
-			imu.getLatestAccelerationG(),
-			imu.getAbsoluteYaw().getTimestamp()
+			imuWrapper.getLatestOrientation(),
+			imuWrapper.getLatestAccelerationG(),
+			imuWrapper.getAbsoluteYaw().getTimestamp()
 		);
 
 		this.limelights = List.of();
@@ -99,7 +98,7 @@ public class Robot {
 	public void periodic() {
 		BusChain.refreshAll();
 
-		imu.updateIMU();
+		imuWrapper.updateIMU();
 		updateSubsystems();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 

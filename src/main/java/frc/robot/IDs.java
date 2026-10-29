@@ -39,7 +39,7 @@ public class IDs {
 
 	public static class Pigeon2IDs {
 
-		public static final Phoenix6DeviceID IMU = new Phoenix6DeviceID(0, BusChain.ROBORIO);
+		public static final Phoenix6DeviceID CHASSIS = new Phoenix6DeviceID(0, BusChain.ROBORIO);
 
 	}
 

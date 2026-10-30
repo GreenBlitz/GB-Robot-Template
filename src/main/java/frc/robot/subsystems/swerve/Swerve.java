@@ -403,7 +403,7 @@ public class Swerve extends GBSubsystem {
 				)
 			);
 
-		// max velocity at 12 volts (put a really high value in max vel and max rot vel for it to work)
+		// max velocity at 12 volts (put a really high VALUE in max vel and max rot vel for it to work)
 		// after calibrating max vel at 12 volts use this to calibrate kS
 		joystick.R3.whileTrue(new DeferredCommand(() -> getCommandsBuilder().driveByPowersWithSupplier(() -> {
 			ChassisPowers powers = new ChassisPowers();

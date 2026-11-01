@@ -6,6 +6,7 @@ import frc.constants.field.Field;
 import frc.robot.vision.DetectedObjectType;
 import frc.utils.Filter;
 import frc.utils.math.ToleranceMath;
+import org.wpilib.math.shape.Rectangle2d;
 
 import java.util.Arrays;
 import java.util.Optional;

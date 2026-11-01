@@ -54,11 +54,11 @@ public class JoysticksBindings {
 		comboButtons.onTrue(robot.getModuleAlon().getCommandsBuilder().comboCommand());
 		usedJoystick.X
 			.whileTrue(robot.getModuleAlon().getCommandsBuilder().driveDistanceCommand(Rotation2d.fromRotations(0), Rotation2d.fromDegrees(360)));
-		usedJoystick.A.whileTrue(robot.getModuleAlon().getCommandsBuilder().driveWithLeftStick());
+		usedJoystick.A.whileTrue(robot.getModuleAlon().getCommandsBuilder().manualDriveCommand(()->usedJoystick.getAxisValue(Axis.LEFT_Y)));
 		usedJoystick.Y.whileTrue(robot.getModuleAlon().getCommandsBuilder().driveDistanceCommand(
 				Rotation2d.fromRotations(2.5),Rotation2d.fromDegrees(0)
 		));
-		usedJoystick.B.onTrue(robot.getModuleAlon().getCommandsBuilder().fullyCircleDrive());
+		usedJoystick.B.whileTrue(robot.getModuleAlon().getCommandsBuilder().stopCommand());
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

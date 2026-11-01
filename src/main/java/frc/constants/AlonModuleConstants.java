@@ -8,7 +8,7 @@ public class AlonModuleConstants {
     public static final int alonLinearId = 10;
     public static final int alonSteerId = 11;
     public static final double moduleAlonStickTolerance = 0.1;
-    public static final double steerMomementOfInertiaKgM2 = 1;
-    public static final double linearMomentOfInertiaKgM2 = 1;
+    public static final double steerMomementOfInertiaKgM2 = 0.019;
+    public static final double linearMomentOfInertiaKgM2 = 0.019;
 
 }

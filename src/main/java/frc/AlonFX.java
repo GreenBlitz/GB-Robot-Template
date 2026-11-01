@@ -94,15 +94,16 @@ public class AlonFX implements IMotor {
 
 	public void stop() {
 		motor.stopMotor();
-		//motor.set(0);
 	}
 
 	@Override
 	public void updateSimulation() {
+		System.out.println(motor.getSimState().getMotorVoltage());
 		simulation.updateMotor();
+		simulation.setInputVoltage(motor.getSimState().getMotorVoltage());
 		motor.getSimState().setRawRotorPosition(simulation.getRotorPosition().getRotations());
 		motor.getSimState().setRotorVelocity(simulation.getMechanismVelocityRPS().getRotations());
-		simulation.setInputVoltage(motor.getSimState().getMotorVoltage());
+
 		//System.out.println(logpath+": "+motor.getSimState().getMotorVoltage());
 	}
 
@@ -112,7 +113,6 @@ public class AlonFX implements IMotor {
 		motor.getConfigurator().refresh(motorOutputConfigs);
 		motorOutputConfigs.NeutralMode = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
 		motor.getConfigurator().apply(motorOutputConfigs);
-
 	}
 
 	public void setPower(double amount) {
@@ -163,7 +163,11 @@ public class AlonFX implements IMotor {
 		updateInputs();
 		Logger.recordOutput(logpath + "/position", position.getValue());
 		Logger.recordOutput(logpath + "/velocity", velocity.getValue());
-		Logger.recordOutput(logpath + "/voltage", voltage.getValue());
+		if (!RobotManager.isSimulation()) {
+			Logger.recordOutput(logpath + "/voltage", voltage.getValue());
+		} else {
+			Logger.recordOutput(logpath + "/voltage", motor.getSimState().getMotorVoltage());
+		}
 		Logger.recordOutput(logpath + "/current", current.getValue());
 		Logger.recordOutput(logpath + "/isMotorConnected", isConnected());
 	}

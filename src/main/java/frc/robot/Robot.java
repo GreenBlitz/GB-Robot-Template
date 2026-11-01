@@ -67,7 +67,9 @@ public class Robot {
 			swerve.getIMUAbsoluteYaw().getTimestamp()
 		);
 		this.moduleAlon = new ModuleAlon(AlonModuleConstants.alonSteerId, AlonModuleConstants.alonLinearId, AlonModuleConstants.steerGearRatio, AlonModuleConstants.linearGearRatio, AlonModuleConstants.steerKp, AlonModuleConstants.linearKp, AlonModuleConstants.steerMomementOfInertiaKgM2, AlonModuleConstants.linearMomentOfInertiaKgM2 ,CANBus.roboRIO(), "/motor");
-		this.moduleAlon.setLinearNeutral(NeutralModeValue.Brake);
+		moduleAlon.setLinearNeutral(true);
+		this.moduleAlon.setLinearNeutral(true);
+
 
 		this.limelights = List.of();
 		limelights.forEach(

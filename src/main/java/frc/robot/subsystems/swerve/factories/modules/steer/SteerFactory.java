@@ -21,10 +21,10 @@ public class SteerFactory {
 					.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_FRONT_RIGHT_STEER, IDs.CANCoderIDs.SWERVE_FRONT_RIGHT, false, modulePosition);
 			case BACK_LEFT ->
 				KrakenX60SteerBuilder
-					.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_BACK_LEFT_STEER, IDs.CANCoderIDs.SWERVE_BACK_LEFT, true, modulePosition);
+					.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_BACK_LEFT_STEER, IDs.CANCoderIDs.SWERVE_BACK_LEFT, false, modulePosition);
 			case BACK_RIGHT ->
 				KrakenX60SteerBuilder
-					.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_BACK_RIGHT_STEER, IDs.CANCoderIDs.SWERVE_BACK_RIGHT, true, modulePosition);
+					.buildSteer(logPath, IDs.TalonFXIDs.SWERVE_BACK_RIGHT_STEER, IDs.CANCoderIDs.SWERVE_BACK_RIGHT, false, modulePosition);
 		};
 	}
 

@@ -4,8 +4,6 @@ import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.IDs;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
@@ -13,6 +11,8 @@ import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmSimulationConstants;
 import frc.robot.subsystems.arm.DynamicMotionMagicArm;
 import frc.robot.subsystems.arm.TalonFXArmBuilder;
+import frc.utils.costomUnits.Angle2d;
+import org.wpilib.command2.sysid.SysIdRoutine;
 
 public class HoodConstants {
 
@@ -44,11 +44,11 @@ public class HoodConstants {
 		SIMULATION_SLOT.GravityType = GravityTypeValue.Arm_Cosine;
 	}
 
-	public static final Rotation2d MAXIMUM_POSITION = Rotation2d.fromDegrees(55);
-	public static final Rotation2d MINIMUM_POSITION = Rotation2d.fromDegrees(27.5);
+	public static final Angle2d MAXIMUM_POSITION = Angle2d.fromDegrees(55);
+	public static final Angle2d MINIMUM_POSITION = Angle2d.fromDegrees(27.5);
 
-	public static final Rotation2d FORWARD_SOFTWARE_LIMIT = Rotation2d.fromDegrees(MAXIMUM_POSITION.getDegrees() - 0.1);
-	public static final Rotation2d BACKWARD_SOFTWARE_LIMIT = Rotation2d.fromDegrees(MINIMUM_POSITION.getDegrees() + 0.1);
+	public static final Angle2d FORWARD_SOFTWARE_LIMIT = Angle2d.fromDegrees(MAXIMUM_POSITION.getDegrees() - 0.1);
+	public static final Angle2d BACKWARD_SOFTWARE_LIMIT = Angle2d.fromDegrees(MINIMUM_POSITION.getDegrees() + 0.1);
 	public static final double CURRENT_LIMIT = 40;
 
 	public static final double HOOD_LENGTH_METERS = 0.3;
@@ -68,6 +68,7 @@ public class HoodConstants {
 			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Arm",
 			IDs.TalonFXIDs.HOOD,
 			IS_INVERTED,
+            true,
 			new TalonFXFollowerConfig(),
 			SYSID_ROUTINE_CONFIG,
 			FEEDBACK_CONFIGS,
@@ -94,6 +95,7 @@ public class HoodConstants {
 			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/MotionMagicArm",
 			IDs.TalonFXIDs.NOT_HOOD1,
 			IS_INVERTED,
+            true,
 			new TalonFXFollowerConfig(),
 			SYSID_ROUTINE_CONFIG,
 			FEEDBACK_CONFIGS,
@@ -105,8 +107,8 @@ public class HoodConstants {
 			FORWARD_SOFTWARE_LIMIT,
 			BACKWARD_SOFTWARE_LIMIT,
 			hoodSimulationConstants,
-			Rotation2d.fromDegrees(5),
-			Rotation2d.fromDegrees(5)
+			Angle2d.fromDegrees(5),
+			Angle2d.fromDegrees(5)
 		);
 	}
 
@@ -122,6 +124,7 @@ public class HoodConstants {
 			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/DynamicMotionMagicArm",
 			IDs.TalonFXIDs.NOT_HOOD2,
 			IS_INVERTED,
+            true,
 			new TalonFXFollowerConfig(),
 			SYSID_ROUTINE_CONFIG,
 			FEEDBACK_CONFIGS,
@@ -133,8 +136,8 @@ public class HoodConstants {
 			FORWARD_SOFTWARE_LIMIT,
 			BACKWARD_SOFTWARE_LIMIT,
 			hoodSimulationConstants,
-			Rotation2d.fromDegrees(5),
-			Rotation2d.fromDegrees(5)
+			Angle2d.fromDegrees(5),
+			Angle2d.fromDegrees(5)
 		);
 	}
 

@@ -5,7 +5,6 @@
 package frc.robot;
 
 import frc.utils.costomUnits.Angle2d;
-import org.wpilib.math.geometry.Pose2d;
 import org.wpilib.command2.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -27,6 +26,9 @@ import frc.utils.battery.BatteryUtil;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.utils.brakestate.BrakeMode;
 import frc.utils.brakestate.BrakeStateManager;
+import org.wpilib.math.geometry.Pose3d;
+import org.wpilib.math.geometry.Rotation3d;
+import org.wpilib.math.geometry.Translation3d;
 import org.wpilib.telemetry.Telemetry;
 import org.wpilib.tunable.Selectable;
 

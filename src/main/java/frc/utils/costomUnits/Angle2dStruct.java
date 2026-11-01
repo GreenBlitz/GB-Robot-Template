@@ -11,7 +11,7 @@ public final class Angle2dStruct implements Struct<Angle2d> {
 
     @Override
     public String getTypeName() {
-        return "Rotation2d";
+        return "Angle2d";
     }
 
     @Override

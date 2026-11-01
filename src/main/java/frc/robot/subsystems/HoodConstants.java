@@ -17,6 +17,8 @@ import frc.robot.subsystems.arm.TalonFXArmBuilder;
 public class HoodConstants {
 
 	public static final boolean IS_INVERTED = true;
+	public static final boolean IS_CONTINUOUS_WRAP = false;
+
 
 	public static final FeedbackConfigs FEEDBACK_CONFIGS = new FeedbackConfigs();
 	public static final Slot0Configs REAL_SLOT = new Slot0Configs();
@@ -68,6 +70,7 @@ public class HoodConstants {
 			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Arm",
 			IDs.TalonFXIDs.HOOD,
 			IS_INVERTED,
+			IS_CONTINUOUS_WRAP,
 			new TalonFXFollowerConfig(),
 			SYSID_ROUTINE_CONFIG,
 			FEEDBACK_CONFIGS,
@@ -94,6 +97,7 @@ public class HoodConstants {
 			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/MotionMagicArm",
 			IDs.TalonFXIDs.NOT_HOOD1,
 			IS_INVERTED,
+			IS_CONTINUOUS_WRAP,
 			new TalonFXFollowerConfig(),
 			SYSID_ROUTINE_CONFIG,
 			FEEDBACK_CONFIGS,
@@ -122,6 +126,7 @@ public class HoodConstants {
 			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/DynamicMotionMagicArm",
 			IDs.TalonFXIDs.NOT_HOOD2,
 			IS_INVERTED,
+			IS_CONTINUOUS_WRAP,
 			new TalonFXFollowerConfig(),
 			SYSID_ROUTINE_CONFIG,
 			FEEDBACK_CONFIGS,

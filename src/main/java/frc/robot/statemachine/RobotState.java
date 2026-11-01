@@ -6,7 +6,8 @@ import frc.robot.subsystems.swerve.states.SwerveState;
 public enum RobotState {
 
 	DRIVE(SwerveState.DEFAULT_DRIVE.withDriveAcceleration(DriveAcceleration.NORMAL)),
-	SKID_PREVENTION(SwerveState.DEFAULT_DRIVE.withDriveAcceleration(DriveAcceleration.SKID_PREVENTION));
+	SKID_PREVENTION(SwerveState.DEFAULT_DRIVE.withDriveAcceleration(DriveAcceleration.SKID_PREVENTION)),
+	NEUTRAL;
 
 	private final SwerveState swerveState;
 	private boolean swerveStateActive;

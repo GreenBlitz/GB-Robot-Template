@@ -5,7 +5,6 @@
 package frc.robot;
 
 import com.ctre.phoenix6.CANBus;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -66,7 +65,18 @@ public class Robot {
 			swerve.getIMUAccelerationG(),
 			swerve.getIMUAbsoluteYaw().getTimestamp()
 		);
-		this.moduleAlon = new ModuleAlon(AlonModuleConstants.alonSteerId, AlonModuleConstants.alonLinearId, AlonModuleConstants.steerGearRatio, AlonModuleConstants.linearGearRatio, AlonModuleConstants.steerKp, AlonModuleConstants.linearKp, AlonModuleConstants.steerMomementOfInertiaKgM2, AlonModuleConstants.linearMomentOfInertiaKgM2 ,CANBus.roboRIO(), "/motor");
+		this.moduleAlon = new ModuleAlon(
+			AlonModuleConstants.alonSteerId,
+			AlonModuleConstants.alonLinearId,
+			AlonModuleConstants.steerGearRatio,
+			AlonModuleConstants.linearGearRatio,
+			AlonModuleConstants.steerKp,
+			AlonModuleConstants.linearKp,
+			AlonModuleConstants.steerMomementOfInertiaKgM2,
+			AlonModuleConstants.linearMomentOfInertiaKgM2,
+			CANBus.roboRIO(),
+			"/motor"
+		);
 		moduleAlon.setLinearNeutral(true);
 		this.moduleAlon.setLinearNeutral(true);
 

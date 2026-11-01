@@ -52,12 +52,13 @@ public class JoysticksBindings {
 		robot.getModuleAlon().getCommandsBuilder().setDefaultJoystick(usedJoystick);
 		Trigger comboButtons = usedJoystick.A.and(usedJoystick.B);
 		comboButtons.onTrue(robot.getModuleAlon().getCommandsBuilder().comboCommand());
-		usedJoystick.X
-			.whileTrue(robot.getModuleAlon().getCommandsBuilder().driveDistanceCommand(Rotation2d.fromRotations(0), Rotation2d.fromDegrees(360)));
-		usedJoystick.A.whileTrue(robot.getModuleAlon().getCommandsBuilder().manualDriveCommand(()->usedJoystick.getAxisValue(Axis.LEFT_Y)));
-		usedJoystick.Y.whileTrue(robot.getModuleAlon().getCommandsBuilder().driveDistanceCommand(
-				Rotation2d.fromRotations(2.5),Rotation2d.fromDegrees(0)
-		));
+		usedJoystick.X.whileTrue(
+			robot.getModuleAlon().getCommandsBuilder().driveDistanceCommand(Rotation2d.fromRotations(0), Rotation2d.fromDegrees(360))
+		);
+		usedJoystick.A.whileTrue(robot.getModuleAlon().getCommandsBuilder().manualDriveCommand(() -> usedJoystick.getAxisValue(Axis.LEFT_Y)));
+		usedJoystick.Y.whileTrue(
+			robot.getModuleAlon().getCommandsBuilder().driveDistanceCommand(Rotation2d.fromRotations(2.5), Rotation2d.fromDegrees(0))
+		);
 		usedJoystick.B.whileTrue(robot.getModuleAlon().getCommandsBuilder().stopCommand());
 	}
 

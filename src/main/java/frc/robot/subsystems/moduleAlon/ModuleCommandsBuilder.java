@@ -21,13 +21,13 @@ public class ModuleCommandsBuilder {
 	public ModuleCommandsBuilder(ModuleAlon moduleAlon, String logPath) {
 		this.logPath = logPath;
 		this.moduleAlon = moduleAlon;
-		moduleAlon.setDefaultCommand(
-			new InstantCommand(() -> moduleAlon.stop(), moduleAlon)
-		);
+		moduleAlon.setDefaultCommand(new InstantCommand(() -> moduleAlon.stop(), moduleAlon));
 	}
 
-	public RunCommand stopCommand(){
-		return new RunCommand(()->{moduleAlon.stop();},moduleAlon);
+	public RunCommand stopCommand() {
+		return new RunCommand(() -> {
+			moduleAlon.stop();
+		}, moduleAlon);
 	}
 
 	public void setDefaultJoystick(SmartJoystick defaultJoystick) {
@@ -38,10 +38,13 @@ public class ModuleCommandsBuilder {
 		return new RunCommand(() -> {
 			double x = xAxis.get();
 			double y = yAxis.get();
-			Logger.recordOutput(logPath+"/axis/x", x);
-			Logger.recordOutput(logPath+"/axis/y", y);
-			Logger.recordOutput(logPath+"/axis/angle",Rotation2d.fromRadians(Math.atan2(y, x)));
-			Logger.recordOutput(logPath+"/axis/angleInRange",AngleMath.findAngleInRange(Rotation2d.fromRadians(Math.atan2(y, x)), moduleAlon.getSteerPosition()));
+			Logger.recordOutput(logPath + "/axis/x", x);
+			Logger.recordOutput(logPath + "/axis/y", y);
+			Logger.recordOutput(logPath + "/axis/angle", Rotation2d.fromRadians(Math.atan2(y, x)));
+			Logger.recordOutput(
+				logPath + "/axis/angleInRange",
+				AngleMath.findAngleInRange(Rotation2d.fromRadians(Math.atan2(y, x)), moduleAlon.getSteerPosition())
+			);
 			if (x * x + y * y >= AlonModuleConstants.moduleAlonStickTolerance * AlonModuleConstants.moduleAlonStickTolerance) {
 				moduleAlon.steerToPosition(AngleMath.findAngleInRange(Rotation2d.fromRadians(Math.atan2(y, x)), moduleAlon.getSteerPosition()));
 				moduleAlon.linearPower(Math.sqrt(x * x + y * y));
@@ -76,7 +79,7 @@ public class ModuleCommandsBuilder {
 	}
 
 	public RunCommand manualDriveCommand(Supplier<Double> power) {
-		return new RunCommand(()->moduleAlon.linearPower(power.get()), moduleAlon);
+		return new RunCommand(() -> moduleAlon.linearPower(power.get()), moduleAlon);
 	}
 
 	public void linearWithStickValue(SmartJoystick joystick, Axis axis) {
@@ -91,14 +94,10 @@ public class ModuleCommandsBuilder {
 			moduleAlon.steerToPosition(angle);
 		}, (isInterrupted) -> {
 			moduleAlon.stop();
-		}, () -> MathUtil.isNear(angle.getDegrees(), moduleAlon.getSteerPosition().getDegrees(), steerToleranceDegrees),
-				moduleAlon);
+		}, () -> MathUtil.isNear(angle.getDegrees(), moduleAlon.getSteerPosition().getDegrees(), steerToleranceDegrees), moduleAlon);
 
 		Command driveToPosition = new DriveToPositionCommand(drive, moduleAlon);
-		return new SequentialCommandGroup(
-			steerToPosition,
-			driveToPosition
-		);
+		return new SequentialCommandGroup(steerToPosition, driveToPosition);
 	}
 
 	private static class DriveToPositionCommand extends Command {

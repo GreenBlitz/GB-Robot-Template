@@ -18,8 +18,7 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.interfaces.IMotor;
 import frc.robot.hardware.interfaces.InputSignal;
-import frc.robot.hardware.mechanisms.MechanismSimulation;
-import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
+import frc.robot.hardware.simulations.wpilib.SimpleMotorSimulation;
 import frc.utils.battery.BatteryUtil;
 import org.littletonrobotics.junction.Logger;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -50,16 +49,12 @@ public class AlonFX implements IMotor {
 		position = motor.getPosition();
 		position.setUpdateFrequency(RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ);
 		motor.optimizeBusUtilization();
-		if (RobotManager.isSimulation()){
-			simulation=new SimpleMotorSimulation(
-					new DCMotorSim(
-							LinearSystemId.createDCMotorSystem(
-									DCMotor.getKrakenX60(1),
-									momentOfInertiaKgM2,
-									gearRatio
-							),
-							DCMotor.getKrakenX60Foc(1)
-					)
+		if (RobotManager.isSimulation()) {
+			simulation = new SimpleMotorSimulation(
+				new DCMotorSim(
+					LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60(1), momentOfInertiaKgM2, gearRatio),
+					DCMotor.getKrakenX60Foc(1)
+				)
 			);
 		}
 		motor.getSimState().setSupplyVoltage(BatteryUtil.DEFAULT_VOLTAGE);
@@ -104,7 +99,7 @@ public class AlonFX implements IMotor {
 		motor.getSimState().setRawRotorPosition(simulation.getRotorPosition().getRotations());
 		motor.getSimState().setRotorVelocity(simulation.getMechanismVelocityRPS().getRotations());
 
-		//System.out.println(logpath+": "+motor.getSimState().getMotorVoltage());
+		// System.out.println(logpath+": "+motor.getSimState().getMotorVoltage());
 	}
 
 	@Override
@@ -142,7 +137,7 @@ public class AlonFX implements IMotor {
 
 	public void invertMotor() {
 		MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
-		motorOutputConfigs.Inverted=getMotorInvertedDirection();
+		motorOutputConfigs.Inverted = getMotorInvertedDirection();
 		motor.getConfigurator().apply(motorOutputConfigs);
 		direction = getMotorInvertedDirection();
 	}

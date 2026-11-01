@@ -102,7 +102,7 @@ public class ModuleAlon extends GBSubsystem {
 		steer.stop();
 	}
 
-	public void updateSimulation(){
+	public void updateSimulation() {
 		linear.updateSimulation();
 		steer.updateSimulation();
 	}

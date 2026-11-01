@@ -1,9 +1,9 @@
 package frc.utils.battery;
 
-import edu.wpi.first.math.filter.LinearFilter;
-import edu.wpi.first.networktables.BooleanEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj2.command.Command;
+import org.wpilib.math.filter.LinearFilter;
+import org.wpilib.networktables.BooleanEntry;
+import org.wpilib.networktables.NetworkTableInstance;
+import org.wpilib.command2.Command;
 import frc.robot.Robot;
 import frc.constants.IPs;
 import frc.utils.CMDHandler;

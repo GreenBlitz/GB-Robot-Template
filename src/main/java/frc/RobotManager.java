@@ -4,11 +4,11 @@
 
 package frc;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Threads;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import org.wpilib.driverstation.internal.DriverStationBackend;
+import org.wpilib.hardware.hal.ThreadsJNI;
+//import org.wpilib.smartdashboard.SendableChooser;
+//import org.wpilib.smartdashboard.SmartDashboard;
+import org.wpilib.command2.CommandScheduler;
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonomousConstants;
 import frc.utils.alerts.Alert;
@@ -42,7 +42,7 @@ public class RobotManager extends LoggedRobot {
 		if (Robot.ROBOT_TYPE.isReplay()) {
 			setUseTiming(false);
 		}
-		DriverStation.silenceJoystickConnectionWarning(true);
+		DriverStationBackend.silenceJoystickConnectionAlert(true);
 		LoggerFactory.initializeLogger();
 		PathPlannerUtil.startPathfinder();
 		PathPlannerUtil.setupPathPlannerLogging();
@@ -50,10 +50,10 @@ public class RobotManager extends LoggedRobot {
 		this.roborioCycles = 0;
 		this.robot = new Robot();
 
-		createAutoReadyForConstructionChooser();
+//		createAutoReadyForConstructionChooser();
 		JoysticksBindings.configureBindings(robot);
 
-		Threads.setCurrentThreadPriority(true, 10);
+		ThreadsJNI.setCurrentThreadPriority(10);
 
 		alertsMessage = "Alerts: None";
 		logCriticalAlerts();
@@ -102,21 +102,21 @@ public class RobotManager extends LoggedRobot {
 		logCriticalAlerts();
 	}
 
-	private void createAutoReadyForConstructionChooser() {
-		SendableChooser<Boolean> autoReadyForConstructionSendableChooser = new SendableChooser<>();
-		autoReadyForConstructionSendableChooser.setDefaultOption("false", false);
-		autoReadyForConstructionSendableChooser.addOption("true", true);
-		autoReadyForConstructionSendableChooser.onChange(isReady -> {
-			if (isReady) {
-				this.autonomousCommand = robot.getAutonomousCommand();
-				BrakeStateManager.setBrakeMode(BrakeMode.BRAKE);
-			} else {
-				BrakeStateManager.setBrakeMode(BrakeMode.COAST);
-			}
-			Logger.recordOutput(AutonomousConstants.LOG_PATH_PREFIX + "/ReadyToConstruct", isReady);
-		});
-		SmartDashboard.putData("AutoReadyForConstruction", autoReadyForConstructionSendableChooser);
-	}
+//	private void createAutoReadyForConstructionChooser() {
+//		SendableChooser<Boolean> autoReadyForConstructionSendableChooser = new SendableChooser<>();
+//		autoReadyForConstructionSendableChooser.setDefaultOption("false", false);
+//		autoReadyForConstructionSendableChooser.addOption("true", true);
+//		autoReadyForConstructionSendableChooser.onChange(isReady -> {
+//			if (isReady) {
+//				this.autonomousCommand = robot.getAutonomousCommand();
+//				BrakeStateManager.setBrakeMode(BrakeMode.BRAKE);
+//			} else {
+//				BrakeStateManager.setBrakeMode(BrakeMode.COAST);
+//			}
+//			Logger.recordOutput(AutonomousConstants.LOG_PATH_PREFIX + "/ReadyToConstruct", isReady);
+//		});
+//		SmartDashboard.putData("AutoReadyForConstruction", autoReadyForConstructionSendableChooser);
+//	}
 
 	private void updateTimeRelatedData() {
 		roborioCycles++;

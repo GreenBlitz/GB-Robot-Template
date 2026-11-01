@@ -1,7 +1,7 @@
 package frc.robot.subsystems.swerve.factories.constants;
 
 import com.pathplanner.lib.config.PIDConstants;
-import edu.wpi.first.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Rotation2d;
 import frc.robot.subsystems.swerve.SwerveConstants;
 
 public class SimulationSwerveConstants {

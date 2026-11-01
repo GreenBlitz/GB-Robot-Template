@@ -1,9 +1,9 @@
 package frc.robot.subsystems.swerve.factories.modules.constants;
 
-import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.subsystems.swerve.factories.constants.RealSwerveConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.records.ModuleSpecificConstants;
+import org.wpilib.math.geometry.Translation2d;
 
 class RealModuleConstants {
 

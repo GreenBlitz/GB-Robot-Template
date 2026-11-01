@@ -1,7 +1,7 @@
 package frc.utils.utilcommands;
 
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.wpilib.command2.FunctionalCommand;
+import org.wpilib.command2.SubsystemBase;
 
 /**
  * A command that runs a given runnable on execute, and another runnable when it ends.

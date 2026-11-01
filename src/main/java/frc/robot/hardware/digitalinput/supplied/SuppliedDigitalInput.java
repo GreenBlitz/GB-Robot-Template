@@ -1,7 +1,7 @@
 package frc.robot.hardware.digitalinput.supplied;
 
-import edu.wpi.first.math.filter.Debouncer;
-import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
+import frc.robot.hardware.digitalinput.DigitalInputInputs;
+import org.wpilib.math.filter.Debouncer;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 
 import java.util.function.BooleanSupplier;
@@ -23,7 +23,7 @@ public class SuppliedDigitalInput implements IDigitalInput {
 	}
 
 	@Override
-	public void updateInputs(DigitalInputInputsAutoLogged inputs) {
+	public void updateInputs(DigitalInputInputs inputs) {
 		inputs.nonDebouncedValue = inverted ^ booleanSupplier.getAsBoolean();
 		inputs.debouncedValue = debouncer.calculate(inputs.nonDebouncedValue);
 	}

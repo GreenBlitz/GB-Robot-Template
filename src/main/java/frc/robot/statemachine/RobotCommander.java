@@ -1,6 +1,6 @@
 package frc.robot.statemachine;
 
-import edu.wpi.first.wpilibj2.command.*;
+import org.wpilib.command2.*;
 import frc.robot.Robot;
 import frc.robot.statemachine.superstructure.Superstructure;
 import frc.robot.subsystems.GBSubsystem;

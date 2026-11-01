@@ -1,6 +1,6 @@
 package frc.robot.vision.cameras.limelight;
 
-import edu.wpi.first.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Rotation2d;
 
 public record LimelightTarget2dValues(
 	boolean isValid,
@@ -25,7 +25,7 @@ public record LimelightTarget2dValues(
 	public static final int AMOUNT_OF_TARGET2D_VALUES = 17;
 
 	public LimelightTarget2dValues() {
-		this(false, 0, 0, 0, Rotation2d.kZero, Rotation2d.kZero, Rotation2d.kZero, Rotation2d.kZero, 0, 0, 0, 0, 0, 0, 0, 0, Rotation2d.kZero);
+		this(false, 0, 0, 0, Rotation2d.ZERO, Rotation2d.ZERO, Rotation2d.ZERO, Rotation2d.ZERO, 0, 0, 0, 0, 0, 0, 0, 0, Rotation2d.ZERO);
 	}
 
 	public static LimelightTarget2dValues fromArray(double[] target2dArray) {

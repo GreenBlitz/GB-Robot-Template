@@ -9,7 +9,7 @@ import frc.utils.math.ToleranceMath;
 
 public class PoseUtil {
 
-	public static boolean isAccelerationHigh(Translation2d imuAccelerationG, double minimumIMUAccelerationG) {
+	public static boolean isAccelerationDetectingCollision(Translation2d imuAccelerationG, double minimumIMUAccelerationG) {
 		return imuAccelerationG.getNorm() >= minimumIMUAccelerationG;
 	}
 

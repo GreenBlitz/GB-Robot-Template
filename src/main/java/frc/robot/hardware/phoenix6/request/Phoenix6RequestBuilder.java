@@ -8,7 +8,11 @@ import java.util.function.Supplier;
 
 public class Phoenix6RequestBuilder {
 
-	public static Phoenix6VelocityPositionRequest build(PositionVoltage positionVoltage, double defaultArbitraryFeedForward, boolean enableFOC) {
+	public static Phoenix6VelocityPositionRequest buildVelocityPositionRequest(
+		PositionVoltage positionVoltage,
+		double defaultArbitraryFeedForward,
+		boolean enableFOC
+	) {
 		return new Phoenix6VelocityPositionRequest(
 			Rotation2d.fromRotations(positionVoltage.Position),
 			Rotation2d.fromRotations(positionVoltage.Velocity),
@@ -20,7 +24,11 @@ public class Phoenix6RequestBuilder {
 		);
 	}
 
-	public static Phoenix6FeedForwardRequest build(VelocityVoltage velocityVoltage, double defaultArbitraryFeedForward, boolean enableFOC) {
+	public static Phoenix6FeedForwardRequest buildVelocityVoltageRequest(
+		VelocityVoltage velocityVoltage,
+		double defaultArbitraryFeedForward,
+		boolean enableFOC
+	) {
 		return new Phoenix6FeedForwardRequest(
 			Rotation2d.fromRotations(velocityVoltage.Velocity),
 			velocityVoltage.withEnableFOC(enableFOC),
@@ -30,7 +38,10 @@ public class Phoenix6RequestBuilder {
 		);
 	}
 
-	public static Phoenix6FeedForwardRequest build(VelocityTorqueCurrentFOC velocityTorqueCurrentFOC, double defaultArbitraryFeedForward) {
+	public static Phoenix6FeedForwardRequest buildVelocityTorqueCurrentFOCRequest(
+		VelocityTorqueCurrentFOC velocityTorqueCurrentFOC,
+		double defaultArbitraryFeedForward
+	) {
 		return new Phoenix6FeedForwardRequest(
 			Rotation2d.fromRotations(velocityTorqueCurrentFOC.Velocity),
 			velocityTorqueCurrentFOC,
@@ -40,7 +51,7 @@ public class Phoenix6RequestBuilder {
 		);
 	}
 
-	public static Phoenix6MotionMagicRequest build(
+	public static Phoenix6MotionMagicRequest buildMotionMagicRequest(
 		MotionMagicVoltage motionMagicVoltage,
 		double defaultArbitraryFeedForward,
 		boolean enableFOC
@@ -54,7 +65,7 @@ public class Phoenix6RequestBuilder {
 		);
 	}
 
-	public static Phoenix6DynamicMotionMagicRequest build(
+	public static Phoenix6DynamicMotionMagicRequest buildDynamicMotionMagicRequest(
 		DynamicMotionMagicVoltage dynamicMotionMagicVoltage,
 		double defaultArbitraryFeedForward,
 		boolean enableFOC
@@ -70,11 +81,11 @@ public class Phoenix6RequestBuilder {
 		);
 	}
 
-	public static Phoenix6Request<Double> build(VoltageOut voltageOut, boolean enableFOC) {
+	public static Phoenix6Request<Double> buildVoltageOutRequest(VoltageOut voltageOut, boolean enableFOC) {
 		return new Phoenix6Request<>(voltageOut.Output, voltageOut.withEnableFOC(enableFOC), voltageOut::withOutput);
 	}
 
-	public static Phoenix6Request<Double> build(TorqueCurrentFOC torqueCurrentFOC) {
+	public static Phoenix6Request<Double> buildTorqueCurrentFOCRequest(TorqueCurrentFOC torqueCurrentFOC) {
 		return new Phoenix6Request<>(torqueCurrentFOC.Output, torqueCurrentFOC, torqueCurrentFOC::withOutput);
 	}
 

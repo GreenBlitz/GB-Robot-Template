@@ -65,7 +65,9 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
     private final double m_cos;
     private final double m_sin;
 
-    /** Constructs an Angle2d with a default angle of 0 degrees. */
+    /**
+     * Constructs an Angle2d with a default angle of 0 degrees.
+     */
     public Angle2d() {
         m_value = 0.0;
         m_cos = 1.0;
@@ -108,7 +110,7 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
      *
      * @param angle The angle of the rotation.
      */
-    public Angle2d (Angle angle) {
+    public Angle2d(Angle angle) {
         this(angle.in(Radians));
     }
 
@@ -182,7 +184,7 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
      * @return The rotation object with the desired angle value.
      */
     //use carefully, it does a Modulo 360
-    public static Angle2d fromRotation2d(Rotation2d rotation2d){
+    public static Angle2d fromRotation2d(Rotation2d rotation2d) {
         return Angle2d.fromRadians(rotation2d.getRadians());
     }
 
@@ -265,7 +267,7 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
      * Returns the current rotation relative to the given rotation.
      *
      * @param other The rotation describing the orientation of the new coordinate frame that the
-     *     current rotation will be converted into.
+     *              current rotation will be converted into.
      * @return The current rotation relative to the new orientation of the coordinate frame.
      */
     public Angle2d relativeTo(Angle2d other) {
@@ -283,7 +285,7 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
         return MatBuilder.fill(Nat.N2(), Nat.N2(), m_cos, -m_sin, m_sin, m_cos);
     }
 
-    public Rotation2d toRotation2d(){
+    public Rotation2d toRotation2d() {
         return Rotation2d.fromRadians(getRadians());
     }
 
@@ -378,9 +380,13 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
     }
 
 
-    /** Angle2d protobuf for serialization. */
+    /**
+     * Angle2d protobuf for serialization.
+     */
     public static final Angle2dProto proto = new Angle2dProto();
 
-    /** Angle2d struct for serialization. */
+    /**
+     * Angle2d struct for serialization.
+     */
     public static final Angle2dStruct struct = new Angle2dStruct();
 }

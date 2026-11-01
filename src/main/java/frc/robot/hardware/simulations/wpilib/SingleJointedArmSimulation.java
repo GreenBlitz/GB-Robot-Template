@@ -20,7 +20,7 @@ public class SingleJointedArmSimulation implements WPILibMechanismSimulation {
 	}
 
 	@Override
-	public Angle2d getMechanismVelocityRPS() {
+	public Angle2d getMechanismVelocityAPS() {
 		return Angle2d.fromRadians(singleJointedArmSimulation.getVelocity());
 	}
 

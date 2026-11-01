@@ -36,8 +36,8 @@ public class DynamicMotionMagicArm extends Arm {
 
 	public void setTargetPosition(Angle2d target, Angle2d acceleration, Angle2d velocity) {
 		dynamicMotionMagicRequest.withSetPoint(target);
-		dynamicMotionMagicRequest.withMaxAccelerationRPS(acceleration);
-		dynamicMotionMagicRequest.withMaxVelocityRPS(velocity);
+		dynamicMotionMagicRequest.withMaxAccelerationAPS(acceleration);
+		dynamicMotionMagicRequest.withMaxVelocityAPS(velocity);
 		motor.applyRequest(dynamicMotionMagicRequest);
 	}
 
@@ -49,8 +49,8 @@ public class DynamicMotionMagicArm extends Arm {
 	@Override
 	public void log() {
 		super.log();
-		Logger.recordOutput(getLogPath() + "/DynamicMotionMagicAcceleration", dynamicMotionMagicRequest.getMaxAccelerationRPS());
-		Logger.recordOutput(getLogPath() + "/DynamicMotionMagicVelocity", dynamicMotionMagicRequest.getMaxVelocityRPS());
+		Logger.recordOutput(getLogPath() + "/DynamicMotionMagicAcceleration", dynamicMotionMagicRequest.getMaxAccelerationAPS());
+		Logger.recordOutput(getLogPath() + "/DynamicMotionMagicVelocity", dynamicMotionMagicRequest.getMaxVelocityAPS());
 	}
 
 }

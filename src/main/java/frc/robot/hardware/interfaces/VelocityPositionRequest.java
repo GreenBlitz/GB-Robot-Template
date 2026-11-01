@@ -4,8 +4,8 @@ import frc.utils.costomUnits.Angle2d;
 
 public interface VelocityPositionRequest extends IFeedForwardRequest {
 
-	VelocityPositionRequest setVelocity(Angle2d targetVelocityRPS);
+	VelocityPositionRequest setVelocity(Angle2d targetVelocityAPS);
 
-	Angle2d getVelocityRPS();
+	Angle2d getVelocityAPS();
 
 }

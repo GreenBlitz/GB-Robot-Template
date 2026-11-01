@@ -6,11 +6,11 @@ public interface MechanismSimulation {
 
 	Angle2d getRotorPosition();
 
-	Angle2d getRotorVelocityRPS();
+	Angle2d getRotorVelocityAPS();
 
 	Angle2d getMechanismPosition();
 
-	Angle2d getMechanismVelocityRPS();
+	Angle2d getMechanismVelocityAPS();
 
 	void setInputVoltage(double voltage);
 

@@ -36,7 +36,7 @@ public class VelocityPositionArm extends Arm {
 	@Override
 	public void log() {
 		super.log();
-		Logger.recordOutput(getLogPath() + "/TargetVelocity", velocityPositionRequest.getVelocityRPS());
+		Logger.recordOutput(getLogPath() + "/TargetVelocity", velocityPositionRequest.getVelocityAPS());
 	}
 
 }

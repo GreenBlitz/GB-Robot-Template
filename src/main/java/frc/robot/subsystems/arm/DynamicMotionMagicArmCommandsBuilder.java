@@ -26,13 +26,13 @@ public class DynamicMotionMagicArmCommandsBuilder extends ArmCommandsBuilder {
 		return arm.asSubsystemCommand(new RunCommand(() -> arm.setTargetPosition(position.get())), "Set target position by supplier");
 	}
 
-	public Command setTargetPosition(Angle2d position, Angle2d maxVelocityRPS, Angle2d maxAccelerationRPSSquared) {
+	public Command setTargetPosition(Angle2d position, Angle2d maxVelocityAPS, Angle2d maxAccelerationAPSSquared) {
 		return arm.asSubsystemCommand(
-			new InitExecuteCommand(() -> {}, () -> arm.setTargetPosition(position, maxVelocityRPS, maxAccelerationRPSSquared)),
+			new InitExecuteCommand(() -> {}, () -> arm.setTargetPosition(position, maxVelocityAPS, maxAccelerationAPSSquared)),
 			"Set target position with "
-				+ maxAccelerationRPSSquared
+				+ maxAccelerationAPSSquared
 				+ " acceleration per Second Squared and with "
-				+ maxVelocityRPS
+				+ maxVelocityAPS
 				+ " velocity per second to:"
 				+ position
 		);

@@ -18,7 +18,7 @@ public class SimpleMotorSimulation implements WPILibMechanismSimulation {
 	}
 
 	@Override
-	public Angle2d getMechanismVelocityRPS() {
+	public Angle2d getMechanismVelocityAPS() {
 		return Angle2d.fromRadians(motorSimulation.getAngularVelocity());
 	}
 

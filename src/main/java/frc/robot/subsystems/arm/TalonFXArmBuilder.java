@@ -46,8 +46,8 @@ public class TalonFXArmBuilder {
 		Angle2d forwardSoftwareLimit,
 		Angle2d reverseSoftwareLimit,
 		ArmSimulationConstants simulationConstants,
-		Angle2d defaultMaxAccelerationRPSSquare,
-		Angle2d defaultMaxVelocityRPS
+		Angle2d defaultMaxAccelerationAPSSquare,
+		Angle2d defaultMaxVelocityAPS
 	) {
 		TalonFXMotor motor = new TalonFXMotor(
 			logPath,
@@ -68,8 +68,8 @@ public class TalonFXArmBuilder {
 		IDynamicMotionMagicRequest positionRequest = Phoenix6RequestBuilder.build(
 			new DynamicMotionMagicVoltage(
 				signals.position().getLatestValue().getRotations(),
-				defaultMaxVelocityRPS.getRotations(),
-				defaultMaxAccelerationRPSSquare.getRotations()
+				defaultMaxVelocityAPS.getRotations(),
+				defaultMaxAccelerationAPSSquare.getRotations()
 			),
 			arbitraryFeedForward,
 			true
@@ -84,7 +84,7 @@ public class TalonFXArmBuilder {
 			isContinuousWrap,
 			currentLimit
 		);
-		addMotionMagicConfig(configuration, defaultMaxVelocityRPS, defaultMaxAccelerationRPSSquare);
+		addMotionMagicConfig(configuration, defaultMaxVelocityAPS, defaultMaxAccelerationAPSSquare);
 		motor.applyConfiguration(configuration);
 
 		return new DynamicMotionMagicArm(
@@ -93,8 +93,8 @@ public class TalonFXArmBuilder {
 			signals,
 			voltageRequest,
 			positionRequest,
-			defaultMaxAccelerationRPSSquare,
-			defaultMaxVelocityRPS,
+			defaultMaxAccelerationAPSSquare,
+			defaultMaxVelocityAPS,
 			configuration.Slot0.kG
 		);
 	}
@@ -115,8 +115,8 @@ public class TalonFXArmBuilder {
 		Angle2d forwardSoftwareLimit,
 		Angle2d reverseSoftwareLimit,
 		ArmSimulationConstants simulationConstants,
-		Angle2d defaultMaxAccelerationRPSSquare,
-		Angle2d defaultMaxVelocityRPS
+		Angle2d defaultMaxAccelerationAPSSquare,
+		Angle2d defaultMaxVelocityAPS
 	) {
 		TalonFXMotor motor = new TalonFXMotor(
 			logPath,
@@ -146,7 +146,7 @@ public class TalonFXArmBuilder {
 			isContinuousWrap,
 			currentLimit
 		));
-		addMotionMagicConfig(configuration, defaultMaxVelocityRPS, defaultMaxAccelerationRPSSquare);
+		addMotionMagicConfig(configuration, defaultMaxVelocityAPS, defaultMaxAccelerationAPSSquare);
 		motor.applyConfiguration(configuration);
 
 		return new Arm(logPath, motor, signals, voltageRequest, positionRequest, configuration.Slot0.kG);

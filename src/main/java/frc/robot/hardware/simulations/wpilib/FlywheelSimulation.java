@@ -13,7 +13,7 @@ public class FlywheelSimulation implements WPILibMechanismSimulation {
 	public FlywheelSimulation(FlywheelSim flywheelSimulation) {
 		this.flywheelSimulation = flywheelSimulation;
 		this.currentPosition = Angle2d.fromDegrees(0);
-		this.currentVelocity = getMechanismVelocityRPS();
+		this.currentVelocity = getMechanismVelocityAPS();
 	}
 
 	@Override
@@ -22,7 +22,7 @@ public class FlywheelSimulation implements WPILibMechanismSimulation {
 	}
 
 	@Override
-	public Angle2d getMechanismVelocityRPS() {
+	public Angle2d getMechanismVelocityAPS() {
 		return Angle2d.fromRadians(flywheelSimulation.getAngularVelocity());
 	}
 
@@ -35,7 +35,7 @@ public class FlywheelSimulation implements WPILibMechanismSimulation {
 	public void updateMotor() {
 		flywheelSimulation.update(TimeUtil.getLatestCycleTimeSeconds());
 		Angle2d lastVelocity = currentVelocity;
-		currentVelocity = getMechanismVelocityRPS();
+		currentVelocity = getMechanismVelocityAPS();
 		Angle2d averageVelocity = Angle2d.fromRotations((currentVelocity.getRotations() + lastVelocity.getRotations()) / 2);
 		updatePosition(averageVelocity);
 	}

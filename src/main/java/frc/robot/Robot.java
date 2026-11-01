@@ -16,6 +16,7 @@ import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
+import frc.robot.statemachine.RobotCommander;
 import frc.robot.subsystems.HoodConstants;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.swerve.Swerve;
@@ -49,6 +50,7 @@ public class Robot {
 	public final Arm arm;
 	public final Arm motionMagicArm;
 	public final Arm dynamicMotionMagicArm;
+	private final RobotCommander robotCommander;
 	private final IPoseEstimator poseEstimator;
 	private final List<Limelight> limelights;
 
@@ -112,6 +114,8 @@ public class Robot {
 			)
 		);
 
+		robotCommander = new RobotCommander("StateMachine", this);
+
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 
 		configureBrakeStateChooser();
@@ -150,6 +154,10 @@ public class Robot {
 
 	public Swerve getSwerve() {
 		return swerve;
+	}
+
+	public RobotCommander getRobotCommander() {
+		return robotCommander;
 	}
 
 	public List<Limelight> getLimelights() {

@@ -1,10 +1,10 @@
 package frc;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
+import frc.robot.statemachine.RobotState;
 import frc.robot.subsystems.swerve.ChassisPowers;
 
 public class JoysticksBindings {
@@ -47,9 +47,8 @@ public class JoysticksBindings {
 
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
-		usedJoystick.B.onTrue(robot.motionMagicArm.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(30)));
-		usedJoystick.X.onTrue(robot.dynamicMotionMagicArm.getCommandsBuilder().setTargetPosition(Rotation2d.fromDegrees(30)));
-		usedJoystick.A.onTrue(robot.getSwerve().s)
+		usedJoystick.B.onTrue(robot.getRobotCommander().driveWith(RobotState.SKID_PREVENTION));
+		usedJoystick.A.onTrue(robot.getRobotCommander().driveWith(RobotState.DRIVE));
 		// bindings...
 	}
 

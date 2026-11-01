@@ -22,6 +22,9 @@ public class Modules {
 		return modules[modulePosition.getIndex()];
 	}
 
+	public Module getModule(int num) {
+		return modules[num];
+	}
 
 	public void updateInputs() {
 		for (Module currentModule : modules) {

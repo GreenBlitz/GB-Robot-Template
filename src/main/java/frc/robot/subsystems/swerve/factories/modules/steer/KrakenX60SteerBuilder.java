@@ -30,7 +30,9 @@ import frc.utils.AngleUnit;
 
 class KrakenX60SteerBuilder {
 
-	private static final double GEAR_RATIO = 12.8;
+	private static final double FRONT_MODULES_GEAR_RATIO = 12.8;
+	private static final double BACK_MODULES_GEAR_RATIO = 18.75;
+
 	private static final double MOMENT_OF_INERTIA_METERS_SQUARED = 0.00001;
 
 	private static SysIdRoutine.Config buildSysidConfig(String logPath) {
@@ -45,7 +47,7 @@ class KrakenX60SteerBuilder {
 	private static SimpleMotorSimulation buildMechanismSimulation() {
 		return new SimpleMotorSimulation(
 			new DCMotorSim(
-				Models.singleJointedArmFromPhysicalConstants(DCMotor.getKrakenX60Foc(1), MOMENT_OF_INERTIA_METERS_SQUARED, GEAR_RATIO),
+				Models.singleJointedArmFromPhysicalConstants(DCMotor.getKrakenX60Foc(1), MOMENT_OF_INERTIA_METERS_SQUARED, FRONT_MODULES_GEAR_RATIO),
 				DCMotor.getKrakenX60Foc(1)
 			)
 		);
@@ -56,11 +58,18 @@ class KrakenX60SteerBuilder {
 
 		steerConfig.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 
-		steerConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+		steerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 		steerConfig.CurrentLimits.StatorCurrentLimit = 30;
 		steerConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
-		steerConfig.Feedback.RotorToSensorRatio = GEAR_RATIO;
+		switch (position) {
+			case FRONT_RIGHT, FRONT_LEFT -> {
+				steerConfig.Feedback.RotorToSensorRatio = FRONT_MODULES_GEAR_RATIO;
+			}
+			case BACK_RIGHT, BACK_LEFT -> {
+				steerConfig.Feedback.RotorToSensorRatio = BACK_MODULES_GEAR_RATIO;
+			}
+		}
 		steerConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
 
 		if (Robot.ROBOT_TYPE.isReal()) {
@@ -107,6 +116,7 @@ class KrakenX60SteerBuilder {
 			steerConfig.Slot0.kD = 0;
 		}
 		steerConfig.ClosedLoopGeneral.ContinuousWrap = true;
+		steerConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
 
 		return steerConfig;
 	}

@@ -43,7 +43,7 @@ public class PathFollowingCommandsBuilder {
 		);
 	}
 
-	public static Command deadlinePathWithCommand(
+	public static Command deadlinedPathWithCommand(
 		Swerve swerve,
 		Supplier<Pose2d> currentPose,
 		PathPlannerPath path,
@@ -52,6 +52,32 @@ public class PathFollowingCommandsBuilder {
 		String logPath
 	) {
 		return new ParallelDeadlineGroup(commandSupplier.get(), followAdjustedPath(swerve, currentPose, path, pathfindingConstraints, logPath));
+	}
+
+	public static Command deadlinedCommandWithPath(
+		Swerve swerve,
+		Supplier<Pose2d> currentPose,
+		PathPlannerPath path,
+		PathConstraints pathfindingConstraints,
+		Supplier<Command> commandSupplier,
+		Pose2d regularIsNearEndOfPathTolerance,
+		Pose2d stuckIsNearEndOfPathTolerance,
+		double stuckDebounceSeconds,
+		String logPath
+	) {
+		return new ParallelDeadlineGroup(
+			followAdjustedPathThenStop(
+				swerve,
+				currentPose,
+				path,
+				pathfindingConstraints,
+				regularIsNearEndOfPathTolerance,
+				stuckIsNearEndOfPathTolerance,
+				stuckDebounceSeconds,
+				logPath
+			),
+			commandSupplier.get()
+		);
 	}
 
 	public static Command commandAfterPath(
@@ -79,7 +105,6 @@ public class PathFollowingCommandsBuilder {
 			commandSupplier.get()
 		);
 	}
-
 
 	public static Command followPath(PathPlannerPath path, String logPath) {
 		return AutoBuilder.followPath(path)

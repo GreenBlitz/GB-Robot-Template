@@ -5,7 +5,7 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import frc.robot.hardware.phoenix6.motors.TalonFXWrapper;
-import frc.robot.hardware.mechanisms.MechanismSimulation;
+import frc.robot.hardware.simulations.MechanismSimulation;
 import frc.utils.battery.BatteryUtil;
 
 public class TalonFXSimulation {

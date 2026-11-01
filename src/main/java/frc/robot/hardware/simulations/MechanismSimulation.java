@@ -1,4 +1,4 @@
-package frc.robot.hardware.mechanisms;
+package frc.robot.hardware.simulations;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 

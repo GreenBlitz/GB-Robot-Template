@@ -167,7 +167,8 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		Logger.recordOutput(logPath + "/odometryPose", getOdometryPose());
 		Logger.recordOutput(logPath + "/predictedOdometryPose", getPredictedOdometryPose());
 		if (lastVisionObservation != null) {
-			Logger.recordOutput(logPath + "/lastVisionUpdate", lastVisionObservation.timestampSeconds());
+			Logger.recordOutput(logPath + "/lastVisionObservation/lastObservationSourceCamera", lastVisionObservation.sourceCamera());
+			Logger.recordOutput(logPath + "/lastVisionObservation/lastObservation", lastVisionObservation);
 		}
 		Logger.recordOutput(logPath + "/lastOdometryUpdate", lastOdometryData.getTimestampSeconds());
 		Logger.recordOutput(logPath + "/isIMUOffsetCalibrated", isIMUOffsetCalibrated);
@@ -175,8 +176,8 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		lastOdometryData.getIMU3DAccelerationG()
 			.ifPresent(
 				(imu3DAcceleration) -> Logger.recordOutput(
-					logPath + "/isColliding",
-					PoseUtil.isAccelerationHigh(
+					logPath + "/isAccelerationDetectingCollision",
+					PoseUtil.isAccelerationDetectingCollision(
 						imu3DAcceleration.toTranslation2d(),
 						WPILibPoseEstimatorConstants.MINIMUM_COLLISION_IMU_ACCELERATION_G
 					)
@@ -197,7 +198,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 			);
 
 		Logger.recordOutput(
-			logPath + "/isSkidding",
+			logPath + "/areModulesSkidding",
 			PoseUtil.areModulesSkidding(
 				kinematics,
 				lastOdometryData.getWheelStates(),
@@ -246,8 +247,10 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	private Matrix<N3, N1> getCollisionCompensatedVisionStdDevs(RobotPoseObservation visionObservation) {
 		boolean isColliding = imu3DAccelerationGBuffer.getSample(visionObservation.timestampSeconds())
 			.map(
-				(imuAccelerationG) -> PoseUtil
-					.isAccelerationHigh(imuAccelerationG.toTranslation2d(), WPILibPoseEstimatorConstants.MINIMUM_COLLISION_IMU_ACCELERATION_G)
+				(imuAccelerationG) -> PoseUtil.isAccelerationDetectingCollision(
+					imuAccelerationG.toTranslation2d(),
+					WPILibPoseEstimatorConstants.MINIMUM_COLLISION_IMU_ACCELERATION_G
+				)
 			)
 			.orElse(false);
 

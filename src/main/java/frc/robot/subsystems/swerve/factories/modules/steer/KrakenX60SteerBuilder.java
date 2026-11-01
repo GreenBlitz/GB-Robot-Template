@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Robot;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.interfaces.ControllableMotor;
-import frc.robot.hardware.mechanisms.wpilib.SimpleMotorSimulation;
+import frc.robot.hardware.simulations.wpilib.SimpleMotorSimulation;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
@@ -128,21 +128,25 @@ class KrakenX60SteerBuilder {
 
 	static SteerRequests buildRequests() {
 		return new SteerRequests(
-			Phoenix6RequestBuilder.build(new PositionVoltage(0), 0, true),
-			Phoenix6RequestBuilder.build(new VoltageOut(0), true)
+			Phoenix6RequestBuilder.buildVelocityPositionRequest(new PositionVoltage(0), 0, true),
+			Phoenix6RequestBuilder.buildVoltageOutRequest(new VoltageOut(0), true)
 		);
 	}
 
 	static SteerSignals buildSignals(TalonFXMotor steer) {
 		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
-			.build(steer.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, steer.getBusChain());
+			.buildDoubleSignal(steer.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, steer.getBusChain());
 		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder
-			.build(steer.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, steer.getBusChain());
-		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder
-			.build(steer.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, steer.getBusChain());
-		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder.build(
+			.buildDoubleSignal(steer.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, steer.getBusChain());
+		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder.buildAngleSignal(
+			steer.getDevice().getVelocity(),
+			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+			AngleUnit.ROTATIONS,
+			steer.getBusChain()
+		);
+		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder.buildLatencySignalWithoutRegisteringSlope(
 			steer.getDevice().getPosition(),
-			velocitySignal,
+			velocitySignal.getSignal(),
 			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
 			AngleUnit.ROTATIONS,
 			steer.getBusChain()

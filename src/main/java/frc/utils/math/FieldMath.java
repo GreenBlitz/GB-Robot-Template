@@ -1,10 +1,7 @@
 package frc.utils.math;
 
 import frc.utils.costomUnits.Angle2d;
-import org.wpilib.math.geometry.Rotation3d;
-import org.wpilib.math.geometry.Pose2d;
-import org.wpilib.math.geometry.Translation2d;
-import org.wpilib.math.geometry.Translation3d;
+import org.wpilib.math.geometry.*;
 
 import frc.constants.MathConstants;
 import frc.constants.field.Field;
@@ -36,6 +33,10 @@ public class FieldMath {
 		};
 	}
 
+    public static Rotation2d transformAngle(Rotation2d angle, AngleTransform angleTransform) {
+            return transformAngle(Angle2d.fromRotation2d(angle),angleTransform).toRotation2d();
+        }
+
 	public static Rotation3d transformAngle(
 		Rotation3d rotation,
 		AngleTransform rollTransform,
@@ -57,7 +58,7 @@ public class FieldMath {
 	}
 
 	public static Pose2d mirror(Pose2d pose2d, boolean mirrorX, boolean mirrorY, AngleTransform angleTransform) {
-		return new Pose2d(mirror(pose2d.getTranslation(), mirrorX, mirrorY), transformAngle(Angle2d.fromRotation2d(pose2d.getRotation()), angleTransform).toRotation2d());
+		return new Pose2d(mirror(pose2d.getTranslation(), mirrorX, mirrorY), transformAngle(pose2d.getRotation(), angleTransform));
 	}
 
 	public static Translation3d mirror(Translation3d translation3d, boolean mirrorX, boolean mirrorY) {

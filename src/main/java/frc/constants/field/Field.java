@@ -1,11 +1,7 @@
 package frc.constants.field;
 
 import frc.utils.costomUnits.Angle2d;
-import org.wpilib.math.geometry.Translation2d;
-import org.wpilib.math.geometry.Rotation3d;
-import org.wpilib.math.geometry.Pose2d;
-import org.wpilib.math.geometry.Translation3d;
-import org.wpilib.math.geometry.Pose3d;
+import org.wpilib.math.geometry.*;
 import org.wpilib.driverstation.Alliance;
 import frc.utils.driverstation.DriverStationUtil;
 import frc.utils.math.AngleTransform;
@@ -23,7 +19,7 @@ public class Field {
 	public static final double WIDTH_METERS = 8.0518;
 
 	public static Pose2d getAllianceRelative(Pose2d pose2d) {
-		return new Pose2d(getAllianceRelative(pose2d.getTranslation()), getAllianceRelative(Angle2d.fromRotation2d(pose2d.getRotation())).toRotation2d());
+		return new Pose2d(getAllianceRelative(pose2d.getTranslation()), getAllianceRelative(pose2d.getRotation()));
 	}
 
 	public static Translation2d getAllianceRelative(Translation2d translation) {
@@ -31,6 +27,10 @@ public class Field {
 	}
 
 	public static Angle2d getAllianceRelative(Angle2d rotation) {
+		return isFieldConventionAlliance() ? rotation : FieldMath.transformAngle(rotation, AngleTransform.INVERT);
+	}
+
+    public static Rotation2d getAllianceRelative(Rotation2d rotation) {
 		return isFieldConventionAlliance() ? rotation : FieldMath.transformAngle(rotation, AngleTransform.INVERT);
 	}
 

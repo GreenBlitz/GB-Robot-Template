@@ -1,6 +1,5 @@
 package frc.robot.vision.cameras.limelight;
 
-
 import frc.utils.costomUnits.Angle2d;
 
 public record LimelightTarget2dValues(

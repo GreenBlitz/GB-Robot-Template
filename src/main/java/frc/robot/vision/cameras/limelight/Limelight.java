@@ -76,9 +76,9 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		if (pipeline.isNeuralDetecting()) {
 			neuralDetections.clear();
 
-			inputs.neuralDetectionInputs().target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
-			inputs.neuralDetectionInputs().rawDetections = LimelightHelpers.getRawDetections(name);
-			Logger.processInputs(logPath + "/neuralDetectionInputs", inputs.neuralDetectionInputs());
+//			inputs.neuralDetectionInputs().target2dValues = LimelightTarget2dValues.fromArray(LimelightHelpers.getT2DArray(name));
+//			inputs.neuralDetectionInputs().rawDetections = LimelightHelpers.getRawDetections(name);
+//			Logger.processInputs(logPath + "/neuralDetectionInputs", inputs.neuralDetectionInputs());
 
 			if (getTarget2dValues().isValid()) {
 				for (LimelightHelpers.RawDetection rawDetection : getRawDetections()) {

@@ -1744,7 +1744,7 @@ public class LimelightHelpers {
 	}
 
 	/**
-	 * Configures the complementary filter alpha valu for IMU Assist Modes (Modes 3 and 4)
+	 * Configures the complementary filter alpha value for IMU Assist Modes (Modes 3 and 4)
 	 *
 	 * @param limelightName Name/identifier of the Limelight
 	 * @param alpha         Defaults to .001. Higher values will cause the internal IMU to converge onto the assist source more rapidly.
@@ -1755,7 +1755,7 @@ public class LimelightHelpers {
 
 
 	/**
-	 * Configures the throttle valu. Set to 100-200 while disabled to reduce thermal output/temperature.
+	 * Configures the throttle value. Set to 100-200 while disabled to reduce thermal output/temperature.
 	 *
 	 * @param limelightName Name/identifier of the Limelight
 	 * @param throttle      Defaults to 0. Your Limelight will process one frame after skipping <throttle> frames.

@@ -2,7 +2,6 @@ package frc.robot.subsystems.swerve;
 
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -85,9 +84,9 @@ public class SwerveCommandsBuilder {
 	}
 
 
-	public Command setTargetModuleStates(Supplier<SwerveModuleState[]> statesSupplier, boolean isClosedLoop, SlewRateLimiter slewRateLimiter) {
+	public Command setTargetModuleStates(Supplier<SwerveModuleState[]> statesSupplier, boolean isClosedLoop, SwerveState swerveState) {
 		return swerve.asSubsystemCommand(
-			new RunCommand(() -> modules.setTargetStates(statesSupplier.get(), isClosedLoop, slewRateLimiter)),
+			new RunCommand(() -> modules.setTargetStates(statesSupplier.get(), isClosedLoop, swerveState.getDriveAcceleration())),
 			"Set states by " + "supplier"
 		);
 	}

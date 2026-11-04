@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.subsystems.swerve.states.DriveAcceleration;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
@@ -13,10 +14,13 @@ public class Modules {
 
 	private final Module[] modules;
 	private final String logPath;
+	private final SlewRateLimiter[] limiters;
+	private DriveAcceleration lastAcceleration = null;
 
 	public Modules(String logPath, Module... modules) {
 		this.logPath = logPath + ModuleConstants.MODULES_LOG_PATH_ADDITION;
 		this.modules = modules;
+		this.limiters = new SlewRateLimiter[modules.length];
 	}
 
 	public Module getModule(ModuleUtil.ModulePosition modulePosition) {
@@ -85,11 +89,26 @@ public class Modules {
 		}
 	}
 
-	public void setTargetStates(SwerveModuleState[] moduleStates, boolean isClosedLoop, SlewRateLimiter slewRateLimiter) {
+	public void setTargetStates(SwerveModuleState[] moduleStates, boolean isClosedLoop, DriveAcceleration acceleration) {
+		if (acceleration != lastAcceleration) {
+			rebuildLimiters(acceleration);
+			lastAcceleration = acceleration;
+		}
 		for (int i = 0; i < modules.length; i++) {
-			moduleStates[i].speedMetersPerSecond = slewRateLimiter.calculate(moduleStates[i].speedMetersPerSecond);
+			moduleStates[i].speedMetersPerSecond = limiters[i].calculate(moduleStates[i].speedMetersPerSecond);
 			modules[i].setTargetState(moduleStates[i], isClosedLoop);
 		}
+	}
+
+	private void rebuildLimiters(DriveAcceleration acceleration) {
+		double rate = acceleration.getAcceleration();
+		for (int i = 0; i < modules.length; i++) {
+			limiters[i] = new SlewRateLimiter(rate, -rate, 0);
+		}
+	}
+
+	public void resetLimiters() {
+		lastAcceleration = null;
 	}
 
 

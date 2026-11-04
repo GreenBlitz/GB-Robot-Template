@@ -13,7 +13,7 @@ public enum DriveAcceleration {
 
 	DriveAcceleration(double acceleration) {
 		this.acceleration = acceleration;
-		slewRateLimiter = new SlewRateLimiter (acceleration);
+		slewRateLimiter = new SlewRateLimiter(acceleration);
 	}
 
 	public double getAcceleration() {

@@ -49,7 +49,7 @@ public class Superstructure {
 	public Command setState(RobotState robotState) {
 		return switch (robotState) {
 			case SKID_PREVENTION -> new InstantCommand();
-			case DRIVE ->  new InstantCommand();
+			case DRIVE -> new InstantCommand();
 		};
 	}
 

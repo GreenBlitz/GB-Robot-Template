@@ -5,7 +5,6 @@ import frc.robot.Robot;
 import frc.robot.statemachine.superstructure.Superstructure;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.subsystems.swerve.states.SwerveState;
 
 import java.util.Set;
 
@@ -21,7 +20,7 @@ public class RobotCommander extends GBSubsystem {
 	public RobotCommander(String logPath, Robot robot) {
 		super(logPath);
 		this.robot = robot;
-        this.swerve = robot.getSwerve();
+		this.swerve = robot.getSwerve();
 		this.positionTargets = new PositionTargets(robot);
 		this.superstructure = new Superstructure("StateMachine/Superstructure", robot);
 		this.currentState = RobotState.DRIVE;
@@ -63,6 +62,7 @@ public class RobotCommander extends GBSubsystem {
 	public Command driveWith(RobotState state) {
 		return driveWith(state, superstructure.setState(state));
 	}
+
 	private Command asSubsystemCommand(Command command, RobotState state) {
 		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
 	}

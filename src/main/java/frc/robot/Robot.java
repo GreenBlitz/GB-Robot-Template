@@ -140,7 +140,7 @@ public class Robot {
 
 		poseEstimator.log();
 
-		Logger.recordOutput(robotCommander.getSuperstructure().getCurrentState().name(), "aaa1");
+		Logger.recordOutput("aaa1", robotCommander.getCurrentState().name());
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();

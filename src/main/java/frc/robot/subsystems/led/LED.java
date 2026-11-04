@@ -79,4 +79,5 @@ public class LED extends GBSubsystem {
 		ledPattern.applyTo(addressableLEDBuffer);
 		addressableLED.setData(addressableLEDBuffer);
 	}
+
 }

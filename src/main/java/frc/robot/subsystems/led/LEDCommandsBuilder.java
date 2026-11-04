@@ -34,8 +34,7 @@ public class LEDCommandsBuilder {
 	}
 
 	public Command enableBlink() {
-		return led
-			.asSubsystemCommand(new RunCommand(led::blinkWithCurrentPattern), "Enable LED enableBlink");
+		return led.asSubsystemCommand(new RunCommand(led::blinkWithCurrentPattern), "Enable LED enableBlink");
 	}
 
 	public Command disableBlink() {

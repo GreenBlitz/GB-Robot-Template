@@ -25,7 +25,7 @@ public class Superstructure {
 
 		this.targetChecks = new TargetChecks(this);
 
-		this.currentState = null;
+		this.currentState = RobotState.DRIVE;
 		this.isSubsystemRunningIndependently = false;
 		this.logPath = logPath;
 	}
@@ -48,7 +48,8 @@ public class Superstructure {
 
 	public Command setState(RobotState robotState) {
 		return switch (robotState) {
-			default -> new InstantCommand();
+			case SKID_PREVENTION -> new InstantCommand();
+			case DRIVE ->  new InstantCommand();
 		};
 	}
 

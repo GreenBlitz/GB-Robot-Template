@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.constants.AlonModuleConstants;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
+import frc.robot.RobotConstants;
+import frc.utils.battery.BatteryUtil;
 import frc.utils.math.AngleMath;
 import org.littletonrobotics.junction.Logger;
 
@@ -70,7 +72,6 @@ public class ModuleCommandsBuilder {
 		return driveWithStick(() -> joystick.getAxisValue(Axis.RIGHT_X), () -> joystick.getAxisValue(Axis.RIGHT_Y));
 	}
 
-
 	public InstantCommand setNeutralMode(boolean brake) {
 		return new InstantCommand(() -> {
 			moduleAlon.setLinearNeutral(brake);
@@ -79,7 +80,9 @@ public class ModuleCommandsBuilder {
 	}
 
 	public RunCommand manualDriveCommand(Supplier<Double> power) {
-		return new RunCommand(() -> moduleAlon.linearPower(power.get()), moduleAlon);
+
+		return new RunCommand(() -> {moduleAlon.linearPower(power.get());
+			Logger.recordOutput(logPath+"/shouldPower",power.get()* BatteryUtil.DEFAULT_VOLTAGE);}, moduleAlon);
 	}
 
 	public void linearWithStickValue(SmartJoystick joystick, Axis axis) {

@@ -3,6 +3,7 @@ package frc;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.*;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -66,9 +67,9 @@ public class AlonFX implements IMotor {
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
 
 		CurrentLimitsConfigs currentLimitsConfigs = new CurrentLimitsConfigs();
-		currentLimitsConfigs.StatorCurrentLimitEnable = true;
-		currentLimitsConfigs.SupplyCurrentLowerLimit = 5;
-		currentLimitsConfigs.StatorCurrentLimit = 40;
+		currentLimitsConfigs.StatorCurrentLimitEnable = false;
+//		currentLimitsConfigs.SupplyCurrentLowerLimit = 5;
+//		currentLimitsConfigs.StatorCurrentLimit = 40;
 		configuration.CurrentLimits = currentLimitsConfigs;
 
 		Slot0Configs slot0Configs = new Slot0Configs();
@@ -93,13 +94,10 @@ public class AlonFX implements IMotor {
 
 	@Override
 	public void updateSimulation() {
-		System.out.println(motor.getSimState().getMotorVoltage());
 		simulation.updateMotor();
 		simulation.setInputVoltage(motor.getSimState().getMotorVoltage());
 		motor.getSimState().setRawRotorPosition(simulation.getRotorPosition().getRotations());
 		motor.getSimState().setRotorVelocity(simulation.getMechanismVelocityRPS().getRotations());
-
-		// System.out.println(logpath+": "+motor.getSimState().getMotorVoltage());
 	}
 
 	@Override
@@ -111,7 +109,9 @@ public class AlonFX implements IMotor {
 	}
 
 	public void setPower(double amount) {
-		motor.set(amount);
+		DutyCycleOut dutyCycle = new DutyCycleOut(amount);
+		dutyCycle.EnableFOC = false;
+		motor.setControl(dutyCycle);
 	}
 
 	public void driveToPosition(Rotation2d position) {

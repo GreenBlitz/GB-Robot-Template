@@ -4,7 +4,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -25,6 +29,10 @@ import frc.utils.battery.BatteryUtil;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.utils.brakestate.BrakeMode;
 import frc.utils.brakestate.BrakeStateManager;
+import org.littletonrobotics.junction.Logger;
+import org.photonvision.*;
+import org.photonvision.simulation.PhotonCameraSim;
+import org.photonvision.simulation.VisionSystemSim;
 
 import java.util.List;
 
@@ -39,11 +47,14 @@ public class Robot {
 
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
+	private final PhotonPoseEstimator photonPoseEstimator;
+	private final PhotonCamera photonCamera = new PhotonCamera("testCamera");
+	private final PhotonCameraSim photonCameraSim = new PhotonCameraSim(photonCamera);
+	private final VisionSystemSim photonSim = new VisionSystemSim("photonSim");
 	private final List<Limelight> limelights;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
-
 		IIMU imu = IMUFactory.createIMU(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
@@ -86,6 +97,11 @@ public class Robot {
 			)
 		);
 
+		photonSim.addAprilTags(AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark));
+		photonSim.addCamera(photonCameraSim,new Transform3d());
+		photonPoseEstimator = new PhotonPoseEstimator(AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark), new Transform3d());
+		photonCamera.getAllUnreadResults().get(0).getBestTarget().bestCameraToTarget;
+		PhotonUtils.estimateFieldToRobot()
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 
 		configureBrakeStateChooser();
@@ -106,7 +122,9 @@ public class Robot {
 		getLimelights().forEach(limelight -> limelight.getIndependentRobotPose().ifPresent(poseEstimator::updateVision));
 
 		poseEstimator.log();
-
+		Logger.recordOutput("PhotonSimRobotPose",photonSim.getRobotPose().toPose2d());
+		photonSim.update(poseEstimator.getEstimatedPose());
+		photonPoseEstimator.estimateAverageBestTargetsPose(photonCamera.getAllUnreadResults().get(0)).ifPresent((EstimatedRobotPose r) -> Logger.recordOutput("estimatorPosePhotonCameraTester",r.estimatedPose.toPose2d()));
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		CommandScheduler.getInstance().run(); // Should be last

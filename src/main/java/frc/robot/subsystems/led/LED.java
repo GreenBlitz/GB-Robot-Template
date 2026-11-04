@@ -30,7 +30,6 @@ public class LED extends GBSubsystem {
 		this.addressableLEDBuffer = new AddressableLEDBuffer(ledConstants.NUMBER_OF_LEDS_IN_STRIP());
 		this.ledPattern = LEDPattern.solid(ledConstants.DEFAULT_COLOR());
 		this.basePattern = ledPattern;
-		applyPattern();
 		addressableLED.start();
 
 		this.ledCommandsBuilder = new LEDCommandsBuilder(this);
@@ -46,7 +45,6 @@ public class LED extends GBSubsystem {
 
 	public void setPattern(LEDPattern pattern) {
 		ledPattern = pattern;
-		applyPattern();
 	}
 
 	public void setAlternatingColors(Color evenColor, Color oddColor) {
@@ -75,9 +73,10 @@ public class LED extends GBSubsystem {
 		setPattern(ledPattern.scrollAtAbsoluteSpeed(linearVelocity, Meters.of(1 / ledConstants.NUMBER_OF_LEDS_PER_METER())));
 	}
 
-	void applyPattern() {
+	@Override
+	public void subsystemPeriodic() {
+		super.subsystemPeriodic();
 		ledPattern.applyTo(addressableLEDBuffer);
 		addressableLED.setData(addressableLEDBuffer);
 	}
-
 }

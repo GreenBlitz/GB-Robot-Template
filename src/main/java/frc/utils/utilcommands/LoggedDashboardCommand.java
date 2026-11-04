@@ -6,7 +6,7 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 import java.util.function.Consumer;
 
 /**
- * This Command run a consumer through dashboard VALUE
+ * This Command run a consumer through dashboard value
  */
 public class LoggedDashboardCommand extends InitExecuteCommand {
 

@@ -1,10 +1,12 @@
 package frc.robot.statemachine;
 
+import frc.robot.subsystems.swerve.states.DriveAcceleration;
 import frc.robot.subsystems.swerve.states.SwerveState;
 
 public enum RobotState {
 
-	;
+	DRIVE,
+	SKID_PREVENTION(SwerveState.DEFAULT_DRIVE.withDriveAcceleration(DriveAcceleration.SKID_PREVENTION));
 
 	private final SwerveState swerveState;
 	private boolean swerveStateActive;

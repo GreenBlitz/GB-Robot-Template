@@ -51,7 +51,7 @@ public class RobotCommander extends GBSubsystem {
 	@Override
 	protected void subsystemPeriodic() {
 		superstructure.log();
-		Logger.recordOutput(getLogPath() + "/RobotState", currentState.name());
+		Logger.recordOutput(getLogPath() + "/RobotState", currentState);
 	}
 
 	public Command driveWith(RobotState state, Command command) {

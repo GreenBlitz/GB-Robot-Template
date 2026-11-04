@@ -5,6 +5,7 @@ import frc.robot.Robot;
 import frc.robot.statemachine.superstructure.Superstructure;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.Swerve;
+import org.littletonrobotics.junction.Logger;
 import java.util.Set;
 
 public class RobotCommander extends GBSubsystem {
@@ -28,7 +29,7 @@ public class RobotCommander extends GBSubsystem {
 			new ConditionalCommand(
 				asSubsystemCommand(Commands.none(), "Disabled"),
 				new InstantCommand(
-					() -> CommandScheduler.getInstance().schedule(new DeferredCommand(() -> endState(currentState), Set.of(this, swerve)))
+					() -> CommandScheduler.getInstance().schedule(new DeferredCommand(() -> endState(currentState), Set.of(this)))
 				),
 				this::isSubsystemRunningIndependently
 			)
@@ -50,11 +51,12 @@ public class RobotCommander extends GBSubsystem {
 	@Override
 	protected void subsystemPeriodic() {
 		superstructure.log();
+		Logger.recordOutput(getLogPath() + "/RobotState", currentState.name());
 	}
 
 	public Command driveWith(RobotState state, Command command) {
 		Command swerveDriveCommand = swerve.getCommandsBuilder().driveByDriversInputs(state.getSwerveState());
-		Command wantedCommand = command.deadlineFor(swerveDriveCommand);
+		Command wantedCommand = swerveDriveCommand.deadlineFor(command);
 		return asSubsystemCommand(wantedCommand, state);
 	}
 

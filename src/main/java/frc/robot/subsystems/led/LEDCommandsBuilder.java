@@ -33,8 +33,11 @@ public class LEDCommandsBuilder {
 		);
 	}
 
-	public Command enableBlink() {
-		return led.asSubsystemCommand(new RunCommand(led::blinkWithCurrentPattern), "Enable LED enableBlink");
+	public Command enableBlink(double timeBetweenBlinksSeconds) {
+		return led.asSubsystemCommand(
+			new RunCommand(led::blinkWithCurrentPattern).beforeStarting(() -> led.setTimeBetweenBlinksSeconds(timeBetweenBlinksSeconds)),
+			"Enable LED enableBlink"
+		);
 	}
 
 	public Command disableBlink() {

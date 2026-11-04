@@ -13,6 +13,7 @@ import static edu.wpi.first.units.Units.Meters;
 public class LED extends GBSubsystem {
 
 	public static LEDConstants ledConstants;
+	public static double timeBetweenBlinksSeconds;
 	private final AddressableLED addressableLED;
 	private final AddressableLEDBuffer addressableLEDBuffer;
 	private LEDPattern ledPattern;
@@ -23,6 +24,7 @@ public class LED extends GBSubsystem {
 		super(logPath);
 
 		this.ledConstants = ledConstants;
+		this.timeBetweenBlinksSeconds = ledConstants.DEFAULT_TIME_BETWEEN_BLINKS_SECOND();
 
 		this.addressableLED = new AddressableLED(ledConstants.PORT_NUMBER());
 		this.addressableLED.setLength(ledConstants.NUMBER_OF_LEDS_IN_STRIP()); // very expensive function, run ONCE only
@@ -61,11 +63,15 @@ public class LED extends GBSubsystem {
 
 	public void blinkWithCurrentPattern() {
 		basePattern = ledPattern;
-		setPattern(ledPattern.blink(Units.Seconds.of(ledConstants.TIME_BETWEEN_BLINKS_SECOND())));
+		setPattern(ledPattern.blink(Units.Seconds.of(ledConstants.DEFAULT_TIME_BETWEEN_BLINKS_SECOND())));
 	}
 
 	public void setDualGradient(Color colorA, Color colorB) {
 		setPattern(LEDPattern.gradient(LEDPattern.GradientType.kContinuous, colorA, colorB));
+	}
+
+	public static void setTimeBetweenBlinksSeconds(double timeBetweenBlinksSeconds) {
+		LED.timeBetweenBlinksSeconds = timeBetweenBlinksSeconds;
 	}
 
 	public void enableScroll(LinearVelocity linearVelocity) {

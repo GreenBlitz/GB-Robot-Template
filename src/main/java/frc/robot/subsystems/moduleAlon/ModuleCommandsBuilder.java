@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.constants.AlonModuleConstants;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
-import frc.robot.RobotConstants;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.math.AngleMath;
 import org.littletonrobotics.junction.Logger;
@@ -172,4 +171,57 @@ public class ModuleCommandsBuilder {
 		}, Set.of(moduleAlon));
 	}
 
+	public static final int loggityMouthCycles = 40;
+	public static final int loggityRadius = 60;
+	public static final double loggitySmileLowerMult = 1;
+	public static final double loggitySmileUpperMult = 0.75;
+	public static final int loggityEyeWidth = 10;
+	public static final double loggityEyeMult = 1.25;
+	public static final int loggityEyeDist = 15;
+	public static final int loggityEyeRaise = 10;
+
+	public static Command loggity(){
+		return new Command() {
+			static{
+				Logger.recordOutput("Loggity/0",0.0);
+				Logger.recordOutput("Loggity/1",0.0);
+				Logger.recordOutput("Loggity/2",0.0);
+			}
+			private int cycle;
+			@Override
+			public void initialize() {
+				cycle = -loggityRadius;
+			}
+			@Override
+			public void execute(){
+				Logger.recordOutput("Loggity/0", logOutputMouth(cycle));
+				double eye = Double.isNaN(logOutputEyes(cycle+loggityEyeDist))?logOutputEyes(cycle-loggityEyeDist):logOutputEyes(cycle+loggityEyeDist);
+				Logger.recordOutput("Loggity/1", eye);
+				Logger.recordOutput("Loggity/2",logOutputFace(cycle));
+				cycle++;
+			}
+			@Override
+			public void end(boolean isInterrupted){
+
+			}
+			@Override
+			public boolean isFinished(){
+				return cycle> loggityRadius;
+			}
+
+			private static double logOutputMouth(int cycle){
+				double op1 = -1*Math.sqrt(loggityMouthCycles * loggityMouthCycles -cycle*cycle-Double.MIN_VALUE)*loggitySmileLowerMult;
+				double op2 = -1*Math.sqrt(loggityMouthCycles * loggityMouthCycles -cycle*cycle-Double.MIN_VALUE)*loggitySmileUpperMult;
+				return cycle%2==0?op1:op2;
+			}
+
+			private static double logOutputEyes(int cycle){
+				return (cycle%2==0?-1:1)*Math.sqrt(loggityEyeWidth*loggityEyeWidth-cycle*cycle)*loggityEyeMult+loggityEyeRaise;
+			}
+
+			private static double logOutputFace(int cycle){
+				return (cycle%2==0?-1:1)*Math.sqrt(loggityRadius*loggityRadius-cycle*cycle);
+			}
+		};
+	}
 }

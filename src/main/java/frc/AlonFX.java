@@ -94,8 +94,8 @@ public class AlonFX implements IMotor {
 
 	@Override
 	public void updateSimulation() {
-		simulation.updateMotor();
 		simulation.setInputVoltage(motor.getSimState().getMotorVoltage());
+		simulation.updateMotor();
 		motor.getSimState().setRawRotorPosition(simulation.getRotorPosition().getRotations());
 		motor.getSimState().setRotorVelocity(simulation.getMechanismVelocityRPS().getRotations());
 	}

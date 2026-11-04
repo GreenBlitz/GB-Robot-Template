@@ -12,6 +12,7 @@ import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
+import frc.robot.subsystems.moduleAlon.ModuleCommandsBuilder;
 import frc.robot.subsystems.swerve.ChassisPowers;
 import org.littletonrobotics.junction.Logger;
 
@@ -67,6 +68,7 @@ public class JoysticksBindings {
 			robot.getModuleAlon().getCommandsBuilder().driveDistanceCommand(Rotation2d.fromRotations(2.5), Rotation2d.fromDegrees(0))
 		);
 		usedJoystick.B.whileTrue(robot.getModuleAlon().getCommandsBuilder().stopCommand());
+		usedJoystick.POV_UP.onTrue(ModuleCommandsBuilder.loggity());
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import frc.robot.subsystems.roller.TalonFXRollerBuilder;
+import frc.robot.subsystems.roller.VelocityRoller;
 import frc.utils.costomUnits.Angle2d;
 import org.wpilib.command2.CommandScheduler;
 import frc.RobotManager;
@@ -48,6 +50,7 @@ public class Robot {
 	public final Arm arm;
 	public final Arm motionMagicArm;
 	public final Arm dynamicMotionMagicArm;
+    public final VelocityRoller velocityRoller;
 	private final IPoseEstimator poseEstimator;
 	private final List<Limelight> limelights;
 
@@ -111,6 +114,8 @@ public class Robot {
 			)
 		);
 
+        velocityRoller =
+
 		swerve.setHeadingSupplier(() -> Angle2d.fromRotation2d(poseEstimator.getEstimatedPose().getRotation()));
 
 		configureBrakeStateChooser();
@@ -140,7 +145,11 @@ public class Robot {
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 
-	public IPoseEstimator getPoseEstimator() {
+    public VelocityRoller createVelocityRoller() {
+        TalonFXRollerBuilder
+    }
+
+    public IPoseEstimator getPoseEstimator() {
 		return poseEstimator;
 	}
 

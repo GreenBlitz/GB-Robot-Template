@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.subsystems.swerve.states.DriveAcceleration;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
@@ -84,8 +85,9 @@ public class Modules {
 		}
 	}
 
-	public void setTargetStates(SwerveModuleState[] moduleStates, boolean isClosedLoop) {
+	public void setTargetStates(SwerveModuleState[] moduleStates, boolean isClosedLoop, DriveAcceleration driveAcceleration) {
 		for (int i = 0; i < modules.length; i++) {
+			moduleStates[i].speedMetersPerSecond = driveAcceleration.getSlewRateLimiter().calculate(moduleStates[i].speedMetersPerSecond);
 			modules[i].setTargetState(moduleStates[i], isClosedLoop);
 		}
 	}

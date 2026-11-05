@@ -8,6 +8,7 @@ public class RealSwerveConstants {
 
 	public static final double VELOCITY_AT_12_VOLTS_METERS_PER_SECOND = 4.204105;
 	public static final double ACCELERATION_AT_12_VOLTS_METERS_PER_SECOND_SQUARED = 1.9;
+	public static final double MAX_SKID_ACCELERATION = 1;
 	public static final double MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND = 4;
 	public static final Rotation2d MAX_ROTATIONAL_VELOCITY_PER_SECOND = Rotation2d.fromRadians(10.11);
 

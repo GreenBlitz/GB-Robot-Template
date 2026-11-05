@@ -1,6 +1,5 @@
 package frc.robot.subsystems.swerve.module.records;
 
-
 import frc.robot.hardware.interfaces.IRequest;
 import frc.utils.costomUnits.Angle2d;
 

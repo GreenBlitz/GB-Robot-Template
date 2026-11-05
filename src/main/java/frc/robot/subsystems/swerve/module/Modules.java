@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.Timer;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
@@ -13,6 +14,8 @@ public class Modules {
 
 	private final Module[] modules;
 	private final String logPath;
+	private double lastOut = 0;
+	private double lastTime = Timer.getFPGATimestamp();
 
 	public Modules(String logPath, Module... modules) {
 		this.logPath = logPath + ModuleConstants.MODULES_LOG_PATH_ADDITION;
@@ -21,6 +24,10 @@ public class Modules {
 
 	public Module getModule(ModuleUtil.ModulePosition modulePosition) {
 		return modules[modulePosition.getIndex()];
+	}
+
+	public Module getModule(int index) {
+		return modules[index];
 	}
 
 
@@ -90,6 +97,11 @@ public class Modules {
 			moduleStates[i].speedMetersPerSecond = slewRateLimiter.calculate(moduleStates[i].speedMetersPerSecond);
 			modules[i].setTargetState(moduleStates[i], isClosedLoop);
 		}
+		double out = moduleStates[0].speedMetersPerSecond;
+		Logger.recordOutput(logPath + "/Debug/Out0", out);
+		Logger.recordOutput(logPath + "/Debug/DeltaPerLoop", out - lastOut);
+		Logger.recordOutput("Debug/Marker", 12345);
+		lastOut = out;
 	}
 
 

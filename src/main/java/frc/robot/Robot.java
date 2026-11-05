@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -31,6 +32,7 @@ import frc.utils.battery.BatteryUtil;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.utils.brakestate.BrakeMode;
 import frc.utils.brakestate.BrakeStateManager;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.List;
 
@@ -132,6 +134,16 @@ public class Robot {
 		getLimelights().forEach(Limelight::updateHardwareInputs);
 		getLimelights().forEach(Limelight::updateMT1);
 		getLimelights().forEach(limelight -> limelight.getIndependentRobotPose().ifPresent(poseEstimator::updateVision));
+
+		 double lastOut = 0;
+		 double lastTime = Timer.getFPGATimestamp(); // edu.wpi.first.wpilibj.Timer
+
+		double now = Timer.getFPGATimestamp();
+		double out = swerve.getModules().getModule(0).getDriveVelocityMetersPerSecond();
+		Logger.recordOutput("/Debug/LimitedAccel", (out - lastOut) / (now - lastTime));
+		Logger.recordOutput("/Debug/Out0", out);
+		lastOut = out;
+		lastTime = now;
 
 		poseEstimator.log();
 

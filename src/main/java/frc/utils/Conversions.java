@@ -1,6 +1,6 @@
 package frc.utils;
 
-import org.wpilib.math.geometry.Rotation2d;
+import frc.utils.costomUnits.Angle2d;
 import org.wpilib.math.trajectory.TrapezoidProfile;
 import frc.constants.MathConstants;
 
@@ -18,8 +18,8 @@ public class Conversions {
 	 * @param magTicks        ticks from a Mag Encoder
 	 * @return angle
 	 */
-	public static Rotation2d magTicksToAngle(double magTicks, double systemGearRatio) {
-		return Rotation2d.fromRotations(magTicks / MAG_TICKS / systemGearRatio);
+	public static Angle2d magTicksToAngle(double magTicks, double systemGearRatio) {
+		return Angle2d.fromRotations(magTicks / MAG_TICKS / systemGearRatio);
 	}
 
 	/**
@@ -29,7 +29,7 @@ public class Conversions {
 	 * @param angle           angle
 	 * @return Mag Encoder ticks
 	 */
-	public static double angleToMagTicks(Rotation2d angle, double systemGearRatio) {
+	public static double angleToMagTicks(Angle2d angle, double systemGearRatio) {
 		return angle.getRotations() * MAG_TICKS * systemGearRatio;
 	}
 
@@ -143,7 +143,7 @@ public class Conversions {
 	 * @param wheelDiameter the wheel diameter
 	 * @return the distance
 	 */
-	public static double angleToDistance(Rotation2d angle, double wheelDiameter) {
+	public static double angleToDistance(Angle2d angle, double wheelDiameter) {
 		return angle.getRotations() * wheelDiameter * MathConstants.HALF_CIRCLE.getRadians();
 	}
 
@@ -154,8 +154,8 @@ public class Conversions {
 	 * @param wheelDiameter the wheel diameter
 	 * @return the angle
 	 */
-	public static Rotation2d distanceToAngle(double distance, double wheelDiameter) {
-		return Rotation2d.fromRotations(distance / (wheelDiameter * MathConstants.HALF_CIRCLE.getRadians()));
+	public static Angle2d distanceToAngle(double distance, double wheelDiameter) {
+		return Angle2d.fromRotations(distance / (wheelDiameter * MathConstants.HALF_CIRCLE.getRadians()));
 	}
 
 	/**

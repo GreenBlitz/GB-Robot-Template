@@ -1,6 +1,6 @@
 package frc.robot.hardware.phoenix6.imu;
 
-import org.wpilib.math.geometry.Rotation2d;
+import frc.utils.costomUnits.Angle2d;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.phoenix6.Phoenix6Device;
 
@@ -15,7 +15,7 @@ public class Pigeon2IMU extends Phoenix6Device implements IIMU {
 	}
 
 	@Override
-	public void setYaw(Rotation2d yaw) {
+	public void setYaw(Angle2d yaw) {
 		imu.setYaw(yaw);
 	}
 

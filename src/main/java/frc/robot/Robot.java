@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.utils.costomUnits.Angle2d;
 import org.wpilib.math.geometry.Pose2d;
 import org.wpilib.command2.CommandScheduler;
 import frc.RobotManager;
@@ -78,7 +79,7 @@ public class Robot {
 			limelight -> limelight.setMT1PoseFilter(
 				LimelightFilters.megaTag1Filter(
 					limelight,
-					timestamp -> poseEstimator.getEstimatedPoseAtTimestamp(timestamp).map(Pose2d::getRotation),
+					timestamp -> poseEstimator.getEstimatedPoseAtTimestamp(timestamp).map((Pose2d) -> Angle2d.fromRotation2d(Pose2d.getRotation())),
 					poseEstimator::isIMUOffsetCalibrated,
 					LimelightFilters.DEFAULT_IN_FIELD_TOLERANCE_METERS,
 					LimelightFilters.DEFAULT_YAW_AT_ANGLE_TOLERANCE
@@ -86,7 +87,7 @@ public class Robot {
 			)
 		);
 
-		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+		swerve.setHeadingSupplier(() -> Angle2d.fromRotation2d(poseEstimator.getEstimatedPose().getRotation()));
 
 		configureBrakeStateChooser();
 	}

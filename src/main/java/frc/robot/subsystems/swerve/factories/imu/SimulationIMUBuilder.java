@@ -1,6 +1,6 @@
 package frc.robot.subsystems.swerve.factories.imu;
 
-import org.wpilib.math.geometry.Rotation2d;
+import frc.utils.costomUnits.Angle2d;
 import frc.robot.hardware.empties.EmptyIMU;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.signal.AngleSignal;
@@ -20,8 +20,8 @@ public class SimulationIMUBuilder {
 		return new AngleSignal(name, AngleUnit.DEGREES) {
 
 			@Override
-			protected void updateValue(TimedValue<Rotation2d> timedValue) {
-				timedValue.setValue(new Rotation2d());
+			protected void updateValue(TimedValue<Angle2d> timedValue) {
+				timedValue.setValue(new Angle2d());
 				timedValue.setTimestamp(TimeUtil.getCurrentTimeSeconds());
 			}
 

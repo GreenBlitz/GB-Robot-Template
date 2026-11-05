@@ -1,7 +1,7 @@
 package frc.robot.hardware.phoenix6.signal;
 
 import com.ctre.phoenix6.StatusSignal;
-import org.wpilib.math.geometry.Rotation2d;
+import frc.utils.costomUnits.Angle2d;
 import frc.robot.hardware.signal.AngleSignal;
 import frc.utils.TimedValue;
 import frc.utils.AngleUnit;
@@ -25,8 +25,8 @@ public class Phoenix6AngleSignal extends AngleSignal implements SignalGetter {
 	}
 
 	@Override
-	protected void updateValue(TimedValue<Rotation2d> timedValue) {
-		timedValue.setValue(angleUnit.toRotation2d(statusSignal.getValueAsDouble()));
+	protected void updateValue(TimedValue<Angle2d> timedValue) {
+		timedValue.setValue(angleUnit.toAngle2d(statusSignal.getValueAsDouble()));
 		timedValue.setTimestamp(TimeUtil.getCurrentTimeSeconds() - statusSignal.getTimestamp().getLatency());
 	}
 

@@ -1,10 +1,7 @@
 package frc.utils.math;
 
-import org.wpilib.math.geometry.Rotation2d;
-import org.wpilib.math.geometry.Rotation3d;
-import org.wpilib.math.geometry.Pose2d;
-import org.wpilib.math.geometry.Translation2d;
-import org.wpilib.math.geometry.Translation3d;
+import frc.utils.costomUnits.Angle2d;
+import org.wpilib.math.geometry.*;
 
 import frc.constants.MathConstants;
 import frc.constants.field.Field;
@@ -23,11 +20,11 @@ public class FieldMath {
 		return toRelative.rotateBy(relativeTo.getRotation()).plus(relativeTo.getTranslation());
 	}
 
-	public static Pose2d rotatePose(Rotation2d rotation, Pose2d toRelative) {
-		return toRelative.rotateBy(rotation.unaryMinus());
+	public static Pose2d rotatePose(Angle2d rotation, Pose2d toRelative) {
+		return toRelative.rotateBy(rotation.unaryMinus().toRotation2d());
 	}
 
-	public static Rotation2d transformAngle(Rotation2d angle, AngleTransform angleTransform) {
+	public static Angle2d transformAngle(Angle2d angle, AngleTransform angleTransform) {
 		return switch (angleTransform) {
 			case KEEP -> angle;
 			case MIRROR_X -> MathConstants.HALF_CIRCLE.minus(angle);
@@ -36,15 +33,19 @@ public class FieldMath {
 		};
 	}
 
+    public static Rotation2d transformAngle(Rotation2d angle, AngleTransform angleTransform) {
+            return transformAngle(Angle2d.fromRotation2d(angle),angleTransform).toRotation2d();
+        }
+
 	public static Rotation3d transformAngle(
 		Rotation3d rotation,
 		AngleTransform rollTransform,
 		AngleTransform pitchTransform,
 		AngleTransform yawTransform
 	) {
-		double roll = transformAngle(Rotation2d.fromRadians(rotation.getX()), rollTransform).getRadians();
-		double pitch = transformAngle(Rotation2d.fromRadians(rotation.getY()), pitchTransform).getRadians();
-		double yaw = transformAngle(Rotation2d.fromRadians(rotation.getZ()), yawTransform).getRadians();
+		double roll = transformAngle(Angle2d.fromRadians(rotation.getX()), rollTransform).getRadians();
+		double pitch = transformAngle(Angle2d.fromRadians(rotation.getY()), pitchTransform).getRadians();
+		double yaw = transformAngle(Angle2d.fromRadians(rotation.getZ()), yawTransform).getRadians();
 		return new Rotation3d(roll, pitch, yaw);
 	}
 

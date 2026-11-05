@@ -5,6 +5,9 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -13,12 +16,15 @@ import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
+import frc.robot.subsystems.HoodConstants;
+import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.imu.IMUFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.vision.cameras.limelight.Limelight;
 import frc.robot.vision.cameras.limelight.LimelightFilters;
+import frc.robot.vision.cameras.limelight.LimelightPipeline;
 import frc.robot.vision.cameras.limelight.LimelightStdDevCalculations;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
@@ -38,6 +44,10 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);
 
 	private final Swerve swerve;
+	public final Limelight limelight;
+	public final Arm arm;
+	public final Arm motionMagicArm;
+	public final Arm dynamicMotionMagicArm;
 	private final IPoseEstimator poseEstimator;
 	private final List<Limelight> limelights;
 
@@ -51,6 +61,21 @@ public class Robot {
 			imu,
 			IMUFactory.createSignals(imu)
 		);
+
+		this.limelight = new Limelight(
+			"limelight-front",
+			"Vision",
+			new Pose3d(
+				new Translation3d(0.297, -0.143, 0.361),
+				new Rotation3d(Math.toRadians(-0.18), Math.toRadians(27.38), Math.toRadians(-0.35))
+			),
+			LimelightPipeline.APRIL_TAG
+		);
+
+		this.arm = HoodConstants.createArm();
+		this.dynamicMotionMagicArm = HoodConstants.createDynamicMotionMagicArm();
+		this.motionMagicArm = HoodConstants.createMotionMagicArm();
+
 		BrakeStateManager.add(() -> swerve.getModules().setBrake(true), () -> swerve.getModules().setBrake(false));
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
@@ -62,7 +87,7 @@ public class Robot {
 			swerve.getIMUAbsoluteYaw().getTimestamp()
 		);
 
-		this.limelights = List.of();
+		this.limelights = List.of(limelight);
 		limelights.forEach(
 			limelight -> limelight.setMT1StdDevsCalculation(
 				LimelightStdDevCalculations.getMT1StdDevsCalculation(
@@ -93,6 +118,9 @@ public class Robot {
 
 	public void updateSubsystems() {
 		swerve.update();
+		arm.update();
+		motionMagicArm.update();
+		arm.update();
 	}
 
 	public void periodic() {

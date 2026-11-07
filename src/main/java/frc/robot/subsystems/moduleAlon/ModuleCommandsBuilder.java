@@ -7,10 +7,10 @@ import frc.constants.AlonModuleConstants;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
 import frc.utils.battery.BatteryUtil;
-import frc.utils.math.AngleMath;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class ModuleCommandsBuilder {
@@ -23,6 +23,8 @@ public class ModuleCommandsBuilder {
 		this.logPath = logPath;
 		this.moduleAlon = moduleAlon;
 		moduleAlon.setDefaultCommand(new InstantCommand(() -> moduleAlon.stop(), moduleAlon));
+		linearSetPower = (power)->{moduleAlon.linearPower(power);};
+		steerToPosition = (position)->{moduleAlon.steerToPosition(position);};
 	}
 
 	public Command stopCommand() {
@@ -35,19 +37,16 @@ public class ModuleCommandsBuilder {
 		this.defaultJoystick = defaultJoystick;
 	}
 
-	public Command driveWithStick(Supplier<Double> xAxis, Supplier<Double> yAxis) {
+	private final Consumer<Double> linearSetPower;
+	private final Consumer<Rotation2d> steerToPosition;
+
+
+	public Command driveWithStick(Supplier<Double> xAxis, Supplier<Double> yAxis,boolean withLinearFlipping) {
 		return new RunCommand(() -> {
-			double x = xAxis.get();
-			double y = yAxis.get();
-			Logger.recordOutput(logPath + "/axis/x", x);
-			Logger.recordOutput(logPath + "/axis/y", y);
-			Logger.recordOutput(logPath + "/axis/angle", Rotation2d.fromRadians(Math.atan2(y, x)));
-			if (x * x + y * y >= AlonModuleConstants.moduleAlonStickTolerance * AlonModuleConstants.moduleAlonStickTolerance) {
-				moduleAlon.steerToPosition(ModuleAlonMath.getSteerTargetAngle(Rotation2d.fromRadians(Math.atan2(y, x)),moduleAlon.getSteerPosition()));
-				moduleAlon.linearPower(Math.sqrt(x * x + y * y)*(ModuleAlonMath.shouldFlipLinear(Rotation2d.fromRadians(Math.atan2(y, x)),moduleAlon.getSteerPosition())?-1:1));
-			} else {
-				moduleAlon.stop();
-			}
+			ModuleAlonMath.driveSwerve(steerToPosition,linearSetPower,xAxis,yAxis,withLinearFlipping,moduleAlon::getSteerPosition);
+			Logger.recordOutput("axis/x",xAxis.get());
+			Logger.recordOutput("axis/y",yAxis.get());
+			Logger.recordOutput("axis/angle",Rotation2d.fromRadians(Math.atan2(yAxis.get(), xAxis.get())));
 		}, moduleAlon).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming);
 	}
 
@@ -60,11 +59,11 @@ public class ModuleCommandsBuilder {
 	}
 
 	public Command driveWithLeftStick(SmartJoystick joystick) {
-		return driveWithStick(() -> joystick.getAxisValue(Axis.LEFT_X), () -> joystick.getAxisValue(Axis.LEFT_Y));
+		return driveWithStick(() -> joystick.getAxisValue(Axis.LEFT_X), () -> joystick.getAxisValue(Axis.LEFT_Y), true);
 	}
 
 	public Command driveWithRightStick(SmartJoystick joystick) {
-		return driveWithStick(() -> joystick.getAxisValue(Axis.RIGHT_X), () -> joystick.getAxisValue(Axis.RIGHT_Y));
+		return driveWithStick(() -> joystick.getAxisValue(Axis.RIGHT_X), () -> joystick.getAxisValue(Axis.RIGHT_Y), true);
 	}
 
 	public InstantCommand setNeutralMode(boolean brake) {

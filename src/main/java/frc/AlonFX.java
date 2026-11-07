@@ -5,7 +5,9 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.hardware.core.CoreCANcoder;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -98,6 +100,13 @@ public class AlonFX implements IMotor {
 		simulation.updateMotor();
 		motor.getSimState().setRawRotorPosition(simulation.getRotorPosition().getRotations());
 		motor.getSimState().setRotorVelocity(simulation.getMechanismVelocityRPS().getRotations());
+	}
+
+	public void withFusedCancoder(CoreCANcoder cancoder){
+		FeedbackConfigs configs = new FeedbackConfigs();
+		motor.getConfigurator().refresh(configs);
+		configs.withFusedCANcoder(cancoder);
+		motor.getConfigurator().apply(configs);
 	}
 
 	@Override

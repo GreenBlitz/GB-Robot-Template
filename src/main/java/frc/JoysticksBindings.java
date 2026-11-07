@@ -1,9 +1,12 @@
 package frc;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
+import frc.robot.subsystems.moduleAlon.ModuleCommandsBuilder;
 import frc.robot.subsystems.swerve.ChassisPowers;
 
 public class JoysticksBindings {
@@ -47,6 +50,20 @@ public class JoysticksBindings {
 	private static void mainJoystickButtons(Robot robot) {
 		SmartJoystick usedJoystick = MAIN_JOYSTICK;
 		// bindings...
+		robot.getModuleAlon().getCommandsBuilder().setDefaultJoystick(usedJoystick);
+		Trigger comboButtons = usedJoystick.A.and(usedJoystick.B);
+		comboButtons.onTrue(robot.getModuleAlon().getCommandsBuilder().comboCommand());
+		usedJoystick.X.whileTrue(
+			robot.getModuleAlon().getCommandsBuilder().driveDistanceCommand(Rotation2d.fromRotations(0), Rotation2d.fromDegrees(360))
+		);
+		usedJoystick.A.whileTrue(robot.getModuleAlon().getCommandsBuilder().manualDriveCommand(() -> usedJoystick.getAxisValue(Axis.LEFT_Y)));
+		usedJoystick.Y.whileTrue(
+			robot.getModuleAlon().getCommandsBuilder().driveDistanceCommand(Rotation2d.fromRotations(2.5), Rotation2d.fromDegrees(0))
+		);
+		usedJoystick.B.whileTrue(robot.getModuleAlon().getCommandsBuilder().stopCommand());
+		usedJoystick.POV_DOWN.onTrue(robot.getModuleAlon().getCommandsBuilder().driveWithLeftStick());
+		usedJoystick.POV_LEFT.onTrue(robot.getModuleAlon().getCommandsBuilder().fullyCircleDrive());
+		usedJoystick.POV_UP.onTrue(ModuleCommandsBuilder.loggity());
 	}
 
 	private static void secondJoystickButtons(Robot robot) {

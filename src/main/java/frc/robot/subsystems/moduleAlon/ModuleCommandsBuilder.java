@@ -25,10 +25,10 @@ public class ModuleCommandsBuilder {
 		moduleAlon.setDefaultCommand(new InstantCommand(() -> moduleAlon.stop(), moduleAlon));
 	}
 
-	public RunCommand stopCommand() {
+	public Command stopCommand() {
 		return new RunCommand(() -> {
 			moduleAlon.stop();
-		}, moduleAlon);
+		}, moduleAlon).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming);
 	}
 
 	public void setDefaultJoystick(SmartJoystick defaultJoystick) {
@@ -42,13 +42,9 @@ public class ModuleCommandsBuilder {
 			Logger.recordOutput(logPath + "/axis/x", x);
 			Logger.recordOutput(logPath + "/axis/y", y);
 			Logger.recordOutput(logPath + "/axis/angle", Rotation2d.fromRadians(Math.atan2(y, x)));
-			Logger.recordOutput(
-				logPath + "/axis/angleInRange",
-				AngleMath.findAngleInRange(Rotation2d.fromRadians(Math.atan2(y, x)), moduleAlon.getSteerPosition())
-			);
 			if (x * x + y * y >= AlonModuleConstants.moduleAlonStickTolerance * AlonModuleConstants.moduleAlonStickTolerance) {
-				moduleAlon.steerToPosition(AngleMath.findAngleInRange(Rotation2d.fromRadians(Math.atan2(y, x)), moduleAlon.getSteerPosition()));
-				moduleAlon.linearPower(Math.sqrt(x * x + y * y));
+				moduleAlon.steerToPosition(ModuleAlonMath.getSteerTargetAngle(Rotation2d.fromRadians(Math.atan2(y, x)),moduleAlon.getSteerPosition()));
+				moduleAlon.linearPower(Math.sqrt(x * x + y * y)*(ModuleAlonMath.shouldFlipLinear(Rotation2d.fromRadians(Math.atan2(y, x)),moduleAlon.getSteerPosition())?-1:1));
 			} else {
 				moduleAlon.stop();
 			}
@@ -177,7 +173,7 @@ public class ModuleCommandsBuilder {
 	public static final double loggitySmileUpperMult = 0.75;
 	public static final int loggityEyeWidth = 10;
 	public static final double loggityEyeMult = 1.25;
-	public static final int loggityEyeDist = 15;
+	public static final int loggityEyeDist = 17;
 	public static final int loggityEyeRaise = 10;
 
 	public static Command loggity(){

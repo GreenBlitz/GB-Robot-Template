@@ -1,7 +1,9 @@
 package frc.robot.subsystems.moduleAlon;
 
 import com.ctre.phoenix6.CANBus;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.AlonFX;
@@ -95,6 +97,8 @@ public class ModuleAlon extends GBSubsystem {
 		Logger.recordOutput(logpath + "/linearTarget", linear.getPIDTarget());
 		steer.logAll();
 		linear.logAll();
+		Translation2d direction = new Translation2d(linear.getVelocity().getRadians(),0).rotateBy(steer.getPosition());
+		Logger.recordOutput(logpath+"/direction", direction.getAngle());
 	}
 
 	public void stop() {

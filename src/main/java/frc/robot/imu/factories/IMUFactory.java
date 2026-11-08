@@ -10,8 +10,8 @@ import frc.robot.imu.IMUSignals;
 public class IMUFactory {
 
 	public static IMUWrapper createIMU(String logPath) {
-		IIMU iimu = createIIMU(logPath);
-		return new IMUWrapper(iimu, createSignals(iimu));
+		IIMU iIMU = createIIMU(logPath);
+		return new IMUWrapper(iIMU, createSignals(iIMU));
 	}
 
 	private static IIMU createIIMU(String logPath) {

@@ -8,14 +8,12 @@ import java.util.function.Supplier;
 public enum HeadingSource {
 
 	IMU,
-	LIMELIGHT_IMU,
 	VISION,
 	SWERVE;
 
 	public static Supplier<Rotation2d> handleHeadingSource(HeadingSource headingSource, Robot robot) {
 		return switch (headingSource) {
-			case IMU -> () -> robot.getImuWrapper().getWrappedYaw().getValue();
-			case LIMELIGHT_IMU -> () -> new Rotation2d();
+			case IMU -> () -> robot.getIMU().getWrappedYaw().getValue();
 			case SWERVE -> () -> robot.getPoseEstimator().getSwerveYaw();
 			case VISION -> () -> robot.getPoseEstimator().getLastVisionObservation().robotPose().getRotation();
 		};

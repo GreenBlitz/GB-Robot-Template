@@ -32,7 +32,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	private RobotPoseObservation lastVisionObservation;
 	private OdometryData lastOdometryData;
 	private boolean isIMUOffsetCalibrated;
-	private Rotation2d swerveOnlyYaw;
+	private Rotation2d swerveYaw;
 
 	public WPILibPoseEstimatorWrapper(
 		String logPath,
@@ -65,7 +65,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 			Optional.of(initialIMUXYAccelerationG)
 		);
 		this.isIMUOffsetCalibrated = false;
-		this.swerveOnlyYaw = WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE.getRotation();
+		this.swerveYaw = WPILibPoseEstimatorConstants.STARTING_ODOMETRY_POSE.getRotation();
 		this.poseToIMUYawDifferenceBuffer = new RingBuffer<>(WPILibPoseEstimatorConstants.POSE_TO_IMU_YAW_DIFFERENCE_BUFFER_SIZE);
 		this.imuYawBuffer = TimeInterpolatableBuffer.createBuffer(WPILibPoseEstimatorConstants.IMU_YAW_BUFFER_SIZE_SECONDS);
 		this.imu3DAccelerationGBuffer = TimeInterpolatableBuffer
@@ -90,7 +90,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 
 	@Override
 	public Rotation2d getSwerveYaw() {
-		return swerveOnlyYaw;
+		return swerveYaw;
 	}
 
 	@Override
@@ -108,7 +108,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	@Override
 	public void updateOdometry(OdometryData data) {
 		Twist2d changeInPose = kinematics.toTwist2d(lastOdometryData.getWheelPositions(), data.getWheelPositions());
-		swerveOnlyYaw = swerveOnlyYaw.plus(Rotation2d.fromRadians(changeInPose.dtheta));
+		swerveYaw = swerveYaw.plus(Rotation2d.fromRadians(changeInPose.dtheta));
 		if (data.getIMUOrientation().isEmpty()) {
 			data.setIMUOrientation(
 				new Rotation3d(
@@ -144,7 +144,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	public void resetPose(OdometryData odometryData, Pose2d poseMeters) {
 		Logger.recordOutput(logPath + "/lastPoseResetTo", poseMeters);
 
-		swerveOnlyYaw = poseMeters.getRotation();
+		swerveYaw = poseMeters.getRotation();
 		poseEstimator.resetPosition(
 			Rotation2d.fromRadians(odometryData.getIMUOrientation().orElse(Rotation3d.kZero).getZ()),
 			odometryData.getWheelPositions(),

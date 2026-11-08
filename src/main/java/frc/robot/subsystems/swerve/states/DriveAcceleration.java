@@ -8,16 +8,16 @@ public enum DriveAcceleration {
 	NORMAL(RealSwerveConstants.ACCELERATION_AT_12_VOLTS_METERS_PER_SECOND_SQUARED),
 	SKID_PREVENTION(RealSwerveConstants.MAX_SKID_ACCELERATION);
 
-	private final double acceleration;
+	private final double maxAcceleration;
 	private final SlewRateLimiter slewRateLimiter;
 
 	DriveAcceleration(double acceleration) {
-		this.acceleration = acceleration;
+		this.maxAcceleration = acceleration;
 		slewRateLimiter = new SlewRateLimiter(acceleration);
 	}
 
-	public double getAcceleration() {
-		return acceleration;
+	public double getMaxAcceleration() {
+		return maxAcceleration;
 	}
 
 	public SlewRateLimiter getSlewRateLimiter() {

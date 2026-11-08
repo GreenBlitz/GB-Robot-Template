@@ -11,9 +11,9 @@ public enum DriveAcceleration {
 	private final double maxAcceleration;
 	private final SlewRateLimiter slewRateLimiter;
 
-	DriveAcceleration(double acceleration) {
-		this.maxAcceleration = acceleration;
-		slewRateLimiter = new SlewRateLimiter(acceleration);
+	DriveAcceleration(double maxAcceleration) {
+		this.maxAcceleration = maxAcceleration;
+		slewRateLimiter = new SlewRateLimiter(maxAcceleration);
 	}
 
 	public double getMaxAcceleration() {

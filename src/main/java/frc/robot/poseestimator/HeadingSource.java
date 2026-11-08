@@ -16,7 +16,7 @@ public enum HeadingSource {
 		return switch (headingSource) {
 			case IMU -> () -> robot.getImuWrapper().getWrappedYaw().getValue();
 			case LIMELIGHT_IMU -> () -> new Rotation2d();
-			case SWERVE -> () -> robot.getPoseEstimator().getOdometryPose().getRotation();
+			case SWERVE -> () -> robot.getPoseEstimator().getSwerveYaw();
 			case VISION -> () -> robot.getPoseEstimator().getLastVisionObservation().robotPose().getRotation();
 		};
 	}

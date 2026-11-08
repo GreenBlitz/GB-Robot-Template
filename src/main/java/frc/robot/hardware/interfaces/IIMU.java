@@ -6,4 +6,6 @@ public interface IIMU extends IDevice {
 
 	void setYaw(Rotation2d yaw);
 
+	String getLogPath();
+
 }

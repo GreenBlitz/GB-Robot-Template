@@ -4,8 +4,6 @@ import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.IDs;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
@@ -13,6 +11,8 @@ import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmSimulationConstants;
 import frc.robot.subsystems.arm.DynamicMotionMagicArm;
 import frc.robot.subsystems.arm.TalonFXArmBuilder;
+import org.wpilib.command2.sysid.SysIdRoutine;
+import org.wpilib.math.geometry.Rotation2d;
 
 public class HoodConstants {
 
@@ -68,6 +68,7 @@ public class HoodConstants {
 			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Arm",
 			IDs.TalonFXIDs.HOOD,
 			IS_INVERTED,
+                true,
 			new TalonFXFollowerConfig(),
 			SYSID_ROUTINE_CONFIG,
 			FEEDBACK_CONFIGS,
@@ -94,6 +95,7 @@ public class HoodConstants {
 			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/MotionMagicArm",
 			IDs.TalonFXIDs.NOT_HOOD1,
 			IS_INVERTED,
+                true,
 			new TalonFXFollowerConfig(),
 			SYSID_ROUTINE_CONFIG,
 			FEEDBACK_CONFIGS,
@@ -122,6 +124,7 @@ public class HoodConstants {
 			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/DynamicMotionMagicArm",
 			IDs.TalonFXIDs.NOT_HOOD2,
 			IS_INVERTED,
+            true,
 			new TalonFXFollowerConfig(),
 			SYSID_ROUTINE_CONFIG,
 			FEEDBACK_CONFIGS,

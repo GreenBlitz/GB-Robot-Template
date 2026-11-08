@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.AlonFX;
+import frc.CANCoderAlon;
 import frc.robot.subsystems.GBSubsystem;
 import org.littletonrobotics.junction.Logger;
 
@@ -13,12 +14,14 @@ public class ModuleAlon extends GBSubsystem {
 
 	private final AlonFX linear;
 	private final AlonFX steer;
+	private final CANCoderAlon canCoder;
 	private final String logpath;
 	private final ModuleCommandsBuilder commandsBuilder;
 
 	public ModuleAlon(
 		int steerID,
 		int linearID,
+		int canCoderID,
 		double steerGearRatio,
 		double linearGearRatio,
 		double steerKp,
@@ -31,6 +34,9 @@ public class ModuleAlon extends GBSubsystem {
 		super(logPath);
 		this.steer = new AlonFX(steerID, canBus, logPath + "/steer", steerGearRatio, steerKp, steerMomentOfInertiaKgM2);
 		this.linear = new AlonFX(linearID, canBus, logPath + "/drive", linearGearRatio, linearKp, linearMomentOfInertiaKgM2);
+		this.canCoder = new CANCoderAlon(canCoderID,logPath+"/cancoder");
+		CANCoderAlon.fuseCancoder(canCoder,steer);
+		resetSteerWithCancoder();
 		this.logpath = logPath;
 
 		commandsBuilder = new ModuleCommandsBuilder(this, logPath + "/commandsBuilder");
@@ -89,6 +95,10 @@ public class ModuleAlon extends GBSubsystem {
 		linear.setPosition(position);
 	}
 
+	public void resetSteerWithCancoder(){
+		steer.setPosition(canCoder.getPosition());
+	}
+
 	public void logAll() {
 		Logger.recordOutput(logpath + "/linearMotorVelocity", getLinearVelocity());
 		Logger.recordOutput(logpath + "/steerAngle", getSteerPosition());
@@ -96,6 +106,7 @@ public class ModuleAlon extends GBSubsystem {
 		Logger.recordOutput(logpath + "/linearTarget", linear.getPIDTarget());
 		steer.logAll();
 		linear.logAll();
+		canCoder.logAll();
 		Translation2d direction = new Translation2d(linear.getVelocity().getRadians(), 0).rotateBy(steer.getPosition());
 		Logger.recordOutput(logpath + "/direction", direction.getAngle());
 	}

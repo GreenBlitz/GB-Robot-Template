@@ -10,12 +10,12 @@ import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.interfaces.InputSignal;
 import org.littletonrobotics.junction.Logger;
 
-public class CANCoderEncoder implements IAngleEncoder {
+public class CANCoderAlon implements IAngleEncoder {
     private final CANcoder canCoder;
     private final String logpath;
     private final StatusSignal<Angle> position;
     private final StatusSignal<Voltage> supplyVoltage;
-    public CANCoderEncoder(int id, String logpath){
+    public CANCoderAlon(int id, String logpath){
         canCoder = new CANcoder(id);
         this.logpath = logpath;
         this.position = canCoder.getPosition();
@@ -44,5 +44,9 @@ public class CANCoderEncoder implements IAngleEncoder {
     @Override
     public void updateInputs(InputSignal<?>... inputSignals) {
 
+    }
+
+    public static void fuseCancoder(CANCoderAlon canCoder, AlonFX motor){
+        motor.withFusedCancoder(canCoder.canCoder);
     }
 }

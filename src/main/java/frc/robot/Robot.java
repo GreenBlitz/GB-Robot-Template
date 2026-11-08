@@ -68,7 +68,7 @@ public class Robot {
 		this.moduleAlon = new ModuleAlon(
 			AlonModuleConstants.alonSteerId,
 			AlonModuleConstants.alonLinearId,
-			AlonModuleConstants.steerGearRatio,
+				67, AlonModuleConstants.steerGearRatio,
 			AlonModuleConstants.linearGearRatio,
 			AlonModuleConstants.steerKp,
 			AlonModuleConstants.linearKp,

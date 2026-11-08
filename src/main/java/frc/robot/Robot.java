@@ -39,18 +39,18 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);
 
 	private final Swerve swerve;
-	private final IMUWrapper imuWrapper;
+	private final IMUWrapper imu;
 	private final IPoseEstimator poseEstimator;
 	private final List<Limelight> limelights;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 
-		this.imuWrapper = IMUFactory.createIMU("IMU/");
+		this.imu = IMUFactory.createIMU("IMU/");
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
 			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
-			imuWrapper,
+			imu,
 			HeadingSource.handleHeadingSource(HeadingSource.IMU, this)
 		);
 		BrakeStateManager.add(() -> swerve.getModules().setBrake(true), () -> swerve.getModules().setBrake(false));
@@ -59,9 +59,9 @@ public class Robot {
 			swerve.getKinematics(),
 			swerve.getModules().getWheelPositions(0),
 			swerve.getModules().getCurrentStates(),
-			imuWrapper.getLatestOrientation(),
-			imuWrapper.getLatestAccelerationG(),
-			imuWrapper.getWrappedYaw().getTimestamp()
+			imu.getLatestOrientation(),
+			imu.getLatestAccelerationG(),
+			imu.getWrappedYaw().getTimestamp()
 		);
 
 		this.limelights = List.of();
@@ -104,7 +104,7 @@ public class Robot {
 	public void periodic() {
 		BusChain.refreshAll();
 
-		imuWrapper.updateIMU();
+		imu.updateIMU();
 		updateSubsystems();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 
@@ -127,8 +127,8 @@ public class Robot {
 		return swerve;
 	}
 
-	public IMUWrapper getImuWrapper() {
-		return imuWrapper;
+	public IMUWrapper getIMU() {
+		return imu;
 	}
 
 	public List<Limelight> getLimelights() {

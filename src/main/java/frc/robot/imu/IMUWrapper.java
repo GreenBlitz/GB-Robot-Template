@@ -54,10 +54,10 @@ public class IMUWrapper {
 	}
 
 	public Translation3d getLatestAccelerationG() {
-		return imuSignals.getLatestAccelerationGMetersPerSecondSquare();
+		return imuSignals.getLatestAccelerationG();
 	}
 
-	public Translation3d getAccelerationMetersPerSecondSquared() {
+	public Translation3d getLatestAccelerationMetersPerSecondSquared() {
 		return getLatestAccelerationG().times(RobotConstants.G);
 	}
 
@@ -79,7 +79,7 @@ public class IMUWrapper {
 			imuSignals.yAccelerationGSignal(),
 			imuSignals.zAccelerationGSignal()
 		);
-		Logger.recordOutput(imu.getLogPath() + "Acceleration", getAccelerationMetersPerSecondSquared());
+		Logger.recordOutput(imu.getLogPath() + "Acceleration", getLatestAccelerationMetersPerSecondSquared());
 	}
 
 }

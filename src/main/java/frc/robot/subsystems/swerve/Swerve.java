@@ -39,7 +39,7 @@ public class Swerve extends GBSubsystem {
 	private final SwerveConstants constants;
 	private final double driveRadiusMeters;
 	private final Modules modules;
-	private final IMUWrapper imuWrapper;
+	private final IMUWrapper imu;
 
 	private final SwerveDriveKinematics kinematics;
 	private final HeadingStabilizer headingStabilizer;
@@ -51,7 +51,7 @@ public class Swerve extends GBSubsystem {
 	private Supplier<Rotation2d> headingSupplier;
 	private ChassisPowers driversPowerInputs;
 
-	public Swerve(SwerveConstants constants, Modules modules, IMUWrapper imuWrapper, Supplier<Rotation2d> headingSupplier) {
+	public Swerve(SwerveConstants constants, Modules modules, IMUWrapper imu, Supplier<Rotation2d> headingSupplier) {
 		super(constants.logPath());
 		this.currentState = new SwerveState(SwerveState.DEFAULT_DRIVE);
 		this.driversPowerInputs = new ChassisPowers();
@@ -59,7 +59,7 @@ public class Swerve extends GBSubsystem {
 		this.constants = constants;
 		this.driveRadiusMeters = SwerveMath.calculateDriveRadiusMeters(modules.getModulePositionsFromCenterMeters());
 		this.modules = modules;
-		this.imuWrapper = imuWrapper;
+		this.imu = imu;
 
 		this.kinematics = new SwerveDriveKinematics(modules.getModulePositionsFromCenterMeters());
 		this.headingSupplier = headingSupplier;
@@ -118,8 +118,8 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public void setHeading(Rotation2d heading) {
-		imuWrapper.setYaw(heading);
-		imuWrapper.updateIMU();
+		imu.setYaw(heading);
+		imu.updateIMU();
 		headingStabilizer.unlockTarget();
 		headingStabilizer.setTargetHeading(heading);
 	}
@@ -147,7 +147,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public int getNumberOfOdometrySamples() {
-		return Math.min(imuWrapper.getYawSignal().asArray().length, modules.getNumberOfOdometrySamples());
+		return Math.min(imu.getYawSignal().asArray().length, modules.getNumberOfOdometrySamples());
 	}
 
 	public OdometryData[] getAllOdometryData() {
@@ -155,11 +155,11 @@ public class Swerve extends GBSubsystem {
 
 		for (int i = 0; i < odometryData.length; i++) {
 			odometryData[i] = new OdometryData(
-				imuWrapper.getYawSignal().getTimestamps()[i],
+				imu.getYawSignal().getTimestamps()[i],
 				modules.getWheelPositions(i),
 				modules.getCurrentStates(),
-				imuWrapper.isEmpty() ? Optional.empty() : Optional.of(imuWrapper.getAllOrientations()[i]),
-				imuWrapper.isEmpty() ? Optional.empty() : Optional.of(imuWrapper.getAllAccelerationsG()[i])
+				imu.isEmpty() ? Optional.empty() : Optional.of(imu.getAllOrientations()[i]),
+				imu.isEmpty() ? Optional.empty() : Optional.of(imu.getAllAccelerationsG()[i])
 			);
 		}
 
@@ -291,7 +291,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public boolean isCollisionDetected() {
-		return imuWrapper.getLatestAccelerationG().toTranslation2d().getNorm() > SwerveConstants.MIN_COLLISION_G_FORCE;
+		return imu.getLatestAccelerationG().toTranslation2d().getNorm() > SwerveConstants.MIN_COLLISION_G_FORCE;
 	}
 
 	public void applyCalibrationBindings(SmartJoystick joystick, Supplier<Pose2d> robotPoseSupplier) {

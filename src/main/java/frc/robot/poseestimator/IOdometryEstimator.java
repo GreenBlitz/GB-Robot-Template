@@ -13,11 +13,6 @@ public interface IOdometryEstimator {
 
 	Pose2d getOdometryPose();
 
-	/**
-	 * Returns the robot's yaw computed purely from swerve wheel kinematics,
-	 * with no IMU input. Accumulates dtheta from toTwist2d() on every odometry
-	 * update and is reset to the new pose's rotation on resetPose().
-	 */
 	Rotation2d getSwerveYaw();
 
 	void setHeading(Rotation2d newHeading);

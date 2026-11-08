@@ -55,7 +55,7 @@ public record IMUSignals(
 		return allAccelerations;
 	}
 
-	public Translation3d getLatestAccelerationGMetersPerSecondSquare() {
+	public Translation3d getLatestAccelerationG() {
 		return new Translation3d(
 			xAccelerationGSignal().getLatestValue(),
 			yAccelerationGSignal().getLatestValue(),

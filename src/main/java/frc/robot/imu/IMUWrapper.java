@@ -54,7 +54,7 @@ public class IMUWrapper {
 	}
 
 	public Translation3d getLatestAccelerationG() {
-		return imuSignals.getLatestAccelerationGMetersPerSecondSquare();
+		return imuSignals.getLatestAccelerationG();
 	}
 
 	public Translation3d getAccelerationMetersPerSecondSquared() {

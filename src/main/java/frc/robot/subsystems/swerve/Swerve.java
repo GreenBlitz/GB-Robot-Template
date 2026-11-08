@@ -62,7 +62,7 @@ public class Swerve extends GBSubsystem {
 		this.imuWrapper = imuWrapper;
 
 		this.kinematics = new SwerveDriveKinematics(modules.getModulePositionsFromCenterMeters());
-		this.headingSupplier = () -> imuWrapper.getAbsoluteYaw().getValue();
+		this.headingSupplier = () -> imuWrapper.getWrappedYaw().getValue();
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
 		this.stateHandler = new SwerveStateHandler(this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);

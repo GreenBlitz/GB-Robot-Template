@@ -59,7 +59,7 @@ public class Robot {
 			swerve.getModules().getCurrentStates(),
 			imuWrapper.getLatestOrientation(),
 			imuWrapper.getLatestAccelerationG(),
-			imuWrapper.getAbsoluteYaw().getTimestamp()
+			imuWrapper.getWrappedYaw().getTimestamp()
 		);
 
 		this.limelights = List.of();

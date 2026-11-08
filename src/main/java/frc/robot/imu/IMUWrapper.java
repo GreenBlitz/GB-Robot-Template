@@ -61,8 +61,8 @@ public class IMUWrapper {
 		return getLatestAccelerationG().times(RobotConstants.G);
 	}
 
-	public TimedValue<Rotation2d> getAbsoluteYaw() {
-		TimedValue<Rotation2d> latestYaw = imuSignals.yawSignal().getLatestTimedValue();
+	public TimedValue<Rotation2d> getWrappedYaw() {
+		TimedValue<Rotation2d> latestYaw = getYawSignal().getLatestTimedValue();
 		Rotation2d latestAbsoluteYaw = Rotation2d.fromRadians(MathUtil.angleModulus(latestYaw.getValue().getRadians()));
 		return new TimedValue<>(latestAbsoluteYaw, latestYaw.getTimestamp());
 	}
@@ -79,7 +79,7 @@ public class IMUWrapper {
 			imuSignals.yAccelerationGSignal(),
 			imuSignals.zAccelerationGSignal()
 		);
-		Logger.recordOutput("IMU/Acceleration", getAccelerationMetersPerSecondSquared());
+		Logger.recordOutput(imu.getLogPath() + "Acceleration", getAccelerationMetersPerSecondSquared());
 	}
 
 }

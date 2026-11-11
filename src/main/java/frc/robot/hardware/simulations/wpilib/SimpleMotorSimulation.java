@@ -2,7 +2,7 @@ package frc.robot.hardware.simulations.wpilib;
 
 import org.wpilib.simulation.DCMotorSim;
 import frc.utils.time.TimeUtil;
-import frc.utils.costomUnits.Angle2d;
+import frc.utils.angle2d.Angle2d;
 
 public class SimpleMotorSimulation implements WPILibMechanismSimulation {
 

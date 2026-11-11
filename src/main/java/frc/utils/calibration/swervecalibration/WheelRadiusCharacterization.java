@@ -12,7 +12,7 @@ import org.wpilib.command2.Command;
 import org.littletonrobotics.junction.Logger;
 import frc.constants.MathConstants;
 import frc.robot.subsystems.GBSubsystem;
-import frc.utils.costomUnits.Angle2d;
+import frc.utils.angle2d.Angle2d;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;

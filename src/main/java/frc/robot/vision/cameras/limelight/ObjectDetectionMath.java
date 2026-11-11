@@ -5,7 +5,7 @@ import org.wpilib.math.geometry.Translation2d;
 import frc.robot.vision.DetectedObjectObservation;
 import frc.robot.vision.DetectedObjectType;
 import frc.utils.math.FieldMath;
-import frc.utils.costomUnits.Angle2d;
+import frc.utils.angle2d.Angle2d;
 
 public class ObjectDetectionMath {
 

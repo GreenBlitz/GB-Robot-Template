@@ -1,6 +1,6 @@
 package frc.robot.hardware.signal.supplied;
 
-import frc.utils.costomUnits.Angle2d;
+import frc.utils.angle2d.Angle2d;
 import frc.robot.hardware.signal.AngleSignal;
 import frc.utils.TimedValue;
 import frc.utils.AngleUnit;

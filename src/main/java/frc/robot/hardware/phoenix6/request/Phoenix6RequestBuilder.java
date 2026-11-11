@@ -2,7 +2,7 @@ package frc.robot.hardware.phoenix6.request;
 
 import com.ctre.phoenix6.controls.*;
 import org.wpilib.math.controller.BangBangController;
-import frc.utils.costomUnits.Angle2d;
+import frc.utils.angle2d.Angle2d;
 
 import java.util.function.Supplier;
 

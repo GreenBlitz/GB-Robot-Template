@@ -4,7 +4,7 @@ import com.revrobotics.REVLibError;
 import com.revrobotics.spark.SparkMax;
 import frc.robot.hardware.rev.REVUtil;
 import frc.utils.Conversions;
-import frc.utils.costomUnits.Angle2d;
+import frc.utils.angle2d.Angle2d;
 
 public class SparkMaxWrapper extends SparkMax {
 

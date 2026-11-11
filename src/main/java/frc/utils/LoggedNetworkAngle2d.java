@@ -1,6 +1,6 @@
 package frc.utils;
 
-import frc.utils.costomUnits.Angle2d;
+import frc.utils.angle2d.Angle2d;
 import org.wpilib.networktables.DoubleEntry;
 import org.wpilib.networktables.NetworkTableInstance;
 import org.littletonrobotics.junction.LogTable;

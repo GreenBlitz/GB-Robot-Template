@@ -1,6 +1,6 @@
 package frc.robot.subsystems.arm;
 
-import frc.utils.costomUnits.Angle2d;
+import frc.utils.angle2d.Angle2d;
 
 public record ArmSimulationConstants(
 	Angle2d maxPosition,

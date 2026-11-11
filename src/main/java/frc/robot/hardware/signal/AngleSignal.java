@@ -5,7 +5,7 @@ import frc.utils.AngleUnit;
 import frc.utils.TimedValue;
 import frc.utils.math.ToleranceMath;
 import frc.utils.time.TimeUtil;
-import frc.utils.costomUnits.Angle2d;
+import frc.utils.angle2d.Angle2d;
 import org.littletonrobotics.junction.LogTable;
 
 public abstract class AngleSignal implements InputSignal<Angle2d> {

@@ -4,7 +4,7 @@ import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.utils.Conversions;
-import frc.utils.costomUnits.Angle2d;
+import frc.utils.angle2d.Angle2d;
 
 import java.util.function.Function;
 

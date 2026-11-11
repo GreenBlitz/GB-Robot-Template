@@ -1,6 +1,6 @@
 package frc.utils;
 
-import frc.utils.costomUnits.Angle2d;
+import frc.utils.angle2d.Angle2d;
 import org.wpilib.math.geometry.Rotation3d;
 import java.util.function.DoubleFunction;
 

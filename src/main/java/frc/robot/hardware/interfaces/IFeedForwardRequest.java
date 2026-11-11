@@ -1,6 +1,6 @@
 package frc.robot.hardware.interfaces;
 
-import frc.utils.costomUnits.Angle2d;
+import frc.utils.angle2d.Angle2d;
 
 public interface IFeedForwardRequest extends IRequest<Angle2d> {
 

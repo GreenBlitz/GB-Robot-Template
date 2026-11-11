@@ -1,4 +1,4 @@
-package frc.utils.costomUnits;
+package frc.utils.angle2d;
 
 import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.interpolation.Interpolatable;

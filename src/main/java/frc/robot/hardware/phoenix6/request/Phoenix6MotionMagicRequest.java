@@ -1,7 +1,7 @@
 package frc.robot.hardware.phoenix6.request;
 
 import com.ctre.phoenix6.controls.ControlRequest;
-import frc.utils.costomUnits.Angle2d;
+import frc.utils.angle2d.Angle2d;
 import frc.robot.hardware.interfaces.IMotionMagicRequest;
 
 import java.util.function.Consumer;

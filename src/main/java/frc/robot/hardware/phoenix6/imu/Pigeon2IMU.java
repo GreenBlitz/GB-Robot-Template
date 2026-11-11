@@ -1,6 +1,6 @@
 package frc.robot.hardware.phoenix6.imu;
 
-import frc.utils.costomUnits.Angle2d;
+import frc.utils.angle2d.Angle2d;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.phoenix6.Phoenix6Device;
 

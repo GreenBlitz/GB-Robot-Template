@@ -3,7 +3,7 @@ package frc.robot.subsystems.arm;
 import org.wpilib.command2.Command;
 import org.wpilib.command2.RunCommand;
 import frc.utils.utilcommands.InitExecuteCommand;
-import frc.utils.costomUnits.Angle2d;
+import frc.utils.angle2d.Angle2d;
 
 import java.util.function.Supplier;
 

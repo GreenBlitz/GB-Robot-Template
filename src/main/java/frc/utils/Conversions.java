@@ -2,7 +2,7 @@ package frc.utils;
 
 import org.wpilib.math.trajectory.TrapezoidProfile;
 import frc.constants.MathConstants;
-import frc.utils.costomUnits.Angle2d;
+import frc.utils.angle2d.Angle2d;
 
 public class Conversions {
 

@@ -3,7 +3,6 @@ package frc.robot.subsystems.swerve;
 import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -22,6 +21,7 @@ import frc.robot.poseestimator.OdometryData;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.states.DriveRelative;
+import frc.robot.subsystems.swerve.states.DriveAcceleration;
 import frc.robot.subsystems.swerve.states.LoopMode;
 import frc.robot.subsystems.swerve.states.SwerveStateHandler;
 import frc.robot.subsystems.swerve.states.heading.HeadingControl;
@@ -322,16 +322,12 @@ public class Swerve extends GBSubsystem {
 	private void applySpeeds(ChassisSpeeds speeds, SwerveState swerveState) {
 		SwerveModuleState[] swerveModuleStates = kinematics
 			.toSwerveModuleStates(speeds, stateHandler.getRotationAxis(swerveState.getRotateAxis()));
-		setTargetModuleStates(
-			swerveModuleStates,
-			swerveState.getLoopMode().isClosedLoop(),
-			swerveState.getDriveAcceleration().getSlewRateLimiter()
-		);
+		setTargetModuleStates(swerveModuleStates, swerveState.getLoopMode().isClosedLoop(), swerveState.getDriveAcceleration());
 	}
 
-	private void setTargetModuleStates(SwerveModuleState[] moduleStates, boolean isClosedLoop, SlewRateLimiter slewRateLimiter) {
+	private void setTargetModuleStates(SwerveModuleState[] moduleStates, boolean isClosedLoop, DriveAcceleration driveAcceleration) {
 		SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, constants.velocityAt12VoltsMetersPerSecond());
-		modules.setTargetStates(moduleStates, isClosedLoop, slewRateLimiter);
+		modules.setTargetStates(moduleStates, isClosedLoop, driveAcceleration);
 	}
 
 

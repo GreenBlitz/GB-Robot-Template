@@ -11,42 +11,43 @@ import frc.robot.hardware.interfaces.InputSignal;
 import org.littletonrobotics.junction.Logger;
 
 public class CANCoderAlon implements IAngleEncoder {
-    private final CANcoder canCoder;
-    private final String logpath;
-    private final StatusSignal<Angle> position;
-    private final StatusSignal<Voltage> supplyVoltage;
-    public CANCoderAlon(int id, String logpath){
-        canCoder = new CANcoder(id);
-        this.logpath = logpath;
-        this.position = canCoder.getPosition();
-        this.supplyVoltage = canCoder.getSupplyVoltage();
-    }
 
-    public Rotation2d getPosition(){
-        return Rotation2d.fromRadians(position.getValue().in(Units.Radians));
-    }
+	private final CANcoder canCoder;
+	private final String logpath;
+	private final StatusSignal<Angle> position;
+	private final StatusSignal<Voltage> supplyVoltage;
 
-    @Override
-    public void setPosition(Rotation2d position) {
-        canCoder.setPosition(position.getMeasure());
-    }
+	public CANCoderAlon(int id, String logpath) {
+		canCoder = new CANcoder(id);
+		this.logpath = logpath;
+		this.position = canCoder.getPosition();
+		this.supplyVoltage = canCoder.getSupplyVoltage();
+	}
 
-    @Override
-    public boolean isConnected() {
-        return canCoder.isConnected();
-    }
+	public Rotation2d getPosition() {
+		return Rotation2d.fromRadians(position.getValue().in(Units.Radians));
+	}
 
-    public void logAll(){
-        Logger.recordOutput(logpath+"/position",position.refresh().getValue());
-        Logger.recordOutput(logpath+"/supply voltage",supplyVoltage.refresh().getValue());
-    }
+	@Override
+	public void setPosition(Rotation2d position) {
+		canCoder.setPosition(position.getMeasure());
+	}
 
-    @Override
-    public void updateInputs(InputSignal<?>... inputSignals) {
+	@Override
+	public boolean isConnected() {
+		return canCoder.isConnected();
+	}
 
-    }
+	public void logAll() {
+		Logger.recordOutput(logpath + "/position", position.refresh().getValue());
+		Logger.recordOutput(logpath + "/supply voltage", supplyVoltage.refresh().getValue());
+	}
 
-    public static void fuseCancoder(CANCoderAlon canCoder, AlonFX motor){
-        motor.withFusedCancoder(canCoder.canCoder);
-    }
+	@Override
+	public void updateInputs(InputSignal<?>... inputSignals) {}
+
+	public static void fuseCancoder(CANCoderAlon canCoder, AlonFX motor) {
+		motor.withFusedCancoder(canCoder.canCoder);
+	}
+
 }

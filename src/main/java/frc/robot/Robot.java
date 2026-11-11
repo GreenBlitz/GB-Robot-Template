@@ -5,11 +5,17 @@
 package frc.robot;
 
 import com.ctre.phoenix6.CANBus;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
+import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
+import frc.robot.hardware.digitalinput.IDigitalInput;
+import frc.robot.hardware.digitalinput.channeled.ChanneledDigitalInput;
+import frc.robot.hardware.digitalinput.chooser.ChooserDigitalInput;
 import frc.robot.subsystems.moduleAlon.ModuleAlon;
 import frc.constants.AlonModuleConstants;
 import frc.robot.hardware.phoenix6.BusChain;
@@ -44,6 +50,8 @@ public class Robot {
 	private final IPoseEstimator poseEstimator;
 	private final List<Limelight> limelights;
 	private final ModuleAlon moduleAlon;
+	private final IDigitalInput digitalInput;
+	private DigitalInputInputsAutoLogged digitalInputInputsAutoLogged;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -68,7 +76,8 @@ public class Robot {
 		this.moduleAlon = new ModuleAlon(
 			AlonModuleConstants.alonSteerId,
 			AlonModuleConstants.alonLinearId,
-				67, AlonModuleConstants.steerGearRatio,
+			67,
+			AlonModuleConstants.steerGearRatio,
 			AlonModuleConstants.linearGearRatio,
 			AlonModuleConstants.steerKp,
 			AlonModuleConstants.linearKp,
@@ -79,8 +88,9 @@ public class Robot {
 		);
 		moduleAlon.setLinearNeutral(true);
 		this.moduleAlon.setLinearNeutral(true);
-
-
+		digitalInput = RobotManager.isSimulation()
+			? new ChooserDigitalInput("digitalInput")
+			: new ChanneledDigitalInput(new DigitalInput(67), new Debouncer(0));
 		this.limelights = List.of();
 		limelights.forEach(
 			limelight -> limelight.setMT1StdDevsCalculation(
@@ -130,6 +140,8 @@ public class Robot {
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
+
+		digitalInput.updateInputs(digitalInputInputsAutoLogged);
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 

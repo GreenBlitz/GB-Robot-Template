@@ -34,8 +34,8 @@ public class ModuleAlon extends GBSubsystem {
 		super(logPath);
 		this.steer = new AlonFX(steerID, canBus, logPath + "/steer", steerGearRatio, steerKp, steerMomentOfInertiaKgM2);
 		this.linear = new AlonFX(linearID, canBus, logPath + "/drive", linearGearRatio, linearKp, linearMomentOfInertiaKgM2);
-		this.canCoder = new CANCoderAlon(canCoderID,logPath+"/cancoder");
-		CANCoderAlon.fuseCancoder(canCoder,steer);
+		this.canCoder = new CANCoderAlon(canCoderID, logPath + "/cancoder");
+		CANCoderAlon.fuseCancoder(canCoder, steer);
 		resetSteerWithCancoder();
 		this.logpath = logPath;
 
@@ -95,7 +95,7 @@ public class ModuleAlon extends GBSubsystem {
 		linear.setPosition(position);
 	}
 
-	public void resetSteerWithCancoder(){
+	public void resetSteerWithCancoder() {
 		steer.setPosition(canCoder.getPosition());
 	}
 

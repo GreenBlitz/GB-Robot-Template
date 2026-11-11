@@ -4,15 +4,14 @@ import frc.utils.angle2d.Angle2d;
 
 public interface IDynamicMotionMagicRequest extends IMotionMagicRequest {
 
-	@Override
-	IDynamicMotionMagicRequest withSetPoint(Angle2d setPoint);
+  @Override
+  IDynamicMotionMagicRequest withSetPoint(Angle2d setPoint);
 
-	IDynamicMotionMagicRequest withMaxVelocityAPS(Angle2d maxVelocityAPS);
+  IDynamicMotionMagicRequest withMaxVelocityAPS(Angle2d maxVelocityAPS);
 
-	Angle2d getMaxVelocityAPS();
+  Angle2d getMaxVelocityAPS();
 
-	IDynamicMotionMagicRequest withMaxAccelerationAPS(Angle2d maxAccelerationAPSSquared);
+  IDynamicMotionMagicRequest withMaxAccelerationAPS(Angle2d maxAccelerationAPSSquared);
 
-	Angle2d getMaxAccelerationAPS();
-
+  Angle2d getMaxAccelerationAPS();
 }

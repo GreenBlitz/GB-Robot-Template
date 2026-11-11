@@ -1,58 +1,63 @@
 package frc.robot.subsystems.arm;
 
-import org.wpilib.command2.Command;
-import org.wpilib.command2.RunCommand;
+import frc.utils.angle2d.Angle2d;
 import frc.utils.utilcommands.ExecuteEndCommand;
 import frc.utils.utilcommands.InitExecuteCommand;
-import frc.utils.angle2d.Angle2d;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
+import org.wpilib.command2.Command;
+import org.wpilib.command2.RunCommand;
 
 public class ArmCommandsBuilder {
 
-	private final Arm arm;
+  private final Arm arm;
 
-	protected ArmCommandsBuilder(Arm arm) {
-		this.arm = arm;
-	}
+  protected ArmCommandsBuilder(Arm arm) {
+    this.arm = arm;
+  }
 
-	public Command stayInPlace() {
-		return arm.asSubsystemCommand(new InitExecuteCommand(arm::stayInPlace, () -> {}), "Stay in place");
-	}
+  public Command stayInPlace() {
+    return arm.asSubsystemCommand(
+        new InitExecuteCommand(arm::stayInPlace, () -> {}), "Stay in place");
+  }
 
-	public Command setPower(double power) {
-		return arm.asSubsystemCommand(new RunCommand(() -> arm.setPower(power)), "Set power to: " + power);
-	}
+  public Command setPower(double power) {
+    return arm.asSubsystemCommand(
+        new RunCommand(() -> arm.setPower(power)), "Set power to: " + power);
+  }
 
-	public Command setPower(DoubleSupplier powerSupplier) {
-		return arm.asSubsystemCommand(new RunCommand(() -> arm.setPower(powerSupplier.getAsDouble())), "Set power by supplier");
-	}
+  public Command setPower(DoubleSupplier powerSupplier) {
+    return arm.asSubsystemCommand(
+        new RunCommand(() -> arm.setPower(powerSupplier.getAsDouble())), "Set power by supplier");
+  }
 
-	public Command setTargetPosition(Angle2d target) {
-		return arm
-			.asSubsystemCommand(new InitExecuteCommand(() -> arm.setTargetPosition(target), () -> {}), "Set target position to: " + target);
-	}
+  public Command setTargetPosition(Angle2d target) {
+    return arm.asSubsystemCommand(
+        new InitExecuteCommand(() -> arm.setTargetPosition(target), () -> {}),
+        "Set target position to: " + target);
+  }
 
-	public Command setTargetPosition(Supplier<Angle2d> target) {
-		return arm.asSubsystemCommand(new RunCommand(() -> arm.setTargetPosition(target.get())), "Set target with Supplier");
-	}
+  public Command setTargetPosition(Supplier<Angle2d> target) {
+    return arm.asSubsystemCommand(
+        new RunCommand(() -> arm.setTargetPosition(target.get())), "Set target with Supplier");
+  }
 
-	public Command setVoltage(Double voltage) {
-		return arm.asSubsystemCommand(new RunCommand(() -> arm.setVoltage(voltage)), "Set voltage to: " + voltage);
-	}
+  public Command setVoltage(Double voltage) {
+    return arm.asSubsystemCommand(
+        new RunCommand(() -> arm.setVoltage(voltage)), "Set voltage to: " + voltage);
+  }
 
-	public Command setVoltage(DoubleSupplier voltage) {
-		return arm.asSubsystemCommand(new RunCommand(() -> arm.setVoltage(voltage.getAsDouble())), "Set voltage by supplier");
-	}
+  public Command setVoltage(DoubleSupplier voltage) {
+    return arm.asSubsystemCommand(
+        new RunCommand(() -> arm.setVoltage(voltage.getAsDouble())), "Set voltage by supplier");
+  }
 
-	public Command setVoltageWithoutLimit(double voltage, BooleanSupplier isFinished) {
-		return arm
-			.asSubsystemCommand(
-				new ExecuteEndCommand(() -> arm.setVoltageWithoutLimit(voltage), () -> arm.stayInPlace()),
-				"Set voltage to: " + voltage + " without limits"
-			)
-			.until(isFinished);
-	}
-
+  public Command setVoltageWithoutLimit(double voltage, BooleanSupplier isFinished) {
+    return arm.asSubsystemCommand(
+            new ExecuteEndCommand(
+                () -> arm.setVoltageWithoutLimit(voltage), () -> arm.stayInPlace()),
+            "Set voltage to: " + voltage + " without limits")
+        .until(isFinished);
+  }
 }

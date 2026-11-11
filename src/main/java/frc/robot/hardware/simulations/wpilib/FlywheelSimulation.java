@@ -1,53 +1,54 @@
 package frc.robot.hardware.simulations.wpilib;
 
-import org.wpilib.simulation.FlywheelSim;
-import frc.utils.time.TimeUtil;
 import frc.utils.angle2d.Angle2d;
+import frc.utils.time.TimeUtil;
+import org.wpilib.simulation.FlywheelSim;
 
 public class FlywheelSimulation implements WPILibMechanismSimulation {
 
-	private final FlywheelSim flywheelSimulation;
-	private Angle2d currentPosition;
-	private Angle2d currentVelocity;
+  private final FlywheelSim flywheelSimulation;
+  private Angle2d currentPosition;
+  private Angle2d currentVelocity;
 
-	public FlywheelSimulation(FlywheelSim flywheelSimulation) {
-		this.flywheelSimulation = flywheelSimulation;
-		this.currentPosition = Angle2d.fromDegrees(0);
-		this.currentVelocity = getMechanismVelocityAPS();
-	}
+  public FlywheelSimulation(FlywheelSim flywheelSimulation) {
+    this.flywheelSimulation = flywheelSimulation;
+    this.currentPosition = Angle2d.fromDegrees(0);
+    this.currentVelocity = getMechanismVelocityAPS();
+  }
 
-	@Override
-	public Angle2d getMechanismPosition() {
-		return currentPosition;
-	}
+  @Override
+  public Angle2d getMechanismPosition() {
+    return currentPosition;
+  }
 
-	@Override
-	public Angle2d getMechanismVelocityAPS() {
-		return Angle2d.fromRadians(flywheelSimulation.getAngularVelocity());
-	}
+  @Override
+  public Angle2d getMechanismVelocityAPS() {
+    return Angle2d.fromRadians(flywheelSimulation.getAngularVelocity());
+  }
 
-	@Override
-	public void setInputVoltage(double voltage) {
-		flywheelSimulation.setInputVoltage(voltage);
-	}
+  @Override
+  public void setInputVoltage(double voltage) {
+    flywheelSimulation.setInputVoltage(voltage);
+  }
 
-	@Override
-	public void updateMotor() {
-		flywheelSimulation.update(TimeUtil.getLatestCycleTimeSeconds());
-		Angle2d lastVelocity = currentVelocity;
-		currentVelocity = getMechanismVelocityAPS();
-		Angle2d averageVelocity = Angle2d.fromRotations((currentVelocity.getRotations() + lastVelocity.getRotations()) / 2);
-		updatePosition(averageVelocity);
-	}
+  @Override
+  public void updateMotor() {
+    flywheelSimulation.update(TimeUtil.getLatestCycleTimeSeconds());
+    Angle2d lastVelocity = currentVelocity;
+    currentVelocity = getMechanismVelocityAPS();
+    Angle2d averageVelocity =
+        Angle2d.fromRotations((currentVelocity.getRotations() + lastVelocity.getRotations()) / 2);
+    updatePosition(averageVelocity);
+  }
 
-	@Override
-	public double getGearRatio() {
-		return flywheelSimulation.getGearing();
-	}
+  @Override
+  public double getGearRatio() {
+    return flywheelSimulation.getGearing();
+  }
 
-	private void updatePosition(Angle2d velocity) {
-		Angle2d deltaDistance = velocity.times(TimeUtil.getLatestCycleTimeSeconds());
-		currentPosition = Angle2d.fromRotations(currentPosition.getRotations() + deltaDistance.getRotations());
-	}
-
+  private void updatePosition(Angle2d velocity) {
+    Angle2d deltaDistance = velocity.times(TimeUtil.getLatestCycleTimeSeconds());
+    currentPosition =
+        Angle2d.fromRotations(currentPosition.getRotations() + deltaDistance.getRotations());
+  }
 }

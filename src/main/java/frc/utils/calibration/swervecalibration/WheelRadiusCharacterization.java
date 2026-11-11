@@ -7,92 +7,91 @@
 
 package frc.utils.calibration.swervecalibration;
 
-import org.wpilib.math.util.MathUtil;
-import org.wpilib.command2.Command;
-import org.littletonrobotics.junction.Logger;
 import frc.constants.MathConstants;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.angle2d.Angle2d;
-
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import org.littletonrobotics.junction.Logger;
+import org.wpilib.command2.Command;
+import org.wpilib.math.util.MathUtil;
 
 public class WheelRadiusCharacterization extends Command {
 
-	private final Supplier<Angle2d> IMUAngleSupplier;
-	private final Supplier<Angle2d[]> wheelDriveDistanceSupplier;
-	private final Consumer<Angle2d> velocityControl;
-	private final Angle2d characterizationSpeed;
-	private final Runnable onEnd;
-	private final double driveRadiusMeters;
+  private final Supplier<Angle2d> IMUAngleSupplier;
+  private final Supplier<Angle2d[]> wheelDriveDistanceSupplier;
+  private final Consumer<Angle2d> velocityControl;
+  private final Angle2d characterizationSpeed;
+  private final Runnable onEnd;
+  private final double driveRadiusMeters;
 
-	private Angle2d[] startWheelPositions;
-	private double lastIMUYawRadians = 0.0;
-	private double accumulateIMUYawRadians = 0.0;
-	private double wheelRadiusMeters = 0.0;
+  private Angle2d[] startWheelPositions;
+  private double lastIMUYawRadians = 0.0;
+  private double accumulateIMUYawRadians = 0.0;
+  private double wheelRadiusMeters = 0.0;
 
-	public WheelRadiusCharacterization(
-		GBSubsystem drive,
-		double driveRadiusMeters,
-		Angle2d characterizationSpeed,
-		Supplier<Angle2d[]> wheelDriveDistanceSupplier,
-		Supplier<Angle2d> IMUAngleSupplier,
-		Consumer<Angle2d> velocityControl,
-		Runnable onEnd
-	) {
-		this.characterizationSpeed = characterizationSpeed;
-		this.driveRadiusMeters = driveRadiusMeters;
-		this.wheelDriveDistanceSupplier = wheelDriveDistanceSupplier;
-		this.IMUAngleSupplier = IMUAngleSupplier;
-		this.velocityControl = velocityControl;
-		this.onEnd = onEnd;
-		addRequirements(drive);
-	}
+  public WheelRadiusCharacterization(
+      GBSubsystem drive,
+      double driveRadiusMeters,
+      Angle2d characterizationSpeed,
+      Supplier<Angle2d[]> wheelDriveDistanceSupplier,
+      Supplier<Angle2d> IMUAngleSupplier,
+      Consumer<Angle2d> velocityControl,
+      Runnable onEnd) {
+    this.characterizationSpeed = characterizationSpeed;
+    this.driveRadiusMeters = driveRadiusMeters;
+    this.wheelDriveDistanceSupplier = wheelDriveDistanceSupplier;
+    this.IMUAngleSupplier = IMUAngleSupplier;
+    this.velocityControl = velocityControl;
+    this.onEnd = onEnd;
+    addRequirements(drive);
+  }
 
-	private void updateAnglePassedFromStart() {
-		double currentIMUYawRadians = IMUAngleSupplier.get().getRadians();
-		accumulateIMUYawRadians += MathUtil.angleModulus(currentIMUYawRadians - lastIMUYawRadians);
-		lastIMUYawRadians = currentIMUYawRadians;
-	}
+  private void updateAnglePassedFromStart() {
+    double currentIMUYawRadians = IMUAngleSupplier.get().getRadians();
+    accumulateIMUYawRadians += MathUtil.angleModulus(currentIMUYawRadians - lastIMUYawRadians);
+    lastIMUYawRadians = currentIMUYawRadians;
+  }
 
-	private double getDriveDistanceMeters() {
-		return accumulateIMUYawRadians * driveRadiusMeters;
-	}
+  private double getDriveDistanceMeters() {
+    return accumulateIMUYawRadians * driveRadiusMeters;
+  }
 
-	private double getAverageDriveDistanceRadians() {
-		Angle2d[] wheelPositions = wheelDriveDistanceSupplier.get();
-		double averageDriveDistanceRadians = 0.0;
-		for (int i = 0; i < WheelRadiusConstants.NUMBER_OF_MODULES; i++) {
-			averageDriveDistanceRadians += Math.abs(wheelPositions[i].getRadians() - startWheelPositions[i].getRadians());
-		}
-		return averageDriveDistanceRadians / WheelRadiusConstants.NUMBER_OF_MODULES;
-	}
+  private double getAverageDriveDistanceRadians() {
+    Angle2d[] wheelPositions = wheelDriveDistanceSupplier.get();
+    double averageDriveDistanceRadians = 0.0;
+    for (int i = 0; i < WheelRadiusConstants.NUMBER_OF_MODULES; i++) {
+      averageDriveDistanceRadians +=
+          Math.abs(wheelPositions[i].getRadians() - startWheelPositions[i].getRadians());
+    }
+    return averageDriveDistanceRadians / WheelRadiusConstants.NUMBER_OF_MODULES;
+  }
 
-	@Override
-	public void initialize() {
-		lastIMUYawRadians = IMUAngleSupplier.get().getRadians();
-		accumulateIMUYawRadians = 0.0;
+  @Override
+  public void initialize() {
+    lastIMUYawRadians = IMUAngleSupplier.get().getRadians();
+    accumulateIMUYawRadians = 0.0;
 
-		startWheelPositions = wheelDriveDistanceSupplier.get();
-	}
+    startWheelPositions = wheelDriveDistanceSupplier.get();
+  }
 
-	@Override
-	public void execute() {
-		velocityControl.accept(characterizationSpeed);
+  @Override
+  public void execute() {
+    velocityControl.accept(characterizationSpeed);
 
-		updateAnglePassedFromStart();
+    updateAnglePassedFromStart();
 
-		// Distance meters / Distance Radians = Radius Meters
-		wheelRadiusMeters = getDriveDistanceMeters() / getAverageDriveDistanceRadians();
-	}
+    // Distance meters / Distance Radians = Radius Meters
+    wheelRadiusMeters = getDriveDistanceMeters() / getAverageDriveDistanceRadians();
+  }
 
-	@Override
-	public void end(boolean interrupted) {
-		onEnd.run();
-		String output = accumulateIMUYawRadians <= MathConstants.FULL_CIRCLE.getRadians()
-			? "Not enough data for characterization"
-			: wheelRadiusMeters + " meters";
-		Logger.recordOutput(WheelRadiusConstants.LOG_PATH, output);
-	}
-
+  @Override
+  public void end(boolean interrupted) {
+    onEnd.run();
+    String output =
+        accumulateIMUYawRadians <= MathConstants.FULL_CIRCLE.getRadians()
+            ? "Not enough data for characterization"
+            : wheelRadiusMeters + " meters";
+    Logger.recordOutput(WheelRadiusConstants.LOG_PATH, output);
+  }
 }

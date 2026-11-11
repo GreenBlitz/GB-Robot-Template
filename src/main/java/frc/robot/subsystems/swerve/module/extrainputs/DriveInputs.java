@@ -6,10 +6,9 @@ import org.littletonrobotics.junction.AutoLog;
 @AutoLog
 public class DriveInputs {
 
-	public Angle2d uncoupledVelocityAnglesPerSecond = new Angle2d();
-	public Angle2d[] uncoupledPositions = new Angle2d[0];
+  public Angle2d uncoupledVelocityAnglesPerSecond = new Angle2d();
+  public Angle2d[] uncoupledPositions = new Angle2d[0];
 
-	public double velocityMetersPerSecond = 0;
-	public double[] positionsMeters = new double[0];
-
+  public double velocityMetersPerSecond = 0;
+  public double[] positionsMeters = new double[0];
 }

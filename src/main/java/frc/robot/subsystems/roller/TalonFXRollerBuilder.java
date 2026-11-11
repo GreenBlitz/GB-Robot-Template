@@ -6,15 +6,9 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.InvertedValue;
-import org.wpilib.math.system.DCMotor;
-import org.wpilib.math.system.Models;
-import org.wpilib.command2.sysid.SysIdRoutine;
-import org.wpilib.simulation.FlywheelSim;
 import frc.robot.Robot;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.interfaces.InputSignal;
-import frc.robot.hardware.simulations.MechanismSimulation;
-import frc.robot.hardware.simulations.wpilib.FlywheelSimulation;
 import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
@@ -22,181 +16,240 @@ import frc.robot.hardware.phoenix6.request.Phoenix6FeedForwardRequest;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
 import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
+import frc.robot.hardware.simulations.MechanismSimulation;
+import frc.robot.hardware.simulations.wpilib.FlywheelSimulation;
 import frc.utils.AngleUnit;
 import frc.utils.angle2d.Angle2d;
+import org.wpilib.command2.sysid.SysIdRoutine;
+import org.wpilib.math.system.DCMotor;
+import org.wpilib.math.system.Models;
+import org.wpilib.simulation.FlywheelSim;
 
 public class TalonFXRollerBuilder {
 
-	public static VelocityRoller buildVelocityRoller(
-		String logPath,
-		Phoenix6DeviceID deviceID,
-		Slot0Configs realVelocityControlConfig,
-		Slot0Configs simulationVelocityControlConfig,
-		TalonFXFollowerConfig talonFXFollowerConfig,
-		SysIdRoutine.Config sysIdRoutineConfig,
-		int currentLimit,
-		FeedbackConfigs feedbackConfigs,
-		double momentOfInertia,
-		boolean isInverted,
-		boolean isFlywheel
-	) {
-		MechanismSimulation motorSimulation;
-		motorSimulation = new FlywheelSimulation(
-			new FlywheelSim(
-				Models.flywheelFromPhysicalConstants(
-					DCMotor.getKrakenX60(talonFXFollowerConfig.followerIDs.length + 1),
-					momentOfInertia,
-					feedbackConfigs.SensorToMechanismRatio * feedbackConfigs.RotorToSensorRatio
-				),
-				DCMotor.getKrakenX60(talonFXFollowerConfig.followerIDs.length + 1)
-			)
-		);
+  public static VelocityRoller buildVelocityRoller(
+      String logPath,
+      Phoenix6DeviceID deviceID,
+      Slot0Configs realVelocityControlConfig,
+      Slot0Configs simulationVelocityControlConfig,
+      TalonFXFollowerConfig talonFXFollowerConfig,
+      SysIdRoutine.Config sysIdRoutineConfig,
+      int currentLimit,
+      FeedbackConfigs feedbackConfigs,
+      double momentOfInertia,
+      boolean isInverted,
+      boolean isFlywheel) {
+    MechanismSimulation motorSimulation;
+    motorSimulation =
+        new FlywheelSimulation(
+            new FlywheelSim(
+                Models.flywheelFromPhysicalConstants(
+                    DCMotor.getKrakenX60(talonFXFollowerConfig.followerIDs.length + 1),
+                    momentOfInertia,
+                    feedbackConfigs.SensorToMechanismRatio * feedbackConfigs.RotorToSensorRatio),
+                DCMotor.getKrakenX60(talonFXFollowerConfig.followerIDs.length + 1)));
 
-		TalonFXMotor motor = new TalonFXMotor(logPath, deviceID, talonFXFollowerConfig, sysIdRoutineConfig, motorSimulation);
+    TalonFXMotor motor =
+        new TalonFXMotor(
+            logPath, deviceID, talonFXFollowerConfig, sysIdRoutineConfig, motorSimulation);
 
-		motor.applyConfiguration(
-			buildConfiguration(
-				isInverted,
-				feedbackConfigs,
-				currentLimit,
-				Robot.ROBOT_TYPE.isSimulation() ? simulationVelocityControlConfig : realVelocityControlConfig
-			)
-		);
+    motor.applyConfiguration(
+        buildConfiguration(
+            isInverted,
+            feedbackConfigs,
+            currentLimit,
+            Robot.ROBOT_TYPE.isSimulation()
+                ? simulationVelocityControlConfig
+                : realVelocityControlConfig));
 
-		InputSignal<Double> voltageSignal = Phoenix6SignalBuilder
-			.buildDoubleSignal(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, deviceID.busChain());
-		InputSignal<Double> currentSignal = Phoenix6SignalBuilder
-			.buildDoubleSignal(motor.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, deviceID.busChain());
-		InputSignal<Angle2d> positionSignal = Phoenix6SignalBuilder.buildLatencySignal(
-			motor.getDevice().getPosition(),
-			motor.getDevice().getVelocity(),
-			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-			AngleUnit.ROTATIONS,
-			deviceID.busChain()
-		);
-		InputSignal<Angle2d> velocitySignal = Phoenix6SignalBuilder
-			.buildAngleSignal(
-                    motor.getDevice().getVelocity(),
-                    RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-                    AngleUnit.ROTATIONS,
-                    deviceID.busChain()
-            );
+    InputSignal<Double> voltageSignal =
+        Phoenix6SignalBuilder.buildDoubleSignal(
+            motor.getDevice().getMotorVoltage(),
+            RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+            deviceID.busChain());
+    InputSignal<Double> currentSignal =
+        Phoenix6SignalBuilder.buildDoubleSignal(
+            motor.getDevice().getStatorCurrent(),
+            RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+            deviceID.busChain());
+    InputSignal<Angle2d> positionSignal =
+        Phoenix6SignalBuilder.buildLatencySignal(
+            motor.getDevice().getPosition(),
+            motor.getDevice().getVelocity(),
+            RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+            AngleUnit.ROTATIONS,
+            deviceID.busChain());
+    InputSignal<Angle2d> velocitySignal =
+        Phoenix6SignalBuilder.buildAngleSignal(
+            motor.getDevice().getVelocity(),
+            RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+            AngleUnit.ROTATIONS,
+            deviceID.busChain());
 
-		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.buildVoltageOutRequest(new VoltageOut(0), true);
-		Phoenix6FeedForwardRequest velocityVoltage = Phoenix6RequestBuilder.buildVelocityVoltageRequest(new VelocityVoltage(0), 0, true);
+    Phoenix6Request<Double> voltageRequest =
+        Phoenix6RequestBuilder.buildVoltageOutRequest(new VoltageOut(0), true);
+    Phoenix6FeedForwardRequest velocityVoltage =
+        Phoenix6RequestBuilder.buildVelocityVoltageRequest(new VelocityVoltage(0), 0, true);
 
-		return new VelocityRoller(logPath, motor, voltageSignal, currentSignal, positionSignal, velocitySignal, voltageRequest, velocityVoltage);
-	}
+    return new VelocityRoller(
+        logPath,
+        motor,
+        voltageSignal,
+        currentSignal,
+        positionSignal,
+        velocitySignal,
+        voltageRequest,
+        velocityVoltage);
+  }
 
-	public static VelocityRoller buildBangBangControlledVelocityRoller(
-		String logPath,
-		Phoenix6DeviceID deviceID,
-		Slot0Configs realVelocityControlConfig,
-		Slot0Configs simulationVelocityControlConfig,
-		double maxForwardPower,
-		double maxBackwardPower,
-		int currentLimit,
-		FeedbackConfigs feedbackConfigs,
-		double momentOfInertia,
-		boolean isInverted
-	) {
-		FlywheelSimulation motorSimulation = new FlywheelSimulation(
-			new FlywheelSim(
-				Models.flywheelFromPhysicalConstants(
-					DCMotor.getKrakenX60(1),
-					momentOfInertia,
-					feedbackConfigs.SensorToMechanismRatio * feedbackConfigs.RotorToSensorRatio
-				),
-				DCMotor.getKrakenX60(1)
-			)
-		);
-		TalonFXMotor motor = new TalonFXMotor(logPath, deviceID, new TalonFXFollowerConfig(), new SysIdRoutine.Config(), motorSimulation);
+  public static VelocityRoller buildBangBangControlledVelocityRoller(
+      String logPath,
+      Phoenix6DeviceID deviceID,
+      Slot0Configs realVelocityControlConfig,
+      Slot0Configs simulationVelocityControlConfig,
+      double maxForwardPower,
+      double maxBackwardPower,
+      int currentLimit,
+      FeedbackConfigs feedbackConfigs,
+      double momentOfInertia,
+      boolean isInverted) {
+    FlywheelSimulation motorSimulation =
+        new FlywheelSimulation(
+            new FlywheelSim(
+                Models.flywheelFromPhysicalConstants(
+                    DCMotor.getKrakenX60(1),
+                    momentOfInertia,
+                    feedbackConfigs.SensorToMechanismRatio * feedbackConfigs.RotorToSensorRatio),
+                DCMotor.getKrakenX60(1)));
+    TalonFXMotor motor =
+        new TalonFXMotor(
+            logPath,
+            deviceID,
+            new TalonFXFollowerConfig(),
+            new SysIdRoutine.Config(),
+            motorSimulation);
 
-		motor.applyConfiguration(
-			buildConfiguration(
-				isInverted,
-				feedbackConfigs,
-				currentLimit,
-				Robot.ROBOT_TYPE.isSimulation() ? simulationVelocityControlConfig : realVelocityControlConfig
-			)
-		);
+    motor.applyConfiguration(
+        buildConfiguration(
+            isInverted,
+            feedbackConfigs,
+            currentLimit,
+            Robot.ROBOT_TYPE.isSimulation()
+                ? simulationVelocityControlConfig
+                : realVelocityControlConfig));
 
-		InputSignal<Double> voltageSignal = Phoenix6SignalBuilder
-			.buildDoubleSignal(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, deviceID.busChain());
-		InputSignal<Double> currentSignal = Phoenix6SignalBuilder
-			.buildDoubleSignal(motor.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, deviceID.busChain());
-		InputSignal<Angle2d> positionSignal = Phoenix6SignalBuilder.buildLatencySignal(
-			motor.getDevice().getPosition(),
-			motor.getDevice().getVelocity(),
-			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-			AngleUnit.ROTATIONS,
-			deviceID.busChain()
-		);
-		InputSignal<Angle2d> velocitySignal = Phoenix6SignalBuilder
-			.buildAngleSignal(motor.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, deviceID.busChain());
+    InputSignal<Double> voltageSignal =
+        Phoenix6SignalBuilder.buildDoubleSignal(
+            motor.getDevice().getMotorVoltage(),
+            RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+            deviceID.busChain());
+    InputSignal<Double> currentSignal =
+        Phoenix6SignalBuilder.buildDoubleSignal(
+            motor.getDevice().getStatorCurrent(),
+            RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+            deviceID.busChain());
+    InputSignal<Angle2d> positionSignal =
+        Phoenix6SignalBuilder.buildLatencySignal(
+            motor.getDevice().getPosition(),
+            motor.getDevice().getVelocity(),
+            RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+            AngleUnit.ROTATIONS,
+            deviceID.busChain());
+    InputSignal<Angle2d> velocitySignal =
+        Phoenix6SignalBuilder.buildAngleSignal(
+            motor.getDevice().getVelocity(),
+            RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+            AngleUnit.ROTATIONS,
+            deviceID.busChain());
 
-		Phoenix6Request<Double> voltageRequest = Phoenix6RequestBuilder.buildVoltageOutRequest(new VoltageOut(0), true);
-		Phoenix6Request<Angle2d> velocityRequest = Phoenix6RequestBuilder
-			.buildBangBangRequest(velocitySignal::getLatestValue, maxForwardPower, maxBackwardPower, true);
+    Phoenix6Request<Double> voltageRequest =
+        Phoenix6RequestBuilder.buildVoltageOutRequest(new VoltageOut(0), true);
+    Phoenix6Request<Angle2d> velocityRequest =
+        Phoenix6RequestBuilder.buildBangBangRequest(
+            velocitySignal::getLatestValue, maxForwardPower, maxBackwardPower, true);
 
-		return new VelocityRoller(logPath, motor, voltageSignal, currentSignal, positionSignal, velocitySignal, voltageRequest, velocityRequest);
-	}
+    return new VelocityRoller(
+        logPath,
+        motor,
+        voltageSignal,
+        currentSignal,
+        positionSignal,
+        velocitySignal,
+        voltageRequest,
+        velocityRequest);
+  }
 
-	public static Roller build(
-		String logPath,
-		Phoenix6DeviceID id,
-		boolean inverted,
-		FeedbackConfigs feedbackConfigs,
-		int currentLimit,
-		double momentOfInertia
-	) {
-		FlywheelSimulation motorSimulation = new FlywheelSimulation(
-			new FlywheelSim(
-				Models.flywheelFromPhysicalConstants(
-					DCMotor.getKrakenX60(1),
-					momentOfInertia,
-					feedbackConfigs.SensorToMechanismRatio * feedbackConfigs.RotorToSensorRatio
-				),
-				DCMotor.getKrakenX60(1)
-			)
-		);
-		TalonFXMotor motor = new TalonFXMotor(logPath, id, new TalonFXFollowerConfig(), new SysIdRoutine.Config(), motorSimulation);
+  public static Roller build(
+      String logPath,
+      Phoenix6DeviceID id,
+      boolean inverted,
+      FeedbackConfigs feedbackConfigs,
+      int currentLimit,
+      double momentOfInertia) {
+    FlywheelSimulation motorSimulation =
+        new FlywheelSimulation(
+            new FlywheelSim(
+                Models.flywheelFromPhysicalConstants(
+                    DCMotor.getKrakenX60(1),
+                    momentOfInertia,
+                    feedbackConfigs.SensorToMechanismRatio * feedbackConfigs.RotorToSensorRatio),
+                DCMotor.getKrakenX60(1)));
+    TalonFXMotor motor =
+        new TalonFXMotor(
+            logPath, id, new TalonFXFollowerConfig(), new SysIdRoutine.Config(), motorSimulation);
 
-		motor.applyConfiguration(buildConfiguration(inverted, feedbackConfigs, currentLimit, new Slot0Configs()));
+    motor.applyConfiguration(
+        buildConfiguration(inverted, feedbackConfigs, currentLimit, new Slot0Configs()));
 
-		InputSignal<Double> voltageSignal = Phoenix6SignalBuilder
-			.buildDoubleSignal(motor.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, id.busChain());
-		InputSignal<Double> currentSignal = Phoenix6SignalBuilder
-			.buildDoubleSignal(motor.getDevice().getStatorCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, id.busChain());
-		InputSignal<Angle2d> positionSignal = Phoenix6SignalBuilder.buildLatencySignal(
-			motor.getDevice().getPosition(),
-			motor.getDevice().getVelocity(),
-			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-			AngleUnit.ROTATIONS,
-			id.busChain()
-		);
-		InputSignal<Angle2d> velocitySignal = Phoenix6SignalBuilder
-			.buildAngleSignal(motor.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, id.busChain());
+    InputSignal<Double> voltageSignal =
+        Phoenix6SignalBuilder.buildDoubleSignal(
+            motor.getDevice().getMotorVoltage(),
+            RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+            id.busChain());
+    InputSignal<Double> currentSignal =
+        Phoenix6SignalBuilder.buildDoubleSignal(
+            motor.getDevice().getStatorCurrent(),
+            RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+            id.busChain());
+    InputSignal<Angle2d> positionSignal =
+        Phoenix6SignalBuilder.buildLatencySignal(
+            motor.getDevice().getPosition(),
+            motor.getDevice().getVelocity(),
+            RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+            AngleUnit.ROTATIONS,
+            id.busChain());
+    InputSignal<Angle2d> velocitySignal =
+        Phoenix6SignalBuilder.buildAngleSignal(
+            motor.getDevice().getVelocity(),
+            RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+            AngleUnit.ROTATIONS,
+            id.busChain());
 
+    Phoenix6Request<Double> VoltageRequest =
+        Phoenix6RequestBuilder.buildVoltageOutRequest(new VoltageOut(0), true);
 
-		Phoenix6Request<Double> VoltageRequest = Phoenix6RequestBuilder.buildVoltageOutRequest(new VoltageOut(0), true);
+    return new Roller(
+        logPath,
+        motor,
+        voltageSignal,
+        currentSignal,
+        positionSignal,
+        velocitySignal,
+        VoltageRequest);
+  }
 
-		return new Roller(logPath, motor, voltageSignal, currentSignal, positionSignal, velocitySignal, VoltageRequest);
-	}
-
-	public static TalonFXConfiguration buildConfiguration(
-		boolean inverted,
-		FeedbackConfigs feedbackConfigs,
-		int currentLimit,
-		Slot0Configs ConfigurationSlots
-	) {
-		TalonFXConfiguration configs = new TalonFXConfiguration();
-		configs.Slot0 = ConfigurationSlots;
-		configs.CurrentLimits.SupplyCurrentLimit = currentLimit;
-		configs.CurrentLimits.SupplyCurrentLimitEnable = true;
-		configs.Feedback = feedbackConfigs;
-		configs.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
-		return (configs);
-	}
-
+  public static TalonFXConfiguration buildConfiguration(
+      boolean inverted,
+      FeedbackConfigs feedbackConfigs,
+      int currentLimit,
+      Slot0Configs ConfigurationSlots) {
+    TalonFXConfiguration configs = new TalonFXConfiguration();
+    configs.Slot0 = ConfigurationSlots;
+    configs.CurrentLimits.SupplyCurrentLimit = currentLimit;
+    configs.CurrentLimits.SupplyCurrentLimitEnable = true;
+    configs.Feedback = feedbackConfigs;
+    configs.MotorOutput.Inverted =
+        inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
+    return (configs);
+  }
 }

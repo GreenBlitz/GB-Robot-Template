@@ -1,46 +1,54 @@
 package frc.utils;
 
 import frc.utils.angle2d.Angle2d;
-import org.wpilib.math.interpolation.InterpolatingTreeMap;
-import org.wpilib.math.interpolation.Interpolator;
-import org.wpilib.math.interpolation.InverseInterpolator;
-
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.stream.Stream;
+import org.wpilib.math.interpolation.InterpolatingTreeMap;
+import org.wpilib.math.interpolation.Interpolator;
+import org.wpilib.math.interpolation.InverseInterpolator;
 
 public class InterpolationMap<K, V> extends InterpolatingTreeMap<K, V> {
 
-	public InterpolationMap(InverseInterpolator<K> inverseInterpolator, Interpolator<V> interpolator, Map<K, V> dataPoints) {
-		super(inverseInterpolator, interpolator);
-		put(dataPoints);
-	}
+  public InterpolationMap(
+      InverseInterpolator<K> inverseInterpolator,
+      Interpolator<V> interpolator,
+      Map<K, V> dataPoints) {
+    super(inverseInterpolator, interpolator);
+    put(dataPoints);
+  }
 
-	public InterpolationMap(InverseInterpolator<K> inverseInterpolator, Interpolator<V> interpolator) {
-		super(inverseInterpolator, interpolator);
-	}
+  public InterpolationMap(
+      InverseInterpolator<K> inverseInterpolator, Interpolator<V> interpolator) {
+    super(inverseInterpolator, interpolator);
+  }
 
-	public InterpolationMap(InverseInterpolator<K> inverseInterpolator, Interpolator<V> interpolator, Comparator<K> comparator) {
-		super(inverseInterpolator, interpolator, comparator);
-	}
+  public InterpolationMap(
+      InverseInterpolator<K> inverseInterpolator,
+      Interpolator<V> interpolator,
+      Comparator<K> comparator) {
+    super(inverseInterpolator, interpolator, comparator);
+  }
 
-	public void put(Map<K, V> dataPoints) {
-		dataPoints.forEach(super::put);
-	}
+  public void put(Map<K, V> dataPoints) {
+    dataPoints.forEach(super::put);
+  }
 
-	public Stream<V> get(K[] keys) {
-		return Arrays.stream(keys).map(super::get);
-	}
+  public Stream<V> get(K[] keys) {
+    return Arrays.stream(keys).map(super::get);
+  }
 
-	public static Interpolator<Angle2d> interpolatorForAngle2d() {
-		return (startValue, endValue, t) -> Angle2d
-			.fromDegrees(Interpolator.forDouble().interpolate(startValue.getDegrees(), endValue.getDegrees(), t));
-	}
+  public static Interpolator<Angle2d> interpolatorForAngle2d() {
+    return (startValue, endValue, t) ->
+        Angle2d.fromDegrees(
+            Interpolator.forDouble()
+                .interpolate(startValue.getDegrees(), endValue.getDegrees(), t));
+  }
 
-	public static InverseInterpolator<Angle2d> inverseInterpolatorForAngle2d() {
-		return (startValue, endValue, t) -> InverseInterpolator.forDouble()
-			.inverseInterpolate(startValue.getDegrees(), endValue.getDegrees(), t.getDegrees());
-	}
-
+  public static InverseInterpolator<Angle2d> inverseInterpolatorForAngle2d() {
+    return (startValue, endValue, t) ->
+        InverseInterpolator.forDouble()
+            .inverseInterpolate(startValue.getDegrees(), endValue.getDegrees(), t.getDegrees());
+  }
 }

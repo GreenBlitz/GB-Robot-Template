@@ -5,14 +5,13 @@ import org.wpilib.math.geometry.Pose2d;
 
 public interface IOdometryEstimator {
 
-	void updateOdometry(OdometryData[] odometryData);
+  void updateOdometry(OdometryData[] odometryData);
 
-	void updateOdometry(OdometryData odometryData);
+  void updateOdometry(OdometryData odometryData);
 
-	void resetPose(OdometryData odometryData, Pose2d poseMeters);
+  void resetPose(OdometryData odometryData, Pose2d poseMeters);
 
-	Pose2d getOdometryPose();
+  Pose2d getOdometryPose();
 
-	void setHeading(Angle2d newHeading);
-
+  void setHeading(Angle2d newHeading);
 }

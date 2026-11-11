@@ -5,53 +5,49 @@ import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.signal.AngleSignal;
 import frc.robot.hardware.signal.DoubleSignal;
 import frc.robot.subsystems.swerve.IMUSignals;
-import frc.utils.TimedValue;
 import frc.utils.AngleUnit;
+import frc.utils.TimedValue;
 import frc.utils.angle2d.Angle2d;
 import frc.utils.time.TimeUtil;
 
 public class SimulationIMUBuilder {
 
-	public static IIMU buildIMU(String logPath) {
-		return new EmptyIMU(logPath);
-	}
+  public static IIMU buildIMU(String logPath) {
+    return new EmptyIMU(logPath);
+  }
 
-	private static AngleSignal buildEmptyAngleSignal(String name) {
-		return new AngleSignal(name, AngleUnit.DEGREES) {
+  private static AngleSignal buildEmptyAngleSignal(String name) {
+    return new AngleSignal(name, AngleUnit.DEGREES) {
 
-			@Override
-			protected void updateValue(TimedValue<Angle2d> timedValue) {
-				timedValue.setValue(new Angle2d());
-				timedValue.setTimestamp(TimeUtil.getCurrentTimeSeconds());
-			}
+      @Override
+      protected void updateValue(TimedValue<Angle2d> timedValue) {
+        timedValue.setValue(new Angle2d());
+        timedValue.setTimestamp(TimeUtil.getCurrentTimeSeconds());
+      }
+    };
+  }
 
-		};
-	}
+  private static DoubleSignal buildEmptyDoubleSignal(String name) {
+    return new DoubleSignal(name) {
 
-	private static DoubleSignal buildEmptyDoubleSignal(String name) {
-		return new DoubleSignal(name) {
+      @Override
+      protected void updateValue(TimedValue<Double> timedValue) {
+        timedValue.setValue(0.0);
+        timedValue.setTimestamp(TimeUtil.getCurrentTimeSeconds());
+      }
+    };
+  }
 
-			@Override
-			protected void updateValue(TimedValue<Double> timedValue) {
-				timedValue.setValue(0.0);
-				timedValue.setTimestamp(TimeUtil.getCurrentTimeSeconds());
-			}
-
-		};
-	}
-
-	public static IMUSignals buildSignals() {
-		return new IMUSignals(
-			buildEmptyAngleSignal("roll"),
-			buildEmptyAngleSignal("pitch"),
-			buildEmptyAngleSignal("yaw"),
-			buildEmptyAngleSignal("angularVelocityX"),
-			buildEmptyAngleSignal("angularVelocityY"),
-			buildEmptyAngleSignal("angularVelocityZ"),
-			buildEmptyDoubleSignal("accelerationX"),
-			buildEmptyDoubleSignal("accelerationY"),
-			buildEmptyDoubleSignal("accelerationZ")
-		);
-	}
-
+  public static IMUSignals buildSignals() {
+    return new IMUSignals(
+        buildEmptyAngleSignal("roll"),
+        buildEmptyAngleSignal("pitch"),
+        buildEmptyAngleSignal("yaw"),
+        buildEmptyAngleSignal("angularVelocityX"),
+        buildEmptyAngleSignal("angularVelocityY"),
+        buildEmptyAngleSignal("angularVelocityZ"),
+        buildEmptyDoubleSignal("accelerationX"),
+        buildEmptyDoubleSignal("accelerationY"),
+        buildEmptyDoubleSignal("accelerationZ"));
+  }
 }

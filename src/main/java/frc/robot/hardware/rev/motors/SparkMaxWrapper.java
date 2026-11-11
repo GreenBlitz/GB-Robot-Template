@@ -8,30 +8,34 @@ import frc.utils.angle2d.Angle2d;
 
 public class SparkMaxWrapper extends SparkMax {
 
-	private static final int DEFAULT_APPLY_CONFIG_RETRIES = 1;
+  private static final int DEFAULT_APPLY_CONFIG_RETRIES = 1;
 
-	public SparkMaxWrapper(SparkMaxDeviceID deviceID) {
-		super(deviceID.busID(), deviceID.id(), deviceID.type());
-		applyConfiguration(new SparkMaxConfiguration().withResetMode(com.revrobotics.ResetMode.kResetSafeParameters));
-	}
+  public SparkMaxWrapper(SparkMaxDeviceID deviceID) {
+    super(deviceID.busID(), deviceID.id(), deviceID.type());
+    applyConfiguration(
+        new SparkMaxConfiguration().withResetMode(com.revrobotics.ResetMode.kResetSafeParameters));
+  }
 
-	public double getVoltage() {
-		return getAppliedOutput().get() * getBusVoltage().get();
-	}
+  public double getVoltage() {
+    return getAppliedOutput().get() * getBusVoltage().get();
+  }
 
-	public Angle2d getVelocityAPS() {
-		return Angle2d.fromRotations(Conversions.perMinuteToPerSecond(getEncoder().getVelocity().get()));
-	}
+  public Angle2d getVelocityAPS() {
+    return Angle2d.fromRotations(
+        Conversions.perMinuteToPerSecond(getEncoder().getVelocity().get()));
+  }
 
-	public REVLibError applyConfiguration(SparkMaxConfiguration configuration, int numberOfTries) {
-		return REVUtil.checkWithRetry(
-			() -> super.configure(configuration.getSparkMaxConfig(), configuration.getResetMode(), configuration.getPersistMode()),
-			numberOfTries
-		);
-	}
+  public REVLibError applyConfiguration(SparkMaxConfiguration configuration, int numberOfTries) {
+    return REVUtil.checkWithRetry(
+        () ->
+            super.configure(
+                configuration.getSparkMaxConfig(),
+                configuration.getResetMode(),
+                configuration.getPersistMode()),
+        numberOfTries);
+  }
 
-	public REVLibError applyConfiguration(SparkMaxConfiguration configuration) {
-		return applyConfiguration(configuration, DEFAULT_APPLY_CONFIG_RETRIES);
-	}
-
+  public REVLibError applyConfiguration(SparkMaxConfiguration configuration) {
+    return applyConfiguration(configuration, DEFAULT_APPLY_CONFIG_RETRIES);
+  }
 }

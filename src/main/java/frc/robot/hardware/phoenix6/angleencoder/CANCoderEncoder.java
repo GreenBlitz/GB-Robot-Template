@@ -1,29 +1,28 @@
 package frc.robot.hardware.phoenix6.angleencoder;
 
 import com.ctre.phoenix6.hardware.CANcoder;
-import frc.utils.angle2d.Angle2d;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.Phoenix6Device;
+import frc.utils.angle2d.Angle2d;
 
 public class CANCoderEncoder extends Phoenix6Device implements IAngleEncoder {
 
-	private final CANcoder encoder;
+  private final CANcoder encoder;
 
-	public CANCoderEncoder(String logPath, CANcoder encoder, BusChain busChain) {
-		super(logPath, busChain);
-		this.encoder = encoder;
-		encoder.optimizeBusUtilization();
-	}
+  public CANCoderEncoder(String logPath, CANcoder encoder, BusChain busChain) {
+    super(logPath, busChain);
+    this.encoder = encoder;
+    encoder.optimizeBusUtilization();
+  }
 
-	@Override
-	public void setPosition(Angle2d position) {
-		encoder.setPosition(position.getRotations());
-	}
+  @Override
+  public void setPosition(Angle2d position) {
+    encoder.setPosition(position.getRotations());
+  }
 
-	@Override
-	public CANcoder getDevice() {
-		return encoder;
-	}
-
+  @Override
+  public CANcoder getDevice() {
+    return encoder;
+  }
 }

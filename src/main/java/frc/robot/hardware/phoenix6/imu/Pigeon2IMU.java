@@ -1,27 +1,26 @@
 package frc.robot.hardware.phoenix6.imu;
 
-import frc.utils.angle2d.Angle2d;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.phoenix6.Phoenix6Device;
+import frc.utils.angle2d.Angle2d;
 
 public class Pigeon2IMU extends Phoenix6Device implements IIMU {
 
-	private final Pigeon2Wrapper imu;
+  private final Pigeon2Wrapper imu;
 
-	public Pigeon2IMU(String logPath, Pigeon2Wrapper imu) {
-		super(logPath, imu.getBusChain());
-		this.imu = imu;
-		imu.optimizeBusUtilization();
-	}
+  public Pigeon2IMU(String logPath, Pigeon2Wrapper imu) {
+    super(logPath, imu.getBusChain());
+    this.imu = imu;
+    imu.optimizeBusUtilization();
+  }
 
-	@Override
-	public void setYaw(Angle2d yaw) {
-		imu.setYaw(yaw);
-	}
+  @Override
+  public void setYaw(Angle2d yaw) {
+    imu.setYaw(yaw);
+  }
 
-	@Override
-	public Pigeon2Wrapper getDevice() {
-		return imu;
-	}
-
+  @Override
+  public Pigeon2Wrapper getDevice() {
+    return imu;
+  }
 }

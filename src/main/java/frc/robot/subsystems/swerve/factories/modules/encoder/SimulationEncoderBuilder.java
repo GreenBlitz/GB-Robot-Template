@@ -4,27 +4,26 @@ import frc.robot.hardware.empties.EmptyAngleEncoder;
 import frc.robot.hardware.interfaces.IAngleEncoder;
 import frc.robot.hardware.signal.AngleSignal;
 import frc.robot.subsystems.swerve.module.records.EncoderSignals;
-import frc.utils.TimedValue;
 import frc.utils.AngleUnit;
+import frc.utils.TimedValue;
 import frc.utils.angle2d.Angle2d;
 import frc.utils.time.TimeUtil;
 
 public class SimulationEncoderBuilder {
 
-	public static IAngleEncoder buildEncoder(String logPath) {
-		return new EmptyAngleEncoder(logPath);
-	}
+  public static IAngleEncoder buildEncoder(String logPath) {
+    return new EmptyAngleEncoder(logPath);
+  }
 
-	public static EncoderSignals buildSignals() {
-		return new EncoderSignals(new AngleSignal("yaw", AngleUnit.DEGREES) {
+  public static EncoderSignals buildSignals() {
+    return new EncoderSignals(
+        new AngleSignal("yaw", AngleUnit.DEGREES) {
 
-			@Override
-			protected void updateValue(TimedValue<Angle2d> timedValue) {
-				timedValue.setValue(new Angle2d());
-				timedValue.setTimestamp(TimeUtil.getCurrentTimeSeconds());
-			}
-
-		});
-	}
-
+          @Override
+          protected void updateValue(TimedValue<Angle2d> timedValue) {
+            timedValue.setValue(new Angle2d());
+            timedValue.setTimestamp(TimeUtil.getCurrentTimeSeconds());
+          }
+        });
+  }
 }

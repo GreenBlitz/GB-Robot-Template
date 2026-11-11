@@ -4,16 +4,15 @@ import frc.utils.angle2d.Angle2d;
 
 public interface MechanismSimulation {
 
-	Angle2d getRotorPosition();
+  Angle2d getRotorPosition();
 
-	Angle2d getRotorVelocityAPS();
+  Angle2d getRotorVelocityAPS();
 
-	Angle2d getMechanismPosition();
+  Angle2d getMechanismPosition();
 
-	Angle2d getMechanismVelocityAPS();
+  Angle2d getMechanismVelocityAPS();
 
-	void setInputVoltage(double voltage);
+  void setInputVoltage(double voltage);
 
-	void updateMotor();
-
+  void updateMotor();
 }

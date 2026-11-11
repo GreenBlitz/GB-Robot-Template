@@ -1,14 +1,13 @@
 package frc.robot.hardware.interfaces;
 
-import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.angle2d.Angle2d;
+import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public interface Controllable {
 
-	SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo();
+  SysIdCalibrator.SysIdConfigInfo getSysidConfigInfo();
 
-	void resetPosition(Angle2d position);
+  void resetPosition(Angle2d position);
 
-	void applyRequest(IRequest<?> request);
-
+  void applyRequest(IRequest<?> request);
 }

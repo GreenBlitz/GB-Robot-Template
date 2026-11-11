@@ -1,12 +1,11 @@
 package frc.robot.subsystems.arm;
 
-import frc.utils.angle2d.Angle2d;
 import frc.robot.hardware.interfaces.InputSignal;
+import frc.utils.angle2d.Angle2d;
 
 public record ArmSignals(
-	InputSignal<Double> voltage,
-	InputSignal<Double> statorCurrent,
-	InputSignal<Double> torqueCurrent,
-	InputSignal<Angle2d> velocity,
-	InputSignal<Angle2d> position
-) {}
+    InputSignal<Double> voltage,
+    InputSignal<Double> statorCurrent,
+    InputSignal<Double> torqueCurrent,
+    InputSignal<Angle2d> velocity,
+    InputSignal<Angle2d> position) {}

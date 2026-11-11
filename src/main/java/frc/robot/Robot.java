@@ -135,8 +135,8 @@ public class Robot {
 		getLimelights().forEach(Limelight::updateMT1);
 		getLimelights().forEach(limelight -> limelight.getIndependentRobotPose().ifPresent(poseEstimator::updateVision));
 
-		 double lastOut = 0;
-		 double lastTime = Timer.getFPGATimestamp(); // edu.wpi.first.wpilibj.Timer
+		double lastOut = 0;
+		double lastTime = Timer.getFPGATimestamp(); // edu.wpi.first.wpilibj.Timer
 
 		double now = Timer.getFPGATimestamp();
 		double out = swerve.getModules().getModule(0).getDriveVelocityMetersPerSecond();

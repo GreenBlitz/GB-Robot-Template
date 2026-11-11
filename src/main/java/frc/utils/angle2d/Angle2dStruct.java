@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import org.wpilib.util.struct.Struct;
 
 public final class Angle2dStruct implements Struct<Angle2d> {
+
     @Override
     public Class<Angle2d> getTypeClass() {
         return Angle2d.class;

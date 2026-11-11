@@ -35,4 +35,3 @@ public final class Angle2dProto implements Protobuf<Angle2d, ProtobufRotation2d>
         return true;
     }
 }
-

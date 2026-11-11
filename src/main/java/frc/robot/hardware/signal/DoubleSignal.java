@@ -8,81 +8,80 @@ import org.littletonrobotics.junction.LogTable;
 
 public abstract class DoubleSignal implements InputSignal<Double> {
 
-	private final String name;
-	private final TimedValue<Double> timedValue;
+  private final String name;
+  private final TimedValue<Double> timedValue;
 
-	public DoubleSignal(String name) {
-		this.name = name;
-		this.timedValue = new TimedValue<>(0.0, 0);
-	}
+  public DoubleSignal(String name) {
+    this.name = name;
+    this.timedValue = new TimedValue<>(0.0, 0);
+  }
 
-	@Override
-	public String getName() {
-		return name;
-	}
+  @Override
+  public String getName() {
+    return name;
+  }
 
-	@Override
-	public TimedValue<Double> getLatestTimedValue() {
-		return timedValue;
-	}
+  @Override
+  public TimedValue<Double> getLatestTimedValue() {
+    return timedValue;
+  }
 
-	@Override
-	public Double getLatestValue() {
-		return timedValue.getValue();
-	}
+  @Override
+  public Double getLatestValue() {
+    return timedValue.getValue();
+  }
 
-	@Override
-	public Double[] asArray() {
-		return new Double[] {timedValue.getValue()};
-	}
+  @Override
+  public Double[] asArray() {
+    return new Double[] {timedValue.getValue()};
+  }
 
-	@Override
-	public double getTimestamp() {
-		return timedValue.getTimestamp();
-	}
+  @Override
+  public double getTimestamp() {
+    return timedValue.getTimestamp();
+  }
 
-	@Override
-	public double[] getTimestamps() {
-		return new double[] {timedValue.getTimestamp()};
-	}
+  @Override
+  public double[] getTimestamps() {
+    return new double[] {timedValue.getTimestamp()};
+  }
 
-	@Override
-	public boolean isNear(Double value, Double tolerance) {
-		return ToleranceMath.isNear(value, getLatestValue(), tolerance);
-	}
+  @Override
+  public boolean isNear(Double value, Double tolerance) {
+    return ToleranceMath.isNear(value, getLatestValue(), tolerance);
+  }
 
-	@Override
-	public boolean isFurther(Double value, Double tolerance) {
-		return !isNear(value, tolerance);
-	}
+  @Override
+  public boolean isFurther(Double value, Double tolerance) {
+    return !isNear(value, tolerance);
+  }
 
-	@Override
-	public boolean isGreater(Double value) {
-		return getLatestValue() > value;
-	}
+  @Override
+  public boolean isGreater(Double value) {
+    return getLatestValue() > value;
+  }
 
-	@Override
-	public boolean isLess(Double value) {
-		return getLatestValue() < value;
-	}
+  @Override
+  public boolean isLess(Double value) {
+    return getLatestValue() < value;
+  }
 
-	@Override
-	public void toLog(LogTable table) {
-		updateValue(timedValue);
-		table.put(name, timedValue.getValue());
-	}
+  @Override
+  public void toLog(LogTable table) {
+    updateValue(timedValue);
+    table.put(name, timedValue.getValue());
+  }
 
-	@Override
-	public void fromLog(LogTable table) {
-		timedValue.setValue(table.get(name, 0.0));
-		timedValue.setTimestamp(TimeUtil.getCurrentTimeSeconds());
-	}
+  @Override
+  public void fromLog(LogTable table) {
+    timedValue.setValue(table.get(name, 0.0));
+    timedValue.setTimestamp(TimeUtil.getCurrentTimeSeconds());
+  }
 
-	public Double getAndUpdateValue() {
-		updateValue(timedValue);
-		return timedValue.getValue();
-	}
+  public Double getAndUpdateValue() {
+    updateValue(timedValue);
+    return timedValue.getValue();
+  }
 
-	protected abstract void updateValue(TimedValue<Double> timedValue);
-
+  protected abstract void updateValue(TimedValue<Double> timedValue);
 }

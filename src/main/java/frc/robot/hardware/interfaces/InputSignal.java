@@ -5,26 +5,25 @@ import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public interface InputSignal<T> extends LoggableInputs {
 
-	String getName();
+  String getName();
 
-	TimedValue<T> getLatestTimedValue();
+  TimedValue<T> getLatestTimedValue();
 
-	T getLatestValue();
+  T getLatestValue();
 
-	T getAndUpdateValue();
+  T getAndUpdateValue();
 
-	T[] asArray();
+  T[] asArray();
 
-	double getTimestamp();
+  double getTimestamp();
 
-	double[] getTimestamps();
+  double[] getTimestamps();
 
-	boolean isNear(T value, T tolerance);
+  boolean isNear(T value, T tolerance);
 
-	boolean isFurther(T value, T tolerance);
+  boolean isFurther(T value, T tolerance);
 
-	boolean isGreater(T value);
+  boolean isGreater(T value);
 
-	boolean isLess(T value);
-
+  boolean isLess(T value);
 }

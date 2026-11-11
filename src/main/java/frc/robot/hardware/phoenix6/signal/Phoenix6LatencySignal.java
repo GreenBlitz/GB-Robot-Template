@@ -2,39 +2,39 @@ package frc.robot.hardware.phoenix6.signal;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
-import org.wpilib.math.geometry.Rotation2d;
 import frc.robot.hardware.signal.AngleSignal;
-import frc.utils.TimedValue;
 import frc.utils.AngleUnit;
+import frc.utils.TimedValue;
 import frc.utils.time.TimeUtil;
+import org.wpilib.math.geometry.Rotation2d;
 
 public class Phoenix6LatencySignal extends AngleSignal implements SignalGetter {
 
-	private final StatusSignal<?> signal;
-	private final StatusSignal<?> slopeSignal;
+  private final StatusSignal<?> signal;
+  private final StatusSignal<?> slopeSignal;
 
-	protected Phoenix6LatencySignal(String name, StatusSignal<?> signal, StatusSignal<?> slopeSignal, AngleUnit angleUnit) {
-		super(name, angleUnit);
-		this.signal = signal;
-		this.slopeSignal = slopeSignal;
-	}
+  protected Phoenix6LatencySignal(
+      String name, StatusSignal<?> signal, StatusSignal<?> slopeSignal, AngleUnit angleUnit) {
+    super(name, angleUnit);
+    this.signal = signal;
+    this.slopeSignal = slopeSignal;
+  }
 
-	@Override
-	protected void updateValue(TimedValue<Rotation2d> timedValue) {
-		timedValue.setValue(angleUnit.toRotation2d(BaseStatusSignal.getLatencyCompensatedValueAsDouble(signal, slopeSignal)));
-		timedValue.setTimestamp(TimeUtil.getCurrentTimeSeconds());
-	}
+  @Override
+  protected void updateValue(TimedValue<Rotation2d> timedValue) {
+    timedValue.setValue(
+        angleUnit.toRotation2d(
+            BaseStatusSignal.getLatencyCompensatedValueAsDouble(signal, slopeSignal)));
+    timedValue.setTimestamp(TimeUtil.getCurrentTimeSeconds());
+  }
 
-	/**
-	 * For using refresh all with more signals...
-	 */
-	@Override
-	public StatusSignal<?> getSignal() {
-		return signal;
-	}
+  /** For using refresh all with more signals... */
+  @Override
+  public StatusSignal<?> getSignal() {
+    return signal;
+  }
 
-	public StatusSignal<?> getSlopeSignal() {
-		return slopeSignal;
-	}
-
+  public StatusSignal<?> getSlopeSignal() {
+    return slopeSignal;
+  }
 }

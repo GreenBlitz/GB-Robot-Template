@@ -4,8 +4,7 @@ import org.wpilib.math.geometry.Rotation2d;
 
 public interface IFeedForwardRequest extends IRequest<Rotation2d> {
 
-	IFeedForwardRequest withArbitraryFeedForward(double newArbitraryFeedForward);
+  IFeedForwardRequest withArbitraryFeedForward(double newArbitraryFeedForward);
 
-	double getArbitraryFeedForward();
-
+  double getArbitraryFeedForward();
 }

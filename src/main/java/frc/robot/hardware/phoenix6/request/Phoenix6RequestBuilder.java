@@ -1,111 +1,99 @@
 package frc.robot.hardware.phoenix6.request;
 
 import com.ctre.phoenix6.controls.*;
+import java.util.function.Supplier;
 import org.wpilib.math.controller.BangBangController;
 import org.wpilib.math.geometry.Rotation2d;
 
-import java.util.function.Supplier;
-
 public class Phoenix6RequestBuilder {
 
-	public static Phoenix6VelocityPositionRequest buildVelocityPositionRequest(
-		PositionVoltage positionVoltage,
-		double defaultArbitraryFeedForward,
-		boolean enableFOC
-	) {
-		return new Phoenix6VelocityPositionRequest(
-			Rotation2d.fromRotations(positionVoltage.Position),
-			Rotation2d.fromRotations(positionVoltage.Velocity),
-			positionVoltage.withEnableFOC(enableFOC),
-			setPoint -> positionVoltage.withVelocity(setPoint.getRotations()),
-			setPoint -> positionVoltage.withPosition(setPoint.getRotations()),
-			positionVoltage::withFeedForward,
-			defaultArbitraryFeedForward
-		);
-	}
+  public static Phoenix6VelocityPositionRequest buildVelocityPositionRequest(
+      PositionVoltage positionVoltage, double defaultArbitraryFeedForward, boolean enableFOC) {
+    return new Phoenix6VelocityPositionRequest(
+        Rotation2d.fromRotations(positionVoltage.Position),
+        Rotation2d.fromRotations(positionVoltage.Velocity),
+        positionVoltage.withEnableFOC(enableFOC),
+        setPoint -> positionVoltage.withVelocity(setPoint.getRotations()),
+        setPoint -> positionVoltage.withPosition(setPoint.getRotations()),
+        positionVoltage::withFeedForward,
+        defaultArbitraryFeedForward);
+  }
 
-	public static Phoenix6FeedForwardRequest buildVelocityVoltageRequest(
-		VelocityVoltage velocityVoltage,
-		double defaultArbitraryFeedForward,
-		boolean enableFOC
-	) {
-		return new Phoenix6FeedForwardRequest(
-			Rotation2d.fromRotations(velocityVoltage.Velocity),
-			velocityVoltage.withEnableFOC(enableFOC),
-			setPoint -> velocityVoltage.withVelocity(setPoint.getRotations()),
-			velocityVoltage::withFeedForward,
-			defaultArbitraryFeedForward
-		);
-	}
+  public static Phoenix6FeedForwardRequest buildVelocityVoltageRequest(
+      VelocityVoltage velocityVoltage, double defaultArbitraryFeedForward, boolean enableFOC) {
+    return new Phoenix6FeedForwardRequest(
+        Rotation2d.fromRotations(velocityVoltage.Velocity),
+        velocityVoltage.withEnableFOC(enableFOC),
+        setPoint -> velocityVoltage.withVelocity(setPoint.getRotations()),
+        velocityVoltage::withFeedForward,
+        defaultArbitraryFeedForward);
+  }
 
-	public static Phoenix6FeedForwardRequest buildVelocityTorqueCurrentFOCRequest(
-		VelocityTorqueCurrentFOC velocityTorqueCurrentFOC,
-		double defaultArbitraryFeedForward
-	) {
-		return new Phoenix6FeedForwardRequest(
-			Rotation2d.fromRotations(velocityTorqueCurrentFOC.Velocity),
-			velocityTorqueCurrentFOC,
-			setPoint -> velocityTorqueCurrentFOC.withVelocity(setPoint.getRotations()),
-			velocityTorqueCurrentFOC::withFeedForward,
-			defaultArbitraryFeedForward
-		);
-	}
+  public static Phoenix6FeedForwardRequest buildVelocityTorqueCurrentFOCRequest(
+      VelocityTorqueCurrentFOC velocityTorqueCurrentFOC, double defaultArbitraryFeedForward) {
+    return new Phoenix6FeedForwardRequest(
+        Rotation2d.fromRotations(velocityTorqueCurrentFOC.Velocity),
+        velocityTorqueCurrentFOC,
+        setPoint -> velocityTorqueCurrentFOC.withVelocity(setPoint.getRotations()),
+        velocityTorqueCurrentFOC::withFeedForward,
+        defaultArbitraryFeedForward);
+  }
 
-	public static Phoenix6MotionMagicRequest buildMotionMagicRequest(
-		MotionMagicVoltage motionMagicVoltage,
-		double defaultArbitraryFeedForward,
-		boolean enableFOC
-	) {
-		return new Phoenix6MotionMagicRequest(
-			Rotation2d.fromRotations(motionMagicVoltage.Position),
-			motionMagicVoltage.withEnableFOC(enableFOC),
-			setPoint -> motionMagicVoltage.withPosition(setPoint.getRotations()),
-			motionMagicVoltage::withFeedForward,
-			defaultArbitraryFeedForward
-		);
-	}
+  public static Phoenix6MotionMagicRequest buildMotionMagicRequest(
+      MotionMagicVoltage motionMagicVoltage,
+      double defaultArbitraryFeedForward,
+      boolean enableFOC) {
+    return new Phoenix6MotionMagicRequest(
+        Rotation2d.fromRotations(motionMagicVoltage.Position),
+        motionMagicVoltage.withEnableFOC(enableFOC),
+        setPoint -> motionMagicVoltage.withPosition(setPoint.getRotations()),
+        motionMagicVoltage::withFeedForward,
+        defaultArbitraryFeedForward);
+  }
 
-	public static Phoenix6DynamicMotionMagicRequest buildDynamicMotionMagicRequest(
-		DynamicMotionMagicVoltage dynamicMotionMagicVoltage,
-		double defaultArbitraryFeedForward,
-		boolean enableFOC
-	) {
-		return new Phoenix6DynamicMotionMagicRequest(
-			Rotation2d.fromRotations(dynamicMotionMagicVoltage.Position),
-			dynamicMotionMagicVoltage.withEnableFOC(enableFOC),
-			setPoint -> dynamicMotionMagicVoltage.withPosition(setPoint.getRotations()),
-			dynamicMotionMagicVoltage::withFeedForward,
-			maxVelocity -> dynamicMotionMagicVoltage.withVelocity(maxVelocity.getRotations()),
-			maxAcceleration -> dynamicMotionMagicVoltage.withAcceleration(maxAcceleration.getRotations()),
-			defaultArbitraryFeedForward
-		);
-	}
+  public static Phoenix6DynamicMotionMagicRequest buildDynamicMotionMagicRequest(
+      DynamicMotionMagicVoltage dynamicMotionMagicVoltage,
+      double defaultArbitraryFeedForward,
+      boolean enableFOC) {
+    return new Phoenix6DynamicMotionMagicRequest(
+        Rotation2d.fromRotations(dynamicMotionMagicVoltage.Position),
+        dynamicMotionMagicVoltage.withEnableFOC(enableFOC),
+        setPoint -> dynamicMotionMagicVoltage.withPosition(setPoint.getRotations()),
+        dynamicMotionMagicVoltage::withFeedForward,
+        maxVelocity -> dynamicMotionMagicVoltage.withVelocity(maxVelocity.getRotations()),
+        maxAcceleration ->
+            dynamicMotionMagicVoltage.withAcceleration(maxAcceleration.getRotations()),
+        defaultArbitraryFeedForward);
+  }
 
-	public static Phoenix6Request<Double> buildVoltageOutRequest(VoltageOut voltageOut, boolean enableFOC) {
-		return new Phoenix6Request<>(voltageOut.Output, voltageOut.withEnableFOC(enableFOC), voltageOut::withOutput);
-	}
+  public static Phoenix6Request<Double> buildVoltageOutRequest(
+      VoltageOut voltageOut, boolean enableFOC) {
+    return new Phoenix6Request<>(
+        voltageOut.Output, voltageOut.withEnableFOC(enableFOC), voltageOut::withOutput);
+  }
 
-	public static Phoenix6Request<Double> buildTorqueCurrentFOCRequest(TorqueCurrentFOC torqueCurrentFOC) {
-		return new Phoenix6Request<>(torqueCurrentFOC.Output, torqueCurrentFOC, torqueCurrentFOC::withOutput);
-	}
+  public static Phoenix6Request<Double> buildTorqueCurrentFOCRequest(
+      TorqueCurrentFOC torqueCurrentFOC) {
+    return new Phoenix6Request<>(
+        torqueCurrentFOC.Output, torqueCurrentFOC, torqueCurrentFOC::withOutput);
+  }
 
-	public static Phoenix6Request<Rotation2d> buildBangBangRequest(
-		Supplier<Rotation2d> currentVelocity,
-		double maxForwardPower,
-		double maxBackwardPower,
-		boolean enableFOC
-	) {
-		BangBangController bangBangController = new BangBangController();
-		DutyCycleOut dutyCycleOut = new DutyCycleOut(0).withEnableFOC(enableFOC);
-		return new Phoenix6Request<>(
-			Rotation2d.ZERO,
-			dutyCycleOut,
-			(Rotation2d targetVelocity) -> dutyCycleOut.withOutput(
-				bangBangController.calculate(currentVelocity.get().getRotations(), targetVelocity.getRotations()) == 0
-					? maxBackwardPower
-					: maxForwardPower
-			)
-		);
-	}
-
+  public static Phoenix6Request<Rotation2d> buildBangBangRequest(
+      Supplier<Rotation2d> currentVelocity,
+      double maxForwardPower,
+      double maxBackwardPower,
+      boolean enableFOC) {
+    BangBangController bangBangController = new BangBangController();
+    DutyCycleOut dutyCycleOut = new DutyCycleOut(0).withEnableFOC(enableFOC);
+    return new Phoenix6Request<>(
+        Rotation2d.ZERO,
+        dutyCycleOut,
+        (Rotation2d targetVelocity) ->
+            dutyCycleOut.withOutput(
+                bangBangController.calculate(
+                            currentVelocity.get().getRotations(), targetVelocity.getRotations())
+                        == 0
+                    ? maxBackwardPower
+                    : maxForwardPower));
+  }
 }

@@ -2,16 +2,10 @@ package frc.robot.subsystems.roller;
 
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase;
-import org.wpilib.math.filter.Debouncer;
-import org.wpilib.math.system.DCMotor;
-import org.wpilib.math.system.Models;
-import org.wpilib.simulation.DCMotorSim;
-import org.wpilib.command2.sysid.SysIdRoutine;
 import frc.robot.Robot;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.digitalinput.chooser.ChooserDigitalInput;
 import frc.robot.hardware.digitalinput.supplied.SuppliedDigitalInput;
-import frc.robot.hardware.simulations.wpilib.SimpleMotorSimulation;
 import frc.robot.hardware.rev.motors.BrushlessSparkMAXMotor;
 import frc.robot.hardware.rev.motors.SparkMaxConfiguration;
 import frc.robot.hardware.rev.motors.SparkMaxDeviceID;
@@ -20,103 +14,123 @@ import frc.robot.hardware.rev.request.SparkMaxRequest;
 import frc.robot.hardware.rev.request.SparkMaxRequestBuilder;
 import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.hardware.signal.supplied.SuppliedDoubleSignal;
+import frc.robot.hardware.simulations.wpilib.SimpleMotorSimulation;
 import frc.utils.AngleUnit;
+import org.wpilib.command2.sysid.SysIdRoutine;
+import org.wpilib.math.filter.Debouncer;
+import org.wpilib.math.system.DCMotor;
+import org.wpilib.math.system.Models;
+import org.wpilib.simulation.DCMotorSim;
 import org.wpilib.util.Pair;
 
 public class SparkMaxRollerBuilder {
 
-	private static SimpleMotorSimulation buildSimulation(double gearRatio, double momentOfInertia) {
-		return new SimpleMotorSimulation(
-			new DCMotorSim(Models.singleJointedArmFromPhysicalConstants(DCMotor.getNEO(1), momentOfInertia, gearRatio), DCMotor.getNEO(1))
-		);
-	}
+  private static SimpleMotorSimulation buildSimulation(double gearRatio, double momentOfInertia) {
+    return new SimpleMotorSimulation(
+        new DCMotorSim(
+            Models.singleJointedArmFromPhysicalConstants(
+                DCMotor.getNEO(1), momentOfInertia, gearRatio),
+            DCMotor.getNEO(1)));
+  }
 
-	private static Roller buildRoller(
-		String logPath,
-		SparkMaxWrapper sparkMaxWrapper,
-		boolean inverted,
-		double gearRatio,
-		int currentLimit,
-		double momentOfInertia
-	) {
-		SimpleMotorSimulation motorSimulation = buildSimulation(gearRatio, momentOfInertia);
+  private static Roller buildRoller(
+      String logPath,
+      SparkMaxWrapper sparkMaxWrapper,
+      boolean inverted,
+      double gearRatio,
+      int currentLimit,
+      double momentOfInertia) {
+    SimpleMotorSimulation motorSimulation = buildSimulation(gearRatio, momentOfInertia);
 
-		BrushlessSparkMAXMotor motor = new BrushlessSparkMAXMotor(logPath, sparkMaxWrapper, motorSimulation, new SysIdRoutine.Config());
+    BrushlessSparkMAXMotor motor =
+        new BrushlessSparkMAXMotor(
+            logPath, sparkMaxWrapper, motorSimulation, new SysIdRoutine.Config());
 
-		motor.applyConfiguration(buildConfiguration(inverted, gearRatio, currentLimit));
+    motor.applyConfiguration(buildConfiguration(inverted, gearRatio, currentLimit));
 
-		SuppliedDoubleSignal voltageSignal = new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
-		SuppliedDoubleSignal currentSignal = new SuppliedDoubleSignal("current", () -> sparkMaxWrapper.getOutputCurrent().get());
-		SuppliedAngleSignal positionSignal = new SuppliedAngleSignal(
-			"position",
-			() -> sparkMaxWrapper.getEncoder().getPosition().get(),
-			AngleUnit.ROTATIONS
-		);
-		SuppliedAngleSignal velocitySignal = new SuppliedAngleSignal(
-			"velocity",
-			() -> sparkMaxWrapper.getEncoder().getVelocity().get(),
-			AngleUnit.ROTATIONS
-		);
+    SuppliedDoubleSignal voltageSignal =
+        new SuppliedDoubleSignal("voltage", sparkMaxWrapper::getVoltage);
+    SuppliedDoubleSignal currentSignal =
+        new SuppliedDoubleSignal("current", () -> sparkMaxWrapper.getOutputCurrent().get());
+    SuppliedAngleSignal positionSignal =
+        new SuppliedAngleSignal(
+            "position",
+            () -> sparkMaxWrapper.getEncoder().getPosition().get(),
+            AngleUnit.ROTATIONS);
+    SuppliedAngleSignal velocitySignal =
+        new SuppliedAngleSignal(
+            "velocity",
+            () -> sparkMaxWrapper.getEncoder().getVelocity().get(),
+            AngleUnit.ROTATIONS);
 
-		SparkMaxRequest<Double> voltageRequest = SparkMaxRequestBuilder.build(0.0, SparkBase.ControlType.kVoltage, ClosedLoopSlot.kSlot0);
+    SparkMaxRequest<Double> voltageRequest =
+        SparkMaxRequestBuilder.build(0.0, SparkBase.ControlType.kVoltage, ClosedLoopSlot.kSlot0);
 
-		return new Roller(logPath, motor, voltageSignal, currentSignal, positionSignal, velocitySignal, voltageRequest);
-	}
+    return new Roller(
+        logPath,
+        motor,
+        voltageSignal,
+        currentSignal,
+        positionSignal,
+        velocitySignal,
+        voltageRequest);
+  }
 
-	public static Roller build(
-		String logPath,
-		SparkMaxDeviceID id,
-		boolean inverted,
-		double gearRatio,
-		int currentLimit,
-		double momentOfInertia
-	) {
-		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(id);
-		return buildRoller(logPath, sparkMaxWrapper, inverted, gearRatio, currentLimit, momentOfInertia);
-	}
+  public static Roller build(
+      String logPath,
+      SparkMaxDeviceID id,
+      boolean inverted,
+      double gearRatio,
+      int currentLimit,
+      double momentOfInertia) {
+    SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(id);
+    return buildRoller(
+        logPath, sparkMaxWrapper, inverted, gearRatio, currentLimit, momentOfInertia);
+  }
 
-	public static Pair<Roller, IDigitalInput> buildWithDigitalInput(
-		String logPath,
-		SparkMaxDeviceID id,
-		boolean inverted,
-		double gearRatio,
-		int currentLimit,
-		double momentOfInertia,
-		String digitalInputName,
-		double debounceTime,
-		boolean isForwardLimitSwitch,
-		boolean isLimitSwitchInverted
-	) {
-		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(id);
+  public static Pair<Roller, IDigitalInput> buildWithDigitalInput(
+      String logPath,
+      SparkMaxDeviceID id,
+      boolean inverted,
+      double gearRatio,
+      int currentLimit,
+      double momentOfInertia,
+      String digitalInputName,
+      double debounceTime,
+      boolean isForwardLimitSwitch,
+      boolean isLimitSwitchInverted) {
+    SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(id);
 
-		IDigitalInput digitalInput;
-		if (Robot.ROBOT_TYPE.isSimulation()) {
-			digitalInput = new ChooserDigitalInput(digitalInputName);
-		} else {
-			if (isForwardLimitSwitch) {
-				digitalInput = new SuppliedDigitalInput(
-					() -> sparkMaxWrapper.getForwardLimitSwitch().isPressed().get(),
-					new Debouncer(debounceTime),
-					isLimitSwitchInverted
-				);
-			} else {
-				digitalInput = new SuppliedDigitalInput(
-					() -> sparkMaxWrapper.getReverseLimitSwitch().isPressed().get(),
-					new Debouncer(debounceTime),
-					isLimitSwitchInverted
-				);
-			}
-		}
-		return new Pair<>(buildRoller(logPath, sparkMaxWrapper, inverted, gearRatio, currentLimit, momentOfInertia), digitalInput);
-	}
+    IDigitalInput digitalInput;
+    if (Robot.ROBOT_TYPE.isSimulation()) {
+      digitalInput = new ChooserDigitalInput(digitalInputName);
+    } else {
+      if (isForwardLimitSwitch) {
+        digitalInput =
+            new SuppliedDigitalInput(
+                () -> sparkMaxWrapper.getForwardLimitSwitch().isPressed().get(),
+                new Debouncer(debounceTime),
+                isLimitSwitchInverted);
+      } else {
+        digitalInput =
+            new SuppliedDigitalInput(
+                () -> sparkMaxWrapper.getReverseLimitSwitch().isPressed().get(),
+                new Debouncer(debounceTime),
+                isLimitSwitchInverted);
+      }
+    }
+    return new Pair<>(
+        buildRoller(logPath, sparkMaxWrapper, inverted, gearRatio, currentLimit, momentOfInertia),
+        digitalInput);
+  }
 
-	private static SparkMaxConfiguration buildConfiguration(boolean inverted, double gearRatio, int currentLimit) {
-		SparkMaxConfiguration configs = new SparkMaxConfiguration();
-		configs.getSparkMaxConfig().smartCurrentLimit(currentLimit);
-		configs.getSparkMaxConfig().inverted(inverted);
-		configs.getSparkMaxConfig().encoder.positionConversionFactor(1 / gearRatio);
-		configs.getSparkMaxConfig().encoder.velocityConversionFactor(1 / gearRatio);
-		return configs;
-	}
-
+  private static SparkMaxConfiguration buildConfiguration(
+      boolean inverted, double gearRatio, int currentLimit) {
+    SparkMaxConfiguration configs = new SparkMaxConfiguration();
+    configs.getSparkMaxConfig().smartCurrentLimit(currentLimit);
+    configs.getSparkMaxConfig().inverted(inverted);
+    configs.getSparkMaxConfig().encoder.positionConversionFactor(1 / gearRatio);
+    configs.getSparkMaxConfig().encoder.velocityConversionFactor(1 / gearRatio);
+    return configs;
+  }
 }

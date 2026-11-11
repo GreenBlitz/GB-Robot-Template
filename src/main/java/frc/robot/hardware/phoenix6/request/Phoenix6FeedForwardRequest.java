@@ -1,36 +1,34 @@
 package frc.robot.hardware.phoenix6.request;
 
 import com.ctre.phoenix6.controls.ControlRequest;
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.IFeedForwardRequest;
-
 import java.util.function.Consumer;
+import org.wpilib.math.geometry.Rotation2d;
 
-public class Phoenix6FeedForwardRequest extends Phoenix6Request<Rotation2d> implements IFeedForwardRequest {
+public class Phoenix6FeedForwardRequest extends Phoenix6Request<Rotation2d>
+    implements IFeedForwardRequest {
 
-	private final Consumer<Double> setArbitraryFeedForward;
-	private double arbitraryFeedForward;
+  private final Consumer<Double> setArbitraryFeedForward;
+  private double arbitraryFeedForward;
 
-	Phoenix6FeedForwardRequest(
-		Rotation2d defaultSetPoint,
-		ControlRequest controlRequest,
-		Consumer<Rotation2d> setSetPoint,
-		Consumer<Double> setFeedForward,
-		double defaultArbitraryFeedForward
-	) {
-		super(defaultSetPoint, controlRequest, setSetPoint);
-		this.setArbitraryFeedForward = setFeedForward;
-		this.arbitraryFeedForward = defaultArbitraryFeedForward;
-	}
+  Phoenix6FeedForwardRequest(
+      Rotation2d defaultSetPoint,
+      ControlRequest controlRequest,
+      Consumer<Rotation2d> setSetPoint,
+      Consumer<Double> setFeedForward,
+      double defaultArbitraryFeedForward) {
+    super(defaultSetPoint, controlRequest, setSetPoint);
+    this.setArbitraryFeedForward = setFeedForward;
+    this.arbitraryFeedForward = defaultArbitraryFeedForward;
+  }
 
-	public Phoenix6FeedForwardRequest withArbitraryFeedForward(double newArbitraryFeedForward) {
-		setArbitraryFeedForward.accept(newArbitraryFeedForward);
-		this.arbitraryFeedForward = newArbitraryFeedForward;
-		return this;
-	}
+  public Phoenix6FeedForwardRequest withArbitraryFeedForward(double newArbitraryFeedForward) {
+    setArbitraryFeedForward.accept(newArbitraryFeedForward);
+    this.arbitraryFeedForward = newArbitraryFeedForward;
+    return this;
+  }
 
-	public double getArbitraryFeedForward() {
-		return arbitraryFeedForward;
-	}
-
+  public double getArbitraryFeedForward() {
+    return arbitraryFeedForward;
+  }
 }

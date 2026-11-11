@@ -4,142 +4,144 @@
 
 package frc;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Threads;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Robot;
-import frc.robot.autonomous.AutonomousConstants;
 import frc.utils.alerts.Alert;
-import frc.utils.brakestate.BrakeMode;
-import frc.utils.driverstation.DriverStationUtil;
 import frc.utils.alerts.AlertManager;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.auto.PathPlannerUtil;
+import frc.utils.brakestate.BrakeMode;
 import frc.utils.brakestate.BrakeStateManager;
+import frc.utils.driverstation.DriverStationUtil;
 import frc.utils.logger.LoggerFactory;
 import frc.utils.time.TimeUtil;
-import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
-
 import java.util.ArrayList;
 import java.util.stream.Collectors;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.wpilib.command2.CommandScheduler;
+import org.wpilib.driverstation.internal.DriverStationBackend;
+import org.wpilib.hardware.hal.ThreadsJNI;
+
+// import org.wpilib.smartdashboard.SendableChooser;
+// import org.wpilib.smartdashboard.SmartDashboard;
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the TimedRobot
- * documentation. If you change the name of this class or the package after creating this project, you must also update the build.gradle file in
- * the project.
+ * The VM is configured to automatically run this class, and to call the functions corresponding to
+ * each mode, as described in the TimedRobot documentation. If you change the name of this class or
+ * the package after creating this project, you must also update the build.gradle file in the
+ * project.
  */
 public class RobotManager extends LoggedRobot {
 
-	private final Robot robot;
-	private PathPlannerAutoWrapper autonomousCommand;
-	private int roborioCycles;
-	private String alertsMessage;
+  private final Robot robot;
+  private PathPlannerAutoWrapper autonomousCommand;
+  private int roborioCycles;
+  private String alertsMessage;
 
-	public RobotManager() {
-		if (Robot.ROBOT_TYPE.isReplay()) {
-			setUseTiming(false);
-		}
-		DriverStation.silenceJoystickConnectionWarning(true);
-		LoggerFactory.initializeLogger();
-		PathPlannerUtil.startPathfinder();
-		PathPlannerUtil.setupPathPlannerLogging();
+  public RobotManager() {
+    if (Robot.ROBOT_TYPE.isReplay()) {
+      setUseTiming(false);
+    }
+    DriverStationBackend.silenceJoystickConnectionAlert(true);
+    LoggerFactory.initializeLogger();
+    PathPlannerUtil.startPathfinder();
+    PathPlannerUtil.setupPathPlannerLogging();
 
-		this.roborioCycles = 0;
-		this.robot = new Robot();
+    this.roborioCycles = 0;
+    this.robot = new Robot();
 
-		createAutoReadyForConstructionChooser();
-		JoysticksBindings.configureBindings(robot);
+    //		createAutoReadyForConstructionChooser();
+    JoysticksBindings.configureBindings(robot);
 
-		Threads.setCurrentThreadPriority(true, 10);
+    ThreadsJNI.setCurrentThreadPriority(10);
 
-		alertsMessage = "Alerts: None";
-		logCriticalAlerts();
-	}
+    alertsMessage = "Alerts: None";
+    logCriticalAlerts();
+  }
 
-	@Override
-	public void disabledInit() {
-		if (!DriverStationUtil.isMatch()) {
-			BrakeStateManager.setBrakeMode(BrakeMode.COAST);
-		}
-	}
+  @Override
+  public void disabledInit() {
+    if (!DriverStationUtil.isMatch()) {
+      BrakeStateManager.setBrakeMode(BrakeMode.COAST);
+    }
+  }
 
-	@Override
-	public void disabledExit() {
-		if (!DriverStationUtil.isMatch()) {
-			BrakeStateManager.setBrakeMode(BrakeMode.BRAKE);
-		}
-	}
+  @Override
+  public void disabledExit() {
+    if (!DriverStationUtil.isMatch()) {
+      BrakeStateManager.setBrakeMode(BrakeMode.BRAKE);
+    }
+  }
 
-	@Override
-	public void autonomousInit() {
-		// robot.getRobotCommander().getSuperstructure().setIsSubsystemRunningIndependently(true);
-		// robot.getSwerve().getCommandsBuilder().setIsSubsystemRunningIndependently(true);
+  @Override
+  public void autonomousInit() {
+    // robot.getRobotCommander().getSuperstructure().setIsSubsystemRunningIndependently(true);
+    // robot.getSwerve().getCommandsBuilder().setIsSubsystemRunningIndependently(true);
 
-		if (autonomousCommand == null) {
-			this.autonomousCommand = robot.getAutonomousCommand();
-		}
-		CommandScheduler.getInstance().schedule(autonomousCommand);
-	}
+    if (autonomousCommand == null) {
+      this.autonomousCommand = robot.getAutonomousCommand();
+    }
+    CommandScheduler.getInstance().schedule(autonomousCommand);
+  }
 
-	@Override
-	public void autonomousExit() {
-		if (autonomousCommand != null) {
-			autonomousCommand.cancel();
-		}
-		// robot.getRobotCommander().getSuperstructure().setIsSubsystemRunningIndependently(false);
-		// robot.getSwerve().getCommandsBuilder().setIsSubsystemRunningIndependently(false);
-	}
+  @Override
+  public void autonomousExit() {
+    if (autonomousCommand != null) {
+      autonomousCommand.cancel();
+    }
+    // robot.getRobotCommander().getSuperstructure().setIsSubsystemRunningIndependently(false);
+    // robot.getSwerve().getCommandsBuilder().setIsSubsystemRunningIndependently(false);
+  }
 
-	@Override
-	public void robotPeriodic() {
-		updateTimeRelatedData(); // Better to be first
-		JoysticksBindings.updateChassisDriverInputs();
-		robot.periodic();
-		AlertManager.reportAlerts();
-		logCriticalAlerts();
-	}
+  @Override
+  public void robotPeriodic() {
+    updateTimeRelatedData(); // Better to be first
+    JoysticksBindings.updateChassisDriverInputs();
+    robot.periodic();
+    AlertManager.reportAlerts();
+    logCriticalAlerts();
+  }
 
-	private void createAutoReadyForConstructionChooser() {
-		SendableChooser<Boolean> autoReadyForConstructionSendableChooser = new SendableChooser<>();
-		autoReadyForConstructionSendableChooser.setDefaultOption("false", false);
-		autoReadyForConstructionSendableChooser.addOption("true", true);
-		autoReadyForConstructionSendableChooser.onChange(isReady -> {
-			if (isReady) {
-				this.autonomousCommand = robot.getAutonomousCommand();
-				BrakeStateManager.setBrakeMode(BrakeMode.BRAKE);
-			} else {
-				BrakeStateManager.setBrakeMode(BrakeMode.COAST);
-			}
-			Logger.recordOutput(AutonomousConstants.LOG_PATH_PREFIX + "/ReadyToConstruct", isReady);
-		});
-		SmartDashboard.putData("AutoReadyForConstruction", autoReadyForConstructionSendableChooser);
-	}
+  //	private void createAutoReadyForConstructionChooser() {
+  //		SendableChooser<Boolean> autoReadyForConstructionSendableChooser = new SendableChooser<>();
+  //		autoReadyForConstructionSendableChooser.setDefaultOption("false", false);
+  //		autoReadyForConstructionSendableChooser.addOption("true", true);
+  //		autoReadyForConstructionSendableChooser.onChange(isReady -> {
+  //			if (isReady) {
+  //				this.autonomousCommand = robot.getAutonomousCommand();
+  //				BrakeStateManager.setBrakeMode(BrakeMode.BRAKE);
+  //			} else {
+  //				BrakeStateManager.setBrakeMode(BrakeMode.COAST);
+  //			}
+  //			Logger.recordOutput(AutonomousConstants.LOG_PATH_PREFIX + "/ReadyToConstruct", isReady);
+  //		});
+  //		SmartDashboard.putData("AutoReadyForConstruction", autoReadyForConstructionSendableChooser);
+  //	}
 
-	private void updateTimeRelatedData() {
-		roborioCycles++;
-		Logger.recordOutput("RoborioCycles", roborioCycles);
-		TimeUtil.updateCycleTime(roborioCycles);
-	}
+  private void updateTimeRelatedData() {
+    roborioCycles++;
+    Logger.recordOutput("RoborioCycles", roborioCycles);
+    TimeUtil.updateCycleTime(roborioCycles);
+  }
 
-	private void logCriticalAlerts() {
-		ArrayList<Alert> alerts = AlertManager.getReportedAlerts();
+  private void logCriticalAlerts() {
+    ArrayList<Alert> alerts = AlertManager.getReportedAlerts();
 
-		String newAlertsMessage = alerts.stream().filter(Alert::isCritical).map(Alert::getName).collect(Collectors.joining(", "));
+    String newAlertsMessage =
+        alerts.stream()
+            .filter(Alert::isCritical)
+            .map(Alert::getName)
+            .collect(Collectors.joining(", "));
 
-		boolean areAlertsOk = newAlertsMessage.isEmpty();
+    boolean areAlertsOk = newAlertsMessage.isEmpty();
 
-		Logger.recordOutput("AreAlertsOK", areAlertsOk);
+    Logger.recordOutput("AreAlertsOK", areAlertsOk);
 
-		newAlertsMessage = "Alerts: " + (areAlertsOk ? "None" : newAlertsMessage);
+    newAlertsMessage = "Alerts: " + (areAlertsOk ? "None" : newAlertsMessage);
 
-		if (!newAlertsMessage.equals(alertsMessage)) {
-			alertsMessage = newAlertsMessage;
-			Logger.recordOutput("Alerts", alertsMessage);
-		}
-	}
-
-
+    if (!newAlertsMessage.equals(alertsMessage)) {
+      alertsMessage = newAlertsMessage;
+      Logger.recordOutput("Alerts", alertsMessage);
+    }
+  }
 }

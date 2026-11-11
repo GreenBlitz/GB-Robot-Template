@@ -1,9 +1,7 @@
 package frc.utils.brakestate;
 
 public enum BrakeMode {
-
-	UNKNOWN,
-	BRAKE,
-	COAST
-
+  UNKNOWN,
+  BRAKE,
+  COAST
 }

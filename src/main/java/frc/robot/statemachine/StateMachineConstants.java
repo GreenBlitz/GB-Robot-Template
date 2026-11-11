@@ -1,4 +1,3 @@
 package frc.robot.statemachine;
 
-public class StateMachineConstants {
-}
+public class StateMachineConstants {}

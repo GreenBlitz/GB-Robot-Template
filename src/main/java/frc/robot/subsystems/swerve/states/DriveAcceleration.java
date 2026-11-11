@@ -5,19 +5,19 @@ import frc.robot.subsystems.swerve.factories.constants.RealSwerveConstants;
 
 public enum DriveAcceleration {
 
-	NORMAL(RealSwerveConstants.ACCELERATION_AT_12_VOLTS_METERS_PER_SECOND_SQUARED),
-	SKID_PREVENTION(RealSwerveConstants.MAX_SKID_ACCELERATION);
+	DEFAULT(RealSwerveConstants.ACCELERATION_AT_12_VOLTS_METERS_PER_SECOND_SQUARED),
+	SKID_PREVENTION(RealSwerveConstants.MAX_SKID_ACCELERATION_METERS_PER_SECOND_SQUARED);
 
-	private final double acceleration;
+	private final double maxAccelerationMetersPerSecondSquared;
 	private final SlewRateLimiter slewRateLimiter;
 
-	DriveAcceleration(double acceleration) {
-		this.acceleration = acceleration;
-		slewRateLimiter = new SlewRateLimiter(acceleration, -acceleration, 0);
+	DriveAcceleration(double maxAccelerationMetersPerSecondSquared) {
+		this.maxAccelerationMetersPerSecondSquared = maxAccelerationMetersPerSecondSquared;
+		slewRateLimiter = new SlewRateLimiter(maxAccelerationMetersPerSecondSquared);
 	}
 
-	public double getAcceleration() {
-		return acceleration;
+	public double getMaxAccelerationMetersPerSecondSquared() {
+		return maxAccelerationMetersPerSecondSquared;
 	}
 
 	public SlewRateLimiter getSlewRateLimiter() {

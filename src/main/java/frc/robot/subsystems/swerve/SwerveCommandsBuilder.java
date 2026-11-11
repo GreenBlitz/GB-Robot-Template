@@ -68,7 +68,6 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-
 	public Command pointWheels(Rotation2d targetSteerPosition, boolean optimize) {
 		return swerve.asSubsystemCommand(
 			new RunCommand(() -> modules.pointWheels(targetSteerPosition, optimize)),
@@ -84,14 +83,13 @@ public class SwerveCommandsBuilder {
 		return swerve.asSubsystemCommand(new RunCommand(modules::pointWheelsInX), "Point wheels in X");
 	}
 
-
 	public Command setTargetModuleStates(
 		Supplier<SwerveModuleState[]> statesSupplier,
 		boolean isClosedLoop,
 		DriveAcceleration driveAcceleration
 	) {
 		return swerve.asSubsystemCommand(
-			new RunCommand(() -> modules.setTargetStates(statesSupplier.get(), isClosedLoop, driveAcceleration.getSlewRateLimiter())),
+			new RunCommand(() -> modules.setTargetStates(statesSupplier.get(), isClosedLoop, driveAcceleration)),
 			"Set states by " + "supplier"
 		);
 	}

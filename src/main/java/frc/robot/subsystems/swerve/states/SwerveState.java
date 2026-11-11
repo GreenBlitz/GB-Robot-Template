@@ -7,8 +7,8 @@ import org.littletonrobotics.junction.Logger;
 public class SwerveState {
 
 	private static final DriveRelative DEFAULT_DRIVE_RELATIVE = DriveRelative.ALLIANCE_RELATIVE;
-	private static final DriveSpeed DEFAULT_DRIVE_SPEED = DriveSpeed.NORMAL;
-	private static final DriveAcceleration DEFAULT_DRIVE_ACCELERATION = DriveAcceleration.NORMAL;
+	private static final DriveSpeed DEFAULT_DRIVE_SPEED = DriveSpeed.DEFAULT;
+	private static final DriveAcceleration DEFAULT_DRIVE_ACCELERATION = DriveAcceleration.DEFAULT;
 	private static final LoopMode DEFAULT_LOOP_MODE = LoopMode.CLOSED;
 	private static final RotateAxis DEFAULT_ROTATE_AXIS = RotateAxis.MIDDLE_OF_CHASSIS;
 	private static final AimAssist DEFAULT_AIM_ASSIST = AimAssist.NONE;

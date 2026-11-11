@@ -18,7 +18,7 @@ public class ModuleAlonMath {
 	}
 
 	public static boolean shouldFlipLinear(Rotation2d targetSteerAngle, Rotation2d currentSteerAngle) {
-		return Math.abs((targetSteerAngle.getRotations() - currentSteerAngle.getRotations()) % 0.75) > 0.25;
+		return Math.abs(((targetSteerAngle.getRotations() - currentSteerAngle.getRotations()) % 1.0) % 0.75) > 0.25;
 	}
 
 	public static double getModInRange(double x, double rangeStart, double rangeEnd) {

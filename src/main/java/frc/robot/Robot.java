@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.imu.IMUWrapper;
 import frc.robot.hardware.phoenix6.BusChain;
-import frc.robot.poseestimator.HeadingSource;
+import frc.robot.poseestimator.OrientationSupplier;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
@@ -40,6 +40,7 @@ public class Robot {
 
 	private final Swerve swerve;
 	private final IMUWrapper imu;
+	private final OrientationSupplier orientationSupplier;
 	private final IPoseEstimator poseEstimator;
 	private final List<Limelight> limelights;
 
@@ -47,11 +48,12 @@ public class Robot {
 		BatteryUtil.scheduleLimiter();
 
 		this.imu = IMUFactory.createIMU("IMU/");
+		this.orientationSupplier = imu;
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
 			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
 			imu,
-			HeadingSource.handleHeadingSource(HeadingSource.IMU, this)
+			orientationSupplier
 		);
 		BrakeStateManager.add(() -> swerve.getModules().setBrake(true), () -> swerve.getModules().setBrake(false));
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
@@ -59,7 +61,7 @@ public class Robot {
 			swerve.getKinematics(),
 			swerve.getModules().getWheelPositions(0),
 			swerve.getModules().getCurrentStates(),
-			imu.getLatestOrientation(),
+			orientationSupplier,
 			imu.getLatestAccelerationG(),
 			imu.getWrappedYaw().getTimestamp()
 		);
@@ -97,10 +99,6 @@ public class Robot {
 		swerve.update();
 	}
 
-	public void setSwerveHeadingSource(HeadingSource headingSource) {
-		swerve.setHeadingSupplier(HeadingSource.handleHeadingSource(headingSource, this));
-	}
-
 	public void periodic() {
 		BusChain.refreshAll();
 
@@ -121,6 +119,10 @@ public class Robot {
 
 	public IPoseEstimator getPoseEstimator() {
 		return poseEstimator;
+	}
+
+	public OrientationSupplier getHeadingSupplier() {
+		return orientationSupplier;
 	}
 
 	public Swerve getSwerve() {

@@ -13,8 +13,6 @@ public interface IOdometryEstimator {
 
 	Pose2d getOdometryPose();
 
-	Rotation2d getSwerveYaw();
-
 	void setHeading(Rotation2d newHeading);
 
 }

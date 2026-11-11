@@ -12,7 +12,7 @@ public class OdometryData {
 	private double timestampSeconds = 0;
 	private SwerveModulePosition[] wheelPositions = new SwerveModulePosition[4];
 	private SwerveModuleState[] wheelStates = new SwerveModuleState[4];
-	private Optional<Rotation3d> imuOrientation = Optional.empty();
+	private Rotation3d orientation = new Rotation3d();
 	private Optional<Translation3d> imu3DAccelerationG = Optional.empty();
 
 	public OdometryData() {}
@@ -21,13 +21,13 @@ public class OdometryData {
 		double timestampSeconds,
 		SwerveModulePosition[] wheelPositions,
 		SwerveModuleState[] wheelStates,
-		Optional<Rotation3d> imuOrientation,
+		Rotation3d orientation,
 		Optional<Translation3d> imu3DAccelerationG
 	) {
 		this.timestampSeconds = timestampSeconds;
 		this.wheelPositions = wheelPositions;
 		this.wheelStates = wheelStates;
-		this.imuOrientation = imuOrientation;
+		this.orientation = orientation;
 		this.imu3DAccelerationG = imu3DAccelerationG;
 	}
 
@@ -43,8 +43,8 @@ public class OdometryData {
 		return wheelStates;
 	}
 
-	public Optional<Rotation3d> getIMUOrientation() {
-		return imuOrientation;
+	public Rotation3d getOrientation() {
+		return orientation;
 	}
 
 	public Optional<Translation3d> getIMU3DAccelerationG() {
@@ -63,12 +63,12 @@ public class OdometryData {
 		this.wheelStates = wheelStates;
 	}
 
-	public void setIMUOrientation(Optional<Rotation3d> imuOrientation) {
-		this.imuOrientation = imuOrientation;
+	public void setOrientation(Rotation3d orientation) {
+		this.orientation = orientation;
 	}
 
-	public void setIMUOrientation(Rotation3d imuOrientation) {
-		setIMUOrientation(Optional.of(imuOrientation));
+	public void setOrientation(Rotation3d orientation) {
+		setOrientation(Optional.of(orientation));
 	}
 
 	public void setIMU3DAcceleration(Optional<Translation3d> imu3DAccelerationG) {

@@ -41,7 +41,7 @@ import java.util.function.Supplier;
 public class Swerve extends GBSubsystem {
 
 	private final SwerveConstants constants;
-	private final double driveRadiusMeters;
+	public static double driveRadiusMeters;
 	private final Modules modules;
 	private final IIMU imu;
 	private final IMUSignals imuSignals;
@@ -327,7 +327,7 @@ public class Swerve extends GBSubsystem {
 
 	private void setTargetModuleStates(SwerveModuleState[] moduleStates, boolean isClosedLoop, DriveAcceleration driveAcceleration) {
 		SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, constants.velocityAt12VoltsMetersPerSecond());
-		modules.setTargetStates(moduleStates, isClosedLoop, driveAcceleration);
+		modules.setTargetStates(moduleStates, isClosedLoop, driveAcceleration.getSlewRateLimiter());
 	}
 
 

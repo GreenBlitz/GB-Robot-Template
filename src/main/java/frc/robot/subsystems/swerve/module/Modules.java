@@ -6,9 +6,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.subsystems.swerve.Swerve;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
+
+import static frc.utils.time.TimeUtil.DEFAULT_CYCLE_TIME_SECONDS;
 
 public class Modules {
 
@@ -97,9 +100,9 @@ public class Modules {
 			moduleStates[i].speedMetersPerSecond = slewRateLimiter.calculate(moduleStates[i].speedMetersPerSecond);
 			modules[i].setTargetState(moduleStates[i], isClosedLoop);
 		}
-		double out = moduleStates[0].speedMetersPerSecond;
+		double out = moduleStates[0].speedMetersPerSecond ;
 		Logger.recordOutput(logPath + "/Debug/Out0", out);
-		Logger.recordOutput(logPath + "/Debug/DeltaPerLoop", out - lastOut);
+		Logger.recordOutput(logPath + "/Debug/DeltaPerLoop", (1*DEFAULT_CYCLE_TIME_SECONDS)*(out - lastOut));
 		Logger.recordOutput("Debug/Marker", 12345);
 		lastOut = out;
 	}

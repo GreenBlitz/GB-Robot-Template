@@ -41,4 +41,3 @@ public final class Angle2dStruct implements Struct<Angle2d> {
         return true;
     }
 }
-

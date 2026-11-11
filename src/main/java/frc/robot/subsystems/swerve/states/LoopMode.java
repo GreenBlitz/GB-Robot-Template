@@ -1,18 +1,16 @@
 package frc.robot.subsystems.swerve.states;
 
 public enum LoopMode {
+  CLOSED(true),
+  OPEN(false);
 
-	CLOSED(true),
-	OPEN(false);
+  private final boolean isClosedLoop;
 
-	private final boolean isClosedLoop;
+  LoopMode(boolean isClosedLoop) {
+    this.isClosedLoop = isClosedLoop;
+  }
 
-	LoopMode(boolean isClosedLoop) {
-		this.isClosedLoop = isClosedLoop;
-	}
-
-	public boolean isClosedLoop() {
-		return isClosedLoop;
-	}
-
+  public boolean isClosedLoop() {
+    return isClosedLoop;
+  }
 }

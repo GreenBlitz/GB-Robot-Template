@@ -1,4 +1,3 @@
 package frc.robot.hardware.interfaces;
 
-public interface IMotionMagicRequest extends IFeedForwardRequest {
-}
+public interface IMotionMagicRequest extends IFeedForwardRequest {}

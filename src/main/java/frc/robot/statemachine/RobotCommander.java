@@ -1,76 +1,76 @@
 package frc.robot.statemachine;
 
-import org.wpilib.command2.*;
 import frc.robot.Robot;
 import frc.robot.statemachine.superstructure.Superstructure;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.Swerve;
 import java.util.Set;
+import org.wpilib.command2.*;
 
 public class RobotCommander extends GBSubsystem {
 
-	private final Robot robot;
-	private final Swerve swerve;
-	private final Superstructure superstructure;
-	private final PositionTargets positionTargets;
+  private final Robot robot;
+  private final Swerve swerve;
+  private final Superstructure superstructure;
+  private final PositionTargets positionTargets;
 
-	private RobotState currentState;
+  private RobotState currentState;
 
-	public RobotCommander(String logPath, Robot robot) {
-		super(logPath);
-		this.robot = robot;
-//        this.swerve = robot.getSwerve();
-		this.swerve = null;
-		this.positionTargets = new PositionTargets(robot);
-		this.superstructure = new Superstructure("StateMachine/Superstructure", robot);
-		this.currentState = null;
+  public RobotCommander(String logPath, Robot robot) {
+    super(logPath);
+    this.robot = robot;
+    //        this.swerve = robot.getSwerve();
+    this.swerve = null;
+    this.positionTargets = new PositionTargets(robot);
+    this.superstructure = new Superstructure("StateMachine/Superstructure", robot);
+    this.currentState = null;
 
-		setDefaultCommand(
-			new ConditionalCommand(
-				asSubsystemCommand(Commands.none(), "Disabled"),
-				new InstantCommand(
-					() -> CommandScheduler.getInstance().schedule(new DeferredCommand(() -> endState(currentState), Set.of(this, swerve)))
-				),
-				this::isSubsystemRunningIndependently
-			)
-		);
-	}
+    setDefaultCommand(
+        new ConditionalCommand(
+            asSubsystemCommand(Commands.none(), "Disabled"),
+            new InstantCommand(() ->
+                CommandScheduler.getInstance()
+                    .schedule(
+                        new DeferredCommand(() -> endState(currentState), Set.of(this, swerve)))),
+            this::isSubsystemRunningIndependently));
+  }
 
-	public RobotState getCurrentState() {
-		return currentState;
-	}
+  public RobotState getCurrentState() {
+    return currentState;
+  }
 
-	public Superstructure getSuperstructure() {
-		return superstructure;
-	}
+  public Superstructure getSuperstructure() {
+    return superstructure;
+  }
 
-	public boolean isSubsystemRunningIndependently() {
-		return superstructure.isSubsystemRunningIndependently() || swerve.isRunningIndependently();
-	}
+  public boolean isSubsystemRunningIndependently() {
+    return superstructure.isSubsystemRunningIndependently() || swerve.isRunningIndependently();
+  }
 
-	@Override
-	protected void subsystemPeriodic() {
-		superstructure.log();
-	}
+  @Override
+  protected void subsystemPeriodic() {
+    superstructure.log();
+  }
 
-	public Command driveWith(RobotState state, Command command) {
-		Command swerveDriveCommand = swerve.getCommandsBuilder().driveByDriversInputs(state.getSwerveState());
-		Command wantedCommand = command.deadlineFor(swerveDriveCommand);
-		return asSubsystemCommand(wantedCommand, state);
-	}
+  public Command driveWith(RobotState state, Command command) {
+    Command swerveDriveCommand =
+        swerve.getCommandsBuilder().driveByDriversInputs(state.getSwerveState());
+    Command wantedCommand = command.deadlineFor(swerveDriveCommand);
+    return asSubsystemCommand(wantedCommand, state);
+  }
 
-	public Command driveWith(RobotState state) {
-		return driveWith(state, superstructure.setState(state));
-	}
+  public Command driveWith(RobotState state) {
+    return driveWith(state, superstructure.setState(state));
+  }
 
-	private Command asSubsystemCommand(Command command, RobotState state) {
-		return new ParallelCommandGroup(asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
-	}
+  private Command asSubsystemCommand(Command command, RobotState state) {
+    return new ParallelCommandGroup(
+        asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
+  }
 
-	private Command endState(RobotState state) {
-		return switch (state) {
-			default -> new InstantCommand();
-		};
-	}
-
+  private Command endState(RobotState state) {
+    return switch (state) {
+      default -> new InstantCommand();
+    };
+  }
 }

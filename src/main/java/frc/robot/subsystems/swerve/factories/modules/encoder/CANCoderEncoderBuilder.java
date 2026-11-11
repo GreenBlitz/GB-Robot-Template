@@ -16,47 +16,47 @@ import frc.utils.alerts.Alert;
 
 class CANCoderEncoderBuilder {
 
-	private static final int APPLY_CONFIG_RETRIES = 5;
+  private static final int APPLY_CONFIG_RETRIES = 5;
 
-	private static CANcoderConfiguration buildEncoderConfig(int id) {
-		CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
+  private static CANcoderConfiguration buildEncoderConfig(int id) {
+    CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
 
-		encoderConfig.MagnetSensor.MagnetOffset = getCANCoderOffset(id);
-		encoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-		encoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = MathConstants.HALF_CIRCLE.getRotations();
+    encoderConfig.MagnetSensor.MagnetOffset = getCANCoderOffset(id);
+    encoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+    encoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint =
+        MathConstants.HALF_CIRCLE.getRotations();
 
-		return encoderConfig;
-	}
+    return encoderConfig;
+  }
 
-	static double getCANCoderOffset(int id) {
-		return switch (id) {
-			case 0 -> -0.285400390625;
-			case 1 -> 0.072021484375;
-			case 2 -> -0.2646484375;
-			case 3 -> -0.259033203125;
-			default -> 0;
-		};
-	}
+  static double getCANCoderOffset(int id) {
+    return switch (id) {
+      case 0 -> -0.285400390625;
+      case 1 -> 0.072021484375;
+      case 2 -> -0.2646484375;
+      case 3 -> -0.259033203125;
+      default -> 0;
+    };
+  }
 
-	static IAngleEncoder buildEncoder(String logPath, Phoenix6DeviceID encoderDeviceID) {
-		CANcoder cancoder = new CANcoder(encoderDeviceID.id(), encoderDeviceID.busChain().getCANBus());
-		CANcoderConfiguration caNcoderConfiguration = buildEncoderConfig(encoderDeviceID.id());
-		if (!Phoenix6Util.checkStatusCodeWithRetry(() -> cancoder.getConfigurator().apply(caNcoderConfiguration), APPLY_CONFIG_RETRIES).isOK()) {
-			new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt", true).report();
-		}
+  static IAngleEncoder buildEncoder(String logPath, Phoenix6DeviceID encoderDeviceID) {
+    CANcoder cancoder = new CANcoder(encoderDeviceID.id(), encoderDeviceID.busChain().getCANBus());
+    CANcoderConfiguration caNcoderConfiguration = buildEncoderConfig(encoderDeviceID.id());
+    if (!Phoenix6Util.checkStatusCodeWithRetry(
+            () -> cancoder.getConfigurator().apply(caNcoderConfiguration), APPLY_CONFIG_RETRIES)
+        .isOK()) {
+      new Alert(Alert.AlertType.ERROR, logPath + "ConfigurationFailAt", true).report();
+    }
 
-		return new CANCoderEncoder(logPath, cancoder, encoderDeviceID.busChain());
-	}
+    return new CANCoderEncoder(logPath, cancoder, encoderDeviceID.busChain());
+  }
 
-	static EncoderSignals buildSignals(CANCoderEncoder encoder) {
-		return new EncoderSignals(
-			Phoenix6SignalBuilder.buildAngleSignal(
-				encoder.getDevice().getPosition(),
-				RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-				AngleUnit.ROTATIONS,
-				encoder.getBusChain()
-			)
-		);
-	}
-
+  static EncoderSignals buildSignals(CANCoderEncoder encoder) {
+    return new EncoderSignals(
+        Phoenix6SignalBuilder.buildAngleSignal(
+            encoder.getDevice().getPosition(),
+            RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+            AngleUnit.ROTATIONS,
+            encoder.getBusChain()));
+  }
 }

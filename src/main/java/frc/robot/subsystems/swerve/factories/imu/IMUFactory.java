@@ -8,19 +8,18 @@ import frc.robot.subsystems.swerve.IMUSignals;
 
 public class IMUFactory {
 
-	public static IIMU createIMU(String logPath) {
-		logPath += "/IMU";
-		return switch (Robot.ROBOT_TYPE) {
-			case REAL, REPLAY -> Pigeon2IMUBuilder.buildIMU(logPath, IDs.Pigeon2IDs.SWERVE);
-			case SIMULATION -> SimulationIMUBuilder.buildIMU(logPath);
-		};
-	}
+  public static IIMU createIMU(String logPath) {
+    logPath += "/IMU";
+    return switch (Robot.ROBOT_TYPE) {
+      case REAL, REPLAY -> Pigeon2IMUBuilder.buildIMU(logPath, IDs.Pigeon2IDs.SWERVE);
+      case SIMULATION -> SimulationIMUBuilder.buildIMU(logPath);
+    };
+  }
 
-	public static IMUSignals createSignals(IIMU imu) {
-		return switch (Robot.ROBOT_TYPE) {
-			case REAL, REPLAY -> Pigeon2IMUBuilder.buildSignals((Pigeon2IMU) imu);
-			case SIMULATION -> SimulationIMUBuilder.buildSignals();
-		};
-	}
-
+  public static IMUSignals createSignals(IIMU imu) {
+    return switch (Robot.ROBOT_TYPE) {
+      case REAL, REPLAY -> Pigeon2IMUBuilder.buildSignals((Pigeon2IMU) imu);
+      case SIMULATION -> SimulationIMUBuilder.buildSignals();
+    };
+  }
 }

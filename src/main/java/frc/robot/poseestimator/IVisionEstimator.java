@@ -1,12 +1,11 @@
 package frc.robot.poseestimator;
 
-import org.wpilib.math.geometry.Pose2d;
 import frc.robot.vision.RobotPoseObservation;
+import org.wpilib.math.geometry.Pose2d;
 
 public interface IVisionEstimator {
 
-	void updateVision(RobotPoseObservation... robotPoseVisionData);
+  void updateVision(RobotPoseObservation... robotPoseVisionData);
 
-	Pose2d getEstimatedPose();
-
+  Pose2d getEstimatedPose();
 }

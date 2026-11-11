@@ -68,7 +68,6 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-
 	public Command pointWheels(Rotation2d targetSteerPosition, boolean optimize) {
 		return swerve.asSubsystemCommand(
 			new RunCommand(() -> modules.pointWheels(targetSteerPosition, optimize)),
@@ -83,7 +82,6 @@ public class SwerveCommandsBuilder {
 	public Command pointWheelsInX() {
 		return swerve.asSubsystemCommand(new RunCommand(modules::pointWheelsInX), "Point wheels in X");
 	}
-
 
 	public Command setTargetModuleStates(
 		Supplier<SwerveModuleState[]> statesSupplier,

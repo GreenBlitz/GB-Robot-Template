@@ -1,7 +1,6 @@
 package frc.robot.subsystems.arm;
 
 import com.ctre.phoenix6.controls.VoltageOut;
-import frc.utils.costomUnits.Angle2d;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
@@ -9,6 +8,7 @@ import frc.robot.hardware.interfaces.*;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.battery.BatteryUtil;
+import frc.utils.costomUnits.Angle2d;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
 

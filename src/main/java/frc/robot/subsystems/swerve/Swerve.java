@@ -1,6 +1,5 @@
 package frc.robot.subsystems.swerve;
 
-import frc.utils.costomUnits.Angle2d;
 import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.config.RobotConfig;
 import org.wpilib.math.util.MathUtil;
@@ -28,6 +27,7 @@ import frc.robot.subsystems.swerve.states.heading.HeadingControl;
 import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.TimedValue;
+import frc.utils.costomUnits.Angle2d;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.battery.BatteryUtil;
 import org.littletonrobotics.junction.Logger;
@@ -328,12 +328,12 @@ public class Swerve extends GBSubsystem {
 	}
 
 
-	public boolean isAtHeading(Angle2d targetHeading, Angle2d tolerance, Angle2d velocityDeadbandAnglesPerSecond) {
+	public boolean isAtHeading(Angle2d targetHeading, Angle2d tolerance, Angle2d velocityDeadbandAPS) {
 		double headingDeltaDegrees = Math.abs(targetHeading.minus(headingSupplier.get()).getDegrees());
 		boolean isAtHeading = headingDeltaDegrees < tolerance.getDegrees();
 
 		double rotationVelocityRadiansPerSecond = getRobotRelativeVelocity().omega;
-		boolean isStopping = Math.abs(rotationVelocityRadiansPerSecond) < velocityDeadbandAnglesPerSecond.getRadians();
+		boolean isStopping = Math.abs(rotationVelocityRadiansPerSecond) < velocityDeadbandAPS.getRadians();
 
 		return isAtHeading && isStopping;
 	}

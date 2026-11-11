@@ -6,13 +6,11 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.signals.InvertedValue;
-import frc.robot.Robot;
-import frc.utils.costomUnits.Angle2d;
 import org.wpilib.math.system.DCMotor;
 import org.wpilib.math.system.Models;
 import org.wpilib.command2.sysid.SysIdRoutine;
 import org.wpilib.simulation.FlywheelSim;
-
+import frc.robot.Robot;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.simulations.MechanismSimulation;
@@ -25,6 +23,7 @@ import frc.robot.hardware.phoenix6.request.Phoenix6Request;
 import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.utils.AngleUnit;
+import frc.utils.costomUnits.Angle2d;
 
 public class TalonFXRollerBuilder {
 

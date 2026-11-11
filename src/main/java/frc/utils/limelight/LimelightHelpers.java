@@ -2,7 +2,12 @@
 
 package frc.utils.limelight;
 
-import org.wpilib.math.geometry.*;
+import org.wpilib.math.geometry.Pose2d;
+import org.wpilib.math.geometry.Pose3d;
+import org.wpilib.math.geometry.Rotation3d;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Translation3d;
+import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.networktables.DoubleArrayEntry;
 import org.wpilib.networktables.NetworkTable;
 import org.wpilib.networktables.NetworkTableEntry;

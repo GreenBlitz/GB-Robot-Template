@@ -1,11 +1,16 @@
 package frc.constants.field;
 
 import frc.utils.costomUnits.Angle2d;
-import org.wpilib.math.geometry.*;
 import org.wpilib.driverstation.Alliance;
 import frc.utils.driverstation.DriverStationUtil;
 import frc.utils.math.AngleTransform;
 import frc.utils.math.FieldMath;
+import org.wpilib.math.geometry.Pose2d;
+import org.wpilib.math.geometry.Pose3d;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Rotation3d;
+import org.wpilib.math.geometry.Translation2d;
+import org.wpilib.math.geometry.Translation3d;
 
 public class Field {
 

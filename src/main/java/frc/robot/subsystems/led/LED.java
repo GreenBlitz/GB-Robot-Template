@@ -20,8 +20,8 @@ public class LED extends GBSubsystem {
 	private LEDPattern basePattern;
 	private final LEDCommandsBuilder ledCommandsBuilder;
 
-	public LED(String logPath, LEDConstants ledConstants) {
-		super(logPath);
+	public LED(LEDConstants ledConstants) {
+		super(ledConstants.LOG_PATH());
 
 		this.ledConstants = ledConstants;
 		this.timeBetweenBlinksSeconds = ledConstants.DEFAULT_TIME_BETWEEN_BLINKS_SECOND();

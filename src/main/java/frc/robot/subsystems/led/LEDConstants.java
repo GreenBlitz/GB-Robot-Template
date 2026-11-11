@@ -3,6 +3,7 @@ package frc.robot.subsystems.led;
 import edu.wpi.first.wpilibj.util.Color;
 
 public record LEDConstants(
+	String LOG_PATH,
 	int PORT_NUMBER,
 	int NUMBER_OF_LEDS_IN_STRIP,
 	double DEFAULT_TIME_BETWEEN_BLINKS_SECOND,

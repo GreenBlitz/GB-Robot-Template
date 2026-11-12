@@ -12,7 +12,7 @@ public class LoggedNetworkAngle2d extends LoggedNetworkInput {
 
 	private final String key;
 	private final DoubleEntry entry;
-	private Angle2d defaultValue = Angle2d.fromDegrees(0);
+	private Angle2d defaultValue = Angle2d.ZERO;
 	private Angle2d value;
 
 	public LoggedNetworkAngle2d(String key) {

@@ -177,7 +177,6 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
 	 * @param rotation2d The value of the angle in Rotation2d.
 	 * @return The rotation object with the desired angle value.
 	 */
-	// use carefully, it does a Modulo 360
 	public static Angle2d fromRotation2d(Rotation2d rotation2d) {
 		return Angle2d.fromRadians(rotation2d.getRadians());
 	}
@@ -273,6 +272,7 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
 		return MatBuilder.fill(Nat.N2(), Nat.N2(), m_cos, -m_sin, m_sin, m_cos);
 	}
 
+	// use carefully, it does a Modulo 360
 	public Rotation2d toRotation2d() {
 		return Rotation2d.fromRadians(getRadians());
 	}

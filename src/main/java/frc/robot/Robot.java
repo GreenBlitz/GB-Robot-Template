@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.imu.IMUWrapper;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.poseestimator.OrientationSupplier;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
@@ -39,6 +40,7 @@ public class Robot {
 
 	private final Swerve swerve;
 	private final IMUWrapper imu;
+	private final OrientationSupplier orientationSupplier;
 	private final IPoseEstimator poseEstimator;
 	private final List<Limelight> limelights;
 
@@ -46,10 +48,12 @@ public class Robot {
 		BatteryUtil.scheduleLimiter();
 
 		this.imu = IMUFactory.createIMUWrapper("IMU/");
+		this.orientationSupplier = imu;
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
 			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
-			imu
+			imu,
+			orientationSupplier
 		);
 		BrakeStateManager.add(() -> swerve.getModules().setBrake(true), () -> swerve.getModules().setBrake(false));
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
@@ -57,7 +61,7 @@ public class Robot {
 			swerve.getKinematics(),
 			swerve.getModules().getWheelPositions(0),
 			swerve.getModules().getCurrentStates(),
-			imu.getLatestOrientation(),
+			orientationSupplier,
 			imu.getLatestAccelerationG(),
 			imu.getWrappedYaw().getTimestamp()
 		);
@@ -85,8 +89,6 @@ public class Robot {
 				)
 			)
 		);
-
-		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 
 		configureBrakeStateChooser();
 	}
@@ -117,8 +119,16 @@ public class Robot {
 		return poseEstimator;
 	}
 
+	public OrientationSupplier getOrientationSupplier() {
+		return orientationSupplier;
+	}
+
 	public Swerve getSwerve() {
 		return swerve;
+	}
+
+	public IMUWrapper getIMU() {
+		return imu;
 	}
 
 	public List<Limelight> getLimelights() {

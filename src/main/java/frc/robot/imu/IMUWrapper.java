@@ -8,10 +8,11 @@ import frc.robot.RobotConstants;
 import frc.robot.hardware.empties.EmptyIMU;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.interfaces.InputSignal;
+import frc.robot.poseestimator.OrientationSupplier;
 import frc.utils.TimedValue;
 import org.littletonrobotics.junction.Logger;
 
-public class IMUWrapper {
+public class IMUWrapper implements OrientationSupplier {
 
 	private final IIMU imu;
 	private final IMUSignals imuSignals;
@@ -41,10 +42,12 @@ public class IMUWrapper {
 		return imuSignals.getLatestAngularVelocity();
 	}
 
+	@Override
 	public Rotation3d[] getAllOrientations() {
 		return imuSignals.getAllOrientations();
 	}
 
+	@Override
 	public Rotation3d getLatestOrientation() {
 		return imuSignals.getLatestOrientation();
 	}

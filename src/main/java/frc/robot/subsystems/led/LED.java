@@ -79,7 +79,7 @@ public class LED extends GBSubsystem {
 		setGenericPattern(ledPattern.scrollAtAbsoluteSpeed(linearVelocity, Meters.of(1 / ledConstants.NUMBER_OF_LEDS_PER_METER())));
 	}
 
-	private void applyPattern(){
+	private void applyPattern() {
 		ledPattern.applyTo(addressableLEDBuffer);
 		addressableLED.setData(addressableLEDBuffer);
 	}

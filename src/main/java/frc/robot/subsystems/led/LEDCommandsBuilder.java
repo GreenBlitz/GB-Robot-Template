@@ -17,7 +17,7 @@ public class LEDCommandsBuilder {
 		this.led = led;
 	}
 
-	public Command setGenericPattern(LEDPattern pattern){
+	public Command setGenericPattern(LEDPattern pattern) {
 		return led.asSubsystemCommand(new InstantCommand(() -> led.setGenericPattern(pattern)), "Set generic LED pattern");
 	}
 
@@ -52,19 +52,31 @@ public class LEDCommandsBuilder {
 	}
 
 	public Command enableScroll() {
-		return led.asSubsystemCommand(
-			new InstantCommand(() -> led.enableScroll(LED.ledConstants.SCROLL_SPEED_PER_METER_PER_SECOND())),
-			"Enable LED Scroll"
-		);
+		return led.asSubsystemCommand(new Command() {
+
+			@Override
+			public void initialize() {
+				led.enableScroll(LED.ledConstants.SCROLL_SPEED_PER_METER_PER_SECOND());
+			}
+
+			@Override
+			public void execute() {}
+
+		}, "Enable LED Scroll");
 	}
 
 	public Command enableScroll(LinearVelocity metersPerSecondVelocity) {
-		return led.asSubsystemCommand(
-				new InstantCommand(
-						() -> led.enableScroll(metersPerSecondVelocity)
-				),
-				"Enable LED Scroll at custom speed"
-		);
+		return led.asSubsystemCommand(new Command() {
+
+			@Override
+			public void initialize() {
+				led.enableScroll(metersPerSecondVelocity);
+			}
+
+			@Override
+			public void execute() {}
+
+		}, "Enable LED Scroll at custom speed");
 	}
 
 	public Command disableScroll() {

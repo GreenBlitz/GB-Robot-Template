@@ -248,7 +248,7 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
 	 * @return The new rotated Angle2d.
 	 */
 	public Angle2d rotateBy(Angle2d other) {
-		return new Angle2d(m_cos * other.m_cos - m_sin * other.m_sin, m_cos * other.m_sin + m_sin * other.m_cos);
+		return Angle2d.fromRadians(m_value + other.getRadians());
 	}
 
 	/**

@@ -62,7 +62,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 			initialTimestampSeconds,
 			initialModulePositions,
 			initialModuleStates,
-			orientationSupplier.getLatestOrientation(),
+			Optional.of(orientationSupplier.getLatestOrientation()),
 			Optional.of(initialIMUXYAccelerationG)
 		);
 		this.orientationSupplier = orientationSupplier;
@@ -87,11 +87,6 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	@Override
 	public Pose2d getOdometryPose() {
 		return odometryEstimator.getPoseMeters();
-	}
-
-	@Override
-	public RobotPoseObservation getLastVisionObservation() {
-		return lastVisionObservation;
 	}
 
 	@Override

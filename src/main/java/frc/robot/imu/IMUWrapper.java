@@ -12,6 +12,7 @@ import frc.robot.poseestimator.OrientationSupplier;
 import frc.utils.TimedValue;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class IMUWrapper implements OrientationSupplier {
@@ -45,13 +46,13 @@ public class IMUWrapper implements OrientationSupplier {
 	}
 
 	@Override
-	public Rotation3d[] getAllOrientations() {
-		return imuSignals.getAllOrientations();
+	public Optional<Rotation3d[]> getAllOrientations() {
+		return Optional.of(imuSignals.getAllOrientations());
 	}
 
 	@Override
-	public Rotation3d getLatestOrientation() {
-		return imuSignals.getLatestOrientation();
+	public Optional<Rotation3d> getLatestOrientation() {
+		return Optional.of(imuSignals.getLatestOrientation());
 	}
 
 	public Translation3d[] getAllAccelerationsG() {

@@ -7,8 +7,6 @@ public interface IVisionEstimator {
 
 	void updateVision(RobotPoseObservation... robotPoseVisionData);
 
-	RobotPoseObservation getLastVisionObservation();
-
 	Pose2d getEstimatedPose();
 
 }

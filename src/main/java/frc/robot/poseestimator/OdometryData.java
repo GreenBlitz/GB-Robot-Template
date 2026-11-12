@@ -1,9 +1,11 @@
 package frc.robot.poseestimator;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.Robot;
 
 import java.util.Optional;
 
@@ -12,7 +14,7 @@ public class OdometryData {
 	private double timestampSeconds = 0;
 	private SwerveModulePosition[] wheelPositions = new SwerveModulePosition[4];
 	private SwerveModuleState[] wheelStates = new SwerveModuleState[4];
-	private Rotation3d orientation = new Rotation3d();
+	private Optional<Rotation3d> orientation = Optional.empty();
 	private Optional<Translation3d> imu3DAccelerationG = Optional.empty();
 
 	public OdometryData() {}
@@ -21,7 +23,7 @@ public class OdometryData {
 		double timestampSeconds,
 		SwerveModulePosition[] wheelPositions,
 		SwerveModuleState[] wheelStates,
-		Rotation3d orientation,
+		Optional<Rotation3d> orientation,
 		Optional<Translation3d> imu3DAccelerationG
 	) {
 		this.timestampSeconds = timestampSeconds;
@@ -43,7 +45,7 @@ public class OdometryData {
 		return wheelStates;
 	}
 
-	public Rotation3d getOrientation() {
+	public Optional<Rotation3d> getOrientation() {
 		return orientation;
 	}
 
@@ -63,11 +65,11 @@ public class OdometryData {
 		this.wheelStates = wheelStates;
 	}
 
-	public void setOrientation(Rotation3d orientation) {
+	public void setOrientation(Optional<Rotation3d> orientation) {
 		this.orientation = orientation;
 	}
 
-	public void setOrientation(Rotation3d orientation) {
+	public void setOrientation(Rotation3d orientation){
 		setOrientation(Optional.of(orientation));
 	}
 

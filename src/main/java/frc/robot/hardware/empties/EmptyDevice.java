@@ -24,4 +24,8 @@ public abstract class EmptyDevice implements IDevice {
 	@Override
 	public void updateInputs(InputSignal<?>... inputSignals) {}
 
+	@Override
+	public String getLogPath() {
+		return logPath;
+	}
 }

@@ -5,8 +5,6 @@ import frc.robot.hardware.interfaces.IAngleEncoder;
 
 public class EmptyAngleEncoder extends EmptyDevice implements IAngleEncoder {
 
-	private final String logPath;
-
 	public EmptyAngleEncoder(String logPath) {
 		super(logPath);
 		this.logPath = logPath;
@@ -14,10 +12,5 @@ public class EmptyAngleEncoder extends EmptyDevice implements IAngleEncoder {
 
 	@Override
 	public void setPosition(Rotation2d position) {}
-
-	@Override
-	public String getLogPath() {
-		return logPath;
-	}
 
 }

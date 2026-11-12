@@ -19,21 +19,25 @@ public class ModuleAlon extends GBSubsystem {
 	private final ModuleCommandsBuilder commandsBuilder;
 	private State state = State.NORMAL;
 
-	public void setState(State state){
-		this.state=state;
+	public void setState(State state) {
+		this.state = state;
 	}
 
-	public State getState(){
+	public State getState() {
 		return state;
 	}
 
-	public static enum State{
+	public static enum State {
+
 		NORMAL(1),
 		SLOW(0.1);
+
 		public final double powerMultiplier;
-		private State(double powerMultiplier){
-			this.powerMultiplier=powerMultiplier;
+
+		private State(double powerMultiplier) {
+			this.powerMultiplier = powerMultiplier;
 		}
+
 	}
 
 	public ModuleAlon(
@@ -122,7 +126,7 @@ public class ModuleAlon extends GBSubsystem {
 		Logger.recordOutput(logpath + "/steerAngle", getSteerPosition());
 		Logger.recordOutput(logpath + "/steerTarget", steer.getPIDTarget());
 		Logger.recordOutput(logpath + "/linearTarget", linear.getPIDTarget());
-		Logger.recordOutput(logpath+"/moduleMode", getState());
+		Logger.recordOutput(logpath + "/moduleMode", getState());
 		steer.logAll();
 		linear.logAll();
 		canCoder.logAll();

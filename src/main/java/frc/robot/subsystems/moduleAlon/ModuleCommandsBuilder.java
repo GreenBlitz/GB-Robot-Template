@@ -23,7 +23,7 @@ public class ModuleCommandsBuilder {
 		this.moduleAlon = moduleAlon;
 		moduleAlon.setDefaultCommand(new InstantCommand(() -> moduleAlon.stop(), moduleAlon));
 		linearSetPower = (power) -> {
-			moduleAlon.linearPower(power*moduleAlon.getState().powerMultiplier);
+			moduleAlon.linearPower(power * moduleAlon.getState().powerMultiplier);
 		};
 		steerToPosition = (position) -> {
 			moduleAlon.steerToPosition(position);
@@ -36,13 +36,12 @@ public class ModuleCommandsBuilder {
 		}, moduleAlon).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming);
 	}
 
-	public Command slowModeCommand(){
-		return new FunctionalCommand(
-				()->{},
-				()->{moduleAlon.setState(ModuleAlon.State.SLOW);},
-				(b)->{moduleAlon.setState(ModuleAlon.State.NORMAL);},
-				()->false
-		);
+	public Command slowModeCommand() {
+		return new FunctionalCommand(() -> {}, () -> {
+			moduleAlon.setState(ModuleAlon.State.SLOW);
+		}, (b) -> {
+			moduleAlon.setState(ModuleAlon.State.NORMAL);
+		}, () -> false);
 	}
 
 	public void setDefaultJoystick(SmartJoystick defaultJoystick) {

@@ -40,7 +40,7 @@ public class ModuleAlonMath {
 		double x = xAxis.get();
 		double y = yAxis.get();
 		Rotation2d angle = Rotation2d.fromRadians(Math.atan2(y, x));
-		double magnitude = Math.min(Math.hypot(x, y),1);
+		double magnitude = Math.min(Math.hypot(x, y), 1);
 		if (withLinearFlipping) {
 			linearPower.accept(magnitude * (shouldFlipLinear(angle, steerPosition.get()) ? -1 : 1));
 			steerToPosition.accept(getSteerTargetAngleWithLinearFlipping(angle, steerPosition.get()));

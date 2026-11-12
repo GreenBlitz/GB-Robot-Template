@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.RobotManager;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
@@ -95,8 +94,10 @@ public class Robot {
 			? new ChooserDigitalInput("digitalInput")
 			: new ChanneledDigitalInput(new DigitalInput(1), new Debouncer(0));
 		this.limelights = List.of();
-		digitalInputInputsAutoLogged=new DigitalInputInputsAutoLogged();
-		digitalInputTrigger=new Trigger(()->{return digitalInputInputsAutoLogged.debouncedValue;});
+		digitalInputInputsAutoLogged = new DigitalInputInputsAutoLogged();
+		digitalInputTrigger = new Trigger(() -> {
+			return digitalInputInputsAutoLogged.debouncedValue;
+		});
 		digitalInputTrigger.whileTrue(moduleAlon.getCommandsBuilder().slowModeCommand());
 		limelights.forEach(
 			limelight -> limelight.setMT1StdDevsCalculation(

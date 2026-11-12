@@ -24,7 +24,6 @@ public class ModuleCommandsBuilder {
 		moduleAlon.setDefaultCommand(new InstantCommand(() -> moduleAlon.stop(), moduleAlon));
 		linearSetPower = (power) -> {
 			moduleAlon.linearPower(power*moduleAlon.getState().powerMultiplier);
-			System.out.println("ahh");
 		};
 		steerToPosition = (position) -> {
 			moduleAlon.steerToPosition(position);

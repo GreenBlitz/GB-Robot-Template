@@ -9,12 +9,12 @@ import frc.robot.imu.IMUSignals;
 
 public class IMUFactory {
 
-	public static IMUWrapper createIMU(String logPath) {
-		IIMU imu = createIIMU(logPath);
+	public static IMUWrapper createIMUWrapper(String logPath) {
+		IIMU imu = createIMU(logPath);
 		return new IMUWrapper(imu, createSignals(imu));
 	}
 
-	private static IIMU createIIMU(String logPath) {
+	private static IIMU createIMU(String logPath) {
 		return switch (Robot.ROBOT_TYPE) {
 			case REAL, REPLAY -> Pigeon2IMUBuilder.buildIMU(logPath, IDs.Pigeon2IDs.CHASSIS);
 			case SIMULATION -> SimulationIMUBuilder.buildIMU(logPath);

@@ -47,7 +47,7 @@ public class Robot {
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 
-		this.imu = IMUFactory.createIMU("IMU/");
+		this.imu = IMUFactory.createIMUWrapper("IMU/");
 		this.orientationSupplier = imu;
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
@@ -119,7 +119,7 @@ public class Robot {
 		return poseEstimator;
 	}
 
-	public OrientationSupplier getHeadingSupplier() {
+	public OrientationSupplier getOrientationSupplier() {
 		return orientationSupplier;
 	}
 

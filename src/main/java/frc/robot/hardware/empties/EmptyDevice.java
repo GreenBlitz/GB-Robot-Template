@@ -28,4 +28,5 @@ public abstract class EmptyDevice implements IDevice {
 	public String getLogPath() {
 		return logPath;
 	}
+
 }

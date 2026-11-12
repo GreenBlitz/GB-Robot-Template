@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.GBSubsystem;
 
 import static edu.wpi.first.units.Units.Meters;
@@ -35,6 +36,8 @@ public class LED extends GBSubsystem {
 		addressableLED.start();
 
 		this.ledCommandsBuilder = new LEDCommandsBuilder(this);
+
+		setDefaultCommand(new InstantCommand(()-> setGenericPattern(ledPattern)));
 	}
 
 	public LEDCommandsBuilder getCommandsBuilder() {

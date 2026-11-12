@@ -101,13 +101,13 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		Twist2d changeInPose = kinematics.toTwist2d(lastOdometryData.getWheelPositions(), data.getWheelPositions());
 		if (Robot.ROBOT_TYPE == RobotType.SIMULATION) {
 			data.setOrientation(
-					new Rotation3d(
-							lastOdometryData.getOrientation().getX(),
-							lastOdometryData.getOrientation().getY(),
-							Rotation2d.fromRadians(lastOdometryData.getOrientation().getZ())
-									.plus(Rotation2d.fromRadians(changeInPose.dtheta))
-									.getRadians()
-					)
+				new Rotation3d(
+					lastOdometryData.getOrientation().getX(),
+					lastOdometryData.getOrientation().getY(),
+					Rotation2d.fromRadians(lastOdometryData.getOrientation().getZ())
+						.plus(Rotation2d.fromRadians(changeInPose.dtheta))
+						.getRadians()
+				)
 			);
 		}
 

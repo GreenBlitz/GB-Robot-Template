@@ -13,6 +13,7 @@ import frc.robot.autonomous.PathFollowingCommandsBuilder;
 import frc.robot.subsystems.swerve.module.ModuleConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.Modules;
+import frc.robot.subsystems.swerve.states.DriveAcceleration;
 import frc.robot.subsystems.swerve.states.RotateAxis;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.auto.PathPlannerUtil;
@@ -67,7 +68,6 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-
 	public Command pointWheels(Rotation2d targetSteerPosition, boolean optimize) {
 		return swerve.asSubsystemCommand(
 			new RunCommand(() -> modules.pointWheels(targetSteerPosition, optimize)),
@@ -83,10 +83,13 @@ public class SwerveCommandsBuilder {
 		return swerve.asSubsystemCommand(new RunCommand(modules::pointWheelsInX), "Point wheels in X");
 	}
 
-
-	public Command setTargetModuleStates(Supplier<SwerveModuleState[]> statesSupplier, boolean isClosedLoop) {
+	public Command setTargetModuleStates(
+		Supplier<SwerveModuleState[]> statesSupplier,
+		boolean isClosedLoop,
+		DriveAcceleration driveAcceleration
+	) {
 		return swerve.asSubsystemCommand(
-			new RunCommand(() -> modules.setTargetStates(statesSupplier.get(), isClosedLoop)),
+			new RunCommand(() -> modules.setTargetStates(statesSupplier.get(), isClosedLoop, driveAcceleration.getSlewRateLimiter())),
 			"Set states by " + "supplier"
 		);
 	}

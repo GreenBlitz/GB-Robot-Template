@@ -1,9 +1,11 @@
 package frc.robot.subsystems.swerve.module;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.TimedRobot;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
@@ -12,10 +14,12 @@ public class Modules {
 
 	private final Module[] modules;
 	private final String logPath;
+	private final double[] lastCycleLimitedVelocity;
 
 	public Modules(String logPath, Module... modules) {
 		this.logPath = logPath + ModuleConstants.MODULES_LOG_PATH_ADDITION;
 		this.modules = modules;
+		this.lastCycleLimitedVelocity = new double[modules.length];
 	}
 
 	public Module getModule(ModuleUtil.ModulePosition modulePosition) {
@@ -84,10 +88,17 @@ public class Modules {
 		}
 	}
 
-	public void setTargetStates(SwerveModuleState[] moduleStates, boolean isClosedLoop) {
+	public void setTargetStates(SwerveModuleState[] moduleStates, boolean isClosedLoop, SlewRateLimiter slewRateLimiter) {
+		double[] targetLimitedAccelerationMetersPerSecondSquared = new double[modules.length];
 		for (int i = 0; i < modules.length; i++) {
+			double velocityMetersPerSecondAfterLimit = slewRateLimiter.calculate(moduleStates[i].speedMetersPerSecond);
+			moduleStates[i].speedMetersPerSecond = velocityMetersPerSecondAfterLimit;
+			targetLimitedAccelerationMetersPerSecondSquared[i] = (velocityMetersPerSecondAfterLimit - lastCycleLimitedVelocity[i])
+				/ TimedRobot.kDefaultPeriod;
+			lastCycleLimitedVelocity[i] = velocityMetersPerSecondAfterLimit;
 			modules[i].setTargetState(moduleStates[i], isClosedLoop);
 		}
+		Logger.recordOutput(logPath + "/TargerAccelerationMetersPerSecondSquared", targetLimitedAccelerationMetersPerSecondSquared);
 	}
 
 

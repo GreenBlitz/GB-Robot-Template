@@ -32,7 +32,6 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	private final TimeInterpolatableBuffer<Translation3d> imu3DAccelerationGBuffer;
 	private RobotPoseObservation lastVisionObservation;
 	private OdometryData lastOdometryData;
-	private OrientationSupplier orientationSupplier;
 	private boolean isIMUOffsetCalibrated;
 
 	public WPILibPoseEstimatorWrapper(
@@ -62,10 +61,9 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 			initialTimestampSeconds,
 			initialModulePositions,
 			initialModuleStates,
-			Optional.of(orientationSupplier.getLatestOrientation()),
+			orientationSupplier.getLatestOrientation(),
 			Optional.of(initialIMUXYAccelerationG)
 		);
-		this.orientationSupplier = orientationSupplier;
 		this.isIMUOffsetCalibrated = false;
 		this.poseToIMUYawDifferenceBuffer = new RingBuffer<>(WPILibPoseEstimatorConstants.POSE_TO_IMU_YAW_DIFFERENCE_BUFFER_SIZE);
 		this.imuYawBuffer = TimeInterpolatableBuffer.createBuffer(WPILibPoseEstimatorConstants.IMU_YAW_BUFFER_SIZE_SECONDS);
@@ -98,22 +96,8 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 
 	@Override
 	public void updateOdometry(OdometryData data) {
-		Twist2d changeInPose = kinematics.toTwist2d(lastOdometryData.getWheelPositions(), data.getWheelPositions());
-		if (data.getOrientation().isEmpty()) {
-			data.setOrientation(
-				new Rotation3d(
-					lastOdometryData.getOrientation().get().getX(),
-					lastOdometryData.getOrientation().get().getY(),
-					Rotation2d.fromRadians(lastOdometryData.getOrientation().get().getZ())
-						.plus(Rotation2d.fromRadians(changeInPose.dtheta))
-						.getRadians()
-				)
-			);
-		}
-
-		poseEstimator
-			.updateWithTime(data.getTimestampSeconds(), Rotation2d.fromRadians(data.getOrientation().get().getZ()), data.getWheelPositions());
-		imuYawBuffer.addSample(data.getTimestampSeconds(), Rotation2d.fromRadians(data.getOrientation().get().getZ()));
+		poseEstimator.updateWithTime(data.getTimestampSeconds(), Rotation2d.fromRadians(data.getOrientation().getZ()), data.getWheelPositions());
+		imuYawBuffer.addSample(data.getTimestampSeconds(), Rotation2d.fromRadians(data.getOrientation().getZ()));
 		data.getIMU3DAccelerationG().ifPresent((acceleration) -> imu3DAccelerationGBuffer.addSample(data.getTimestampSeconds(), acceleration));
 
 		lastOdometryData.setWheelPositions(data.getWheelPositions());
@@ -134,17 +118,10 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	public void resetPose(OdometryData odometryData, Pose2d poseMeters) {
 		Logger.recordOutput(logPath + "/lastPoseResetTo", poseMeters);
 
-		poseEstimator.resetPosition(
-			Rotation2d.fromRadians(odometryData.getOrientation().orElse(Rotation3d.kZero).getZ()),
-			odometryData.getWheelPositions(),
-			poseMeters
-		);
+		poseEstimator.resetPosition(Rotation2d.fromRadians(odometryData.getOrientation().getZ()), odometryData.getWheelPositions(), poseMeters);
 		this.lastOdometryData = odometryData;
 		poseToIMUYawDifferenceBuffer.clear();
-		imuYawBuffer.addSample(
-			odometryData.getTimestampSeconds(),
-			Rotation2d.fromRadians(odometryData.getOrientation().orElse(Rotation3d.kZero).getZ())
-		);
+		imuYawBuffer.addSample(odometryData.getTimestampSeconds(), Rotation2d.fromRadians(odometryData.getOrientation().getZ()));
 		imu3DAccelerationGBuffer.addSample(odometryData.getTimestampSeconds(), odometryData.getIMU3DAccelerationG().orElse(Translation3d.kZero));
 	}
 
@@ -187,18 +164,15 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 				)
 			);
 
-		lastOdometryData.getOrientation()
-			.ifPresent(
-				(imuOrientation) -> Logger.recordOutput(
-					logPath + "/isTilted",
-					PoseUtil.isTilted(
-						Rotation2d.fromRadians(imuOrientation.getX()),
-						Rotation2d.fromRadians(imuOrientation.getY()),
-						WPILibPoseEstimatorConstants.MINIMUM_TILT_IMU_ROLL,
-						WPILibPoseEstimatorConstants.MINIMUM_TILT_IMU_PITCH
-					)
-				)
-			);
+		Logger.recordOutput(
+			logPath + "/isTilted",
+			PoseUtil.isTilted(
+				Rotation2d.fromRadians(lastOdometryData.getOrientation().getX()),
+				Rotation2d.fromRadians(lastOdometryData.getOrientation().getY()),
+				WPILibPoseEstimatorConstants.MINIMUM_TILT_IMU_ROLL,
+				WPILibPoseEstimatorConstants.MINIMUM_TILT_IMU_PITCH
+			)
+		);
 
 		Logger.recordOutput(
 			logPath + "/areModulesSkidding",

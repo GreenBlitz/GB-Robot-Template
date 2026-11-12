@@ -45,7 +45,7 @@ public class VelocityRoller extends Roller {
 	@Override
 	public void stop() {
 		super.stop();
-		velocityRequest.withSetPoint(Angle2d.kZero);
+		velocityRequest.withSetPoint(Angle2d.ZERO);
 	}
 
 	@Override

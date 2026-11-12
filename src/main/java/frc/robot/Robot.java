@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -75,17 +74,19 @@ public class Robot {
 				)
 			)
 		);
-		limelights.forEach(
-			limelight -> limelight.setMT1PoseFilter(
-				LimelightFilters.megaTag1Filter(
-					limelight,
-					timestamp -> poseEstimator.getEstimatedPoseAtTimestamp(timestamp).map(pose -> Angle2d.fromRotation2d(pose.getRotation())),
-					poseEstimator::isIMUOffsetCalibrated,
-					LimelightFilters.DEFAULT_IN_FIELD_TOLERANCE_METERS,
-					LimelightFilters.DEFAULT_YAW_AT_ANGLE_TOLERANCE
+		limelights
+			.forEach(
+				limelight -> limelight.setMT1PoseFilter(
+					LimelightFilters.megaTag1Filter(
+						limelight,
+						timestamp -> poseEstimator.getEstimatedPoseAtTimestamp(timestamp)
+							.map(pose -> Angle2d.fromRotation2d(pose.getRotation())),
+						poseEstimator::isIMUOffsetCalibrated,
+						LimelightFilters.DEFAULT_IN_FIELD_TOLERANCE_METERS,
+						LimelightFilters.DEFAULT_YAW_AT_ANGLE_TOLERANCE
+					)
 				)
-			)
-		);
+			);
 
 		swerve.setHeadingSupplier(() -> Angle2d.fromRotation2d(poseEstimator.getEstimatedPose().getRotation()));
 

@@ -291,7 +291,8 @@ public class Module {
 		if (!isStopping) {
 			return false;
 		}
-		boolean isAtSteerPosition = ToleranceMath.isNearWrapped(Angle2d.fromRotation2d(getTargetState().angle), getSteerPosition(), steerPositionTolerance);
+		boolean isAtSteerPosition = ToleranceMath
+			.isNearWrapped(Angle2d.fromRotation2d(getTargetState().angle), getSteerPosition(), steerPositionTolerance);
 		return isAtSteerPosition;
 	}
 

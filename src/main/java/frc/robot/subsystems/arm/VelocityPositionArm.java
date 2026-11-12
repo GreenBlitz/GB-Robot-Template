@@ -30,7 +30,7 @@ public class VelocityPositionArm extends Arm {
 
 	@Override
 	public void setTargetPosition(Angle2d targetPosition) {
-		setTargetPositionVelocity(targetPosition, Angle2d.kZero);
+		setTargetPositionVelocity(targetPosition, Angle2d.ZERO);
 	}
 
 	@Override

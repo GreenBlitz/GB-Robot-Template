@@ -109,8 +109,11 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 			);
 		}
 
-		poseEstimator
-			.updateWithTime(data.getTimestampSeconds(), Angle2d.fromRadians(data.getIMUOrientation().get().getZ()).toRotation2d(), data.getWheelPositions());
+		poseEstimator.updateWithTime(
+			data.getTimestampSeconds(),
+			Angle2d.fromRadians(data.getIMUOrientation().get().getZ()).toRotation2d(),
+			data.getWheelPositions()
+		);
 		imuYawBuffer.addSample(data.getTimestampSeconds(), Angle2d.fromRadians(data.getIMUOrientation().get().getZ()));
 		data.getIMU3DAccelerationG().ifPresent((acceleration) -> imu3DAccelerationGBuffer.addSample(data.getTimestampSeconds(), acceleration));
 

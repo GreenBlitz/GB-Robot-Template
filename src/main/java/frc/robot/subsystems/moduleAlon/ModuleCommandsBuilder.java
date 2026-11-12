@@ -24,6 +24,7 @@ public class ModuleCommandsBuilder {
 		moduleAlon.setDefaultCommand(new InstantCommand(() -> moduleAlon.stop(), moduleAlon));
 		linearSetPower = (power) -> {
 			moduleAlon.linearPower(power*moduleAlon.getState().powerMultiplier);
+			System.out.println("ahh");
 		};
 		steerToPosition = (position) -> {
 			moduleAlon.steerToPosition(position);
@@ -39,8 +40,7 @@ public class ModuleCommandsBuilder {
 	public Command slowModeCommand(){
 		return new FunctionalCommand(
 				()->{},
-				()->{moduleAlon.setState(ModuleAlon.State.SLOW);
-					System.out.println("ahh");},
+				()->{moduleAlon.setState(ModuleAlon.State.SLOW);},
 				(b)->{moduleAlon.setState(ModuleAlon.State.NORMAL);},
 				()->false
 		);
@@ -88,7 +88,7 @@ public class ModuleCommandsBuilder {
 
 	public RunCommand manualDriveCommand(Supplier<Double> power) {
 		return new RunCommand(() -> {
-			moduleAlon.linearPower(power.get());
+			linearSetPower.accept(power.get());
 			Logger.recordOutput(logPath + "/shouldPower", power.get() * BatteryUtil.DEFAULT_VOLTAGE);
 		}, moduleAlon);
 	}

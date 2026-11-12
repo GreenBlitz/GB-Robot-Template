@@ -93,7 +93,7 @@ public class Robot {
 		this.moduleAlon.setLinearNeutral(true);
 		digitalInput = RobotManager.isSimulation()
 			? new ChooserDigitalInput("digitalInput")
-			: new ChanneledDigitalInput(new DigitalInput(67), new Debouncer(0));
+			: new ChanneledDigitalInput(new DigitalInput(1), new Debouncer(0));
 		this.limelights = List.of();
 		digitalInputInputsAutoLogged=new DigitalInputInputsAutoLogged();
 		digitalInputTrigger=new Trigger(()->{return digitalInputInputsAutoLogged.debouncedValue;});

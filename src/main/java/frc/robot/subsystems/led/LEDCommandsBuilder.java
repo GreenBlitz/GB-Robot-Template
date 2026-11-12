@@ -7,8 +7,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 
-import static edu.wpi.first.units.Units.MetersPerSecond;
-
 public class LEDCommandsBuilder {
 
 	private final LED led;
@@ -19,8 +17,12 @@ public class LEDCommandsBuilder {
 		this.led = led;
 	}
 
+	public Command setGenericPattern(LEDPattern pattern){
+		return led.asSubsystemCommand(new InstantCommand(() -> led.setGenericPattern(pattern)), "Set generic LED pattern");
+	}
+
 	public Command setSolidColor(Color color) {
-		return led.asSubsystemCommand(new InstantCommand(() -> led.setGenericPattern(LEDPattern.solid(Color.kWhite))), "Set LED pattern");
+		return led.asSubsystemCommand(new InstantCommand(() -> led.setGenericPattern(LEDPattern.solid(Color.kWhite))), "Set solid LED color");
 	}
 
 	public Command setTwoAlternatingColors(Color a, Color b) {

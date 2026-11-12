@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 
 public class LEDCommandsBuilder {
 
@@ -37,10 +36,35 @@ public class LEDCommandsBuilder {
 	}
 
 	public Command enableBlink(double timeBetweenBlinksSeconds) {
-		return led.asSubsystemCommand(
-			new RunCommand(led::blinkWithCurrentPattern).beforeStarting(() -> led.setTimeBetweenBlinksSeconds(timeBetweenBlinksSeconds)),
-			"Enable LED enableBlink"
-		);
+		return led.asSubsystemCommand(new Command() {
+
+			@Override
+			public void initialize() {
+				led.setTimeBetweenBlinksSeconds(timeBetweenBlinksSeconds);
+			}
+
+			@Override
+			public void execute() {
+				led.blinkWithCurrentPattern();
+			}
+
+		}, "Enable LED Blink");
+	}
+
+	public Command enableBlink() {
+		return led.asSubsystemCommand(new Command() {
+
+			@Override
+			public void initialize() {
+				led.setTimeBetweenBlinksSeconds(LED.ledConstants.DEFAULT_TIME_BETWEEN_BLINKS_SECOND());
+			}
+
+			@Override
+			public void execute() {
+				led.blinkWithCurrentPattern();
+			}
+
+		}, "Enable LED Blink");
 	}
 
 	public Command disableBlink() {
@@ -53,16 +77,13 @@ public class LEDCommandsBuilder {
 
 	public Command enableScroll() {
 		return led.asSubsystemCommand(
-				new InstantCommand(() -> led.enableScroll(LED.ledConstants.SCROLL_SPEED_PER_METER_PER_SECOND())),
-				"Enable LED Scroll"
+			new InstantCommand(() -> led.enableScroll(LED.ledConstants.SCROLL_SPEED_PER_METER_PER_SECOND())),
+			"Enable LED Scroll"
 		);
 	}
 
 	public Command enableScroll(LinearVelocity metersPerSecondVelocity) {
-		return led.asSubsystemCommand(
-				new InstantCommand(() -> led.enableScroll(metersPerSecondVelocity)),
-				"Enable LED Scroll"
-		);
+		return led.asSubsystemCommand(new InstantCommand(() -> led.enableScroll(metersPerSecondVelocity)), "Enable LED Scroll");
 	}
 
 	public Command disableScroll() {

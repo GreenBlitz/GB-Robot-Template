@@ -37,7 +37,7 @@ public class LED extends GBSubsystem {
 
 		this.ledCommandsBuilder = new LEDCommandsBuilder(this);
 
-		setDefaultCommand(new InstantCommand(()-> setGenericPattern(ledPattern)));
+		setDefaultCommand(new InstantCommand(() -> setGenericPattern(ledPattern)));
 	}
 
 	public LEDCommandsBuilder getCommandsBuilder() {
@@ -87,7 +87,7 @@ public class LED extends GBSubsystem {
 		addressableLED.setData(addressableLEDBuffer);
 	}
 
-	public void update(){
+	public void update() {
 		super.subsystemPeriodic();
 		applyPattern();
 	}

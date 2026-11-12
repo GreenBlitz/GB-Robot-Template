@@ -4,11 +4,21 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.CANBus;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.RobotManager;
+import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
+import frc.robot.hardware.digitalinput.IDigitalInput;
+import frc.robot.hardware.digitalinput.channeled.ChanneledDigitalInput;
+import frc.robot.hardware.digitalinput.chooser.ChooserDigitalInput;
+import frc.robot.subsystems.moduleAlon.ModuleAlon;
+import frc.constants.AlonModuleConstants;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
@@ -40,6 +50,10 @@ public class Robot {
 	private final Swerve swerve;
 	private final IPoseEstimator poseEstimator;
 	private final List<Limelight> limelights;
+	private final ModuleAlon moduleAlon;
+	private final IDigitalInput digitalInput;
+	private final Trigger digitalInputTrigger;
+	private DigitalInputInputsAutoLogged digitalInputInputsAutoLogged;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -61,8 +75,30 @@ public class Robot {
 			swerve.getIMUAccelerationG(),
 			swerve.getIMUAbsoluteYaw().getTimestamp()
 		);
-
+		this.moduleAlon = new ModuleAlon(
+			AlonModuleConstants.alonSteerId,
+			AlonModuleConstants.alonLinearId,
+			67,
+			AlonModuleConstants.steerGearRatio,
+			AlonModuleConstants.linearGearRatio,
+			AlonModuleConstants.steerKp,
+			AlonModuleConstants.linearKp,
+			AlonModuleConstants.steerMomementOfInertiaKgM2,
+			AlonModuleConstants.linearMomentOfInertiaKgM2,
+			CANBus.roboRIO(),
+			"/motor"
+		);
+		moduleAlon.setLinearNeutral(true);
+		this.moduleAlon.setLinearNeutral(true);
+		digitalInput = RobotManager.isSimulation()
+			? new ChooserDigitalInput("digitalInput")
+			: new ChanneledDigitalInput(new DigitalInput(1), new Debouncer(0));
 		this.limelights = List.of();
+		digitalInputInputsAutoLogged = new DigitalInputInputsAutoLogged();
+		digitalInputTrigger = new Trigger(() -> {
+			return digitalInputInputsAutoLogged.debouncedValue;
+		});
+		digitalInputTrigger.whileTrue(moduleAlon.getCommandsBuilder().slowModeCommand());
 		limelights.forEach(
 			limelight -> limelight.setMT1StdDevsCalculation(
 				LimelightStdDevCalculations.getMT1StdDevsCalculation(
@@ -93,6 +129,8 @@ public class Robot {
 
 	public void updateSubsystems() {
 		swerve.update();
+		moduleAlon.logAll();
+		moduleAlon.updateSimulation();
 	}
 
 	public void periodic() {
@@ -109,11 +147,17 @@ public class Robot {
 
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
+
+		digitalInput.updateInputs(digitalInputInputsAutoLogged);
 		CommandScheduler.getInstance().run(); // Should be last
 	}
 
 	public IPoseEstimator getPoseEstimator() {
 		return poseEstimator;
+	}
+
+	public ModuleAlon getModuleAlon() {
+		return moduleAlon;
 	}
 
 	public Swerve getSwerve() {

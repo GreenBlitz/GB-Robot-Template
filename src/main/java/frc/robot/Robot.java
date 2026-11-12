@@ -79,7 +79,7 @@ public class Robot {
 		this.dynamicMotionMagicArm = HoodConstants.createDynamicMotionMagicArm();
 		this.motionMagicArm = HoodConstants.createMotionMagicArm();
 
-		this.led = new LED(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/LED", LEDConstantsFactory.createConstants());
+		this.led = new LED(LEDConstantsFactory.createConstants());
 
 		BrakeStateManager.add(() -> swerve.getModules().setBrake(true), () -> swerve.getModules().setBrake(false));
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
@@ -130,6 +130,7 @@ public class Robot {
 		arm.update();
 		motionMagicArm.update();
 		arm.update();
+		led.update();
 	}
 
 	public void periodic() {

@@ -13,16 +13,18 @@ import static edu.wpi.first.units.Units.Meters;
 public class LED extends GBSubsystem {
 
 	public static LEDConstants ledConstants;
+	public static double timeBetweenBlinksSeconds;
 	private final AddressableLED addressableLED;
 	private final AddressableLEDBuffer addressableLEDBuffer;
 	private LEDPattern ledPattern;
 	private LEDPattern basePattern;
 	private final LEDCommandsBuilder ledCommandsBuilder;
 
-	public LED(String logPath, LEDConstants ledConstants) {
-		super(logPath);
+	public LED(LEDConstants ledConstants) {
+		super(ledConstants.LOG_PATH());
 
 		this.ledConstants = ledConstants;
+		this.timeBetweenBlinksSeconds = ledConstants.DEFAULT_TIME_BETWEEN_BLINKS_SECOND();
 
 		this.addressableLED = new AddressableLED(ledConstants.PORT_NUMBER());
 		this.addressableLED.setLength(ledConstants.NUMBER_OF_LEDS_IN_STRIP()); // very expensive function, run ONCE only
@@ -30,7 +32,6 @@ public class LED extends GBSubsystem {
 		this.addressableLEDBuffer = new AddressableLEDBuffer(ledConstants.NUMBER_OF_LEDS_IN_STRIP());
 		this.ledPattern = LEDPattern.solid(ledConstants.DEFAULT_COLOR());
 		this.basePattern = ledPattern;
-		applyPattern();
 		addressableLED.start();
 
 		this.ledCommandsBuilder = new LEDCommandsBuilder(this);
@@ -44,9 +45,8 @@ public class LED extends GBSubsystem {
 		return basePattern;
 	}
 
-	public void setPattern(LEDPattern pattern) {
+	public void setGenericPattern(LEDPattern pattern) {
 		ledPattern = pattern;
-		applyPattern();
 	}
 
 	public void setAlternatingColors(Color evenColor, Color oddColor) {
@@ -63,21 +63,30 @@ public class LED extends GBSubsystem {
 
 	public void blinkWithCurrentPattern() {
 		basePattern = ledPattern;
-		setPattern(ledPattern.blink(Units.Seconds.of(ledConstants.TIME_BETWEEN_BLINKS_SECOND())));
+		setGenericPattern(ledPattern.blink(Units.Seconds.of(ledConstants.DEFAULT_TIME_BETWEEN_BLINKS_SECOND())));
 	}
 
 	public void setDualGradient(Color colorA, Color colorB) {
-		setPattern(LEDPattern.gradient(LEDPattern.GradientType.kContinuous, colorA, colorB));
+		setGenericPattern(LEDPattern.gradient(LEDPattern.GradientType.kContinuous, colorA, colorB));
+	}
+
+	public static void setTimeBetweenBlinksSeconds(double timeBetweenBlinksSeconds) {
+		LED.timeBetweenBlinksSeconds = timeBetweenBlinksSeconds;
 	}
 
 	public void enableScroll(LinearVelocity linearVelocity) {
 		basePattern = ledPattern;
-		setPattern(ledPattern.scrollAtAbsoluteSpeed(linearVelocity, Meters.of(1 / ledConstants.NUMBER_OF_LEDS_PER_METER())));
+		setGenericPattern(ledPattern.scrollAtAbsoluteSpeed(linearVelocity, Meters.of(1 / ledConstants.NUMBER_OF_LEDS_PER_METER())));
 	}
 
-	void applyPattern() {
+	private void applyPattern() {
 		ledPattern.applyTo(addressableLEDBuffer);
 		addressableLED.setData(addressableLEDBuffer);
+	}
+
+	public void update(){
+		super.subsystemPeriodic();
+		applyPattern();
 	}
 
 }

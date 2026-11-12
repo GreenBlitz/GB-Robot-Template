@@ -29,7 +29,7 @@ import java.util.Optional;
 
 public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 
-	private static final int APPLY_CONFIG_RETRIES = 5;
+	private static final int APPLY_CONFIG_RETRIES = 1;
 
 	private final TalonFXWrapper motor;
 	private final TalonFXWrapper[] followers;

@@ -95,8 +95,9 @@ public class RobotManager extends LoggedRobot {
 
 	@Override
 	public void robotPeriodic() {
-		updateTimeRelatedData(); // Better to be first
+		updateTimeRelatedData(); // Better to be first\[]
 		JoysticksBindings.updateChassisDriverInputs();
+		JoysticksBindings.updateGBModuleTal();
 		robot.periodic();
 		AlertManager.reportAlerts();
 		logCriticalAlerts();

@@ -1,7 +1,7 @@
 package frc.robot.hardware.rev.motors;
 
 import com.revrobotics.spark.SparkLowLevel;
-import edu.wpi.first.math.geometry.Rotation2d;
+import frc.utils.angle2d.Angle2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
@@ -37,7 +37,7 @@ public class BrushlessSparkMAXMotor extends SparkMaxMotor implements Controllabl
 	}
 
 	@Override
-	public void resetPosition(Rotation2d position) {
+	public void resetPosition(Angle2d position) {
 		motor.getEncoder().setPosition(position.getRotations());
 	}
 

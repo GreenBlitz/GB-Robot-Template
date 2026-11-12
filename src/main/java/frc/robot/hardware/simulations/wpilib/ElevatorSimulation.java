@@ -1,6 +1,6 @@
 package frc.robot.hardware.simulations.wpilib;
 
-import edu.wpi.first.math.geometry.Rotation2d;
+import frc.utils.angle2d.Angle2d;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import frc.utils.Conversions;
 import frc.utils.time.TimeUtil;
@@ -18,12 +18,12 @@ public class ElevatorSimulation implements WPILibMechanismSimulation {
 	}
 
 	@Override
-	public Rotation2d getMechanismPosition() {
+	public Angle2d getMechanismPosition() {
 		return Conversions.distanceToAngle(elevatorSimulation.getPositionMeters(), drumDiameter);
 	}
 
 	@Override
-	public Rotation2d getMechanismVelocityRPS() {
+	public Angle2d getMechanismVelocityAPS() {
 		return Conversions.distanceToAngle(elevatorSimulation.getVelocityMetersPerSecond(), drumDiameter);
 	}
 

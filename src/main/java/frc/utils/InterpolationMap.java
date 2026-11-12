@@ -1,6 +1,6 @@
 package frc.utils;
 
-import edu.wpi.first.math.geometry.Rotation2d;
+import frc.utils.angle2d.Angle2d;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
@@ -33,12 +33,12 @@ public class InterpolationMap<K, V> extends InterpolatingTreeMap<K, V> {
 		return Arrays.stream(keys).map(super::get);
 	}
 
-	public static Interpolator<Rotation2d> interpolatorForRotation2d() {
-		return (startValue, endValue, t) -> Rotation2d
+	public static Interpolator<Angle2d> interpolatorForAngle2d() {
+		return (startValue, endValue, t) -> Angle2d
 			.fromDegrees(Interpolator.forDouble().interpolate(startValue.getDegrees(), endValue.getDegrees(), t));
 	}
 
-	public static InverseInterpolator<Rotation2d> inverseInterpolatorForRotation2d() {
+	public static InverseInterpolator<Angle2d> inverseInterpolatorForAngle2d() {
 		return (startValue, endValue, t) -> InverseInterpolator.forDouble()
 			.inverseInterpolate(startValue.getDegrees(), endValue.getDegrees(), t.getDegrees());
 	}

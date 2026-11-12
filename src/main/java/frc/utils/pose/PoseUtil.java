@@ -1,6 +1,6 @@
 package frc.utils.pose;
 
-import edu.wpi.first.math.geometry.Rotation2d;
+import frc.utils.angle2d.Angle2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -13,7 +13,7 @@ public class PoseUtil {
 		return imuAccelerationG.getNorm() >= minimumIMUAccelerationG;
 	}
 
-	public static boolean isTilted(Rotation2d imuRoll, Rotation2d imuPitch, Rotation2d minimumTiltIMURoll, Rotation2d minimumTiltIMUPitch) {
+	public static boolean isTilted(Angle2d imuRoll, Angle2d imuPitch, Angle2d minimumTiltIMURoll, Angle2d minimumTiltIMUPitch) {
 		return Math.abs(imuRoll.getRadians()) >= minimumTiltIMURoll.getRadians()
 			|| Math.abs(imuPitch.getRadians()) >= minimumTiltIMUPitch.getRadians();
 	}

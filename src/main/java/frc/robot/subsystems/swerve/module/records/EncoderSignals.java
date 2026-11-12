@@ -1,6 +1,6 @@
 package frc.robot.subsystems.swerve.module.records;
 
-import edu.wpi.first.math.geometry.Rotation2d;
+import frc.utils.angle2d.Angle2d;
 import frc.robot.hardware.interfaces.InputSignal;
 
-public record EncoderSignals(InputSignal<Rotation2d> position) {}
+public record EncoderSignals(InputSignal<Angle2d> position) {}

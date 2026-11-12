@@ -2,7 +2,7 @@ package frc.utils.calibration.camera;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import frc.utils.angle2d.Angle2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,7 +20,7 @@ public class CameraPoseCalibration extends Command {
 	private final Pose3d tagPoseFieldRelative;
 	private final Pose2d expectedRobotPoseFieldRelative;
 	private final double tagCenterHeightFromGroundMeters;
-	private final Rotation2d robotYawRelativeToTagFacingYaw;
+	private final Angle2d robotYawRelativeToTagFacingYaw;
 
 	private final CameraPoseCalibrationInputsAutoLogged cameraPoseCalibrationInputs;
 
@@ -53,7 +53,7 @@ public class CameraPoseCalibration extends Command {
 		double robotXAxisDistanceFromTag,
 		double tagCenterHeightFromGroundMeters,
 		Pose3d tagPoseFieldRelative,
-		Rotation2d robotYawRelativeToTagFacingYaw
+		Angle2d robotYawRelativeToTagFacingYaw
 	) {
 		this.logPath = logPathPrefix + "/cameraPositionCalibration";
 		this.cameraName = cameraName;

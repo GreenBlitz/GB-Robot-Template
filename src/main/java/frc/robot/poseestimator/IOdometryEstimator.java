@@ -1,7 +1,7 @@
 package frc.robot.poseestimator;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import frc.utils.angle2d.Angle2d;
 
 public interface IOdometryEstimator {
 
@@ -13,6 +13,6 @@ public interface IOdometryEstimator {
 
 	Pose2d getOdometryPose();
 
-	void setHeading(Rotation2d newHeading);
+	void setHeading(Angle2d newHeading);
 
 }

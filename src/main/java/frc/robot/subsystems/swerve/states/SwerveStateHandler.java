@@ -1,7 +1,7 @@
 package frc.robot.subsystems.swerve.states;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import frc.utils.angle2d.Angle2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.constants.MathConstants;
@@ -48,7 +48,7 @@ public class SwerveStateHandler {
 	}
 
 	public RotateAxis getFarRotateAxis(boolean isLeft) {
-		Rotation2d currentAllianceRelativeHeading = swerve.getAllianceRelativeHeading();
+		Angle2d currentAllianceRelativeHeading = swerve.getAllianceRelativeHeading();
 		// -45 <= x <= 45
 		if (Math.abs(currentAllianceRelativeHeading.getDegrees()) <= MathConstants.EIGHTH_CIRCLE.getDegrees()) {
 			return isLeft ? RotateAxis.FRONT_LEFT_MODULE : RotateAxis.FRONT_RIGHT_MODULE;

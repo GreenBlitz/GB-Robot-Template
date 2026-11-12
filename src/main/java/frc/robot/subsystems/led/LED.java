@@ -45,7 +45,7 @@ public class LED extends GBSubsystem {
 		return basePattern;
 	}
 
-	public void setPattern(LEDPattern pattern) {
+	public void setGenericPattern(LEDPattern pattern) {
 		ledPattern = pattern;
 	}
 
@@ -63,11 +63,11 @@ public class LED extends GBSubsystem {
 
 	public void blinkWithCurrentPattern() {
 		basePattern = ledPattern;
-		setPattern(ledPattern.blink(Units.Seconds.of(ledConstants.DEFAULT_TIME_BETWEEN_BLINKS_SECOND())));
+		setGenericPattern(ledPattern.blink(Units.Seconds.of(ledConstants.DEFAULT_TIME_BETWEEN_BLINKS_SECOND())));
 	}
 
 	public void setDualGradient(Color colorA, Color colorB) {
-		setPattern(LEDPattern.gradient(LEDPattern.GradientType.kContinuous, colorA, colorB));
+		setGenericPattern(LEDPattern.gradient(LEDPattern.GradientType.kContinuous, colorA, colorB));
 	}
 
 	public static void setTimeBetweenBlinksSeconds(double timeBetweenBlinksSeconds) {
@@ -76,14 +76,18 @@ public class LED extends GBSubsystem {
 
 	public void enableScroll(LinearVelocity linearVelocity) {
 		basePattern = ledPattern;
-		setPattern(ledPattern.scrollAtAbsoluteSpeed(linearVelocity, Meters.of(1 / ledConstants.NUMBER_OF_LEDS_PER_METER())));
+		setGenericPattern(ledPattern.scrollAtAbsoluteSpeed(linearVelocity, Meters.of(1 / ledConstants.NUMBER_OF_LEDS_PER_METER())));
+	}
+
+	private void applyPattern(){
+		ledPattern.applyTo(addressableLEDBuffer);
+		addressableLED.setData(addressableLEDBuffer);
 	}
 
 	@Override
 	public void subsystemPeriodic() {
 		super.subsystemPeriodic();
-		ledPattern.applyTo(addressableLEDBuffer);
-		addressableLED.setData(addressableLEDBuffer);
+		applyPattern();
 	}
 
 }

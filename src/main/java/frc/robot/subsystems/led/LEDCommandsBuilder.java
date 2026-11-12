@@ -1,5 +1,6 @@
 package frc.robot.subsystems.led;
 
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -19,7 +20,7 @@ public class LEDCommandsBuilder {
 	}
 
 	public Command setSolidColor(Color color) {
-		return led.asSubsystemCommand(new InstantCommand(() -> led.setPattern(LEDPattern.solid(Color.kWhite))), "Set LED pattern");
+		return led.asSubsystemCommand(new InstantCommand(() -> led.setGenericPattern(LEDPattern.solid(Color.kWhite))), "Set LED pattern");
 	}
 
 	public Command setTwoAlternatingColors(Color a, Color b) {
@@ -28,7 +29,7 @@ public class LEDCommandsBuilder {
 
 	public Command setRainbowGradient() {
 		return led.asSubsystemCommand(
-			new InstantCommand(() -> led.setPattern(LEDPattern.rainbow(LED.ledConstants.SATURATION(), LED.ledConstants.VALUE()))),
+			new InstantCommand(() -> led.setGenericPattern(LEDPattern.rainbow(LED.ledConstants.SATURATION(), LED.ledConstants.VALUE()))),
 			"Set Rainbow LED Pattern"
 		);
 	}
@@ -50,13 +51,22 @@ public class LEDCommandsBuilder {
 
 	public Command enableScroll() {
 		return led.asSubsystemCommand(
-			new InstantCommand(() -> led.enableScroll(MetersPerSecond.of(LED.ledConstants.SCROLL_SPEED_PER_METER_PER_SECOND()))),
+			new InstantCommand(() -> led.enableScroll(LED.ledConstants.SCROLL_SPEED_PER_METER_PER_SECOND())),
 			"Enable LED Scroll"
 		);
 	}
 
+	public Command enableScroll(LinearVelocity metersPerSecondVelocity) {
+		return led.asSubsystemCommand(
+				new InstantCommand(
+						() -> led.enableScroll(metersPerSecondVelocity)
+				),
+				"Enable LED Scroll at custom speed"
+		);
+	}
+
 	public Command disableScroll() {
-		return led.asSubsystemCommand(new InstantCommand(() -> led.setPattern(led.getBasePattern())), "Disable LED Scroll");
+		return led.asSubsystemCommand(new InstantCommand(() -> led.setGenericPattern(led.getBasePattern())), "Disable LED Scroll");
 	}
 
 }

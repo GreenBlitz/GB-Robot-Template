@@ -12,7 +12,6 @@ import frc.robot.poseestimator.OrientationSupplier;
 import frc.utils.TimedValue;
 import org.littletonrobotics.junction.Logger;
 
-
 public class IMUWrapper implements OrientationSupplier {
 
 	private final IIMU imu;

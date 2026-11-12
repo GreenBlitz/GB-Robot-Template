@@ -7,7 +7,6 @@ public class EmptyAngleEncoder extends EmptyDevice implements IAngleEncoder {
 
 	public EmptyAngleEncoder(String logPath) {
 		super(logPath);
-		this.logPath = logPath;
 	}
 
 	@Override

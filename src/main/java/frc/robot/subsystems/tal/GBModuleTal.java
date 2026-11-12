@@ -37,11 +37,11 @@ public class GBModuleTal extends GBSubsystem {
 
 	private InvertedValue steerDirection;
 	private InvertedValue driveDirection;
-	private boolean driveIsBrake;
-	private boolean steerIsBrake;
+	private boolean driveBrake;
+	private boolean steerBrake;
 
-	private Supplier<Double> targetMotorPower;
-	private Supplier<Rotation2d> targetJoystickAngle;
+	private Supplier<Double> targetDrivePower;
+	private Supplier<Rotation2d> targetSteerAngle;
 
 	private ModulePowers modulePowers;
 	private final PositionVoltage request;
@@ -64,22 +64,23 @@ public class GBModuleTal extends GBSubsystem {
 		this.steerMotor = new TalonFXMotor(logPath + "/steerMotor", new Phoenix6DeviceID(steerID), new SysIdRoutine.Config());
 		this.steerConfigs = new TalonFXConfiguration();
 		this.driveConfigs = new TalonFXConfiguration();
-		this.steerIsBrake = false;
-		this.driveIsBrake = false;
+		this.steerBrake = false;
+		this.driveBrake = false;
 		configureSteerMotor();
 		configureDriveMotor();
-		this.targetJoystickAngle = () -> new Rotation2d(0);
-		this.targetMotorPower = () -> (Double) 0.0;
+		this.targetSteerAngle = () -> new Rotation2d(0);
+		this.targetDrivePower = () -> (Double) 0.0;
 		this.setAmpereLimit(ModuleTalConstants.ampereLimit);
 		this.commandBuilder = new GBModuleTalCommandBuilder(this);
 		this.request = new PositionVoltage(0).withSlot(0);
 
 
 		this.drivePositionSignal = Phoenix6SignalBuilder
-			.build(this.driveMotor.getDevice().getPosition(), 60, AngleUnit.ROTATIONS, BusChain.ROBORIO);
+			.build(this.driveMotor.getDevice().getPosition(), ModuleTalConstants.signalUpdateFrequency, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 		this.steerPositionSignal = Phoenix6SignalBuilder
-			.build(this.steerMotor.getDevice().getPosition(), 60, AngleUnit.ROTATIONS, BusChain.ROBORIO);
-		this.driveVoltageSignal = Phoenix6SignalBuilder.build(this.driveMotor.getDevice().getMotorVoltage(), 60, BusChain.ROBORIO);
+			.build(this.steerMotor.getDevice().getPosition(), ModuleTalConstants.signalUpdateFrequency, AngleUnit.ROTATIONS, BusChain.ROBORIO);
+		this.driveVoltageSignal = Phoenix6SignalBuilder
+			.build(this.driveMotor.getDevice().getMotorVoltage(), ModuleTalConstants.signalUpdateFrequency, BusChain.ROBORIO);
 
 		if (Robot.ROBOT_TYPE.isSimulation()) {
 			this.driveSimulation = new SimpleMotorSimulation(
@@ -140,15 +141,17 @@ public class GBModuleTal extends GBSubsystem {
 		return this.commandBuilder;
 	}
 
-	public void changeDriveNeutralMode() {
-		this.driveMotor.setBrake(false);
+	public void changeDriveBrake() {
+		driveBrake = !driveBrake;
+		this.driveMotor.setBrake(driveBrake);
 	}
 
-	public void changeSteerNeutralMode() {
-		this.steerMotor.setBrake(false);
+	public void changeSteerBrake() {
+		steerBrake = !steerBrake;
+		this.steerMotor.setBrake(steerBrake);
 	}
 
-	protected void invertDriveRotation() {
+	protected void invertDriveDirection() {
 		this.driveDirection = this.driveDirection == InvertedValue.Clockwise_Positive
 			? InvertedValue.CounterClockwise_Positive
 			: InvertedValue.Clockwise_Positive;
@@ -156,7 +159,7 @@ public class GBModuleTal extends GBSubsystem {
 		this.driveMotor.applyConfiguration(this.driveConfigs);
 	}
 
-	protected void invertSteerRotation() {
+	protected void invertSteerDirection() {
 		this.steerDirection = this.steerDirection == InvertedValue.Clockwise_Positive
 			? InvertedValue.CounterClockwise_Positive
 			: InvertedValue.Clockwise_Positive;
@@ -165,22 +168,22 @@ public class GBModuleTal extends GBSubsystem {
 	}
 
 	public void invertMotors() {
-		this.invertDriveRotation();
-		this.invertSteerRotation();
+		this.invertDriveDirection();
+		this.invertSteerDirection();
 	}
 
-	public void changeNeutralModeMotors() {
-		this.changeDriveNeutralMode();
-		this.changeSteerNeutralMode();
+	public void changeMotorsBrake() {
+		this.changeDriveBrake();
+		this.changeSteerBrake();
 	}
 
 	public void drive(Rotation2d angle, double power) {
-		steerToAngle(angle);
+		steerToUnrestrictedAngle(angle);
 		setDrivePower(power);
 	}
 
 
-	public void steerToAngle(Rotation2d angle) {
+	public void steerToUnrestrictedAngle(Rotation2d angle) {
 //		Rotation2d currentAngle = this.getSteerAngle();
 //		Logger.recordOutput(getLogPath() + "/currentAngleSteer", currentAngle);
 //		if (Math.signum(currentAngle.getDegrees()) != Math.signum(angle.getDegrees()) && angle.getDegrees()!=0) {
@@ -213,13 +216,19 @@ public class GBModuleTal extends GBSubsystem {
 
 		Rotation2d currentAngle = this.getSteerAngle();
 		double diff = angle.getDegrees() - currentAngle.getDegrees();
+		// -170 - 225 = -395
 		diff = diff - 360.0 * Math.floor((diff + 180) / 360);
+		// -395 - 360*floor(-215)/360 = -45
 
 
 		this.steerMotor.applyRequest(
 			Phoenix6RequestBuilder
 				.build(request.withPosition(currentAngle.getRotations() + Rotation2d.fromDegrees(diff).getRotations()), 0.5, false)
 		);
+	}
+
+	public void steerToAngle(Rotation2d angle) {
+		this.steerMotor.applyRequest(Phoenix6RequestBuilder.build(request.withPosition(angle.getRotations()), 0.5, false));
 	}
 
 
@@ -235,9 +244,6 @@ public class GBModuleTal extends GBSubsystem {
 		this.driveMotor.setPower(power);
 	}
 
-	public void stopSteer() {
-		this.steerMotor.stop();
-	}
 
 	public void stop() {
 		this.driveMotor.stop();
@@ -248,7 +254,7 @@ public class GBModuleTal extends GBSubsystem {
 		return this.steerPositionSignal.getAndUpdateValue();
 	}
 
-	public double getDriveSpeed() {
+	public double getDrivePower() {
 		return this.driveMotor.getDevice().get();
 	}
 
@@ -257,16 +263,16 @@ public class GBModuleTal extends GBSubsystem {
 	}
 
 
-	public boolean isDriveAtSpeed(double speed) {
-		return this.getDriveSpeed() == speed;
+	public boolean isDriveAtPower(double power) {
+		return this.getDrivePower() == power;
 	}
 
 	public boolean isSteerAtAngle(Rotation2d angle) {
 		return this.getSteerAngle() == angle;
 	}
 
-	public Supplier<Double> getTargetMotorPower() {
-		return targetMotorPower;
+	public Supplier<Double> getTargetDrivePower() {
+		return targetDrivePower;
 	}
 
 	public Rotation2d getDrivePosition() {
@@ -281,18 +287,18 @@ public class GBModuleTal extends GBSubsystem {
 		}
 		driveMotor.updateInputs(drivePositionSignal, driveVoltageSignal);
 		steerMotor.updateInputs(steerPositionSignal);
-		Logger.recordOutput(getLogPath() + "/currentDriveSpeed", getDriveSpeed());
-		Logger.recordOutput(getLogPath() + "/targetDrivePower", getTargetMotorPower().get());
-		Logger.recordOutput(getLogPath() + "/targetWheelAngle", this.targetJoystickAngle.get());
+		Logger.recordOutput(getLogPath() + "/currentDriveSpeed", getDrivePower());
+		Logger.recordOutput(getLogPath() + "/targetDrivePower", getTargetDrivePower().get());
+		Logger.recordOutput(getLogPath() + "/targetWheelAngle", this.targetSteerAngle.get());
 	}
 
 	public void update() {
-		this.targetMotorPower = () -> (Double) Math.sqrt(Math.pow(this.modulePowers.xPower, 2) + Math.pow(this.modulePowers.yPower, 2));
-		this.targetJoystickAngle = this::calculateAngle;
+		this.targetDrivePower = () -> (Double) Math.sqrt(Math.pow(this.modulePowers.xPower, 2) + Math.pow(this.modulePowers.yPower, 2));
+		this.targetSteerAngle = this::calculateAngle;
 	}
 
-	public Rotation2d getTargetJoystickAngle() {
-		return targetJoystickAngle.get();
+	public Rotation2d getTargetSteerAngle() {
+		return targetSteerAngle.get();
 	}
 
 	protected Rotation2d calculateAngle() {

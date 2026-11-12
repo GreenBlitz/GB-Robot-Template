@@ -28,20 +28,32 @@ public class GBModuleTalCommandBuilder {
 	}
 
 	public Command steerToAngle(Supplier<Rotation2d> angle) {
-		return module.asSubsystemCommand(new InstantCommand(() -> module.steerToAngle(angle.get()), module), "steer to an angle");
+		return module.asSubsystemCommand(new InstantCommand(() -> module.steerToUnrestrictedAngle(angle.get()), module), "steer to an angle");
 	}
 
 	public Command changeNeutralMode() {
-		return module.asSubsystemCommand(new InstantCommand(module::changeNeutralModeMotors, module), "change module neutral mode");
+		return module.asSubsystemCommand(new InstantCommand(module::changeMotorsBrake, module), "change module neutral mode");
 	}
 
 	public Command FullyCircleDrive() {
 		return module.asSubsystemCommand(
 			new SequentialCommandGroup(
-				new DriveDistanceCommand(module, new Rotation2d(0), new Rotation2d(2 * Math.PI)),
-				new DriveDistanceCommand(module, new Rotation2d((1.0 / 2) * Math.PI), new Rotation2d(2 * Math.PI)),
-				new DriveDistanceCommand(module, new Rotation2d(Math.PI), new Rotation2d(2 * Math.PI)),
-				new DriveDistanceCommand(module, new Rotation2d(Math.PI + (1.0 / 2) * Math.PI), new Rotation2d(2 * Math.PI))
+				new DriveDistanceCommand(module, Rotation2d.fromDegrees(this.module.getSteerAngle().getDegrees()), new Rotation2d(2 * Math.PI)),
+				new DriveDistanceCommand(
+					module,
+					new Rotation2d(this.module.getSteerAngle().getRadians() + (1.0 / 2) * Math.PI),
+					new Rotation2d(2 * Math.PI)
+				),
+				new DriveDistanceCommand(
+					module,
+					new Rotation2d(this.module.getSteerAngle().getRadians() + Math.PI),
+					new Rotation2d(2 * Math.PI)
+				),
+				new DriveDistanceCommand(
+					module,
+					new Rotation2d(this.module.getSteerAngle().getRadians() + Math.PI + (1.0 / 2) * Math.PI),
+					new Rotation2d(2 * Math.PI)
+				)
 			),
 			"drive 2 rotations to each 90 degrees angle"
 		);

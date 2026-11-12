@@ -17,5 +17,7 @@ public class ModuleTalConstants {
 
 	public static final double ampereLimit = 40;
 
+	public static final int signalUpdateFrequency = 60;
+
 
 }

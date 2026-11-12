@@ -68,13 +68,13 @@ public class JoysticksBindings {
 		usedJoystick.Y.onTrue(new InstantCommand(() -> robot.getMotor().pidWithPositionVoltage(100.0)));
 		usedJoystick.POV_DOWN.onTrue(new InstantCommand(robot.getMotor()::setPoisition));
 		usedJoystick.POV_RIGHT.onTrue(robot.getGBModuleTal().getCommandBuilder().FullyCircleDrive());
-		usedJoystick.POV_LEFT.onTrue(new RunCommand(() -> robot.getGBModuleTal().steerToAngle(new Rotation2d(2 * Math.PI))));
+		usedJoystick.POV_LEFT.onTrue(new RunCommand(() -> robot.getGBModuleTal().steerToUnrestrictedAngle(new Rotation2d(2 * Math.PI))));
 		usedJoystick.X.onTrue(
 			robot.getGBModuleTal()
 				.getCommandBuilder()
 				.driveModuleByJoystick(
-					() -> robot.getGBModuleTal().getTargetJoystickAngle(),
-					() -> robot.getGBModuleTal().getTargetMotorPower().get()
+					() -> robot.getGBModuleTal().getTargetSteerAngle(),
+					() -> robot.getGBModuleTal().getTargetDrivePower().get()
 				)
 		);
 		Trigger combo = usedJoystick.R1.and(usedJoystick.L1);

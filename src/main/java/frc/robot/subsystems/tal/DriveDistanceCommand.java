@@ -13,8 +13,9 @@ public class DriveDistanceCommand extends Command {
 
 	public DriveDistanceCommand(GBModuleTal module, Rotation2d angle, Rotation2d targetRotations) {
 		this.module = module;
-		this.angle = angle;
+		this.angle = Rotation2d.fromDegrees(angle.getDegrees() + 100);
 		this.targetRotations = targetRotations;
+
 		this.addRequirements(this.module);
 	}
 
@@ -27,16 +28,18 @@ public class DriveDistanceCommand extends Command {
 
 	@Override
 	public void execute() {
-		this.module.steerToAngle(this.angle);
 		if (
-			Math.abs(this.angle.getDegrees()) - Math.abs(this.module.getSteerAngle().getDegrees()) <= 1
-				&& Math.abs(this.angle.getDegrees()) - Math.abs(this.module.getSteerAngle().getDegrees()) >= -1
+			Math.abs(this.angle.getDegrees()) - Math.abs(this.module.getSteerAngle().getDegrees()) <= 2.5
+				&& Math.abs(this.angle.getDegrees()) - Math.abs(this.module.getSteerAngle().getDegrees()) >= -2.5
 		)
 			if (this.targetRotations.getRotations() > 0) {
 				this.module.setDrivePower(ModuleTalConstants.defaultPower);
 			} else {
 				this.module.setDrivePower(-ModuleTalConstants.defaultPower);
 			}
+		else {
+			this.module.steerToAngle(this.angle);
+		}
 	}
 
 	@Override

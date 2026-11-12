@@ -84,7 +84,7 @@ public class LED extends GBSubsystem {
 		addressableLED.setData(addressableLEDBuffer);
 	}
 
-	public void update(){
+	public void update() {
 		super.subsystemPeriodic();
 		applyPattern();
 	}

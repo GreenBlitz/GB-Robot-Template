@@ -10,6 +10,8 @@ import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import frc.robot.Robot;
+import frc.robot.RobotType;
 import frc.robot.poseestimator.OrientationSupplier;
 import frc.robot.vision.RobotPoseObservation;
 import frc.robot.poseestimator.IPoseEstimator;
@@ -96,6 +98,19 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 
 	@Override
 	public void updateOdometry(OdometryData data) {
+		Twist2d changeInPose = kinematics.toTwist2d(lastOdometryData.getWheelPositions(), data.getWheelPositions());
+		if (Robot.ROBOT_TYPE == RobotType.SIMULATION) {
+			data.setOrientation(
+					new Rotation3d(
+							lastOdometryData.getOrientation().getX(),
+							lastOdometryData.getOrientation().getY(),
+							Rotation2d.fromRadians(lastOdometryData.getOrientation().getZ())
+									.plus(Rotation2d.fromRadians(changeInPose.dtheta))
+									.getRadians()
+					)
+			);
+		}
+
 		poseEstimator.updateWithTime(data.getTimestampSeconds(), Rotation2d.fromRadians(data.getOrientation().getZ()), data.getWheelPositions());
 		imuYawBuffer.addSample(data.getTimestampSeconds(), Rotation2d.fromRadians(data.getOrientation().getZ()));
 		data.getIMU3DAccelerationG().ifPresent((acceleration) -> imu3DAccelerationGBuffer.addSample(data.getTimestampSeconds(), acceleration));

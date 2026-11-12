@@ -327,7 +327,7 @@ public class Swerve extends GBSubsystem {
 
 	private void setTargetModuleStates(SwerveModuleState[] moduleStates, boolean isClosedLoop, DriveAcceleration driveAcceleration) {
 		SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, constants.velocityAt12VoltsMetersPerSecond());
-		modules.setTargetStates(moduleStates, isClosedLoop, driveAcceleration);
+		modules.setTargetStates(moduleStates, isClosedLoop, driveAcceleration.getSlewRateLimiter());
 	}
 
 

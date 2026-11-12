@@ -89,7 +89,7 @@ public class SwerveCommandsBuilder {
 		DriveAcceleration driveAcceleration
 	) {
 		return swerve.asSubsystemCommand(
-			new RunCommand(() -> modules.setTargetStates(statesSupplier.get(), isClosedLoop, driveAcceleration)),
+			new RunCommand(() -> modules.setTargetStates(statesSupplier.get(), isClosedLoop, driveAcceleration.getSlewRateLimiter())),
 			"Set states by " + "supplier"
 		);
 	}

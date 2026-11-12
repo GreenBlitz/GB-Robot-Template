@@ -5,24 +5,22 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.Timer;
-import frc.robot.subsystems.swerve.Swerve;
+import edu.wpi.first.wpilibj.TimedRobot;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
 
-import static frc.utils.time.TimeUtil.DEFAULT_CYCLE_TIME_SECONDS;
 
 public class Modules {
 
 	private final Module[] modules;
 	private final String logPath;
-	private double lastOut = 0;
-	private double lastTime = Timer.getFPGATimestamp();
+	private final double[] lastLimited;
 
 	public Modules(String logPath, Module... modules) {
 		this.logPath = logPath + ModuleConstants.MODULES_LOG_PATH_ADDITION;
 		this.modules = modules;
+		lastLimited = new double[modules.length];
 	}
 
 	public Module getModule(ModuleUtil.ModulePosition modulePosition) {
@@ -95,16 +93,17 @@ public class Modules {
 		}
 	}
 
+
 	public void setTargetStates(SwerveModuleState[] moduleStates, boolean isClosedLoop, SlewRateLimiter slewRateLimiter) {
+		double[] acceleration = new double[modules.length];
 		for (int i = 0; i < modules.length; i++) {
-			moduleStates[i].speedMetersPerSecond = slewRateLimiter.calculate(moduleStates[i].speedMetersPerSecond);
+			double limited = slewRateLimiter.calculate(moduleStates[i].speedMetersPerSecond);
+			moduleStates[i].speedMetersPerSecond = limited;
+			acceleration[i] = (limited - lastLimited[i]) / TimedRobot.kDefaultPeriod;
+			lastLimited[i] = limited;
 			modules[i].setTargetState(moduleStates[i], isClosedLoop);
 		}
-		double out = moduleStates[0].speedMetersPerSecond ;
-		Logger.recordOutput(logPath + "/Debug/Out0", out);
-		Logger.recordOutput(logPath + "/Debug/DeltaPerLoop", (1*DEFAULT_CYCLE_TIME_SECONDS)*(out - lastOut));
-		Logger.recordOutput("Debug/Marker", 12345);
-		lastOut = out;
+		Logger.recordOutput(logPath + "/AccelerationMetersPerSecondSquared", acceleration);
 	}
 
 

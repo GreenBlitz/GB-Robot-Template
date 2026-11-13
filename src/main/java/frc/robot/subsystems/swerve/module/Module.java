@@ -1,6 +1,5 @@
 package frc.robot.subsystems.swerve.module;
 
-import frc.utils.angle2d.Angle2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -16,6 +15,7 @@ import frc.robot.subsystems.swerve.module.records.ModuleSpecificConstants;
 import frc.robot.subsystems.swerve.module.records.SteerRequests;
 import frc.robot.subsystems.swerve.module.records.SteerSignals;
 import frc.utils.Conversions;
+import frc.utils.angle2d.Angle2d;
 import frc.utils.math.ToleranceMath;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;

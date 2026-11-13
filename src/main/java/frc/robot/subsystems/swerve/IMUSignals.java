@@ -1,8 +1,8 @@
 package frc.robot.subsystems.swerve;
 
-import frc.utils.angle2d.Angle2d;
 import edu.wpi.first.math.geometry.*;
 import frc.robot.hardware.interfaces.InputSignal;
+import frc.utils.angle2d.Angle2d;
 
 public record IMUSignals(
 	InputSignal<Angle2d> rollSignal,

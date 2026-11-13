@@ -1,8 +1,8 @@
 package frc.robot.subsystems.arm;
 
-import frc.utils.angle2d.Angle2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.utils.angle2d.Angle2d;
 import frc.utils.utilcommands.InitExecuteCommand;
 
 import java.util.function.Supplier;

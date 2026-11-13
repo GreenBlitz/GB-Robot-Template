@@ -1,9 +1,9 @@
 package frc.robot.subsystems.swerve.module;
 
-import frc.utils.angle2d.Angle2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.utils.angle2d.Angle2d;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;

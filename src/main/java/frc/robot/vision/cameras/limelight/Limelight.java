@@ -1,6 +1,5 @@
 package frc.robot.vision.cameras.limelight;
 
-import frc.utils.angle2d.Angle2d;
 import edu.wpi.first.math.geometry.*;
 import frc.robot.vision.DetectedObjectObservation;
 import frc.robot.vision.RobotPoseObservation;
@@ -9,6 +8,7 @@ import frc.robot.vision.interfaces.ObjectDetector;
 import frc.robot.vision.interfaces.OrientationRequiringRobotPoseSupplier;
 import frc.robot.vision.interfaces.IndependentRobotPoseSupplier;
 import frc.utils.Conversions;
+import frc.utils.angle2d.Angle2d;
 import frc.utils.limelight.LimelightHelpers;
 import frc.utils.Filter;
 import frc.utils.limelight.LimelightHelpersAdditions;

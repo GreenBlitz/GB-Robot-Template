@@ -1,8 +1,8 @@
 package frc.utils;
 
-import frc.utils.angle2d.Angle2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.constants.MathConstants;
+import frc.utils.angle2d.Angle2d;
 
 public class Conversions {
 

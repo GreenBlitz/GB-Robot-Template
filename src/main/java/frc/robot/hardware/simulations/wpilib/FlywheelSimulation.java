@@ -1,7 +1,7 @@
 package frc.robot.hardware.simulations.wpilib;
 
-import frc.utils.angle2d.Angle2d;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
+import frc.utils.angle2d.Angle2d;
 import frc.utils.time.TimeUtil;
 
 public class FlywheelSimulation implements WPILibMechanismSimulation {

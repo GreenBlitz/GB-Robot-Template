@@ -1,10 +1,10 @@
 package frc.robot.vision.cameras.limelight;
 
 import edu.wpi.first.math.geometry.Pose3d;
-import frc.utils.angle2d.Angle2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.vision.DetectedObjectObservation;
 import frc.robot.vision.DetectedObjectType;
+import frc.utils.angle2d.Angle2d;
 import frc.utils.math.FieldMath;
 
 public class ObjectDetectionMath {

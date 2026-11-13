@@ -1,8 +1,8 @@
 package frc.robot.vision.interfaces;
 
-import frc.utils.angle2d.Angle2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import frc.robot.vision.RobotPoseObservation;
+import frc.utils.angle2d.Angle2d;
 
 import java.util.Optional;
 

@@ -1,13 +1,13 @@
 package frc.robot.hardware.rev.motors;
 
 import com.revrobotics.spark.SparkLowLevel;
-import frc.utils.angle2d.Angle2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.simulations.MechanismSimulation;
 import frc.robot.hardware.rev.request.SparkMaxRequest;
 import frc.utils.alerts.Alert;
+import frc.utils.angle2d.Angle2d;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 
 public class BrushlessSparkMAXMotor extends SparkMaxMotor implements ControllableMotor {

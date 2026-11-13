@@ -1,6 +1,5 @@
 package frc.robot.subsystems.swerve;
 
-import frc.utils.angle2d.Angle2d;
 import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.MathUtil;
@@ -28,6 +27,7 @@ import frc.robot.subsystems.swerve.states.heading.HeadingControl;
 import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.TimedValue;
+import frc.utils.angle2d.Angle2d;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.battery.BatteryUtil;
 import org.littletonrobotics.junction.Logger;

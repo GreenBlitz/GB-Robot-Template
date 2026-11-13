@@ -1,11 +1,11 @@
 package frc.robot.vision.cameras.limelight;
 
 import edu.wpi.first.math.geometry.Rectangle2d;
-import frc.utils.angle2d.Angle2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.constants.field.Field;
 import frc.robot.vision.DetectedObjectType;
 import frc.utils.Filter;
+import frc.utils.angle2d.Angle2d;
 import frc.utils.math.ToleranceMath;
 
 import java.util.Arrays;

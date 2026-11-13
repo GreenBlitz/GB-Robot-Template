@@ -1,10 +1,10 @@
 package frc.robot.subsystems.swerve.module.records;
 
-import frc.utils.angle2d.Angle2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.subsystems.swerve.module.ModuleConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.utils.Conversions;
+import frc.utils.angle2d.Angle2d;
 
 public record ModuleSpecificConstants(
 	String logPath,

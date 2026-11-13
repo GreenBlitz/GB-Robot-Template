@@ -3,8 +3,8 @@ package frc.utils;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
-
 import frc.utils.angle2d.Angle2d;
+
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Map;

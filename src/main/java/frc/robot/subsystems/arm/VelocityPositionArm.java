@@ -1,6 +1,6 @@
 package frc.robot.subsystems.arm;
 
-import edu.wpi.first.math.geometry.Rotation2d;
+import frc.utils.angle2d.Angle2d;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.robot.hardware.interfaces.VelocityPositionRequest;
@@ -22,21 +22,21 @@ public class VelocityPositionArm extends Arm {
 		this.velocityPositionRequest = velocityPositionRequest;
 	}
 
-	public void setTargetPositionVelocity(Rotation2d targetPosition, Rotation2d targetVelocity) {
+	public void setTargetPositionVelocity(Angle2d targetPosition, Angle2d targetVelocity) {
 		velocityPositionRequest.withSetPoint(targetPosition);
 		velocityPositionRequest.setVelocity(targetVelocity);
 		motor.applyRequest(velocityPositionRequest);
 	}
 
 	@Override
-	public void setTargetPosition(Rotation2d targetPosition) {
-		setTargetPositionVelocity(targetPosition, Rotation2d.kZero);
+	public void setTargetPosition(Angle2d targetPosition) {
+		setTargetPositionVelocity(targetPosition, Angle2d.ZERO);
 	}
 
 	@Override
 	public void log() {
 		super.log();
-		Logger.recordOutput(getLogPath() + "/TargetVelocity", velocityPositionRequest.getVelocityRPS());
+		Logger.recordOutput(getLogPath() + "/TargetVelocity", velocityPositionRequest.getVelocityAPS());
 	}
 
 }

@@ -6,7 +6,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
@@ -27,6 +26,7 @@ import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
 import frc.robot.hardware.phoenix6.signal.Phoenix6AngleSignal;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.utils.AngleUnit;
+import frc.utils.angle2d.Angle2d;
 
 public class TalonFXArmBuilder {
 
@@ -43,11 +43,11 @@ public class TalonFXArmBuilder {
 		double currentLimit,
 		double signalsFrequency,
 		double arbitraryFeedForward,
-		Rotation2d forwardSoftwareLimit,
-		Rotation2d reverseSoftwareLimit,
+		Angle2d forwardSoftwareLimit,
+		Angle2d reverseSoftwareLimit,
 		ArmSimulationConstants simulationConstants,
-		Rotation2d defaultMaxAccelerationRPSSquare,
-		Rotation2d defaultMaxVelocityRPS
+		Angle2d defaultMaxAccelerationAPSSquare,
+		Angle2d defaultMaxVelocityAPS
 	) {
 		TalonFXMotor motor = new TalonFXMotor(
 			logPath,
@@ -68,8 +68,8 @@ public class TalonFXArmBuilder {
 		IDynamicMotionMagicRequest positionRequest = Phoenix6RequestBuilder.buildDynamicMotionMagicRequest(
 			new DynamicMotionMagicVoltage(
 				signals.position().getLatestValue().getRotations(),
-				defaultMaxVelocityRPS.getRotations(),
-				defaultMaxAccelerationRPSSquare.getRotations()
+				defaultMaxVelocityAPS.getRotations(),
+				defaultMaxAccelerationAPSSquare.getRotations()
 			),
 			arbitraryFeedForward,
 			true
@@ -84,7 +84,7 @@ public class TalonFXArmBuilder {
 			isContinuousWrap,
 			currentLimit
 		);
-		addMotionMagicConfig(configuration, defaultMaxVelocityRPS, defaultMaxAccelerationRPSSquare);
+		addMotionMagicConfig(configuration, defaultMaxVelocityAPS, defaultMaxAccelerationAPSSquare);
 		motor.applyConfiguration(configuration);
 
 		return new DynamicMotionMagicArm(
@@ -93,8 +93,8 @@ public class TalonFXArmBuilder {
 			signals,
 			voltageRequest,
 			positionRequest,
-			defaultMaxAccelerationRPSSquare,
-			defaultMaxVelocityRPS,
+			defaultMaxAccelerationAPSSquare,
+			defaultMaxVelocityAPS,
 			configuration.Slot0.kG
 		);
 	}
@@ -112,11 +112,11 @@ public class TalonFXArmBuilder {
 		double currentLimit,
 		double signalsFrequency,
 		double arbitraryFeedForward,
-		Rotation2d forwardSoftwareLimit,
-		Rotation2d reverseSoftwareLimit,
+		Angle2d forwardSoftwareLimit,
+		Angle2d reverseSoftwareLimit,
 		ArmSimulationConstants simulationConstants,
-		Rotation2d defaultMaxAccelerationRPSSquare,
-		Rotation2d defaultMaxVelocityRPS
+		Angle2d defaultMaxAccelerationAPSSquare,
+		Angle2d defaultMaxVelocityAPS
 	) {
 		TalonFXMotor motor = new TalonFXMotor(
 			logPath,
@@ -146,7 +146,7 @@ public class TalonFXArmBuilder {
 			isContinuousWrap,
 			currentLimit
 		));
-		addMotionMagicConfig(configuration, defaultMaxVelocityRPS, defaultMaxAccelerationRPSSquare);
+		addMotionMagicConfig(configuration, defaultMaxVelocityAPS, defaultMaxAccelerationAPSSquare);
 		motor.applyConfiguration(configuration);
 
 		return new Arm(logPath, motor, signals, voltageRequest, positionRequest, configuration.Slot0.kG);
@@ -210,8 +210,8 @@ public class TalonFXArmBuilder {
 		Slot0Configs simulationSlotsConfig,
 		double currentLimit,
 		double signalsFrequency,
-		Rotation2d forwardSoftwareLimit,
-		Rotation2d reverseSoftwareLimit,
+		Angle2d forwardSoftwareLimit,
+		Angle2d reverseSoftwareLimit,
 		ArmSimulationConstants simulationConstants
 	) {
 		TalonFXMotor motor = new TalonFXMotor(
@@ -290,8 +290,8 @@ public class TalonFXArmBuilder {
 		double currentLimit,
 		double signalsFrequency,
 		double arbitraryFeedForward,
-		Rotation2d forwardSoftwareLimit,
-		Rotation2d reverseSoftwareLimit,
+		Angle2d forwardSoftwareLimit,
+		Angle2d reverseSoftwareLimit,
 		ArmSimulationConstants simulationConstants
 	) {
 		TalonFXMotor motor = new TalonFXMotor(
@@ -340,8 +340,8 @@ public class TalonFXArmBuilder {
 		double currentLimit,
 		double signalsFrequency,
 		double arbitraryFeedForward,
-		Rotation2d forwardSoftwareLimit,
-		Rotation2d reverseSoftwareLimit,
+		Angle2d forwardSoftwareLimit,
+		Angle2d reverseSoftwareLimit,
 		ArmSimulationConstants simulationConstants
 	) {
 		TalonFXMotor motor = new TalonFXMotor(
@@ -381,8 +381,8 @@ public class TalonFXArmBuilder {
 		FeedbackConfigs feedbackConfigs,
 		Slot0Configs simulationConfigSlots,
 		Slot0Configs realConfigSlots,
-		Rotation2d forwardSoftwareLimit,
-		Rotation2d reverseSoftwareLimit,
+		Angle2d forwardSoftwareLimit,
+		Angle2d reverseSoftwareLimit,
 		boolean isInverted,
 		boolean isContinuousWrap,
 		double currentLimit
@@ -415,7 +415,7 @@ public class TalonFXArmBuilder {
 		return config;
 	}
 
-	private static void addMotionMagicConfig(TalonFXConfiguration config, Rotation2d maxVelocity, Rotation2d maxAcceleration) {
+	private static void addMotionMagicConfig(TalonFXConfiguration config, Angle2d maxVelocity, Angle2d maxAcceleration) {
 		config.MotionMagic.MotionMagicAcceleration = maxAcceleration.getRotations();
 		config.MotionMagic.MotionMagicCruiseVelocity = maxVelocity.getRotations();
 	}

@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -20,6 +19,7 @@ import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.vision.cameras.limelight.Limelight;
 import frc.robot.vision.cameras.limelight.LimelightFilters;
 import frc.robot.vision.cameras.limelight.LimelightStdDevCalculations;
+import frc.utils.angle2d.Angle2d;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.robot.hardware.interfaces.IIMU;
@@ -74,19 +74,21 @@ public class Robot {
 				)
 			)
 		);
-		limelights.forEach(
-			limelight -> limelight.setMT1PoseFilter(
-				LimelightFilters.megaTag1Filter(
-					limelight,
-					timestamp -> poseEstimator.getEstimatedPoseAtTimestamp(timestamp).map(Pose2d::getRotation),
-					poseEstimator::isIMUOffsetCalibrated,
-					LimelightFilters.DEFAULT_IN_FIELD_TOLERANCE_METERS,
-					LimelightFilters.DEFAULT_YAW_AT_ANGLE_TOLERANCE
+		limelights
+			.forEach(
+				limelight -> limelight.setMT1PoseFilter(
+					LimelightFilters.megaTag1Filter(
+						limelight,
+						timestamp -> poseEstimator.getEstimatedPoseAtTimestamp(timestamp)
+							.map(pose -> Angle2d.fromRotation2d(pose.getRotation())),
+						poseEstimator::isIMUOffsetCalibrated,
+						LimelightFilters.DEFAULT_IN_FIELD_TOLERANCE_METERS,
+						LimelightFilters.DEFAULT_YAW_AT_ANGLE_TOLERANCE
+					)
 				)
-			)
-		);
+			);
 
-		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+		swerve.setHeadingSupplier(() -> Angle2d.fromRotation2d(poseEstimator.getEstimatedPose().getRotation()));
 
 		configureBrakeStateChooser();
 	}

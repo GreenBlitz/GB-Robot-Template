@@ -1,8 +1,8 @@
 package frc.robot.hardware.interfaces;
 
-import edu.wpi.first.math.geometry.Rotation2d;
+import frc.utils.angle2d.Angle2d;
 
-public interface IFeedForwardRequest extends IRequest<Rotation2d> {
+public interface IFeedForwardRequest extends IRequest<Angle2d> {
 
 	IFeedForwardRequest withArbitraryFeedForward(double newArbitraryFeedForward);
 

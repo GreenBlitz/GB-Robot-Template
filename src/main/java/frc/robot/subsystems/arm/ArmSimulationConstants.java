@@ -1,11 +1,11 @@
 package frc.robot.subsystems.arm;
 
-import edu.wpi.first.math.geometry.Rotation2d;
+import frc.utils.angle2d.Angle2d;
 
 public record ArmSimulationConstants(
-	Rotation2d maxPosition,
-	Rotation2d minPosition,
-	Rotation2d startingPosition,
+	Angle2d maxPosition,
+	Angle2d minPosition,
+	Angle2d startingPosition,
 	double momentOfInertiaKgMeterSquared,
 	double armLengthMeters
 ) {}

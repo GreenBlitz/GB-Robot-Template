@@ -8,6 +8,7 @@ import frc.robot.vision.interfaces.ObjectDetector;
 import frc.robot.vision.interfaces.OrientationRequiringRobotPoseSupplier;
 import frc.robot.vision.interfaces.IndependentRobotPoseSupplier;
 import frc.utils.Conversions;
+import frc.utils.angle2d.Angle2d;
 import frc.utils.limelight.LimelightHelpers;
 import frc.utils.Filter;
 import frc.utils.limelight.LimelightHelpersAdditions;
@@ -86,8 +87,8 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 							DetectedObjectObservation observation = ObjectDetectionMath.getDetectedObjectObservation(
 								robotRelativeCameraPose,
 								objectType,
-								Rotation2d.fromDegrees(rawDetection.txnc()),
-								Rotation2d.fromDegrees(rawDetection.tync()),
+								Angle2d.fromDegrees(rawDetection.txnc()),
+								Angle2d.fromDegrees(rawDetection.tync()),
 								getTarget2dTimestampSeconds(getTarget2dValues())
 							);
 
@@ -117,8 +118,8 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 							DetectedObjectObservation observation = ObjectDetectionMath.getDetectedObjectObservation(
 								robotRelativeCameraPose,
 								objectType,
-								Rotation2d.fromDegrees(rawTarget.txnc()),
-								Rotation2d.fromDegrees(rawTarget.tync()),
+								Angle2d.fromDegrees(rawTarget.txnc()),
+								Angle2d.fromDegrees(rawTarget.tync()),
 								getTarget2dTimestampSeconds(getTarget2dValues())
 							);
 

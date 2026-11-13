@@ -1,10 +1,10 @@
 package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.subsystems.swerve.states.DriveSpeed;
+import frc.utils.angle2d.Angle2d;
 import frc.utils.math.ToleranceMath;
 import frc.utils.time.TimeUtil;
 
@@ -18,12 +18,12 @@ public class SwerveMath {
 		return sum / modulePositionsFromCenterMeters.length;
 	}
 
-	public static ChassisSpeeds allianceToRobotRelativeSpeeds(ChassisSpeeds allianceRelativeSpeeds, Rotation2d allianceRelativeHeading) {
-		return ChassisSpeeds.fromFieldRelativeSpeeds(allianceRelativeSpeeds, allianceRelativeHeading);
+	public static ChassisSpeeds allianceToRobotRelativeSpeeds(ChassisSpeeds allianceRelativeSpeeds, Angle2d allianceRelativeHeading) {
+		return ChassisSpeeds.fromFieldRelativeSpeeds(allianceRelativeSpeeds, allianceRelativeHeading.toRotation2d());
 	}
 
-	public static ChassisSpeeds robotToAllianceRelativeSpeeds(ChassisSpeeds robotRelativeSpeeds, Rotation2d allianceRelativeHeading) {
-		return ChassisSpeeds.fromRobotRelativeSpeeds(robotRelativeSpeeds, allianceRelativeHeading);
+	public static ChassisSpeeds robotToAllianceRelativeSpeeds(ChassisSpeeds robotRelativeSpeeds, Angle2d allianceRelativeHeading) {
+		return ChassisSpeeds.fromRobotRelativeSpeeds(robotRelativeSpeeds, allianceRelativeHeading.toRotation2d());
 	}
 
 	public static ChassisSpeeds discretize(ChassisSpeeds chassisSpeeds) {

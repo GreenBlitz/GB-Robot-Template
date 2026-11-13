@@ -1,18 +1,18 @@
 package frc.robot.hardware.simulations.wpilib;
 
-import edu.wpi.first.math.geometry.Rotation2d;
+import frc.utils.angle2d.Angle2d;
 import frc.robot.hardware.simulations.MechanismSimulation;
 
 public interface WPILibMechanismSimulation extends MechanismSimulation {
 
 	@Override
-	default Rotation2d getRotorPosition() {
+	default Angle2d getRotorPosition() {
 		return getMechanismPosition().times(getGearRatio());
 	}
 
 	@Override
-	default Rotation2d getRotorVelocityRPS() {
-		return getMechanismVelocityRPS().times(getGearRatio());
+	default Angle2d getRotorVelocityAPS() {
+		return getMechanismVelocityAPS().times(getGearRatio());
 	}
 
 	double getGearRatio();

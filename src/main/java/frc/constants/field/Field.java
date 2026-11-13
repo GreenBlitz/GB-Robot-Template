@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.utils.angle2d.Angle2d;
 import frc.utils.driverstation.DriverStationUtil;
 import frc.utils.math.AngleTransform;
 import frc.utils.math.FieldMath;
@@ -31,6 +32,10 @@ public class Field {
 	}
 
 	public static Rotation2d getAllianceRelative(Rotation2d rotation) {
+		return isFieldConventionAlliance() ? rotation : FieldMath.transformAngle(rotation, AngleTransform.INVERT);
+	}
+
+	public static Angle2d getAllianceRelative(Angle2d rotation) {
 		return isFieldConventionAlliance() ? rotation : FieldMath.transformAngle(rotation, AngleTransform.INVERT);
 	}
 

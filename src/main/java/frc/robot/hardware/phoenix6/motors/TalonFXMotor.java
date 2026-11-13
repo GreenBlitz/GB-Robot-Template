@@ -4,7 +4,6 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Robot;
 import frc.robot.RobotConstants;
@@ -22,6 +21,7 @@ import frc.robot.hardware.phoenix6.request.Phoenix6Request;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
+import frc.utils.angle2d.Angle2d;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
 
@@ -143,7 +143,7 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 			String followerLogPath = getLogPath() + "/followers/" + followerConfig.followerIDs[i].name();
 			followerInputs[i].followerData = new FollowerInputs.FollowerData(
 				followers[i].isConnected(),
-				new Rotation2d(followers[i].getPosition().getValue()),
+				new Angle2d(followers[i].getPosition().getValue()),
 				followers[i].getMotorVoltage().getValueAsDouble()
 			);
 			Logger.processInputs(followerLogPath, followerInputs[i]);
@@ -165,7 +165,7 @@ public class TalonFXMotor extends Phoenix6Device implements ControllableMotor {
 	}
 
 	@Override
-	public void resetPosition(Rotation2d position) {
+	public void resetPosition(Angle2d position) {
 		motor.setPosition(position.getRotations());
 	}
 

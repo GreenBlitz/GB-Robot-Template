@@ -2,7 +2,7 @@ package frc.robot.hardware.rev.request;
 
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase;
-import edu.wpi.first.math.geometry.Rotation2d;
+import frc.utils.angle2d.Angle2d;
 import frc.robot.hardware.interfaces.IRequest;
 import frc.utils.Conversions;
 
@@ -47,9 +47,8 @@ public class SparkMaxRequest<T> implements IRequest<T> {
 
 	public Double getSparkMaxCompatibleSetPoint() {
 		boolean isVelocity = controlType == SparkBase.ControlType.kMAXMotionVelocityControl || controlType == SparkBase.ControlType.kVelocity;
-		return setPointToDoubleConverter.apply(
-			isVelocity ? (T) Rotation2d.fromRotations(Conversions.perSecondToPerMinute(((Rotation2d) setPoint).getRotations())) : setPoint
-		);
+		return setPointToDoubleConverter
+			.apply(isVelocity ? (T) Angle2d.fromRotations(Conversions.perSecondToPerMinute(((Angle2d) setPoint).getRotations())) : setPoint);
 	}
 
 	public SparkBase.ControlType getControlType() {

@@ -91,11 +91,11 @@ public class Modules {
 	public void setTargetStates(SwerveModuleState[] moduleStates, boolean isClosedLoop, SlewRateLimiter slewRateLimiter) {
 		double[] targetLimitedAccelerationsMetersPerSecondSquared = new double[modules.length];
 		for (int i = 0; i < modules.length; i++) {
-			double velocityMetersPerSecondAfterLimit = slewRateLimiter.calculate(moduleStates[i].speedMetersPerSecond);
-			moduleStates[i].speedMetersPerSecond = velocityMetersPerSecondAfterLimit;
-			targetLimitedAccelerationsMetersPerSecondSquared[i] = (velocityMetersPerSecondAfterLimit - lastCycleLimitedVelocities[i])
+			double limitedVelocityMetersPerSecond = slewRateLimiter.calculate(moduleStates[i].speedMetersPerSecond);
+			moduleStates[i].speedMetersPerSecond = limitedVelocityMetersPerSecond;
+			targetLimitedAccelerationsMetersPerSecondSquared[i] = (limitedVelocityMetersPerSecond - lastCycleLimitedVelocities[i])
 				/ TimedRobot.kDefaultPeriod;
-			lastCycleLimitedVelocities[i] = velocityMetersPerSecondAfterLimit;
+			lastCycleLimitedVelocities[i] = limitedVelocityMetersPerSecond;
 			modules[i].setTargetState(moduleStates[i], isClosedLoop);
 		}
 		Logger.recordOutput(logPath + "/TargerAccelerationMetersPerSecondsSquared", targetLimitedAccelerationsMetersPerSecondSquared);

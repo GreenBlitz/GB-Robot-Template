@@ -14,12 +14,12 @@ public class Modules {
 
 	private final Module[] modules;
 	private final String logPath;
-	private final double[] lastCycleLimitedVelocity;
+	private final double[] lastCycleLimitedVelocitys;
 
 	public Modules(String logPath, Module... modules) {
 		this.logPath = logPath + ModuleConstants.MODULES_LOG_PATH_ADDITION;
 		this.modules = modules;
-		this.lastCycleLimitedVelocity = new double[modules.length];
+		this.lastCycleLimitedVelocitys = new double[modules.length];
 	}
 
 	public Module getModule(ModuleUtil.ModulePosition modulePosition) {
@@ -89,16 +89,16 @@ public class Modules {
 	}
 
 	public void setTargetStates(SwerveModuleState[] moduleStates, boolean isClosedLoop, SlewRateLimiter slewRateLimiter) {
-		double[] targetLimitedAccelerationMetersPerSecondSquared = new double[modules.length];
+		double[] targetLimitedAccelerationsMetersPerSecondSquared = new double[modules.length];
 		for (int i = 0; i < modules.length; i++) {
 			double velocityMetersPerSecondAfterLimit = slewRateLimiter.calculate(moduleStates[i].speedMetersPerSecond);
 			moduleStates[i].speedMetersPerSecond = velocityMetersPerSecondAfterLimit;
-			targetLimitedAccelerationMetersPerSecondSquared[i] = (velocityMetersPerSecondAfterLimit - lastCycleLimitedVelocity[i])
+			targetLimitedAccelerationsMetersPerSecondSquared[i] = (velocityMetersPerSecondAfterLimit - lastCycleLimitedVelocitys[i])
 				/ TimedRobot.kDefaultPeriod;
-			lastCycleLimitedVelocity[i] = velocityMetersPerSecondAfterLimit;
+			lastCycleLimitedVelocitys[i] = velocityMetersPerSecondAfterLimit;
 			modules[i].setTargetState(moduleStates[i], isClosedLoop);
 		}
-		Logger.recordOutput(logPath + "/TargerAccelerationMetersPerSecondSquared", targetLimitedAccelerationMetersPerSecondSquared);
+		Logger.recordOutput(logPath + "/TargerAccelerationMetersPerSecondsSquared", targetLimitedAccelerationsMetersPerSecondSquared);
 	}
 
 

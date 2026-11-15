@@ -6,4 +6,6 @@ public interface IDevice {
 
 	void updateInputs(InputSignal<?>... inputSignals);
 
+	String getLogPath();
+
 }

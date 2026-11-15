@@ -10,45 +10,46 @@ import frc.utils.battery.BatteryUtil;
 
 public class TalonFXSimulation {
 
-	private final double ROTOR_TO_SENSOR_RATIO = 1.0;
+  private final double ROTOR_TO_SENSOR_RATIO = 1.0;
 
-	private final TalonFXSimState motorSimState;
-	private final TalonFXSimState[] followerSimStates;
-	private final MechanismSimulation mechanismSimulation;
+  private final TalonFXSimState motorSimState;
+  private final TalonFXSimState[] followerSimStates;
+  private final MechanismSimulation mechanismSimulation;
 
-	public TalonFXSimulation(TalonFXWrapper talonFXWrapper, MechanismSimulation simulation, TalonFXWrapper[] followers) {
-		this.mechanismSimulation = simulation;
-		this.motorSimState = talonFXWrapper.getSimState();
-		this.followerSimStates = new TalonFXSimState[followers.length];
+  public TalonFXSimulation(
+      TalonFXWrapper talonFXWrapper, MechanismSimulation simulation, TalonFXWrapper[] followers) {
+    this.mechanismSimulation = simulation;
+    this.motorSimState = talonFXWrapper.getSimState();
+    this.followerSimStates = new TalonFXSimState[followers.length];
 
-		for (int i = 0; i < followerSimStates.length; i++) {
-			followerSimStates[i] = followers[i].getSimState();
-			followerSimStates[i].setSupplyVoltage(BatteryUtil.DEFAULT_VOLTAGE);
-		}
-		motorSimState.setSupplyVoltage(BatteryUtil.DEFAULT_VOLTAGE);
-		updateMotor();
-	}
+    for (int i = 0; i < followerSimStates.length; i++) {
+      followerSimStates[i] = followers[i].getSimState();
+      followerSimStates[i].setSupplyVoltage(BatteryUtil.DEFAULT_VOLTAGE);
+    }
+    motorSimState.setSupplyVoltage(BatteryUtil.DEFAULT_VOLTAGE);
+    updateMotor();
+  }
 
-	public void applyConfig(TalonFXWrapper talonFXWrapper, TalonFXConfiguration configuration) {
-		configuration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-		configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-		if (configuration.Feedback.RotorToSensorRatio != ROTOR_TO_SENSOR_RATIO) {
-			configuration.Feedback.SensorToMechanismRatio *= configuration.Feedback.RotorToSensorRatio / ROTOR_TO_SENSOR_RATIO;
-			configuration.Feedback.RotorToSensorRatio = ROTOR_TO_SENSOR_RATIO;
-		}
-		talonFXWrapper.applyConfiguration(configuration);
-	}
+  public void applyConfig(TalonFXWrapper talonFXWrapper, TalonFXConfiguration configuration) {
+    configuration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+    if (configuration.Feedback.RotorToSensorRatio != ROTOR_TO_SENSOR_RATIO) {
+      configuration.Feedback.SensorToMechanismRatio *=
+          configuration.Feedback.RotorToSensorRatio / ROTOR_TO_SENSOR_RATIO;
+      configuration.Feedback.RotorToSensorRatio = ROTOR_TO_SENSOR_RATIO;
+    }
+    talonFXWrapper.applyConfiguration(configuration);
+  }
 
-	public void updateMotor() {
-		mechanismSimulation.setInputVoltage(motorSimState.getMotorVoltage());
-		mechanismSimulation.updateMotor();
-		motorSimState.setRawRotorPosition(mechanismSimulation.getRotorPosition().getRotations());
-		motorSimState.setRotorVelocity(mechanismSimulation.getRotorVelocityRPS().getRotations());
+  public void updateMotor() {
+    mechanismSimulation.setInputVoltage(motorSimState.getMotorVoltage());
+    mechanismSimulation.updateMotor();
+    motorSimState.setRawRotorPosition(mechanismSimulation.getRotorPosition().getRotations());
+    motorSimState.setRotorVelocity(mechanismSimulation.getRotorVelocityRPS().getRotations());
 
-		for (TalonFXSimState followerSimState : followerSimStates) {
-			followerSimState.setRotorVelocity(mechanismSimulation.getRotorVelocityRPS().getRotations());
-			followerSimState.setRawRotorPosition(mechanismSimulation.getRotorPosition().getRotations());
-		}
-	}
-
+    for (TalonFXSimState followerSimState : followerSimStates) {
+      followerSimState.setRotorVelocity(mechanismSimulation.getRotorVelocityRPS().getRotations());
+      followerSimState.setRawRotorPosition(mechanismSimulation.getRotorPosition().getRotations());
+    }
+  }
 }

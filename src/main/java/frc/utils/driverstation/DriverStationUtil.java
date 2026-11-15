@@ -1,57 +1,58 @@
 package frc.utils.driverstation;
 
-import edu.wpi.first.wpilibj.DriverStation;
+import org.wpilib.driverstation.Alliance;
+import org.wpilib.driverstation.MatchType;
+import org.wpilib.driverstation.internal.DriverStationBackend;
 
 public class DriverStationUtil {
 
-	public static final DriverStation.Alliance DEFAULT_ALLIANCE = DriverStation.Alliance.Red;
+  public static final Alliance DEFAULT_ALLIANCE = Alliance.RED;
 
-	public static DriverStation.Alliance getAlliance() {
-		return DriverStation.getAlliance().orElse(DEFAULT_ALLIANCE);
-	}
+  public static Alliance getAlliance() {
+    return DriverStationBackend.getAlliance().orElse(DEFAULT_ALLIANCE);
+  }
 
-	public static boolean isBlueAlliance() {
-		return getAlliance().equals(DriverStation.Alliance.Blue);
-	}
+  public static boolean isBlueAlliance() {
+    return getAlliance().equals(Alliance.BLUE);
+  }
 
-	public static boolean isRedAlliance() {
-		return !isBlueAlliance();
-	}
+  public static boolean isRedAlliance() {
+    return !isBlueAlliance();
+  }
 
-	public static boolean isConnectedToFMS() {
-		return DriverStation.isFMSAttached();
-	}
+  public static boolean isConnectedToFMS() {
+    return DriverStationBackend.isFMSAttached();
+  }
 
-	public static boolean isAutonomous() {
-		return DriverStation.isAutonomous();
-	}
+  public static boolean isAutonomous() {
+    return DriverStationBackend.isAutonomous();
+  }
 
-	public static boolean isAutonomousEnabled() {
-		return DriverStation.isAutonomousEnabled();
-	}
+  public static boolean isAutonomousEnabled() {
+    return DriverStationBackend.isAutonomousEnabled();
+  }
 
-	public static boolean isTeleop() {
-		return DriverStation.isTeleop();
-	}
+  public static boolean isTeleop() {
+    return DriverStationBackend.isTeleop();
+  }
 
-	public static boolean isTeleopEnabled() {
-		return DriverStation.isTeleopEnabled();
-	}
+  public static boolean isTeleopEnabled() {
+    return DriverStationBackend.isTeleopEnabled();
+  }
 
-	public static boolean isTest() {
-		return DriverStation.isTest();
-	}
+  public static boolean isUtility() {
+    return DriverStationBackend.isUtility();
+  }
 
-	public static boolean isTestEnabled() {
-		return DriverStation.isTestEnabled();
-	}
+  public static boolean isUtilityEnabled() {
+    return DriverStationBackend.isUtilityEnabled();
+  }
 
-	public static boolean isDisabled() {
-		return DriverStation.isDisabled();
-	}
+  public static boolean isDisabled() {
+    return DriverStationBackend.isDisabled();
+  }
 
-	public static boolean isMatch() {
-		return DriverStation.getMatchType() != DriverStation.MatchType.None;
-	}
-
+  public static boolean isMatch() {
+    return DriverStationBackend.getMatchType() != MatchType.NONE;
+  }
 }

@@ -6,6 +6,5 @@ import org.littletonrobotics.junction.AutoLog;
 @AutoLog
 public class LimelightHardwareInputs extends ConnectedInput {
 
-	public double temperatureCelsius = 0.0;
-
+  public double temperatureCelsius = 0.0;
 }

@@ -13,6 +13,7 @@ import frc.robot.poseestimator.OdometryData;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.states.DriveRelative;
+import frc.robot.subsystems.swerve.states.DriveAcceleration;
 import frc.robot.subsystems.swerve.states.LoopMode;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.SwerveStateHandler;
@@ -342,16 +343,13 @@ public class Swerve extends GBSubsystem {
     SwerveModuleVelocity[] swerveModuleVelocities =
         kinematics.toSwerveModuleVelocities(
             velocities, stateHandler.getRotationAxis(swerveState.getRotateAxis()));
-    setTargetModuleVelocities(swerveModuleVelocities, swerveState.getLoopMode().isClosedLoop());
+    setTargetModuleVelocities(swerveModuleVelocities, swerveState.getLoopMode().isClosedLoop(),swerveState.getDriveAcceleration());
   }
 
-  private void setTargetModuleVelocities(
-      SwerveModuleVelocity[] moduleVelocities, boolean isClosedLoop) {
-    SwerveModuleVelocity[] desaturatedModuleVelocities =
-        SwerveDriveKinematics.desaturateWheelVelocities(
-            moduleVelocities, constants.velocityAt12VoltsMetersPerSecond());
-    modules.setTargetVelocities(desaturatedModuleVelocities, isClosedLoop);
-  }
+	private void setTargetModuleVelocities(SwerveModuleVelocity[] moduleStates, boolean isClosedLoop, DriveAcceleration driveAcceleration) {
+       moduleStates = SwerveDriveKinematics.desaturateWheelVelocities(moduleStates, constants.velocityAt12VoltsMetersPerSecond());
+		modules.setTargetVelocities(moduleStates, isClosedLoop, driveAcceleration.getSlewRateLimiter());
+	}
 
   public boolean isAtHeading(
       Rotation2d targetHeading, Rotation2d tolerance, Rotation2d velocityDeadbandAnglesPerSecond) {

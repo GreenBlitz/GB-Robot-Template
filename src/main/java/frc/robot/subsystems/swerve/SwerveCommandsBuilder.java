@@ -7,20 +7,22 @@ import frc.robot.autonomous.PathFollowingCommandsBuilder;
 import frc.robot.subsystems.swerve.module.ModuleConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.Modules;
+import frc.robot.subsystems.swerve.states.DriveAcceleration;
 import frc.robot.subsystems.swerve.states.RotateAxis;
 import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import frc.utils.utilcommands.InitExecuteCommand;
-import java.util.Set;
-import java.util.function.Supplier;
 import org.wpilib.command2.*;
 import org.wpilib.command2.sysid.SysIdRoutine;
 import org.wpilib.math.geometry.Pose2d;
 import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.kinematics.ChassisVelocities;
 import org.wpilib.math.kinematics.SwerveModuleVelocity;
+
+import java.util.Set;
+import java.util.function.Supplier;
 
 public class SwerveCommandsBuilder {
 
@@ -82,9 +84,9 @@ public class SwerveCommandsBuilder {
   }
 
   public Command setTargetModuleVelocities(
-      Supplier<SwerveModuleVelocity[]> velocitiesSupplier, boolean isClosedLoop) {
+      Supplier<SwerveModuleVelocity[]> velocitiesSupplier, boolean isClosedLoop, DriveAcceleration driveAcceleration) {
     return swerve.asSubsystemCommand(
-        new RunCommand(() -> modules.setTargetVelocities(velocitiesSupplier.get(), isClosedLoop)),
+        new RunCommand(() -> modules.setTargetVelocities(velocitiesSupplier.get(), isClosedLoop, driveAcceleration.getSlewRateLimiter())),
         "Set states by " + "supplier");
   }
 

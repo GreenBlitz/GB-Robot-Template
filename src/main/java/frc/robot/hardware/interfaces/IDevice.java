@@ -4,5 +4,5 @@ public interface IDevice {
 
   boolean isConnected();
 
-  void updateInputs(InputSignal<?>... inputSignals);
+  void updateInputs(InputSignal<?>... inputSignals);String getLogPath();
 }

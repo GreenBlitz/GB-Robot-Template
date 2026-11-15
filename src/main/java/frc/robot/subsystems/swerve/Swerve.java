@@ -116,6 +116,10 @@ public class Swerve extends GBSubsystem {
 		this.orientationSupplier = orientationSupplier;
 	}
 
+	public void setHeadingSupplier(Supplier<Rotation2d> headingSupplier) {
+		this.headingSupplier = headingSupplier;
+	}
+
 	public void setDriversPowerInputs(ChassisPowers powers) {
 		this.driversPowerInputs = powers;
 	}

@@ -90,6 +90,8 @@ public class Robot {
 			)
 		);
 
+		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
+
 		configureBrakeStateChooser();
 	}
 

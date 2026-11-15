@@ -36,7 +36,7 @@ public class Field {
 	}
 
 	public static Angle2d getAllianceRelative(Angle2d angle) {
-		return isFieldConventionAlliance() ? rotation : FieldMath.transformAngle(rotation, AngleTransform.INVERT);
+		return isFieldConventionAlliance() ? angle : FieldMath.transformAngle(angle, AngleTransform.INVERT);
 	}
 
 	public static Pose3d getAllianceRelative(Pose3d pose) {

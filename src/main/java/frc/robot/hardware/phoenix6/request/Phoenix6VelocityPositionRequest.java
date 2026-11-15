@@ -28,8 +28,8 @@ public class Phoenix6VelocityPositionRequest extends Phoenix6FeedForwardRequest 
 
 	@Override
 	public VelocityPositionRequest setVelocity(Angle2d targetVelocityAPS) {
-		this.velocity = targetVelocityRPS;
-		setVelocity.accept(targetVelocityRPS);
+		this.velocity = targetVelocityAPS;
+		setVelocity.accept(targetVelocityAPS);
 		return this;
 	}
 

@@ -1,9 +1,9 @@
 package frc.robot.hardware.interfaces;
 
-import edu.wpi.first.math.geometry.Rotation2d;
+import frc.utils.angle2d.Angle2d;
 
 public interface IAngleEncoder extends IDevice {
 
-	void setPosition(Rotation2d position);
+	void setPosition(Angle2d position);
 
 }

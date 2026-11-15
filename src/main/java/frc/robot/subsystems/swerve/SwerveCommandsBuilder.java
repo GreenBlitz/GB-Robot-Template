@@ -3,7 +3,6 @@ package frc.robot.subsystems.swerve;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.*;
@@ -15,6 +14,7 @@ import frc.robot.subsystems.swerve.module.ModuleUtil;
 import frc.robot.subsystems.swerve.module.Modules;
 import frc.robot.subsystems.swerve.states.RotateAxis;
 import frc.robot.subsystems.swerve.states.SwerveState;
+import frc.utils.angle2d.Angle2d;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.calibration.swervecalibration.WheelRadiusCharacterization;
 import frc.utils.calibration.sysid.SysIdCalibrator;
@@ -55,20 +55,20 @@ public class SwerveCommandsBuilder {
 
 		return swerve.asSubsystemCommand(
 			new SequentialCommandGroup(
-				pointWheels(new Rotation2d(), false).until(
+				pointWheels(new Angle2d(), false).until(
 					() -> modules.isSteerAtTargetPositions(
 						SwerveConstants.CALIBRATION_MODULE_ANGLE_TOLERANCE,
 						SwerveConstants.CALIBRATION_MODULE_ANGULAR_VELOCITY_PER_SECOND_DEADBAND
 					)
 				),
-				new ParallelDeadlineGroup(sysIdCommand, pointWheels(new Rotation2d(), false))
+				new ParallelDeadlineGroup(sysIdCommand, pointWheels(new Angle2d(), false))
 			),
 			"Drive calibration"
 		);
 	}
 
 
-	public Command pointWheels(Rotation2d targetSteerPosition, boolean optimize) {
+	public Command pointWheels(Angle2d targetSteerPosition, boolean optimize) {
 		return swerve.asSubsystemCommand(
 			new RunCommand(() -> modules.pointWheels(targetSteerPosition, optimize)),
 			"Point wheels to: " + targetSteerPosition
@@ -117,11 +117,11 @@ public class SwerveCommandsBuilder {
 		);
 	}
 
-	public Command turnToHeading(Rotation2d targetHeading) {
+	public Command turnToHeading(Angle2d targetHeading) {
 		return turnToHeading(targetHeading, RotateAxis.MIDDLE_OF_CHASSIS);
 	}
 
-	public Command turnToHeading(Rotation2d targetHeading, RotateAxis rotateAxis) {
+	public Command turnToHeading(Angle2d targetHeading, RotateAxis rotateAxis) {
 		return swerve.asSubsystemCommand(
 			new InitExecuteCommand(
 				swerve::resetPIDControllers,

@@ -12,7 +12,7 @@ calculating robot position based on capturing april tags
 - **G** : Earths gravitational acceleration
 
 
-- **RPS** : Rotation2d per second
+- **APS** : Angle2d per second
 
 
 - **rot** : rotations

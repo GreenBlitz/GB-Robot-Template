@@ -32,6 +32,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	private final RingBuffer<Rotation2d> poseToIMUYawDifferenceBuffer;
 	private final TimeInterpolatableBuffer<Rotation2d> imuYawBuffer;
 	private final TimeInterpolatableBuffer<Translation3d> imu3DAccelerationGBuffer;
+	private OrientationSupplier orientationSupplier;
 	private RobotPoseObservation lastVisionObservation;
 	private OdometryData lastOdometryData;
 	private boolean isIMUOffsetCalibrated;
@@ -66,6 +67,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 			orientationSupplier.getLatestOrientation(),
 			Optional.of(initialIMUXYAccelerationG)
 		);
+		this.orientationSupplier = orientationSupplier;
 		this.isIMUOffsetCalibrated = false;
 		this.poseToIMUYawDifferenceBuffer = new RingBuffer<>(WPILibPoseEstimatorConstants.POSE_TO_IMU_YAW_DIFFERENCE_BUFFER_SIZE);
 		this.imuYawBuffer = TimeInterpolatableBuffer.createBuffer(WPILibPoseEstimatorConstants.IMU_YAW_BUFFER_SIZE_SECONDS);
@@ -99,7 +101,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	@Override
 	public void updateOdometry(OdometryData data) {
 		Twist2d changeInPose = kinematics.toTwist2d(lastOdometryData.getWheelPositions(), data.getWheelPositions());
-		if (Robot.ROBOT_TYPE == RobotType.SIMULATION) {
+		if (!orientationSupplier.isDataValid()) {
 			data.setOrientation(
 				new Rotation3d(
 					lastOdometryData.getOrientation().getX(),

@@ -48,6 +48,11 @@ public class IMUWrapper implements OrientationSupplier {
 	}
 
 	@Override
+	public boolean isDataValid() {
+		return isConnected();
+	}
+
+	@Override
 	public Rotation3d getLatestOrientation() {
 		return imuSignals.getLatestOrientation();
 	}
@@ -83,6 +88,7 @@ public class IMUWrapper implements OrientationSupplier {
 			imuSignals.zAccelerationGSignal()
 		);
 		Logger.recordOutput(imu.getLogPath() + "Acceleration", getLatestAccelerationMetersPerSecondSquared());
+		Logger.recordOutput(imu.getLogPath() + "isConnected", isConnected());
 	}
 
 }

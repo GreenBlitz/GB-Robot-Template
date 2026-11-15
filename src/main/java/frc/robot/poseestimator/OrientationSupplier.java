@@ -8,4 +8,6 @@ public interface OrientationSupplier {
 
 	Rotation3d[] getAllOrientations();
 
+	boolean isDataValid();
+
 }

@@ -1,8 +1,6 @@
 package frc.utils.angle2d;
 
 import static edu.wpi.first.units.Units.Radians;
-
-import java.util.Objects;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.Interpolatable;
 import edu.wpi.first.math.MathSharedStore;
@@ -10,6 +8,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.util.protobuf.ProtobufSerializable;
 import edu.wpi.first.util.struct.StructSerializable;
+
+import java.util.Objects;
 
 public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, StructSerializable {
 

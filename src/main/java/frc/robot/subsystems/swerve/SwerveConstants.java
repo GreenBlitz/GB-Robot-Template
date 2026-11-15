@@ -32,7 +32,7 @@ public record SwerveConstants(
 			logPath + "/State",
 			logPath + "/Velocity",
 			velocityAt12VoltsMetersPerSecond,
-                maxAngularVelocityPerSecond,
+			maxAngularVelocityPerSecond,
 			new PIDController(translationMetersPIDConstants.kP, translationMetersPIDConstants.kI, translationMetersPIDConstants.kD),
 			new PIDController(translationMetersPIDConstants.kP, translationMetersPIDConstants.kI, translationMetersPIDConstants.kD),
 			new PIDController(rotationDegreesPIDConstants.kP, rotationDegreesPIDConstants.kI, rotationDegreesPIDConstants.kD),

@@ -16,7 +16,7 @@ public class SimulationSwerveConstants {
 		return new SwerveConstants(
 			logPath,
 			VELOCITY_AT_12_VOLTS_METERS_PER_SECOND,
-                MAX_ANGULAR_VELOCITY_PER_SECOND,
+			MAX_ANGULAR_VELOCITY_PER_SECOND,
 			TRANSLATION_METERS_PID_CONSTANTS,
 			ROTATION_DEGREES_PID_CONSTANTS
 		);

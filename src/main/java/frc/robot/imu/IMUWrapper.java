@@ -26,16 +26,12 @@ public class IMUWrapper implements OrientationSupplier {
 		return imu instanceof EmptyIMU;
 	}
 
-	public void setYaw(Rotation2d yaw) {
-		imu.setYaw(yaw);
+	public boolean isConnected() {
+		return imu.isConnected();
 	}
 
 	public InputSignal<Rotation2d> getYawSignal() {
 		return imuSignals.yawSignal();
-	}
-
-	public boolean isConnected() {
-		return imu.isConnected();
 	}
 
 	public Rotation2d[] getLatestAngularVelocities() {
@@ -73,6 +69,11 @@ public class IMUWrapper implements OrientationSupplier {
 		TimedValue<Rotation2d> latestYaw = getYawSignal().getLatestTimedValue();
 		Rotation2d latestAbsoluteYaw = Rotation2d.fromRadians(MathUtil.angleModulus(latestYaw.getValue().getRadians()));
 		return new TimedValue<>(latestAbsoluteYaw, latestYaw.getTimestamp());
+	}
+
+
+	public void setYaw(Rotation2d yaw) {
+		imu.setYaw(yaw);
 	}
 
 	public void updateIMU() {

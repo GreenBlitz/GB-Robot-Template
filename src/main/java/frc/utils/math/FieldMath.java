@@ -23,8 +23,8 @@ public class FieldMath {
 		return toRelative.rotateBy(relativeTo.getRotation()).plus(relativeTo.getTranslation());
 	}
 
-	public static Pose2d rotatePose(Angle2d rotation, Pose2d toRelative) {
-		return toRelative.rotateBy(rotation.unaryMinus().toRotation2d());
+	public static Pose2d rotatePose(Angle2d angle, Pose2d toRelative) {
+		return toRelative.rotateBy(angle.unaryMinus().toRotation2d());
 	}
 
 	public static Rotation2d transformAngle(Rotation2d angle, AngleTransform angleTransform) {

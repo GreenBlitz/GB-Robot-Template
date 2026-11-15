@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.TimedRobot;
+import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
@@ -94,7 +94,7 @@ public class Modules {
 			double limitedVelocityMetersPerSecond = slewRateLimiter.calculate(moduleStates[i].speedMetersPerSecond);
 			moduleStates[i].speedMetersPerSecond = limitedVelocityMetersPerSecond;
 			targetLimitedAccelerationsMetersPerSecondSquared[i] = (limitedVelocityMetersPerSecond - lastCycleLimitedVelocities[i])
-				/ TimedRobot.kDefaultPeriod;
+				/ TimeUtil.DEFAULT_CYCLE_TIME_SECONDS;
 			lastCycleLimitedVelocities[i] = limitedVelocityMetersPerSecond;
 			modules[i].setTargetState(moduleStates[i], isClosedLoop);
 		}

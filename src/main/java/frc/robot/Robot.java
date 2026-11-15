@@ -5,15 +5,14 @@
 package frc.robot;
 
 import frc.RobotManager;
-import frc.robot.hardware.interfaces.IIMU;
-import frc.robot.imu.IMUWrapper;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.imu.IMUWrapper;
+import frc.robot.imu.factories.IMUFactory;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
-import frc.robot.imu.factories.IMUFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.vision.cameras.limelight.Limelight;
 import frc.robot.vision.cameras.limelight.LimelightFilters;
@@ -40,7 +39,7 @@ public class Robot {
 
   private final Swerve swerve;
   private final IMUWrapper imu;
-	private final IPoseEstimator poseEstimator;
+  private final IPoseEstimator poseEstimator;
   private final List<Limelight> limelights;
 
   public Robot() {
@@ -51,8 +50,7 @@ public class Robot {
         new Swerve(
             SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
             ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
-            imu
-            );
+            imu);
     BrakeStateManager.add(
         () -> swerve.getModules().setBrake(true), () -> swerve.getModules().setBrake(false));
     this.poseEstimator =
@@ -96,7 +94,8 @@ public class Robot {
   public void periodic() {
     BusChain.refreshAll();
 
-    imu.updateIMU();updateSubsystems();
+    imu.updateIMU();
+    updateSubsystems();
     poseEstimator.updateOdometry(swerve.getAllOdometryData());
 
     getLimelights().forEach(Limelight::updateHardwareInputs);

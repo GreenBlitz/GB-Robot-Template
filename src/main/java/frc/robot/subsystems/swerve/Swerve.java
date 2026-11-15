@@ -4,9 +4,9 @@ import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.config.RobotConfig;
 import frc.constants.MathConstants;
 import frc.constants.field.Field;
-import frc.robot.imu.IMUWrapper;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
+import frc.robot.imu.IMUWrapper;
 import frc.robot.poseestimator.OdometryData;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;
@@ -17,7 +17,6 @@ import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.SwerveStateHandler;
 import frc.robot.subsystems.swerve.states.heading.HeadingControl;
 import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
-import frc.utils.TimedValue;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.battery.BatteryUtil;
 import java.util.Optional;
@@ -41,7 +40,6 @@ public class Swerve extends GBSubsystem {
   private final double driveRadiusMeters;
   private final Modules modules;
   private final IMUWrapper imu;
-  
 
   private final SwerveDriveKinematics kinematics;
   private final HeadingStabilizer headingStabilizer;
@@ -63,7 +61,6 @@ public class Swerve extends GBSubsystem {
         SwerveMath.calculateDriveRadiusMeters(modules.getModulePositionsFromCenterMeters());
     this.modules = modules;
     this.imu = imu;
-    
 
     this.kinematics = new SwerveDriveKinematics(modules.getModulePositionsFromCenterMeters());
     this.headingSupplier = () -> imu.getWrappedYaw().getValue();
@@ -101,8 +98,6 @@ public class Swerve extends GBSubsystem {
     return stateHandler;
   }
 
-  
-
   public void configPathPlanner(
       Supplier<Pose2d> currentPoseSupplier,
       Consumer<Pose2d> resetPoseConsumer,
@@ -139,10 +134,8 @@ public class Swerve extends GBSubsystem {
     constants.rotationDegreesPIDController().reset();
   }
 
-  
-
   public void update() {
-    
+
     modules.updateInputs();
 
     currentState.log(constants.stateLogPath());
@@ -157,8 +150,6 @@ public class Swerve extends GBSubsystem {
         SwerveMath.getDriveMagnitude(allianceRelativeVelocities));
 
     Logger.recordOutput(getLogPath() + "/OdometrySamples", getNumberOfOdometrySamples());
-
-    
 
     Logger.recordOutput(getLogPath() + "/isCollisionDetected", isCollisionDetected());
   }
@@ -176,12 +167,8 @@ public class Swerve extends GBSubsystem {
               imu.getYawSignal().getTimestamps()[i],
               modules.getWheelPositions(i),
               modules.getCurrentVelocities(),
-              imu .isEmpty()
-                  ? Optional.empty()
-                  : Optional.of(imu.getAllOrientations()[i]),
-              imu .isEmpty()
-                  ? Optional.empty()
-                  : Optional.of(imu.getAllAccelerationsG()[i]));
+              imu.isEmpty() ? Optional.empty() : Optional.of(imu.getAllOrientations()[i]),
+              imu.isEmpty() ? Optional.empty() : Optional.of(imu.getAllAccelerationsG()[i]));
     }
 
     return odometryData;
@@ -190,8 +177,6 @@ public class Swerve extends GBSubsystem {
   public double getDriveRadiusMeters() {
     return driveRadiusMeters;
   }
-
-  
 
   public Rotation2d getAbsoluteHeading() {
     double inputtedHeadingRadians = MathUtil.angleModulus(headingSupplier.get().getRadians());
@@ -221,8 +206,6 @@ public class Swerve extends GBSubsystem {
     }
     return SwerveMath.allianceToRobotRelativeVelocities(velocities, getAllianceRelativeHeading());
   }
-
-  
 
   protected void moveToPoseByPID(Pose2d currentPose, Pose2d targetPose) {
     double xVelocityMetersPerSecond =

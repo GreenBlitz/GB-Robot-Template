@@ -4,17 +4,17 @@ import frc.robot.IDs;
 import frc.robot.Robot;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.phoenix6.imu.Pigeon2IMU;
-import frc.robot.imu.IMUWrapper;
 import frc.robot.imu.IMUSignals;
+import frc.robot.imu.IMUWrapper;
 
 public class IMUFactory {
 
   public static IMUWrapper createIMUWrapper(String logPath) {
-		IIMU imu = createIMU(logPath);
+    IIMU imu = createIMU(logPath);
     return new IMUWrapper(imu, createSignals(imu));
-	}
+  }
 
-	private static IIMU createIMU(String logPath) {
+  private static IIMU createIMU(String logPath) {
     return switch (Robot.ROBOT_TYPE) {
       case REAL, REPLAY -> Pigeon2IMUBuilder.buildIMU(logPath, IDs.Pigeon2IDs.CHASSIS);
       case SIMULATION -> SimulationIMUBuilder.buildIMU(logPath);

@@ -2,10 +2,10 @@ package frc.robot.hardware.phoenix6.signal;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
-import frc.utils.angle2d.Angle2d;
 import frc.robot.hardware.signal.AngleSignal;
 import frc.utils.TimedValue;
 import frc.utils.AngleUnit;
+import frc.utils.angle2d.Angle2d;
 import frc.utils.time.TimeUtil;
 
 public class Phoenix6LatencySignal extends AngleSignal implements SignalGetter {

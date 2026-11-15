@@ -26,14 +26,14 @@ public final class Angle2dStruct implements Struct<Angle2d> {
 	}
 
 	@Override
-	public Angle2d unpack(ByteBuffer bb) {
-		double value = bb.getDouble();
+	public Angle2d unpack(ByteBuffer byteBuffer) {
+		double value = byteBuffer.getDouble();
 		return new Angle2d(value);
 	}
 
 	@Override
-	public void pack(ByteBuffer bb, Angle2d value) {
-		bb.putDouble(value.getRadians());
+	public void pack(ByteBuffer byteBuffer, Angle2d value) {
+		byteBuffer.putDouble(value.getRadians());
 	}
 
 	@Override

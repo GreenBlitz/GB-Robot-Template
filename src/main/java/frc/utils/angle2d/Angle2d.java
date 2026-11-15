@@ -37,10 +37,10 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
 		sin = 0.0;
 	}
 
-	public Angle2d(double value) {
-		valueRads = value;
-		cos = Math.cos(value);
-		sin = Math.sin(value);
+	public Angle2d(double valueRads) {
+		this.valueRads = valueRads;
+		cos = Math.cos(valueRads);
+		sin = Math.sin(valueRads);
 	}
 
 	public Angle2d(double x, double y) {
@@ -138,7 +138,7 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
 	}
 
 	public Angle2d modulo360() {
-		return fromRadians(valueRads % Math.PI*2);
+		return fromRadians(valueRads % Math.PI * 2);
 	}
 
 	@Override

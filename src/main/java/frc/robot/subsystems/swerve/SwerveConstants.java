@@ -23,7 +23,7 @@ public record SwerveConstants(
 	public SwerveConstants(
 		String logPath,
 		double velocityAt12VoltsMetersPerSecond,
-		Angle2d maxRotationalVelocityPerSecond,
+		Angle2d maxAngularVelocityPerSecond,
 		PIDConstants translationMetersPIDConstants,
 		PIDConstants rotationDegreesPIDConstants
 	) {
@@ -32,7 +32,7 @@ public record SwerveConstants(
 			logPath + "/State",
 			logPath + "/Velocity",
 			velocityAt12VoltsMetersPerSecond,
-			maxRotationalVelocityPerSecond,
+			maxAngularVelocityPerSecond,
 			new PIDController(translationMetersPIDConstants.kP, translationMetersPIDConstants.kI, translationMetersPIDConstants.kD),
 			new PIDController(translationMetersPIDConstants.kP, translationMetersPIDConstants.kI, translationMetersPIDConstants.kD),
 			new PIDController(rotationDegreesPIDConstants.kP, rotationDegreesPIDConstants.kI, rotationDegreesPIDConstants.kD),

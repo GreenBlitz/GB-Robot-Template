@@ -12,24 +12,24 @@ public class LoggedNetworkAngle2d extends LoggedNetworkInput {
 
 	private final String key;
 	private final DoubleEntry entry;
-	private Angle2d defaultValue = Angle2d.ZERO;
-	private Angle2d value;
+	private Angle2d defaultAngle = Angle2d.ZERO;
+	private Angle2d angle;
 
 	public LoggedNetworkAngle2d(String key) {
 		this.key = key;
 		this.entry = NetworkTableInstance.getDefault().getDoubleTopic(key + "InDegrees").getEntry(0.0);
-		this.value = defaultValue;
+		this.angle = defaultAngle;
 		Logger.registerDashboardInput(this);
 	}
 
-	public LoggedNetworkAngle2d(String key, Angle2d defaultValue) {
+	public LoggedNetworkAngle2d(String key, Angle2d defaultAngle) {
 		this(key);
-		setDefault(defaultValue);
-		this.value = defaultValue;
+		setDefault(defaultAngle);
+		this.angle = defaultAngle;
 	}
 
 	public void setDefault(Angle2d defaultValue) {
-		this.defaultValue = defaultValue;
+		this.defaultAngle = defaultValue;
 		entry.set(entry.get(defaultValue.getDegrees()));
 	}
 
@@ -38,24 +38,24 @@ public class LoggedNetworkAngle2d extends LoggedNetworkInput {
 	}
 
 	public Angle2d get() {
-		return value;
+		return angle;
 	}
 
 	private final LoggableInputs inputs = new LoggableInputs() {
 
 		public void toLog(LogTable table) {
-			table.put(removeSlash(key), value);
+			table.put(removeSlash(key), angle);
 		}
 
 		public void fromLog(LogTable table) {
-			value = table.get(removeSlash(key + "InDegrees"), defaultValue);
+			angle = table.get(removeSlash(key + "InDegrees"), defaultAngle);
 		}
 
 	};
 
 	public void periodic() {
 		if (!Logger.hasReplaySource()) {
-			value = Angle2d.fromDegrees(entry.get());
+			angle = Angle2d.fromDegrees(entry.get());
 		}
 		Logger.processInputs(prefix, inputs);
 	}

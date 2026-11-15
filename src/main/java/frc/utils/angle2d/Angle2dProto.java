@@ -22,13 +22,13 @@ public final class Angle2dProto implements Protobuf<Angle2d, ProtobufRotation2d>
 	}
 
 	@Override
-	public Angle2d unpack(ProtobufRotation2d msg) {
-		return new Angle2d(msg.getValue());
+	public Angle2d unpack(ProtobufRotation2d message) {
+		return new Angle2d(message.getValue());
 	}
 
 	@Override
-	public void pack(ProtobufRotation2d msg, Angle2d value) {
-		msg.setValue(value.getRadians());
+	public void pack(ProtobufRotation2d message, Angle2d value) {
+		message.setValue(value.getRadians());
 	}
 
 	@Override

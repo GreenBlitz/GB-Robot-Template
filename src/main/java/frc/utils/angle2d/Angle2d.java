@@ -138,7 +138,7 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
 	}
 
 	public Angle2d modulo360() {
-		return fromRadians(valueRads % Math.PI*2);
+		return fromRadians(valueRads % Math.PI * 2);
 	}
 
 	@Override

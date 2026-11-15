@@ -8,6 +8,7 @@ import frc.robot.Robot;
 import frc.robot.hardware.interfaces.ControllableMotor;
 import frc.robot.hardware.interfaces.IFeedForwardRequest;
 import frc.robot.hardware.interfaces.IRequest;
+import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
 import frc.robot.subsystems.GBSubsystem;
 import frc.utils.Conversions;
@@ -15,19 +16,19 @@ import frc.utils.battery.BatteryUtil;
 import frc.utils.calibration.sysid.SysIdCalibrator;
 import org.littletonrobotics.junction.Logger;
 
+
 public class Elevator extends GBSubsystem {
 
 	protected final ControllableMotor motor;
 	private final IFeedForwardRequest positionRequest;
 	private final IRequest<Double> voltageRequest;
 	private final SysIdCalibrator sysIdCalibrator;
-	private final ElevatorCommandBuilder commandsBuilder;
+	private final ElevatorCommandsBuilder commandsBuilder;
 	private final ElevatorSignals elevatorSignals;
-	private final double drumDiameter;
+	private final double drumDiameterMeters;
 	private final double kG;
-	private final double minHeight;
-	private final double maxHeight;
-
+	private final double minHeightMeters;
+	private final double maxHeightMeters;
 
 	public Elevator(
 		String logPath,
@@ -36,27 +37,25 @@ public class Elevator extends GBSubsystem {
 		IRequest<Double> voltageRequest,
 		ElevatorSignals elevatorSignals,
 		double kG,
-		double drumDiameter,
-		double minHeight,
-		double maxHeight
-
+		double drumDiameterMeters,
+		double minHeightMeters,
+		double maxHeightMeters
 	) {
 		super(logPath);
 		this.motor = motor;
 		this.positionRequest = positionRequest;
 		this.voltageRequest = voltageRequest;
 		this.sysIdCalibrator = new SysIdCalibrator(motor.getSysidConfigInfo(), this, (voltage) -> setVoltage(voltage + getKgVoltage()));
-		this.commandsBuilder = new ElevatorCommandBuilder(this);
-		setDefaultCommand(commandsBuilder.stayPut());
-
+		this.commandsBuilder = new ElevatorCommandsBuilder(this);
+		setDefaultCommand(commandsBuilder.stayInPlace());
 		this.elevatorSignals = elevatorSignals;
-		this.drumDiameter = drumDiameter;
+		this.drumDiameterMeters = drumDiameterMeters;
 		this.kG = kG;
-		this.minHeight = minHeight;
-		this.maxHeight = maxHeight;
+		this.minHeightMeters = minHeightMeters;
+		this.maxHeightMeters = maxHeightMeters;
 	}
 
-	public ElevatorCommandBuilder getCommandsBuilder() {
+	public ElevatorCommandsBuilder getCommandsBuilder() {
 		return this.commandsBuilder;
 	}
 
@@ -73,77 +72,68 @@ public class Elevator extends GBSubsystem {
 	}
 
 	public void stayInPlace() {
-		setTargetPosition(this.elevatorSignals.positionSignal().getLatestValue());
+		setTargetPosition(rotationsToMeters(this.elevatorSignals.positionSignal().getLatestValue()));
 	}
 
-
-	public Rotation2d getPosition() {
-		return this.elevatorSignals.positionSignal().getLatestValue();
+	public double getPosition() {
+		return rotationsToMeters(this.elevatorSignals.positionSignal().getLatestValue());
 	}
 
-	public double getMaxHeight() {
-		return maxHeight;
+	public double getMaxHeightMeters() {
+		return maxHeightMeters;
 	}
 
-	public double getMinHeight() {
-		return minHeight;
+	public double getMinHeightMeters() {
+		return minHeightMeters;
 	}
 
-	public double getDrumDiameter() {
-		return drumDiameter;
+	public double getDrumDiameterMeters() {
+		return drumDiameterMeters;
 	}
 
-	public double angleToMeters(Rotation2d angle) {
-		return Conversions.angleToDistance(angle, this.drumDiameter);
+	public double rotationsToMeters(Rotation2d angle) {
+		return Conversions.angleToDistance(angle, this.drumDiameterMeters);
 	}
 
-	public Rotation2d metersToAngle(double distance) {
-		return Conversions.distanceToAngle(distance, this.drumDiameter);
+	public Rotation2d metersToRotations(double distance) {
+		return Conversions.distanceToAngle(distance, this.drumDiameterMeters);
 	}
 
 	public void setBrake(boolean brake) {
 		this.motor.setBrake(brake);
 	}
 
-	public boolean isAtPosition(Rotation2d position, Rotation2d tolerance) {
-		return this.elevatorSignals.positionSignal().isNear(position, tolerance);
+	public boolean isAtPosition(double position, double tolerance) {
+		return this.elevatorSignals.positionSignal().isNear(metersToRotations(position), metersToRotations(tolerance));
 	}
 
-	public boolean isBeforePosition(Rotation2d position) {
-		return this.elevatorSignals.positionSignal().isLess(position);
+	public boolean isBeforePosition(double position) {
+		return this.elevatorSignals.positionSignal().isLess(metersToRotations(position));
 	}
 
-	public boolean isAfterPosition(Rotation2d position) {
-		return this.elevatorSignals.positionSignal().isGreater(position);
+	public boolean isAfterPosition(double position) {
+		return this.elevatorSignals.positionSignal().isGreater(metersToRotations(position));
 	}
 
-	public boolean isInSoftLimit() {
-		return this.elevatorSignals.positionSignal().isLess(metersToAngle(maxHeight))
-			&& this.elevatorSignals.positionSignal().isGreater(this.metersToAngle(minHeight));
+	public boolean isInMechanicalLimit() {
+		return this.elevatorSignals.positionSignal().isLess(metersToRotations(maxHeightMeters))
+			&& this.elevatorSignals.positionSignal().isGreater(metersToRotations(minHeightMeters));
 	}
 
 	public void stop() {
 		this.motor.stop();
 	}
 
-	public void resetPosition(double targetPosition) {
-		motor.resetPosition(metersToAngle(targetPosition));
-	}
-
-	public void resetPosition(Rotation2d targetPosition) {
-		motor.resetPosition(targetPosition);
+	public void resetPosition(double positionMeters) {
+		motor.resetPosition(metersToRotations(positionMeters));
 	}
 
 	public void setPower(double power) {
 		motor.setPower(power);
 	}
 
-	public void setTargetPosition(double position) {
-		positionRequest.withSetPoint(this.metersToAngle(position));
-	}
-
-	public void setTargetPosition(Rotation2d position) {
-		positionRequest.withSetPoint(position);
+	public void setTargetPosition(double positionMeters) {
+		positionRequest.withSetPoint(this.metersToRotations(positionMeters));
 	}
 
 	public void update() {
@@ -154,10 +144,13 @@ public class Elevator extends GBSubsystem {
 
 	private void updateInputs() {
 		motor.updateInputs(elevatorSignals.positionSignal(), elevatorSignals.voltageSignal());
+        for (InputSignal<?> signal : elevatorSignals.otherSignals()) {
+            motor.updateInputs(signal);
+        }
 	}
 
 	public void log() {
-		Logger.recordOutput(getLogPath() + "/position", elevatorSignals.positionSignal().getLatestValue());
+		Logger.recordOutput(getLogPath() + "/positionMeters", elevatorSignals.positionSignal().getLatestValue());
 		Logger.recordOutput(getLogPath() + "/voltage", elevatorSignals.voltageSignal().getLatestValue());
 	}
 

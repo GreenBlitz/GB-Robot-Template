@@ -1,6 +1,5 @@
 package frc.robot.subsystems.elevator;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.hardware.interfaces.*;
 import org.littletonrobotics.junction.Logger;
 
@@ -31,7 +30,7 @@ public class DynamicMotionMagicElevator extends Elevator {
 		this.defaultDynamicMotionAccelerationMeters = defaultMotionMagicAcceleration;
 		this.defaultDynamicMotionVelocityMeters = defaultMotionMagicVelocity;
 		this.dynamicMotionMagicCommandsBuilder = new DynamicMotionMagicElevatorCommandsBuilder(this);
-		setDefaultCommand(getCommandsBuilder().stayPut());
+		setDefaultCommand(getCommandsBuilder().stayInPlace());
 	}
 
 	public DynamicMotionMagicElevatorCommandsBuilder getCommandsBuilder() {
@@ -39,27 +38,14 @@ public class DynamicMotionMagicElevator extends Elevator {
 	}
 
 	public void setTargetPosition(double target, double acceleration, double velocity) {
-		dynamicMotionMagicRequest.withSetPoint(metersToAngle(target));
-		dynamicMotionMagicRequest.withMaxAccelerationRPS(metersToAngle(acceleration));
-		dynamicMotionMagicRequest.withMaxVelocityRPS(metersToAngle(velocity));
+		dynamicMotionMagicRequest.withSetPoint(metersToRotations(target));
+		dynamicMotionMagicRequest.withMaxAccelerationRPS(metersToRotations(acceleration));
+		dynamicMotionMagicRequest.withMaxVelocityRPS(metersToRotations(velocity));
 		motor.applyRequest(dynamicMotionMagicRequest);
 	}
-
-	public void setTargetPosition(Rotation2d target, double acceleration, double velocity) {
-		dynamicMotionMagicRequest.withSetPoint(target);
-		dynamicMotionMagicRequest.withMaxAccelerationRPS(metersToAngle(acceleration));
-		dynamicMotionMagicRequest.withMaxVelocityRPS(metersToAngle(velocity));
-		motor.applyRequest(dynamicMotionMagicRequest);
-	}
-
 
 	@Override
 	public void setTargetPosition(double target) {
-		setTargetPosition(target, defaultDynamicMotionAccelerationMeters, defaultDynamicMotionVelocityMeters);
-	}
-
-	@Override
-	public void setTargetPosition(Rotation2d target) {
 		setTargetPosition(target, defaultDynamicMotionAccelerationMeters, defaultDynamicMotionVelocityMeters);
 	}
 

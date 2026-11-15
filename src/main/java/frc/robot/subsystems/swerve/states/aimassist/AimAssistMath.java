@@ -28,7 +28,7 @@ public class AimAssistMath {
 		}
 
 		Angle2d clampedAngularVelocityPerSecond = ToleranceMath
-			.clamp(pidOutputVelocityPerSecond, swerveConstants.maxRotationalVelocityPerSecond());
+			.clamp(pidOutputVelocityPerSecond, swerveConstants.maxAngularVelocityPerSecond());
 
 		return new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, clampedAngularVelocityPerSecond.getRadians());
 	}

@@ -250,14 +250,14 @@ public class Swerve extends GBSubsystem {
 		double xVelocityMetersPerSecond = constants.xMetersPIDController().calculate(currentPose.getX(), targetPose.getX());
 		double yVelocityMetersPerSecond = constants.yMetersPIDController().calculate(currentPose.getY(), targetPose.getY());
 		int direction = Field.isFieldConventionAlliance() ? 1 : -1;
-		Angle2d rotationVelocityPerSecond = Angle2d.fromDegrees(
+		Angle2d angularVelocityPerSecond = Angle2d.fromDegrees(
 			constants.rotationDegreesPIDController().calculate(currentPose.getRotation().getDegrees(), targetPose.getRotation().getDegrees())
 		);
 
 		ChassisSpeeds targetAllianceRelativeSpeeds = new ChassisSpeeds(
 			xVelocityMetersPerSecond * direction,
 			yVelocityMetersPerSecond * direction,
-			rotationVelocityPerSecond.getRadians()
+			angularVelocityPerSecond.getRadians()
 		);
 		driveByState(targetAllianceRelativeSpeeds, SwerveState.DEFAULT_DRIVE);
 	}
@@ -335,8 +335,8 @@ public class Swerve extends GBSubsystem {
 		double headingDeltaDegrees = Math.abs(targetHeading.minus(headingSupplier.get()).getDegrees());
 		boolean isAtHeading = headingDeltaDegrees < tolerance.getDegrees();
 
-		double rotationVelocityRadiansPerSecond = getRobotRelativeVelocity().omegaRadiansPerSecond;
-		boolean isStopping = Math.abs(rotationVelocityRadiansPerSecond) < velocityDeadbandAPS.getRadians();
+		double angularVelocityRadiansPerSecond = getRobotRelativeVelocity().omegaRadiansPerSecond;
+		boolean isStopping = Math.abs(angularVelocityRadiansPerSecond) < velocityDeadbandAPS.getRadians();
 
 		return isAtHeading && isStopping;
 	}

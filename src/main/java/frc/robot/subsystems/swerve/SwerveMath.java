@@ -34,7 +34,7 @@ public class SwerveMath {
 		return new ChassisSpeeds(
 			powers.xPower * constants.velocityAt12VoltsMetersPerSecond(),
 			powers.yPower * constants.velocityAt12VoltsMetersPerSecond(),
-			powers.rotationalPower * constants.maxRotationalVelocityPerSecond().getRadians()
+			powers.rotationalPower * constants.maxAngularVelocityPerSecond().getRadians()
 		);
 	}
 

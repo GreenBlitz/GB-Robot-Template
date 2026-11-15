@@ -2,9 +2,9 @@ package frc.robot.hardware.rev.motors;
 
 import com.revrobotics.REVLibError;
 import com.revrobotics.spark.SparkMax;
-import frc.utils.angle2d.Angle2d;
 import frc.robot.hardware.rev.REVUtil;
 import frc.utils.Conversions;
+import frc.utils.angle2d.Angle2d;
 
 public class SparkMaxWrapper extends SparkMax {
 

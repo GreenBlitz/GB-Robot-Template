@@ -12,7 +12,7 @@ public record SwerveConstants(
 	String stateLogPath,
 	String velocityLogPath,
 	double velocityAt12VoltsMetersPerSecond,
-	Angle2d maxRotationalVelocityPerSecond,
+	Angle2d maxAngularVelocityPerSecond,
 	PIDController xMetersPIDController,
 	PIDController yMetersPIDController,
 	PIDController wraplessRotationDegreesPIDController,

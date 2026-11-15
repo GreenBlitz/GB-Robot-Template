@@ -52,6 +52,8 @@ public class Swerve extends GBSubsystem {
 	private final SwerveStateHandler stateHandler;
 	private final LoggedNetworkNumber calibrationVoltageTunable;
 
+	private double[] lastDriveVelocities = new double[4];
+
 	private SwerveState currentState;
 	private Supplier<Rotation2d> headingSupplier;
 	private ChassisPowers driversPowerInputs;
@@ -419,6 +421,14 @@ public class Swerve extends GBSubsystem {
 			powers.rotationalPower = 1;
 			return powers;
 		}), Set.of(this)));
+	}
+
+	public double[] getLastDriveVelocities() {
+		return lastDriveVelocities;
+	}
+
+	public void setLastDriveVelocities(double[] lastDriveVelocities) {
+		this.lastDriveVelocities = lastDriveVelocities;
 	}
 
 }

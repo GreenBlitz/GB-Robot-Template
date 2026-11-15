@@ -47,6 +47,10 @@ public class Modules {
 		}
 	}
 
+	public double[] getDriveVelocitiesMetersPerSecond() {
+		return Arrays.stream(modules).mapToDouble(Module::getDriveVelocityMetersPerSecond).toArray();
+	}
+
 	public void setBrake(boolean brake) {
 		for (Module currentModule : modules) {
 			currentModule.setBrake(brake);

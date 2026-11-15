@@ -1,8 +1,7 @@
 package frc.robot.subsystems.swerve.module;
 
-import java.util.Arrays;
-
 import frc.utils.time.TimeUtil;
+import java.util.Arrays;
 import org.littletonrobotics.junction.Logger;
 import org.wpilib.math.filter.SlewRateLimiter;
 import org.wpilib.math.geometry.Rotation2d;
@@ -12,15 +11,15 @@ import org.wpilib.math.kinematics.SwerveModuleVelocity;
 
 public class Modules {
 
-    private final Module[] modules;
-    private final String logPath;
-	private final double[] lastCycleLimitedTargetVelocities;
+  private final Module[] modules;
+  private final String logPath;
+  private final double[] lastCycleLimitedTargetVelocities;
 
-	public Modules(String logPath, Module... modules) {
-		this.logPath = logPath + ModuleConstants.MODULES_LOG_PATH_ADDITION;
-		this.modules = modules;
-		this.lastCycleLimitedTargetVelocities = new double[modules.length];
-	}
+  public Modules(String logPath, Module... modules) {
+    this.logPath = logPath + ModuleConstants.MODULES_LOG_PATH_ADDITION;
+    this.modules = modules;
+    this.lastCycleLimitedTargetVelocities = new double[modules.length];
+  }
 
   public Module getModule(ModuleUtil.ModulePosition modulePosition) {
     return modules[modulePosition.getIndex()];
@@ -84,19 +83,25 @@ public class Modules {
     }
   }
 
-	public void setTargetVelocities(SwerveModuleVelocity[] moduleVelocities, boolean isClosedLoop, SlewRateLimiter slewRateLimiter) {
-		double[] targetLimitedAccelerationsMetersPerSecondSquared = new double[modules.length];
-		for (int i = 0; i < modules.length; i++) {
-			double limitedVelocityMetersPerSecond = slewRateLimiter.calculate(moduleVelocities[i].velocity);
-			moduleVelocities[i].velocity = limitedVelocityMetersPerSecond;
-			targetLimitedAccelerationsMetersPerSecondSquared[i] = (limitedVelocityMetersPerSecond - lastCycleLimitedTargetVelocities[i])
-				/ TimeUtil.DEFAULT_CYCLE_TIME_SECONDS;
-			lastCycleLimitedTargetVelocities[i] = limitedVelocityMetersPerSecond;
-			modules[i].setTargetState(moduleVelocities[i], isClosedLoop);
-		}
-		Logger.recordOutput(logPath + "/TargetAccelerationMetersPerSecondsSquared", targetLimitedAccelerationsMetersPerSecondSquared);
-	}
-
+  public void setTargetVelocities(
+      SwerveModuleVelocity[] moduleVelocities,
+      boolean isClosedLoop,
+      SlewRateLimiter slewRateLimiter) {
+    double[] targetLimitedAccelerationsMetersPerSecondSquared = new double[modules.length];
+    for (int i = 0; i < modules.length; i++) {
+      double limitedVelocityMetersPerSecond =
+          slewRateLimiter.calculate(moduleVelocities[i].velocity);
+      moduleVelocities[i].velocity = limitedVelocityMetersPerSecond;
+      targetLimitedAccelerationsMetersPerSecondSquared[i] =
+          (limitedVelocityMetersPerSecond - lastCycleLimitedTargetVelocities[i])
+              / TimeUtil.DEFAULT_CYCLE_TIME_SECONDS;
+      lastCycleLimitedTargetVelocities[i] = limitedVelocityMetersPerSecond;
+      modules[i].setTargetState(moduleVelocities[i], isClosedLoop);
+    }
+    Logger.recordOutput(
+        logPath + "/TargetAccelerationMetersPerSecondsSquared",
+        targetLimitedAccelerationsMetersPerSecondSquared);
+  }
 
   public Translation2d[] getModulePositionsFromCenterMeters() {
     return Arrays.stream(modules)

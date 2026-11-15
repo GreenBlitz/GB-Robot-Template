@@ -98,7 +98,7 @@ public class Modules {
 			lastCycleLimitedTargetVelocities[i] = limitedVelocityMetersPerSecond;
 			modules[i].setTargetState(moduleStates[i], isClosedLoop);
 		}
-		Logger.recordOutput(logPath + "/TargerAccelerationMetersPerSecondsSquared", targetLimitedAccelerationsMetersPerSecondSquared);
+		Logger.recordOutput(logPath + "/TargetAccelerationMetersPerSecondsSquared", targetLimitedAccelerationsMetersPerSecondSquared);
 	}
 
 

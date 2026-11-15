@@ -14,12 +14,12 @@ public class Modules {
 
 	private final Module[] modules;
 	private final String logPath;
-	private final double[] lastCycleLimitedVelocities;
+	private final double[] lastCycleLimitedTargetVelocities;
 
 	public Modules(String logPath, Module... modules) {
 		this.logPath = logPath + ModuleConstants.MODULES_LOG_PATH_ADDITION;
 		this.modules = modules;
-		this.lastCycleLimitedVelocities = new double[modules.length];
+		this.lastCycleLimitedTargetVelocities = new double[modules.length];
 	}
 
 	public Module getModule(ModuleUtil.ModulePosition modulePosition) {
@@ -93,9 +93,9 @@ public class Modules {
 		for (int i = 0; i < modules.length; i++) {
 			double limitedVelocityMetersPerSecond = slewRateLimiter.calculate(moduleStates[i].speedMetersPerSecond);
 			moduleStates[i].speedMetersPerSecond = limitedVelocityMetersPerSecond;
-			targetLimitedAccelerationsMetersPerSecondSquared[i] = (limitedVelocityMetersPerSecond - lastCycleLimitedVelocities[i])
+			targetLimitedAccelerationsMetersPerSecondSquared[i] = (limitedVelocityMetersPerSecond - lastCycleLimitedTargetVelocities[i])
 				/ TimeUtil.DEFAULT_CYCLE_TIME_SECONDS;
-			lastCycleLimitedVelocities[i] = limitedVelocityMetersPerSecond;
+			lastCycleLimitedTargetVelocities[i] = limitedVelocityMetersPerSecond;
 			modules[i].setTargetState(moduleStates[i], isClosedLoop);
 		}
 		Logger.recordOutput(logPath + "/TargerAccelerationMetersPerSecondsSquared", targetLimitedAccelerationsMetersPerSecondSquared);

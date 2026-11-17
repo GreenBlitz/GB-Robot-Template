@@ -44,7 +44,7 @@ public class IMUWrapper implements OrientationSupplier {
 	}
 
 	@Override
-	public boolean isDataValid() {
+	public boolean isDataReliable() {
 		return isConnected();
 	}
 
@@ -72,11 +72,13 @@ public class IMUWrapper implements OrientationSupplier {
 	}
 
 
+	@Override
 	public void setYaw(Rotation2d yaw) {
 		imu.setYaw(yaw);
 	}
 
-	public void updateIMU() {
+	@Override
+	public void updateOrientationSupplier() {
 		imu.updateInputs(
 			imuSignals.pitchSignal(),
 			imuSignals.rollSignal(),

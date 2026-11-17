@@ -126,8 +126,8 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public void setHeading(Rotation2d heading) {
-		imu.setYaw(heading);
-		imu.updateIMU();
+		orientationSupplier.setYaw(heading);
+		orientationSupplier.updateOrientationSupplier();
 		headingStabilizer.unlockTarget();
 		headingStabilizer.setTargetHeading(heading);
 	}
@@ -155,7 +155,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public int getNumberOfOdometrySamples() {
-		return Math.min(imu.getYawSignal().asArray().length, modules.getNumberOfOdometrySamples());
+		return Math.min(orientationSupplier.getYawSignal().asArray().length, modules.getNumberOfOdometrySamples());
 	}
 
 	public OdometryData[] getAllOdometryData() {
@@ -163,7 +163,7 @@ public class Swerve extends GBSubsystem {
 
 		for (int i = 0; i < odometryData.length; i++) {
 			odometryData[i] = new OdometryData(
-				imu.getYawSignal().getTimestamps()[i],
+				orientationSupplier.getYawSignal().getTimestamps()[i],
 				modules.getWheelPositions(i),
 				modules.getCurrentStates(),
 				orientationSupplier.getAllOrientations()[i],

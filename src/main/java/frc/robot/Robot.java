@@ -102,7 +102,8 @@ public class Robot {
 	public void periodic() {
 		BusChain.refreshAll();
 
-		imu.updateIMU();
+		orientationSupplier.updateOrientationSupplier();
+		imu.updateOrientationSupplier();
 		updateSubsystems();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 

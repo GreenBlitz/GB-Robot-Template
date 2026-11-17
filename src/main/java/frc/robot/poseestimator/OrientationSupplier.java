@@ -17,6 +17,8 @@ public interface OrientationSupplier {
 
 	void setYaw(Rotation2d yaw);
 
+	void setOrientation(Rotation3d orientation);
+
 	void updateOrientationSupplier();
 
 }

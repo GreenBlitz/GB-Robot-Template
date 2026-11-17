@@ -31,6 +31,7 @@ public class IMUWrapper implements OrientationSupplier {
 		return imu.isConnected();
 	}
 
+	@Override
 	public InputSignal<Rotation2d> getYawSignal() {
 		return imuSignals.yawSignal();
 	}
@@ -76,6 +77,11 @@ public class IMUWrapper implements OrientationSupplier {
 	@Override
 	public void setYaw(Rotation2d yaw) {
 		imu.setYaw(yaw);
+	}
+
+	@Override
+	public void setOrientation(Rotation3d orientation) {
+		imu.setOrientation(orientation);
 	}
 
 	@Override

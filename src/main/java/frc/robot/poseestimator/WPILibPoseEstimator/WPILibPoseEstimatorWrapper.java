@@ -67,8 +67,8 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		);
 		this.orientationSupplier = orientationSupplier;
 		this.isIMUOffsetCalibrated = false;
-		this.poseToIMUYawDifferenceBuffer = new RingBuffer<>(WPILibPoseEstimatorConstants.POSE_TO_IMU_YAW_DIFFERENCE_BUFFER_SIZE);
-		this.imuYawBuffer = TimeInterpolatableBuffer.createBuffer(WPILibPoseEstimatorConstants.IMU_YAW_BUFFER_SIZE_SECONDS);
+		this.poseToIMUYawDifferenceBuffer = new RingBuffer<>(WPILibPoseEstimatorConstants.POSE_TO_YAW_DIFFERENCE_BUFFER_SIZE);
+		this.imuYawBuffer = TimeInterpolatableBuffer.createBuffer(WPILibPoseEstimatorConstants.YAW_BUFFER_SIZE_SECONDS);
 		this.imu3DAccelerationGBuffer = TimeInterpolatableBuffer
 			.createBuffer(WPILibPoseEstimatorConstants.IMU_3D_ACCELERATION_G_BUFFER_SIZE_SECONDS);
 	}
@@ -151,6 +151,10 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 		poseToIMUYawDifferenceBuffer.clear();
 	}
 
+	public void setOrientationSupplier(OrientationSupplier orientationSupplier) {
+		this.orientationSupplier = orientationSupplier;
+	}
+
 	@Override
 	public boolean isIMUOffsetCalibrated() {
 		return isIMUOffsetCalibrated;
@@ -184,8 +188,8 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 			PoseUtil.isTilted(
 				Rotation2d.fromRadians(lastOdometryData.getOrientation().getX()),
 				Rotation2d.fromRadians(lastOdometryData.getOrientation().getY()),
-				WPILibPoseEstimatorConstants.MINIMUM_TILT_IMU_ROLL,
-				WPILibPoseEstimatorConstants.MINIMUM_TILT_IMU_PITCH
+				WPILibPoseEstimatorConstants.MINIMUM_TILT_ROLL,
+				WPILibPoseEstimatorConstants.MINIMUM_TILT_PITCH
 			)
 		);
 
@@ -217,7 +221,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 
 	private void updateIsIMUOffsetCalibrated() {
 		double poseToIMUYawDifferenceStdDev = StatisticsMath.calculateStandardDeviations(poseToIMUYawDifferenceBuffer, Rotation2d::getRadians);
-		isIMUOffsetCalibrated = poseToIMUYawDifferenceStdDev < WPILibPoseEstimatorConstants.MAX_POSE_TO_IMU_YAW_DIFFERENCE_STD_DEV
+		isIMUOffsetCalibrated = poseToIMUYawDifferenceStdDev < WPILibPoseEstimatorConstants.MAX_POSE_TO_YAW_DIFFERENCE_STD_DEV
 			&& poseToIMUYawDifferenceBuffer.isFull();
 		Logger.recordOutput(logPath + "/poseToIMUOffsetStdDev", poseToIMUYawDifferenceStdDev);
 	}

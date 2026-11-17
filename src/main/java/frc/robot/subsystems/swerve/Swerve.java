@@ -76,6 +76,10 @@ public class Swerve extends GBSubsystem {
 		setDefaultCommand(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
 	}
 
+	public Swerve(SwerveConstants constants, Modules modules, IMUWrapper imu) {
+		this(constants, modules, imu, imu);
+	}
+
 	public String getLogPath() {
 		return constants.logPath();
 	}

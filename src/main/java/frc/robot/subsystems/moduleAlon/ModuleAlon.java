@@ -17,7 +17,6 @@ import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.angleencoder.CANCoderEncoder;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
-import frc.robot.hardware.phoenix6.request.Phoenix6Request;
 import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
 import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.subsystems.GBSubsystem;
@@ -71,19 +70,22 @@ public class ModuleAlon extends GBSubsystem {
 		String logPath
 	) {
 		super(logPath);
-		this.steer = new TalonFXMotor(logPath+"/steer", AlonModuleConstants.steerId,new SysIdRoutine.Config());
-		this.linear = new TalonFXMotor(logPath+"/linear", AlonModuleConstants.linearId,new SysIdRoutine.Config());
+
+		this.steer = new TalonFXMotor(logPath+"/steer", AlonModuleConstants.steerId,new SysIdRoutine.Config(), AlonFX.createSimulation(AlonModuleConstants.steerMomentOfInertiaKgM2,AlonModuleConstants.steerGearRatio));
+		this.linear = new TalonFXMotor(logPath+"/linear", AlonModuleConstants.linearId,new SysIdRoutine.Config(), AlonFX.createSimulation(AlonModuleConstants.linearMomentOfInertiaKgM2,AlonModuleConstants.linearGearRatio));
 		this.canCoder = EncoderFactory.createEncoder(logPath, ModuleUtil.ModulePosition.FRONT_LEFT);
+
 		steerConfig = AlonFX.createConfig(AlonModuleConstants.steerGearRatio,AlonModuleConstants.steerKp);
 		linearConfig = AlonFX.createConfig(AlonModuleConstants.linearGearRatio,AlonModuleConstants.linearKp);
+
 		linearVelocitySignal = Phoenix6SignalBuilder.buildAngleSignal(linear.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 		linearPositionSignal = Phoenix6SignalBuilder.buildLatencySignal(linear.getDevice().getPosition(), linear.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 		linearVoltageSignal = Phoenix6SignalBuilder.buildDoubleSignal(linear.getDevice().getMotorVoltage(),RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,BusChain.ROBORIO);
+
 		steerVelocitySignal = Phoenix6SignalBuilder.buildAngleSignal(steer.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 		steerPositionSignal = Phoenix6SignalBuilder.buildLatencySignal(steer.getDevice().getPosition(), steer.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 		steerVoltageSignal = Phoenix6SignalBuilder.buildDoubleSignal(steer.getDevice().getMotorVoltage(),RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,BusChain.ROBORIO);
 
-		
 		if (RobotManager.isReal()){
 			steerConfig.Feedback.withFusedCANcoder(((CANCoderEncoder) canCoder).getDevice());
 			resetSteerWithCancoder();
@@ -113,7 +115,6 @@ public class ModuleAlon extends GBSubsystem {
 	}
 
 	public void steerToPosition(Rotation2d angle) {
-		System.out.println("steer to position:" + angle.getRotations());
 		steer.applyRequest(
 				Phoenix6RequestBuilder.buildVelocityPositionRequest(new PositionVoltage(angle.getMeasure()),1,true)
 		);

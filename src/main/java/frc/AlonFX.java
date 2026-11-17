@@ -62,6 +62,15 @@ public class AlonFX implements IMotor {
 		motor.getSimState().setMotorType(TalonFXSimState.MotorType.KrakenX60);
 	}
 
+	public static SimpleMotorSimulation createSimulation(double momentOfInertiaKgM2, double gearRatio){
+		return new SimpleMotorSimulation(
+				new DCMotorSim(
+						LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60(1), momentOfInertiaKgM2, gearRatio),
+						DCMotor.getKrakenX60Foc(1)
+				)
+		);
+	}
+
 	public static TalonFXConfiguration createConfig(double gearRatio, double kP) {
 		TalonFXConfiguration configuration = new TalonFXConfiguration();
 

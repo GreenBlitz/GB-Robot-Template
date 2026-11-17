@@ -56,10 +56,6 @@ public class JoysticksBindings {
 		Trigger comboButtons = usedJoystick.A.and(usedJoystick.B);
 		comboButtons.onTrue(robot.getModuleAlon().getCommandsBuilder().comboCommand());
 		usedJoystick.A.onTrue(robot.getModuleAlon().getCommandsBuilder().driveWithLeftStick());
-//		usedJoystick.A.onTrue(new InstantCommand(()->{
-//			System.out.println("a pressed");
-//		}));
-//		//usedJoystick.POV_DOWN.onTrue(robot.getModuleAlon().getCommandsBuilder().driveWithLeftStick());
 		usedJoystick.POV_LEFT.onTrue(robot.getModuleAlon().getCommandsBuilder().fullyCircleDrive());
 		usedJoystick.POV_UP.onTrue(ModuleCommandsBuilder.loggity());
 	}

@@ -99,7 +99,7 @@ public class WPILibPoseEstimatorWrapper implements IPoseEstimator {
 	@Override
 	public void updateOdometry(OdometryData data) {
 		Twist2d changeInPose = kinematics.toTwist2d(lastOdometryData.getWheelPositions(), data.getWheelPositions());
-		if (!orientationSupplier.isDataReliable()) {
+		if (orientationSupplier.isDataReliable().passesFilter()) {
 			data.setOrientation(
 				new Rotation3d(
 					lastOdometryData.getOrientation().getX(),

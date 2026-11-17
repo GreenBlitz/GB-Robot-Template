@@ -9,6 +9,7 @@ import frc.robot.hardware.empties.EmptyIMU;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.poseestimator.OrientationSupplier;
+import frc.utils.Filter;
 import frc.utils.TimedValue;
 import org.littletonrobotics.junction.Logger;
 
@@ -44,8 +45,8 @@ public class IMUWrapper implements OrientationSupplier {
 	}
 
 	@Override
-	public boolean isDataReliable() {
-		return isConnected();
+	public Filter isDataReliable() {
+		return this::isConnected;
 	}
 
 	@Override

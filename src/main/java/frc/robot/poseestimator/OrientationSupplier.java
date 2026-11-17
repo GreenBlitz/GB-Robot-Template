@@ -3,6 +3,7 @@ package frc.robot.poseestimator;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import frc.robot.hardware.interfaces.InputSignal;
+import frc.utils.Filter;
 
 public interface OrientationSupplier {
 
@@ -12,7 +13,7 @@ public interface OrientationSupplier {
 
 	Rotation3d[] getAllOrientations();
 
-	boolean isDataReliable();
+	Filter isDataReliable();
 
 	void setYaw(Rotation2d yaw);
 

@@ -11,20 +11,34 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.AlonFX;
 import frc.RobotManager;
 import frc.constants.AlonModuleConstants;
+import frc.robot.RobotConstants;
 import frc.robot.hardware.interfaces.IAngleEncoder;
+import frc.robot.hardware.interfaces.InputSignal;
+import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.hardware.phoenix6.angleencoder.CANCoderEncoder;
 import frc.robot.hardware.phoenix6.motors.TalonFXMotor;
 import frc.robot.hardware.phoenix6.request.Phoenix6Request;
 import frc.robot.hardware.phoenix6.request.Phoenix6RequestBuilder;
+import frc.robot.hardware.phoenix6.signal.Phoenix6SignalBuilder;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.factories.modules.encoder.EncoderFactory;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
+import frc.utils.AngleUnit;
 import org.littletonrobotics.junction.Logger;
 
 public class ModuleAlon extends GBSubsystem {
 
 	private final TalonFXMotor linear;
 	private final TalonFXConfiguration linearConfig;
+	
+	private final InputSignal<Rotation2d> linearPositionSignal;
+	private final InputSignal<Rotation2d> linearVelocitySignal;
+	private final InputSignal<Double> linearVoltageSignal;
+
+	private final InputSignal<Rotation2d> steerPositionSignal;
+	private final InputSignal<Rotation2d> steerVelocitySignal;
+	private final InputSignal<Double> steerVoltageSignal;
+
 	private final TalonFXConfiguration steerConfig;
 	private final TalonFXMotor steer;
 	private final IAngleEncoder canCoder;
@@ -62,13 +76,20 @@ public class ModuleAlon extends GBSubsystem {
 		this.canCoder = EncoderFactory.createEncoder(logPath, ModuleUtil.ModulePosition.FRONT_LEFT);
 		steerConfig = AlonFX.createConfig(AlonModuleConstants.steerGearRatio,AlonModuleConstants.steerKp);
 		linearConfig = AlonFX.createConfig(AlonModuleConstants.linearGearRatio,AlonModuleConstants.linearKp);
+		linearVelocitySignal = Phoenix6SignalBuilder.buildAngleSignal(linear.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
+		linearPositionSignal = Phoenix6SignalBuilder.buildLatencySignal(linear.getDevice().getPosition(), linear.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
+		linearVoltageSignal = Phoenix6SignalBuilder.buildDoubleSignal(linear.getDevice().getMotorVoltage(),RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,BusChain.ROBORIO);
+		steerVelocitySignal = Phoenix6SignalBuilder.buildAngleSignal(steer.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
+		steerPositionSignal = Phoenix6SignalBuilder.buildLatencySignal(steer.getDevice().getPosition(), steer.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
+		steerVoltageSignal = Phoenix6SignalBuilder.buildDoubleSignal(steer.getDevice().getMotorVoltage(),RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,BusChain.ROBORIO);
+
+		
 		if (RobotManager.isReal()){
 			steerConfig.Feedback.withFusedCANcoder(((CANCoderEncoder) canCoder).getDevice());
 			resetSteerWithCancoder();
 		}
 		steer.applyConfiguration(steerConfig);
 		linear.applyConfiguration(linearConfig);
-		//add a way to fuse cancoder
 		this.logpath = logPath;
 
 		commandsBuilder = new ModuleCommandsBuilder(this, logPath + "/commandsBuilder");
@@ -92,8 +113,9 @@ public class ModuleAlon extends GBSubsystem {
 	}
 
 	public void steerToPosition(Rotation2d angle) {
+		System.out.println("steer to position:" + angle.getRotations());
 		steer.applyRequest(
-				Phoenix6RequestBuilder.buildVelocityPositionRequest(new PositionVoltage(angle.getMeasure()),0,true)
+				Phoenix6RequestBuilder.buildVelocityPositionRequest(new PositionVoltage(angle.getMeasure()),1,true)
 		);
 	}
 
@@ -102,15 +124,15 @@ public class ModuleAlon extends GBSubsystem {
 	}
 
 	public Rotation2d getSteerPosition() {
-		return Rotation2d.fromRotations(steer.getDevice().getPosition().getValue().in(Units.Rotation));
+		return steerPositionSignal.getLatestValue();
 	}
 
 	public Rotation2d getLinearPosition() {
-		return Rotation2d.fromRotations(linear.getDevice().getPosition().getValue().in(Units.Rotation));
+		return linearPositionSignal.getLatestValue();
 	}
 
 	public Rotation2d getLinearVelocity() {
-		return Rotation2d.fromRotations(steer.getDevice().getVelocity().getValue().in(Units.RotationsPerSecond));
+		return linearVelocitySignal.getLatestValue();
 	}
 
 	public void setLinearNeutral(boolean brake) {
@@ -136,13 +158,10 @@ public class ModuleAlon extends GBSubsystem {
 	}
 
 	public void logAll() {
-		Logger.recordOutput(logpath + "/linearMotorVelocity", getLinearVelocity());
-		Logger.recordOutput(logpath + "/steerAngle", getSteerPosition());
 		Logger.recordOutput(logpath + "/steerTarget", steer.getDevice().getClosedLoopReference().getValue());
 		Logger.recordOutput(logpath + "/linearTarget", linear.getDevice().getClosedLoopReference().getValue());
-		Logger.recordOutput(logpath + "/moduleMode", getState());
-		steer.updateInputs();
-		linear.updateInputs();
+		steer.updateInputs(steerPositionSignal, steerVelocitySignal, steerVoltageSignal);
+		linear.updateInputs(linearPositionSignal, linearVelocitySignal, linearVoltageSignal);
 
 		Translation2d direction = new Translation2d(linear.getDevice().getPosition().getValue().in(Units.Rotation), 0).rotateBy(getSteerPosition());
 		Logger.recordOutput(logpath + "/directionAngle", direction.getAngle());

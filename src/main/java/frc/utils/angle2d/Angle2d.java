@@ -27,7 +27,7 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
 
 	public static final Angle2d COUNTER_CLOCKWISE_180DEG = COUNTER_CLOCKWISE_PI;
 
-    public static final Angle2d CLOCKWISE_PI = new Angle2d(Math.PI);
+	public static final Angle2d CLOCKWISE_PI = new Angle2d(Math.PI);
 
 	public static final Angle2d CLOCKWISE_180DEG = CLOCKWISE_PI;
 

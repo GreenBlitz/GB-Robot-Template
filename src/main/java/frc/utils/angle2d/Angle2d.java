@@ -70,7 +70,7 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
 	}
 
 	public Angle2d plus(Angle2d other) {
-        return Angle2d.fromRadians(valueRads + other.valueRads);
+		return Angle2d.fromRadians(valueRads + other.valueRads);
 	}
 
 	public Angle2d minus(Angle2d other) {

@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -46,10 +45,10 @@ public class Robot {
 
 	private final Swerve swerve;
 	private final IMUWrapper imu;
-    public final Limelight limelight;
-    public final Arm arm;
-    public final Arm motionMagicArm;
-    public final Arm dynamicMotionMagicArm;
+	public final Limelight limelight;
+	public final Arm arm;
+	public final Arm motionMagicArm;
+	public final Arm dynamicMotionMagicArm;
 	private final IPoseEstimator poseEstimator;
 	private final List<Limelight> limelights;
 

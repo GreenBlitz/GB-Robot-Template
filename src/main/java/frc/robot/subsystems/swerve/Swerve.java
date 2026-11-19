@@ -179,7 +179,7 @@ public class Swerve extends GBSubsystem {
 
 	public Angle2d getAllianceRelativeHeading() {
 		Angle2d currentHeading = headingSupplier.get();
-		return Field.isFieldConventionAlliance() ? currentHeading : currentHeading.rotateBy(MathConstants.HALF_CIRCLE);
+		return Field.isFieldConventionAlliance() ? currentHeading : currentHeading.plus(MathConstants.HALF_CIRCLE);
 	}
 
 	public ChassisSpeeds getRobotRelativeVelocity() {

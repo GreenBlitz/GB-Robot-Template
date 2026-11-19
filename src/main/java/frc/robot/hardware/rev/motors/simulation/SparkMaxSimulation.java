@@ -32,7 +32,7 @@ public class SparkMaxSimulation {
 		mechanismSimulation.setInputVoltage(getVoltage());
 		mechanismSimulation.updateMotor();
 		simulation.iterate(
-			Conversions.perSecondToPerMinute(mechanismSimulation.getRotorVelocityRPS().getRotations()),
+			Conversions.perSecondToPerMinute(mechanismSimulation.getRotorVelocityAPS().getRotations()),
 			BatteryUtil.getCurrentVoltage(),
 			TimeUtil.getLatestCycleTimeSeconds()
 		);

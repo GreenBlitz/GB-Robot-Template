@@ -2,10 +2,10 @@ package frc.utils.calibration.camera;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.utils.angle2d.Angle2d;
 import frc.utils.limelight.LimelightHelpers;
 import frc.utils.math.AngleTransform;
 import frc.utils.math.FieldMath;
@@ -20,7 +20,7 @@ public class CameraPoseCalibration extends Command {
 	private final Pose3d tagPoseFieldRelative;
 	private final Pose2d expectedRobotPoseFieldRelative;
 	private final double tagCenterHeightFromGroundMeters;
-	private final Rotation2d robotYawRelativeToTagFacingYaw;
+	private final Angle2d robotYawRelativeToTagFacingYaw;
 
 	private final CameraPoseCalibrationInputsAutoLogged cameraPoseCalibrationInputs;
 
@@ -34,7 +34,7 @@ public class CameraPoseCalibration extends Command {
 	private int currentCycle;
 
 	/**
-	 * limelight is funny so we invert the solution's y-axis </br>
+	 * limelight is funny so we unaryMinus the solution's y-axis </br>
 	 * Important specifications: tag pose in the field (tagPoseFieldRelative) yaw must be 180 degrees, Y difference from the tag should be 0, the
 	 * robot's face that the camera is on should be facing the tag and parallel to it.
 	 *
@@ -53,7 +53,7 @@ public class CameraPoseCalibration extends Command {
 		double robotXAxisDistanceFromTag,
 		double tagCenterHeightFromGroundMeters,
 		Pose3d tagPoseFieldRelative,
-		Rotation2d robotYawRelativeToTagFacingYaw
+		Angle2d robotYawRelativeToTagFacingYaw
 	) {
 		this.logPath = logPathPrefix + "/cameraPositionCalibration";
 		this.cameraName = cameraName;

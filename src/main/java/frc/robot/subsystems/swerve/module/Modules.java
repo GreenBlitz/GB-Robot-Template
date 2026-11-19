@@ -1,10 +1,10 @@
 package frc.robot.subsystems.swerve.module;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.utils.angle2d.Angle2d;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -49,7 +49,7 @@ public class Modules {
 	}
 
 
-	public void pointWheels(Rotation2d targetSteerPosition, boolean optimize) {
+	public void pointWheels(Angle2d targetSteerPosition, boolean optimize) {
 		for (Module module : modules) {
 			module.pointSteer(targetSteerPosition, optimize);
 		}
@@ -122,8 +122,8 @@ public class Modules {
 		return Arrays.stream(modules).map(Module::getCurrentState).toArray(SwerveModuleState[]::new);
 	}
 
-	public Rotation2d[] getDrivesPositions() {
-		return Arrays.stream(modules).map(Module::getDrivePosition).toArray(Rotation2d[]::new);
+	public Angle2d[] getDrivesPositions() {
+		return Arrays.stream(modules).map(Module::getDrivePosition).toArray(Angle2d[]::new);
 	}
 
 	public SwerveModulePosition[] getWheelPositions(int odometrySampleIndex) {
@@ -144,7 +144,7 @@ public class Modules {
 		return true;
 	}
 
-	public boolean isSteerAtTargetPositions(Rotation2d steerPositionTolerance, Rotation2d steerVelocityPerSecondDeadband) {
+	public boolean isSteerAtTargetPositions(Angle2d steerPositionTolerance, Angle2d steerVelocityPerSecondDeadband) {
 		for (Module module : modules) {
 			if (!module.isSteerAtTargetPosition(steerPositionTolerance, steerVelocityPerSecondDeadband)) {
 				return false;
@@ -154,8 +154,8 @@ public class Modules {
 	}
 
 	public boolean isAtTargetStates(
-		Rotation2d steerPositionTolerance,
-		Rotation2d steerVelocityPerSecondDeadband,
+		Angle2d steerPositionTolerance,
+		Angle2d steerVelocityPerSecondDeadband,
 		double speedToleranceMetersPerSecond
 	) {
 		return isSteerAtTargetPositions(steerPositionTolerance, steerVelocityPerSecondDeadband)

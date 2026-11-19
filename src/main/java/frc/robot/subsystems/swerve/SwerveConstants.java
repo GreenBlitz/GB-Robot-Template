@@ -41,7 +41,7 @@ public record SwerveConstants(
 		);
 
 		this.rotationDegreesPIDController
-			.enableContinuousInput(MathConstants.HALF_CIRCLE.invert().getDegrees(), MathConstants.HALF_CIRCLE.getDegrees());
+			.enableContinuousInput(MathConstants.HALF_CIRCLE.unaryMinus().getDegrees(), MathConstants.HALF_CIRCLE.getDegrees());
 	}
 
 	static final Angle2d WHEEL_RADIUS_CALIBRATION_VELOCITY_PER_SECOND = Angle2d.fromRotations(0.5);

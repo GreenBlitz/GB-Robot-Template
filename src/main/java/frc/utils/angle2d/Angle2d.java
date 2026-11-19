@@ -74,10 +74,10 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
 	}
 
 	public Angle2d minus(Angle2d other) {
-		return plus(other.invert());
+		return plus(other.unaryMinus());
 	}
 
-	public Angle2d invert() {
+	public Angle2d unaryMinus() {
 		return new Angle2d(-valueRads);
 	}
 
@@ -90,7 +90,7 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
 	}
 
 	public Angle2d relativeTo(Angle2d other) {
-		return plus(other.invert());
+		return plus(other.unaryMinus());
 	}
 
 	// use carefully, it does a Modulo 360

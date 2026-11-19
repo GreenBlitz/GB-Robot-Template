@@ -24,7 +24,7 @@ public class FieldMath {
 	}
 
 	public static Pose2d rotatePose(Angle2d angle, Pose2d toRelative) {
-		return toRelative.rotateBy(angle.invert().toRotation2d());
+		return toRelative.rotateBy(angle.unaryMinus().toRotation2d());
 	}
 
 	public static Rotation2d transformAngle(Rotation2d angle, AngleTransform angleTransform) {

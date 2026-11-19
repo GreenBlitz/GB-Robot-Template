@@ -34,7 +34,7 @@ public class CameraPoseCalibration extends Command {
 	private int currentCycle;
 
 	/**
-	 * limelight is funny so we invert the solution's y-axis </br>
+	 * limelight is funny so we unaryMinus the solution's y-axis </br>
 	 * Important specifications: tag pose in the field (tagPoseFieldRelative) yaw must be 180 degrees, Y difference from the tag should be 0, the
 	 * robot's face that the camera is on should be facing the tag and parallel to it.
 	 *
@@ -126,7 +126,7 @@ public class CameraPoseCalibration extends Command {
 				cameraPoseCalibrationInputs.cameraPoseFieldRelative.getRotation().getZ()
 					- expectedRobotPoseFieldRelative.getRotation().getRadians()
 			)
-		).rotateBy(new Rotation3d(0, 0, robotYawRelativeToTagFacingYaw.invert().getRadians()));
+		).rotateBy(new Rotation3d(0, 0, robotYawRelativeToTagFacingYaw.unaryMinus().getRadians()));
 	}
 
 	private void sumMeasurementsValues() {

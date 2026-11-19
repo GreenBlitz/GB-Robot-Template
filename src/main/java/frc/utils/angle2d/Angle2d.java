@@ -17,43 +17,36 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
 
 	public static final Angle2d CLOCKWISE_HALF_PI = new Angle2d(-Math.PI / 2);
 
-	public static final Angle2d CLOCKWISE_90DEGREES = CLOCKWISE_HALF_PI;
+	public static final Angle2d CLOCKWISE_90DEG = CLOCKWISE_HALF_PI;
 
-	public static final Angle2d COUNTER_CLOCKWISE_PI_2 = new Angle2d(Math.PI / 2);
+	public static final Angle2d COUNTER_CLOCKWISE_HALf_PI = new Angle2d(Math.PI / 2);
 
-	public static final Angle2d COUNTER_CLOCKWISE_90DEG = COUNTER_CLOCKWISE_PI_2;
+	public static final Angle2d COUNTER_CLOCKWISE_90DEG = COUNTER_CLOCKWISE_HALf_PI;
 
-	public static final Angle2d PI = new Angle2d(Math.PI);
+	public static final Angle2d COUNTER_CLOCKWISE_PI = new Angle2d(Math.PI);
 
-	public static final Angle2d COUNTER_CLOCKWISE_180DEG = PI;
+	public static final Angle2d COUNTER_CLOCKWISE_180DEG = COUNTER_CLOCKWISE_PI;
+
+	public static final Angle2d CLOCKWISE_PI = new Angle2d(Math.PI);
+
+	public static final Angle2d CLOCKWISE_180DEG = CLOCKWISE_PI;
 
 	private final double valueRads;
-	private final double cos;
-	private final double sin;
 
 	public Angle2d() {
 		valueRads = 0.0;
-		cos = 1.0;
-		sin = 0.0;
 	}
 
 	public Angle2d(double valueRads) {
 		this.valueRads = valueRads;
-		cos = Math.cos(valueRads);
-		sin = Math.sin(valueRads);
 	}
 
 	public Angle2d(double x, double y) {
 		double magnitude = Math.hypot(x, y);
-		if (magnitude > 1e-6) {
-			cos = x / magnitude;
-			sin = y / magnitude;
-		} else {
-			cos = 1.0;
-			sin = 0.0;
+		if (magnitude < 1e-6) {
 			MathSharedStore.reportError("x and y components of Angle2d are zero\n", Thread.currentThread().getStackTrace());
 		}
-		valueRads = Math.atan2(sin, cos);
+		valueRads = Math.atan2(y, x);
 	}
 
 	public Angle2d(Angle angle) {
@@ -77,11 +70,11 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
 	}
 
 	public Angle2d plus(Angle2d other) {
-		return rotateBy(other);
+		return Angle2d.fromRadians(valueRads + other.valueRads);
 	}
 
 	public Angle2d minus(Angle2d other) {
-		return rotateBy(other.unaryMinus());
+		return plus(other.unaryMinus());
 	}
 
 	public Angle2d unaryMinus() {
@@ -93,24 +86,20 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
 	}
 
 	public Angle2d div(double denominator) {
-		return times(1.0 / denominator);
-	}
-
-	public Angle2d rotateBy(Angle2d other) {
-		return Angle2d.fromRadians(valueRads + other.getRadians());
+		return new Angle2d(valueRads / denominator);
 	}
 
 	public Angle2d relativeTo(Angle2d other) {
-		return rotateBy(other.unaryMinus());
+		return plus(other.unaryMinus());
 	}
 
 	// use carefully, it does a Modulo 360
 	public Rotation2d toRotation2d() {
-		return Rotation2d.fromRadians(getRadians());
+		return Rotation2d.fromRadians(valueRads);
 	}
 
 	public Angle getMeasure() {
-		return Radians.of(getRadians());
+		return Radians.of(valueRads);
 	}
 
 	public double getRadians() {
@@ -126,19 +115,19 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
 	}
 
 	public double getCos() {
-		return cos;
+		return Math.cos(valueRads);
 	}
 
 	public double getSin() {
-		return sin;
+		return Math.sin(valueRads);
 	}
 
 	public double getTan() {
-		return sin / cos;
+		return Math.tan(valueRads);
 	}
 
-	public Angle2d modulo360() {
-		return fromRadians(valueRads % Math.PI * 2);
+	public Angle2d moduloOneRotation() {
+		return fromRadians(valueRads % (Math.PI * 2));
 	}
 
 	@Override
@@ -148,7 +137,7 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
 
 	@Override
 	public boolean equals(Object obj) {
-		return obj instanceof Angle2d other && Math.hypot(cos - other.cos, sin - other.sin) < 1E-9;
+		return obj instanceof Angle2d other && Math.hypot(getCos() - other.getCos(), getSin() - other.getSin()) < 1E-9;
 	}
 
 	@Override
@@ -157,12 +146,8 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
 	}
 
 	@Override
-	public Angle2d interpolate(Angle2d endValue, double t) {
-		return plus(endValue.minus(this).times(Math.max(0, Math.min(t, 1))));
+	public Angle2d interpolate(Angle2d endValue, double interpolationFraction) {
+		return plus(endValue.minus(this).times(Math.max(0, Math.min(interpolationFraction, 1))));
 	}
-
-	public static final Angle2dProto proto = new Angle2dProto();
-
-	public static final Angle2dStruct struct = new Angle2dStruct();
 
 }

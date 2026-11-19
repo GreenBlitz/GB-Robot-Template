@@ -159,7 +159,7 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public int getNumberOfOdometrySamples() {
-		return Math.min(orientationSupplier.getYawSignal().asArray().length, modules.getNumberOfOdometrySamples());
+		return Math.min(orientationSupplier.getYawSignal().asArray().length, Math.min(modules.getNumberOfOdometrySamples(), imu.getAllAccelerationsG().length));
 	}
 
 	public OdometryData[] getAllOdometryData() {

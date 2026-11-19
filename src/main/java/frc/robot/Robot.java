@@ -40,7 +40,7 @@ public class Robot {
 
 	private final Swerve swerve;
 	private final IMUWrapper imu;
-	private final OrientationSupplier orientationSupplier;
+	private OrientationSupplier orientationSupplier;
 	private final IPoseEstimator poseEstimator;
 	private final List<Limelight> limelights;
 
@@ -82,7 +82,7 @@ public class Robot {
 				LimelightFilters.megaTag1Filter(
 					limelight,
 					timestamp -> poseEstimator.getEstimatedPoseAtTimestamp(timestamp).map(Pose2d::getRotation),
-					poseEstimator::isIMUOffsetCalibrated,
+					poseEstimator::isOffsetCalibrated,
 					LimelightFilters.DEFAULT_IN_FIELD_TOLERANCE_METERS,
 					LimelightFilters.DEFAULT_YAW_AT_ANGLE_TOLERANCE
 				)
@@ -131,6 +131,12 @@ public class Robot {
 
 	public IMUWrapper getIMU() {
 		return imu;
+	}
+
+	public void setOrientationSupplier(OrientationSupplier orientationSupplier) {
+		this.orientationSupplier = orientationSupplier;
+		swerve.setOrientationSupplier(orientationSupplier);
+		poseEstimator.setOrientationSupplier(orientationSupplier);
 	}
 
 	public List<Limelight> getLimelights() {

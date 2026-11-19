@@ -66,7 +66,7 @@ public class Swerve extends GBSubsystem {
 
 		this.kinematics = new SwerveDriveKinematics(modules.getModulePositionsFromCenterMeters());
 		this.orientationSupplier = orientationSupplier;
-		this.headingSupplier = () -> orientationSupplier.getLatestOrientation().toRotation2d();
+		this.headingSupplier = () -> this.orientationSupplier.getLatestOrientation().toRotation2d();
 		this.headingStabilizer = new HeadingStabilizer(this.constants);
 		this.stateHandler = new SwerveStateHandler(this);
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
@@ -159,7 +159,10 @@ public class Swerve extends GBSubsystem {
 	}
 
 	public int getNumberOfOdometrySamples() {
-		return Math.min(orientationSupplier.getYawSignal().asArray().length, Math.min(modules.getNumberOfOdometrySamples(), imu.getAllAccelerationsG().length));
+		return Math.min(
+			orientationSupplier.getYawSignal().asArray().length,
+			Math.min(modules.getNumberOfOdometrySamples(), imu.getAllAccelerationsG().length)
+		);
 	}
 
 	public OdometryData[] getAllOdometryData() {

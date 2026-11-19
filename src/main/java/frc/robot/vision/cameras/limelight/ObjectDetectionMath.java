@@ -51,7 +51,7 @@ public class ObjectDetectionMath {
 	) {
 		double objectAndCameraHeightDifferenceMeters = objectCenterHeightMeters - cameraPose.getZ();
 		double cameraToObjectXAxisHypotenuseMeters = Math.hypot(cameraRelativeObjectXMeters, objectAndCameraHeightDifferenceMeters);
-		return objectToCrosshairYawOffset.unaryMinus().getTan() * cameraToObjectXAxisHypotenuseMeters;
+		return objectToCrosshairYawOffset.invert().getTan() * cameraToObjectXAxisHypotenuseMeters;
 	}
 
 }

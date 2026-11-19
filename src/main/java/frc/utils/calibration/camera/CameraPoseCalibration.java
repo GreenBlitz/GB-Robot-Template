@@ -126,7 +126,7 @@ public class CameraPoseCalibration extends Command {
 				cameraPoseCalibrationInputs.cameraPoseFieldRelative.getRotation().getZ()
 					- expectedRobotPoseFieldRelative.getRotation().getRadians()
 			)
-		).rotateBy(new Rotation3d(0, 0, robotYawRelativeToTagFacingYaw.unaryMinus().getRadians()));
+		).rotateBy(new Rotation3d(0, 0, robotYawRelativeToTagFacingYaw.invert().getRadians()));
 	}
 
 	private void sumMeasurementsValues() {

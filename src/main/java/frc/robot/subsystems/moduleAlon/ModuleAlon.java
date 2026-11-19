@@ -2,6 +2,7 @@ package frc.robot.subsystems.moduleAlon;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.hardware.CANcoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.Units;
@@ -78,6 +79,13 @@ public class ModuleAlon extends GBSubsystem {
 		steerConfig = AlonFX.createConfig(AlonModuleConstants.steerGearRatio,AlonModuleConstants.steerKp);
 		linearConfig = AlonFX.createConfig(AlonModuleConstants.linearGearRatio,AlonModuleConstants.linearKp);
 
+		if (RobotManager.isReal()){
+			steerConfig.Feedback.withFusedCANcoder(((CANCoderEncoder) canCoder).getDevice());
+			resetSteerWithCancoder();
+		}
+		steer.applyConfiguration(steerConfig);
+		linear.applyConfiguration(linearConfig);
+
 		linearVelocitySignal = Phoenix6SignalBuilder.buildAngleSignal(linear.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 		linearPositionSignal = Phoenix6SignalBuilder.buildLatencySignal(linear.getDevice().getPosition(), linear.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 		linearVoltageSignal = Phoenix6SignalBuilder.buildDoubleSignal(linear.getDevice().getMotorVoltage(),RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,BusChain.ROBORIO);
@@ -86,12 +94,7 @@ public class ModuleAlon extends GBSubsystem {
 		steerPositionSignal = Phoenix6SignalBuilder.buildLatencySignal(steer.getDevice().getPosition(), steer.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 		steerVoltageSignal = Phoenix6SignalBuilder.buildDoubleSignal(steer.getDevice().getMotorVoltage(),RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,BusChain.ROBORIO);
 
-		//if (RobotManager.isReal()){
-		//	steerConfig.Feedback.withFusedCANcoder(((CANCoderEncoder) canCoder).getDevice());
-		//	resetSteerWithCancoder();
-		//}
-		steer.applyConfiguration(steerConfig);
-		linear.applyConfiguration(linearConfig);
+
 		this.logpath = logPath;
 
 		commandsBuilder = new ModuleCommandsBuilder(this, logPath + "/commandsBuilder");
@@ -161,6 +164,15 @@ public class ModuleAlon extends GBSubsystem {
 	public void logAll() {
 		Logger.recordOutput(logpath + "/steerTarget", steer.getDevice().getClosedLoopReference().getValue());
 		Logger.recordOutput(logpath + "/linearTarget", linear.getDevice().getClosedLoopReference().getValue());
+
+		steerPositionSignal.getAndUpdateValue();
+		steerVelocitySignal.getAndUpdateValue();
+		steerVoltageSignal.getAndUpdateValue();
+
+		linearPositionSignal.getAndUpdateValue();
+		linearVelocitySignal.getAndUpdateValue();
+		linearVoltageSignal.getAndUpdateValue();
+
 		steer.updateInputs(steerPositionSignal, steerVelocitySignal, steerVoltageSignal);
 		linear.updateInputs(linearPositionSignal, linearVelocitySignal, linearVoltageSignal);
 

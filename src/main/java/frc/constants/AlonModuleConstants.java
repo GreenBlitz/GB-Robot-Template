@@ -5,10 +5,10 @@ import frc.robot.hardware.phoenix6.Phoenix6DeviceID;
 
 public class AlonModuleConstants {
 
-	public static final int canCoderId = 6;
-	public static final Phoenix6DeviceID steerId = new Phoenix6DeviceID(11, BusChain.ROBORIO);
-	public static final Phoenix6DeviceID linearId = new Phoenix6DeviceID(10, BusChain.ROBORIO);
-	public static final double steerKp = 5;
+	public static final Phoenix6DeviceID steerId = new Phoenix6DeviceID(0, BusChain.CHASSIS);
+	public static final Phoenix6DeviceID linearId = new Phoenix6DeviceID(1, BusChain.CHASSIS);
+	public static final double steerKp = 4;
+	public static final double canCoderMagnetOffset = 67;
 	public static final double steerGearRatio = 12.8;
 	public static final double linearKp = 2;
 	public static final double linearGearRatio = 1;

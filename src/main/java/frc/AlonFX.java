@@ -62,6 +62,12 @@ public class AlonFX implements IMotor {
 		motor.getSimState().setMotorType(TalonFXSimState.MotorType.KrakenX60);
 	}
 
+	public static CANcoderConfiguration createCANcoderConfig(double magnetOffset){
+		CANcoderConfiguration config = new CANcoderConfiguration();
+		config.MagnetSensor.MagnetOffset = magnetOffset;
+		return config;
+	}
+
 	public static SimpleMotorSimulation createSimulation(double momentOfInertiaKgM2, double gearRatio){
 		return new SimpleMotorSimulation(
 				new DCMotorSim(

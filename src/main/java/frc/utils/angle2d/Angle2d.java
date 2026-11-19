@@ -101,7 +101,7 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
 	}
 
 	public Angle2d rotateBy(Angle2d other) {
-		return Angle2d.fromRadians(valueRads + other.getRadians());
+		return Angle2d.fromRadians(valueRads + other.valueRads);
 	}
 
 	public Angle2d relativeTo(Angle2d other) {
@@ -110,11 +110,11 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
 
 	// use carefully, it does a Modulo 360
 	public Rotation2d toRotation2d() {
-		return Rotation2d.fromRadians(getRadians());
+		return Rotation2d.fromRadians(valueRads);
 	}
 
 	public Angle getMeasure() {
-		return Radians.of(getRadians());
+		return Radians.of(valueRads);
 	}
 
 	public double getRadians() {
@@ -141,7 +141,7 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
 		return sin / cos;
 	}
 
-	public Angle2d modulo360() {
+	public Angle2d moduloOneRotation() {
 		return fromRadians(valueRads % (Math.PI * 2));
 	}
 
@@ -161,12 +161,8 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
 	}
 
 	@Override
-	public Angle2d interpolate(Angle2d endValue, double t) {
-		return plus(endValue.minus(this).times(Math.max(0, Math.min(t, 1))));
+	public Angle2d interpolate(Angle2d endValue, double interpolationFraction) {
+		return plus(endValue.minus(this).times(Math.max(0, Math.min(interpolationFraction, 1))));
 	}
-
-	public static final Angle2dProto proto = new Angle2dProto();
-
-	public static final Angle2dStruct struct = new Angle2dStruct();
 
 }

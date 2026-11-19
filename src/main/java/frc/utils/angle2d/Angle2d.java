@@ -32,32 +32,21 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
 	public static final Angle2d CLOCKWISE_180DEG = CLOCKWISE_PI;
 
 	private final double valueRads;
-	private final double cos;
-	private final double sin;
 
 	public Angle2d() {
 		valueRads = 0.0;
-		cos = 1.0;
-		sin = 0.0;
 	}
 
 	public Angle2d(double valueRads) {
 		this.valueRads = valueRads;
-		cos = Math.cos(valueRads);
-		sin = Math.sin(valueRads);
 	}
 
 	public Angle2d(double x, double y) {
 		double magnitude = Math.hypot(x, y);
-		if (magnitude > 1e-6) {
-			cos = x / magnitude;
-			sin = y / magnitude;
-		} else {
-			cos = 1.0;
-			sin = 0.0;
+		if (magnitude < 1e-6) {
 			MathSharedStore.reportError("x and y components of Angle2d are zero\n", Thread.currentThread().getStackTrace());
 		}
-		valueRads = Math.atan2(sin, cos);
+		valueRads = Math.atan2(y, x);
 	}
 
 	public Angle2d(Angle angle) {
@@ -130,15 +119,15 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
 	}
 
 	public double getCos() {
-		return cos;
+		return Math.cos(valueRads);
 	}
 
 	public double getSin() {
-		return sin;
+		return Math.sin(valueRads);
 	}
 
 	public double getTan() {
-		return sin / cos;
+		return Math.tan(valueRads);
 	}
 
 	public Angle2d moduloOneRotation() {
@@ -152,7 +141,7 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
 
 	@Override
 	public boolean equals(Object obj) {
-		return obj instanceof Angle2d other && Math.hypot(cos - other.cos, sin - other.sin) < 1E-9;
+		return obj instanceof Angle2d other && Math.hypot(getCos() - other.getCos(), getSin() - other.getSin()) < 1E-9;
 	}
 
 	@Override

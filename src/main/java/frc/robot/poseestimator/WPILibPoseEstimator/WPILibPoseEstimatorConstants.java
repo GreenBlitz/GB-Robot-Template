@@ -17,9 +17,9 @@ public class WPILibPoseEstimatorConstants {
 
 	public static final double MINIMUM_COLLISION_IMU_ACCELERATION_G = 2;
 
-	public static final Rotation2d MINIMUM_TILT_IMU_ROLL = Rotation2d.fromDegrees(4);
+	public static final Rotation2d MINIMUM_TILT_ROLL = Rotation2d.fromDegrees(4);
 
-	public static final Rotation2d MINIMUM_TILT_IMU_PITCH = Rotation2d.fromDegrees(4);
+	public static final Rotation2d MINIMUM_TILT_PITCH = Rotation2d.fromDegrees(4);
 
 	public static final double MINIMUM_SKID_ROBOT_TO_MODULE_VELOCITY_DIFFERENCE_METERS_PER_SECOND = 0.5;
 
@@ -29,11 +29,11 @@ public class WPILibPoseEstimatorConstants {
 
 	public static final double ODOMETRY_POSE_PREDICTION_TIME_SECONDS = 1;
 
-	public static final int POSE_TO_IMU_YAW_DIFFERENCE_BUFFER_SIZE = 50;
+	public static final int POSE_TO_YAW_DIFFERENCE_BUFFER_SIZE = 50;
 
-	public static double MAX_POSE_TO_IMU_YAW_DIFFERENCE_STD_DEV = 0.0025;
+	public static double MAX_POSE_TO_YAW_DIFFERENCE_STD_DEV = 0.0025;
 
-	public static double IMU_YAW_BUFFER_SIZE_SECONDS = 2;
+	public static double YAW_BUFFER_SIZE_SECONDS = 2;
 
 	public static double IMU_3D_ACCELERATION_G_BUFFER_SIZE_SECONDS = 2;
 

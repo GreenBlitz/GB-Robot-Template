@@ -16,8 +16,10 @@ import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
+import frc.robot.subsystems.FlywheelConstants;
 import frc.robot.subsystems.HoodConstants;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.roller.VelocityRoller;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.imu.factories.IMUFactory;
@@ -46,14 +48,15 @@ public class Robot {
 	private final Swerve swerve;
 	private final IMUWrapper imu;
 	public final Limelight limelight;
+    public final VelocityRoller velocityRoller;
 	public final Arm arm;
-	public final Arm motionMagicArm;
-	public final Arm dynamicMotionMagicArm;
 	private final IPoseEstimator poseEstimator;
 	private final List<Limelight> limelights;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
+
+        velocityRoller = FlywheelConstants.createFlyWheel();
 
 		this.imu = IMUFactory.createIMUWrapper("IMU/");
 		this.swerve = new Swerve(
@@ -73,8 +76,6 @@ public class Robot {
 		);
 
 		this.arm = HoodConstants.createArm();
-		this.dynamicMotionMagicArm = HoodConstants.createDynamicMotionMagicArm();
-		this.motionMagicArm = HoodConstants.createMotionMagicArm();
 
 		BrakeStateManager.add(() -> swerve.getModules().setBrake(true), () -> swerve.getModules().setBrake(false));
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
@@ -120,8 +121,6 @@ public class Robot {
 
 	public void updateSubsystems() {
 		swerve.update();
-		arm.update();
-		motionMagicArm.update();
 		arm.update();
 	}
 

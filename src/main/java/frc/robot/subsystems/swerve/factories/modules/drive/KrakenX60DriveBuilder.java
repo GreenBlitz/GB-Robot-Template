@@ -30,112 +30,108 @@ import frc.utils.AngleUnit;
 
 public class KrakenX60DriveBuilder {
 
-	public static final double SLIP_CURRENT = 40;
-	public static final double GEAR_RATIO = 7.13;
-	private static final double MOMENT_OF_INERTIA_METERS_SQUARED = 0.001;
+    public static final double SLIP_CURRENT = 40;
+    public static final double GEAR_RATIO = 7.13;
+    private static final double MOMENT_OF_INERTIA_METERS_SQUARED = 0.001;
 
-	private static SysIdRoutine.Config buildSysidConfig(String logPath) {
-		return new SysIdRoutine.Config(
-			Units.Volts.of(1).per(Units.Second),
-			Units.Volts.of(7),
-			null,
-			state -> SignalLogger.writeString(logPath + "/state", state.toString())
-		);
-	}
+    private static SysIdRoutine.Config buildSysidConfig(String logPath) {
+        return new SysIdRoutine.Config(
+                Units.Volts.of(1).per(Units.Second),
+                Units.Volts.of(7),
+                null,
+                state -> SignalLogger.writeString(logPath + "/state", state.toString())
+        );
+    }
 
-	private static SimpleMotorSimulation buildMechanismSimulation() {
-		return new SimpleMotorSimulation(
-			new DCMotorSim(
-				LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), MOMENT_OF_INERTIA_METERS_SQUARED, GEAR_RATIO),
-				DCMotor.getKrakenX60Foc(1)
-			)
-		);
-	}
+    private static SimpleMotorSimulation buildMechanismSimulation() {
+        return new SimpleMotorSimulation(
+                new DCMotorSim(
+                        LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), MOMENT_OF_INERTIA_METERS_SQUARED, GEAR_RATIO),
+                        DCMotor.getKrakenX60Foc(1)
+                )
+        );
+    }
 
-	private static TalonFXConfiguration buildMotorConfig(boolean inverted) {
-		TalonFXConfiguration driveConfig = new TalonFXConfiguration();
+    private static TalonFXConfiguration buildMotorConfig(boolean inverted) {
+        TalonFXConfiguration driveConfig = new TalonFXConfiguration();
 
-		driveConfig.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
+        driveConfig.MotorOutput.Inverted = inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 
-		driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-		driveConfig.Feedback.SensorToMechanismRatio = GEAR_RATIO;
+        driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        driveConfig.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
-		driveConfig.TorqueCurrent.PeakForwardTorqueCurrent = SLIP_CURRENT;
-		driveConfig.TorqueCurrent.PeakReverseTorqueCurrent = -SLIP_CURRENT;
-		driveConfig.CurrentLimits.StatorCurrentLimit = SLIP_CURRENT;
-		driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+        driveConfig.TorqueCurrent.PeakForwardTorqueCurrent = SLIP_CURRENT;
+        driveConfig.TorqueCurrent.PeakReverseTorqueCurrent = -SLIP_CURRENT;
+        driveConfig.CurrentLimits.StatorCurrentLimit = SLIP_CURRENT;
+        driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
-		if (Robot.ROBOT_TYPE.isReal()) {
-			// Velocity Voltage
-			driveConfig.Slot0.kS = 0.35;
-			driveConfig.Slot0.kV = 0.834924;
-			driveConfig.Slot0.kA = 0;
-			driveConfig.Slot0.kP = 30;
-			driveConfig.Slot0.kI = 0;
-			driveConfig.Slot0.kD = 0;
+        if (Robot.ROBOT_TYPE.isReal()) {
+            // Velocity Voltage
+            driveConfig.Slot0.kS = 0.35;
+            driveConfig.Slot0.kV = 0.834924;
+            driveConfig.Slot0.kA = 0;
+            driveConfig.Slot0.kP = 30;
+            driveConfig.Slot0.kI = 0;
+            driveConfig.Slot0.kD = 0;
 
-			// Velocity Torque
-			driveConfig.Slot1.kS = 5.1;
-			driveConfig.Slot1.kV = 0;
-			driveConfig.Slot1.kA = GEAR_RATIO / (1 / DCMotor.getKrakenX60Foc(1).KtNMPerAmp);
-			driveConfig.Slot1.kP = 40;
-			driveConfig.Slot1.kI = 0;
-			driveConfig.Slot1.kD = 0;
-		} else {
-			// Velocity Voltage
-			driveConfig.Slot0.kS = 0;
-			driveConfig.Slot0.kV = 0;
-			driveConfig.Slot0.kA = 0;
-			driveConfig.Slot0.kP = 10;
-			driveConfig.Slot0.kI = 0;
-			driveConfig.Slot0.kD = 0;
+            // Velocity Torque
+            driveConfig.Slot1.kS = 5.1;
+            driveConfig.Slot1.kV = 0;
+            driveConfig.Slot1.kA = GEAR_RATIO / (1 / DCMotor.getKrakenX60Foc(1).KtNMPerAmp);
+            driveConfig.Slot1.kP = 40;
+            driveConfig.Slot1.kI = 0;
+            driveConfig.Slot1.kD = 0;
+        } else {
+            // Velocity Voltage
+            driveConfig.Slot0.kS = 0;
+            driveConfig.Slot0.kV = 0;
+            driveConfig.Slot0.kA = 0;
+            driveConfig.Slot0.kP = 10;
+            driveConfig.Slot0.kI = 0;
+            driveConfig.Slot0.kD = 0;
 
-			// Velocity Torque
-			driveConfig.Slot1.kS = 5.1;
-			driveConfig.Slot1.kV = 0;
-			driveConfig.Slot1.kA = GEAR_RATIO / (1 / DCMotor.getKrakenX60Foc(1).KtNMPerAmp);
-			driveConfig.Slot1.kP = 40;
-			driveConfig.Slot1.kI = 0;
-			driveConfig.Slot1.kD = 0;
-		}
+            // Velocity Torque
+            driveConfig.Slot1.kS = 5.1;
+            driveConfig.Slot1.kV = 0;
+            driveConfig.Slot1.kA = GEAR_RATIO / (1 / DCMotor.getKrakenX60Foc(1).KtNMPerAmp);
+            driveConfig.Slot1.kP = 40;
+            driveConfig.Slot1.kI = 0;
+            driveConfig.Slot1.kD = 0;
+        }
 
-		return driveConfig;
-	}
+        return driveConfig;
+    }
 
-	static ControllableMotor buildDrive(String logPath, Phoenix6DeviceID deviceID, boolean inverted) {
-		TalonFXMotor drive = new TalonFXMotor(logPath, deviceID, buildSysidConfig(logPath), buildMechanismSimulation());
-		drive.applyConfiguration(buildMotorConfig(inverted));
-		return drive;
-	}
+    static ControllableMotor buildDrive(String logPath, Phoenix6DeviceID deviceID, boolean inverted) {
+        TalonFXMotor drive = new TalonFXMotor(logPath, deviceID, buildSysidConfig(logPath), buildMechanismSimulation());
+        drive.applyConfiguration(buildMotorConfig(inverted));
+        return drive;
+    }
 
-	static DriveRequests buildRequests() {
-		return new DriveRequests(
-			Phoenix6RequestBuilder.buildVelocityTorqueCurrentFOCRequest(new VelocityTorqueCurrentFOC(0).withSlot(1), 0),
-			Phoenix6RequestBuilder.buildVoltageOutRequest(new VoltageOut(0), true),
-			Phoenix6RequestBuilder.buildTorqueCurrentFOCRequest(new TorqueCurrentFOC(0))
-		);
-	}
+    static DriveRequests buildRequests() {
+        return new DriveRequests(
+                Phoenix6RequestBuilder.buildVelocityTorqueCurrentFOCRequest(new VelocityTorqueCurrentFOC(0).withSlot(1), 0),
+                Phoenix6RequestBuilder.buildVoltageOutRequest(new VoltageOut(0), true),
+                Phoenix6RequestBuilder.buildTorqueCurrentFOCRequest(new TorqueCurrentFOC(0))
+        );
+    }
 
-	static DriveSignals buildSignals(TalonFXMotor drive) {
-		Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
-			.buildDoubleSignal(drive.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, drive.getBusChain());
-		Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder
-			.buildDoubleSignal(drive.getDevice().getTorqueCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, drive.getBusChain());
-		Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder.buildAngleSignal(
-			drive.getDevice().getVelocity(),
-			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-			AngleUnit.ROTATIONS,
-			drive.getBusChain()
-		);
-		Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder.buildLatencySignalWithoutRegisteringSlope(
-			drive.getDevice().getPosition(),
-			velocitySignal.getSignal(),
-			RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
-			AngleUnit.ROTATIONS,
-			drive.getBusChain()
-		);
+    static DriveSignals buildSignals(TalonFXMotor drive) {
+        Phoenix6DoubleSignal voltageSignal = Phoenix6SignalBuilder
+                .buildDoubleSignal(drive.getDevice().getMotorVoltage(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, drive.getBusChain());
+        Phoenix6DoubleSignal currentSignal = Phoenix6SignalBuilder
+                .buildDoubleSignal(drive.getDevice().getTorqueCurrent(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, drive.getBusChain());
+        Phoenix6AngleSignal velocitySignal = Phoenix6SignalBuilder
+                .buildAngleSignal(drive.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, drive.getBusChain());
+        Phoenix6LatencySignal positionSignal = Phoenix6SignalBuilder.buildLatencySignalWithoutRegisteringSlope(
+                drive.getDevice().getPosition(),
+                velocitySignal.getSignal(),
+                RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,
+                AngleUnit.ROTATIONS,
+                drive.getBusChain()
+        );
 
-		return new DriveSignals(positionSignal, velocitySignal, currentSignal, voltageSignal);
-	}
+        return new DriveSignals(positionSignal, velocitySignal, currentSignal, voltageSignal);
+    }
 
 }

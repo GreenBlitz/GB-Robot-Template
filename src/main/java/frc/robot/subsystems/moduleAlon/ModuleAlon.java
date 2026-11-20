@@ -76,15 +76,10 @@ public class ModuleAlon extends GBSubsystem {
 		this.linear = new TalonFXMotor(logPath+"/linear", AlonModuleConstants.linearId,new SysIdRoutine.Config(), AlonFX.createSimulation(AlonModuleConstants.linearMomentOfInertiaKgM2,AlonModuleConstants.linearGearRatio));
 		this.canCoder = EncoderFactory.createEncoder(logPath, ModuleUtil.ModulePosition.FRONT_LEFT);
 
+		boolean isCanCoder = canCoder.isConnected();
+
 		steerConfig = AlonFX.createConfig(AlonModuleConstants.steerGearRatio,AlonModuleConstants.steerKp);
 		linearConfig = AlonFX.createConfig(AlonModuleConstants.linearGearRatio,AlonModuleConstants.linearKp);
-
-		if (RobotManager.isReal()){
-			steerConfig.Feedback.withFusedCANcoder(((CANCoderEncoder) canCoder).getDevice());
-			resetSteerWithCancoder();
-		}
-		steer.applyConfiguration(steerConfig);
-		linear.applyConfiguration(linearConfig);
 
 		linearVelocitySignal = Phoenix6SignalBuilder.buildAngleSignal(linear.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 		linearPositionSignal = Phoenix6SignalBuilder.buildLatencySignal(linear.getDevice().getPosition(), linear.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
@@ -94,6 +89,13 @@ public class ModuleAlon extends GBSubsystem {
 		steerPositionSignal = Phoenix6SignalBuilder.buildLatencySignal(steer.getDevice().getPosition(), steer.getDevice().getVelocity(), RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ, AngleUnit.ROTATIONS, BusChain.ROBORIO);
 		steerVoltageSignal = Phoenix6SignalBuilder.buildDoubleSignal(steer.getDevice().getMotorVoltage(),RobotConstants.DEFAULT_SIGNALS_FREQUENCY_HERTZ,BusChain.ROBORIO);
 
+		if (RobotManager.isReal()&&isCanCoder){
+			steerConfig.Feedback.withFusedCANcoder(((CANCoderEncoder) canCoder).getDevice());
+			resetSteerWithCancoder();
+		}
+
+		steer.applyConfiguration(steerConfig);
+		linear.applyConfiguration(linearConfig);
 
 		this.logpath = logPath;
 

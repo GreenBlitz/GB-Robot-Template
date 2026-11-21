@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import com.ctre.phoenix6.CANBus;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -18,7 +17,6 @@ import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.digitalinput.channeled.ChanneledDigitalInput;
 import frc.robot.hardware.digitalinput.chooser.ChooserDigitalInput;
 import frc.robot.subsystems.moduleAlon.ModuleAlon;
-import frc.constants.AlonModuleConstants;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
@@ -76,17 +74,7 @@ public class Robot {
 			swerve.getIMUAbsoluteYaw().getTimestamp()
 		);
 		this.moduleAlon = new ModuleAlon(
-			AlonModuleConstants.alonSteerId,
-			AlonModuleConstants.alonLinearId,
-			67,
-			AlonModuleConstants.steerGearRatio,
-			AlonModuleConstants.linearGearRatio,
-			AlonModuleConstants.steerKp,
-			AlonModuleConstants.linearKp,
-			AlonModuleConstants.steerMomementOfInertiaKgM2,
-			AlonModuleConstants.linearMomentOfInertiaKgM2,
-			CANBus.roboRIO(),
-			"/motor"
+				"moduleAlon"
 		);
 		moduleAlon.setLinearNeutral(true);
 		this.moduleAlon.setLinearNeutral(true);

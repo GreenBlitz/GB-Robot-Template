@@ -1,6 +1,8 @@
 package frc;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
@@ -53,14 +55,7 @@ public class JoysticksBindings {
 		robot.getModuleAlon().getCommandsBuilder().setDefaultJoystick(usedJoystick);
 		Trigger comboButtons = usedJoystick.A.and(usedJoystick.B);
 		comboButtons.onTrue(robot.getModuleAlon().getCommandsBuilder().comboCommand());
-		usedJoystick.X.whileTrue(
-			robot.getModuleAlon().getCommandsBuilder().driveDistanceCommand(Rotation2d.fromRotations(0), Rotation2d.fromDegrees(360))
-		);
-		usedJoystick.Y.whileTrue(
-			robot.getModuleAlon().getCommandsBuilder().driveDistanceCommand(Rotation2d.fromRotations(2.5), Rotation2d.fromDegrees(0))
-		);
-		usedJoystick.B.whileTrue(robot.getModuleAlon().getCommandsBuilder().stopCommand());
-		usedJoystick.POV_DOWN.onTrue(robot.getModuleAlon().getCommandsBuilder().driveWithLeftStick());
+		usedJoystick.A.onTrue(robot.getModuleAlon().getCommandsBuilder().driveWithLeftStick());
 		usedJoystick.POV_LEFT.onTrue(robot.getModuleAlon().getCommandsBuilder().fullyCircleDrive());
 		usedJoystick.POV_UP.onTrue(ModuleCommandsBuilder.loggity());
 	}

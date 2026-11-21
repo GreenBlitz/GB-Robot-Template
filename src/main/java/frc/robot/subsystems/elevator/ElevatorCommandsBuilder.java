@@ -10,20 +10,12 @@ public class ElevatorCommandsBuilder {
     protected ElevatorCommandsBuilder(Elevator elevator){
         this.elevator=elevator;
     }
-    public Command goToPositionWithVelocity(double positionFrac, double fracPositionPerSecond, double fractionalTolerance){
-        return elevator.asSubsystemCommand(
-                new InitExecuteCommand(
-                        ()->{elevator.updateTargetPosition(positionFrac);},
-                        ()->elevator.goToPosition(positionFrac, fracPositionPerSecond)
-                ).until(()->{return elevator.isAtPosition(positionFrac,fractionalTolerance);}),"Go to position: "+ positionFrac
-        );
-    }
-    public Command goToPositionWithVelocity(Distance position, Distance heightPerSecond, Distance tolerance){
+    public Command goToPositionWithVelocity(ElevatorMeasure position, ElevatorMeasure changePerSecond, ElevatorMeasure tolerance){
         return elevator.asSubsystemCommand(
                 new InitExecuteCommand(
                         ()->{elevator.updateTargetPosition(position);},
-                        ()->elevator.goToPosition(position, heightPerSecond)
-                ).until(()->{return elevator.isAtPosition(tolerance,tolerance);}),"Go to position: "+ position
+                        ()->elevator.goToPosition(position, changePerSecond)
+                ).until(()->{return elevator.isAtPosition(position, tolerance);}),"Go to position: "+ position
         );
     }
 }

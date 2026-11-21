@@ -18,9 +18,7 @@ public class Elevator extends GBSubsystem {
     private final InputSignal<Rotation2d> positionSignal;
     private final InputSignal<Rotation2d> velocitySignal;
     private final VelocityPositionRequest request;
-    private final Distance elevatorHeight;
-    private final Rotation2d motorPositionAtMinHeight;
-    private final Rotation2d motorPositionAtMaxHeight;
+    private final ElevatorPhysicalProperties physicalProperties;
     private double targetPosition;
 
     public Elevator(
@@ -31,9 +29,7 @@ public class Elevator extends GBSubsystem {
             InputSignal<Rotation2d> positionSignal,
             InputSignal<Rotation2d> velocitySignal,
             VelocityPositionRequest velocityPositionRequest,
-            Distance elevatorHeightCM,
-            Rotation2d motorPositionAtMinHeight,
-            Rotation2d motorPositionAtMaxHeight
+            ElevatorPhysicalProperties physicalProperties
     ) {
         super(logPath);
         this.motor = motor;
@@ -45,14 +41,12 @@ public class Elevator extends GBSubsystem {
         //this.commandsBuilder = new RollerCommandsBuilder(this);
         this.motor.resetPosition(Rotation2d.fromRotations(0));
         this.targetPosition = 0;
-        this.elevatorHeight = elevatorHeightCM;
-        this.motorPositionAtMinHeight=motorPositionAtMinHeight;
-        this.motorPositionAtMaxHeight=motorPositionAtMaxHeight;
+        this.physicalProperties = physicalProperties;
         //setDefaultCommand(commandsBuilder.stop());
     }
 
     private Rotation2d getMotorTarget(){
-        return motorPositionAtMaxHeight.times(targetPosition).plus(motorPositionAtMinHeight.times(1-targetPosition));
+        return physicalProperties.convertFractionalHeightToMotorPosition(targetPosition);
     }
 
     public double getTargetPositionFractional(){
@@ -63,7 +57,8 @@ public class Elevator extends GBSubsystem {
         return elevatorHeight.times(targetPosition);
     }
 
-    public void updateTargetPosition(double targetPositionFraction) {
+    public void updateTargetPosition(ElevatorMeasure targetPosition) {
+        double targetPositionFraction =
         if (!(0<=targetPositionFraction&&targetPositionFraction<=1)){
             System.out.println("Warning: position not in range, called from:");
             Thread.dumpStack();
@@ -74,7 +69,7 @@ public class Elevator extends GBSubsystem {
     public boolean isAtPosition(double positionFraction, double tolerance){
         return MathUtil.isNear(positionFraction,getElevatorFractionalPosition(),tolerance);
     }
-    public boolean isAtPosition(Distance position, Distance tolerance){
+    public boolean isAtPosition(ElevatorMeasure position, ElevatorMeasure tolerance){
         return isAtPosition(position.div(elevatorHeight).magnitude(),tolerance.div(elevatorHeight).magnitude());
     }
     public boolean isAtPosition(double positionFraction, Distance tolerance){

@@ -27,7 +27,7 @@ public class IDs {
 
 	public static class CANCoderIDs {
 
-		public static final Phoenix6DeviceID SWERVE_FRONT_LEFT = new Phoenix6DeviceID(62, BusChain.CHASSIS);
+		public static final Phoenix6DeviceID SWERVE_FRONT_LEFT = new Phoenix6DeviceID(0, BusChain.CHASSIS);
 
 		public static final Phoenix6DeviceID SWERVE_FRONT_RIGHT = new Phoenix6DeviceID(1, BusChain.ROBORIO);
 

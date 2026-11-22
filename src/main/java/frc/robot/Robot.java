@@ -122,6 +122,7 @@ public class Robot {
 	public void updateSubsystems() {
 		swerve.update();
 		arm.update();
+		velocityRoller.update();
 	}
 
 	public void periodic() {

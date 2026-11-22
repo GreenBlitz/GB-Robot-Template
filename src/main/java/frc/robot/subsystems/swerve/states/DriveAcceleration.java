@@ -2,6 +2,7 @@ package frc.robot.subsystems.swerve.states;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import frc.robot.subsystems.swerve.factories.constants.RealSwerveConstants;
+import frc.robot.subsystems.swerve.module.ModuleUtil;
 
 public enum DriveAcceleration {
 
@@ -46,8 +47,8 @@ public enum DriveAcceleration {
 		return slewRateLimiters;
 	}
 
-	public SlewRateLimiter getSlewRateLimiter(int moduleIndex) {
-		return slewRateLimiters[moduleIndex];
+	public SlewRateLimiter getSlewRateLimiter(ModuleUtil.ModulePosition modulePosition) {
+		return slewRateLimiters[modulePosition.getIndex()];
 	}
 
 	public double getMaxAccelerationMetersPerSecondSquared(int moduleIndex) {

@@ -73,9 +73,7 @@ public class Robot {
 			swerve.getIMUAccelerationG(),
 			swerve.getIMUAbsoluteYaw().getTimestamp()
 		);
-		this.moduleAlon = new ModuleAlon(
-				"moduleAlon"
-		);
+		this.moduleAlon = new ModuleAlon("moduleAlon");
 		moduleAlon.setLinearNeutral(true);
 		this.moduleAlon.setLinearNeutral(true);
 		digitalInput = RobotManager.isSimulation()

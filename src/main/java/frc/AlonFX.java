@@ -62,18 +62,18 @@ public class AlonFX implements IMotor {
 		motor.getSimState().setMotorType(TalonFXSimState.MotorType.KrakenX60);
 	}
 
-	public static CANcoderConfiguration createCANcoderConfig(double magnetOffset){
+	public static CANcoderConfiguration createCANcoderConfig(double magnetOffset) {
 		CANcoderConfiguration config = new CANcoderConfiguration();
 		config.MagnetSensor.MagnetOffset = magnetOffset;
 		return config;
 	}
 
-	public static SimpleMotorSimulation createSimulation(double momentOfInertiaKgM2, double gearRatio){
+	public static SimpleMotorSimulation createSimulation(double momentOfInertiaKgM2, double gearRatio) {
 		return new SimpleMotorSimulation(
-				new DCMotorSim(
-						LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60(1), momentOfInertiaKgM2, gearRatio),
-						DCMotor.getKrakenX60Foc(1)
-				)
+			new DCMotorSim(
+				LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60(1), momentOfInertiaKgM2, gearRatio),
+				DCMotor.getKrakenX60Foc(1)
+			)
 		);
 	}
 
@@ -93,12 +93,13 @@ public class AlonFX implements IMotor {
 		configuration.Slot0 = slot0Configs;
 
 		MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
-		motorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;;
+		motorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
+		;
 		configuration.MotorOutput = motorOutputConfigs;
 
 		FeedbackConfigs feedbackConfigs = new FeedbackConfigs();
 		feedbackConfigs.SensorToMechanismRatio = gearRatio;
-			configuration.Feedback = feedbackConfigs;
+		configuration.Feedback = feedbackConfigs;
 		return configuration;
 	}
 
@@ -174,13 +175,16 @@ public class AlonFX implements IMotor {
 	private InvertedValue getMotorInvertedDirection() {
 		MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
 		motor.getConfigurator().refresh(motorOutputConfigs);
-		InvertedValue direction =motorOutputConfigs.Inverted;
+		InvertedValue direction = motorOutputConfigs.Inverted;
 		return direction == InvertedValue.Clockwise_Positive ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive;
 	}
+
 	public static TalonFXConfiguration invertMotorDirection(TalonFXConfiguration configuration) {
 		MotorOutputConfigs motorOutputConfigs = configuration.MotorOutput;
-		InvertedValue direction =motorOutputConfigs.Inverted;
-	    configuration.MotorOutput.Inverted=direction == InvertedValue.Clockwise_Positive ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive;
+		InvertedValue direction = motorOutputConfigs.Inverted;
+		configuration.MotorOutput.Inverted = direction == InvertedValue.Clockwise_Positive
+			? InvertedValue.CounterClockwise_Positive
+			: InvertedValue.Clockwise_Positive;
 		return configuration;
 	}
 

@@ -5,23 +5,44 @@ import frc.robot.subsystems.swerve.factories.constants.RealSwerveConstants;
 
 public enum DriveAcceleration {
 
-	DEFAULT(RealSwerveConstants.ACCELERATION_AT_12_VOLTS_METERS_PER_SECOND_SQUARED),
-	SKID_PREVENTION(RealSwerveConstants.MAX_MODULE_ACCELERATION_BEFORE_STARTING_TO_SKID_METERS_PER_SECOND_SQUARED);
+	DEFAULT(
+		RealSwerveConstants.ACCELERATION_AT_12_VOLTS_METERS_PER_SECOND_SQUARED,
+		RealSwerveConstants.ACCELERATION_AT_12_VOLTS_METERS_PER_SECOND_SQUARED,
+		RealSwerveConstants.ACCELERATION_AT_12_VOLTS_METERS_PER_SECOND_SQUARED,
+		RealSwerveConstants.ACCELERATION_AT_12_VOLTS_METERS_PER_SECOND_SQUARED
+	),
+	SKID_PREVENTION(
+		RealSwerveConstants.FRONT_LEFT_ACCELERATION_LIMIT,
+		RealSwerveConstants.FRONT_RIGHT_ACCELERATION_LIMIT,
+		RealSwerveConstants.BACK_LEFT_ACCELERATION_LIMIT,
+		RealSwerveConstants.BACK_RIGHT_ACCELERATION_LIMIT
+	);
 
-	private final double maxAccelerationMetersPerSecondSquared;
-	private final SlewRateLimiter slewRateLimiter;
+	private final double[] maxAccelerationsMetersPerSecondSquared;
+	private final SlewRateLimiter[] slewRateLimiters = new SlewRateLimiter[4];
 
-	DriveAcceleration(double maxAccelerationMetersPerSecondSquared) {
-		this.maxAccelerationMetersPerSecondSquared = maxAccelerationMetersPerSecondSquared;
-		slewRateLimiter = new SlewRateLimiter(maxAccelerationMetersPerSecondSquared);
+	DriveAcceleration(double frontLeft, double frontRight, double backLeft, double backRight) {
+		this.maxAccelerationsMetersPerSecondSquared = new double[] {frontLeft, frontRight, backLeft, backRight};
 	}
 
-	public double getMaxAccelerationMetersPerSecondSquared() {
-		return maxAccelerationMetersPerSecondSquared;
+	public SlewRateLimiter[] createLimiters() {
+		SlewRateLimiter[] limiters = new SlewRateLimiter[maxAccelerationsMetersPerSecondSquared.length];
+		for (int i = 0; i < limiters.length; i++) {
+			limiters[i] = new SlewRateLimiter(maxAccelerationsMetersPerSecondSquared[i], -maxAccelerationsMetersPerSecondSquared[i], 0);
+		}
+		return limiters;
 	}
 
-	public SlewRateLimiter getSlewRateLimiter() {
-		return slewRateLimiter;
+	public SlewRateLimiter[] getSlewRateLimiters() {
+		return slewRateLimiters;
+	}
+
+	public SlewRateLimiter getSlewRateLimiter(int moduleIndex) {
+		return slewRateLimiters[moduleIndex];
+	}
+
+	public double getMaxAccelerationMetersPerSecondSquared(int moduleIndex) {
+		return maxAccelerationsMetersPerSecondSquared[moduleIndex];
 	}
 
 }

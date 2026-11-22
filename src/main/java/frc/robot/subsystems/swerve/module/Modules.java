@@ -1,10 +1,10 @@
 package frc.robot.subsystems.swerve.module;
 
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.subsystems.swerve.states.DriveAcceleration;
 import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -88,10 +88,10 @@ public class Modules {
 		}
 	}
 
-	public void setTargetStates(SwerveModuleState[] moduleStates, boolean isClosedLoop, SlewRateLimiter slewRateLimiter) {
+	public void setTargetStates(SwerveModuleState[] moduleStates, boolean isClosedLoop, DriveAcceleration driveAcceleration) {
 		double[] targetLimitedAccelerationsMetersPerSecondSquared = new double[modules.length];
 		for (int i = 0; i < modules.length; i++) {
-			double limitedVelocityMetersPerSecond = slewRateLimiter.calculate(moduleStates[i].speedMetersPerSecond);
+			double limitedVelocityMetersPerSecond = driveAcceleration.getSlewRateLimiters()[i].calculate(moduleStates[i].speedMetersPerSecond);
 			moduleStates[i].speedMetersPerSecond = limitedVelocityMetersPerSecond;
 			targetLimitedAccelerationsMetersPerSecondSquared[i] = (limitedVelocityMetersPerSecond - lastCycleLimitedTargetVelocities[i])
 				/ TimeUtil.DEFAULT_CYCLE_TIME_SECONDS;

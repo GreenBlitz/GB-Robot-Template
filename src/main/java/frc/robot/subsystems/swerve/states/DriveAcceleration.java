@@ -21,8 +21,17 @@ public enum DriveAcceleration {
 	private final double[] maxAccelerationsMetersPerSecondSquared;
 	private final SlewRateLimiter[] slewRateLimiters = new SlewRateLimiter[4];
 
-	DriveAcceleration(double frontLeft, double frontRight, double backLeft, double backRight) {
-		this.maxAccelerationsMetersPerSecondSquared = new double[] {frontLeft, frontRight, backLeft, backRight};
+	DriveAcceleration(
+		double frontLeftAccelerationLimitMetersPerSecondSquared,
+		double frontRightAccelerationLimitMetersPerSecondSquared,
+		double backLeftAccelerationLimitMetersPerSecondSquared,
+		double backRightAccelerationLimitMetersPerSecondSquared
+	) {
+		this.maxAccelerationsMetersPerSecondSquared = new double[] {
+			frontLeftAccelerationLimitMetersPerSecondSquared,
+			frontRightAccelerationLimitMetersPerSecondSquared,
+			backLeftAccelerationLimitMetersPerSecondSquared,
+			backRightAccelerationLimitMetersPerSecondSquared};
 	}
 
 	public SlewRateLimiter[] createLimiters() {

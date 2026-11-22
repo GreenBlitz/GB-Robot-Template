@@ -3,8 +3,8 @@ package frc.robot.statemachine;
 import frc.robot.Robot;
 import frc.robot.statemachine.superstructure.Superstructure;
 import frc.robot.subsystems.GBSubsystem;
+import frc.robot.subsystems.TestSubsystem;
 import frc.robot.subsystems.swerve.Swerve;
-import java.util.Set;
 import org.wpilib.command2.*;
 
 public class RobotCommander extends GBSubsystem {
@@ -14,7 +14,10 @@ public class RobotCommander extends GBSubsystem {
   private final Superstructure superstructure;
   private final PositionTargets positionTargets;
 
-  private RobotState currentState;
+  private final TestSubsystem testSubsystem;
+  private final TestSubsystem testSubsystem2;
+
+  private SubsystemState currentState;
 
   public RobotCommander(String logPath, Robot robot) {
     super(logPath);
@@ -25,47 +28,35 @@ public class RobotCommander extends GBSubsystem {
     this.superstructure = new Superstructure("StateMachine/Superstructure", robot);
     this.currentState = null;
 
-    setDefaultCommand(
-        new ConditionalCommand(
-            asSubsystemCommand(Commands.none(), "Disabled"),
-            new InstantCommand(() ->
-                CommandScheduler.getInstance()
-                    .schedule(
-                        new DeferredCommand(() -> endState(currentState), Set.of(this, swerve)))),
-            this::isSubsystemRunningIndependently));
+    this.testSubsystem = new TestSubsystem("TestSubsystem");
+    this.testSubsystem2 = new TestSubsystem("TestSubsystem2");
   }
 
-  public RobotState getCurrentState() {
+  public SubsystemState getCurrentState() {
     return currentState;
+  }
+
+  public void setStateA() {
+    testSubsystem.setState(SubsystemState.STATE1);
+  }
+
+  public void setStateB() {
+    testSubsystem.setState(SubsystemState.STATE2);
+    testSubsystem2.setState(SubsystemState.STATE1);
+  }
+
+  public void setStateC() {
+    testSubsystem.setState(SubsystemState.STATE3);
+    testSubsystem2.setState(SubsystemState.STATE2);
   }
 
   public Superstructure getSuperstructure() {
     return superstructure;
   }
 
-  public boolean isSubsystemRunningIndependently() {
-    return superstructure.isSubsystemRunningIndependently() || swerve.isRunningIndependently();
-  }
-
   @Override
   protected void subsystemPeriodic() {
     superstructure.log();
-  }
-
-  public Command driveWith(RobotState state, Command command) {
-    Command swerveDriveCommand =
-        swerve.getCommandsBuilder().driveByDriversInputs(state.getSwerveState());
-    Command wantedCommand = command.deadlineFor(swerveDriveCommand);
-    return asSubsystemCommand(wantedCommand, state);
-  }
-
-  public Command driveWith(RobotState state) {
-    return driveWith(state, superstructure.setState(state));
-  }
-
-  private Command asSubsystemCommand(Command command, RobotState state) {
-    return new ParallelCommandGroup(
-        asSubsystemCommand(command, state.name()), new InstantCommand(() -> currentState = state));
   }
 
   private Command endState(RobotState state) {

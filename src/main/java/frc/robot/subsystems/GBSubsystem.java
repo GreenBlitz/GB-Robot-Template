@@ -1,18 +1,38 @@
 package frc.robot.subsystems;
 
+import frc.utils.utilcommands.InitExecuteCommand;
 import org.littletonrobotics.junction.Logger;
 import org.wpilib.command2.*;
 
 public abstract class GBSubsystem extends SubsystemBase {
 
+  public enum SubsystemState {
+    STATE1,
+    STATE2,
+    STATE3
+  }
+
   private final String logPath;
   private Command currentCommand;
-  private boolean isRunningIndependently;
+  private InitExecuteCommand stateCommand;
+  private SubsystemState currentState;
 
   public GBSubsystem(String logPath) {
     this.logPath = logPath;
     this.currentCommand = Commands.none().withName("None");
+    this.stateCommand = new InitExecuteCommand(() -> {}, () -> runByState(getCurrentState()));
+    CommandScheduler.getInstance().schedule(asSubsystemCommand(stateCommand, "stateCommand"));
   }
+
+  public void setState(SubsystemState state) {
+    this.currentState = state;
+  }
+
+  public SubsystemState getCurrentState() {
+    return currentState;
+  }
+
+  protected void runByState(SubsystemState state) {}
 
   @Override
   public Command getCurrentCommand() {
@@ -23,18 +43,10 @@ public abstract class GBSubsystem extends SubsystemBase {
     return logPath;
   }
 
-  public boolean isRunningIndependently() {
-    return isRunningIndependently;
-  }
-
-  public void setIsRunningIndependently(boolean isRunningIndependently) {
-    this.isRunningIndependently = isRunningIndependently;
-  }
-
   @Override
   public final void periodic() {
     Logger.recordOutput(getLogPath() + "/CurrentCommand", getCurrentCommand().getName());
-    Logger.recordOutput(getLogPath() + "/IsRunningIndependently", isRunningIndependently());
+    Logger.recordOutput(getLogPath() + "/CurrentState", getCurrentState().name());
     subsystemPeriodic();
   }
 

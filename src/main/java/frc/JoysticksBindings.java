@@ -5,6 +5,7 @@ import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
 import frc.robot.subsystems.swerve.ChassisPowers;
+import org.wpilib.command2.InstantCommand;
 
 public class JoysticksBindings {
 
@@ -46,7 +47,9 @@ public class JoysticksBindings {
 
   private static void mainJoystickButtons(Robot robot) {
     SmartJoystick usedJoystick = MAIN_JOYSTICK;
-    // bindings...
+    usedJoystick.A.onTrue(new InstantCommand(() -> robot.getCommander().setStateA()));
+    usedJoystick.B.onTrue(new InstantCommand(() -> robot.getCommander().setStateB()));
+    usedJoystick.X.onTrue(new InstantCommand(() -> robot.getCommander().setStateC()));
   }
 
   private static void secondJoystickButtons(Robot robot) {

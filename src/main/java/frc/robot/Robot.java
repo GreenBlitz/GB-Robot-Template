@@ -11,6 +11,7 @@ import frc.robot.imu.factories.IMUFactory;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
+import frc.robot.statemachine.RobotCommander;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
@@ -41,6 +42,8 @@ public class Robot {
   private final IMUWrapper imu;
   private final IPoseEstimator poseEstimator;
   private final List<Limelight> limelights;
+
+  public RobotCommander commander;
 
   public Robot() {
     BatteryUtil.scheduleLimiter();
@@ -85,6 +88,11 @@ public class Robot {
     swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 
     configureBrakeStateChooser();
+    commander = new RobotCommander("RobotCommander", this);
+  }
+
+  public RobotCommander getCommander() {
+    return commander;
   }
 
   public void updateSubsystems() {

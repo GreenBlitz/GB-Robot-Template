@@ -1,6 +1,7 @@
 package frc.robot.subsystems.test;
 
 import frc.robot.subsystems.GBSubsystem;
+import org.littletonrobotics.junction.Logger;
 
 public class TestSubsystem extends GBSubsystem<TestSubsystemState> {
 
@@ -17,9 +18,15 @@ public class TestSubsystem extends GBSubsystem<TestSubsystemState> {
     }
   }
 
-  private void do1() {}
+  private void do1() {
+    Logger.recordOutput(getLogPath() + "/running", "1");
+  }
 
-  private void do2() {}
+  private void do2() {
+    Logger.recordOutput(getLogPath() + "/running", "2");
+  }
 
-  private void do3() {}
+  private void do3() {
+    Logger.recordOutput(getLogPath() + "/running", "3");
+  }
 }

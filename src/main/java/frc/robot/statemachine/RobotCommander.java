@@ -3,51 +3,47 @@ package frc.robot.statemachine;
 import frc.robot.Robot;
 import frc.robot.statemachine.superstructure.Superstructure;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.test.TestSubsystem;
+import frc.robot.subsystems.test.TestSubsystemState;
 import org.wpilib.command2.*;
 
-public class RobotCommander extends GBSubsystem {
+public class RobotCommander extends GBSubsystem<RobotState> {
 
   private final Robot robot;
-  private final Swerve swerve;
   private final Superstructure superstructure;
   private final PositionTargets positionTargets;
 
-  private final TestSubsystem testSubsystem;
-  private final TestSubsystem testSubsystem2;
-
-  private SubsystemState currentState;
+  private final TestSubsystem testSubsystem1 = new TestSubsystem("testSubsystem1");
+  private final TestSubsystem testSubsystem2 = new TestSubsystem("testSubsystem2");
 
   public RobotCommander(String logPath, Robot robot) {
     super(logPath);
     this.robot = robot;
-    //        this.swerve = robot.getSwerve();
-    this.swerve = null;
     this.positionTargets = new PositionTargets(robot);
     this.superstructure = new Superstructure("StateMachine/Superstructure", robot);
-    this.currentState = null;
-
-    this.testSubsystem = new TestSubsystem("TestSubsystem");
-    this.testSubsystem2 = new TestSubsystem("TestSubsystem2");
   }
 
-  public SubsystemState getCurrentState() {
-    return currentState;
+  @Override
+  protected void runByState(RobotState state) {
+    switch (state) {
+      case STATE1 -> do1();
+      case STATE2 -> do2();
+      case STATE3 -> do3();
+    }
   }
 
-  public void setStateA() {
-    testSubsystem.setState(SubsystemState.STATE1);
+  private void do1() {
+    testSubsystem1.setState(TestSubsystemState.STATE1);
   }
 
-  public void setStateB() {
-    testSubsystem.setState(SubsystemState.STATE2);
-    testSubsystem2.setState(SubsystemState.STATE1);
+  private void do2() {
+    testSubsystem1.setState(TestSubsystemState.STATE2);
+    testSubsystem2.setState(TestSubsystemState.STATE2);
   }
 
-  public void setStateC() {
-    testSubsystem.setState(SubsystemState.STATE3);
-    testSubsystem2.setState(SubsystemState.STATE2);
+  private void do3() {
+    testSubsystem1.setState(TestSubsystemState.STATE3);
+    testSubsystem2.setState(TestSubsystemState.STATE1);
   }
 
   public Superstructure getSuperstructure() {

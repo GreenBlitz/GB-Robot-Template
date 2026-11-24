@@ -3,8 +3,8 @@ package frc.robot.statemachine;
 import frc.robot.Robot;
 import frc.robot.statemachine.superstructure.Superstructure;
 import frc.robot.subsystems.GBSubsystem;
-import frc.robot.subsystems.TestSubsystem;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.test.TestSubsystem;
 import org.wpilib.command2.*;
 
 public class RobotCommander extends GBSubsystem {

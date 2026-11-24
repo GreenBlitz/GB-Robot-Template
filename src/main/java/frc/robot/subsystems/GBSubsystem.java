@@ -4,18 +4,12 @@ import frc.utils.utilcommands.InitExecuteCommand;
 import org.littletonrobotics.junction.Logger;
 import org.wpilib.command2.*;
 
-public abstract class GBSubsystem extends SubsystemBase {
-
-  public enum SubsystemState {
-    STATE1,
-    STATE2,
-    STATE3
-  }
+public abstract class GBSubsystem<T> extends SubsystemBase {
 
   private final String logPath;
   private Command currentCommand;
   private InitExecuteCommand stateCommand;
-  private SubsystemState currentState;
+  private T currentState;
 
   public GBSubsystem(String logPath) {
     this.logPath = logPath;
@@ -24,15 +18,15 @@ public abstract class GBSubsystem extends SubsystemBase {
     CommandScheduler.getInstance().schedule(asSubsystemCommand(stateCommand, "stateCommand"));
   }
 
-  public void setState(SubsystemState state) {
+  public void setState(T state) {
     this.currentState = state;
   }
 
-  public SubsystemState getCurrentState() {
+  public T getCurrentState() {
     return currentState;
   }
 
-  protected void runByState(SubsystemState state) {}
+  protected void runByState(T state) {}
 
   @Override
   public Command getCurrentCommand() {
@@ -46,7 +40,7 @@ public abstract class GBSubsystem extends SubsystemBase {
   @Override
   public final void periodic() {
     Logger.recordOutput(getLogPath() + "/CurrentCommand", getCurrentCommand().getName());
-    Logger.recordOutput(getLogPath() + "/CurrentState", getCurrentState().name());
+    //    Logger.recordOutput(getLogPath() + "/CurrentState", getCurrentState().name());
     subsystemPeriodic();
   }
 

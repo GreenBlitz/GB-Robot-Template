@@ -1,0 +1,25 @@
+package frc.robot.subsystems.test;
+
+import frc.robot.subsystems.GBSubsystem;
+
+public class TestSubsystem extends GBSubsystem<TestSubsystemState> {
+
+  public TestSubsystem(String logPath) {
+    super(logPath);
+  }
+
+  @Override
+  protected void runByState(TestSubsystemState state) {
+    switch (state) {
+      case STATE1 -> do1();
+      case STATE2 -> do2();
+      case STATE3 -> do3();
+    }
+  }
+
+  private void do1() {}
+
+  private void do2() {}
+
+  private void do3() {}
+}

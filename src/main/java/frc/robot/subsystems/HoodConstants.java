@@ -10,7 +10,6 @@ import frc.robot.RobotConstants;
 import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmSimulationConstants;
-import frc.robot.subsystems.arm.DynamicMotionMagicArm;
 import frc.robot.subsystems.arm.TalonFXArmBuilder;
 import frc.utils.angle2d.Angle2d;
 
@@ -82,5 +81,6 @@ public class HoodConstants {
 			hoodSimulationConstants
 		);
 	}
+
 }
 

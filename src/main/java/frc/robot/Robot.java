@@ -48,7 +48,7 @@ public class Robot {
 	private final Swerve swerve;
 	private final IMUWrapper imu;
 	public final Limelight limelight;
-    public final VelocityRoller velocityRoller;
+	public final VelocityRoller velocityRoller;
 	public final Arm arm;
 	private final IPoseEstimator poseEstimator;
 	private final List<Limelight> limelights;
@@ -56,7 +56,7 @@ public class Robot {
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 
-        velocityRoller = FlywheelConstants.createFlyWheel();
+		velocityRoller = FlywheelConstants.createFlyWheel();
 
 		this.imu = IMUFactory.createIMUWrapper("IMU/");
 		this.swerve = new Swerve(

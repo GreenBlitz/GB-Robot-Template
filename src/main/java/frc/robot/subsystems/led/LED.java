@@ -17,11 +17,12 @@ public class LED extends GBSubsystem {
 
 	private LEDPattern ledPattern;
 
-	private enum Effect{
+	private enum Effect {
 		NONE,
 		BLINK,
 		SCROLL
 	}
+
 	private Effect currentEffect;
 
 	private final AddressableLED addressableLED;
@@ -86,15 +87,14 @@ public class LED extends GBSubsystem {
 
 	private void updatePattern() {
 		if (currentEffect == Effect.BLINK) {
-			ledPattern.blink(
-					Units.Seconds.of(ledConstants.DEFAULT_TIME_BETWEEN_BLINKS_SECOND())
-			).applyTo(addressableLEDBuffer);
-
+			ledPattern.blink(Units.Seconds.of(ledConstants.DEFAULT_TIME_BETWEEN_BLINKS_SECOND())).applyTo(addressableLEDBuffer);
 		} else if (currentEffect == Effect.SCROLL) {
-			ledPattern.scrollAtAbsoluteSpeed(
+			ledPattern
+				.scrollAtAbsoluteSpeed(
 					ledConstants.SCROLL_SPEED_PER_METER_PER_SECOND(),
 					Meters.of(1.0 / ledConstants.NUMBER_OF_LEDS_PER_METER())
-			).applyTo(addressableLEDBuffer);
+				)
+				.applyTo(addressableLEDBuffer);
 		} else {
 			ledPattern.applyTo(addressableLEDBuffer);
 		}

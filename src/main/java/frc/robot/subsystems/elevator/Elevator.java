@@ -17,7 +17,8 @@ public class Elevator extends GBSubsystem {
 	private final InputSignal<Double> currentSignal;
 	private final InputSignal<Rotation2d> positionSignal;
 	private final InputSignal<Rotation2d> velocitySignal;
-	private final VelocityPositionRequest request;
+	private final VelocityPositionRequest velocityPositionRequest;
+	private final IRequest<Double> voltageRequest;
 	private final ElevatorPhysicalProperties physicalProperties;
     private final ElevatorCommandsBuilder commandsBuilder;
 	private double targetPosition;
@@ -30,6 +31,7 @@ public class Elevator extends GBSubsystem {
 		InputSignal<Rotation2d> positionSignal,
 		InputSignal<Rotation2d> velocitySignal,
 		VelocityPositionRequest velocityPositionRequest,
+		IRequest<Double> voltageRequest,
 		ElevatorPhysicalProperties physicalProperties
 	) {
 		super(logPath);
@@ -38,7 +40,8 @@ public class Elevator extends GBSubsystem {
 		this.currentSignal = currentSignal;
 		this.positionSignal = positionSignal;
 		this.velocitySignal = velocitySignal;
-		this.request = velocityPositionRequest;
+		this.velocityPositionRequest = velocityPositionRequest;
+		this.voltageRequest = voltageRequest;
 		this.commandsBuilder = new ElevatorCommandsBuilder(this);
 		this.targetPosition = 0;
 		this.physicalProperties = physicalProperties;
@@ -137,8 +140,11 @@ public class Elevator extends GBSubsystem {
 	}
 
 	private void motorGoToPosition(Rotation2d position, Rotation2d rps) {
-		IRequest<Rotation2d> request1 = request.setVelocity(rps).withSetPoint(position);
-		motor.applyRequest(request1);
+		motor.applyRequest(velocityPositionRequest.setVelocity(rps).withSetPoint(position));
+	}
+
+	public void setVoltage(double voltage){
+		motor.applyRequest(voltageRequest.withSetPoint(voltage));
 	}
 
 }

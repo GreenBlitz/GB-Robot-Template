@@ -2,6 +2,7 @@ package frc.robot.orientation;
 
 public enum OrientationSource {
 
+    NONE(-1),
     IMU(0),
     SWERVE(1);
 
@@ -15,10 +16,11 @@ public enum OrientationSource {
         return index;
     }
 
-    public OrientationSource getSourceByIndex(int index){
+    public static OrientationSource getSourceByIndex(int index){
         return switch (index){
             case 0 -> IMU;
-            case 1 ->
-        }
+            case 1 -> SWERVE;
+            default -> NONE;
+        };
     }
 }

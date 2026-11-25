@@ -12,6 +12,7 @@ import frc.RobotManager;
 import frc.robot.imu.IMUWrapper;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.orientation.OrientationSupplier;
+import frc.robot.orientation.SuperDuperMegaOrientationSupplierFinalBoss;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
@@ -48,7 +49,6 @@ public class Robot {
 		BatteryUtil.scheduleLimiter();
 
 		this.imu = IMUFactory.createIMUWrapper("IMU/");
-		this.orientationSupplier = imu;
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
 			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
@@ -87,6 +87,11 @@ public class Robot {
 					LimelightFilters.DEFAULT_YAW_AT_ANGLE_TOLERANCE
 				)
 			)
+		);
+
+		this.orientationSupplier = new SuperDuperMegaOrientationSupplierFinalBoss(
+				imu,
+				swerve
 		);
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());

@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.constants.MathConstants;
 import frc.constants.field.Field;
+import frc.robot.hardware.interfaces.InputSignal;
 import frc.robot.imu.IMUWrapper;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
@@ -26,6 +27,7 @@ import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.SwerveStateHandler;
 import frc.robot.subsystems.swerve.states.heading.HeadingControl;
 import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
+import frc.utils.Filter;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.battery.BatteryUtil;
 import org.littletonrobotics.junction.Logger;
@@ -36,7 +38,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class Swerve extends GBSubsystem {
+public class Swerve extends GBSubsystem implements OrientationSupplier {
 
 	private final SwerveConstants constants;
 	private final double driveRadiusMeters;
@@ -383,6 +385,41 @@ public class Swerve extends GBSubsystem {
 			powers.rotationalPower = 1;
 			return powers;
 		}), Set.of(this)));
+	}
+
+	@Override
+	public InputSignal<Rotation2d> getYawSignal() {
+		return null;
+	}
+
+	@Override
+	public Rotation3d getLatestOrientation() {
+		return null;
+	}
+
+	@Override
+	public Rotation3d[] getAllOrientations() {
+		return new Rotation3d[0];
+	}
+
+	@Override
+	public Filter isDataReliable() {
+		return null;
+	}
+
+	@Override
+	public void setYaw(Rotation2d yaw) {
+
+	}
+
+	@Override
+	public void setOrientation(Rotation3d orientation) {
+
+	}
+
+	@Override
+	public void updateOrientationSupplier() {
+
 	}
 
 }

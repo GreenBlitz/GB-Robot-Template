@@ -16,37 +16,37 @@ public class SuperDuperMegaOrientationSupplierFinalBoss implements OrientationSu
     }
 
     private OrientationSupplier getCurrentOrientationSupplier(){
-        return
+        return currentOrientationSupplier;
     }
 
     @Override
     public InputSignal<Rotation2d> getYawSignal() {
-        return null;
+        return currentOrientationSupplier.getYawSignal();
     }
 
     @Override
     public Rotation3d getLatestOrientation() {
-        return null;
+        return currentOrientationSupplier.getLatestOrientation();
     }
 
     @Override
     public Rotation3d[] getAllOrientations() {
-        return new Rotation3d[0];
+        return currentOrientationSupplier.getAllOrientations();
     }
 
     @Override
     public Filter isDataReliable() {
-        return null;
+        return currentOrientationSupplier.isDataReliable();
     }
 
     @Override
     public void setYaw(Rotation2d yaw) {
-
+        currentOrientationSupplier.setYaw(yaw);
     }
 
     @Override
     public void setOrientation(Rotation3d orientation) {
-
+        currentOrientationSupplier.setOrientation(orientation);
     }
 
     private void updateOrientationSource() {
@@ -56,11 +56,12 @@ public class SuperDuperMegaOrientationSupplierFinalBoss implements OrientationSu
                 best = i;
             }
         }
-        currentOrientationSource = OrientationSource.IMU
+        currentOrientationSource = OrientationSource.getSourceByIndex(best);
     }
 
     @Override
     public void updateOrientationSupplier() {
+        updateOrientationSource();
         this.currentOrientationSupplier = orientationSuppliers[currentOrientationSource.getIndex()];
     }
 

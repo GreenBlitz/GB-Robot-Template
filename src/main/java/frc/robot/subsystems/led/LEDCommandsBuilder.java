@@ -53,7 +53,6 @@ public class LEDCommandsBuilder {
 
 	public Command enableBlink() {
 		return led.asSubsystemCommand(new Command() {
-
 			@Override
 			public void initialize() {
 				led.setTimeBetweenBlinksSeconds(LED.ledConstants.DEFAULT_TIME_BETWEEN_BLINKS_SECOND());
@@ -63,7 +62,6 @@ public class LEDCommandsBuilder {
 			public void execute() {
 				led.blinkWithCurrentPattern();
 			}
-
 		}, "Enable LED Blink");
 	}
 

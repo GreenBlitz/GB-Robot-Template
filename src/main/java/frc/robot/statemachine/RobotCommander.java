@@ -31,6 +31,7 @@ public class RobotCommander extends GBSubsystem<RobotState> {
       case STATE1 -> do1();
       case STATE2 -> do2();
       case STATE3 -> do3();
+      case STATE4 -> do4();
     }
   }
 
@@ -51,6 +52,11 @@ public class RobotCommander extends GBSubsystem<RobotState> {
     Logger.recordOutput(getLogPath() + "/running", "3");
   }
 
+  private void do4() {
+    testSubsystem1.setState(TestSubsystemState.STATE1);
+    Logger.recordOutput(getLogPath() + "/running", "4");
+  }
+
   public Superstructure getSuperstructure() {
     return superstructure;
   }
@@ -69,6 +75,9 @@ public class RobotCommander extends GBSubsystem<RobotState> {
     }
     if (a == 1500) {
       setState(RobotState.STATE1);
+    }
+    if (a == 2000) {
+      setState(RobotState.STATE4);
     }
     a++;
   }

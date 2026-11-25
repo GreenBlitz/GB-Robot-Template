@@ -3,7 +3,8 @@ package frc.robot.statemachine;
 public enum RobotState {
   STATE1,
   STATE2,
-  STATE3
+  STATE3,
+  STATE4
 
   //  ;
 

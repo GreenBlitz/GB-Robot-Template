@@ -13,14 +13,14 @@ public enum DriveAcceleration {
 		RealSwerveConstants.ACCELERATION_AT_12_VOLTS_METERS_PER_SECOND_SQUARED
 	),
 	SKID_PREVENTION(
-		RealSwerveConstants.FRONT_LEFT_MODULE_ACCELERATION_LIMIT_METERS_PER_SECOND_SQUARED,
-		RealSwerveConstants.FRONT_RIGHT_MODULE_ACCELERATION_LIMIT_METERS_PER_SECOND_SQUARED,
-		RealSwerveConstants.BACK_LEFT_MODULE_ACCELERATION_LIMIT_METERS_PER_SECOND_SQUARED,
-		RealSwerveConstants.BACK_RIGHT_MODULE_ACCELERATION_LIMIT_METERS_PER_SECOND_SQUARED
+		RealSwerveConstants.FRONT_LEFT_MODULE_ACCELERATION_LIMIT_BEFORE_STARTING_TO_SKID_METERS_PER_SECOND_SQUARED,
+		RealSwerveConstants.FRONT_RIGHT_MODULE_ACCELERATION_LIMIT_BEFORE_STARTING_TO_SKID_METERS_PER_SECOND_SQUARED,
+		RealSwerveConstants.BACK_LEFT_MODULE_ACCELERATION_LIMIT_BEFORE_STARTING_TO_SKID_METERS_PER_SECOND_SQUARED,
+		RealSwerveConstants.BACK_RIGHT_MODULE_ACCELERATION_LIMIT_BEFORE_STARTING_TO_SKID_METERS_PER_SECOND_SQUARED
 	);
 
 	private final double[] maxAccelerationsMetersPerSecondSquared;
-	private final SlewRateLimiter[] slewRateLimiters = new SlewRateLimiter[4];
+	private final SlewRateLimiter[] slewRateLimiters;
 
 	DriveAcceleration(
 		double frontLeftAccelerationLimitMetersPerSecondSquared,
@@ -33,6 +33,7 @@ public enum DriveAcceleration {
 			frontRightAccelerationLimitMetersPerSecondSquared,
 			backLeftAccelerationLimitMetersPerSecondSquared,
 			backRightAccelerationLimitMetersPerSecondSquared};
+		this.slewRateLimiters = createLimiters();
 	}
 
 	public SlewRateLimiter[] createLimiters() {
@@ -51,8 +52,8 @@ public enum DriveAcceleration {
 		return slewRateLimiters[modulePosition.getIndex()];
 	}
 
-	public double getMaxAccelerationMetersPerSecondSquared(int moduleIndex) {
-		return maxAccelerationsMetersPerSecondSquared[moduleIndex];
+	public double getMaxAccelerationMetersPerSecondSquared(ModuleUtil.ModulePosition modulePosition) {
+		return maxAccelerationsMetersPerSecondSquared[modulePosition.getIndex()];
 	}
 
 }

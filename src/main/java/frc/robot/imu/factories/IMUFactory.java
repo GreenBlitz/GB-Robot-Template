@@ -16,7 +16,7 @@ public class IMUFactory {
 
 	private static IIMU createIMU(String logPath) {
 		return switch (Robot.ROBOT_TYPE) {
-			case REAL, REPLAY -> Pigeon2IMUBuilder.buildIMU(logPath, IDs.Pigeon2IDs.CHASSIS);
+			case REAL, REPLAY -> Pigeon2IMUBuilder.buildIMU(logPath, IDs.Pigeon2IDs.SWERVE);
 			case SIMULATION -> SimulationIMUBuilder.buildIMU(logPath);
 		};
 	}

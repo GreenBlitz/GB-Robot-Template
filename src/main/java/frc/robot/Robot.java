@@ -5,26 +5,34 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
-import frc.robot.imu.IMUWrapper;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.imu.IMUWrapper;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
+import frc.robot.subsystems.HoodConstants;
+import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.imu.factories.IMUFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
 import frc.robot.vision.cameras.limelight.Limelight;
 import frc.robot.vision.cameras.limelight.LimelightFilters;
+import frc.robot.vision.cameras.limelight.LimelightPipeline;
 import frc.robot.vision.cameras.limelight.LimelightStdDevCalculations;
 import frc.utils.auto.PathPlannerAutoWrapper;
 import frc.utils.battery.BatteryUtil;
 import frc.utils.brakestate.BrakeMode;
 import frc.utils.brakestate.BrakeStateManager;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.List;
 
@@ -39,18 +47,39 @@ public class Robot {
 
 	private final Swerve swerve;
 	private final IMUWrapper imu;
+	public final Limelight limelight;
+	public final Arm arm;
+	public final Arm motionMagicArm;
+	public final Arm dynamicMotionMagicArm;
 	private final IPoseEstimator poseEstimator;
 	private final List<Limelight> limelights;
+	private final double[] lastSpeeds = new double[4];
+
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 
-		this.imu = IMUFactory.createIMUWrapper("IMU/");
+		this.imu = IMUFactory.createIMUWrapper(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve");
 		this.swerve = new Swerve(
 			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
 			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
 			imu
 		);
+
+		this.limelight = new Limelight(
+			"limelight-front",
+			"Vision",
+			new Pose3d(
+				new Translation3d(0.297, -0.143, 0.361),
+				new Rotation3d(Math.toRadians(-0.18), Math.toRadians(27.38), Math.toRadians(-0.35))
+			),
+			LimelightPipeline.APRIL_TAG
+		);
+
+		this.arm = HoodConstants.createArm();
+		this.dynamicMotionMagicArm = HoodConstants.createDynamicMotionMagicArm();
+		this.motionMagicArm = HoodConstants.createMotionMagicArm();
+
 		BrakeStateManager.add(() -> swerve.getModules().setBrake(true), () -> swerve.getModules().setBrake(false));
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
@@ -62,7 +91,7 @@ public class Robot {
 			imu.getWrappedYaw().getTimestamp()
 		);
 
-		this.limelights = List.of();
+		this.limelights = List.of(limelight);
 		limelights.forEach(
 			limelight -> limelight.setMT1StdDevsCalculation(
 				LimelightStdDevCalculations.getMT1StdDevsCalculation(
@@ -93,14 +122,27 @@ public class Robot {
 
 	public void updateSubsystems() {
 		swerve.update();
+		arm.update();
+		motionMagicArm.update();
+		arm.update();
 	}
 
 	public void periodic() {
 		BusChain.refreshAll();
 
-		imu.updateIMU();
 		updateSubsystems();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
+
+		double[] accelerations = new double[4];
+
+		for (int i = 0; i < 4; i++) {
+			double now = Math.abs(swerve.getModules().getModule(i).getDriveVelocityMetersPerSecond());
+			accelerations[i] = (now - lastSpeeds[i]) / TimedRobot.kDefaultPeriod;
+			lastSpeeds[i] = now;
+		}
+
+		Logger.recordOutput("Debug/RealAcceleration", accelerations);
+
 
 		getLimelights().forEach(Limelight::updateHardwareInputs);
 		getLimelights().forEach(Limelight::updateMT1);

@@ -4,9 +4,7 @@ import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
 import frc.joysticks.SmartJoystick;
 import frc.robot.Robot;
-import frc.robot.statemachine.RobotState;
 import frc.robot.subsystems.swerve.ChassisPowers;
-import org.wpilib.command2.InstantCommand;
 
 public class JoysticksBindings {
 
@@ -48,12 +46,19 @@ public class JoysticksBindings {
 
   private static void mainJoystickButtons(Robot robot) {
     SmartJoystick usedJoystick = MAIN_JOYSTICK;
-    usedJoystick.A.onTrue(
-        new InstantCommand(() -> robot.getCommander().setState(RobotState.STATE1)));
-    usedJoystick.B.onTrue(
-        new InstantCommand(() -> robot.getCommander().setState(RobotState.STATE2)));
-    usedJoystick.X.onTrue(
-        new InstantCommand(() -> robot.getCommander().setState(RobotState.STATE3)));
+    //    usedJoystick.A.onTrue(
+    //        new InstantCommand(() -> robot.getCommander().setState(RobotState.STATE1)));
+    //    usedJoystick.B.onTrue(
+    //        new InstantCommand(() -> robot.getCommander().setState(RobotState.STATE2)));
+    //    usedJoystick.X.onTrue(
+    //        new InstantCommand(() -> robot.getCommander().setState(RobotState.STATE3)));
+
+    //    usedJoystick.getAxisAsButton(Axis.LEFT_X, 0.5).onTrue(new InstantCommand(() ->
+    // robot.getCommander().setState(RobotState.STATE1)));
+    //    usedJoystick.getAxisAsButton(Axis.LEFT_Y, 0.5).onTrue(new InstantCommand(() ->
+    // robot.getCommander().setState(RobotState.STATE2)));
+    //    usedJoystick.getAxisAsButton(Axis.RIGHT_X, 0.5).onTrue(new InstantCommand(() ->
+    // robot.getCommander().setState(RobotState.STATE3)));
   }
 
   private static void secondJoystickButtons(Robot robot) {

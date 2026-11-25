@@ -16,6 +16,7 @@ public class RobotCommander extends GBSubsystem<RobotState> {
 
   private final TestSubsystem testSubsystem1 = new TestSubsystem("testSubsystem1");
   private final TestSubsystem testSubsystem2 = new TestSubsystem("testSubsystem2");
+  private int a = 0;
 
   public RobotCommander(String logPath, Robot robot) {
     super(logPath);
@@ -57,6 +58,19 @@ public class RobotCommander extends GBSubsystem<RobotState> {
   @Override
   protected void subsystemPeriodic() {
     superstructure.log();
+    if (a == 0) {
+      setState(RobotState.STATE1);
+    }
+    if (a == 500) {
+      setState(RobotState.STATE2);
+    }
+    if (a == 1000) {
+      setState(RobotState.STATE3);
+    }
+    if (a == 1500) {
+      setState(RobotState.STATE1);
+    }
+    a++;
   }
 
   private Command endState(RobotState state) {

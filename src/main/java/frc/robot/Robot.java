@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.imu.IMUWrapper;
 import frc.robot.hardware.phoenix6.BusChain;
-import frc.robot.poseestimator.OrientationSupplier;
+import frc.robot.orientation.OrientationSupplier;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;

@@ -1,6 +1,7 @@
 package frc.robot.poseestimator;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import frc.robot.orientation.OrientationSupplier;
 
 import java.util.Optional;
 

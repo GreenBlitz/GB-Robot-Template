@@ -15,7 +15,7 @@ import frc.constants.field.Field;
 import frc.robot.imu.IMUWrapper;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
-import frc.robot.poseestimator.OrientationSupplier;
+import frc.robot.orientation.OrientationSupplier;
 import frc.robot.poseestimator.OdometryData;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.swerve.module.Modules;

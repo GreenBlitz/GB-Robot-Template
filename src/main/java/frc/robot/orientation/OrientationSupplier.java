@@ -1,4 +1,4 @@
-package frc.robot.poseestimator;
+package frc.robot.orientation;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;

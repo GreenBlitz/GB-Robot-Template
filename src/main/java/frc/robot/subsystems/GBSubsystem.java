@@ -13,7 +13,7 @@ public abstract class GBSubsystem<T> extends SubsystemBase {
   public GBSubsystem(String logPath) {
     this.logPath = logPath;
     this.currentCommand = Commands.none().withName("None");
-    this.stateCommand = new RunCommand(() -> runByState(getCurrentState()));
+    this.stateCommand = new RunCommand(() -> runByStateNoNull(getCurrentState()));
     CommandScheduler.getInstance()
         .schedule(asSubsystemCommand(stateCommand, "stateCommand").ignoringDisable(true));
     //    CommandScheduler.getInstance().schedule(asSubsystemCommand(new InstantCommand(() -> {}),
@@ -30,6 +30,12 @@ public abstract class GBSubsystem<T> extends SubsystemBase {
   }
 
   protected void runByState(T state) {}
+
+  private void runByStateNoNull(T state) {
+    if (state != null) {
+      runByState(state);
+    }
+  }
 
   @Override
   public Command getCurrentCommand() {

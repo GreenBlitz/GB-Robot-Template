@@ -31,12 +31,10 @@ public class RobotCommander extends GBSubsystem<RobotState> {
 
   @Override
   protected void runByState(RobotState state) {
-    if (state != null) {
-      switch (state) {
-        case STATE1 -> do1();
-        case STATE2 -> do2();
-        case STATE3 -> do3();
-      }
+    switch (state) {
+      case STATE1 -> do1();
+      case STATE2 -> do2();
+      case STATE3 -> do3();
     }
   }
 

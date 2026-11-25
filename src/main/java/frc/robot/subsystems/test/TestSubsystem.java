@@ -11,10 +11,12 @@ public class TestSubsystem extends GBSubsystem<TestSubsystemState> {
 
   @Override
   protected void runByState(TestSubsystemState state) {
-    switch (state) {
-      case STATE1 -> do1();
-      case STATE2 -> do2();
-      case STATE3 -> do3();
+    if (state != null) {
+      switch (state) {
+        case STATE1 -> do1();
+        case STATE2 -> do2();
+        case STATE3 -> do3();
+      }
     }
   }
 

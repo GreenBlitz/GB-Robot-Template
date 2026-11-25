@@ -21,14 +21,22 @@ public class RobotCommander extends GBSubsystem<RobotState> {
     this.robot = robot;
     this.positionTargets = new PositionTargets(robot);
     this.superstructure = new Superstructure("StateMachine/Superstructure", robot);
+
+    runByState(RobotState.STATE1);
+    CommandScheduler.getInstance().schedule(new WaitCommand(10));
+    runByState(RobotState.STATE2);
+    CommandScheduler.getInstance().schedule(new WaitCommand(10));
+    runByState(RobotState.STATE3);
   }
 
   @Override
   protected void runByState(RobotState state) {
-    switch (state) {
-      case STATE1 -> do1();
-      case STATE2 -> do2();
-      case STATE3 -> do3();
+    if (state != null) {
+      switch (state) {
+        case STATE1 -> do1();
+        case STATE2 -> do2();
+        case STATE3 -> do3();
+      }
     }
   }
 

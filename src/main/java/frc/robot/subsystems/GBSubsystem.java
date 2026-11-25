@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import frc.utils.utilcommands.InitExecuteCommand;
 import org.littletonrobotics.junction.Logger;
 import org.wpilib.command2.*;
 
@@ -8,14 +7,18 @@ public abstract class GBSubsystem<T> extends SubsystemBase {
 
   private final String logPath;
   private Command currentCommand;
-  private InitExecuteCommand stateCommand;
+  private RunCommand stateCommand;
   private T currentState;
 
   public GBSubsystem(String logPath) {
     this.logPath = logPath;
     this.currentCommand = Commands.none().withName("None");
-    this.stateCommand = new InitExecuteCommand(() -> {}, () -> runByState(getCurrentState()));
-    CommandScheduler.getInstance().schedule(asSubsystemCommand(stateCommand, "stateCommand"));
+    this.stateCommand = new RunCommand(() -> runByState(getCurrentState()));
+    CommandScheduler.getInstance()
+        .schedule(asSubsystemCommand(stateCommand, "stateCommand").ignoringDisable(true));
+    //    CommandScheduler.getInstance().schedule(asSubsystemCommand(new InstantCommand(() -> {}),
+    // "AAAAAAAAAAAA").ignoringDisable(true));
+    //    Logger.recordOutput("AAA", 1);
   }
 
   public void setState(T state) {

@@ -45,9 +45,6 @@ public class Robot {
 
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);
 
-	private final Swerve swerve;
-	private final IMUWrapper imu;
-	private final IPoseEstimator poseEstimator;
 	private final PhotonPoseEstimator photonPoseEstimator;
 	private final PhotonCamera photonCamera = new PhotonCamera("testCamera");
 	private final List<Limelight> limelights;
@@ -55,22 +52,8 @@ public class Robot {
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
 
-		this.imu = IMUFactory.createIMUWrapper("IMU/");
-		this.swerve = new Swerve(
-			SwerveConstantsFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
-			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
-			imu
-		);
-		BrakeStateManager.add(() -> swerve.getModules().setBrake(true), () -> swerve.getModules().setBrake(false));
-		this.poseEstimator = new WPILibPoseEstimatorWrapper(
-			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
-			swerve.getKinematics(),
-			swerve.getModules().getWheelPositions(0),
-			swerve.getModules().getCurrentStates(),
-			imu.getLatestOrientation(),
-			imu.getLatestAccelerationG(),
-			imu.getWrappedYaw().getTimestamp()
-		);
+
+
 
 		this.limelights = List.of();
 		limelights.forEach(
@@ -84,52 +67,25 @@ public class Robot {
 				)
 			)
 		);
-		limelights.forEach(
-			limelight -> limelight.setMT1PoseFilter(
-				LimelightFilters.megaTag1Filter(
-					limelight,
-					timestamp -> poseEstimator.getEstimatedPoseAtTimestamp(timestamp).map(Pose2d::getRotation),
-					poseEstimator::isIMUOffsetCalibrated,
-					LimelightFilters.DEFAULT_IN_FIELD_TOLERANCE_METERS,
-					LimelightFilters.DEFAULT_YAW_AT_ANGLE_TOLERANCE
-				)
-			)
-		);
 
 		photonPoseEstimator = new PhotonPoseEstimator(AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark), new Transform3d());
-		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 
 		configureBrakeStateChooser();
 	}
 
 	public void updateSubsystems() {
-		swerve.update();
+
 	}
 
 	public void periodic() {
 		BusChain.refreshAll();
 
-		imu.updateIMU();
 		updateSubsystems();
-		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 
-		getLimelights().forEach(Limelight::updateHardwareInputs);
-		getLimelights().forEach(Limelight::updateMT1);
-		getLimelights().forEach(limelight -> limelight.getIndependentRobotPose().ifPresent(poseEstimator::updateVision));
-
-		poseEstimator.log();
 		photonPoseEstimator.estimateAverageBestTargetsPose(photonCamera.getAllUnreadResults().get(0)).ifPresent((EstimatedRobotPose r) -> Logger.recordOutput("estimatorPosePhotonCameraTester",r.estimatedPose.toPose2d()));
 		BatteryUtil.logStatus();
 		BusChain.logChainsStatuses();
 		CommandScheduler.getInstance().run(); // Should be last
-	}
-
-	public IPoseEstimator getPoseEstimator() {
-		return poseEstimator;
-	}
-
-	public Swerve getSwerve() {
-		return swerve;
 	}
 
 	public List<Limelight> getLimelights() {

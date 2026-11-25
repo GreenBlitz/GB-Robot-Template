@@ -5,6 +5,7 @@ import frc.robot.statemachine.superstructure.Superstructure;
 import frc.robot.subsystems.GBSubsystem;
 import frc.robot.subsystems.test.TestSubsystem;
 import frc.robot.subsystems.test.TestSubsystemState;
+import org.littletonrobotics.junction.Logger;
 import org.wpilib.command2.*;
 
 public class RobotCommander extends GBSubsystem<RobotState> {
@@ -21,12 +22,6 @@ public class RobotCommander extends GBSubsystem<RobotState> {
     this.robot = robot;
     this.positionTargets = new PositionTargets(robot);
     this.superstructure = new Superstructure("StateMachine/Superstructure", robot);
-
-    runByState(RobotState.STATE1);
-    CommandScheduler.getInstance().schedule(new WaitCommand(10));
-    runByState(RobotState.STATE2);
-    CommandScheduler.getInstance().schedule(new WaitCommand(10));
-    runByState(RobotState.STATE3);
   }
 
   @Override
@@ -40,16 +35,19 @@ public class RobotCommander extends GBSubsystem<RobotState> {
 
   private void do1() {
     testSubsystem1.setState(TestSubsystemState.STATE1);
+    Logger.recordOutput(getLogPath() + "/running", "1");
   }
 
   private void do2() {
     testSubsystem1.setState(TestSubsystemState.STATE2);
     testSubsystem2.setState(TestSubsystemState.STATE2);
+    Logger.recordOutput(getLogPath() + "/running", "2");
   }
 
   private void do3() {
     testSubsystem1.setState(TestSubsystemState.STATE3);
     testSubsystem2.setState(TestSubsystemState.STATE1);
+    Logger.recordOutput(getLogPath() + "/running", "3");
   }
 
   public Superstructure getSuperstructure() {

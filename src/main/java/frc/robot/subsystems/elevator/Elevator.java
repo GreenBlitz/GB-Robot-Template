@@ -20,7 +20,7 @@ public class Elevator extends GBSubsystem {
 	private final VelocityPositionRequest velocityPositionRequest;
 	private final IRequest<Double> voltageRequest;
 	private final ElevatorPhysicalProperties physicalProperties;
-    private final ElevatorCommandsBuilder commandsBuilder;
+	private final ElevatorCommandsBuilder commandsBuilder;
 	private double targetPosition;
 
 	public Elevator(
@@ -48,9 +48,9 @@ public class Elevator extends GBSubsystem {
 		setDefaultCommand(commandsBuilder.stop());
 	}
 
-    public ElevatorCommandsBuilder getCommandsBuilder(){
-        return commandsBuilder;
-    }
+	public ElevatorCommandsBuilder getCommandsBuilder() {
+		return commandsBuilder;
+	}
 
 	private Rotation2d getMotorTarget() {
 		return physicalProperties.convertFractionalHeightToMotorPosition(targetPosition);
@@ -143,7 +143,7 @@ public class Elevator extends GBSubsystem {
 		motor.applyRequest(velocityPositionRequest.setVelocity(rps).withSetPoint(position));
 	}
 
-	public void setVoltage(double voltage){
+	public void setVoltage(double voltage) {
 		motor.applyRequest(voltageRequest.withSetPoint(voltage));
 	}
 

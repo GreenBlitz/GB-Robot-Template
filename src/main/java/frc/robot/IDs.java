@@ -52,9 +52,9 @@ public class IDs {
 	public static class DigitalInputsIDs {
 	}
 
-	public static class ElevatorIDs{
+	public static class ElevatorIDs {
 
-		public  static final Phoenix6DeviceID ELEVATOR = new Phoenix6DeviceID(63, BusChain.ROBORIO);
+		public static final Phoenix6DeviceID ELEVATOR = new Phoenix6DeviceID(63, BusChain.ROBORIO);
 
 	}
 

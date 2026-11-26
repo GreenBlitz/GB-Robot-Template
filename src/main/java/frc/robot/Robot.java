@@ -4,18 +4,22 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.configs.Slot0Configs;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.RobotManager;
 import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.digitalinput.channeled.ChanneledDigitalInput;
 import frc.robot.hardware.digitalinput.chooser.ChooserDigitalInput;
+import frc.robot.hardware.phoenix6.motors.TalonFXFollowerConfig;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.TalonFXElevatorBuilder;
 import frc.robot.subsystems.moduleAlon.ModuleAlon;
@@ -67,9 +71,19 @@ public class Robot {
 			IMUFactory.createSignals(imu)
 		);
 		this.elevator = TalonFXElevatorBuilder.buildElevator(
-				RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Elevator",IDs.ElevatorIDs.ELEVATOR,RobotConstants.elevatorPhysicalProperties,RobotConstants.elevatorStartingPosition,
-
-		)
+			RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Elevator",
+			IDs.ElevatorIDs.ELEVATOR,
+			RobotConstants.elevatorPhysicalProperties,
+			RobotConstants.elevatorStartingPosition,
+			new Slot0Configs().withKP(RobotConstants.elevatorRealKp),
+			new Slot0Configs().withKP(RobotConstants.elevatorSimKp),
+			new TalonFXFollowerConfig(),
+			new SysIdRoutine.Config(),
+			RobotConstants.elevatorFeedbackConfigs,
+			RobotConstants.elevatorMass.in(Units.Kilogram),
+			RobotConstants.elevatorRadius.in(Units.Meter),
+			false
+		);
 		BrakeStateManager.add(() -> swerve.getModules().setBrake(true), () -> swerve.getModules().setBrake(false));
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,

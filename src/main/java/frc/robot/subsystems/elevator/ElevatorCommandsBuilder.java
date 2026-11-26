@@ -23,36 +23,25 @@ public class ElevatorCommandsBuilder {
 		}), "Go to position: " + position);
 	}
 
-	public Command goToPositionWithVelocity(Supplier<ElevatorMeasure> position,Supplier<ElevatorMeasure> velocityChangePerSecond){
-		return elevator.asSubsystemCommand(
-				new RunCommand(()->{
-					elevator.updateTargetPosition(position.get());
-					elevator.goToPosition(position.get(), velocityChangePerSecond.get());
-				}
-				),"Go to position from supplier"
-		);
+	public Command goToPositionWithVelocity(Supplier<ElevatorMeasure> position, Supplier<ElevatorMeasure> velocityChangePerSecond) {
+		return elevator.asSubsystemCommand(new RunCommand(() -> {
+			elevator.updateTargetPosition(position.get());
+			elevator.goToPosition(position.get(), velocityChangePerSecond.get());
+		}), "Go to position from supplier");
 	}
 
-	public Command setVoltage(double voltage){
-		return elevator.asSubsystemCommand(
-				new RunCommand(
-						()->elevator.setVoltage(voltage)
-				), "Set voltage: "+ voltage
-		);
+	public Command setVoltage(double voltage) {
+		return elevator.asSubsystemCommand(new RunCommand(() -> elevator.setVoltage(voltage)), "Set voltage: " + voltage);
 	}
 
-	public Command setVoltage(Supplier<Double> voltage){
-		return elevator.asSubsystemCommand(
-				new RunCommand(
-						()->{elevator.setVoltage(voltage.get());}
-				), "Set voltage from supplier"
-		);
+	public Command setVoltage(Supplier<Double> voltage) {
+		return elevator.asSubsystemCommand(new RunCommand(() -> {
+			elevator.setVoltage(voltage.get());
+		}), "Set voltage from supplier");
 	}
 
-    public Command stop(){
-        return elevator.asSubsystemCommand(
-                new InstantCommand(elevator::stop), "stop"
-        );
-    }
+	public Command stop() {
+		return elevator.asSubsystemCommand(new InstantCommand(elevator::stop), "stop");
+	}
 
 }

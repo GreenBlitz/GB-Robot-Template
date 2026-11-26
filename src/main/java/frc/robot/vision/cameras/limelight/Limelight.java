@@ -4,9 +4,7 @@ import edu.wpi.first.math.geometry.*;
 import frc.robot.vision.DetectedObjectObservation;
 import frc.robot.vision.RobotPoseObservation;
 import frc.robot.vision.cameras.limelight.inputs.LimelightInputsSet;
-import frc.robot.vision.interfaces.ObjectDetector;
-import frc.robot.vision.interfaces.OrientationRequiringRobotPoseSupplier;
-import frc.robot.vision.interfaces.IndependentRobotPoseSupplier;
+import frc.robot.vision.interfaces.IndependentCamera;
 import frc.utils.Conversions;
 import frc.utils.limelight.LimelightHelpers;
 import frc.utils.Filter;
@@ -21,7 +19,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, OrientationRequiringRobotPoseSupplier {
+public class Limelight implements IndependentCamera {
 
 	private final String name;
 	private final String logPath;
@@ -71,6 +69,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		setPipeline(pipeline);
 	}
 
+	@Override
 	public void updateNeuralDetection() {
 		if (pipeline.isNeuralDetecting()) {
 			neuralDetections.clear();
@@ -102,6 +101,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		}
 	}
 
+	@Override
 	public void updateColorDetection() {
 		if (pipeline.isColorDetecting()) {
 			colorDetections.clear();
@@ -133,6 +133,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		}
 	}
 
+	@Override
 	public void updateMT1() {
 		if (pipeline.isUsingMT()) {
 			inputs.mt1Inputs().mtRawData = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
@@ -151,6 +152,7 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		}
 	}
 
+	@Override
 	public void updateMT2() {
 		if (pipeline.isUsingMT()) {
 			inputs.mt2Inputs().mtRawData = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
@@ -169,12 +171,19 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		}
 	}
 
+	@Override
 	public void updateHardwareInputs() {
 		inputs.hardwareInputs().connected = LimelightHelpersAdditions.getIsConnected(name);
 		inputs.hardwareInputs().temperatureCelsius = LimelightHelpersAdditions.getTemperatureCelsius(name);
 		Logger.processInputs(logPath, inputs.hardwareInputs());
 	}
 
+	@Override
+	public void update(LimelightPipeline pipeline){
+
+	}
+
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -231,10 +240,12 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		return colorDetectionFilter;
 	}
 
+	@Override
 	public Filter getMt1PoseFilter() {
 		return mt1PoseFilter;
 	}
 
+	@Override
 	public Filter getMt2PoseFilter() {
 		return mt2PoseFilter;
 	}
@@ -257,26 +268,32 @@ public class Limelight implements ObjectDetector, IndependentRobotPoseSupplier, 
 		LimelightHelpers.setPipelineIndex(name, pipeline.getPipelineIndex());
 	}
 
+	@Override
 	public void setNeuralDetectionFilter(Function<LimelightHelpers.RawDetection, Boolean> neuralDetectionFilter) {
 		this.neuralDetectionFilter = neuralDetectionFilter;
 	}
 
+	@Override
 	public void setColorDetectionFilter(Function<LimelightHelpers.RawTarget, Boolean> colorDetectionFilter) {
 		this.colorDetectionFilter = colorDetectionFilter;
 	}
 
+	@Override
 	public void setMT1PoseFilter(Filter mt1RobotPoseFilter) {
 		this.mt1PoseFilter = mt1RobotPoseFilter;
 	}
 
+	@Override
 	public void setMT2PoseFilter(Filter mt2RobotPoseFilter) {
 		this.mt2PoseFilter = mt2RobotPoseFilter;
 	}
 
+	@Override
 	public void setMT1StdDevsCalculation(Supplier<StandardDeviations2D> calculateMT1StdDevs) {
 		this.calculateMT1StdDevs = calculateMT1StdDevs;
 	}
 
+	@Override
 	public void setMT2StdDevsCalculation(Supplier<StandardDeviations2D> calculateMT2StdDevs) {
 		this.calculateMT2StdDevs = calculateMT2StdDevs;
 	}

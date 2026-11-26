@@ -408,18 +408,12 @@ public class Swerve extends GBSubsystem implements OrientationSupplier {
 	}
 
 	@Override
-	public void setYaw(Rotation2d yaw) {
-
-	}
+	public void setYaw(Rotation2d yaw) {}
 
 	@Override
-	public void setOrientation(Rotation3d orientation) {
-
-	}
+	public void setOrientation(Rotation3d orientation) {}
 
 	@Override
-	public void updateOrientationSupplier() {
-
-	}
+	public void updateOrientationSupplier() {}
 
 }

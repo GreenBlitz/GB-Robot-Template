@@ -89,10 +89,7 @@ public class Robot {
 			)
 		);
 
-		this.orientationSupplier = new SuperDuperMegaOrientationSupplierFinalBoss(
-				imu,
-				swerve
-		);
+		this.orientationSupplier = new SuperDuperMegaOrientationSupplierFinalBoss(imu, swerve);
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 

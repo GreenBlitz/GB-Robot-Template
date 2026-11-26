@@ -6,14 +6,17 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.RobotManager;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.hardware.rev.motors.*;
 import frc.utils.battery.BatteryUtil;
 
 /**
@@ -28,6 +31,8 @@ public class Robot {
 
 	private DifferentialDrive tankDrive;
 	private double powerMultiplier = 1;
+
+	public BrushlessSparkMAXMotor endEffector;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -68,6 +73,25 @@ public class Robot {
 				});
 			}
 		}
+
+		endEffector = buildEndEffector();
+	}
+
+	private BrushlessSparkMAXMotor buildEndEffector() {
+		SparkMaxWrapper sparkMaxWrapper = new SparkMaxWrapper(new SparkMaxDeviceID(5));
+
+		SparkMaxConfig sparkMaxConfig = new SparkMaxConfig();
+
+		sparkMaxConfig.softLimit.forwardSoftLimit(1);
+		sparkMaxConfig.softLimit.reverseSoftLimit(-1);
+		sparkMaxConfig.softLimit.forwardSoftLimitEnabled(true);
+		sparkMaxConfig.softLimit.reverseSoftLimitEnabled(true);
+
+		SparkMaxConfiguration configuration = new SparkMaxConfiguration().withSparkMaxConfig(sparkMaxConfig);
+
+		sparkMaxWrapper.applyConfiguration(configuration);
+
+		return new BrushlessSparkMAXMotor(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/endEffector", sparkMaxWrapper, new SysIdRoutine.Config());
 	}
 
 	public void periodic() {

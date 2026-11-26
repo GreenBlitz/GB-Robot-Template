@@ -87,7 +87,6 @@ public class RobotManager extends LoggedRobot {
 		updateTimeRelatedData(); // Better to be first
 		JoysticksBindings.updateChassisDriverInputs();
 		robot.periodic();
-		robot.getTankDrive().arcadeDrive(JoysticksBindings.chassisDriverInputs.xPower, JoysticksBindings.chassisDriverInputs.rotationalPower);
 		AlertManager.reportAlerts();
 	}
 

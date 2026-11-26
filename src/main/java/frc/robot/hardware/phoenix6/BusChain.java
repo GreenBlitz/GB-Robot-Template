@@ -7,9 +7,14 @@ import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
 import org.littletonrobotics.junction.Logger;
+import org.wpilib.hardware.bus.CANPort;
 
 public enum BusChain {
-  ROBORIO("rio");
+  SYSTEMCORE_CAN_0(CANPort.CAN_S0),
+  SYSTEMCORE_CAN_1(CANPort.CAN_S1),
+  SYSTEMCORE_CAN_2(CANPort.CAN_S2),
+  SYSTEMCORE_CAN_3(CANPort.CAN_S3),
+  SYSTEMCORE_CAN_4(CANPort.CAN_S4);
 
   private static final double PERMITTED_CAN_UTILIZATION_DECIMAL_VALUE = 0.6;
   private static final int PERMITTED_RECEIVE_ERRORS = 0;
@@ -30,6 +35,10 @@ public enum BusChain {
     this.signals = new BaseStatusSignal[0];
 
     createAlerts();
+  }
+
+  BusChain(CANPort port) {
+    this(port.name().toLowerCase());
   }
 
   private void createAlerts() {

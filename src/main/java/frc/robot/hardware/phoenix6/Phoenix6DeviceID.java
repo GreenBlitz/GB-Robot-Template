@@ -5,7 +5,7 @@ import frc.robot.Robot;
 public record Phoenix6DeviceID(int id, BusChain busChain) {
 
   public Phoenix6DeviceID(int id) {
-    this(id, BusChain.ROBORIO);
+    this(id, BusChain.SYSTEMCORE_CAN_2);
   }
 
   public Phoenix6DeviceID(int id, BusChain busChain) {
@@ -14,6 +14,6 @@ public record Phoenix6DeviceID(int id, BusChain busChain) {
   }
 
   public static BusChain determineBusChain(BusChain busChain) {
-    return Robot.ROBOT_TYPE.isSimulation() ? BusChain.ROBORIO : busChain;
+    return Robot.ROBOT_TYPE.isSimulation() ? BusChain.SYSTEMCORE_CAN_2 : busChain;
   }
 }

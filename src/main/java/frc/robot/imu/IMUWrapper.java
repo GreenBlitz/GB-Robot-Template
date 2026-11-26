@@ -1,14 +1,15 @@
 package frc.robot.imu;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import frc.robot.RobotConstants;
 import frc.robot.hardware.empties.EmptyIMU;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.interfaces.InputSignal;
+import frc.utils.Angle3d;
 import frc.utils.TimedValue;
+import frc.utils.angle2d.Angle2d;
 import org.littletonrobotics.junction.Logger;
 
 public class IMUWrapper {
@@ -29,11 +30,11 @@ public class IMUWrapper {
 		return imu.isConnected();
 	}
 
-	public InputSignal<Rotation2d> getYawSignal() {
+	public InputSignal<Angle2d> getYawSignal() {
 		return imuSignals.yawSignal();
 	}
 
-	public Rotation2d[] getLatestAngularVelocities() {
+	public Angle3d getLatestAngularVelocities() {
 		return imuSignals.getLatestAngularVelocity();
 	}
 
@@ -57,14 +58,14 @@ public class IMUWrapper {
 		return getLatestAccelerationG().times(RobotConstants.G);
 	}
 
-	public TimedValue<Rotation2d> getWrappedYaw() {
-		TimedValue<Rotation2d> latestYaw = getYawSignal().getLatestTimedValue();
-		Rotation2d latestAbsoluteYaw = Rotation2d.fromRadians(MathUtil.angleModulus(latestYaw.getValue().getRadians()));
+	public TimedValue<Angle2d> getWrappedYaw() {
+		TimedValue<Angle2d> latestYaw = getYawSignal().getLatestTimedValue();
+		Angle2d latestAbsoluteYaw = Angle2d.fromRadians(MathUtil.angleModulus(latestYaw.getValue().getRadians()));
 		return new TimedValue<>(latestAbsoluteYaw, latestYaw.getTimestamp());
 	}
 
 
-	public void setYaw(Rotation2d yaw) {
+	public void setYaw(Angle2d yaw) {
 		imu.setYaw(yaw);
 	}
 

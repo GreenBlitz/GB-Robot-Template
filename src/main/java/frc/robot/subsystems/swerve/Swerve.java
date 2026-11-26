@@ -25,6 +25,7 @@ import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.SwerveStateHandler;
 import frc.robot.subsystems.swerve.states.heading.HeadingControl;
 import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
+import frc.utils.angle2d.Angle2d;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.battery.BatteryUtil;
 import org.littletonrobotics.junction.Logger;
@@ -49,7 +50,7 @@ public class Swerve extends GBSubsystem {
 	private final LoggedNetworkNumber calibrationVoltageTunable;
 
 	private SwerveState currentState;
-	private Supplier<Rotation2d> headingSupplier;
+	private Supplier<Angle2d> headingSupplier;
 	private ChassisPowers driversPowerInputs;
 
 	public Swerve(SwerveConstants constants, Modules modules, IMUWrapper imu) {
@@ -110,7 +111,7 @@ public class Swerve extends GBSubsystem {
 		);
 	}
 
-	public void setHeadingSupplier(Supplier<Rotation2d> headingSupplier) {
+	public void setHeadingSupplier(Supplier<Angle2d> headingSupplier) {
 		this.headingSupplier = headingSupplier;
 	}
 
@@ -118,7 +119,7 @@ public class Swerve extends GBSubsystem {
 		this.driversPowerInputs = powers;
 	}
 
-	public void setHeading(Rotation2d heading) {
+	public void setHeading(Angle2d heading) {
 		imu.setYaw(heading);
 		imu.updateIMU();
 		headingStabilizer.unlockTarget();
@@ -171,14 +172,14 @@ public class Swerve extends GBSubsystem {
 		return driveRadiusMeters;
 	}
 
-	public Rotation2d getAbsoluteHeading() {
+	public Angle2d getAbsoluteHeading() {
 		double inputtedHeadingRadians = MathUtil.angleModulus(headingSupplier.get().getRadians());
-		return Rotation2d.fromRadians(inputtedHeadingRadians);
+		return Angle2d.fromRadians(inputtedHeadingRadians);
 	}
 
-	public Rotation2d getAllianceRelativeHeading() {
-		Rotation2d currentHeading = headingSupplier.get();
-		return Field.isFieldConventionAlliance() ? currentHeading : currentHeading.rotateBy(MathConstants.HALF_CIRCLE);
+	public Angle2d getAllianceRelativeHeading() {
+		Angle2d currentHeading = headingSupplier.get();
+		return Field.isFieldConventionAlliance() ? currentHeading : currentHeading.plus(MathConstants.HALF_CIRCLE);
 	}
 
 	public ChassisSpeeds getRobotRelativeVelocity() {
@@ -200,23 +201,23 @@ public class Swerve extends GBSubsystem {
 		double xVelocityMetersPerSecond = constants.xMetersPIDController().calculate(currentPose.getX(), targetPose.getX());
 		double yVelocityMetersPerSecond = constants.yMetersPIDController().calculate(currentPose.getY(), targetPose.getY());
 		int direction = Field.isFieldConventionAlliance() ? 1 : -1;
-		Rotation2d rotationVelocityPerSecond = Rotation2d.fromDegrees(
+		Angle2d angularVelocityPerSecond = Angle2d.fromDegrees(
 			constants.rotationDegreesPIDController().calculate(currentPose.getRotation().getDegrees(), targetPose.getRotation().getDegrees())
 		);
 
 		ChassisSpeeds targetAllianceRelativeSpeeds = new ChassisSpeeds(
 			xVelocityMetersPerSecond * direction,
 			yVelocityMetersPerSecond * direction,
-			rotationVelocityPerSecond.getRadians()
+			angularVelocityPerSecond.getRadians()
 		);
 		driveByState(targetAllianceRelativeSpeeds, SwerveState.DEFAULT_DRIVE);
 	}
 
-	protected void turnToHeading(Rotation2d targetHeading, SwerveState swerveState) {
+	protected void turnToHeading(Angle2d targetHeading, SwerveState swerveState) {
 		ChassisSpeeds targetSpeeds = new ChassisSpeeds(
 			0,
 			0,
-			Rotation2d
+			Angle2d
 				.fromDegrees(constants.rotationDegreesPIDController().calculate(headingSupplier.get().getDegrees(), targetHeading.getDegrees()))
 				.getRadians()
 		);
@@ -281,12 +282,12 @@ public class Swerve extends GBSubsystem {
 	}
 
 
-	public boolean isAtHeading(Rotation2d targetHeading, Rotation2d tolerance, Rotation2d velocityDeadbandAnglesPerSecond) {
+	public boolean isAtHeading(Angle2d targetHeading, Angle2d tolerance, Angle2d velocityDeadbandAPS) {
 		double headingDeltaDegrees = Math.abs(targetHeading.minus(headingSupplier.get()).getDegrees());
 		boolean isAtHeading = headingDeltaDegrees < tolerance.getDegrees();
 
-		double rotationVelocityRadiansPerSecond = getRobotRelativeVelocity().omegaRadiansPerSecond;
-		boolean isStopping = Math.abs(rotationVelocityRadiansPerSecond) < velocityDeadbandAnglesPerSecond.getRadians();
+		double angularVelocityRadiansPerSecond = getRobotRelativeVelocity().omegaRadiansPerSecond;
+		boolean isStopping = Math.abs(angularVelocityRadiansPerSecond) < velocityDeadbandAPS.getRadians();
 
 		return isAtHeading && isStopping;
 	}
@@ -334,14 +335,14 @@ public class Swerve extends GBSubsystem {
 
 		// Rotational pid tests
 		joystick.R1.whileTrue(getCommandsBuilder().turnToHeading(MathConstants.HALF_CIRCLE));
-		joystick.L1.whileTrue(getCommandsBuilder().turnToHeading(new Rotation2d()));
+		joystick.L1.whileTrue(getCommandsBuilder().turnToHeading(new Angle2d()));
 
 		// Translation pid tests
 		joystick.getAxisAsButton(Axis.LEFT_TRIGGER)
 			.onTrue(
 				new DeferredCommand(
 					() -> getCommandsBuilder()
-						.moveToPoseByPID(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(1, 1, new Rotation2d()))),
+						.moveToPoseByPID(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(1, 1, new Angle2d().toRotation2d()))),
 					Set.of(this)
 				)
 			);
@@ -349,7 +350,7 @@ public class Swerve extends GBSubsystem {
 			.onTrue(
 				new DeferredCommand(
 					() -> getCommandsBuilder()
-						.moveToPoseByPID(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(-1, -1, new Rotation2d()))),
+						.moveToPoseByPID(robotPoseSupplier, robotPoseSupplier.get().plus(new Transform2d(-1, -1, new Angle2d().toRotation2d()))),
 					Set.of(this)
 				)
 			);

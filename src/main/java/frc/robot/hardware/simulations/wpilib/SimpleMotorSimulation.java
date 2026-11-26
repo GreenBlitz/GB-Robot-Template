@@ -1,7 +1,7 @@
 package frc.robot.hardware.simulations.wpilib;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import frc.utils.angle2d.Angle2d;
 import frc.utils.time.TimeUtil;
 
 public class SimpleMotorSimulation implements WPILibMechanismSimulation {
@@ -13,13 +13,13 @@ public class SimpleMotorSimulation implements WPILibMechanismSimulation {
 	}
 
 	@Override
-	public Rotation2d getMechanismPosition() {
-		return Rotation2d.fromRadians(motorSimulation.getAngularPositionRad());
+	public Angle2d getMechanismPosition() {
+		return Angle2d.fromRadians(motorSimulation.getAngularPositionRad());
 	}
 
 	@Override
-	public Rotation2d getMechanismVelocityRPS() {
-		return Rotation2d.fromRadians(motorSimulation.getAngularVelocityRadPerSec());
+	public Angle2d getMechanismVelocityAPS() {
+		return Angle2d.fromRadians(motorSimulation.getAngularVelocityRadPerSec());
 	}
 
 	@Override

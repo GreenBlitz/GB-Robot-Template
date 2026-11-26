@@ -150,4 +150,8 @@ public class Angle2d implements Interpolatable<Angle2d>, ProtobufSerializable, S
 		return plus(endValue.minus(this).times(Math.max(0, Math.min(interpolationFraction, 1))));
 	}
 
+	public static final Angle2dStruct struct = new Angle2dStruct();
+
+	public static final Angle2dProto proto = new Angle2dProto();
+
 }

@@ -8,77 +8,81 @@ import frc.robot.hardware.phoenix6.signal.SignalGetter;
 import frc.utils.alerts.Alert;
 import frc.utils.alerts.AlertManager;
 import frc.utils.alerts.PeriodicAlert;
-import org.littletonrobotics.junction.Logger;
-
 import java.util.LinkedList;
+import org.littletonrobotics.junction.Logger;
 
 public abstract class Phoenix6Device implements IDevice {
 
-	private final ConnectedInputAutoLogged connectedInput;
-	private final BusChain busChain;
-	private final String logPath;
+  private final ConnectedInputAutoLogged connectedInput;
+  private final BusChain busChain;
+  private final String logPath;
 
-	public Phoenix6Device(String logPath, BusChain busChain) {
-		this.logPath = logPath;
-		this.busChain = busChain;
-		this.connectedInput = new ConnectedInputAutoLogged();
-		connectedInput.connected = true;
-		AlertManager.addAlert(new PeriodicAlert(Alert.AlertType.ERROR, logPath + "disconnectedAt", () -> !isConnected(), true));
-	}
+  public Phoenix6Device(String logPath, BusChain busChain) {
+    this.logPath = logPath;
+    this.busChain = busChain;
+    this.connectedInput = new ConnectedInputAutoLogged();
+    connectedInput.connected = true;
+    AlertManager.addAlert(
+        new PeriodicAlert(
+            Alert.AlertType.ERROR, logPath + "disconnectedAt", () -> !isConnected(), true));
+  }
 
-	public String getLogPath() {
-		return logPath;
-	}
+  public String getLogPath() {
+    return logPath;
+  }
 
-	public boolean isConnected() {
-		return connectedInput.connected;
-	}
+  public boolean isConnected() {
+    return connectedInput.connected;
+  }
 
-	private boolean isValid(InputSignal<?> signal) {
-		return signal instanceof SignalGetter;
-	}
+  private boolean isValid(InputSignal<?> signal) {
+    return signal instanceof SignalGetter;
+  }
 
-	private void reportInvalidSignal(InputSignal<?> invalidSignal) {
-		new Alert(
-			Alert.AlertType.WARNING,
-			logPath + "signal named " + invalidSignal.getName() + " has invalid type " + invalidSignal.getClass().getSimpleName()
-		).report();
-	}
+  private void reportInvalidSignal(InputSignal<?> invalidSignal) {
+    new Alert(
+            Alert.AlertType.WARNING,
+            logPath
+                + "signal named "
+                + invalidSignal.getName()
+                + " has invalid type "
+                + invalidSignal.getClass().getSimpleName())
+        .report();
+  }
 
-	private InputSignal<?>[] getValidSignals(InputSignal<?>... signals) {
-		LinkedList<InputSignal<?>> validSignals = new LinkedList<>();
-		for (InputSignal<?> signal : signals) {
-			if (isValid(signal)) {
-				validSignals.add(signal);
-			} else {
-				reportInvalidSignal(signal);
-			}
-		}
-		return validSignals.toArray(InputSignal<?>[]::new);
-	}
+  private InputSignal<?>[] getValidSignals(InputSignal<?>... signals) {
+    LinkedList<InputSignal<?>> validSignals = new LinkedList<>();
+    for (InputSignal<?> signal : signals) {
+      if (isValid(signal)) {
+        validSignals.add(signal);
+      } else {
+        reportInvalidSignal(signal);
+      }
+    }
+    return validSignals.toArray(InputSignal<?>[]::new);
+  }
 
-	private void logSignals(InputSignal<?>... signals) {
-		for (InputSignal<?> signal : signals) {
-			Logger.processInputs(logPath, signal);
-		}
-	}
+  private void logSignals(InputSignal<?>... signals) {
+    for (InputSignal<?> signal : signals) {
+      Logger.processInputs(logPath, signal);
+    }
+  }
 
-	@Override
-	public void updateInputs(InputSignal<?>... inputSignals) {
-		connectedInput.connected = getDevice().isConnected();
-		Logger.processInputs(logPath, connectedInput);
+  @Override
+  public void updateInputs(InputSignal<?>... inputSignals) {
+    connectedInput.connected = getDevice().isConnected();
+    Logger.processInputs(logPath, connectedInput);
 
-		if (inputSignals.length == 0) {
-			return;
-		}
-		InputSignal<?>[] validSignals = getValidSignals(inputSignals);
-		logSignals(validSignals);
-	}
+    if (inputSignals.length == 0) {
+      return;
+    }
+    InputSignal<?>[] validSignals = getValidSignals(inputSignals);
+    logSignals(validSignals);
+  }
 
-	public BusChain getBusChain() {
-		return busChain;
-	}
+  public BusChain getBusChain() {
+    return busChain;
+  }
 
-	public abstract ParentDevice getDevice();
-
+  public abstract ParentDevice getDevice();
 }

@@ -2,10 +2,9 @@ package frc.robot.hardware.interfaces;
 
 public interface IDevice {
 
-	boolean isConnected();
+  boolean isConnected();
 
-	void updateInputs(InputSignal<?>... inputSignals);
+  void updateInputs(InputSignal<?>... inputSignals);
 
-	String getLogPath();
-
+  String getLogPath();
 }

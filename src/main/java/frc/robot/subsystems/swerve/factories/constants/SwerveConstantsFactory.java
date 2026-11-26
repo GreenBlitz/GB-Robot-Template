@@ -5,10 +5,9 @@ import frc.robot.subsystems.swerve.SwerveConstants;
 
 public class SwerveConstantsFactory {
 
-	public static SwerveConstants create(String logPath) {
-		return switch (Robot.ROBOT_TYPE) {
-			case REAL, REPLAY, SIMULATION -> SimulationSwerveConstants.getSwerveConstants(logPath);
-		};
-	}
-
+  public static SwerveConstants create(String logPath) {
+    return switch (Robot.ROBOT_TYPE) {
+      case REAL, REPLAY, SIMULATION -> SimulationSwerveConstants.getSwerveConstants(logPath);
+    };
+  }
 }

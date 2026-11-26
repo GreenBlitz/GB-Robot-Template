@@ -30,11 +30,16 @@ public class Robot {
 	public static final int TANK_TYPE = 2;
 
 	private DifferentialDrive tankDrive;
-	private double powerMultiplier = 1;
+	private double MAX_POWER_LIMIT = 1;
 
 	public BrushlessSparkMAXMotor endEffector;
 
 	public Robot() {
+		// hardware presentation
+		// motors and controllers presentation
+		// elec with them
+		// black box codeing
+
 		BatteryUtil.scheduleLimiter();
 		switch (TANK_TYPE) {
 			case 0 -> {
@@ -43,11 +48,11 @@ public class Robot {
 				TalonSRX frontRight = new TalonSRX(1);
 				TalonSRX rearRight = new TalonSRX(2);
 				tankDrive = new DifferentialDrive(power -> {
-					frontLeft.set(ControlMode.PercentOutput, power * powerMultiplier);
-					rearLeft.set(ControlMode.PercentOutput, power * powerMultiplier);
+					frontLeft.set(ControlMode.PercentOutput, power * MAX_POWER_LIMIT);
+					rearLeft.set(ControlMode.PercentOutput, power * MAX_POWER_LIMIT);
 				}, power -> {
-					frontRight.set(ControlMode.PercentOutput, -power * powerMultiplier);
-					rearRight.set(ControlMode.PercentOutput, -power * powerMultiplier);
+					frontRight.set(ControlMode.PercentOutput, -power * MAX_POWER_LIMIT);
+					rearRight.set(ControlMode.PercentOutput, -power * MAX_POWER_LIMIT);
 				});
 			}
 			case 1 -> {
@@ -56,20 +61,20 @@ public class Robot {
 				PWMSparkMax frontRight = new PWMSparkMax(2);
 				PWMSparkMax rearRight = new PWMSparkMax(3);
 				tankDrive = new DifferentialDrive(power -> {
-					frontLeft.set(-power * powerMultiplier);
-					rearLeft.set(-power * powerMultiplier);
+					frontLeft.set(-power * MAX_POWER_LIMIT);
+					rearLeft.set(-power * MAX_POWER_LIMIT);
 				}, power -> {
-					frontRight.set(power * powerMultiplier);
-					rearRight.set(power * powerMultiplier);
+					frontRight.set(power * MAX_POWER_LIMIT);
+					rearRight.set(power * MAX_POWER_LIMIT);
 				});
 			}
 			case 2 -> {
 				VictorSP left = new VictorSP(4);
 				VictorSP right = new VictorSP(0);
 				tankDrive = new DifferentialDrive(power -> {
-					left.set(power * powerMultiplier);
+					left.set(power * MAX_POWER_LIMIT);
 				}, power -> {
-					right.set(-power * powerMultiplier);
+					right.set(-power * MAX_POWER_LIMIT);
 				});
 			}
 		}

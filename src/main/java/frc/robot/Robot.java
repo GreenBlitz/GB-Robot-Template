@@ -16,6 +16,8 @@ import frc.robot.hardware.digitalinput.DigitalInputInputsAutoLogged;
 import frc.robot.hardware.digitalinput.IDigitalInput;
 import frc.robot.hardware.digitalinput.channeled.ChanneledDigitalInput;
 import frc.robot.hardware.digitalinput.chooser.ChooserDigitalInput;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.TalonFXElevatorBuilder;
 import frc.robot.subsystems.moduleAlon.ModuleAlon;
 import frc.robot.hardware.phoenix6.BusChain;
 import frc.robot.poseestimator.IPoseEstimator;
@@ -51,7 +53,8 @@ public class Robot {
 	private final ModuleAlon moduleAlon;
 	private final IDigitalInput digitalInput;
 	private final Trigger digitalInputTrigger;
-	private DigitalInputInputsAutoLogged digitalInputInputsAutoLogged;
+	private final DigitalInputInputsAutoLogged digitalInputInputsAutoLogged;
+	private final Elevator elevator;
 
 	public Robot() {
 		BatteryUtil.scheduleLimiter();
@@ -63,6 +66,10 @@ public class Robot {
 			imu,
 			IMUFactory.createSignals(imu)
 		);
+		this.elevator = TalonFXElevatorBuilder.buildElevator(
+				RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Elevator",IDs.ElevatorIDs.ELEVATOR,RobotConstants.elevatorPhysicalProperties,RobotConstants.elevatorStartingPosition,
+
+		)
 		BrakeStateManager.add(() -> swerve.getModules().setBrake(true), () -> swerve.getModules().setBrake(false));
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,

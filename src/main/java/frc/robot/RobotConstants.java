@@ -1,5 +1,9 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Distance;
+import frc.robot.subsystems.elevator.ElevatorPhysicalProperties;
 import frc.utils.math.StandardDeviations2D;
 
 public class RobotConstants {
@@ -7,6 +11,9 @@ public class RobotConstants {
 	public static final double DEFAULT_SIGNALS_FREQUENCY_HERTZ = 60;
 
 	public static final String SUBSYSTEM_LOGPATH_PREFIX = "Subsystems";
+
+	public static final ElevatorPhysicalProperties elevatorPhysicalProperties = new ElevatorPhysicalProperties(Rotation2d.fromRotations(0), Rotation2d.fromRotations(1), Units.Meter.of(1), Units.Meter.of(0));
+	public static final Distance elevatorStartingPosition= Units.Meters.of(0);
 
 	public static final StandardDeviations2D DEFAULT_TAG_DISTANCE_FACTORS = new StandardDeviations2D(0.5);
 	public static final StandardDeviations2D DEFAULT_STD_DEV_FACTORS = new StandardDeviations2D(0.15);

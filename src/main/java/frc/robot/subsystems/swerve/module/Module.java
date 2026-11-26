@@ -261,6 +261,14 @@ public class Module {
 		return Math.min(driveInputs.positionsMeters.length, steerSignals.position().asArray().length);
 	}
 
+	public double getOdometryTimestamp(int odometryUpdateIndex) {
+		return driveSignals.position().getTimestamps()[odometryUpdateIndex];
+	}
+
+	public boolean isConnected() {
+		return drive.isConnected() && steer.isConnected();
+	}
+
 	public SwerveModuleState getTargetState() {
 		return targetState;
 	}

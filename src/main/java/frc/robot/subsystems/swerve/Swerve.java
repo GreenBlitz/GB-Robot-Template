@@ -6,6 +6,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -13,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.constants.MathConstants;
 import frc.constants.field.Field;
 import frc.robot.hardware.interfaces.InputSignal;
+import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.imu.IMUWrapper;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
@@ -27,6 +29,7 @@ import frc.robot.subsystems.swerve.states.SwerveState;
 import frc.robot.subsystems.swerve.states.SwerveStateHandler;
 import frc.robot.subsystems.swerve.states.heading.HeadingControl;
 import frc.robot.subsystems.swerve.states.heading.HeadingStabilizer;
+import frc.utils.AngleUnit;
 import frc.utils.Filter;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.battery.BatteryUtil;
@@ -50,11 +53,15 @@ public class Swerve extends GBSubsystem implements OrientationSupplier {
 	private final SwerveCommandsBuilder commandsBuilder;
 	private final SwerveStateHandler stateHandler;
 	private final LoggedNetworkNumber calibrationVoltageTunable;
+	private final SuppliedAngleSignal rawYawSignal;
 
 	private SwerveState currentState;
 	private OrientationSupplier orientationSupplier;
 	private Supplier<Rotation2d> headingSupplier;
 	private ChassisPowers driversPowerInputs;
+	private Rotation2d rawYaw;
+	private Rotation3d[] rawYawOrientations;
+	private SwerveModulePosition[] lastWheelPositions;
 
 	public Swerve(SwerveConstants constants, Modules modules, IMUWrapper imu, OrientationSupplier orientationSupplier) {
 		super(constants.logPath());
@@ -74,6 +81,10 @@ public class Swerve extends GBSubsystem implements OrientationSupplier {
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 
 		this.calibrationVoltageTunable = new LoggedNetworkNumber("Tunable/SwerveDriveCalibrationVoltage", 0);
+		this.rawYaw = new Rotation2d();
+		this.rawYawOrientations = new Rotation3d[0];
+		this.rawYawSignal = new SuppliedAngleSignal("RawYaw", () -> rawYaw.getRadians(), AngleUnit.RADIANS);
+		this.lastWheelPositions = null;
 		update();
 		setDefaultCommand(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
 	}
@@ -146,6 +157,7 @@ public class Swerve extends GBSubsystem implements OrientationSupplier {
 
 	public void update() {
 		modules.updateInputs();
+		updateRawYaw();
 
 		currentState.log(constants.stateLogPath());
 
@@ -160,23 +172,42 @@ public class Swerve extends GBSubsystem implements OrientationSupplier {
 		Logger.recordOutput(getLogPath() + "/isCollisionDetected", isCollisionDetected());
 	}
 
+	private void updateRawYaw() {
+		int numberOfSamples = modules.getNumberOfOdometrySamples();
+		rawYawOrientations = new Rotation3d[numberOfSamples];
+		for (int i = 0; i < numberOfSamples; i++) {
+			SwerveModulePosition[] currentWheelPositions = modules.getWheelPositions(i);
+			if (lastWheelPositions != null) {
+				Twist2d deltaPose = kinematics.toTwist2d(lastWheelPositions, currentWheelPositions);
+				rawYaw = rawYaw.plus(Rotation2d.fromRadians(deltaPose.dtheta));
+			}
+			lastWheelPositions = currentWheelPositions;
+			rawYawOrientations[i] = new Rotation3d(0, 0, rawYaw.getRadians());
+		}
+		rawYawSignal.getAndUpdateValue();
+	}
+
 	public int getNumberOfOdometrySamples() {
-		return Math.min(
-			orientationSupplier.getYawSignal().asArray().length,
-			Math.min(modules.getNumberOfOdometrySamples(), imu.getAllAccelerationsG().length)
-		);
+		int samples = Math.min(orientationSupplier.getAllOrientations().length, modules.getNumberOfOdometrySamples());
+		if (!imu.isEmpty() && imu.isConnected()) {
+			samples = Math.min(samples, imu.getAllAccelerationsG().length);
+		}
+		return samples;
 	}
 
 	public OdometryData[] getAllOdometryData() {
 		OdometryData[] odometryData = new OdometryData[getNumberOfOdometrySamples()];
+		Rotation3d[] orientations = orientationSupplier.getAllOrientations();
+		boolean includeIMUAcceleration = !imu.isEmpty() && imu.isConnected();
+		double[] timestamps = includeIMUAcceleration ? imu.getYawSignal().getTimestamps() : modules.getOdometryTimestamps();
 
 		for (int i = 0; i < odometryData.length; i++) {
 			odometryData[i] = new OdometryData(
-				orientationSupplier.getYawSignal().getTimestamps()[i],
+				timestamps[i],
 				modules.getWheelPositions(i),
 				modules.getCurrentStates(),
-				orientationSupplier.getAllOrientations()[i],
-				imu.isEmpty() ? Optional.empty() : Optional.of(imu.getAllAccelerationsG()[i])
+				orientations[i],
+				includeIMUAcceleration ? Optional.of(imu.getAllAccelerationsG()[i]) : Optional.empty()
 			);
 		}
 
@@ -389,29 +420,34 @@ public class Swerve extends GBSubsystem implements OrientationSupplier {
 
 	@Override
 	public InputSignal<Rotation2d> getYawSignal() {
-		return null;
+		return rawYawSignal;
 	}
 
 	@Override
 	public Rotation3d getLatestOrientation() {
-		return null;
+		return new Rotation3d(0, 0, rawYaw.getRadians());
 	}
 
 	@Override
 	public Rotation3d[] getAllOrientations() {
-		return new Rotation3d[0];
+		return rawYawOrientations;
 	}
 
 	@Override
 	public Filter isDataReliable() {
-		return null;
+		return modules::isConnected;
 	}
 
 	@Override
-	public void setYaw(Rotation2d yaw) {}
+	public void setYaw(Rotation2d yaw) {
+		this.rawYaw = yaw;
+		this.rawYawSignal.getAndUpdateValue();
+	}
 
 	@Override
-	public void setOrientation(Rotation3d orientation) {}
+	public void setOrientation(Rotation3d orientation) {
+		setYaw(orientation.toRotation2d());
+	}
 
 	@Override
 	public void updateOrientationSupplier() {}

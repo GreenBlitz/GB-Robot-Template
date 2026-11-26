@@ -54,6 +54,8 @@ public class Robot {
 			ModulesFactory.create(RobotConstants.SUBSYSTEM_LOGPATH_PREFIX + "/Swerve"),
 			imu
 		);
+		this.orientationSupplier = new SuperDuperMegaOrientationSupplierFinalBoss(imu, swerve);
+		this.swerve.setOrientationSupplier(orientationSupplier);
 		BrakeStateManager.add(() -> swerve.getModules().setBrake(true), () -> swerve.getModules().setBrake(false));
 		this.poseEstimator = new WPILibPoseEstimatorWrapper(
 			WPILibPoseEstimatorConstants.WPILIB_POSEESTIMATOR_LOGPATH,
@@ -89,8 +91,6 @@ public class Robot {
 			)
 		);
 
-		this.orientationSupplier = new SuperDuperMegaOrientationSupplierFinalBoss(imu, swerve);
-
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 
 		configureBrakeStateChooser();
@@ -103,8 +103,8 @@ public class Robot {
 	public void periodic() {
 		BusChain.refreshAll();
 
-		orientationSupplier.updateOrientationSupplier();
 		imu.updateOrientationSupplier();
+		orientationSupplier.updateOrientationSupplier();
 		updateSubsystems();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 

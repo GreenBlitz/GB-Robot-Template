@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.utils.Filter;
+import org.littletonrobotics.junction.Logger;
 
 public class SuperDuperMegaOrientationSupplierFinalBoss implements OrientationSupplier {
 
@@ -13,6 +14,7 @@ public class SuperDuperMegaOrientationSupplierFinalBoss implements OrientationSu
 
 	public SuperDuperMegaOrientationSupplierFinalBoss(OrientationSupplier... orientationSuppliers) {
 		this.orientationSuppliers = orientationSuppliers;
+		updateOrientationSupplier();
 	}
 
 	private OrientationSupplier getCurrentOrientationSupplier() {
@@ -62,7 +64,21 @@ public class SuperDuperMegaOrientationSupplierFinalBoss implements OrientationSu
 	@Override
 	public void updateOrientationSupplier() {
 		updateOrientationSource();
-		this.currentOrientationSupplier = orientationSuppliers[currentOrientationSource.getIndex()];
+
+		if (currentOrientationSource == OrientationSource.NONE) {
+			if (currentOrientationSupplier == null && orientationSuppliers.length > 0) {
+				currentOrientationSupplier = orientationSuppliers[orientationSuppliers.length - 1];
+			}
+			Logger.recordOutput("Orientation/CurrentSource", currentOrientationSource);
+			return;
+		}
+
+		OrientationSupplier nextSupplier = orientationSuppliers[currentOrientationSource.getIndex()];
+		if (currentOrientationSupplier != null && currentOrientationSupplier != nextSupplier) {
+			nextSupplier.setYaw(currentOrientationSupplier.getLatestOrientation().toRotation2d());
+		}
+		currentOrientationSupplier = nextSupplier;
+		Logger.recordOutput("Orientation/CurrentSource", currentOrientationSource);
 	}
 
 }

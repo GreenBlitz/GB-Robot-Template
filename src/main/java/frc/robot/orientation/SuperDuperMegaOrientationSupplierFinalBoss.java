@@ -63,24 +63,21 @@ public class SuperDuperMegaOrientationSupplierFinalBoss implements OrientationSu
 
 	@Override
 	public void updateOrientationSupplier() {
-		OrientationSource previousSource = currentOrientationSource;
 		updateOrientationSource();
 
-		if (currentOrientationSource != OrientationSource.NONE) {
-			this.currentOrientationSupplier = orientationSuppliers[currentOrientationSource.getIndex()];
-		} else if (this.currentOrientationSupplier == null && orientationSuppliers.length > 0) {
-			this.currentOrientationSupplier = orientationSuppliers[orientationSuppliers.length - 1];
-		}
-
-		if (previousSource != null && previousSource != currentOrientationSource && currentOrientationSupplier != null) {
-			OrientationSupplier previousSupplier = previousSource != OrientationSource.NONE
-				? orientationSuppliers[previousSource.getIndex()]
-				: null;
-			if (previousSupplier != null) {
-				currentOrientationSupplier.setYaw(previousSupplier.getLatestOrientation().toRotation2d());
+		if (currentOrientationSource == OrientationSource.NONE) {
+			if (currentOrientationSupplier == null && orientationSuppliers.length > 0) {
+				currentOrientationSupplier = orientationSuppliers[orientationSuppliers.length - 1];
 			}
+			Logger.recordOutput("Orientation/CurrentSource", currentOrientationSource);
+			return;
 		}
 
+		OrientationSupplier nextSupplier = orientationSuppliers[currentOrientationSource.getIndex()];
+		if (currentOrientationSupplier != null && currentOrientationSupplier != nextSupplier) {
+			nextSupplier.setYaw(currentOrientationSupplier.getLatestOrientation().toRotation2d());
+		}
+		currentOrientationSupplier = nextSupplier;
 		Logger.recordOutput("Orientation/CurrentSource", currentOrientationSource);
 	}
 

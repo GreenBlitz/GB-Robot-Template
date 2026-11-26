@@ -60,6 +60,7 @@ public class Swerve extends GBSubsystem implements OrientationSupplier {
 	private Supplier<Rotation2d> headingSupplier;
 	private ChassisPowers driversPowerInputs;
 	private Rotation2d rawYaw;
+	private Rotation3d[] rawYawOrientations;
 	private SwerveModulePosition[] lastWheelPositions;
 
 	public Swerve(SwerveConstants constants, Modules modules, IMUWrapper imu, OrientationSupplier orientationSupplier) {
@@ -81,6 +82,7 @@ public class Swerve extends GBSubsystem implements OrientationSupplier {
 
 		this.calibrationVoltageTunable = new LoggedNetworkNumber("Tunable/SwerveDriveCalibrationVoltage", 0);
 		this.rawYaw = new Rotation2d();
+		this.rawYawOrientations = new Rotation3d[0];
 		this.rawYawSignal = new SuppliedAngleSignal("RawYaw", () -> rawYaw.getRadians(), AngleUnit.RADIANS);
 		this.lastWheelPositions = null;
 		update();
@@ -172,6 +174,7 @@ public class Swerve extends GBSubsystem implements OrientationSupplier {
 
 	private void updateRawYaw() {
 		int numberOfSamples = modules.getNumberOfOdometrySamples();
+		rawYawOrientations = new Rotation3d[numberOfSamples];
 		for (int i = 0; i < numberOfSamples; i++) {
 			SwerveModulePosition[] currentWheelPositions = modules.getWheelPositions(i);
 			if (lastWheelPositions != null) {
@@ -179,11 +182,13 @@ public class Swerve extends GBSubsystem implements OrientationSupplier {
 				rawYaw = rawYaw.plus(Rotation2d.fromRadians(deltaPose.dtheta));
 			}
 			lastWheelPositions = currentWheelPositions;
+			rawYawOrientations[i] = new Rotation3d(0, 0, rawYaw.getRadians());
 		}
+		rawYawSignal.getAndUpdateValue();
 	}
 
 	public int getNumberOfOdometrySamples() {
-		int samples = Math.min(orientationSupplier.getYawSignal().asArray().length, modules.getNumberOfOdometrySamples());
+		int samples = Math.min(orientationSupplier.getAllOrientations().length, modules.getNumberOfOdometrySamples());
 		if (!imu.isEmpty() && imu.isConnected()) {
 			samples = Math.min(samples, imu.getAllAccelerationsG().length);
 		}
@@ -193,8 +198,8 @@ public class Swerve extends GBSubsystem implements OrientationSupplier {
 	public OdometryData[] getAllOdometryData() {
 		OdometryData[] odometryData = new OdometryData[getNumberOfOdometrySamples()];
 		Rotation3d[] orientations = orientationSupplier.getAllOrientations();
-		double[] timestamps = orientationSupplier.getYawSignal().getTimestamps();
 		boolean includeIMUAcceleration = !imu.isEmpty() && imu.isConnected();
+		double[] timestamps = includeIMUAcceleration ? imu.getYawSignal().getTimestamps() : modules.getOdometryTimestamps();
 
 		for (int i = 0; i < odometryData.length; i++) {
 			odometryData[i] = new OdometryData(
@@ -425,13 +430,7 @@ public class Swerve extends GBSubsystem implements OrientationSupplier {
 
 	@Override
 	public Rotation3d[] getAllOrientations() {
-		Rotation3d orientation = getLatestOrientation();
-		int samples = modules.getNumberOfOdometrySamples();
-		Rotation3d[] orientations = new Rotation3d[samples];
-		for (int i = 0; i < samples; i++) {
-			orientations[i] = orientation;
-		}
-		return orientations;
+		return rawYawOrientations;
 	}
 
 	@Override
@@ -442,11 +441,12 @@ public class Swerve extends GBSubsystem implements OrientationSupplier {
 	@Override
 	public void setYaw(Rotation2d yaw) {
 		this.rawYaw = yaw;
+		this.rawYawSignal.getAndUpdateValue();
 	}
 
 	@Override
 	public void setOrientation(Rotation3d orientation) {
-		this.rawYaw = orientation.toRotation2d();
+		setYaw(orientation.toRotation2d());
 	}
 
 	@Override

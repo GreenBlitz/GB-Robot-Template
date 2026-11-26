@@ -11,13 +11,9 @@ public class SuperDuperMegaOrientationSupplierFinalBoss implements OrientationSu
 	private final OrientationSupplier[] orientationSuppliers;
 	private OrientationSupplier currentOrientationSupplier;
 	private OrientationSource currentOrientationSource;
-	private Rotation3d lastReliableOrientation;
-	private boolean orientationJustSet;
 
 	public SuperDuperMegaOrientationSupplierFinalBoss(OrientationSupplier... orientationSuppliers) {
 		this.orientationSuppliers = orientationSuppliers;
-		this.lastReliableOrientation = new Rotation3d();
-		this.orientationJustSet = false;
 		updateOrientationSupplier();
 	}
 
@@ -48,15 +44,11 @@ public class SuperDuperMegaOrientationSupplierFinalBoss implements OrientationSu
 	@Override
 	public void setYaw(Rotation2d yaw) {
 		currentOrientationSupplier.setYaw(yaw);
-		lastReliableOrientation = new Rotation3d(lastReliableOrientation.getX(), lastReliableOrientation.getY(), yaw.getRadians());
-		orientationJustSet = true;
 	}
 
 	@Override
 	public void setOrientation(Rotation3d orientation) {
 		currentOrientationSupplier.setOrientation(orientation);
-		lastReliableOrientation = orientation;
-		orientationJustSet = true;
 	}
 
 	private void updateOrientationSource() {
@@ -71,7 +63,7 @@ public class SuperDuperMegaOrientationSupplierFinalBoss implements OrientationSu
 
 	@Override
 	public void updateOrientationSupplier() {
-		OrientationSource previousOrientationSource = currentOrientationSource;
+		OrientationSource previousSource = currentOrientationSource;
 		updateOrientationSource();
 
 		if (currentOrientationSource != OrientationSource.NONE) {
@@ -80,14 +72,13 @@ public class SuperDuperMegaOrientationSupplierFinalBoss implements OrientationSu
 			this.currentOrientationSupplier = orientationSuppliers[orientationSuppliers.length - 1];
 		}
 
-		if (previousOrientationSource == OrientationSource.IMU && currentOrientationSource == OrientationSource.SWERVE) {
-			this.currentOrientationSupplier.setYaw(lastReliableOrientation.toRotation2d());
-		}
-
-		if (orientationJustSet) {
-			orientationJustSet = false;
-		} else if (this.currentOrientationSupplier != null && this.currentOrientationSupplier.isDataReliable().passesFilter()) {
-			this.lastReliableOrientation = this.currentOrientationSupplier.getLatestOrientation();
+		if (previousSource != null && previousSource != currentOrientationSource && currentOrientationSupplier != null) {
+			OrientationSupplier previousSupplier = previousSource != OrientationSource.NONE
+				? orientationSuppliers[previousSource.getIndex()]
+				: null;
+			if (previousSupplier != null) {
+				currentOrientationSupplier.setYaw(previousSupplier.getLatestOrientation().toRotation2d());
+			}
 		}
 
 		Logger.recordOutput("Orientation/CurrentSource", currentOrientationSource);

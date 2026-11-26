@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.constants.MathConstants;
 import frc.constants.field.Field;
 import frc.robot.hardware.interfaces.InputSignal;
-import frc.robot.hardware.signal.MultiSampleAngleSignal;
+import frc.robot.hardware.signal.supplied.SuppliedAngleSignal;
 import frc.robot.imu.IMUWrapper;
 import frc.joysticks.Axis;
 import frc.joysticks.SmartJoystick;
@@ -33,7 +33,6 @@ import frc.utils.AngleUnit;
 import frc.utils.Filter;
 import frc.utils.auto.PathPlannerUtil;
 import frc.utils.battery.BatteryUtil;
-import frc.utils.time.TimeUtil;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
@@ -54,13 +53,13 @@ public class Swerve extends GBSubsystem implements OrientationSupplier {
 	private final SwerveCommandsBuilder commandsBuilder;
 	private final SwerveStateHandler stateHandler;
 	private final LoggedNetworkNumber calibrationVoltageTunable;
-	private final MultiSampleAngleSignal rawYawSignal;
+	private final SuppliedAngleSignal rawYawSignal;
 
 	private SwerveState currentState;
 	private OrientationSupplier orientationSupplier;
 	private Supplier<Rotation2d> headingSupplier;
 	private ChassisPowers driversPowerInputs;
-	private Rotation3d currentRawOrientation;
+	private Rotation2d rawYaw;
 	private SwerveModulePosition[] lastWheelPositions;
 
 	public Swerve(SwerveConstants constants, Modules modules, IMUWrapper imu, OrientationSupplier orientationSupplier) {
@@ -81,8 +80,8 @@ public class Swerve extends GBSubsystem implements OrientationSupplier {
 		this.commandsBuilder = new SwerveCommandsBuilder(this);
 
 		this.calibrationVoltageTunable = new LoggedNetworkNumber("Tunable/SwerveDriveCalibrationVoltage", 0);
-		this.rawYawSignal = new MultiSampleAngleSignal("RawYaw", AngleUnit.RADIANS);
-		this.currentRawOrientation = new Rotation3d();
+		this.rawYaw = new Rotation2d();
+		this.rawYawSignal = new SuppliedAngleSignal("RawYaw", () -> rawYaw.getRadians(), AngleUnit.RADIANS);
 		this.lastWheelPositions = null;
 		update();
 		setDefaultCommand(commandsBuilder.driveByDriversInputs(SwerveState.DEFAULT_DRIVE));
@@ -173,31 +172,14 @@ public class Swerve extends GBSubsystem implements OrientationSupplier {
 
 	private void updateRawYaw() {
 		int numberOfSamples = modules.getNumberOfOdometrySamples();
-		if (numberOfSamples == 0) {
-			return;
-		}
-
-		Rotation2d[] yawSamples = new Rotation2d[numberOfSamples];
-		double[] timestamps = modules.getOdometryTimestamps();
-		Rotation2d currentYaw = currentRawOrientation.toRotation2d();
-
 		for (int i = 0; i < numberOfSamples; i++) {
 			SwerveModulePosition[] currentWheelPositions = modules.getWheelPositions(i);
 			if (lastWheelPositions != null) {
 				Twist2d deltaPose = kinematics.toTwist2d(lastWheelPositions, currentWheelPositions);
-				currentYaw = currentYaw.plus(Rotation2d.fromRadians(deltaPose.dtheta));
+				rawYaw = rawYaw.plus(Rotation2d.fromRadians(deltaPose.dtheta));
 			}
 			lastWheelPositions = currentWheelPositions;
-			yawSamples[i] = currentYaw;
 		}
-
-		rawYawSignal.setValues(yawSamples, timestamps);
-		Logger.processInputs(getLogPath(), rawYawSignal);
-		currentRawOrientation = new Rotation3d(
-			currentRawOrientation.getX(),
-			currentRawOrientation.getY(),
-			rawYawSignal.getLatestValue().getRadians()
-		);
 	}
 
 	public int getNumberOfOdometrySamples() {
@@ -438,15 +420,16 @@ public class Swerve extends GBSubsystem implements OrientationSupplier {
 
 	@Override
 	public Rotation3d getLatestOrientation() {
-		return currentRawOrientation;
+		return new Rotation3d(0, 0, rawYaw.getRadians());
 	}
 
 	@Override
 	public Rotation3d[] getAllOrientations() {
-		Rotation2d[] yawSamples = rawYawSignal.asArray();
-		Rotation3d[] orientations = new Rotation3d[yawSamples.length];
-		for (int i = 0; i < yawSamples.length; i++) {
-			orientations[i] = new Rotation3d(currentRawOrientation.getX(), currentRawOrientation.getY(), yawSamples[i].getRadians());
+		Rotation3d orientation = getLatestOrientation();
+		int samples = modules.getNumberOfOdometrySamples();
+		Rotation3d[] orientations = new Rotation3d[samples];
+		for (int i = 0; i < samples; i++) {
+			orientations[i] = orientation;
 		}
 		return orientations;
 	}
@@ -458,13 +441,12 @@ public class Swerve extends GBSubsystem implements OrientationSupplier {
 
 	@Override
 	public void setYaw(Rotation2d yaw) {
-		setOrientation(new Rotation3d(currentRawOrientation.getX(), currentRawOrientation.getY(), yaw.getRadians()));
+		this.rawYaw = yaw;
 	}
 
 	@Override
 	public void setOrientation(Rotation3d orientation) {
-		this.currentRawOrientation = orientation;
-		this.rawYawSignal.setLatestValue(orientation.toRotation2d(), TimeUtil.getCurrentTimeSeconds());
+		this.rawYaw = orientation.toRotation2d();
 	}
 
 	@Override

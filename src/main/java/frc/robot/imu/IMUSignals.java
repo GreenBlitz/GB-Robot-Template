@@ -18,10 +18,11 @@ public record IMUSignals(
 ) {
 
 	public Angle3d getLatestAngularVelocity() {
-		return new Angle3d (
+		return new Angle3d(
 			rollAngularVelocitySignal.getLatestValue(),
 			pitchAngularVelocitySignal.getLatestValue(),
-			yawAngularVelocitySignal.getLatestValue());
+			yawAngularVelocitySignal.getLatestValue()
+		);
 	}
 
 	public Rotation3d[] getAllOrientations() {

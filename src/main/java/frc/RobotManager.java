@@ -90,6 +90,7 @@ public class RobotManager extends LoggedRobot {
 		AlertManager.reportAlerts();
 	}
 
+
 	private void createAutoReadyForConstructionChooser() {
 		SendableChooser<Boolean> autoReadyForConstructionSendableChooser = new SendableChooser<>();
 		autoReadyForConstructionSendableChooser.setDefaultOption("false", false);

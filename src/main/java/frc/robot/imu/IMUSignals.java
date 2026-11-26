@@ -16,8 +16,8 @@ public record IMUSignals(
 	InputSignal<Double> zAccelerationGSignal
 ) {
 
-	public Angle2d[] getLatestAngularVelocity() {
-		return new Angle2d[] {
+	public Angle3d getLatestAngularVelocity() {
+		return new Angle3d {
 			rollAngularVelocitySignal.getLatestValue(),
 			pitchAngularVelocitySignal.getLatestValue(),
 			yawAngularVelocitySignal.getLatestValue()};

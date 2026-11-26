@@ -114,6 +114,24 @@ public class Modules {
 		return numberOfOdometrySamples;
 	}
 
+	public double[] getOdometryTimestamps() {
+		int numberOfOdometrySamples = getNumberOfOdometrySamples();
+		double[] timestamps = new double[numberOfOdometrySamples];
+		for (int i = 0; i < numberOfOdometrySamples; i++) {
+			timestamps[i] = modules[0].getOdometryTimestamp(i);
+		}
+		return timestamps;
+	}
+
+	public boolean isConnected() {
+		for (Module module : modules) {
+			if (!module.isConnected()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public SwerveModuleState[] getTargetStates() {
 		return Arrays.stream(modules).map(Module::getTargetState).toArray(SwerveModuleState[]::new);
 	}

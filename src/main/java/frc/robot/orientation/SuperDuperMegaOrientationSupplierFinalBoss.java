@@ -4,15 +4,21 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import frc.robot.hardware.interfaces.InputSignal;
 import frc.utils.Filter;
+import org.littletonrobotics.junction.Logger;
 
 public class SuperDuperMegaOrientationSupplierFinalBoss implements OrientationSupplier {
 
 	private final OrientationSupplier[] orientationSuppliers;
 	private OrientationSupplier currentOrientationSupplier;
 	private OrientationSource currentOrientationSource;
+	private Rotation3d lastReliableOrientation;
+	private boolean orientationJustSet;
 
 	public SuperDuperMegaOrientationSupplierFinalBoss(OrientationSupplier... orientationSuppliers) {
 		this.orientationSuppliers = orientationSuppliers;
+		this.lastReliableOrientation = new Rotation3d();
+		this.orientationJustSet = false;
+		updateOrientationSupplier();
 	}
 
 	private OrientationSupplier getCurrentOrientationSupplier() {
@@ -42,11 +48,15 @@ public class SuperDuperMegaOrientationSupplierFinalBoss implements OrientationSu
 	@Override
 	public void setYaw(Rotation2d yaw) {
 		currentOrientationSupplier.setYaw(yaw);
+		lastReliableOrientation = new Rotation3d(lastReliableOrientation.getX(), lastReliableOrientation.getY(), yaw.getRadians());
+		orientationJustSet = true;
 	}
 
 	@Override
 	public void setOrientation(Rotation3d orientation) {
 		currentOrientationSupplier.setOrientation(orientation);
+		lastReliableOrientation = orientation;
+		orientationJustSet = true;
 	}
 
 	private void updateOrientationSource() {
@@ -61,8 +71,26 @@ public class SuperDuperMegaOrientationSupplierFinalBoss implements OrientationSu
 
 	@Override
 	public void updateOrientationSupplier() {
+		OrientationSource previousOrientationSource = currentOrientationSource;
 		updateOrientationSource();
-		this.currentOrientationSupplier = orientationSuppliers[currentOrientationSource.getIndex()];
+
+		if (currentOrientationSource != OrientationSource.NONE) {
+			this.currentOrientationSupplier = orientationSuppliers[currentOrientationSource.getIndex()];
+		} else if (this.currentOrientationSupplier == null && orientationSuppliers.length > 0) {
+			this.currentOrientationSupplier = orientationSuppliers[orientationSuppliers.length - 1];
+		}
+
+		if (previousOrientationSource == OrientationSource.IMU && currentOrientationSource == OrientationSource.SWERVE) {
+			this.currentOrientationSupplier.setYaw(lastReliableOrientation.toRotation2d());
+		}
+
+		if (orientationJustSet) {
+			orientationJustSet = false;
+		} else if (this.currentOrientationSupplier != null && this.currentOrientationSupplier.isDataReliable().passesFilter()) {
+			this.lastReliableOrientation = this.currentOrientationSupplier.getLatestOrientation();
+		}
+
+		Logger.recordOutput("Orientation/CurrentSource", currentOrientationSource);
 	}
 
 }

@@ -62,7 +62,7 @@ public class TalonFXElevatorBuilder {
 			feedbackConfigs.RotorToSensorRatio * feedbackConfigs.SensorToMechanismRatio
 		);
 
-		TalonFXMotor motor = new TalonFXMotor(logPath, deviceID, talonFXFollowerConfig, sysIdRoutineConfig);
+		TalonFXMotor motor = new TalonFXMotor(logPath, deviceID, talonFXFollowerConfig, sysIdRoutineConfig, motorSimulation);
 		double maxPosition = Math
 			.max(physicalProperties.motorMinPosition().getRotations(), physicalProperties.motorMaxPosition().getRotations());
 		double minPosition = Math

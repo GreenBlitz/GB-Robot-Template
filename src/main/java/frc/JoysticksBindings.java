@@ -1,5 +1,6 @@
 package frc;
 
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.joysticks.Axis;
 import frc.joysticks.JoystickPorts;
@@ -52,7 +53,10 @@ public class JoysticksBindings {
 		robot.getModuleAlon().getCommandsBuilder().setDefaultJoystick(usedJoystick);
 		Trigger comboButtons = usedJoystick.A.and(usedJoystick.B);
 		comboButtons.onTrue(robot.getModuleAlon().getCommandsBuilder().comboCommand());
-		usedJoystick.A.onTrue(robot.getModuleAlon().getCommandsBuilder().driveWithLeftStick());
+		//usedJoystick.A.onTrue(robot.getModuleAlon().getCommandsBuilder().driveWithLeftStick());
+		usedJoystick.A.onTrue(
+				robot.getElevator().getCommandsBuilder().setVoltage(()->{return usedJoystick.getAxisValue(Axis.LEFT_Y);})
+		);
 		usedJoystick.POV_LEFT.onTrue(robot.getModuleAlon().getCommandsBuilder().fullyCircleDrive());
 		usedJoystick.POV_UP.onTrue(ModuleCommandsBuilder.loggity());
 	}

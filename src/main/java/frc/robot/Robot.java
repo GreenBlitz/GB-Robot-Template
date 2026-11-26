@@ -138,6 +138,7 @@ public class Robot {
 		swerve.update();
 		moduleAlon.logAll();
 		moduleAlon.updateSimulation();
+		elevator.update();
 	}
 
 	public void periodic() {
@@ -177,6 +178,10 @@ public class Robot {
 
 	public PathPlannerAutoWrapper getAutonomousCommand() {
 		return new PathPlannerAutoWrapper();
+	}
+
+	public Elevator getElevator() {
+		return elevator;
 	}
 
 	private void configureBrakeStateChooser() {

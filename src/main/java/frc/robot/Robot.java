@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.RobotManager;
 import frc.robot.imu.IMUWrapper;
 import frc.robot.hardware.phoenix6.BusChain;
+import frc.robot.orientation.OrientationSupplier;
+import frc.robot.orientation.SuperDuperMegaOrientationSupplierFinalBoss;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
@@ -39,6 +41,7 @@ public class Robot {
 
 	private final Swerve swerve;
 	private final IMUWrapper imu;
+	private OrientationSupplier orientationSupplier;
 	private final IPoseEstimator poseEstimator;
 	private final List<Limelight> limelights;
 
@@ -57,7 +60,7 @@ public class Robot {
 			swerve.getKinematics(),
 			swerve.getModules().getWheelPositions(0),
 			swerve.getModules().getCurrentStates(),
-			imu.getLatestOrientation(),
+			orientationSupplier,
 			imu.getLatestAccelerationG(),
 			imu.getWrappedYaw().getTimestamp()
 		);
@@ -79,12 +82,14 @@ public class Robot {
 				LimelightFilters.megaTag1Filter(
 					limelight,
 					timestamp -> poseEstimator.getEstimatedPoseAtTimestamp(timestamp).map(Pose2d::getRotation),
-					poseEstimator::isIMUOffsetCalibrated,
+					poseEstimator::isOffsetCalibrated,
 					LimelightFilters.DEFAULT_IN_FIELD_TOLERANCE_METERS,
 					LimelightFilters.DEFAULT_YAW_AT_ANGLE_TOLERANCE
 				)
 			)
 		);
+
+		this.orientationSupplier = new SuperDuperMegaOrientationSupplierFinalBoss(imu, swerve);
 
 		swerve.setHeadingSupplier(() -> poseEstimator.getEstimatedPose().getRotation());
 
@@ -98,7 +103,8 @@ public class Robot {
 	public void periodic() {
 		BusChain.refreshAll();
 
-		imu.updateIMU();
+		orientationSupplier.updateOrientationSupplier();
+		imu.updateOrientationSupplier();
 		updateSubsystems();
 		poseEstimator.updateOdometry(swerve.getAllOdometryData());
 
@@ -117,8 +123,22 @@ public class Robot {
 		return poseEstimator;
 	}
 
+	public OrientationSupplier getOrientationSupplier() {
+		return orientationSupplier;
+	}
+
 	public Swerve getSwerve() {
 		return swerve;
+	}
+
+	public IMUWrapper getIMU() {
+		return imu;
+	}
+
+	public void setOrientationSupplier(OrientationSupplier orientationSupplier) {
+		this.orientationSupplier = orientationSupplier;
+		swerve.setOrientationSupplier(orientationSupplier);
+		poseEstimator.setOrientationSupplier(orientationSupplier);
 	}
 
 	public List<Limelight> getLimelights() {

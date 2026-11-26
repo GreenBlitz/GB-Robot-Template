@@ -8,10 +8,12 @@ import frc.robot.RobotConstants;
 import frc.robot.hardware.empties.EmptyIMU;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.interfaces.InputSignal;
+import frc.robot.orientation.OrientationSupplier;
+import frc.utils.Filter;
 import frc.utils.TimedValue;
 import org.littletonrobotics.junction.Logger;
 
-public class IMUWrapper {
+public class IMUWrapper implements OrientationSupplier {
 
 	private final IIMU imu;
 	private final IMUSignals imuSignals;
@@ -29,6 +31,7 @@ public class IMUWrapper {
 		return imu.isConnected();
 	}
 
+	@Override
 	public InputSignal<Rotation2d> getYawSignal() {
 		return imuSignals.yawSignal();
 	}
@@ -37,10 +40,17 @@ public class IMUWrapper {
 		return imuSignals.getLatestAngularVelocity();
 	}
 
+	@Override
 	public Rotation3d[] getAllOrientations() {
 		return imuSignals.getAllOrientations();
 	}
 
+	@Override
+	public Filter isDataReliable() {
+		return this::isConnected;
+	}
+
+	@Override
 	public Rotation3d getLatestOrientation() {
 		return imuSignals.getLatestOrientation();
 	}
@@ -64,11 +74,18 @@ public class IMUWrapper {
 	}
 
 
+	@Override
 	public void setYaw(Rotation2d yaw) {
 		imu.setYaw(yaw);
 	}
 
-	public void updateIMU() {
+	@Override
+	public void setOrientation(Rotation3d orientation) {
+		imu.setOrientation(orientation);
+	}
+
+	@Override
+	public void updateOrientationSupplier() {
 		imu.updateInputs(
 			imuSignals.pitchSignal(),
 			imuSignals.rollSignal(),

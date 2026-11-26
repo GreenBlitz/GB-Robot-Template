@@ -7,6 +7,7 @@ import frc.robot.RobotConstants;
 import frc.robot.hardware.empties.EmptyIMU;
 import frc.robot.hardware.interfaces.IIMU;
 import frc.robot.hardware.interfaces.InputSignal;
+import frc.utils.Angle3d;
 import frc.utils.TimedValue;
 import frc.utils.angle2d.Angle2d;
 import org.littletonrobotics.junction.Logger;

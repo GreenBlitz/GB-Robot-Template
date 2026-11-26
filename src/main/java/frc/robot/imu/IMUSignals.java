@@ -2,6 +2,7 @@ package frc.robot.imu;
 
 import edu.wpi.first.math.geometry.*;
 import frc.robot.hardware.interfaces.InputSignal;
+import frc.utils.Angle3d;
 import frc.utils.angle2d.Angle2d;
 
 public record IMUSignals(
@@ -17,10 +18,10 @@ public record IMUSignals(
 ) {
 
 	public Angle3d getLatestAngularVelocity() {
-		return new Angle3d {
+		return new Angle3d (
 			rollAngularVelocitySignal.getLatestValue(),
 			pitchAngularVelocitySignal.getLatestValue(),
-			yawAngularVelocitySignal.getLatestValue()};
+			yawAngularVelocitySignal.getLatestValue());
 	}
 
 	public Rotation3d[] getAllOrientations() {

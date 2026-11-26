@@ -22,11 +22,6 @@ public class Robot {
 	public static final RobotType ROBOT_TYPE = RobotType.determineRobotType(false);
 
 	public Robot() {
-		// hardware presentation
-		// motors and controllers presentation
-		// elec with them
-		// black box codeing
-
 		BatteryUtil.scheduleLimiter();
 	}
 

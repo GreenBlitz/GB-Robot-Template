@@ -8,4 +8,11 @@ public class RobotCommander extends Superstructure<RobotState> {
   public RobotCommander(RobotState defaultState, String logPath, Robot robot) {
     super(defaultState, logPath, robot.getStateHandlers());
   }
+
+  @Override
+  public void runByState(RobotState state) {
+    switch (state) {
+      default -> {}
+    }
+  }
 }

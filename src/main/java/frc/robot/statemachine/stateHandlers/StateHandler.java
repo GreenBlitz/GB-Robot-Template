@@ -1,17 +1,18 @@
 package frc.robot.statemachine.stateHandlers;
 
+import org.littletonrobotics.junction.Logger;
 import org.wpilib.command2.Command;
 import org.wpilib.command2.RunCommand;
 
 public abstract class StateHandler<T> {
 
-  private final String logPath;
   protected Command stateCommand;
+  private final String logPath;
   private T currentState;
 
   public StateHandler(String logPath, T defaultState) {
-    this.logPath = logPath;
     this.stateCommand = new RunCommand(() -> runByState(getCurrentState()));
+    this.logPath = logPath;
     this.currentState = defaultState;
   }
 
@@ -29,5 +30,7 @@ public abstract class StateHandler<T> {
 
   public void runByState(T state) {}
 
-  public void log() {}
+  public void log() {
+    Logger.recordOutput(getLogPath() + "/currentState", getCurrentState().toString());
+  }
 }

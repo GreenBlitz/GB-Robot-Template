@@ -7,7 +7,7 @@ public abstract class Superstructure<T> extends StateHandler<T> {
   private final Set<StateHandler> stateHandlers;
 
   public Superstructure(T defaultState, String logPath, StateHandler... stateHandlers) {
-    super(defaultState, logPath);
+    super(logPath, defaultState);
     this.stateHandlers = Set.of(stateHandlers);
   }
 }

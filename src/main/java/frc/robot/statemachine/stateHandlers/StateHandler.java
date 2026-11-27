@@ -6,14 +6,13 @@ import org.wpilib.command2.RunCommand;
 public abstract class StateHandler<T> {
 
   private final String logPath;
+  protected Command stateCommand;
   private T currentState;
-  private Command stateCommand;
 
-  public StateHandler(T defaultState, String logPath) {
+  public StateHandler(String logPath, T defaultState) {
     this.logPath = logPath;
-    this.currentState = defaultState;
-
     this.stateCommand = new RunCommand(() -> runByState(getCurrentState()));
+    this.currentState = defaultState;
   }
 
   public String getLogPath() {

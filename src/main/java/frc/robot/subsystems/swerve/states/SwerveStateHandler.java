@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve.states;
 
 import frc.constants.MathConstants;
+import frc.robot.statemachine.stateHandlers.SubsystemStateHandler;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.SwerveConstants;
 import frc.robot.subsystems.swerve.module.ModuleUtil;
@@ -12,7 +13,7 @@ import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.math.kinematics.ChassisVelocities;
 
-public class SwerveStateHandler {
+public class SwerveStateHandler extends SubsystemStateHandler<SwerveState> {
 
   private final Swerve swerve;
   private final SwerveConstants swerveConstants;

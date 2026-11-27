@@ -11,7 +11,6 @@ import frc.robot.imu.factories.IMUFactory;
 import frc.robot.poseestimator.IPoseEstimator;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorConstants;
 import frc.robot.poseestimator.WPILibPoseEstimator.WPILibPoseEstimatorWrapper;
-import frc.robot.statemachine.stateHandlers.StateHandler;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.factories.constants.SwerveConstantsFactory;
 import frc.robot.subsystems.swerve.factories.modules.ModulesFactory;
@@ -23,7 +22,6 @@ import frc.utils.battery.BatteryUtil;
 import frc.utils.brakestate.BrakeMode;
 import frc.utils.brakestate.BrakeStateManager;
 import java.util.List;
-import java.util.Set;
 import org.wpilib.command2.CommandScheduler;
 import org.wpilib.math.geometry.Pose2d;
 import org.wpilib.telemetry.Telemetry;
@@ -125,9 +123,9 @@ public class Robot {
     return limelights;
   }
 
-  public Set<StateHandler> getStateHandlers() {
-    return Set.of();
-  }
+  //  public Set<StateHandler> getStateHandlers() {
+  //    return Set.of();
+  //  }
 
   public PathPlannerAutoWrapper getAutonomousCommand() {
     return new PathPlannerAutoWrapper();

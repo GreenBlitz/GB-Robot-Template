@@ -1,16 +1,18 @@
 package frc.robot.statemachine;
 
 import frc.robot.Robot;
-import frc.robot.statemachine.stateHandlers.SubsystemStateHandler;
-import frc.robot.statemachine.stateHandlers.Superstructure;
+import frc.robot.statemachine.stateHandlers.StateHandler;
+import frc.robot.subsystems.swerve.states.SwerveStateHandler;
 
-public class RobotCommander extends Superstructure<RobotState> {
+public class RobotCommander extends StateHandler<RobotState> {
 
-  private final SubsystemStateHandler swerveStateHandler;
+  private final SwerveStateHandler swerveStateHandler;
 
-  public RobotCommander(RobotState defaultState, String logPath, Robot robot) {
-    super(defaultState, logPath, robot.getSwerve().getStateHandler());
-    this.swerveStateHandler = robot.getSwerve().getStateHandler();
+  // other SubsystemStateHandlers and StateHandlers
+
+  public RobotCommander(String logPath, RobotState defaultState, Robot robot) {
+    super(logPath, defaultState);
+    this.swerveStateHandler = new SwerveStateHandler(robot.getSwerve());
   }
 
   @Override

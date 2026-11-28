@@ -6,7 +6,7 @@ public abstract class SubsystemStateHandler<T> extends StateHandler<T> {
 
   private final GBSubsystem subsystem;
 
-  public SubsystemStateHandler(T defaultState, String logPath, GBSubsystem subsystem) {
+  public SubsystemStateHandler(String logPath, T defaultState, GBSubsystem subsystem) {
     super(logPath, defaultState);
     this.subsystem = subsystem;
     super.stateCommand =

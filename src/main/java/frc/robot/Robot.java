@@ -123,6 +123,10 @@ public class Robot {
     return limelights;
   }
 
+  //  public Set<StateHandler> getStateHandlers() {
+  //    return Set.of();
+  //  }
+
   public PathPlannerAutoWrapper getAutonomousCommand() {
     return new PathPlannerAutoWrapper();
   }
